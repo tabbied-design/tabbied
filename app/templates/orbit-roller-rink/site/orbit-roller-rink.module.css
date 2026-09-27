@@ -1,0 +1,1469 @@
+/* ==========================================================================
+   ORBIT ROLLER RINK - roller skating and disco, Clearwater Flats
+   1979 roller disco. The night is the ground; the four inks of the racing
+   stripe run round the rink's oval in the hero and curve round the
+   corners of the sections. The session times are white letters pressed
+   into a grooved felt letterboard, rental is a wall of shoe cubbies with
+   sizes on their plates, and the pictures are vinyl stickers: rotated,
+   outlined and slapped over corners, the skate in three colorways. Titan
+   One for the chunky display, Baloo for reading, a condensed grotesk for
+   the letterboard's plastic letters.
+   ========================================================================== */
+
+.page {
+  --night: #1d1033;
+  --pink: #ff4f9a;
+  --orange: #ff9a3c;
+  --yellow: #ffe15d;
+  --cyan: #3fd3e0;
+
+  --text: var(--yellow);
+  --on-pink: var(--night);
+  --on-orange: var(--night);
+  --on-yellow: var(--night);
+  --on-cyan: var(--night);
+
+  /* Derived: never roles of their own, always mixed from them. */
+  --muted: color-mix(in oklab, var(--text) 72%, var(--night));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --panel: color-mix(in oklab, var(--night) 88%, var(--text));
+  --panel-2: color-mix(in oklab, var(--night) 80%, var(--text));
+  --board: var(--night);
+  --on-board: var(--text);
+  --wood: color-mix(in oklab, var(--orange) 45%, var(--night));
+  --shade: color-mix(in oklab, var(--night) 70%, transparent);
+  --peel: var(--text);
+
+  --gut: clamp(1.1rem, 4vw, 3rem);
+  --max: 76rem;
+  --display: 'Titan One', 'Arial Rounded MT Bold', 'Helvetica Rounded', sans-serif;
+  --sans: 'Baloo 2', 'Trebuchet MS', 'Helvetica Neue', sans-serif;
+  --letters: 'Sofia Sans Extra Condensed', 'Arial Narrow', sans-serif;
+
+  font-family: var(--sans);
+  font-size: 1.08rem;
+  line-height: 1.5;
+  background: var(--night);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by each surface's lightness, tinted toward the other. */
+    --text: color-mix(in oklab, oklch(from var(--night) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--yellow));
+    --on-pink: oklch(from var(--pink) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-orange: oklch(from var(--orange) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-yellow: oklch(from var(--yellow) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-cyan: oklch(from var(--cyan) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    /* The felt of the letterboard: always darker than the night. */
+    --board: oklch(from var(--night) calc(l * 0.5) calc(c * 0.5) h);
+    --on-board: oklch(from var(--board) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* The four inks, carried by a class so a card or a ticket can take one. */
+.pink {
+  --ink: var(--pink);
+  --on-ink: var(--on-pink);
+}
+
+.orange {
+  --ink: var(--orange);
+  --on-ink: var(--on-orange);
+}
+
+.yellow {
+  --ink: var(--yellow);
+  --on-ink: var(--on-yellow);
+}
+
+.cyan {
+  --ink: var(--cyan);
+  --on-ink: var(--on-cyan);
+}
+
+/* A vinyl sticker: the drawing grown by a few pixels of outline on every
+   side, then a hard shadow to lift it off the page. */
+.sticker {
+  position: absolute;
+  z-index: 3;
+  filter:
+    drop-shadow(4px 0 0 var(--peel))
+    drop-shadow(-4px 0 0 var(--peel))
+    drop-shadow(0 4px 0 var(--peel))
+    drop-shadow(0 -4px 0 var(--peel))
+    drop-shadow(5px 7px 0 var(--shade));
+}
+
+/* Glitter: four-point stars. */
+.glitter {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  width: 14px;
+  aspect-ratio: 1;
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+  background: var(--yellow);
+}
+
+.s2 {
+  width: 10px;
+  background: var(--cyan);
+}
+
+.s3 {
+  width: 22px;
+  background: var(--text);
+}
+
+/* ------------------------------------------------------------- the top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.7rem var(--gut);
+  background: var(--night);
+  box-shadow: 0 3px 0 var(--pink), 0 6px 0 var(--orange), 0 9px 0 var(--yellow), 0 12px 0 var(--cyan);
+}
+
+.mark {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.markRing {
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--night) 0 30%, var(--cyan) 30% 45%, var(--yellow) 45% 60%, var(--orange) 60% 75%, var(--pink) 75%);
+}
+
+.markName {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem clamp(0.9rem, 1.8vw, 1.8rem);
+}
+
+.nav a {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.barNote {
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  background: var(--yellow);
+  color: var(--on-yellow);
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--night);
+  font-weight: 700;
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--pink);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 6px;
+  }
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(2.5rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut) clamp(5rem, 8vw, 7rem);
+}
+
+.heroText {
+  position: relative;
+  z-index: 2;
+}
+
+.since {
+  display: inline-block;
+  padding: 0.3rem 1rem;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 2px var(--cyan);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.title {
+  display: grid;
+  margin-top: 1.2rem;
+  font-family: var(--display);
+  line-height: 0.86;
+}
+
+/* The disco drop: the word stacked over four offset copies of itself in
+   the racing stripe's inks. */
+.titleBig {
+  font-size: clamp(5.2rem, 15vw, 13rem);
+  letter-spacing: -0.01em;
+  text-shadow:
+    4px 4px 0 var(--pink),
+    8px 8px 0 var(--orange),
+    12px 12px 0 var(--yellow),
+    16px 16px 0 var(--cyan);
+}
+
+.titleSmall {
+  margin-top: 0.3em;
+  padding-left: 0.1em;
+  font-size: clamp(2.2rem, 5vw, 4.2rem);
+  color: var(--text);
+}
+
+.lede {
+  max-width: 34rem;
+  margin-top: 1.6rem;
+  font-size: 1.18rem;
+  line-height: 1.55;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.2rem;
+  padding: 0 1.6rem;
+  border-radius: 999px;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+}
+
+.btn {
+  background: var(--pink);
+  color: var(--on-pink);
+  box-shadow: 0 5px 0 var(--orange);
+}
+
+.btnGhost {
+  box-shadow: inset 0 0 0 3px var(--cyan);
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    translate: 0 2px;
+    box-shadow: 0 3px 0 var(--orange);
+  }
+
+  .btnGhost:hover {
+    background: var(--panel);
+  }
+}
+
+/* The rink: a stadium of floor inside a gap of night and four stripes. */
+.rinkWrap {
+  position: relative;
+  justify-self: center;
+  width: min(100% - 6rem, 29rem);
+  aspect-ratio: 0.7;
+  margin: 3.5rem;
+}
+
+.rink {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 999px;
+  box-shadow:
+    0 0 0 6px var(--night),
+    0 0 0 18px var(--pink),
+    0 0 0 30px var(--orange),
+    0 0 0 42px var(--yellow),
+    0 0 0 54px var(--cyan);
+}
+
+.heroBall {
+  width: clamp(8rem, 13vw, 11.5rem);
+  right: -4.5rem;
+  top: -3.8rem;
+  rotate: 11deg;
+}
+
+.heroSkate {
+  width: clamp(9rem, 15vw, 13rem);
+  left: -6rem;
+  bottom: -4.5rem;
+  rotate: -16deg;
+}
+
+/* The centre spot: a badge painted on the floor. */
+.rinkTag {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  width: 10.5rem;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  rotate: -8deg;
+  border-radius: 50%;
+  background: var(--yellow);
+  color: var(--on-yellow);
+  box-shadow: 0 0 0 5px var(--night), 0 0 0 9px var(--yellow);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-wrap: balance;
+  padding: 1.2rem;
+}
+
+.rinkTagBig {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  line-height: 1.05;
+}
+
+/* -------------------------------------------------------------- sections */
+
+.sec {
+  position: relative;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+  scroll-margin-top: 4.5rem;
+}
+
+/* A lane of the racing stripe: in from the page's edge along the top of
+   the section, round the corner and down its side, the way the stripe
+   runs round the rink. */
+.lane {
+  position: absolute;
+  top: 1rem;
+  left: calc(50% - 50vw);
+  right: -3.4rem;
+  height: 22rem;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(180deg, var(--night) 55%, transparent 96%);
+  mask: linear-gradient(180deg, var(--night) 55%, transparent 96%);
+}
+
+.laneTrack {
+  position: absolute;
+  left: -200px;
+  right: 48px;
+  top: 48px;
+  bottom: -200px;
+  border-top-right-radius: 130px;
+  box-shadow:
+    0 0 0 12px var(--pink),
+    0 0 0 24px var(--orange),
+    0 0 0 36px var(--yellow),
+    0 0 0 48px var(--cyan);
+}
+
+.laneLeft {
+  left: -3.4rem;
+  right: calc(50% - 50vw);
+}
+
+.laneLeft .laneTrack {
+  left: 48px;
+  right: -200px;
+  border-top-right-radius: 0;
+  border-top-left-radius: 130px;
+}
+
+.sec:has(> .lane) {
+  padding-top: calc(clamp(4rem, 8vw, 6.5rem) + 4.5rem);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  grid-template-areas:
+    'kicker kicker'
+    'title note';
+  gap: 0.8rem 3rem;
+  align-items: end;
+  margin-bottom: 2.6rem;
+}
+
+.kicker {
+  grid-area: kicker;
+  justify-self: start;
+  padding: 0.25rem 0.9rem;
+  border-radius: 999px;
+  background: var(--cyan);
+  color: var(--on-cyan);
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.secHead h2 {
+  grid-area: title;
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 0.98;
+  text-shadow: 3px 3px 0 var(--pink), 6px 6px 0 var(--orange);
+}
+
+.secNote {
+  grid-area: note;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------- sessions
+   The felt letterboard: grooves every 9px, an aluminium frame, and
+   white plastic letters pressed into the rows. */
+
+.boardWrap {
+  position: relative;
+  max-width: 62rem;
+  margin: 0 auto;
+}
+
+.board {
+  position: relative;
+  padding: clamp(1.2rem, 3vw, 2.2rem) clamp(1rem, 3.5vw, 2.8rem);
+  border-radius: 10px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 8px, color-mix(in oklab, var(--on-board) 7%, transparent) 8px 9px),
+    var(--board);
+  border: 14px solid color-mix(in oklab, var(--text) 55%, var(--night));
+  box-shadow:
+    inset 0 0 0 2px color-mix(in oklab, var(--text) 30%, var(--night)),
+    inset 0 12px 20px -10px var(--shade),
+    0 20px 40px -20px var(--shade);
+  color: var(--on-board);
+}
+
+.boardHead,
+.boardFoot {
+  font-family: var(--letters);
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.3em;
+  text-shadow: 0 1px 0 var(--shade);
+}
+
+.boardHead {
+  font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+  padding-bottom: 0.6rem;
+}
+
+.boardFoot {
+  margin-top: 0.8rem;
+  font-size: clamp(0.95rem, 1.6vw, 1.2rem);
+  letter-spacing: 0.18em;
+}
+
+.letters {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--letters);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-shadow: 0 1px 0 var(--shade);
+}
+
+.letters th,
+.letters td {
+  height: 2.8rem;
+  padding: 0 0.6rem;
+  font-size: clamp(1.15rem, 2.2vw, 1.65rem);
+  font-weight: 700;
+  line-height: 1;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.letters th {
+  width: 4.5rem;
+}
+
+.lTime {
+  width: 11rem;
+}
+
+.lName {
+  white-space: normal;
+}
+
+.lPrice {
+  width: 5rem;
+  text-align: right;
+}
+
+/* A hot session: a star pressed in before the name. */
+.hot .lName::before {
+  content: '';
+  display: inline-block;
+  width: 0.9em;
+  aspect-ratio: 1;
+  margin-right: 0.5em;
+  vertical-align: -0.08em;
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+  background: var(--yellow);
+}
+
+.boardTape {
+  width: clamp(9rem, 15vw, 13rem);
+  left: -4rem;
+  bottom: -3.2rem;
+  rotate: -10deg;
+}
+
+/* ---------------------------------------------------------------- rental
+   The cubby wall: a wooden grid of holes, a size plate on each. */
+
+.rentalGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: stretch;
+}
+
+.cubbies {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 22px, color-mix(in oklab, var(--wood) 88%, var(--night)) 22px 24px),
+    var(--wood);
+  box-shadow: 0 20px 40px -24px var(--shade);
+}
+
+.cubby {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  aspect-ratio: 1 / 1.08;
+  border-radius: 4px;
+  background: var(--board);
+  box-shadow: inset 0 14px 18px -8px var(--shade), inset 0 -3px 0 color-mix(in oklab, var(--wood) 60%, var(--board));
+  overflow: visible;
+}
+
+.cubbyPlate {
+  justify-self: center;
+  display: grid;
+  justify-items: center;
+  margin-top: -6px;
+  padding: 0.15rem 0.7rem 0.25rem;
+  border-radius: 0 0 8px 8px;
+  background: var(--yellow);
+  color: var(--on-yellow);
+  line-height: 1.05;
+}
+
+.cubbySize {
+  font-family: var(--display);
+  font-size: 1.15rem;
+}
+
+.cubbySub {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cubbyHole {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.cubbyCount {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: color-mix(in oklab, var(--on-board) 70%, var(--board));
+}
+
+.cubbySkate {
+  position: relative;
+  width: 78%;
+  rotate: -8deg;
+}
+
+.cubbySkateFlip {
+  rotate: 10deg;
+  scale: -1 1;
+}
+
+.counter {
+  position: relative;
+  display: grid;
+  align-items: center;
+  padding: clamp(1rem, 2.5vw, 1.8rem);
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--panel);
+}
+
+.counterSpots {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.counterCard {
+  position: relative;
+  padding: 1.5rem 1.6rem 1.6rem;
+  border-radius: 16px;
+  background: var(--night);
+  box-shadow: 0 0 0 4px var(--pink);
+}
+
+.counterTitle {
+  font-family: var(--display);
+  font-size: 1.9rem;
+  line-height: 1.1;
+}
+
+.rentList {
+  display: grid;
+  margin-top: 0.8rem;
+}
+
+.rentList > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.45rem 0;
+  border-bottom: 2px dotted var(--rule);
+}
+
+.rentList dt {
+  font-size: 1.04rem;
+}
+
+.rentList dd {
+  font-family: var(--display);
+  font-size: 1.12rem;
+  text-align: right;
+}
+
+.counterNote {
+  margin-top: 1rem;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- school */
+
+.schoolGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+.badgeWrap {
+  position: relative;
+  justify-self: center;
+  width: min(100% - 5rem, 22rem);
+  aspect-ratio: 1;
+  margin: 2.5rem;
+}
+
+.badge {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 6px var(--night),
+    0 0 0 14px var(--pink),
+    0 0 0 22px var(--orange),
+    0 0 0 30px var(--yellow),
+    0 0 0 38px var(--cyan);
+}
+
+.badgeText {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  justify-items: center;
+  translate: -50% -50%;
+  rotate: -6deg;
+  padding: 0.6rem 1.3rem 0.7rem;
+  border-radius: 999px;
+  background: var(--night);
+  box-shadow: 0 0 0 4px var(--yellow);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badgeBig {
+  font-family: var(--display);
+  font-size: 1.8rem;
+  line-height: 1;
+  font-weight: 400;
+}
+
+.lessons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.lesson {
+  display: flex;
+  flex-direction: column;
+  padding: 1.3rem 1.4rem 1.4rem;
+  border-radius: 20px 20px 20px 4px;
+  background: var(--panel);
+  box-shadow: inset 8px 0 0 var(--ink);
+}
+
+.lessonHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.lessonName {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  line-height: 1.05;
+}
+
+.lessonPrice {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-family: var(--display);
+  font-size: 1.1rem;
+  rotate: 8deg;
+}
+
+.lessonMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+  margin-top: 0.3rem;
+  font-weight: 800;
+  font-size: 0.98rem;
+}
+
+.lessonMeta span + span::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 1rem;
+  border-radius: 50%;
+  vertical-align: 0.15em;
+  background: var(--ink);
+}
+
+.lessonBody {
+  margin-top: 0.6rem;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------- parties */
+
+.partyWall {
+  position: relative;
+  padding: clamp(2rem, 5vw, 3.6rem) clamp(1rem, 4vw, 3rem);
+}
+
+.confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 28px;
+  background: var(--panel);
+}
+
+.tickets {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+}
+
+/* An admit-one ticket: notches bitten out of each side. */
+.ticket {
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem 1.6rem 1.7rem;
+  border-radius: 14px;
+  background: var(--ink);
+  color: var(--on-ink);
+  -webkit-mask:
+    radial-gradient(circle at 0 5.2rem, transparent 0 13px, var(--night) 14px) left / 51% 100% no-repeat,
+    radial-gradient(circle at 100% 5.2rem, transparent 0 13px, var(--night) 14px) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle at 0 5.2rem, transparent 0 13px, var(--night) 14px) left / 51% 100% no-repeat,
+    radial-gradient(circle at 100% 5.2rem, transparent 0 13px, var(--night) 14px) right / 51% 100% no-repeat;
+}
+
+.admit {
+  padding-bottom: 1rem;
+  border-bottom: 3px dashed color-mix(in oklab, var(--on-ink) 40%, transparent);
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.ticketName {
+  margin-top: 1.4rem;
+  font-family: var(--display);
+  font-size: 2.1rem;
+  line-height: 1;
+  text-align: center;
+}
+
+.ticketPrice {
+  font-family: var(--display);
+  font-size: 3rem;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.ticketLines {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid color-mix(in oklab, var(--on-ink) 25%, transparent);
+}
+
+.ticketLines li {
+  position: relative;
+  padding-left: 1.3rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.ticketLines li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.38em;
+  width: 0.75em;
+  aspect-ratio: 1;
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+  background: currentColor;
+}
+
+.partyTape {
+  width: clamp(8rem, 13vw, 11rem);
+  left: -2.6rem;
+  bottom: -3.4rem;
+  rotate: -12deg;
+}
+
+.partyNote {
+  margin-top: 3.2rem;
+  font-size: 1.05rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ after dark */
+
+.dark {
+  position: relative;
+  margin-top: clamp(4.5rem, 8vw, 7rem);
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+  overflow: hidden;
+  scroll-margin-top: 4.5rem;
+  border-top: 12px solid var(--pink);
+  border-bottom: 12px solid var(--cyan);
+}
+
+.darkField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.darkInner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 2rem;
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.darkCard {
+  position: relative;
+  z-index: 2;
+  padding: clamp(1.6rem, 4vw, 2.8rem);
+  border-radius: 28px;
+  background: var(--night);
+  box-shadow: 0 0 0 5px var(--yellow), 0 24px 50px -20px var(--shade);
+}
+
+.darkCard .kicker {
+  display: inline-block;
+  background: var(--pink);
+  color: var(--on-pink);
+}
+
+.darkTitle {
+  margin-top: 1rem;
+  font-family: var(--display);
+  font-size: clamp(2.6rem, 5.6vw, 4.8rem);
+  line-height: 0.95;
+  text-shadow: 3px 3px 0 var(--pink), 6px 6px 0 var(--cyan);
+}
+
+.darkLede {
+  max-width: 36rem;
+  margin-top: 1.2rem;
+  font-size: 1.12rem;
+}
+
+.lineup {
+  display: grid;
+  margin-top: 1.6rem;
+  border-top: 2px solid var(--rule);
+}
+
+.lineup li {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.55rem 0;
+  border-bottom: 2px solid var(--rule);
+}
+
+.luDate {
+  font-weight: 800;
+}
+
+.luTheme {
+  font-family: var(--display);
+  font-size: 1.15rem;
+}
+
+.luDj {
+  font-size: 0.96rem;
+  color: var(--muted);
+  text-align: right;
+}
+
+.darkBall {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 20rem);
+  rotate: -9deg;
+}
+
+/* ----------------------------------------------------------------- rules
+   The painted sign by the skate floor gate. */
+
+.sign {
+  position: relative;
+  max-width: 58rem;
+  margin: 3rem auto 0;
+  padding: clamp(1.8rem, 4vw, 3rem) clamp(1.4rem, 4.5vw, 3.6rem);
+  border-radius: 40px;
+  background: var(--panel);
+  box-shadow:
+    0 0 0 8px var(--night),
+    0 0 0 18px var(--pink),
+    0 0 0 28px var(--orange),
+    0 0 0 38px var(--yellow),
+    0 0 0 48px var(--cyan);
+}
+
+.signTitle {
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  line-height: 1;
+  text-align: center;
+  text-shadow: 3px 3px 0 var(--pink), 6px 6px 0 var(--orange);
+}
+
+.rules {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 2.4rem;
+  margin-top: 2rem;
+  counter-reset: rule;
+}
+
+.rules li {
+  position: relative;
+  padding-left: 3.1rem;
+  font-size: 1.1rem;
+  line-height: 1.4;
+  counter-increment: rule;
+}
+
+.rules li::before {
+  content: counter(rule);
+  position: absolute;
+  left: 0;
+  top: -0.1rem;
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background: var(--yellow);
+  color: var(--on-yellow);
+  font-family: var(--display);
+  font-size: 1.1rem;
+}
+
+.rules li:nth-child(2n)::before {
+  background: var(--cyan);
+  color: var(--on-cyan);
+}
+
+.signFoot {
+  margin-top: 1.8rem;
+  padding-top: 1.2rem;
+  border-top: 2px dashed var(--rule);
+  font-size: 1.02rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- visit */
+
+.visit {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 0.6fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+
+.visitCard {
+  padding: 1.6rem 1.7rem;
+  border-radius: 22px;
+  background: var(--panel);
+}
+
+.address {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  line-height: 1.12;
+}
+
+.visitNote {
+  margin-top: 0.8rem;
+  color: var(--muted);
+}
+
+.contact {
+  margin-top: 0.5rem;
+  font-weight: 800;
+  font-size: 1.1rem;
+  overflow-wrap: anywhere;
+}
+
+.contact:first-of-type {
+  margin-top: 1rem;
+}
+
+.hours {
+  display: grid;
+  border-top: 3px solid var(--pink);
+}
+
+.hours > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 2px solid var(--rule);
+}
+
+.hours dt {
+  font-weight: 700;
+}
+
+.hours dd {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.visitSkate {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 12rem);
+  rotate: 12deg;
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(4.5rem, 8vw, 7rem);
+}
+
+.footFloor {
+  position: relative;
+  height: 90px;
+  overflow: hidden;
+  box-shadow: 0 -4px 0 var(--pink), 0 -8px 0 var(--orange), 0 -12px 0 var(--yellow), 0 -16px 0 var(--cyan);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) auto minmax(0, 1.3fr);
+  gap: 1rem 2.4rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 2.8rem;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  color: var(--text);
+}
+
+.footInner a {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--pink);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1200px) {
+  .lane {
+    display: none;
+  }
+
+  .sec:has(> .lane) {
+    padding-top: clamp(4rem, 8vw, 6.5rem);
+  }
+}
+
+@media (max-width: 1120px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 1.2rem;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .rentalGrid,
+  .schoolGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tickets {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .visit {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .visitSkate {
+    position: absolute;
+    right: 0;
+    top: -8rem;
+    width: 9rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'kicker'
+      'title'
+      'note';
+  }
+
+  .darkInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .darkBall {
+    width: 12rem;
+  }
+
+  .rules {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    font-size: 1.02rem;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .barNote {
+    display: none;
+  }
+
+  .titleBig {
+    text-shadow:
+      3px 3px 0 var(--pink),
+      6px 6px 0 var(--orange),
+      9px 9px 0 var(--yellow),
+      12px 12px 0 var(--cyan);
+  }
+
+  .rinkWrap {
+    width: calc(100% - 5rem);
+    margin: 3rem 2.5rem;
+  }
+
+  .rink {
+    box-shadow:
+      0 0 0 5px var(--night),
+      0 0 0 13px var(--pink),
+      0 0 0 21px var(--orange),
+      0 0 0 29px var(--yellow),
+      0 0 0 37px var(--cyan);
+  }
+
+  .heroBall {
+    right: -2.5rem;
+    top: -3rem;
+    width: 7rem;
+  }
+
+  .heroSkate {
+    left: -2.8rem;
+    bottom: -3rem;
+    width: 8rem;
+  }
+
+  .rinkTag {
+    width: 8.4rem;
+    font-size: 0.82rem;
+  }
+
+  .rinkTagBig {
+    font-size: 1.1rem;
+  }
+
+  .board {
+    border-width: 9px;
+  }
+
+  .letters,
+  .letters tbody,
+  .letters tr,
+  .letters th,
+  .letters td {
+    display: block;
+  }
+
+  .letters tr {
+    display: grid;
+    grid-template-columns: 3.4rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      'day name price'
+      'day time price';
+    padding: 0.4rem 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--on-board) 12%, transparent);
+  }
+
+  .letters th,
+  .letters td {
+    height: auto;
+    padding: 0.15rem 0.2rem;
+    font-size: 1.1rem;
+    white-space: normal;
+    width: auto;
+  }
+
+  .letters th {
+    grid-area: day;
+  }
+
+  .lName {
+    grid-area: name;
+  }
+
+  .lTime {
+    grid-area: time;
+    font-size: 0.95rem;
+    opacity: 0.8;
+  }
+
+  .lPrice {
+    grid-area: price;
+  }
+
+  .boardTape {
+    left: -0.8rem;
+    bottom: -3.4rem;
+    width: 7.5rem;
+  }
+
+  .cubbies {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lessons,
+  .tickets,
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .badgeWrap {
+    width: calc(100% - 5rem);
+  }
+
+  .partyTape {
+    left: -0.8rem;
+    bottom: -3rem;
+    width: 7rem;
+  }
+
+  .lineup li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .luDj {
+    text-align: left;
+  }
+
+  .sign {
+    margin: 3rem 1.5rem 0;
+    box-shadow:
+      0 0 0 5px var(--night),
+      0 0 0 11px var(--pink),
+      0 0 0 17px var(--orange),
+      0 0 0 23px var(--yellow),
+      0 0 0 29px var(--cyan);
+  }
+
+  .visitSkate {
+    top: -6rem;
+    width: 7rem;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

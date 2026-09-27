@@ -1,0 +1,1839 @@
+/* ==========================================================================
+   LONGMEADOW EQUINE VETERINARY - horse vets at Longmeadow Farm, Westcote
+   The show ground and the stable yard. Every section is announced on a
+   painted stable board and numbered like a class in a show schedule; the
+   rosettes are built here in CSS (a pleated ring, a toothed inner ring, a
+   center disc and two notched ribbon tails) and carry the prices, the
+   emergency number and the champion's portrait. The clinic is four stable
+   doors along a yard, the week is a printed schedule of classes, and the
+   quarter-round moldings of the lead pattern are the carved trim behind
+   the portrait.
+   ========================================================================== */
+
+.page {
+  --meadow: #f2eddf;
+  --green: #1e4431;
+  --blue: #2f5aa8;
+  --red: #c23a36;
+  --gold: #d7a93e;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --slab: 'Arvo', Rockwell, 'Roboto Slab', Georgia, serif;
+  --serif: 'Crimson Pro', Georgia, 'Times New Roman', serif;
+  --text: var(--green);
+  --on-green: var(--meadow);
+  --on-blue: var(--meadow);
+  --on-red: var(--meadow);
+  --on-gold: var(--green);
+
+  /* Derived surfaces: every one a mix of the roles. */
+  --muted: color-mix(in oklab, var(--text) 72%, var(--meadow));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --panel: color-mix(in oklab, var(--meadow) 93%, var(--text));
+  --card: color-mix(in oklab, var(--meadow) 96%, var(--gold));
+  --green-muted: color-mix(in oklab, var(--on-green) 72%, var(--green));
+  --green-rule: color-mix(in oklab, var(--on-green) 22%, transparent);
+  --board-edge: color-mix(in oklab, var(--on-green) 45%, var(--green));
+  --portrait-light: color-mix(in oklab, var(--meadow) 82%, var(--gold));
+  --portrait-back: color-mix(in oklab, var(--gold) 58%, var(--meadow));
+  --accent-ink: color-mix(in oklab, var(--gold) 55%, var(--text));
+  --shoe-on-green: color-mix(in oklab, var(--gold) 50%, var(--on-green));
+  --door: color-mix(in oklab, var(--green) 78%, var(--on-green));
+  --plank: color-mix(in oklab, var(--green) 84%, var(--on-green));
+  --plank-seam: color-mix(in oklab, var(--green) 92%, var(--text));
+  --brace: color-mix(in oklab, var(--green) 58%, var(--on-green));
+  --shadow: color-mix(in oklab, var(--text) 22%, transparent);
+
+  font-family: var(--serif);
+  font-size: 1.14rem;
+  line-height: 1.5;
+  background: var(--meadow);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the surface's lightness, tinted toward the green. */
+    --text: color-mix(in oklab, oklch(from var(--meadow) clamp(0, (0.62 - l) * 1000, 1) 0 0) 84%, var(--green));
+    --on-green: color-mix(in oklab, oklch(from var(--green) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--meadow));
+    --on-blue: color-mix(in oklab, oklch(from var(--blue) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--meadow));
+    --on-red: color-mix(in oklab, oklch(from var(--red) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--meadow));
+    --on-gold: color-mix(in oklab, oklch(from var(--gold) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--green));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.7rem var(--gut);
+  background: var(--meadow);
+  border-bottom: 3px double var(--rule);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.markShoe {
+  width: 1.45rem;
+}
+
+.markName {
+  font-family: var(--slab);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem 1.5rem;
+}
+
+.nav a {
+  font-family: var(--slab);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.barCall {
+  display: grid;
+  padding: 0.4rem 1rem 0.45rem;
+  border-radius: 999px;
+  background: var(--red);
+  color: var(--on-red);
+  line-height: 1.1;
+  text-align: center;
+}
+
+.barCallLabel {
+  font-family: var(--slab);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.barCallNum {
+  font-family: var(--slab);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--gold);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+
+  .barCall:hover {
+    background: color-mix(in oklab, var(--red) 86%, var(--text));
+  }
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--meadow);
+  font-family: var(--slab);
+}
+
+/* ------------------------------------------------------------------ rosette
+   A rosette is a figure of stacked layers: two notched tails hanging from
+   the middle, a pleated ring with a scalloped edge, a toothed inner ring
+   and a disc for whatever it carries. --ro sets its width; the tails hang
+   below that square. The variants swap the ribbon colors; the disc stays
+   the meadow ground so the text on it is always --text. */
+
+.rosette {
+  --ro: 10rem;
+  --tail: 0.95;
+  --ro-a: var(--blue);
+  --ro-a2: color-mix(in oklab, var(--blue) 70%, var(--green));
+  --ro-b: var(--gold);
+  --ro-b2: color-mix(in oklab, var(--gold) 72%, var(--meadow));
+  --ro-c: var(--meadow);
+  --ro-on: var(--text);
+  position: relative;
+  flex: none;
+  width: var(--ro);
+  height: calc(var(--ro) * (0.45 + var(--tail)));
+  isolation: isolate;
+}
+
+.roRed,
+.ro_red {
+  --ro-a: var(--red);
+  --ro-a2: color-mix(in oklab, var(--red) 72%, var(--green));
+  --ro-b: var(--gold);
+  --ro-b2: color-mix(in oklab, var(--gold) 72%, var(--meadow));
+}
+
+.ro_blue {
+  --ro-a: var(--blue);
+  --ro-a2: color-mix(in oklab, var(--blue) 70%, var(--green));
+  --ro-b: var(--red);
+  --ro-b2: color-mix(in oklab, var(--red) 72%, var(--meadow));
+}
+
+.ro_gold {
+  --ro-a: var(--gold);
+  --ro-a2: color-mix(in oklab, var(--gold) 70%, var(--green));
+  --ro-b: var(--green);
+  --ro-b2: color-mix(in oklab, var(--green) 72%, var(--meadow));
+}
+
+.ro_green {
+  --ro-a: var(--green);
+  --ro-a2: color-mix(in oklab, var(--green) 72%, var(--meadow));
+  --ro-b: var(--gold);
+  --ro-b2: color-mix(in oklab, var(--gold) 72%, var(--meadow));
+}
+
+.roTail {
+  position: absolute;
+  z-index: -1;
+  top: calc(var(--ro) * 0.45);
+  width: calc(var(--ro) * 0.24);
+  height: calc(var(--ro) * var(--tail));
+  background: linear-gradient(
+    90deg,
+    var(--ro-a) 0 18%,
+    var(--ro-b) 18% 27%,
+    var(--ro-a) 27% 73%,
+    var(--ro-b) 73% 82%,
+    var(--ro-a) 82%
+  );
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - var(--ro) * 0.09), 0 100%);
+}
+
+.roTail:first-child {
+  left: calc(50% - var(--ro) * 0.235);
+  transform-origin: 100% 0;
+  transform: rotate(10deg);
+}
+
+.roTail:nth-child(2) {
+  left: calc(50% - var(--ro) * 0.005);
+  transform-origin: 0 0;
+  transform: rotate(-10deg);
+}
+
+.roRing {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--ro);
+  height: var(--ro);
+  background:
+    radial-gradient(circle, transparent 0 58%, color-mix(in oklab, var(--ro-a2) 30%, transparent) 100%),
+    repeating-conic-gradient(from 2deg, var(--ro-a) 0 5deg, var(--ro-a2) 5deg 10deg);
+  clip-path: polygon(50% 3%, 52.8% 1%, 55.6% 0.3%, 58.2% 1.6%, 60.5% 4.2%, 63.6% 2.8%, 66.5% 2.8%, 68.8% 4.6%, 70.4% 7.7%, 73.8% 7%, 76.6% 7.7%, 78.4% 9.9%, 79.3% 13.3%, 82.7% 13.4%, 85.4% 14.6%, 86.6% 17.3%, 86.7% 20.7%, 90.1% 21.6%, 92.3% 23.4%, 93% 26.2%, 92.3% 29.6%, 95.4% 31.2%, 97.2% 33.5%, 97.2% 36.4%, 95.8% 39.5%, 98.4% 41.8%, 99.7% 44.4%, 99% 47.2%, 97% 50%, 99% 52.8%, 99.7% 55.6%, 98.4% 58.2%, 95.8% 60.5%, 97.2% 63.6%, 97.2% 66.5%, 95.4% 68.8%, 92.3% 70.4%, 93% 73.8%, 92.3% 76.6%, 90.1% 78.4%, 86.7% 79.3%, 86.6% 82.7%, 85.4% 85.4%, 82.7% 86.6%, 79.3% 86.7%, 78.4% 90.1%, 76.6% 92.3%, 73.8% 93%, 70.4% 92.3%, 68.8% 95.4%, 66.5% 97.2%, 63.6% 97.2%, 60.5% 95.8%, 58.2% 98.4%, 55.6% 99.7%, 52.8% 99%, 50% 97%, 47.2% 99%, 44.4% 99.7%, 41.8% 98.4%, 39.5% 95.8%, 36.4% 97.2%, 33.5% 97.2%, 31.2% 95.4%, 29.6% 92.3%, 26.2% 93%, 23.4% 92.3%, 21.6% 90.1%, 20.7% 86.7%, 17.3% 86.6%, 14.6% 85.4%, 13.4% 82.7%, 13.3% 79.3%, 9.9% 78.4%, 7.7% 76.6%, 7% 73.8%, 7.7% 70.4%, 4.6% 68.8%, 2.8% 66.5%, 2.8% 63.6%, 4.2% 60.5%, 1.6% 58.2%, 0.3% 55.6%, 1% 52.8%, 3% 50%, 1% 47.2%, 0.3% 44.4%, 1.6% 41.8%, 4.2% 39.5%, 2.8% 36.4%, 2.8% 33.5%, 4.6% 31.2%, 7.7% 29.6%, 7% 26.2%, 7.7% 23.4%, 9.9% 21.6%, 13.3% 20.7%, 13.4% 17.3%, 14.6% 14.6%, 17.3% 13.4%, 20.7% 13.3%, 21.6% 9.9%, 23.4% 7.7%, 26.2% 7%, 29.6% 7.7%, 31.2% 4.6%, 33.5% 2.8%, 36.4% 2.8%, 39.5% 4.2%, 41.8% 1.6%, 44.4% 0.3%, 47.2% 1%);
+}
+
+.roInner {
+  position: absolute;
+  left: calc(var(--ro) * 0.14);
+  top: calc(var(--ro) * 0.14);
+  width: calc(var(--ro) * 0.72);
+  height: calc(var(--ro) * 0.72);
+  background: repeating-conic-gradient(from 4deg, var(--ro-b) 0 8.18deg, var(--ro-b2) 8.18deg 16.36deg);
+  clip-path: polygon(50% 0%, 56.4% 5.5%, 64.1% 2%, 68.7% 9.1%, 77% 7.9%, 79.5% 16%, 87.8% 17.3%, 87.9% 25.7%, 95.5% 29.2%, 93.2% 37.3%, 99.5% 42.9%, 95% 50%, 99.5% 57.1%, 93.2% 62.7%, 95.5% 70.8%, 87.9% 74.3%, 87.8% 82.7%, 79.5% 84%, 77% 92.1%, 68.7% 90.9%, 64.1% 98%, 56.4% 94.5%, 50% 100%, 43.6% 94.5%, 35.9% 98%, 31.3% 90.9%, 23% 92.1%, 20.5% 84%, 12.2% 82.7%, 12.1% 74.3%, 4.5% 70.8%, 6.8% 62.7%, 0.5% 57.1%, 5% 50%, 0.5% 42.9%, 6.8% 37.3%, 4.5% 29.2%, 12.1% 25.7%, 12.2% 17.3%, 20.5% 16%, 23% 7.9%, 31.3% 9.1%, 35.9% 2%, 43.6% 5.5%);
+}
+
+.roDisc {
+  position: absolute;
+  left: calc(var(--ro) * 0.23);
+  top: calc(var(--ro) * 0.23);
+  display: grid;
+  place-items: center;
+  width: calc(var(--ro) * 0.54);
+  height: calc(var(--ro) * 0.54);
+  border-radius: 50%;
+  background: var(--ro-c);
+  color: var(--ro-on);
+  text-align: center;
+  box-shadow:
+    0 0 0 calc(var(--ro) * 0.016) var(--ro-a),
+    inset 0 0 0 calc(var(--ro) * 0.012) color-mix(in oklab, var(--ro-c) 70%, var(--ro-a));
+}
+
+/* ------------------------------------------------------------------- common */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 7rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  max-width: 44rem;
+  margin: 0 auto clamp(2.5rem, 5vw, 3.8rem);
+  text-align: center;
+}
+
+.secNum {
+  font-family: var(--slab);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* The painted stable board every section is announced on. */
+.board {
+  position: relative;
+  display: inline-block;
+  padding: 0.7rem 2.6rem 0.75rem;
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 0.9rem, color-mix(in oklab, var(--green) 90%, var(--on-green)) 0.9rem calc(0.9rem + 1px)),
+    var(--green);
+  color: var(--on-green);
+  font-family: var(--slab);
+  font-size: clamp(1.5rem, 3vw, 2.15rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  box-shadow:
+    inset 0 0 0 5px var(--green),
+    inset 0 0 0 7px var(--board-edge),
+    0 10px 20px -14px var(--shadow);
+}
+
+/* Two brass screw heads, one at each end. */
+.board::before,
+.board::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-top: -0.275rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, color-mix(in oklab, var(--gold) 50%, var(--meadow)), var(--gold) 60%, color-mix(in oklab, var(--gold) 60%, var(--green)));
+}
+
+.board::before {
+  left: 1rem;
+}
+
+.board::after {
+  right: 1rem;
+}
+
+.secLede {
+  max-width: 38rem;
+  font-size: 1.22rem;
+  color: var(--muted);
+}
+
+.btn,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.7rem 1.5rem;
+  border-radius: 4px;
+  font-family: var(--slab);
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.btn {
+  border: 0;
+  background: var(--green);
+  color: var(--on-green);
+}
+
+.btnGhost {
+  border: 2px solid var(--text);
+  color: var(--text);
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    background: color-mix(in oklab, var(--green) 82%, var(--text));
+  }
+
+  .btnGhost:hover {
+    background: var(--panel);
+  }
+}
+
+/* A horseshoe for every bullet. */
+.shoeList {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.shoeList li {
+  display: grid;
+  grid-template-columns: 1.15rem minmax(0, 1fr);
+  gap: 0.7rem;
+  align-items: start;
+}
+
+.shoe {
+  width: 1.05rem;
+  margin-top: 0.2rem;
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+  min-height: min(52rem, calc(100vh - 3.5rem));
+  border-bottom: 3px double var(--rule);
+}
+
+.heroText {
+  display: grid;
+  align-content: center;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 38rem;
+  justify-self: end;
+  padding: clamp(3rem, 7vw, 5.5rem) clamp(1.5rem, 4vw, 4rem) clamp(3rem, 7vw, 5.5rem) var(--gut);
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-family: var(--slab);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.kicker::before {
+  content: '';
+  flex: none;
+  width: 2.2rem;
+  height: 3px;
+  background: linear-gradient(90deg, var(--blue) 0 33%, var(--red) 33% 66%, var(--gold) 66%);
+}
+
+.name {
+  font-family: var(--slab);
+  font-size: clamp(2.7rem, 5vw, 4.7rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+
+.name em {
+  display: block;
+  margin-top: 0.4rem;
+  font-family: var(--serif);
+  font-size: 0.72em;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+.lede {
+  max-width: 32rem;
+  font-size: clamp(1.18rem, 1.6vw, 1.35rem);
+  line-height: 1.45;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 0.6rem;
+  border-top: 1px solid var(--rule);
+}
+
+.heroFacts div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.2rem;
+  padding: 1rem 1rem 0 0;
+}
+
+.heroFacts div + div {
+  padding-left: 1rem;
+  border-left: 1px solid var(--rule);
+}
+
+.heroFacts dt {
+  font-size: 0.95rem;
+  line-height: 1.25;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  font-family: var(--slab);
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.heroArt {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 34rem;
+  overflow: hidden;
+  padding: 3rem 1.5rem 2rem;
+  background: var(--panel);
+}
+
+.molding {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.heroRosette {
+  --ro: clamp(17rem, 30vw, 27rem);
+  --tail: 0.72;
+  filter: drop-shadow(0 18px 24px var(--shadow));
+}
+
+.heroRosette .roDisc {
+  background: var(--portrait-back);
+  overflow: hidden;
+}
+
+.portrait {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.horse {
+  position: absolute;
+  left: -2%;
+  top: 4%;
+  width: 104%;
+}
+
+.heroCaption {
+  position: absolute;
+  left: calc(100% - var(--ro) * 0.2);
+  bottom: calc(var(--ro) * 0.12);
+  display: grid;
+  gap: 0.25rem;
+  width: 12.5rem;
+  padding: 0.85rem 1rem 0.95rem;
+  border-radius: 3px;
+  background: var(--meadow);
+  color: var(--text);
+  box-shadow: 0 0 0 1px var(--rule), 0 12px 20px -12px var(--shadow);
+  transform: rotate(3deg);
+}
+
+.capKicker {
+  font-family: var(--slab);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.capName {
+  font-size: 1.02rem;
+  font-style: italic;
+  line-height: 1.25;
+}
+
+/* -------------------------------------------------------------- emergencies */
+
+.emergency {
+  position: relative;
+  margin-top: clamp(4rem, 8vw, 7rem);
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut) calc(clamp(3.5rem, 7vw, 5rem) + 90px);
+  background: var(--green);
+  color: var(--on-green);
+}
+
+.emInner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+  max-width: 68rem;
+  margin: 0 auto;
+}
+
+.emRosette {
+  --ro: clamp(16rem, 27vw, 24rem);
+  --tail: 0.78;
+}
+
+.emDisc {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0 0.6rem;
+}
+
+.emHours {
+  font-family: var(--slab);
+  font-size: calc(var(--ro) * 0.042);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.emNum {
+  font-family: var(--slab);
+  font-size: calc(var(--ro) * 0.066);
+  font-weight: 700;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.emEvery {
+  font-size: calc(var(--ro) * 0.048);
+  font-style: italic;
+  line-height: 1.15;
+  color: var(--muted);
+}
+
+.emText {
+  display: grid;
+  justify-items: start;
+  gap: 1.1rem;
+}
+
+.emText .secNum {
+  color: var(--green-muted);
+}
+
+.emText .board {
+  background: var(--meadow);
+  color: var(--text);
+  box-shadow:
+    inset 0 0 0 5px var(--meadow),
+    inset 0 0 0 7px var(--rule);
+}
+
+.emLede {
+  max-width: 34rem;
+  font-size: 1.28rem;
+  line-height: 1.45;
+}
+
+.emListTitle {
+  margin-top: 0.6rem;
+  font-family: var(--slab);
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--green-muted);
+}
+
+.emText .shoeList {
+  max-width: 36rem;
+}
+
+.emNote {
+  max-width: 34rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--green-rule);
+  font-style: italic;
+  color: var(--green-muted);
+}
+
+.fence {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 90px;
+  overflow: hidden;
+}
+
+/* ----------------------------------------------------------------- services */
+
+.services {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.service {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'class ro'
+    'name ro'
+    'body body';
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  column-gap: 1rem;
+  row-gap: 0.55rem;
+  align-content: start;
+  padding: 1.6rem 1.4rem 1.8rem 1.6rem;
+  border: 1px solid var(--rule);
+  border-top: 6px solid var(--green);
+  border-radius: 3px;
+  background: var(--card);
+}
+
+.serviceClass {
+  grid-area: class;
+  align-self: end;
+  font-family: var(--slab);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.serviceName {
+  grid-area: name;
+  align-self: start;
+  font-family: var(--slab);
+  font-size: 1.32rem;
+  line-height: 1.2;
+}
+
+.serviceBody {
+  grid-area: body;
+  margin-top: 0.4rem;
+  font-size: 1.08rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.roSmall {
+  --ro: 6.6rem;
+  --tail: 0.66;
+  grid-area: ro;
+  margin: -0.5rem -0.2rem -0.4rem 0;
+}
+
+.priceTag {
+  display: grid;
+  gap: 0.05rem;
+  line-height: 1;
+}
+
+.pricePer {
+  font-family: var(--serif);
+  font-size: calc(var(--ro) * 0.095);
+  font-style: italic;
+  line-height: 1.05;
+  color: var(--muted);
+}
+
+.priceNum {
+  font-family: var(--slab);
+  font-size: calc(var(--ro) * 0.16);
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------- clinic */
+
+.yard {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+  padding: 2.5rem clamp(1rem, 2.4vw, 2rem) 0;
+  border-radius: 4px 4px 0 0;
+  background:
+    linear-gradient(180deg, transparent calc(100% - 1.4rem), color-mix(in oklab, var(--text) 16%, var(--meadow)) calc(100% - 1.4rem)),
+    color-mix(in oklab, var(--meadow) 88%, var(--red));
+}
+
+.stall {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 0.9rem;
+  justify-items: center;
+}
+
+.stallBoard {
+  padding: 0.4rem 1.2rem 0.45rem;
+  border-radius: 3px;
+  background: var(--meadow);
+  font-family: var(--slab);
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: inset 0 0 0 2px var(--gold), 0 6px 12px -8px var(--shadow);
+}
+
+/* The door: a frame, an open top half with the stall dark inside it, and
+   a boarded bottom half with its Z brace and a bolt. */
+.door {
+  display: grid;
+  grid-template-rows: minmax(12rem, 1fr) 9.5rem;
+  width: 100%;
+  padding: 0.55rem 0.55rem 0;
+  border-radius: 6px 6px 0 0;
+  background: var(--door);
+}
+
+.doorTop {
+  display: grid;
+  align-items: center;
+  padding: 1.1rem 1.1rem 1rem;
+  border-radius: 3px 3px 0 0;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--green) 70%, transparent), transparent 50%),
+    var(--green);
+  color: var(--on-green);
+}
+
+.doorText {
+  font-size: 1.02rem;
+  line-height: 1.4;
+}
+
+.doorBottom {
+  position: relative;
+  border-top: 5px solid var(--brace);
+  background:
+    linear-gradient(180deg, transparent 0 14%, var(--brace) 14% 24%, transparent 24% 76%, var(--brace) 76% 86%, transparent 86%),
+    linear-gradient(to top right, transparent calc(50% - 0.35rem), var(--brace) calc(50% - 0.35rem) calc(50% + 0.35rem), transparent calc(50% + 0.35rem)),
+    repeating-linear-gradient(90deg, var(--plank) 0 calc(20% - 2px), var(--plank-seam) calc(20% - 2px) 20%);
+}
+
+.bolt {
+  position: absolute;
+  right: 10%;
+  top: 38%;
+  width: 22%;
+  height: 0.5rem;
+  border-radius: 2px;
+  background: var(--gold);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--gold) 60%, var(--green));
+}
+
+.stallFacts {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  padding-bottom: 2.2rem;
+}
+
+.stallFacts li {
+  padding: 0.12rem 0.6rem;
+  border-radius: 999px;
+  background: var(--meadow);
+  font-size: 0.92rem;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.clinicFacts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid var(--rule);
+  border-top: 0;
+  border-radius: 0 0 4px 4px;
+}
+
+.clinicFacts div {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1.4rem 1.5rem 1.5rem;
+}
+
+.clinicFacts div + div {
+  border-left: 1px solid var(--rule);
+}
+
+.clinicFacts dt {
+  font-family: var(--slab);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.clinicFacts dd {
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+/* ------------------------------------------------------------------- visits */
+
+.visitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.ringMap {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.ringField {
+  position: relative;
+  grid-area: 1 / 1;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.rings {
+  position: relative;
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+}
+
+.rings > span {
+  grid-area: 1 / 1;
+  display: block;
+  border-radius: 50%;
+}
+
+.ringC,
+.ringB,
+.ringA {
+  position: relative;
+  aspect-ratio: 1;
+  border: 2px dashed color-mix(in oklab, var(--text) 50%, transparent);
+}
+
+.ringC {
+  width: 88%;
+  background: color-mix(in oklab, var(--meadow) 92%, var(--gold));
+  box-shadow: 0 0 0 0.6rem var(--meadow);
+}
+
+.ringB {
+  width: 62%;
+  background: color-mix(in oklab, var(--meadow) 80%, var(--gold));
+}
+
+.ringA {
+  width: 36%;
+  background: color-mix(in oklab, var(--meadow) 64%, var(--gold));
+}
+
+.ringLabel {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  margin: -1rem 0 0 -1rem;
+  border-radius: 50%;
+  background: var(--meadow);
+  font-family: var(--slab);
+  font-weight: 700;
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ringHome {
+  display: grid !important;
+  place-items: center;
+  width: 12%;
+  aspect-ratio: 1;
+  background: var(--green);
+}
+
+.ringShoe {
+  width: 52%;
+}
+
+.ringNote {
+  font-size: 1rem;
+  font-style: italic;
+  text-align: center;
+  color: var(--muted);
+}
+
+.zoneWrap {
+  display: grid;
+  gap: 2rem;
+}
+
+.zones {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.08rem;
+}
+
+.zones th,
+.zones td {
+  padding: 0.95rem 0.9rem 0.95rem 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.zones thead th {
+  padding-top: 0;
+  font-family: var(--slab);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--text);
+}
+
+.zones tbody td:nth-child(2) {
+  font-family: var(--slab);
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.zoneChip {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--on-green);
+  font-family: var(--slab);
+  font-weight: 700;
+}
+
+.colPlaces {
+  color: var(--muted);
+}
+
+.zones .num {
+  padding-right: 0;
+  text-align: right;
+  font-family: var(--slab);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.zones thead .num {
+  font-size: 0.72rem;
+}
+
+.visitRules {
+  display: grid;
+  gap: 1rem;
+}
+
+.visitRules div {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  border-left: 4px solid var(--gold);
+  background: var(--panel);
+}
+
+.visitRules dt {
+  font-family: var(--slab);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.visitRules dd {
+  line-height: 1.4;
+}
+
+/* -------------------------------------------------------------------- plans */
+
+.planList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+.plan {
+  display: grid;
+  justify-items: center;
+  gap: 0.8rem;
+  padding: 0 1.8rem 2rem;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--card);
+  text-align: center;
+}
+
+.planTop {
+  margin-top: -1.5rem;
+  border: 2px solid var(--text);
+}
+
+.roPlan {
+  --ro: 11rem;
+  --tail: 0.62;
+  margin-top: -1.2rem;
+  margin-bottom: -0.4rem;
+}
+
+.planPrice {
+  font-family: var(--slab);
+  font-size: calc(var(--ro) * 0.17);
+  font-weight: 700;
+}
+
+.planPlace {
+  font-family: var(--slab);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.planName {
+  font-family: var(--slab);
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.planWho {
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.plan .shoeList {
+  width: 100%;
+  margin-top: 0.4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  text-align: left;
+}
+
+.trim {
+  position: relative;
+  height: 72px;
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+/* ----------------------------------------------------------------- schedule */
+
+.schedule {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.schedCover {
+  position: sticky;
+  top: 6rem;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 4;
+  padding: 2rem;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px var(--rule), 0 24px 40px -28px var(--shadow);
+}
+
+.quilt {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.coverCard {
+  position: relative;
+  display: grid;
+  gap: 0.8rem;
+  width: 100%;
+  max-width: 20rem;
+  padding: 2rem 1.6rem;
+  border-radius: 2px;
+  background: var(--meadow);
+  text-align: center;
+  box-shadow: inset 0 0 0 4px var(--meadow), inset 0 0 0 5px var(--text), 0 14px 24px -12px var(--shadow);
+}
+
+.coverSmall {
+  font-family: var(--slab);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.coverTitle {
+  font-family: var(--slab);
+  font-size: clamp(1.9rem, 3vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.coverWeek {
+  font-size: 1.25rem;
+  font-style: italic;
+}
+
+.classes {
+  display: grid;
+  border-top: 3px double var(--rule);
+}
+
+.classRow {
+  display: grid;
+  grid-template-columns: 3.4rem 8.5rem minmax(0, 1fr) auto;
+  gap: 1.2rem;
+  align-items: baseline;
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.classNum {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  align-self: center;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--on-green);
+  font-family: var(--slab);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.classWhen {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.classDay {
+  font-family: var(--slab);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.classTime {
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+.classBody {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.className {
+  font-family: var(--slab);
+  font-size: 1.12rem;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.classRing {
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.classVet {
+  font-size: 1.02rem;
+  font-style: italic;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------- vets */
+
+.vets {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.vet {
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.roVet {
+  --ro: 8.5rem;
+  --tail: 0.7;
+}
+
+.vetInitials {
+  font-family: var(--slab);
+  font-size: calc(var(--ro) * 0.17);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.vetText {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.vetName {
+  font-family: var(--slab);
+  font-size: 1.3rem;
+}
+
+.vetRole {
+  font-family: var(--slab);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.vetFocus {
+  line-height: 1.4;
+}
+
+.vetOwn {
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--rule);
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- register */
+
+.register {
+  padding-bottom: clamp(4rem, 8vw, 7rem);
+}
+
+.regGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.form {
+  display: grid;
+  justify-items: start;
+  gap: 1.2rem;
+}
+
+.formLede {
+  max-width: 34rem;
+  font-size: 1.2rem;
+  color: var(--muted);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+  width: 100%;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--slab);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 2.9rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid color-mix(in oklab, var(--text) 32%, transparent);
+  border-radius: 3px;
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
+  font-size: 1.08rem;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+
+.office {
+  display: grid;
+  gap: 1rem;
+  padding: 2rem 1.8rem;
+  border-radius: 6px;
+  background: var(--green);
+  color: var(--on-green);
+  box-shadow: inset 0 0 0 6px var(--green), inset 0 0 0 8px var(--board-edge);
+}
+
+.officeBoard {
+  font-family: var(--slab);
+  font-size: 1.1rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.address {
+  font-family: var(--slab);
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+.officeNote {
+  color: var(--green-muted);
+  line-height: 1.4;
+}
+
+.hours {
+  display: grid;
+  border-top: 1px solid var(--green-rule);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--green-rule);
+}
+
+.hours dt {
+  color: var(--green-muted);
+}
+
+.hours dd {
+  font-family: var(--slab);
+  font-size: 0.95rem;
+  text-align: right;
+}
+
+.contact a {
+  font-family: var(--slab);
+  font-size: 1rem;
+  border-bottom: 1px solid var(--green-rule);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  position: relative;
+  background: var(--green);
+  color: var(--on-green);
+}
+
+.rug {
+  position: relative;
+  height: 80px;
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 3rem var(--gut) 3.5rem;
+  text-align: center;
+}
+
+.footShoe {
+  width: 3.2rem;
+  margin-bottom: 0.4rem;
+}
+
+.footName {
+  font-family: var(--slab);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.footAddr {
+  font-style: italic;
+  color: var(--green-muted);
+}
+
+.footSmall {
+  font-size: 1rem;
+  color: var(--green-muted);
+}
+
+.footSmall a {
+  color: var(--on-green);
+  border-bottom: 1px solid var(--green-rule);
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .barCall {
+    justify-self: end;
+  }
+
+}
+
+@media (max-width: 1020px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroText {
+    justify-self: stretch;
+    max-width: 44rem;
+  }
+
+  .heroArt {
+    min-height: 36rem;
+  }
+
+  .heroCaption {
+    left: auto;
+    right: calc(var(--ro) * -0.1);
+  }
+
+  .emInner {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+
+  .services {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .yard {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .clinicFacts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .clinicFacts div:nth-child(3) {
+    border-left: 0;
+  }
+
+  .clinicFacts div:nth-child(n + 3) {
+    border-top: 1px solid var(--rule);
+  }
+
+  .visitGrid,
+  .schedule,
+  .regGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ringMap {
+    max-width: 30rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .schedCover {
+    position: relative;
+    top: auto;
+    aspect-ratio: auto;
+    min-height: 20rem;
+  }
+
+  .planList {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 30rem;
+    margin: 0 auto;
+    gap: 3rem;
+  }
+
+  .planTop {
+    margin-top: 0;
+  }
+
+  .vets {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 3rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    font-size: 1.08rem;
+  }
+
+  .barCallLabel {
+    display: none;
+  }
+
+  .barCall {
+    padding: 0.45rem 0.75rem;
+  }
+
+  .barCallNum {
+    font-size: 0.8rem;
+  }
+
+  .markName {
+    font-size: 1.05rem;
+  }
+
+  .heroFacts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroFacts div,
+  .heroFacts div + div {
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.7rem 0;
+    border-left: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .heroArt {
+    min-height: 28rem;
+    padding: 2rem 1rem 3rem;
+  }
+
+  .heroRosette {
+    --ro: min(17rem, 72vw);
+  }
+
+  .heroArt {
+    padding-bottom: 7.5rem;
+  }
+
+  .heroCaption {
+    right: auto;
+    left: 50%;
+    bottom: -5.6rem;
+    width: 15rem;
+    margin-left: -7.5rem;
+    transform: rotate(-2deg);
+  }
+
+  .emRosette {
+    --ro: min(17rem, 76vw);
+  }
+
+  .board {
+    padding: 0.6rem 2rem 0.65rem;
+    font-size: 1.35rem;
+    letter-spacing: 0.08em;
+  }
+
+  .board::before {
+    left: 0.7rem;
+  }
+
+  .board::after {
+    right: 0.7rem;
+  }
+
+  .services,
+  .yard,
+  .vets {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .door {
+    grid-template-rows: auto 7rem;
+  }
+
+  .doorTop {
+    min-height: 9rem;
+  }
+
+  .clinicFacts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .clinicFacts div + div {
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .zones thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .zones tbody tr {
+    display: grid;
+    grid-template-columns: 2.8rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      'z d f'
+      'z p f';
+    column-gap: 0.4rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .zones tbody th,
+  .zones tbody td {
+    padding: 0;
+    border: 0;
+  }
+
+  .zones tbody th {
+    grid-area: z;
+  }
+
+  .zones tbody td:nth-child(2) {
+    grid-area: d;
+  }
+
+  .zones tbody .colPlaces {
+    grid-area: p;
+    font-size: 0.98rem;
+    line-height: 1.3;
+  }
+
+  .zones tbody .num {
+    grid-area: f;
+    align-self: center;
+  }
+
+  .visitRules div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.3rem;
+  }
+
+  .classRow {
+    grid-template-columns: 3rem minmax(0, 1fr);
+    row-gap: 0.4rem;
+  }
+
+  .classWhen {
+    grid-column: 2;
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+  }
+
+  .classNum {
+    grid-row: 1 / span 3;
+    align-self: start;
+  }
+
+  .classBody,
+  .classVet {
+    grid-column: 2;
+    text-align: left;
+  }
+
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plan {
+    padding: 0 1.2rem 1.6rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .barCall {
+    display: none;
+  }
+}

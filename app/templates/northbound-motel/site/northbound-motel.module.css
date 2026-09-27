@@ -1,0 +1,1758 @@
+/* ==========================================================================
+   NORTHBOUND MOTEL - roadside motel, Highway 9 at Red Mesa Junction
+   Souvenir postcards and a roadside sign. The hero is the motel's own
+   photograph with its sky left empty, and the pattern behind it is the
+   sunset. A tall sign stands in front: a bulb-bordered board with the
+   name in script and neon, an arrow, and the VACANCY panel. Rooms hang on
+   diamond key fobs; the amenities are postcards with deckled edges, a
+   perforated stamp, a postmark and a note in somebody's hand. House
+   rules are on the office letter board; booking is a registration card.
+   ========================================================================== */
+
+.page {
+  --sand: #f4e5cd;
+  --teal: #1c7c84;
+  --sunset: #f17a35;
+  --pink: #e75b7e;
+  --brown: #3a2a1f;
+  --text: var(--brown);
+  --on-teal: var(--sand);
+  --on-brown: var(--sand);
+  --on-pink: var(--brown);
+  --on-sunset: var(--brown);
+  --script: 'Grand Hotel', 'Brush Script MT', cursive;
+  --neon: 'Monoton', 'Barlow Semi Condensed', sans-serif;
+  --sans: 'Barlow Semi Condensed', 'Arial Narrow', 'Helvetica Neue', sans-serif;
+  --hand: 'Nothing You Could Do', 'Bradley Hand', 'Segoe Print', cursive;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 76rem;
+
+  /* Derived: never roles of their own. */
+  --muted: color-mix(in oklab, var(--text) 72%, var(--sand));
+  --rule: color-mix(in oklab, var(--text) 20%, transparent);
+  --deep: color-mix(in oklab, var(--sand) 84%, var(--brown));
+  --teal-ink: color-mix(in oklab, var(--teal) 56%, var(--text));
+  --pink-ink: color-mix(in oklab, var(--pink) 55%, var(--text));
+  --metal: color-mix(in oklab, var(--sand) 55%, var(--brown));
+  --metal-light: color-mix(in oklab, var(--sand) 82%, var(--brown));
+  --glow: color-mix(in oklab, var(--pink) 75%, transparent);
+  --shadow: color-mix(in oklab, var(--brown) 45%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1.12rem;
+  line-height: 1.5;
+  background: var(--sand);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by each surface's lightness, tinted toward an ink. */
+    --text: color-mix(in oklab, oklch(from var(--sand) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--brown));
+    --on-teal: color-mix(in oklab, oklch(from var(--teal) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--sand));
+    --on-brown: color-mix(in oklab, oklch(from var(--brown) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--sand));
+    --on-pink: oklch(from var(--pink) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-sunset: oklch(from var(--sunset) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.55rem var(--gut);
+  background: color-mix(in srgb, var(--sand) 95%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 3px solid var(--teal);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.markScript {
+  font-family: var(--script);
+  font-size: 2.05rem;
+  line-height: 1;
+  color: var(--teal-ink);
+}
+
+.markMotel {
+  font-family: var(--neon);
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  color: var(--pink-ink);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.2rem clamp(1rem, 2vw, 2rem);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.nav a {
+  color: var(--muted);
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--sunset);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 6px;
+  }
+}
+
+.barVacancy {
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--brown);
+  color: var(--on-brown);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-shadow: 0 0 0.35em var(--glow), 0 0 0.8em var(--glow);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  font-weight: 700;
+  --template-menu-bg: var(--sand);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  height: clamp(42rem, 92vh, 58rem);
+  overflow: hidden;
+  background: var(--sand);
+}
+
+/* The sunset: beams thrown up behind the mesas. */
+.sky {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 34%;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--pink) 0%, color-mix(in oklab, var(--pink) 50%, var(--sunset)) 38%, var(--sunset) 70%, color-mix(in oklab, var(--sunset) 55%, var(--sand)) 100%);
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+}
+
+.scene::after {
+  /* the lot fades into the sand of the page */
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 16%;
+  background: linear-gradient(transparent, var(--sand));
+}
+
+.road {
+  position: absolute;
+  inset: 0;
+}
+
+/* A route shield and the junction's plate, top left in the sky. */
+.shield {
+  position: absolute;
+  z-index: 2;
+  top: 2rem;
+  left: var(--gut);
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+}
+
+.shieldRoute {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  width: 6.4rem;
+  height: 6.8rem;
+  padding-bottom: 0.6rem;
+  background: var(--brown);
+  clip-path: polygon(0 10%, 14% 0, 50% 7%, 86% 0, 100% 10%, 100% 52%, 88% 78%, 50% 100%, 12% 78%, 0 52%);
+  filter: drop-shadow(0 6px 8px var(--shadow));
+}
+
+.shieldRoute::before {
+  content: '';
+  position: absolute;
+  inset: 0.3rem;
+  background: var(--sand);
+  clip-path: inherit;
+}
+
+.shieldRoute span,
+.shieldRoute strong {
+  position: relative;
+  color: var(--text);
+}
+
+.shieldRoute span {
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.shieldRoute strong {
+  font-weight: 800;
+  font-size: 3rem;
+  line-height: 0.95;
+}
+
+.shieldPlace {
+  padding: 0.25rem 0.7rem;
+  background: var(--teal);
+  color: var(--on-teal);
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 2px var(--teal), inset 0 0 0 3px var(--on-teal);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* The roadside sign: board, arrow, vacancy panel and pole. */
+.sign {
+  position: absolute;
+  z-index: 2;
+  top: 1.8rem;
+  bottom: 0;
+  right: clamp(1rem, 7vw, 7rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 19rem;
+}
+
+.signBoard {
+  position: relative;
+  width: 100%;
+  padding: 2.2rem 1.2rem 1.6rem;
+  background: var(--teal);
+  color: var(--on-teal);
+  text-align: center;
+  border: 0.45rem solid var(--sand);
+  border-radius: 2.2rem 2.2rem 0.9rem 0.9rem;
+  box-shadow: 0 0 0 0.3rem var(--brown), 0 26px 40px -20px var(--shadow);
+}
+
+.signBoard::before {
+  /* the bulbs */
+  content: '';
+  position: absolute;
+  inset: 0.45rem;
+  border: 0.42rem dotted var(--sunset);
+  border-radius: 1.7rem 1.7rem 0.5rem 0.5rem;
+  pointer-events: none;
+}
+
+.signName {
+  display: grid;
+  justify-items: center;
+}
+
+.signScript {
+  font-family: var(--script);
+  font-size: 4.1rem;
+  line-height: 1;
+  rotate: -7deg;
+  text-shadow: 0.05em 0.05em 0 var(--brown);
+}
+
+.signMotel {
+  margin-top: 0.7rem;
+  font-family: var(--neon);
+  font-size: 2.7rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 0.12em var(--pink), 0 0 0.4em var(--glow), 0 0 0.9em var(--glow);
+}
+
+.signSince {
+  margin-top: 0.9rem;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.signArrow {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  width: 16rem;
+  height: 5.2rem;
+  margin: -1.6rem 0 0 -9.5rem;
+  background:
+    radial-gradient(circle, var(--sand) 0 0.18rem, transparent 0.21rem) 0.3rem 0.3rem / 1.1rem 1.1rem,
+    var(--sunset);
+  clip-path: polygon(0 50%, 26% 0, 26% 27%, 100% 27%, 100% 73%, 26% 73%, 26% 100%);
+  rotate: -9deg;
+  filter: drop-shadow(0 5px 3px var(--shadow));
+}
+
+.vacancy {
+  display: flex;
+  gap: 0.7rem;
+  align-items: baseline;
+  margin-top: 0.2rem;
+  padding: 0.55rem 1.1rem 0.6rem;
+  background: var(--brown);
+  color: var(--on-brown);
+  border: 0.3rem solid var(--sand);
+  border-radius: 0.4rem;
+  box-shadow: 0 0 0 0.2rem var(--brown);
+}
+
+.vacNo {
+  font-family: var(--neon);
+  font-size: 1.3rem;
+  color: color-mix(in oklab, var(--on-brown) 22%, var(--brown));
+}
+
+.vacLit {
+  font-family: var(--neon);
+  font-size: 1.55rem;
+  text-shadow: 0 0 0.12em var(--pink), 0 0 0.4em var(--glow), 0 0 1em var(--glow);
+}
+
+.signExtras {
+  margin-top: 0.5rem;
+  padding: 0.2rem 0.8rem;
+  background: var(--sand);
+  color: var(--text);
+  border: 2px solid var(--brown);
+  font-weight: 800;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.signPole {
+  flex: 1;
+  width: 1.3rem;
+  min-height: 2rem;
+  background: linear-gradient(90deg, var(--metal), var(--metal-light) 40%, var(--metal) 70%, color-mix(in oklab, var(--metal) 70%, var(--brown)));
+}
+
+/* The welcome card, propped on the lot. */
+.welcome {
+  position: absolute;
+  z-index: 2;
+  left: var(--gut);
+  bottom: 2.2rem;
+  width: min(30rem, 52%);
+  padding: 1.5rem 1.7rem 1.6rem;
+  background: var(--sand);
+  color: var(--text);
+  border-top: 0.55rem solid var(--teal);
+  border-radius: 4px;
+  box-shadow: 0 24px 40px -18px var(--shadow);
+  rotate: -1.2deg;
+}
+
+.welcomeHello {
+  font-family: var(--script);
+  font-size: 2.5rem;
+  line-height: 1;
+  color: var(--teal-ink);
+}
+
+.lede {
+  margin-top: 0.6rem;
+  font-size: 1.12rem;
+  line-height: 1.45;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.1rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-block;
+  padding: 0.6rem 1.2rem 0.65rem;
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.btn {
+  background: var(--pink);
+  color: var(--on-pink);
+  box-shadow: 0 3px 0 color-mix(in oklab, var(--pink) 55%, var(--brown));
+}
+
+.btnGhost {
+  color: var(--text);
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    background: color-mix(in oklab, var(--pink) 85%, var(--brown));
+  }
+
+  .btnGhost:hover {
+    background: color-mix(in oklab, var(--text) 8%, transparent);
+  }
+}
+
+/* ------------------------------------------------------------ sections */
+
+.sec {
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.secHead {
+  display: grid;
+  justify-items: center;
+  max-width: 44rem;
+  margin: 0 auto clamp(2.4rem, 5vw, 3.6rem);
+  text-align: center;
+}
+
+.kicker {
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--pink-ink);
+}
+
+.secHead h2 {
+  font-family: var(--script);
+  font-size: clamp(3rem, 6vw, 4.6rem);
+  line-height: 1.05;
+  color: var(--teal-ink);
+}
+
+.secNote {
+  margin-top: 0.6rem;
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+
+/* ---------------------------------------------------------------- rooms */
+
+.fobPink {
+  --fob: var(--pink);
+  --on-fob: var(--on-pink);
+}
+
+.fobTeal {
+  --fob: var(--teal);
+  --on-fob: var(--on-teal);
+}
+
+.fobSunset {
+  --fob: var(--sunset);
+  --on-fob: var(--on-sunset);
+}
+
+.rooms {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 4vw, 3.5rem);
+}
+
+.room {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+}
+
+.fobWrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 15rem;
+  height: 17rem;
+}
+
+/* A diamond key fob, embossed, with the ring through its top corner. */
+.fob {
+  position: relative;
+  width: 10.8rem;
+  height: 10.8rem;
+  margin-top: 1.4rem;
+  rotate: 45deg;
+  border-radius: 1.5rem;
+  background: var(--fob);
+  box-shadow:
+    inset 0 0 0 0.5rem var(--fob),
+    inset 0 0 0 0.65rem color-mix(in oklab, var(--on-fob) 40%, transparent),
+    inset -0.4rem -0.5rem 1rem color-mix(in oklab, var(--brown) 22%, transparent),
+    inset 0.3rem 0.3rem 0.6rem color-mix(in oklab, var(--sand) 30%, transparent),
+    0 18px 26px -14px var(--shadow);
+}
+
+.fob::before {
+  /* the hole in the top corner */
+  content: '';
+  position: absolute;
+  top: 0.8rem;
+  left: 0.8rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  background: var(--sand);
+  box-shadow: inset 0.1rem 0.15rem 0.2rem var(--shadow);
+}
+
+.fobFace {
+  position: absolute;
+  inset: 1.4rem;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  rotate: -45deg;
+  color: var(--on-fob);
+  text-align: center;
+}
+
+.fobMotel,
+.fobPost {
+  font-weight: 800;
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.fobPost {
+  max-width: 7rem;
+  font-weight: 600;
+  font-size: 0.55rem;
+}
+
+.fobNo {
+  font-weight: 800;
+  font-size: 3.6rem;
+  line-height: 1;
+  text-shadow:
+    0 1px 0 color-mix(in oklab, var(--brown) 35%, transparent),
+    0 -1px 0 color-mix(in oklab, var(--on-fob) 30%, transparent);
+}
+
+.keyRing {
+  position: absolute;
+  z-index: 2;
+  top: 0.4rem;
+  left: 50%;
+  width: 2.8rem;
+  height: 2.8rem;
+  translate: -50% 0;
+  border: 0.28rem solid var(--metal);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--brown) 30%, transparent);
+}
+
+/* The key itself, hanging off the ring. */
+.key {
+  position: absolute;
+  z-index: 1;
+  top: 2.3rem;
+  left: calc(50% + 1rem);
+  width: 0.6rem;
+  height: 4.4rem;
+  border-radius: 1px;
+  background: linear-gradient(90deg, var(--metal), var(--metal-light), var(--metal));
+  rotate: -62deg;
+  transform-origin: 50% 0;
+  box-shadow:
+    0.5rem 3.1rem 0 -0.08rem var(--metal),
+    0.5rem 3.7rem 0 -0.08rem var(--metal);
+}
+
+.key::before {
+  content: '';
+  position: absolute;
+  top: -1.3rem;
+  left: -0.6rem;
+  width: 1.8rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, transparent 0 0.3rem, var(--metal) 0.32rem);
+}
+
+.roomCard {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+  text-align: center;
+}
+
+.roomCard h3 {
+  font-family: var(--script);
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.roomBeds {
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+}
+
+.roomExtras {
+  display: grid;
+  gap: 0.1rem;
+  font-size: 1.02rem;
+  color: var(--muted);
+}
+
+.rate {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  padding-top: 0.6rem;
+  border-top: 2px dashed var(--rule);
+}
+
+.rate strong {
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.rate span {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.weekly {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ postcards */
+
+.rackSec {
+  background: var(--deep);
+  border-top: 3px solid var(--teal);
+  border-bottom: 3px solid var(--teal);
+}
+
+.rackInner {
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 3.5vw, 3rem);
+}
+
+.cardPair {
+  display: grid;
+  align-content: start;
+  filter: drop-shadow(0 14px 16px var(--shadow));
+}
+
+/* Deckled edges: a small zigzag round all four sides. */
+.front,
+.back {
+  --deckle: polygon(
+    0.00% 0, 2.78% 3px, 5.56% 0, 8.33% 3px, 11.11% 0, 13.89% 3px,
+    16.67% 0, 19.44% 3px, 22.22% 0, 25.00% 3px, 27.78% 0, 30.56% 3px,
+    33.33% 0, 36.11% 3px, 38.89% 0, 41.67% 3px, 44.44% 0, 47.22% 3px,
+    50.00% 0, 52.78% 3px, 55.56% 0, 58.33% 3px, 61.11% 0, 63.89% 3px,
+    66.67% 0, 69.44% 3px, 72.22% 0, 75.00% 3px, 77.78% 0, 80.56% 3px,
+    83.33% 0, 86.11% 3px, 88.89% 0, 91.67% 3px, 94.44% 0, 97.22% 3px,
+    100.00% 0, calc(100% - 3px) 2.78%, 100% 5.56%, calc(100% - 3px) 8.33%, 100% 11.11%, calc(100% - 3px) 13.89%,
+    100% 16.67%, calc(100% - 3px) 19.44%, 100% 22.22%, calc(100% - 3px) 25.00%, 100% 27.78%, calc(100% - 3px) 30.56%,
+    100% 33.33%, calc(100% - 3px) 36.11%, 100% 38.89%, calc(100% - 3px) 41.67%, 100% 44.44%, calc(100% - 3px) 47.22%,
+    100% 50.00%, calc(100% - 3px) 52.78%, 100% 55.56%, calc(100% - 3px) 58.33%, 100% 61.11%, calc(100% - 3px) 63.89%,
+    100% 66.67%, calc(100% - 3px) 69.44%, 100% 72.22%, calc(100% - 3px) 75.00%, 100% 77.78%, calc(100% - 3px) 80.56%,
+    100% 83.33%, calc(100% - 3px) 86.11%, 100% 88.89%, calc(100% - 3px) 91.67%, 100% 94.44%, calc(100% - 3px) 97.22%,
+    100% 100.00%, 97.22% calc(100% - 3px), 94.44% 100%, 91.67% calc(100% - 3px), 88.89% 100%, 86.11% calc(100% - 3px),
+    83.33% 100%, 80.56% calc(100% - 3px), 77.78% 100%, 75.00% calc(100% - 3px), 72.22% 100%, 69.44% calc(100% - 3px),
+    66.67% 100%, 63.89% calc(100% - 3px), 61.11% 100%, 58.33% calc(100% - 3px), 55.56% 100%, 52.78% calc(100% - 3px),
+    50.00% 100%, 47.22% calc(100% - 3px), 44.44% 100%, 41.67% calc(100% - 3px), 38.89% 100%, 36.11% calc(100% - 3px),
+    33.33% 100%, 30.56% calc(100% - 3px), 27.78% 100%, 25.00% calc(100% - 3px), 22.22% 100%, 19.44% calc(100% - 3px),
+    16.67% 100%, 13.89% calc(100% - 3px), 11.11% 100%, 8.33% calc(100% - 3px), 5.56% 100%, 2.78% calc(100% - 3px),
+    0.00% 100%, 3px 97.22%, 0 94.44%, 3px 91.67%, 0 88.89%, 3px 86.11%,
+    0 83.33%, 3px 80.56%, 0 77.78%, 3px 75.00%, 0 72.22%, 3px 69.44%,
+    0 66.67%, 3px 63.89%, 0 61.11%, 3px 58.33%, 0 55.56%, 3px 52.78%,
+    0 50.00%, 3px 47.22%, 0 44.44%, 3px 41.67%, 0 38.89%, 3px 36.11%,
+    0 33.33%, 3px 30.56%, 0 27.78%, 3px 25.00%, 0 22.22%, 3px 19.44%,
+    0 16.67%, 3px 13.89%, 0 11.11%, 3px 8.33%, 0 5.56%, 3px 2.78%
+  );
+  position: relative;
+  background: var(--sand);
+  color: var(--text);
+  clip-path: var(--deckle);
+}
+
+.front {
+  z-index: 2;
+  padding: 0.85rem 0.85rem 0.7rem;
+  rotate: -2deg;
+}
+
+.cardPair:nth-child(2) .front {
+  rotate: 1.5deg;
+}
+
+.view {
+  position: relative;
+  display: grid;
+  place-items: end center;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--teal);
+}
+
+.pool {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* The diving board over the pool. */
+.board {
+  position: absolute;
+  z-index: 1;
+  right: -1rem;
+  bottom: 22%;
+  width: 45%;
+  height: 0.9rem;
+  background: var(--sand);
+  border-radius: 0.5rem 0 0 0.5rem;
+  box-shadow: 0 0.5rem 0 color-mix(in oklab, var(--brown) 40%, transparent);
+}
+
+.board::after {
+  content: '';
+  position: absolute;
+  right: 1.8rem;
+  top: 0.9rem;
+  width: 1.6rem;
+  height: 3rem;
+  background: color-mix(in oklab, var(--sand) 70%, var(--brown));
+}
+
+.viewChair {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--pink) 50%, var(--sand)) 0 70%, color-mix(in oklab, var(--sunset) 40%, var(--sand)) 70%);
+}
+
+.chair {
+  width: 52%;
+  margin-bottom: 4%;
+}
+
+.viewDusk {
+  place-items: end start;
+  background: linear-gradient(180deg, color-mix(in oklab, var(--pink) 80%, var(--sand)) 0 26%, var(--sunset) 26% 52%, color-mix(in oklab, var(--sunset) 45%, var(--sand)) 52% 80%, color-mix(in oklab, var(--brown) 30%, var(--sand)) 80%);
+}
+
+.viewDusk::before {
+  /* the sun going down */
+  content: '';
+  position: absolute;
+  right: 18%;
+  top: 30%;
+  width: 26%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--sand) 80%, var(--sunset));
+}
+
+.cactus {
+  position: relative;
+  width: 34%;
+  margin: 0 0 -2% 14%;
+}
+
+.viewScript {
+  position: absolute;
+  z-index: 2;
+  top: 0.7rem;
+  left: 0.7rem;
+  padding: 0.05rem 0.7rem 0.15rem;
+  background: var(--brown);
+  color: var(--on-brown);
+  font-family: var(--script);
+  font-size: 1.75rem;
+  line-height: 1.1;
+  rotate: -4deg;
+}
+
+.caption {
+  margin-top: 0.55rem;
+  font-weight: 600;
+  font-size: 0.86rem;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* The message side, tucked under the picture side. */
+.back {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  min-height: 15rem;
+  margin: -3.5rem 0.6rem 0 1.2rem;
+  padding: 4.2rem 1rem 1.1rem;
+  rotate: 2.5deg;
+  background:
+    linear-gradient(var(--rule), var(--rule)) 52% 4.2rem / 1px calc(100% - 5.3rem) no-repeat,
+    var(--sand);
+}
+
+.cardPair:nth-child(2) .back {
+  rotate: -2deg;
+  margin: -3.5rem 1.2rem 0 0.6rem;
+}
+
+.note {
+  padding-right: 0.9rem;
+  font-family: var(--hand);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--teal-ink);
+}
+
+.postSide {
+  position: relative;
+  display: grid;
+  align-content: start;
+  padding-left: 0.9rem;
+}
+
+/* A perforated stamp: a sun going down over a mesa. */
+.stamp {
+  justify-self: end;
+  width: 3.2rem;
+  height: 3.9rem;
+  background:
+    radial-gradient(circle at 50% 62%, var(--sand) 0 0.5rem, transparent 0.52rem),
+    linear-gradient(180deg, transparent 70%, var(--brown) 70%),
+    linear-gradient(180deg, var(--pink), var(--sunset));
+  box-shadow: inset 0 0 0 0.22rem var(--sand), inset 0 0 0 0.3rem var(--teal);
+  -webkit-mask: radial-gradient(circle, transparent 0.12rem, var(--sand) 0.14rem) -0.25rem -0.25rem / 0.5rem 0.5rem;
+  mask: radial-gradient(circle, transparent 0.12rem, var(--sand) 0.14rem) -0.25rem -0.25rem / 0.5rem 0.5rem;
+  rotate: 4deg;
+}
+
+/* The postmark, ringed, with its wavy cancel running off to the left. */
+.postmark {
+  position: absolute;
+  top: 1.4rem;
+  right: 1.7rem;
+  display: grid;
+  place-content: center;
+  width: 4.4rem;
+  height: 4.4rem;
+  border: 2px solid color-mix(in oklab, var(--text) 60%, transparent);
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+  text-align: center;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--text) 70%, transparent);
+  rotate: -14deg;
+}
+
+.postmark::before {
+  content: '';
+  position: absolute;
+  top: 1.1rem;
+  right: 100%;
+  width: 4.4rem;
+  height: 1.9rem;
+  background: repeating-radial-gradient(circle at 50% -1.4rem, transparent 0 1.5rem, color-mix(in oklab, var(--text) 55%, transparent) 1.5rem calc(1.5rem + 1.5px), transparent calc(1.5rem + 2px) 1.95rem);
+  opacity: 0.8;
+}
+
+.address {
+  margin-top: 1.1rem;
+  font-family: var(--hand);
+  font-size: 0.98rem;
+  line-height: 1.8;
+  color: var(--teal-ink);
+  background: repeating-linear-gradient(180deg, transparent 0 calc(1.8em - 1px), var(--rule) calc(1.8em - 1px) 1.8em);
+}
+
+.also {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: clamp(2.8rem, 5vw, 4rem);
+}
+
+.also div {
+  padding: 0.9rem 1.1rem;
+  background: var(--sand);
+  border-left: 0.5rem solid var(--teal);
+  border-radius: 3px;
+}
+
+.also div:nth-child(3n + 2) {
+  border-left-color: var(--pink);
+}
+
+.also div:nth-child(3n) {
+  border-left-color: var(--sunset);
+}
+
+.also dt {
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.also dd {
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------- nearby */
+
+.nearSec {
+  position: relative;
+}
+
+.nearGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+/* A distance sign on two legs. */
+.distance {
+  position: relative;
+  padding: 1.3rem 1.5rem 1.4rem;
+  margin-bottom: 5rem;
+  background: var(--teal);
+  color: var(--on-teal);
+  border-radius: 0.9rem;
+  box-shadow:
+    inset 0 0 0 0.35rem var(--teal),
+    inset 0 0 0 0.55rem var(--on-teal),
+    0 20px 30px -18px var(--shadow);
+}
+
+.distanceHead {
+  font-family: var(--script);
+  font-size: 3rem;
+  line-height: 1;
+  text-align: center;
+}
+
+.distanceRows {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.8rem;
+}
+
+.distanceRows li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.35rem 0.3rem;
+  border-top: 2px solid color-mix(in oklab, var(--on-teal) 35%, transparent);
+  font-weight: 700;
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+
+.distanceMiles {
+  font-weight: 800;
+  font-size: 1.6rem;
+}
+
+.post {
+  position: absolute;
+  z-index: -1;
+  top: 100%;
+  width: 0.9rem;
+  height: 5rem;
+  background: linear-gradient(90deg, var(--metal), var(--metal-light), var(--metal));
+}
+
+.postLeft {
+  left: 22%;
+}
+
+.postRight {
+  right: 22%;
+}
+
+.places {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.place {
+  display: grid;
+  gap: 0.35rem;
+  padding-bottom: 1.3rem;
+  border-bottom: 2px dashed var(--rule);
+}
+
+.place:last-child {
+  border-bottom: 0;
+}
+
+.placeWhere {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0;
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pink-ink);
+}
+
+.placeWhere span + span::before {
+  content: '';
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  margin: 0 0.7rem 0.15rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.place h3 {
+  font-family: var(--script);
+  font-size: 2.3rem;
+  line-height: 1.05;
+  color: var(--teal-ink);
+}
+
+.placeNote {
+  font-size: 1.1rem;
+}
+
+.placeTip {
+  padding-left: 0.8rem;
+  border-left: 3px solid var(--sunset);
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* The desert along the foot of the section. */
+.desert {
+  position: relative;
+  height: 7.5rem;
+  overflow: hidden;
+  border-top: 3px solid var(--brown);
+}
+
+/* --------------------------------------------------------------- know */
+
+.knowGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+/* The office letter board: grooved felt in a wood frame. */
+.letterboard {
+  padding: 2rem 1.8rem 2.2rem;
+  background:
+    repeating-linear-gradient(180deg, color-mix(in oklab, var(--brown) 82%, var(--on-brown)) 0 1px, transparent 1px 0.62rem),
+    var(--brown);
+  color: var(--on-brown);
+  border: 0.9rem solid color-mix(in oklab, var(--sunset) 45%, var(--brown));
+  border-radius: 4px;
+  box-shadow: inset 0 0 1.4rem color-mix(in oklab, var(--brown) 70%, transparent), 0 24px 36px -20px var(--shadow);
+  text-align: center;
+  rotate: -1deg;
+}
+
+.boardHead {
+  font-weight: 700;
+  font-size: clamp(1.8rem, 3.4vw, 2.4rem);
+  line-height: 1.1;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.boardLines {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+  font-weight: 600;
+  font-size: clamp(1.1rem, 1.9vw, 1.4rem);
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.boardLines li:nth-child(2) {
+  translate: 0.4rem 0;
+}
+
+.boardLines li:nth-child(3) {
+  translate: -0.3rem 1px;
+}
+
+.boardLines li:nth-child(4) {
+  translate: 0.2rem 0;
+}
+
+.know {
+  display: grid;
+}
+
+.know div {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: 1.2rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.know div:first-child {
+  border-top: 3px solid var(--text);
+}
+
+.know dt {
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pink-ink);
+  padding-top: 0.15rem;
+}
+
+.know dd {
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+/* ----------------------------------------------------------------- book */
+
+.bookSec {
+  position: relative;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+  background: var(--brown);
+}
+
+.wall {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* The registration card: typed boxes and a room number to fill in. */
+.register {
+  position: relative;
+  display: grid;
+  gap: 1.3rem;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: clamp(1.4rem, 3.5vw, 2.4rem);
+  background: var(--sand);
+  color: var(--text);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 0.4rem var(--sand), inset 0 0 0 0.52rem var(--teal), 0 30px 60px -20px color-mix(in oklab, var(--brown) 80%, transparent);
+}
+
+.registerHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 3px solid var(--text);
+}
+
+.registerTitle {
+  font-family: var(--script);
+  font-size: clamp(2.6rem, 5vw, 3.4rem);
+  line-height: 1;
+  color: var(--teal-ink);
+}
+
+.registerSub {
+  grid-row: 2;
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.roomBox {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  display: grid;
+  justify-items: center;
+  padding: 0.4rem 0.9rem;
+  border: 2px solid var(--text);
+}
+
+.roomBox span {
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.roomBox strong {
+  font-family: var(--hand);
+  font-size: 1.6rem;
+  line-height: 1.1;
+  color: var(--teal-ink);
+}
+
+.registerGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.4rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-weight: 800;
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  padding: 0.35rem 0.1rem;
+  border: 0;
+  border-bottom: 2px solid var(--text);
+  border-radius: 0;
+  background: transparent;
+  color: var(--teal-ink);
+  font-family: var(--hand);
+  font-size: 1.1rem;
+}
+
+.field input::placeholder {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  color: color-mix(in oklab, var(--text) 45%, transparent);
+}
+
+.field select option {
+  background: var(--sand);
+  color: var(--text);
+  font-family: var(--sans);
+}
+
+.registerFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1.4rem;
+  padding-top: 0.4rem;
+}
+
+.registerFoot p {
+  flex: 1 1 16rem;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- find */
+
+.map {
+  position: relative;
+  height: 10rem;
+  margin-bottom: 2.4rem;
+}
+
+.highway {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 6rem;
+  height: 1.6rem;
+  translate: 0 -50%;
+  background:
+    repeating-linear-gradient(90deg, var(--sand) 0 1.6rem, transparent 1.6rem 3rem) 0 50% / 100% 3px no-repeat,
+    var(--brown);
+  border-radius: 3px;
+}
+
+.stops {
+  position: absolute;
+  inset: 0;
+  right: 6rem;
+}
+
+.stop {
+  position: absolute;
+  top: 50%;
+  display: grid;
+  justify-items: center;
+  translate: -50% -50%;
+}
+
+.stopDot {
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  background: var(--sand);
+  border: 3px solid var(--brown);
+}
+
+.stopName {
+  position: absolute;
+  bottom: calc(100% + 0.4rem);
+  white-space: nowrap;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.stop:nth-child(even) .stopName {
+  top: calc(100% + 0.4rem);
+  bottom: auto;
+}
+
+.town .stopDot {
+  border-radius: 3px;
+  background: var(--teal);
+}
+
+.us .stopDot {
+  width: 2rem;
+  height: 2rem;
+  background: var(--pink);
+  box-shadow: 0 0 0 0.35rem color-mix(in oklab, var(--pink) 35%, transparent);
+}
+
+.us .stopName {
+  font-family: var(--script);
+  font-size: 1.8rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--pink-ink);
+}
+
+.mapNorth {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  translate: 0 -50%;
+  padding-right: 1.4rem;
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.mapNorth::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 1rem;
+  height: 1.2rem;
+  translate: 0 -50%;
+  background: var(--text);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.findGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  border-top: 3px solid var(--text);
+}
+
+.findItem {
+  display: grid;
+  gap: 0.1rem;
+  padding-top: 0.8rem;
+}
+
+.findItem span {
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pink-ink);
+}
+
+.findItem a,
+.findItem strong {
+  font-weight: 700;
+  font-size: 1.3rem;
+  overflow-wrap: anywhere;
+}
+
+.findItem a {
+  text-decoration: underline;
+  text-decoration-color: var(--sunset);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 5px;
+}
+
+/* --------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--brown);
+  color: var(--on-brown);
+}
+
+.dusk {
+  position: relative;
+  height: 5rem;
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr));
+  gap: 1rem 2.4rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 2.8rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.footName {
+  font-family: var(--script);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ----------------------------------------------------------- responsive */
+
+@media (max-width: 1120px) {
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 34rem;
+    margin: 0 auto;
+    gap: 3.6rem;
+  }
+
+  .also {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 1rem;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .rooms {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 36rem;
+    margin: 0 auto;
+  }
+
+  .room {
+    grid-template-columns: 15rem minmax(0, 1fr);
+    align-items: center;
+    justify-items: start;
+    gap: 1rem;
+  }
+
+  .roomCard {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .nearGrid,
+  .knowGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .distance {
+    width: min(100%, 24rem);
+    justify-self: center;
+  }
+
+  .footInner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  /* The hero stacks: sky, motel and sign on top, the welcome below. */
+  .hero {
+    height: auto;
+    padding-top: 27rem;
+  }
+
+  .sky {
+    bottom: auto;
+    height: 17rem;
+  }
+
+  .scene {
+    bottom: auto;
+    height: 29rem;
+  }
+
+  .shield {
+    top: 1.2rem;
+    transform: scale(0.8);
+    transform-origin: 0 0;
+  }
+
+  .sign {
+    top: 1rem;
+    bottom: auto;
+    right: 1rem;
+    width: 12rem;
+  }
+
+  .signBoard {
+    padding: 1.4rem 0.6rem 1rem;
+  }
+
+  .signScript {
+    font-size: 2.6rem;
+  }
+
+  .signMotel {
+    font-size: 1.7rem;
+  }
+
+  .signSince {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+  }
+
+  .signArrow {
+    width: 9rem;
+    height: 3rem;
+    margin: -1rem 0 0 -4.5rem;
+  }
+
+  .vacLit {
+    font-size: 1.05rem;
+  }
+
+  .vacNo {
+    font-size: 0.9rem;
+  }
+
+  .signExtras,
+  .signPole {
+    display: none;
+  }
+
+  .welcome {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: auto;
+    margin: 0 var(--gut) 2rem;
+  }
+
+  .barVacancy {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .room {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+
+  .roomCard {
+    justify-items: center;
+    text-align: center;
+  }
+
+  .back {
+    grid-template-columns: minmax(0, 1fr);
+    background: var(--sand);
+    padding-top: 4.4rem;
+  }
+
+  .postSide {
+    padding: 0.8rem 0 0;
+    margin-top: 0.8rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .postmark {
+    top: 0.2rem;
+    right: 2.4rem;
+  }
+
+  .also {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .know div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  .registerGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .map {
+    height: auto;
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .highway {
+    top: 0;
+    bottom: 0;
+    left: 0.85rem;
+    right: auto;
+    width: 1.2rem;
+    height: auto;
+    translate: none;
+    background:
+      repeating-linear-gradient(180deg, var(--sand) 0 1rem, transparent 1rem 2rem) 50% 0 / 3px 100% no-repeat,
+      var(--brown);
+  }
+
+  .stops {
+    position: relative;
+    display: grid;
+    gap: 1rem;
+    padding: 0.6rem 0;
+  }
+
+  .stop,
+  .stop:nth-child(n) {
+    position: relative;
+    left: auto !important;
+    top: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    justify-items: start;
+    translate: none;
+    padding-left: 0.4rem;
+  }
+
+  .stopName,
+  .stop:nth-child(even) .stopName {
+    position: static;
+  }
+
+  .mapNorth {
+    position: static;
+    translate: none;
+    padding-left: 2.6rem;
+  }
+
+  .findGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

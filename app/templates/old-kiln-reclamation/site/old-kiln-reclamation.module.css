@@ -1,0 +1,1581 @@
+/* ==========================================================================
+   OLD KILN RECLAMATION - architectural salvage yard, Hatherden
+   The yard and its paperwork. The hero is this week's arrivals propped
+   against the yard wall (a field of notched blocks, the lead pattern),
+   each tied with a manila tag: a chamfered card with a reinforced ring
+   hole, the lot number stamped and the price written by hand. The yard
+   book is a ruled ledger in green and red, the stock hangs on tags from
+   two strings, the buying board is chalk on black with chalk arrows, and
+   a pallet of reclaimed bricks runs under the stock.
+   ========================================================================== */
+
+.page {
+  --concrete: #e6e2da;
+  --ink: #1e1c1a;
+  --brick: #b24e35;
+  --rust: #7a4a2a;
+  --verdigris: #5e9c8c;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --display: 'Fjalla One', 'Oswald', Impact, 'Arial Narrow', sans-serif;
+  --cond: 'Encode Sans Condensed', 'Arial Narrow', 'Roboto Condensed', sans-serif;
+  --hand: 'Shadows Into Light Two', 'Comic Neue', 'Segoe Print', cursive;
+  --text: var(--ink);
+  --on-ink: var(--concrete);
+  --on-brick: var(--concrete);
+  --on-rust: var(--concrete);
+
+  /* Derived surfaces: tags, ledger paper, chalk and string, all mixed. */
+  --muted: color-mix(in oklab, var(--text) 68%, var(--concrete));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 42%, transparent);
+  --card: color-mix(in oklab, var(--concrete) 84%, var(--on-ink));
+  --panel: color-mix(in oklab, var(--concrete) 90%, var(--text));
+  --yard-bg: color-mix(in oklab, var(--concrete) 80%, var(--text));
+  --manila: color-mix(in oklab, var(--concrete) 70%, var(--rust));
+  --manila-dark: color-mix(in oklab, var(--manila) 86%, var(--rust));
+  --ring: color-mix(in oklab, var(--manila) 45%, var(--rust));
+  --string: color-mix(in oklab, var(--text) 62%, var(--manila));
+  --ledger-rule: color-mix(in oklab, var(--verdigris) 42%, transparent);
+  --ledger-red: color-mix(in oklab, var(--brick) 75%, var(--text));
+  --chalk: color-mix(in oklab, var(--on-ink) 88%, var(--ink));
+  --chalk-muted: color-mix(in oklab, var(--on-ink) 66%, var(--ink));
+  --chalk-rule: color-mix(in oklab, var(--on-ink) 24%, transparent);
+  --brick-muted: color-mix(in oklab, var(--on-brick) 78%, var(--brick));
+  --shadow: color-mix(in oklab, var(--ink) 34%, transparent);
+
+  font-family: var(--cond);
+  font-size: 1.06rem;
+  line-height: 1.5;
+  background: var(--concrete);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--concrete) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--ink));
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--concrete));
+    --on-brick: color-mix(in oklab, oklch(from var(--brick) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--concrete));
+    --on-rust: oklch(from var(--rust) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, dl, dd, ol, ul, figure, fieldset) {
+  margin: 0;
+}
+
+.page :where(h1, h2, h3) {
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--concrete);
+  border-bottom: 2px solid var(--text);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+/* The kiln: a bottle oven with its chimney. */
+.markKiln {
+  display: block;
+  flex: none;
+  width: 1.4rem;
+  height: 1.8rem;
+  background: var(--brick);
+  clip-path: polygon(40% 0, 60% 0, 62% 30%, 88% 52%, 100% 100%, 0 100%, 12% 52%, 38% 30%);
+}
+
+.markName {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.3rem 1.5rem;
+}
+
+.nav a {
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--brick);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+  }
+
+  .btn:hover {
+    background: color-mix(in oklab, var(--ink) 84%, var(--brick));
+  }
+
+  .btnLine:hover {
+    background: var(--panel);
+  }
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--concrete);
+}
+
+/* ------------------------------------------------------------- manila tags */
+
+/* A tag hangs from its string: the pair turns as one, from the knot. */
+.hang {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  justify-items: center;
+  transform-origin: 50% 0;
+  filter: drop-shadow(0 6px 6px var(--shadow));
+}
+
+.string {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 1.5px;
+  height: var(--string-len, 2.4rem);
+  margin-bottom: -1.05rem;
+  background: var(--string);
+}
+
+/* The knot where the string is tied. */
+.string::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -0.2rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  margin-left: -0.2rem;
+  border-radius: 50%;
+  background: var(--string);
+}
+
+.mTag {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0;
+  width: var(--tag-w, 6.8rem);
+  padding: 2.1rem 0.55rem 0.85rem;
+  background: linear-gradient(172deg, var(--manila), var(--manila-dark));
+  color: var(--text);
+  text-align: center;
+  clip-path: polygon(24% 0, 76% 0, 100% 12%, 100% 100%, 0 100%, 0 12%);
+  -webkit-mask: radial-gradient(circle at 50% 1.05rem, transparent 0 0.3rem, var(--ink) 0.33rem);
+  mask: radial-gradient(circle at 50% 1.05rem, transparent 0 0.3rem, var(--ink) 0.33rem);
+}
+
+/* The reinforcing ring round the hole. */
+.mTag::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-left: -0.55rem;
+  border: 0.22rem solid var(--ring);
+  border-radius: 50%;
+}
+
+.mLot {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.mPrice {
+  font-family: var(--hand);
+  font-size: 1.75rem;
+  line-height: 1.05;
+}
+
+.mWhat {
+  font-family: var(--hand);
+  font-size: 0.95rem;
+  line-height: 1.1;
+}
+
+/* ------------------------------------------------------------------- common */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  gap: 0.9rem;
+  max-width: 44rem;
+  margin-bottom: clamp(2.2rem, 4.5vw, 3.2rem);
+}
+
+.secNum {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.secNum::after {
+  content: '';
+  width: 3rem;
+  height: 2px;
+  background: var(--brick);
+}
+
+.secTitle {
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 5.4vw, 4.2rem);
+  line-height: 0.95;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+
+.secLede {
+  max-width: 38rem;
+  font-size: 1.12rem;
+  color: var(--muted);
+}
+
+.btn,
+.btnLine {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.6rem 1.4rem;
+  border: 0;
+  font-family: var(--display);
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.btn {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.btnLine {
+  box-shadow: inset 0 0 0 2px var(--text);
+  color: var(--text);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  border-bottom: 2px solid var(--text);
+}
+
+.heroText {
+  display: grid;
+  align-content: center;
+  gap: 1.4rem;
+  width: 100%;
+  max-width: 36rem;
+  justify-self: end;
+  padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 3.5vw, 3rem) clamp(3rem, 6vw, 5rem) var(--gut);
+}
+
+.kicker {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.name {
+  font-family: var(--display);
+  font-size: clamp(3.4rem, 6.6vw, 6.4rem);
+  line-height: 0.9;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+
+.lede {
+  max-width: 30rem;
+  font-size: clamp(1.08rem, 1.4vw, 1.22rem);
+  line-height: 1.5;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.heroNote {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.heroNoteText {
+  font-family: var(--hand);
+  font-size: 1.7rem;
+  line-height: 1;
+  transform: rotate(-4deg);
+}
+
+.arrow {
+  width: 9rem;
+  height: auto;
+  overflow: visible;
+}
+
+.arrow path {
+  fill: none;
+  stroke: var(--brick);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The yard: the wall of blocks, a gravel floor, four things leaning. */
+.yard {
+  position: relative;
+  container-type: inline-size;
+  aspect-ratio: 1.08 / 1;
+  min-height: 34rem;
+  overflow: hidden;
+  background: var(--yard-bg);
+}
+
+.wall {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 70%;
+  overflow: hidden;
+}
+
+.floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 30%;
+  background:
+    radial-gradient(circle, color-mix(in oklab, var(--text) 22%, transparent) 0 1px, transparent 1.5px) 0 0 / 9px 7px,
+    radial-gradient(circle, color-mix(in oklab, var(--on-ink) 30%, transparent) 0 1px, transparent 1.5px) 4px 3px / 13px 11px,
+    linear-gradient(180deg, color-mix(in oklab, var(--text) 30%, var(--yard-bg)) 0 6px, var(--yard-bg) 6px);
+  box-shadow: 0 -2px 0 var(--text);
+}
+
+.item {
+  position: absolute;
+}
+
+.art {
+  width: 100%;
+}
+
+.itemDoor {
+  z-index: 1;
+  left: 7%;
+  bottom: 15%;
+  width: 27%;
+  transform: rotate(-3deg);
+}
+
+.itemPot {
+  z-index: 5;
+  right: 3%;
+  bottom: 12%;
+  width: 14%;
+  transform: rotate(4deg);
+}
+
+.itemRad {
+  z-index: 4;
+  left: 28%;
+  bottom: 8%;
+  width: 25%;
+  transform: rotate(2deg);
+}
+
+.itemBath {
+  z-index: 3;
+  left: 40%;
+  bottom: 3%;
+  width: 47%;
+  transform: rotate(-1.5deg);
+}
+
+.yard .mTag {
+  --tag-w: clamp(4.8rem, 12.5cqw, 7rem);
+  padding-top: clamp(1.8rem, 4cqw, 2.1rem);
+}
+
+.yard .mPrice {
+  font-size: clamp(1.25rem, 3.4cqw, 1.8rem);
+}
+
+.yard .mWhat {
+  font-size: clamp(0.72rem, 1.8cqw, 0.95rem);
+}
+
+.hangDoor {
+  --string-len: 2.2rem;
+  left: 82%;
+  top: 50%;
+  transform: translateX(-50%) rotate(16deg);
+}
+
+.hangRad {
+  --string-len: 1.8rem;
+  left: 90%;
+  top: 5%;
+  transform: translateX(-50%) rotate(-14deg);
+}
+
+.hangBath {
+  --string-len: 2.6rem;
+  left: 84%;
+  top: 15%;
+  transform: translateX(-50%) rotate(-7deg);
+}
+
+.hangPot {
+  --string-len: 5.5rem;
+  left: 50%;
+  top: 22%;
+  transform: translateX(-50%) rotate(-10deg);
+}
+
+
+/* -------------------------------------------------------------- the ledger */
+
+.ledger {
+  position: relative;
+  padding: 1.5rem clamp(1rem, 3vw, 2rem) 2rem clamp(1.5rem, 4vw, 3rem);
+  background: var(--card);
+  box-shadow: 0 0 0 1px var(--rule), 0 30px 50px -36px var(--shadow);
+}
+
+/* The double red margin rule down the left of every page. */
+.ledger::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: clamp(0.7rem, 2vw, 1.5rem);
+  width: 5px;
+  border-left: 1.5px solid var(--ledger-red);
+  border-right: 1.5px solid var(--ledger-red);
+}
+
+.ledgerHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 0.8rem;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ledgerHand {
+  font-family: var(--hand);
+  font-size: 1.35rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.bookWrap {
+  overflow-x: auto;
+}
+
+.book {
+  width: 100%;
+  min-width: 52rem;
+  border-collapse: collapse;
+}
+
+.book th,
+.book td {
+  height: 3.1rem;
+  padding: 0.35rem 0.8rem 0.2rem;
+  border-bottom: 1px solid var(--ledger-rule);
+  border-left: 1px solid var(--ledger-rule);
+  text-align: left;
+  vertical-align: bottom;
+}
+
+.book thead th {
+  height: auto;
+  padding-bottom: 0.5rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--verdigris);
+}
+
+.book th:first-child,
+.book td:first-child {
+  border-left: 0;
+}
+
+.book tbody th,
+.colItem,
+.book tbody .colPrice {
+  font-family: var(--hand);
+  font-size: 1.3rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.colLot {
+  width: 4.5rem;
+}
+
+.colDate {
+  width: 5.5rem;
+  white-space: nowrap;
+}
+
+.book tbody .colDate,
+.book tbody .colFrom,
+.book tbody .colSize {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.colSize {
+  white-space: nowrap;
+}
+
+.colPrice {
+  width: 7.5rem;
+  text-align: right !important;
+  white-space: nowrap;
+}
+
+.sold td,
+.sold th {
+  color: var(--muted);
+}
+
+.sold .colItem {
+  text-decoration: line-through;
+  text-decoration-color: var(--ledger-red);
+  text-decoration-thickness: 2px;
+}
+
+.sold .colPrice {
+  color: var(--ledger-red);
+}
+
+/* ------------------------------------------------------------ stock on tags */
+
+.rail {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3.5rem 2rem;
+}
+
+.railItem {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  padding-top: 0.3rem;
+}
+
+/* The string the tags hang from, running across each row. */
+.railItem::before {
+  content: '';
+  position: absolute;
+  top: 0.3rem;
+  left: -1rem;
+  right: -1rem;
+  height: 2px;
+  background: var(--string);
+}
+
+.railItem .string {
+  --string-len: 2.6rem;
+}
+
+.swing {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  transform-origin: 50% 0;
+  filter: drop-shadow(0 8px 8px var(--shadow));
+}
+
+.railItem:nth-child(3n + 1) .swing {
+  transform: rotate(1.5deg);
+}
+
+.railItem:nth-child(3n + 2) .swing {
+  transform: rotate(-1deg);
+}
+
+.railItem:nth-child(3n) .swing {
+  transform: rotate(2deg);
+}
+
+.railItem:nth-child(3n + 2) .string {
+  --string-len: 3.6rem;
+}
+
+.bigTag {
+  --tag-w: min(100%, 19rem);
+  gap: 0.35rem;
+  min-height: 17rem;
+  padding: 2.6rem 1.4rem 1.4rem;
+  filter: none;
+}
+
+.bigName {
+  font-family: var(--display);
+  font-size: 2rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.bigWhat {
+  max-width: 15rem;
+  font-size: 0.98rem;
+  line-height: 1.4;
+}
+
+.bigRange {
+  margin-top: 0.5rem;
+  font-family: var(--hand);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.bigUnit {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* A pallet of reclaimed bricks under the tags. */
+.pallet {
+  position: relative;
+  height: 112px;
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  overflow: hidden;
+  box-shadow: 0 10px 0 -2px var(--rust), 0 12px 0 -2px var(--text);
+}
+
+/* -------------------------------------------------------- the buying board */
+
+.buy {
+  position: relative;
+  margin-top: clamp(4.5rem, 9vw, 7.5rem);
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--chalk);
+  border-top: 14px solid var(--rust);
+  border-bottom: 14px solid var(--rust);
+}
+
+.chalk {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.16;
+}
+
+.buyInner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.buyHead {
+  display: grid;
+  align-content: start;
+  gap: 1.2rem;
+}
+
+.buy .secNum {
+  color: var(--chalk-muted);
+}
+
+.buyTitle {
+  font-family: var(--hand);
+  font-size: clamp(3rem, 7vw, 5.4rem);
+  line-height: 0.95;
+  transform: rotate(-2deg);
+  transform-origin: left center;
+}
+
+.buyLede {
+  max-width: 32rem;
+  font-size: 1.15rem;
+  color: var(--chalk-muted);
+}
+
+.pays {
+  display: grid;
+  margin-top: 0.6rem;
+  border-top: 2px dashed var(--chalk-rule);
+}
+
+.pays div {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.8rem 0;
+  border-bottom: 2px dashed var(--chalk-rule);
+}
+
+.pays dt {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pays dd {
+  font-family: var(--hand);
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.value {
+  display: grid;
+  align-content: start;
+  gap: 1.3rem;
+  padding: clamp(1.5rem, 3vw, 2.2rem);
+  border: 2px dashed var(--chalk-rule);
+  border-radius: 6px;
+}
+
+.valueTitle {
+  font-family: var(--hand);
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.valueSteps {
+  display: grid;
+  gap: 0.2rem;
+  counter-reset: step;
+}
+
+.valueSteps li {
+  position: relative;
+  display: grid;
+  gap: 0.15rem;
+  padding-left: 3rem;
+  counter-increment: step;
+}
+
+.valueSteps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: -0.2rem;
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border: 2px solid var(--chalk);
+  border-radius: 50%;
+  font-family: var(--hand);
+  font-size: 1.3rem;
+}
+
+.valueName {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.valueBody {
+  color: var(--chalk-muted);
+}
+
+/* A chalk arrow down to the next step. */
+.chalkArrow {
+  width: 3.4rem;
+  height: auto;
+  margin: 0.3rem 0 0.2rem -2.4rem;
+  overflow: visible;
+}
+
+.chalkArrow path {
+  fill: none;
+  stroke: var(--chalk);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 9 2 3 2;
+}
+
+.valueNote {
+  padding-top: 1rem;
+  border-top: 2px dashed var(--chalk-rule);
+  font-family: var(--hand);
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+/* ---------------------------------------------------------------- workshop */
+
+.restoreGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.restoreSide {
+  display: grid;
+  gap: 0;
+}
+
+.chips {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  box-shadow: 0 0 0 2px var(--text);
+}
+
+.services {
+  display: grid;
+  border-top: 2px solid var(--text);
+}
+
+.service {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) 9.5rem;
+  gap: 1.2rem;
+  align-items: start;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.serviceNum {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.serviceText {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.serviceName {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.serviceBody {
+  color: var(--muted);
+}
+
+/* The price on a small manila label, pinned at a slant. */
+.servicePrice {
+  display: grid;
+  justify-items: center;
+  padding: 0.7rem 0.6rem 0.8rem;
+  background: linear-gradient(172deg, var(--manila), var(--manila-dark));
+  clip-path: polygon(0 0, 88% 0, 100% 18%, 100% 100%, 0 100%);
+  transform: rotate(2deg);
+  text-align: center;
+}
+
+.servicePriceNum {
+  font-family: var(--hand);
+  font-size: 1.45rem;
+  line-height: 1.1;
+}
+
+.serviceTime {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- delivery */
+
+.delGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+.delGrid .secHead {
+  margin-bottom: 0;
+}
+
+.delSide {
+  display: grid;
+  gap: 1.6rem;
+}
+
+.delNote {
+  font-family: var(--hand);
+  font-size: 1.3rem;
+  line-height: 1.3;
+  transform: rotate(-1deg);
+}
+
+.delList {
+  display: grid;
+  padding: 1.4rem 1.6rem;
+  background: var(--card);
+  box-shadow: 0 0 0 1px var(--rule), 8px 8px 0 var(--verdigris);
+}
+
+.delList div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--ledger-rule);
+}
+
+.delList div:last-child {
+  border-bottom: 0;
+}
+
+.delList dt {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-size: 1.05rem;
+}
+
+/* Dotted leader to the price. */
+.delList dt::after {
+  content: '';
+  flex: 1;
+  min-width: 1rem;
+  border-bottom: 2px dotted var(--rule-strong);
+}
+
+.delList dd {
+  font-family: var(--hand);
+  font-size: 1.45rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------------------- visit */
+
+.visitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+.visitPanel {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 30rem;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+.corbels {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* The painted sign on the gate. */
+.sign {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  width: min(100%, 24rem);
+  padding: 1.6rem 1.7rem 1.8rem;
+  background: var(--brick);
+  color: var(--on-brick);
+  box-shadow: inset 0 0 0 5px var(--brick), inset 0 0 0 7px var(--on-brick), 0 20px 30px -16px var(--shadow);
+}
+
+.signSmall {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.hours {
+  display: grid;
+}
+
+.hours div {
+  display: grid;
+  gap: 0.05rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid color-mix(in oklab, var(--on-brick) 30%, transparent);
+  text-align: center;
+}
+
+.hours dt {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brick-muted);
+}
+
+.hours dd {
+  font-family: var(--hand);
+  font-size: 1.4rem;
+  line-height: 1.15;
+}
+
+.visitText {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.address {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.visitBody {
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.boots {
+  justify-self: start;
+  padding: 0.5rem 0.9rem;
+  border: 2px solid var(--brick);
+  font-family: var(--hand);
+  font-size: 1.4rem;
+  line-height: 1.2;
+  transform: rotate(-1.5deg);
+}
+
+.visitList {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.visitList li {
+  display: grid;
+  grid-template-columns: 1.2rem minmax(0, 1fr);
+  gap: 0.6rem;
+}
+
+/* A brick for a bullet. */
+.visitList li::before {
+  content: '';
+  width: 1rem;
+  height: 0.5rem;
+  margin-top: 0.55rem;
+  background: var(--brick);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--brick) 70%, var(--text));
+}
+
+/* ------------------------------------------------------------------ contact */
+
+.contactSec {
+  padding-bottom: clamp(4.5rem, 9vw, 7.5rem);
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.contactText {
+  display: grid;
+  gap: 1rem;
+}
+
+.holdTag {
+  position: relative;
+  justify-self: start;
+  width: 8rem;
+  margin: 1.2rem 0 0 1.5rem;
+  padding-top: 0.3rem;
+}
+
+/* A nail in the wall for the tag. */
+.holdTag::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-left: -0.35rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, color-mix(in oklab, var(--text) 40%, var(--concrete)), var(--text));
+}
+
+.holdTag .swing {
+  transform: rotate(-6deg);
+}
+
+.contactLine a {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  letter-spacing: 0.03em;
+  border-bottom: 2px solid var(--brick);
+}
+
+.form {
+  display: grid;
+  justify-items: start;
+  gap: 1.3rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--card);
+  box-shadow: 0 0 0 1px var(--rule), 0 30px 50px -36px var(--shadow);
+}
+
+.choice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.4rem;
+  padding: 0;
+  border: 0;
+}
+
+.choice legend {
+  width: 100%;
+  margin-bottom: 0.5rem;
+  padding: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.radio {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.radio input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--brick);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+  width: 100%;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  min-height: 2.9rem;
+  padding: 0.55rem 0.75rem;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 2px;
+  background: var(--concrete);
+  color: var(--text);
+  font: inherit;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: 2px solid var(--brick);
+  outline-offset: 1px;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.footWall {
+  position: relative;
+  height: 96px;
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  gap: 0.5rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.8rem var(--gut) 3.5rem;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 2.2rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.footAddr {
+  font-family: var(--hand);
+  font-size: 1.35rem;
+  color: var(--chalk-muted);
+}
+
+.footSmall {
+  font-size: 0.95rem;
+  color: var(--chalk-muted);
+}
+
+.footSmall a {
+  color: var(--on-ink);
+  border-bottom: 1px solid var(--chalk-rule);
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1120px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+}
+
+@media (max-width: 960px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroText {
+    justify-self: stretch;
+    max-width: 40rem;
+  }
+
+  .yard {
+    aspect-ratio: 1 / 1;
+    min-height: 0;
+  }
+
+  .buyInner,
+  .restoreGrid,
+  .delGrid,
+  .visitGrid,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .chips {
+    aspect-ratio: 3 / 1;
+  }
+
+  .rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .railItem:nth-child(n) .swing {
+    transform: rotate(1deg);
+  }
+
+  .railItem:nth-child(even) .swing {
+    transform: rotate(-1.5deg);
+  }
+
+  .railItem:nth-child(even) .string {
+    --string-len: 3.6rem;
+  }
+
+  .railItem:nth-child(odd) .string {
+    --string-len: 2.6rem;
+  }
+
+  .visitPanel {
+    min-height: 24rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .markName {
+    font-size: 1.1rem;
+  }
+
+  .heroNote {
+    display: none;
+  }
+
+  .yard {
+    aspect-ratio: 0.86 / 1;
+  }
+
+  .yard .mTag {
+    --tag-w: 4.1rem;
+    padding: 1.7rem 0.3rem 0.55rem;
+  }
+
+  .yard .mPrice {
+    font-size: 1.15rem;
+  }
+
+  .yard .mLot {
+    font-size: 0.52rem;
+    letter-spacing: 0.08em;
+  }
+
+  .yard .mWhat {
+    display: none;
+  }
+
+  .itemDoor {
+    z-index: 5;
+  }
+
+  .hangDoor {
+    --string-len: 1.6rem;
+  }
+
+  .hangPot {
+    --string-len: 3rem;
+    transform: translateX(-50%) rotate(12deg);
+  }
+
+  .hangBath {
+    --string-len: 1.4rem;
+    left: 60%;
+    top: 30%;
+    transform: translateX(-50%) rotate(-6deg);
+  }
+
+  .hangRad {
+    transform: translateX(-50%) rotate(8deg);
+  }
+
+  .itemDoor {
+    width: 30%;
+    left: 4%;
+  }
+
+  .itemPot {
+    width: 16%;
+    right: 2%;
+  }
+
+  .itemRad {
+    left: 24%;
+    width: 28%;
+  }
+
+  .itemBath {
+    left: 36%;
+    width: 52%;
+  }
+
+  .rail {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 2.5rem;
+  }
+
+  .railItem .string,
+  .railItem:nth-child(n) .string {
+    --string-len: 2.4rem;
+  }
+
+  .ledgerHead {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .book {
+    min-width: 0;
+  }
+
+  .book thead {
+    display: none;
+  }
+
+  .book tbody tr {
+    display: grid;
+    grid-template-columns: 3.4rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      'lot item price'
+      'lot from from'
+      'lot size size';
+    column-gap: 0.7rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--ledger-rule);
+  }
+
+  .book tbody th,
+  .book tbody td {
+    height: auto;
+    padding: 0;
+    border: 0;
+  }
+
+  .book tbody th {
+    grid-area: lot;
+  }
+
+  .book tbody .colDate {
+    display: none;
+  }
+
+  .book tbody .colItem {
+    grid-area: item;
+  }
+
+  .book tbody .colFrom {
+    grid-area: from;
+  }
+
+  .book tbody .colSize {
+    grid-area: size;
+  }
+
+  .book tbody .colPrice {
+    grid-area: price;
+    width: auto;
+  }
+
+  .pays div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.2rem;
+  }
+
+  .service {
+    grid-template-columns: 2.4rem minmax(0, 1fr);
+  }
+
+  .servicePrice {
+    grid-column: 2;
+    justify-self: start;
+    min-width: 9rem;
+  }
+
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

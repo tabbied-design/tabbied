@@ -1,0 +1,1389 @@
+/* ==========================================================================
+   TERRACE LAWN TENNIS CLUB - Terrace Road, Kingsmead
+   The manual scoreboard and the court. The hero is a server at the top of
+   the toss, standing inside a giant SERVE: the word runs behind the figure
+   in mown-lawn stripes and a second, clipped copy of it comes back in
+   front, so the player stands in the type. Fees hang on the green board as
+   white numeral plates beside painted name slats; the courts are drawn as
+   court diagrams with Saturday's hours under each; the championships are a
+   draw bracket; and the sections that sit on grass are mown in stripes.
+   The lead field is doublebar, two parallel bars: the court lines and the
+   mower's passes, along the foot of the hero and again under the footer.
+   ========================================================================== */
+
+.page {
+  --cream: #f2efe3;
+  --green: #245235;
+  --purple: #5b2a6e;
+  --ball: #d8e34a;
+
+  --serif: 'Rufina', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --body: 'Alike Angular', 'Iowan Old Style', Georgia, serif;
+  --board-font: 'League Gothic', 'Oswald', 'Arial Narrow', 'Helvetica Neue', sans-serif;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 82rem;
+  --pad-x: max(var(--gut), calc((100% - var(--max)) / 2));
+
+  --text: var(--green);
+  --on-green: var(--cream);
+  --on-purple: var(--cream);
+  --on-ball: var(--green);
+  --on-plate: var(--green);
+
+  /* Everything else is mixed from the roles. */
+  --muted: color-mix(in oklab, var(--text) 70%, var(--cream));
+  --label: color-mix(in oklab, var(--purple) 45%, var(--text));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --green-ink: color-mix(in oklab, var(--green) 70%, var(--text));
+  --lawn-a: color-mix(in oklab, var(--green) 5%, var(--cream));
+  --lawn-b: color-mix(in oklab, var(--green) 11%, var(--cream));
+  /* The giant word's two mower stripes: the green pulled toward the text,
+     so the word holds up even when a palette's green is close to its ground. */
+  --word-a: color-mix(in oklab, var(--green) 62%, var(--text));
+  --word-b: color-mix(in oklab, var(--green) 40%, var(--text));
+  --photo-dark: color-mix(in oklab, var(--green) 40%, var(--text));
+  --photo-light: color-mix(in oklab, var(--cream) 84%, var(--ball));
+  --board-frame: color-mix(in oklab, var(--green) 70%, var(--text));
+  --plate: color-mix(in oklab, var(--on-green) 92%, var(--green));
+  --sheet: var(--cream);
+  --shadow: color-mix(in oklab, var(--text) 30%, transparent);
+
+  font-family: var(--body);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  background: var(--cream);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the lightness of the surface, tinted toward an ink. */
+    --text: color-mix(in oklab, oklch(from var(--cream) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--green));
+    --on-green: color-mix(in oklab, oklch(from var(--green) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--cream));
+    --on-purple: color-mix(in oklab, oklch(from var(--purple) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--cream));
+    --on-ball: oklch(from var(--ball) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-plate: color-mix(in oklab, oklch(from var(--plate) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--green));
+    --sheet: oklch(from var(--cream) clamp(0, l + 0.025, 1) calc(c * 0.6) h);
+    --shadow: oklch(from var(--cream) calc(l * 0.3) c h / 0.35);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, h4) {
+  margin: 0;
+  font-weight: inherit;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.kicker {
+  font-family: var(--board-font);
+  font-size: 1.2rem;
+  letter-spacing: 0.12em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.btn,
+.btnLine {
+  display: inline-block;
+  padding: 0.75rem 1.4rem 0.7rem;
+  font-family: var(--board-font);
+  font-size: 1.35rem;
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  border: 0;
+  cursor: pointer;
+}
+
+.btn {
+  background: var(--purple);
+  color: var(--on-purple);
+  box-shadow: inset 0 -3px 0 color-mix(in oklab, var(--purple) 70%, var(--text));
+}
+
+.btn:hover {
+  background: var(--green);
+  color: var(--on-green);
+}
+
+.btnLine {
+  padding-inline: 0;
+  border-bottom: 3px solid var(--ball);
+}
+
+.btnLine:hover {
+  border-bottom-color: var(--purple);
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.6rem var(--gut);
+  background: var(--cream);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.markRacket {
+  width: 1.15rem;
+}
+
+.markText {
+  display: grid;
+  line-height: 1;
+}
+
+.markName {
+  font-family: var(--serif);
+  font-size: 1.55rem;
+  font-weight: 700;
+}
+
+.markSub {
+  margin-top: 0.15rem;
+  font-family: var(--board-font);
+  font-size: 0.95rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  font-family: var(--board-font);
+  font-size: 1.2rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav a:hover {
+  color: var(--text);
+  box-shadow: 0 3px 0 var(--ball);
+}
+
+.barCta {
+  padding: 0.55rem 1rem 0.5rem;
+  font-family: var(--board-font);
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--green);
+  color: var(--on-green);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--cream);
+  font-family: var(--board-font);
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  --stage-h: clamp(24rem, 46vw, 43rem);
+  position: relative;
+  padding: clamp(2rem, 4vw, 3.5rem) var(--gut) 0;
+  overflow: hidden;
+}
+
+.heroText {
+  position: relative;
+  z-index: 3;
+  max-width: 31rem;
+}
+
+.title {
+  margin-top: 0.8rem;
+  font-family: var(--serif);
+  font-size: clamp(2.3rem, 4.4vw, 3.7rem);
+  font-weight: 700;
+  line-height: 1.02;
+}
+
+.lede {
+  margin-top: 1.1rem;
+  font-size: 1.15rem;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1.6rem;
+  margin-top: 1.6rem;
+}
+
+/* The stage: the word behind, the server, the word again in front. */
+.stage {
+  position: relative;
+  height: var(--stage-h);
+  margin-top: calc(var(--stage-h) * -0.42);
+}
+
+.giant {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-top: 0.06em;
+  font-family: var(--serif);
+  font-size: clamp(7rem, 27vw, 30rem);
+  font-weight: 700;
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--word-a) 0 var(--stripe),
+    var(--word-b) var(--stripe) calc(var(--stripe) * 2)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  --stripe: clamp(2rem, 4.6vw, 4.6rem);
+}
+
+.server {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 53%;
+  width: calc(var(--stage-h) * 0.4417);
+}
+
+/* Only the lower part of the V comes back over the figure. */
+.giantFront {
+  z-index: 2;
+  clip-path: inset(46% 29% 0 54%);
+}
+
+.courtBand {
+  position: relative;
+  height: 96px;
+  margin: 0 calc(var(--gut) * -1);
+  overflow: hidden;
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 1.6rem 0 clamp(2.5rem, 5vw, 4rem);
+}
+
+.heroFacts div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding-top: 0.8rem;
+  border-top: 2px solid var(--text);
+}
+
+.heroFacts dt {
+  font-family: var(--board-font);
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  line-height: 1;
+}
+
+.heroFacts dd {
+  font-family: var(--board-font);
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  position: relative;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--pad-x);
+}
+
+/* Mown stripes: the lawn a section sits on. */
+.lawn {
+  background: repeating-linear-gradient(90deg, var(--lawn-a) 0 7rem, var(--lawn-b) 7rem 14rem);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  column-gap: clamp(2rem, 5vw, 4rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead .kicker {
+  grid-column: 1;
+}
+
+.h2 {
+  grid-column: 1;
+  margin-top: 0.6rem;
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 4.4vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.04;
+}
+
+.secNote {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: end;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- the boards */
+
+.board {
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: clamp(1rem, 3vw, 2rem);
+  background: var(--green);
+  color: var(--on-green);
+  border: 10px solid var(--board-frame);
+  box-shadow: 0 2rem 3rem -2rem var(--shadow);
+}
+
+.boardHead {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 0.7rem;
+  font-family: var(--board-font);
+  font-size: 1.2rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--on-green) 78%, var(--green));
+}
+
+.boardRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) calc(2.8rem * 4 + 15px) 9.5rem;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-top: 1px solid color-mix(in oklab, var(--on-green) 18%, transparent);
+}
+
+/* A painted name slat, hung on the board. */
+.slat {
+  padding: 0.5rem 0.9rem 0.45rem;
+  background: var(--plate);
+  color: var(--on-plate);
+  box-shadow: inset 0 -4px 0 color-mix(in oklab, var(--plate) 80%, var(--green));
+}
+
+.slatName {
+  font-family: var(--board-font);
+  font-size: 1.8rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.slatWho {
+  font-size: 0.92rem;
+  line-height: 1.3;
+}
+
+.plates,
+.livePlates {
+  display: flex;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+/* A numeral plate: white tin on two hooks. */
+.plate {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.8rem;
+  height: 3.6rem;
+  padding-top: 0.3rem;
+  font-family: var(--board-font);
+  font-size: 2.6rem;
+  line-height: 1;
+  background: var(--plate);
+  color: var(--on-plate);
+  box-shadow: inset 0 -4px 0 color-mix(in oklab, var(--plate) 80%, var(--green));
+}
+
+.plate::before {
+  content: '';
+  position: absolute;
+  top: 0.3rem;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.plateWide {
+  width: 4.4rem;
+  font-size: 2.2rem;
+}
+
+.joining {
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  color: color-mix(in oklab, var(--on-green) 82%, var(--green));
+}
+
+.boardFoot {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid color-mix(in oklab, var(--on-green) 18%, transparent);
+  font-size: 0.98rem;
+  color: color-mix(in oklab, var(--on-green) 82%, var(--green));
+}
+
+/* ----------------------------------------------------------------- coaching */
+
+.coachGrid {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.ladder {
+  position: relative;
+  overflow: hidden;
+  min-height: 20rem;
+  border-inline: 6px solid var(--green);
+}
+
+.listHead {
+  padding-bottom: 0.5rem;
+  font-family: var(--board-font);
+  font-size: 1.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--text);
+}
+
+.groups {
+  margin-bottom: 2.4rem;
+}
+
+.group {
+  display: grid;
+  grid-template-columns: 5.4rem minmax(0, 1fr) minmax(0, 1fr) 6.5rem;
+  gap: 1.2rem;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.balls {
+  display: flex;
+  gap: 4px;
+}
+
+.ballOn,
+.ballOff {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+}
+
+/* A ball, with its seam. */
+.ballOn {
+  background:
+    radial-gradient(circle at 115% 50%, transparent 55%, color-mix(in oklab, var(--cream) 70%, var(--ball)) 56% 64%, transparent 65%),
+    var(--ball);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--ball) 55%, var(--text));
+}
+
+.ballOff {
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+/* Adults get a racket: an oval head on a short handle. */
+.racketMark {
+  position: relative;
+  width: 1.3rem;
+  height: 1.7rem;
+  margin-left: 0.4rem;
+  border: 2px solid var(--purple);
+  border-radius: 50%;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 3px, color-mix(in oklab, var(--purple) 40%, transparent) 3px 4px),
+    repeating-linear-gradient(0deg, transparent 0 3px, color-mix(in oklab, var(--purple) 40%, transparent) 3px 4px);
+}
+
+.racketMark::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 3px;
+  height: 0.9rem;
+  margin-left: -1.5px;
+  background: var(--purple);
+}
+
+.groupName {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.groupAge {
+  color: var(--muted);
+  font-size: 0.98rem;
+}
+
+.groupWhen {
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.groupPrice {
+  font-family: var(--board-font);
+  font-size: 1.8rem;
+  line-height: 1;
+  text-align: right;
+}
+
+/* ------------------------------------------------------------------- courts */
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.6rem;
+  margin-bottom: 1.8rem;
+  font-family: var(--board-font);
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.legendFree::before,
+.legendTaken::before {
+  content: '';
+  display: inline-block;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-right: 0.45rem;
+  vertical-align: -0.05rem;
+}
+
+.legendFree::before {
+  box-shadow: inset 0 0 0 1.5px color-mix(in oklab, var(--text) 45%, transparent);
+  background: var(--sheet);
+}
+
+.legendTaken::before {
+  background: var(--purple);
+}
+
+.legendHours {
+  color: var(--muted);
+}
+
+.terraceHead {
+  margin: 0 0 1rem;
+  font-family: var(--board-font);
+  font-size: 1.45rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.courts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.6rem 1.4rem;
+  margin-bottom: 2.6rem;
+}
+
+.hardCourts {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.courtCard {
+  padding: 0.7rem;
+  background: var(--sheet);
+  box-shadow: 0 0 0 1px var(--rule), 0 1rem 1.6rem -1.2rem var(--shadow);
+}
+
+/* A court drawn to scale: doubles and singles sidelines, the service boxes,
+   the centre line and the net. */
+.court {
+  position: relative;
+  aspect-ratio: 2.1;
+}
+
+.grass {
+  --line: var(--on-green);
+  background: repeating-linear-gradient(
+    90deg,
+    var(--green) 0 12.5%,
+    color-mix(in oklab, var(--green) 86%, var(--on-green)) 12.5% 25%
+  );
+}
+
+.hard {
+  --line: var(--on-purple);
+  background: var(--purple);
+}
+
+.courtLines {
+  position: absolute;
+  inset: 11% 7%;
+  border: 2px solid var(--line);
+  background:
+    linear-gradient(var(--line), var(--line)) 50% 0 / 3px 100% no-repeat,
+    linear-gradient(var(--line), var(--line)) 0 12.5% / 100% 2px no-repeat,
+    linear-gradient(var(--line), var(--line)) 0 87.5% / 100% 2px no-repeat,
+    linear-gradient(var(--line), var(--line)) 23.1% 50% / 2px 75% no-repeat,
+    linear-gradient(var(--line), var(--line)) 76.9% 50% / 2px 75% no-repeat,
+    linear-gradient(var(--line), var(--line)) 50% 50% / 53.8% 2px no-repeat;
+}
+
+.courtNo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  min-width: 1.9rem;
+  height: 2.2rem;
+  padding: 0.15rem 0.3rem 0;
+  font-family: var(--board-font);
+  font-size: 1.6rem;
+  line-height: 1;
+  background: var(--plate);
+  color: var(--on-plate);
+}
+
+.courtName {
+  margin-top: 0.55rem;
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.slots {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 3px;
+  margin-top: 0.45rem;
+}
+
+.slots li {
+  display: grid;
+  place-items: center;
+  height: 1.6rem;
+  font-family: var(--board-font);
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.free {
+  color: var(--muted);
+  box-shadow: inset 0 0 0 1.5px color-mix(in oklab, var(--text) 30%, transparent);
+}
+
+.taken {
+  background: var(--purple);
+  color: var(--on-purple);
+}
+
+.bookLine {
+  font-family: var(--board-font);
+  font-size: 1.4rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.bookLine a {
+  border-bottom: 3px solid var(--ball);
+}
+
+/* ------------------------------------------------------------ championships */
+
+.drawWrap {
+  position: relative;
+  padding: clamp(1.2rem, 3vw, 2.4rem);
+  overflow: hidden;
+}
+
+.rib {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.4;
+}
+
+.draw {
+  --join: 1.5rem;
+  --line-c: color-mix(in oklab, var(--text) 60%, transparent);
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: calc(var(--join) * 2);
+}
+
+.round {
+  display: flex;
+  flex-direction: column;
+}
+
+.roundName {
+  align-self: start;
+  margin-bottom: 0.8rem;
+  padding: 0.3rem 0.6rem 0.2rem;
+  font-family: var(--board-font);
+  font-size: 1.2rem;
+  letter-spacing: 0.1em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  background: var(--green);
+  color: var(--on-green);
+}
+
+.pair {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.pair::after {
+  content: '';
+  position: absolute;
+  right: calc(var(--join) * -1);
+  top: 25%;
+  bottom: 25%;
+  border-right: 2px solid var(--line-c);
+}
+
+.match {
+  position: relative;
+  margin: 0.55rem 0;
+  padding: 0.3rem 0;
+  background: var(--sheet);
+  box-shadow: 0 0 0 1px var(--rule), 0 0.8rem 1.2rem -1rem var(--shadow);
+}
+
+.pair .match::after {
+  content: '';
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  width: var(--join);
+  border-top: 2px solid var(--line-c);
+}
+
+.fromLeft::before {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  width: var(--join);
+  border-top: 2px solid var(--line-c);
+}
+
+.finalRound {
+  justify-content: flex-start;
+}
+
+.finalRound .match {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.player,
+.winner {
+  display: grid;
+  grid-template-columns: 1.4rem minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: baseline;
+  padding: 0.3rem 0.8rem;
+}
+
+.player + .player,
+.player + .winner,
+.winner + .player {
+  border-top: 1px dashed var(--rule);
+}
+
+.winner {
+  font-weight: 700;
+}
+
+.winner .pName::after {
+  content: '';
+  display: inline-block;
+  width: 0.6rem;
+  height: 0.6rem;
+  margin-left: 0.45rem;
+  border-radius: 50%;
+  background: var(--ball);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--ball) 55%, var(--text));
+}
+
+.seed {
+  font-family: var(--board-font);
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+.pName {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+}
+
+.sets {
+  font-family: var(--board-font);
+  font-size: 1.25rem;
+  letter-spacing: 0.12em;
+  word-spacing: 0.2em;
+}
+
+.matchNote {
+  padding: 0.3rem 0.8rem 0.1rem;
+  font-size: 0.88rem;
+  font-style: italic;
+  line-height: 1.3;
+  color: var(--muted);
+}
+
+.final {
+  box-shadow: 0 0 0 2px var(--purple), 0 1rem 1.6rem -1rem var(--shadow);
+}
+
+.final .pName {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.liveBoard {
+  max-width: 48rem;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.liveHead,
+.liveRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 6.4rem 3.2rem 4.8rem;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.liveHead {
+  padding-bottom: 0.6rem;
+  font-family: var(--board-font);
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--on-green) 78%, var(--green));
+}
+
+.liveHead span:not(:first-child) {
+  text-align: right;
+}
+
+.liveRow + .liveRow {
+  margin-top: 0.7rem;
+}
+
+.liveSlat {
+  padding: 0.5rem 0.9rem 0.4rem;
+  font-family: var(--board-font);
+  font-size: 2.2rem;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--plate);
+  color: var(--on-plate);
+  box-shadow: inset 0 -4px 0 color-mix(in oklab, var(--plate) 80%, var(--green));
+}
+
+/* ------------------------------------------------------------------- social */
+
+.socialSec {
+  padding-top: 0;
+}
+
+.ribbon {
+  position: relative;
+  height: 80px;
+  margin: 0 calc(var(--pad-x) * -1) clamp(3rem, 6vw, 5rem);
+  overflow: hidden;
+}
+
+.events {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(2rem, 5vw, 4rem);
+}
+
+.event {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: 1.2rem;
+  padding: 1.4rem 0;
+  border-top: 2px solid var(--text);
+}
+
+.eventDate {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  padding: 0.5rem 0 0.4rem;
+  background: var(--green);
+  color: var(--on-green);
+}
+
+.eventDay {
+  font-family: var(--board-font);
+  font-size: 2.8rem;
+  line-height: 1;
+}
+
+.eventMonth {
+  font-family: var(--board-font);
+  font-size: 1.05rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.eventName {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.eventWhat {
+  margin-top: 0.4rem;
+  line-height: 1.5;
+}
+
+.eventPrice {
+  margin-top: 0.5rem;
+  font-family: var(--board-font);
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+/* --------------------------------------------------------------------- join */
+
+.joinGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.joinText .h2 {
+  margin-bottom: 1.2rem;
+}
+
+.joinFacts {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1.8rem;
+}
+
+.joinFacts div {
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--rule);
+}
+
+.joinFacts dt {
+  font-family: var(--board-font);
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.form {
+  display: grid;
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--sheet);
+  border-top: 10px solid var(--green);
+  box-shadow: 0 0 0 1px var(--rule), 0 1.6rem 2.4rem -1.8rem var(--shadow);
+}
+
+.formHead {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.field label {
+  font-family: var(--board-font);
+  font-size: 1.05rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--cream);
+  border: 1px solid color-mix(in oklab, var(--text) 35%, transparent);
+  border-radius: 0;
+}
+
+.field select {
+  appearance: none;
+  background-image: linear-gradient(135deg, transparent 50%, var(--green) 50%);
+  background-position: calc(100% - 0.8rem) 55%;
+  background-size: 0.55rem 0.55rem;
+  background-repeat: no-repeat;
+}
+
+.field select option {
+  background: var(--cream);
+  color: var(--text);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: 2px solid var(--purple);
+  outline-offset: 0;
+}
+
+.form .btn {
+  justify-self: start;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footBand {
+  position: relative;
+  height: 72px;
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(1.4rem, 4vw, 3rem);
+  align-items: center;
+  padding: clamp(2rem, 4vw, 3rem) var(--pad-x);
+  background: var(--green);
+  color: var(--on-green);
+}
+
+.footRacket {
+  width: clamp(2.8rem, 5vw, 4rem);
+}
+
+.footText {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.footLine a,
+.footSmall a {
+  border-bottom: 2px solid var(--ball);
+}
+
+.footSmall {
+  font-size: 0.95rem;
+  color: color-mix(in oklab, var(--on-green) 80%, var(--green));
+}
+
+.footSmall:first-of-type {
+  margin-top: 0.8rem;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1120px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .barCta {
+    justify-self: end;
+  }
+
+  .courts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hardCourts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    --stage-h: clamp(18rem, 62vw, 34rem);
+  }
+
+  .stage {
+    margin-top: 1rem;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secNote {
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: 1rem;
+  }
+
+  .coachGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ladder {
+    min-height: 0;
+    height: 4rem;
+    border-inline: 0;
+    border-block: 6px solid var(--green);
+  }
+
+  .group {
+    grid-template-columns: 5.4rem minmax(0, 1fr) auto;
+  }
+
+  .groupWhen {
+    grid-column: 2 / -1;
+  }
+
+  .groupPrice {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .events,
+  .joinGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The draw reads down the page: each round in turn, no brackets. */
+  .draw {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 1.6rem;
+    max-width: 30rem;
+    margin: 0 auto;
+  }
+
+  .pair::after,
+  .pair .match::after,
+  .fromLeft::before {
+    display: none;
+  }
+
+  .heroFacts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .barCta {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .boardRow {
+    grid-template-columns: minmax(0, 1fr) calc(1.9rem * 4 + 15px);
+    gap: 0.5rem 0.7rem;
+  }
+
+  .heroFacts div {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .slatWho {
+    font-size: 0.82rem;
+  }
+
+  .joining {
+    grid-column: 1 / -1;
+  }
+
+  .plate {
+    width: 1.9rem;
+    height: 2.7rem;
+    font-size: 1.85rem;
+  }
+
+  .plateWide {
+    width: 3.2rem;
+    font-size: 1.6rem;
+  }
+
+  .slatName {
+    font-size: 1.4rem;
+  }
+
+  .courts,
+  .hardCourts {
+    gap: 1rem 0.8rem;
+  }
+
+  .courtCard {
+    padding: 0.5rem;
+  }
+
+  .slots {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .courtName {
+    font-size: 1rem;
+  }
+
+  .liveHead,
+  .liveRow {
+    grid-template-columns: minmax(0, 1fr) 4.2rem 2rem 3.3rem;
+    gap: 0.4rem;
+  }
+
+  .liveSlat {
+    font-size: 1.5rem;
+    padding-inline: 0.5rem;
+  }
+
+  .liveHead {
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+  }
+
+  .fieldRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .group {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.4rem 1rem;
+  }
+
+  .balls,
+  .racketMark {
+    grid-column: 1 / -1;
+  }
+
+  .groupWhen {
+    grid-column: 1 / -1;
+  }
+
+  .groupPrice {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}

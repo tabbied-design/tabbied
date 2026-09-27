@@ -1,0 +1,1749 @@
+/* ==========================================================================
+   CONTINUE? - arcade bar, 66 Bitmap Alley, Lowtown
+   The page is an 8-bit game. A HUD runs across the top (score, hi-score,
+   lives as hearts, credits) over a level-select menu that is the nav; the
+   hero is the title screen, with a platformer scene built from CSS blocks,
+   a chunky-pixel planet (the lead field, quartered squares) and the sprites
+   standing on the platforms. Text sits in dialogue boxes with notched pixel
+   borders; the drinks are a high-score table; the week is a world map; the
+   hours are a coin door with the machine's circuit board behind it.
+   ========================================================================== */
+
+.page {
+  --void: #0e0b1e;
+  --white: #f4f1e8;
+  --pink: #ff3d6e;
+  --green: #3ddc84;
+  --yellow: #ffd23f;
+
+  --pixel: 'Press Start 2P', 'Courier New', ui-monospace, monospace;
+  --term: 'VT323', 'Courier New', ui-monospace, monospace;
+  --silk: 'Silkscreen', 'Press Start 2P', ui-monospace, monospace;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 84rem;
+  --px: 4px;
+
+  --text: var(--white);
+  --on-pink: var(--void);
+  --on-green: var(--void);
+  --on-yellow: var(--void);
+  --on-white: var(--void);
+
+  /* Surfaces, mixed from the roles. */
+  --panel: color-mix(in oklab, var(--void) 88%, var(--text));
+  --panel2: color-mix(in oklab, var(--void) 76%, var(--text));
+  --muted: color-mix(in oklab, var(--text) 70%, var(--void));
+  --rule: color-mix(in oklab, var(--text) 24%, transparent);
+  --edge: color-mix(in oklab, var(--text) 40%, var(--void));
+  --brick: color-mix(in oklab, var(--pink) 62%, var(--void));
+  --mortar: var(--void);
+
+  /* Mortar lines for a running-bond brick, as a mask. */
+  --mortar-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath d='M0 0h32v3H0zM0 16h32v3H0zM0 3h3v13H0zM16 19h3v13h-3z'/%3E%3C/svg%3E");
+
+  font-family: var(--term);
+  font-size: 1.45rem;
+  line-height: 1.15;
+  background: var(--void);
+  color: var(--text);
+  overflow-x: clip;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the lightness of the surface, tinted toward an ink. */
+    --text: color-mix(in oklab, oklch(from var(--void) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--white));
+    --on-pink: oklch(from var(--pink) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-green: oklch(from var(--green) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-yellow: oklch(from var(--yellow) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-white: oklch(from var(--white) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: inherit;
+}
+
+.page :where(p, dl, dd, ol, ul, address) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* A dialogue box: a notched pixel border, drawn by four hard shadows that
+   leave the corners out. */
+.dialog {
+  position: relative;
+  margin: var(--px);
+  padding: 1.3rem 1.3rem 1.2rem;
+  background: var(--panel);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--text),
+    0 var(--px) 0 var(--text),
+    calc(var(--px) * -1) 0 0 var(--text),
+    var(--px) 0 0 var(--text),
+    inset 0 0 0 var(--px) var(--panel2);
+}
+
+.speaker {
+  position: absolute;
+  top: -0.95rem;
+  left: 1rem;
+  padding: 0.35rem 0.5rem;
+  font-family: var(--pixel);
+  font-size: 0.62rem;
+  line-height: 1;
+  text-transform: uppercase;
+  background: var(--pink);
+  color: var(--on-pink);
+}
+
+.dialogText {
+  font-size: 1.45rem;
+  line-height: 1.15;
+}
+
+.btn,
+.btnGhost {
+  display: inline-block;
+  padding: 1rem 1.2rem 0.95rem;
+  font-family: var(--pixel);
+  font-size: 0.72rem;
+  line-height: 1.3;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 0;
+}
+
+.btn {
+  background: var(--green);
+  color: var(--on-green);
+  box-shadow:
+    inset calc(var(--px) * -1) calc(var(--px) * -1) 0 color-mix(in oklab, var(--green) 62%, var(--void)),
+    inset var(--px) var(--px) 0 color-mix(in oklab, var(--green) 55%, var(--white));
+}
+
+.btn:hover {
+  background: var(--yellow);
+  color: var(--on-yellow);
+  box-shadow:
+    inset calc(var(--px) * -1) calc(var(--px) * -1) 0 color-mix(in oklab, var(--yellow) 62%, var(--void)),
+    inset var(--px) var(--px) 0 color-mix(in oklab, var(--yellow) 55%, var(--white));
+}
+
+.btnGhost {
+  color: var(--text);
+  box-shadow: inset 0 0 0 var(--px) var(--text);
+}
+
+.btnGhost:hover {
+  box-shadow: inset 0 0 0 var(--px) var(--yellow);
+}
+
+/* ---------------------------------------------------------------------- HUD */
+
+.hud {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--void);
+  box-shadow: 0 var(--px) 0 var(--panel2);
+}
+
+.hudTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.6rem;
+  padding: 0.8rem var(--gut) 0.6rem;
+}
+
+.mark {
+  font-family: var(--pixel);
+  font-size: 1.05rem;
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow: 3px 3px 0 var(--pink);
+}
+
+.stat,
+.lives {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.statLabel {
+  font-family: var(--pixel);
+  font-size: 0.56rem;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.statValue {
+  font-family: var(--pixel);
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.hearts {
+  display: flex;
+  gap: 6px;
+}
+
+.heart {
+  width: 20px;
+  shape-rendering: crispEdges;
+}
+
+.levels {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem clamp(1rem, 2.4vw, 2.4rem);
+  padding: 0.35rem var(--gut) 0.7rem;
+}
+
+.levels a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding-left: 1rem;
+}
+
+.levels a::before {
+  content: '\25B6';
+  position: absolute;
+  left: 0;
+  font-size: 0.8rem;
+  color: var(--yellow);
+  opacity: 0;
+}
+
+.levelNo {
+  padding: 0.3rem 0.35rem;
+  font-family: var(--pixel);
+  font-size: 0.6rem;
+  line-height: 1;
+  background: var(--panel2);
+}
+
+.levelName {
+  font-size: 1.45rem;
+  text-transform: uppercase;
+}
+
+.levels a:hover::before {
+  opacity: 1;
+}
+
+.levels a:hover .levelNo {
+  background: var(--yellow);
+  color: var(--on-yellow);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--void);
+  font-family: var(--term);
+  font-size: 1.35rem;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  min-height: 52rem;
+  padding: clamp(2.5rem, 5vw, 4.5rem) var(--gut) 12rem;
+  overflow: hidden;
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  opacity: 0.6;
+  background:
+    linear-gradient(var(--text), var(--text)) 11% 14% / 4px 4px no-repeat,
+    linear-gradient(var(--text), var(--text)) 38% 8% / 4px 4px no-repeat,
+    linear-gradient(var(--yellow), var(--yellow)) 55% 26% / 4px 4px no-repeat,
+    linear-gradient(var(--text), var(--text)) 63% 6% / 4px 4px no-repeat,
+    linear-gradient(var(--text), var(--text)) 92% 62% / 4px 4px no-repeat,
+    linear-gradient(var(--pink), var(--pink)) 48% 48% / 4px 4px no-repeat,
+    linear-gradient(var(--text), var(--text)) 72% 58% / 4px 4px no-repeat,
+    linear-gradient(var(--text), var(--text)) 3% 52% / 4px 4px no-repeat,
+    linear-gradient(var(--green), var(--green)) 30% 60% / 4px 4px no-repeat,
+    linear-gradient(var(--text), var(--text)) 86% 4% / 4px 4px no-repeat,
+    linear-gradient(var(--text), var(--text)) 97% 30% / 4px 4px no-repeat,
+    linear-gradient(var(--yellow), var(--yellow)) 20% 34% / 4px 4px no-repeat;
+}
+
+/* The planet: the lead field cut to a stepped, pixel circle. */
+.planet {
+  position: absolute;
+  top: 3rem;
+  right: 5%;
+  width: clamp(16rem, 32vw, 30rem);
+  aspect-ratio: 1;
+  overflow: hidden;
+  clip-path: polygon(65% 0%, 65% 5%, 75% 5%, 75% 10%, 85% 10%, 85% 15%, 90% 15%, 90% 25%, 95% 25%, 95% 35%, 100% 35%, 100% 65%, 95% 65%, 95% 75%, 90% 75%, 90% 85%, 85% 85%, 85% 90%, 75% 90%, 75% 95%, 65% 95%, 65% 100%, 35% 100%, 35% 95%, 25% 95%, 25% 90%, 15% 90%, 15% 85%, 10% 85%, 10% 75%, 5% 75%, 5% 65%, 0% 65%, 0% 35%, 5% 35%, 5% 25%, 10% 25%, 10% 15%, 15% 15%, 15% 10%, 25% 10%, 25% 5%, 35% 5%, 35% 0%);
+}
+
+/* Night falls across the planet in hard bands, not a smooth gradient. */
+.planet::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    135deg,
+    transparent 0 52%,
+    color-mix(in oklab, var(--void) 30%, transparent) 52% 66%,
+    color-mix(in oklab, var(--void) 55%, transparent) 66% 80%,
+    color-mix(in oklab, var(--void) 75%, transparent) 80%
+  );
+}
+
+.rocketPath {
+  position: absolute;
+  left: 50%;
+  top: 19rem;
+  z-index: 1;
+  width: 4.6rem;
+  transform: rotate(32deg);
+}
+
+.heroRocket {
+  width: 100%;
+  shape-rendering: crispEdges;
+}
+
+/* Exhaust: pixel puffs trailing the flame. */
+.exhaust {
+  position: absolute;
+  left: calc(50% - 6px);
+  top: 100%;
+  width: 12px;
+  height: 12px;
+  background: var(--yellow);
+  box-shadow:
+    0 18px 0 var(--pink),
+    -4px 34px 0 color-mix(in oklab, var(--yellow) 70%, transparent),
+    6px 50px 0 color-mix(in oklab, var(--pink) 55%, transparent),
+    -2px 68px 0 color-mix(in oklab, var(--text) 35%, transparent),
+    4px 88px 0 color-mix(in oklab, var(--text) 20%, transparent);
+}
+
+.titleScreen {
+  position: relative;
+  z-index: 2;
+  max-width: 40rem;
+}
+
+.player {
+  font-family: var(--pixel);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  margin-top: 1.2rem;
+  font-family: var(--pixel);
+  font-size: clamp(2.1rem, 6vw, 5.4rem);
+  line-height: 1.1;
+  text-transform: uppercase;
+  text-shadow: 0.08em 0.08em 0 var(--pink);
+}
+
+/* The continue timer, counting down in a lit block. */
+.countdown {
+  display: inline-grid;
+  place-items: center;
+  width: 1.7em;
+  height: 1.7em;
+  margin-top: 1.2rem;
+  padding-left: 0.1em;
+  font-family: var(--pixel);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1;
+  background: var(--yellow);
+  color: var(--on-yellow);
+  box-shadow:
+    inset -6px -6px 0 color-mix(in oklab, var(--yellow) 60%, var(--void)),
+    inset 6px 6px 0 color-mix(in oklab, var(--yellow) 55%, var(--white)),
+    8px 8px 0 var(--pink);
+}
+
+.subtitle {
+  margin-top: 1.4rem;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+}
+
+.titleScreen .dialog {
+  margin-top: 2rem;
+  max-width: 34rem;
+}
+
+.pressStart {
+  position: relative;
+  margin-top: 2rem;
+  padding-left: 1.4rem;
+  font-family: var(--pixel);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  animation: blink 1.1s steps(1, end) infinite;
+}
+
+.pressStart::before {
+  content: '\25B6';
+  position: absolute;
+  left: 0;
+  color: var(--yellow);
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.6rem;
+}
+
+.scene {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 5rem;
+  height: 22rem;
+  pointer-events: none;
+}
+
+.platform {
+  position: absolute;
+  display: flex;
+}
+
+.platformLow {
+  left: 50%;
+  bottom: 0;
+}
+
+.platformHigh {
+  right: 9%;
+  bottom: 8.5rem;
+}
+
+.brickBlock,
+.qBlock {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+}
+
+.brickBlock {
+  background: var(--brick);
+}
+
+.brickBlock::after,
+.ground::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--mortar);
+  -webkit-mask: var(--mortar-mask) 0 0 / 24px 24px repeat;
+  mask: var(--mortar-mask) 0 0 / 24px 24px repeat;
+}
+
+.qBlock {
+  font-family: var(--pixel);
+  font-size: 1.2rem;
+  background: var(--yellow);
+  color: var(--on-yellow);
+  box-shadow:
+    inset -4px -4px 0 color-mix(in oklab, var(--yellow) 60%, var(--void)),
+    inset 4px 4px 0 color-mix(in oklab, var(--yellow) 55%, var(--white));
+}
+
+.heroCabinet {
+  position: absolute;
+  left: 1rem;
+  bottom: 100%;
+  width: 5.4rem;
+  shape-rendering: crispEdges;
+}
+
+.coin {
+  position: absolute;
+  width: 16px;
+  height: 24px;
+  background: var(--yellow);
+  box-shadow: inset -4px 0 0 color-mix(in oklab, var(--yellow) 60%, var(--void));
+  clip-path: polygon(25% 0, 75% 0, 75% 8%, 100% 8%, 100% 92%, 75% 92%, 75% 100%, 25% 100%, 25% 92%, 0 92%, 0 8%, 25% 8%);
+}
+
+.coin1 {
+  right: calc(9% + 0.9rem);
+  bottom: 14rem;
+}
+
+.coin2 {
+  right: calc(9% + 6.9rem);
+  bottom: 14rem;
+}
+
+.coin3 {
+  left: calc(50% + 8rem);
+  bottom: 6rem;
+}
+
+.ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 5rem;
+  background: var(--brick);
+  border-top: 10px solid var(--green);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  position: relative;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.secHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.world {
+  display: inline-block;
+  padding: 0.4rem 0.55rem;
+  font-family: var(--pixel);
+  font-size: 0.65rem;
+  line-height: 1;
+  text-transform: uppercase;
+  background: var(--yellow);
+  color: var(--on-yellow);
+}
+
+.h2 {
+  margin-top: 1.2rem;
+  font-family: var(--pixel);
+  font-size: clamp(1.4rem, 3.4vw, 2.5rem);
+  line-height: 1.25;
+  text-transform: uppercase;
+  text-shadow: 0.1em 0.1em 0 var(--pink);
+}
+
+.secNote {
+  max-width: 40rem;
+  margin-top: 1.2rem;
+  color: var(--muted);
+}
+
+.headSprite {
+  position: relative;
+  flex: none;
+  display: grid;
+  justify-items: center;
+}
+
+/* ---------------------------------------------------------------- the games */
+
+.sideCabinet {
+  width: 6rem;
+  shape-rendering: crispEdges;
+}
+
+.miniPlatform {
+  display: block;
+  width: 9rem;
+  height: 1.5rem;
+  position: relative;
+  background: var(--brick);
+  border-top: 6px solid var(--green);
+}
+
+.miniPlatform::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--mortar);
+  -webkit-mask: var(--mortar-mask) 0 0 / 24px 24px repeat;
+  mask: var(--mortar-mask) 0 0 / 24px 24px repeat;
+}
+
+.selectLabel {
+  margin: 0 0 1.2rem;
+  font-family: var(--pixel);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.selectLabel::before {
+  content: '\25B6';
+  margin-right: 0.6rem;
+  color: var(--yellow);
+}
+
+.games {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.6rem 1.4rem;
+  margin-bottom: 3rem;
+}
+
+.game {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: var(--px);
+  padding: 0.8rem;
+  background: var(--panel);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--edge),
+    0 var(--px) 0 var(--edge),
+    calc(var(--px) * -1) 0 0 var(--edge),
+    var(--px) 0 0 var(--edge);
+}
+
+.gameScreen {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  padding: 0.8rem;
+  text-align: center;
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 3px, color-mix(in oklab, var(--text) 7%, transparent) 3px 4px),
+    var(--void);
+  box-shadow: inset 0 0 0 var(--px) var(--panel2);
+}
+
+.gameTitle {
+  font-family: var(--pixel);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.gameMeta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 0.8rem;
+  margin-top: 0.7rem;
+  font-size: 1.3rem;
+  color: var(--muted);
+}
+
+.gameFoot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  font-size: 1.3rem;
+}
+
+.gameCount {
+  padding: 0.25rem 0.35rem;
+  font-family: var(--pixel);
+  font-size: 0.62rem;
+  line-height: 1;
+  background: var(--yellow);
+  color: var(--on-yellow);
+}
+
+/* The selected cabinet: the player's cursor round the tile. */
+.cursor {
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--yellow),
+    0 var(--px) 0 var(--yellow),
+    calc(var(--px) * -1) 0 0 var(--yellow),
+    var(--px) 0 0 var(--yellow),
+    0 calc(var(--px) * -2) 0 var(--void),
+    0 calc(var(--px) * 2) 0 var(--void);
+}
+
+.cursor::before {
+  content: 'P1';
+  position: absolute;
+  top: -1.2rem;
+  right: -0.6rem;
+  z-index: 1;
+  padding: 0.3rem 0.35rem;
+  font-family: var(--pixel);
+  font-size: 0.6rem;
+  line-height: 1;
+  background: var(--yellow);
+  color: var(--on-yellow);
+}
+
+.pinball {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.4rem;
+}
+
+.table {
+  margin: var(--px);
+  padding: 1.2rem 1rem 0.9rem;
+  background:
+    linear-gradient(to bottom, color-mix(in oklab, var(--pink) 22%, var(--panel)), var(--panel) 70%);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--pink),
+    0 var(--px) 0 var(--pink),
+    calc(var(--px) * -1) 0 0 var(--pink),
+    var(--px) 0 0 var(--pink);
+}
+
+.tableTitle {
+  font-family: var(--pixel);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.table .gameMeta {
+  align-items: center;
+}
+
+.arrival {
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin-top: 3.5rem;
+  padding: clamp(2.5rem, 5vw, 4rem) 1rem;
+  overflow: hidden;
+}
+
+.arrivalField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.arrivalBox {
+  max-width: 36rem;
+  padding-top: 1.6rem;
+}
+
+.arrivalTitle {
+  margin-bottom: 0.6rem;
+  font-family: var(--pixel);
+  font-size: 1rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------- drinks */
+
+.scoreBoard {
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+  background: var(--panel);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--text),
+    0 var(--px) 0 var(--text),
+    calc(var(--px) * -1) 0 0 var(--text),
+    var(--px) 0 0 var(--text);
+}
+
+.boardTitle {
+  margin-bottom: 1.6rem;
+  font-family: var(--pixel);
+  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0.1em 0.1em 0 var(--pink);
+}
+
+.scores {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.scores thead th {
+  padding: 0 0.8rem 0.8rem 0;
+  font-family: var(--pixel);
+  font-size: 0.6rem;
+  font-weight: 400;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.scores td,
+.scores tbody th {
+  padding: 0.7rem 0.8rem 0.7rem 0;
+  text-align: left;
+  vertical-align: middle;
+  border-top: 2px dashed var(--rule);
+}
+
+.rank {
+  display: inline-block;
+  min-width: 3.6rem;
+  padding: 0.35rem 0.4rem;
+  font-family: var(--pixel);
+  font-size: 0.62rem;
+  line-height: 1;
+  text-align: center;
+}
+
+.pink {
+  background: var(--pink);
+  color: var(--on-pink);
+}
+
+.yellow {
+  background: var(--yellow);
+  color: var(--on-yellow);
+}
+
+.green {
+  background: var(--green);
+  color: var(--on-green);
+}
+
+.white {
+  background: var(--white);
+  color: var(--on-white);
+}
+
+.drinkName {
+  font-family: var(--pixel);
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.colStyle {
+  color: var(--muted);
+  font-size: 1.35rem;
+}
+
+.scores thead .colStyle {
+  font-size: 0.6rem;
+}
+
+.colScore {
+  font-family: var(--pixel);
+  font-size: 0.95rem;
+  text-align: right !important;
+  padding-right: 0 !important;
+  white-space: nowrap;
+}
+
+.scores thead .colScore {
+  font-size: 0.6rem;
+}
+
+.boardFoot {
+  margin-top: 1.4rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- tournaments */
+
+.sideJoystick {
+  width: 9rem;
+  shape-rendering: crispEdges;
+}
+
+.worldMap {
+  position: relative;
+  height: 11rem;
+  margin: var(--px);
+  overflow: hidden;
+  background: var(--panel);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--edge),
+    0 var(--px) 0 var(--edge),
+    calc(var(--px) * -1) 0 0 var(--edge),
+    var(--px) 0 0 var(--edge);
+}
+
+.mapField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.mapPath {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  top: calc(50% - 5px);
+  height: 10px;
+  background: repeating-linear-gradient(90deg, var(--yellow) 0 12px, transparent 12px 22px);
+}
+
+.mapNodes {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3.5%;
+}
+
+.mapNodes li {
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+  font-family: var(--pixel);
+  font-size: 0.7rem;
+  background: var(--void);
+  color: var(--text);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--text),
+    0 var(--px) 0 var(--text),
+    calc(var(--px) * -1) 0 0 var(--text),
+    var(--px) 0 0 var(--text);
+}
+
+.mapNodes li:first-child {
+  background: var(--green);
+  color: var(--on-green);
+}
+
+.nights {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.6rem;
+}
+
+.night {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0.9rem;
+  background: var(--panel);
+  border-top: var(--px) solid var(--yellow);
+}
+
+.nightDay {
+  font-family: var(--pixel);
+  font-size: 0.62rem;
+  color: var(--muted);
+}
+
+.nightEvent {
+  margin-top: 0.5rem;
+  font-size: 1.7rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.nightWhat {
+  margin-top: 0.5rem;
+  font-size: 1.25rem;
+  line-height: 1.12;
+  color: var(--muted);
+}
+
+.nightFoot {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: auto;
+  padding-top: 0.9rem;
+  font-size: 1.25rem;
+}
+
+.nightFoot span:last-child {
+  justify-self: start;
+  padding: 0.2rem 0.35rem;
+  font-size: 1.15rem;
+  line-height: 1;
+  background: var(--panel2);
+}
+
+/* --------------------------------------------------------------------- hire */
+
+.hireSec {
+  padding-right: calc(var(--gut) + 6rem);
+}
+
+/* A rocket climbing the margin, its trail running back down the section. */
+.sideRocket {
+  position: absolute;
+  top: 5rem;
+  bottom: 4rem;
+  right: var(--gut);
+  width: 3.6rem;
+}
+
+.climbRocket {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  shape-rendering: crispEdges;
+}
+
+.trail {
+  position: absolute;
+  top: 6rem;
+  bottom: 0;
+  left: calc(50% - 6px);
+  width: 12px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--yellow) 0 12px,
+    transparent 12px 24px,
+    var(--pink) 24px 36px,
+    transparent 36px 52px
+  );
+  -webkit-mask: linear-gradient(to bottom, var(--void), transparent);
+  mask: linear-gradient(to bottom, var(--void), transparent);
+}
+
+.joined {
+  margin-bottom: 2.4rem;
+}
+
+.joined span {
+  display: inline-block;
+  padding: 0.9rem 1.1rem;
+  font-family: var(--pixel);
+  font-size: clamp(0.8rem, 2vw, 1.25rem);
+  line-height: 1.4;
+  text-transform: uppercase;
+  background: var(--pink);
+  color: var(--on-pink);
+  box-shadow: 6px 6px 0 var(--panel2);
+}
+
+.hireGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 2.4rem clamp(2rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.packages {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.package {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.3rem 1rem;
+  margin: var(--px);
+  padding: 1.1rem 1.2rem;
+  background: var(--panel);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--edge),
+    0 var(--px) 0 var(--edge),
+    calc(var(--px) * -1) 0 0 var(--edge),
+    var(--px) 0 0 var(--edge);
+}
+
+.packName {
+  font-family: var(--pixel);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.packWho {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  color: var(--muted);
+  text-align: right;
+}
+
+.packWhat {
+  grid-column: 1 / -1;
+}
+
+.packPrice {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: 0.4rem;
+  padding: 0.35rem 0.45rem;
+  font-family: var(--pixel);
+  font-size: 0.66rem;
+  line-height: 1.2;
+  background: var(--green);
+  color: var(--on-green);
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  padding-top: 1.8rem;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-family: var(--pixel);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  font-family: var(--term);
+  font-size: 1.4rem;
+  color: var(--text);
+  background: var(--void);
+  border: 0;
+  border-radius: 0;
+  box-shadow: inset 0 0 0 3px var(--edge);
+}
+
+.field select {
+  appearance: none;
+  background-image: linear-gradient(135deg, transparent 50%, var(--yellow) 50%);
+  background-position: calc(100% - 0.7rem) 55%;
+  background-size: 0.6rem 0.6rem;
+  background-repeat: no-repeat;
+}
+
+.field select option {
+  background: var(--void);
+  color: var(--text);
+}
+
+.field input:focus,
+.field select:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 3px var(--yellow);
+}
+
+.form .btn {
+  justify-self: start;
+  margin-top: 0.4rem;
+}
+
+/* -------------------------------------------------------------------- hours */
+
+.coinDoor {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 3rem);
+  overflow: hidden;
+  background: var(--panel);
+}
+
+.boardField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.door {
+  position: relative;
+  width: 100%;
+  max-width: 40rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: linear-gradient(to bottom, var(--panel2), var(--panel));
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--text),
+    0 var(--px) 0 var(--text),
+    calc(var(--px) * -1) 0 0 var(--text),
+    var(--px) 0 0 var(--text),
+    inset 0 0 0 8px var(--panel),
+    inset 0 0 0 10px var(--edge);
+}
+
+.slots {
+  display: flex;
+  justify-content: center;
+  gap: 1.4rem;
+  margin-bottom: 1.8rem;
+}
+
+.slot {
+  position: relative;
+  display: grid;
+  align-content: end;
+  justify-items: center;
+  width: 6.5rem;
+  height: 8.5rem;
+  padding-bottom: 0.8rem;
+  background: var(--void);
+  box-shadow: inset 0 0 0 4px var(--edge);
+}
+
+.slot::before {
+  content: '';
+  position: absolute;
+  top: 1.2rem;
+  left: calc(50% - 3px);
+  width: 6px;
+  height: 2.8rem;
+  background: var(--panel2);
+  box-shadow: 0 0 0 3px var(--edge);
+}
+
+.slotLamp {
+  padding: 0.35rem 0.4rem;
+  font-family: var(--pixel);
+  font-size: 0.6rem;
+  line-height: 1;
+  text-transform: uppercase;
+  background: var(--pink);
+  color: var(--on-pink);
+  box-shadow: 0 0 1.2rem color-mix(in oklab, var(--pink) 60%, transparent);
+}
+
+.hours div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.55rem 0;
+  border-bottom: 2px dashed var(--rule);
+}
+
+.hours dt {
+  font-family: var(--pixel);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.hours dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.freePlay {
+  padding: 0.3rem 0.4rem;
+  font-family: var(--pixel);
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  background: var(--green);
+  color: var(--on-green);
+}
+
+.tokens {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 1.6rem;
+}
+
+.tokens div {
+  padding: 0.8rem 0.6rem;
+  text-align: center;
+  background: var(--void);
+  box-shadow: inset 0 0 0 3px var(--edge);
+}
+
+.tokens dt {
+  font-family: var(--pixel);
+  font-size: 1rem;
+}
+
+.tokens dd {
+  margin-top: 0.4rem;
+  font-size: 1.3rem;
+  color: var(--muted);
+}
+
+.doorNote {
+  margin-top: 1.2rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- find */
+
+.findGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 2.4rem clamp(2rem, 4vw, 3.5rem);
+  align-items: center;
+}
+
+.cityMap {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  margin: var(--px);
+  overflow: hidden;
+  background: var(--panel);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--text),
+    0 var(--px) 0 var(--text),
+    calc(var(--px) * -1) 0 0 var(--text),
+    var(--px) 0 0 var(--text);
+}
+
+.cityField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.85;
+}
+
+.street {
+  position: absolute;
+  background:
+    repeating-linear-gradient(var(--dir, 90deg), var(--yellow) 0 10px, transparent 10px 22px) center / var(--line-w, 100%) var(--line-h, 3px) no-repeat,
+    var(--void);
+}
+
+.streetH1,
+.streetH2 {
+  left: 0;
+  right: 0;
+  height: 2.4rem;
+}
+
+.streetH1 {
+  top: 26%;
+}
+
+.streetH2 {
+  top: 68%;
+}
+
+.streetV1,
+.streetV2 {
+  top: 0;
+  bottom: 0;
+  width: 2.4rem;
+  --dir: 180deg;
+  --line-w: 3px;
+  --line-h: 100%;
+}
+
+.streetV1 {
+  left: 24%;
+}
+
+.streetV2 {
+  left: 62%;
+}
+
+.streetLabel {
+  position: absolute;
+  left: 30%;
+  top: calc(68% + 2.6rem);
+  padding: 0.3rem 0.4rem;
+  font-family: var(--pixel);
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  background: var(--void);
+  color: var(--text);
+}
+
+.marker {
+  position: absolute;
+  left: calc(62% + 3.2rem);
+  top: calc(68% - 0.4rem);
+  display: grid;
+  justify-items: center;
+  transform: translate(-50%, -100%);
+}
+
+.markerHeart {
+  width: 3rem;
+  shape-rendering: crispEdges;
+}
+
+.markerTag {
+  margin-top: 0.3rem;
+  padding: 0.3rem 0.4rem;
+  font-family: var(--pixel);
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: var(--yellow);
+  color: var(--on-yellow);
+}
+
+.findBox {
+  padding-top: 1.8rem;
+}
+
+.address {
+  display: grid;
+  gap: 0.2rem;
+  font-style: normal;
+}
+
+.addrMain {
+  margin-bottom: 0.3rem;
+  font-family: var(--pixel);
+  font-size: 1rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.address a {
+  justify-self: start;
+  overflow-wrap: anywhere;
+  border-bottom: 2px solid var(--green);
+}
+
+.travel {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 1.4rem;
+  padding-top: 1rem;
+  border-top: 2px dashed var(--rule);
+}
+
+.travel dt {
+  font-family: var(--pixel);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.travel dd {
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  padding-top: clamp(3rem, 6vw, 5rem);
+}
+
+.credits {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 0 var(--gut) 3rem;
+  text-align: center;
+}
+
+.gameOver {
+  font-family: var(--pixel);
+  font-size: clamp(1.4rem, 4vw, 2.4rem);
+  line-height: 1.2;
+  text-transform: uppercase;
+  text-shadow: 0.1em 0.1em 0 var(--pink);
+}
+
+.footName {
+  margin-top: 0.6rem;
+  font-size: 1.6rem;
+  text-transform: uppercase;
+}
+
+.footSmall {
+  font-size: 1.25rem;
+  color: var(--muted);
+}
+
+.footSmall a {
+  color: var(--text);
+  border-bottom: 2px solid var(--green);
+}
+
+.footGround {
+  position: relative;
+  height: 128px;
+  overflow: hidden;
+  border-top: 10px solid var(--green);
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .nights {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .games,
+  .pinball {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1000px) {
+  .levels {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hireGrid,
+  .findGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero {
+    padding-bottom: 26rem;
+  }
+
+  .planet {
+    top: auto;
+    bottom: 9rem;
+    right: 4%;
+    width: clamp(12rem, 34vw, 18rem);
+  }
+
+  .rocketPath {
+    top: auto;
+    bottom: 16rem;
+    left: 44%;
+  }
+
+  .platformLow {
+    left: 6%;
+  }
+
+  .platformHigh,
+  .coin1,
+  .coin2 {
+    display: none;
+  }
+
+  .coin3 {
+    left: calc(6% + 11rem);
+  }
+}
+
+@media (max-width: 760px) {
+  .hudTop .stat:nth-of-type(1),
+  .hudTop .stat:nth-of-type(2) {
+    display: none;
+  }
+
+  .games,
+  .pinball {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nights {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .night {
+    display: grid;
+    grid-template-columns: 3.2rem minmax(0, 1fr);
+    gap: 0.2rem 0.8rem;
+  }
+
+  .nightDay {
+    grid-row: 1 / span 3;
+    padding-top: 0.2rem;
+  }
+
+  .nightEvent {
+    margin-top: 0;
+  }
+
+  .nightFoot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .mapNodes li {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 0.5rem;
+  }
+
+  .worldMap {
+    height: 7rem;
+  }
+
+  .headSprite {
+    display: none;
+  }
+
+  .hireSec {
+    padding-right: var(--gut);
+  }
+
+  .sideRocket {
+    display: none;
+  }
+
+  /* The high-score table restacks: rank, name and score on a line, what is
+     in it underneath. */
+  .scores thead {
+    display: none;
+  }
+
+  .scores,
+  .scores tbody {
+    display: block;
+  }
+
+  .scores tr {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.3rem 0.8rem;
+    align-items: center;
+    padding: 0.8rem 0;
+    border-top: 2px dashed var(--rule);
+  }
+
+  .scores td,
+  .scores tbody th {
+    padding: 0;
+    border: 0;
+  }
+
+  .drinkName {
+    white-space: normal;
+  }
+
+  .scores .colStyle {
+    grid-column: 2 / -1;
+    grid-row: 2;
+    font-size: 1.25rem;
+  }
+
+  .scores .colScore {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .hours div {
+    grid-template-columns: 5rem minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .hudTop {
+    gap: 0.8rem;
+  }
+
+  .mark {
+    font-size: 0.8rem;
+  }
+
+  .hudTop .stat {
+    display: none;
+  }
+
+  .games,
+  .pinball {
+    gap: 1.2rem 1rem;
+  }
+
+  .gameTitle,
+  .tableTitle {
+    font-size: 0.62rem;
+  }
+
+  .gameMeta,
+  .gameFoot {
+    font-size: 1.15rem;
+  }
+
+  .game {
+    padding: 0.6rem;
+  }
+
+  .package {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .packWho {
+    grid-column: 1;
+    grid-row: auto;
+    text-align: left;
+  }
+
+  .fieldRow,
+  .tokens {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .slots {
+    gap: 0.8rem;
+  }
+
+  .slot {
+    width: 5.2rem;
+    height: 7rem;
+  }
+
+  .streetLabel {
+    left: 4%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pressStart {
+    animation: none;
+  }
+}

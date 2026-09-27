@@ -266,6 +266,15 @@ What was learned making the first 203:
   is refused, so the packager inlines `--artwork-mask` URLs as data URIs in
   the HTML package; an SVG `<image>` (the duotone) and an `<img>` (a fill's
   shading) are ordinary fetches and need nothing.
+- **Name the key color for every part that could wander.** Of the 152
+  pictures made for the picture set (2026-09-27), three layered ones were
+  refused for leaving their keys: a balloon basket came back brown, an
+  allotment's paths gray, a salmon's fat lines white. "The basket drawn in
+  solid black" in the subject fixed each on the first retry.
+- **A traced vector lives in the page's HTML.** `render: "vector"` inlines
+  every path, and a busy isometric scene traced to 198 KB of them. Past
+  about 100 KB, set `render: "masks"` on the prompt and promote again; no
+  regeneration is needed.
 - **`e2e/recolor.spec.ts` is the gate**: every page with artwork is
   re-colored through its root palette properties and each picture's pixels
   must move.

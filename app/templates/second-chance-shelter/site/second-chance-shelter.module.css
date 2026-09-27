@@ -1,0 +1,1602 @@
+/* ==========================================================================
+   SECOND CHANCE ANIMAL SHELTER - 300 Kennel Lane, Westbrook
+   Kennel cards as collectible trading cards: a colored frame, a name
+   banner, a photo window with a pattern behind the cut-out animal, stat
+   boxes, energy in paws and "good with" chips. The hero is an "Adopt me"
+   poster taped to the wall, the terrier on it cut from a bloks field.
+   A donation thermometer fills toward the cattery roof, and the lost and
+   found board has posters with tear-off tabs.
+   ========================================================================== */
+
+.page {
+  --cream: #fff6ea;
+  --ink: #2a2130;
+  --coral: #ff6b4a;
+  --teal: #3a9c8e;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --display: 'Grandstander', 'Trebuchet MS', 'Arial Rounded MT Bold', sans-serif;
+  --sans: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Fallbacks; derived from the surfaces below where the browser can. */
+  --bw: var(--ink);
+  --lift: var(--cream);
+  --text: var(--ink);
+  --on-ink: var(--cream);
+  --on-coral: var(--ink);
+  --on-teal: var(--cream);
+
+  /* Derived surfaces: never roles of their own, always mixed from them. */
+  --muted: color-mix(in oklab, var(--text) 70%, var(--cream));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --hair: color-mix(in oklab, var(--text) 9%, transparent);
+  --card: color-mix(in oklab, var(--cream) 50%, var(--lift));
+  --shade: color-mix(in oklab, var(--cream) 92%, var(--ink));
+  --ink-muted: color-mix(in oklab, var(--on-ink) 70%, var(--ink));
+  --ink-rule: color-mix(in oklab, var(--on-ink) 16%, transparent);
+  --drop: color-mix(in oklab, var(--ink) 40%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1.03rem;
+  line-height: 1.6;
+  background: var(--cream);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --bw: oklch(from var(--cream) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --lift: oklch(from var(--cream) clamp(0, (l - 0.62) * 1000, 1) 0 0);
+    --text: color-mix(in oklab, var(--bw) 84%, var(--ink));
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--cream));
+    --on-coral: color-mix(in oklab, oklch(from var(--coral) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--ink));
+    --on-teal: color-mix(in oklab, oklch(from var(--teal) clamp(0, (0.6 - l) * 1000, 1) 0 0) 92%, var(--ink));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--coral);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.7rem var(--gut);
+  background: color-mix(in oklab, var(--cream) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 2px solid var(--rule);
+}
+
+.mark {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.markBadge {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: var(--on-coral);
+  background: var(--coral);
+  border-radius: 50%;
+  transform: rotate(-8deg);
+}
+
+.markName {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.9rem, 1.8vw, 1.8rem);
+}
+
+.nav a {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--text);
+    text-decoration: underline wavy;
+    text-decoration-color: var(--coral);
+    text-underline-offset: 6px;
+  }
+}
+
+.barDonate {
+  padding: 0.5rem 1.2rem;
+  font-family: var(--display);
+  font-weight: 800;
+  color: var(--on-coral);
+  background: var(--coral);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--cream);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(2.5rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gut) clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.kicker {
+  display: inline-block;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--on-teal);
+  background: var(--teal);
+  border-radius: 999px;
+}
+
+.heroName {
+  display: grid;
+  margin-top: 1.4rem;
+  line-height: 0.92;
+}
+
+.heroSecond {
+  font-size: clamp(3.4rem, 8vw, 7rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.heroShelter {
+  justify-self: start;
+  margin-top: 0.5rem;
+  padding-bottom: 0.1em;
+  font-size: clamp(1.8rem, 3.8vw, 3.2rem);
+  font-weight: 700;
+  background: linear-gradient(transparent 62%, color-mix(in oklab, var(--coral) 45%, transparent) 62% 92%, transparent 92%);
+}
+
+.heroLede {
+  max-width: 33rem;
+  margin-top: 1.6rem;
+  font-size: clamp(1.06rem, 1.4vw, 1.18rem);
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.8rem;
+}
+
+.btnCoral,
+.btnLine,
+.btnInk {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.1rem;
+  padding: 0.6rem 1.5rem;
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  border-radius: 999px;
+  border: 0;
+  cursor: pointer;
+  transition: transform 150ms ease;
+}
+
+.btnCoral {
+  color: var(--on-coral);
+  background: var(--coral);
+  box-shadow: 0 4px 0 color-mix(in oklab, var(--coral) 60%, var(--ink));
+}
+
+.btnInk {
+  color: var(--on-ink);
+  background: var(--ink);
+  box-shadow: 0 4px 0 color-mix(in oklab, var(--ink) 70%, var(--coral));
+}
+
+.btnLine {
+  color: var(--text);
+  box-shadow: inset 0 0 0 2.5px var(--text);
+}
+
+@media (hover: hover) {
+  .btnCoral:hover,
+  .btnLine:hover,
+  .btnInk:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.heroStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 34rem;
+  margin-top: 2.4rem;
+}
+
+.heroStats div {
+  padding: 0.9rem 1rem;
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow: 0 0 0 2px var(--rule);
+}
+
+.heroStats dt {
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.heroStats dd {
+  margin-top: 0.3rem;
+  font-size: 0.84rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+/* The "Adopt me" poster, taped to the wall at a slant. */
+.poster {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  padding: 0 1.6rem 1.6rem;
+  background: var(--card);
+  border-radius: 6px;
+  box-shadow: 0 30px 50px -28px var(--drop), 0 0 0 1px var(--rule);
+  transform: rotate(1.8deg);
+}
+
+.poster::before,
+.poster::after {
+  content: '';
+  position: absolute;
+  top: -0.9rem;
+  width: 6.5rem;
+  height: 1.8rem;
+  background: color-mix(in oklab, var(--teal) 30%, transparent);
+}
+
+.poster::before {
+  left: -1.2rem;
+  transform: rotate(-24deg);
+}
+
+.poster::after {
+  right: -1.2rem;
+  transform: rotate(21deg);
+}
+
+.posterHead {
+  justify-self: stretch;
+  margin: 0 -1.6rem;
+  padding: 0.9rem 1rem 0.8rem;
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  color: var(--on-coral);
+  background: var(--coral);
+  border-radius: 6px 6px 0 0;
+}
+
+.heroDog {
+  width: min(66%, 19.5rem);
+  margin-top: 1.4rem;
+  --artwork-shade: 0.7;
+}
+
+.posterFoot {
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.posterFoot strong {
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.posterFoot span {
+  max-width: 22rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut);
+  scroll-margin-top: 4rem;
+}
+
+.secHead {
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secNo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+/* A little paw before every section's name. */
+.secNo::before {
+  content: '';
+  width: 1.2rem;
+  height: 1.2rem;
+  background:
+    radial-gradient(ellipse 30% 24% at 50% 70%, var(--coral) 96%, transparent 100%),
+    radial-gradient(ellipse 12% 14% at 20% 40%, var(--coral) 96%, transparent 100%),
+    radial-gradient(ellipse 12% 14% at 40% 18%, var(--coral) 96%, transparent 100%),
+    radial-gradient(ellipse 12% 14% at 62% 18%, var(--coral) 96%, transparent 100%),
+    radial-gradient(ellipse 12% 14% at 82% 40%, var(--coral) 96%, transparent 100%);
+}
+
+.secTitle {
+  margin-top: 0.6rem;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.secLede {
+  max-width: 38rem;
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.subTitle {
+  margin-top: 1.8rem;
+  font-size: 1.3rem;
+}
+
+.pawList {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+
+.pawList li {
+  position: relative;
+  padding-left: 1.6rem;
+}
+
+.pawList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.3em;
+  width: 1rem;
+  height: 1rem;
+  background:
+    radial-gradient(ellipse 30% 24% at 50% 70%, var(--teal) 96%, transparent 100%),
+    radial-gradient(ellipse 12% 14% at 20% 40%, var(--teal) 96%, transparent 100%),
+    radial-gradient(ellipse 12% 14% at 40% 18%, var(--teal) 96%, transparent 100%),
+    radial-gradient(ellipse 12% 14% at 62% 18%, var(--teal) 96%, transparent 100%),
+    radial-gradient(ellipse 12% 14% at 82% 40%, var(--teal) 96%, transparent 100%);
+}
+
+/* -------------------------------------------------------- trading cards */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0.9rem 0.9rem 1rem;
+  background: var(--card);
+  border: 10px solid var(--frame);
+  border-radius: 22px;
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--frame) 70%, var(--ink)), 0 22px 40px -26px var(--drop);
+}
+
+.card:nth-child(odd) {
+  transform: rotate(-1deg);
+}
+
+.card:nth-child(even) {
+  transform: rotate(0.8deg);
+}
+
+.cardCoral {
+  --frame: var(--coral);
+  --on-frame: var(--on-coral);
+}
+
+.cardTeal {
+  --frame: var(--teal);
+  --on-frame: var(--on-teal);
+}
+
+.cardInk {
+  --frame: var(--ink);
+  --on-frame: var(--on-ink);
+}
+
+.cardCoralDark {
+  --frame: color-mix(in oklab, var(--coral) 55%, var(--ink));
+  --on-frame: var(--on-ink);
+}
+
+@supports (color: oklch(from red l c h)) {
+  .cardCoralDark {
+    --on-frame: oklch(from color-mix(in oklab, var(--coral) 55%, var(--ink)) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.cardBanner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin: -0.2rem 0 0;
+  padding: 0.35rem 0.4rem 0.35rem 0.9rem;
+  color: var(--on-frame);
+  background: var(--frame);
+  border-radius: 999px;
+}
+
+.cardName {
+  font-size: 1.55rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.cardNo {
+  padding: 0.15rem 0.55rem;
+  font-family: var(--display);
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text);
+  background: var(--card);
+  border-radius: 999px;
+}
+
+/* The photo window: a pattern tile behind the cut-out animal. */
+.window {
+  position: relative;
+  aspect-ratio: 1 / 1.05;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 3px var(--frame);
+}
+
+.windowField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.animalTall,
+.animalWide {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 6px 8px color-mix(in oklab, var(--ink) 40%, transparent));
+}
+
+.animalTall {
+  height: 96%;
+  width: auto;
+}
+
+.animalWide {
+  width: 94%;
+  bottom: 3%;
+}
+
+.window::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 3px var(--frame);
+  pointer-events: none;
+}
+
+.cardType {
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.stats div {
+  padding: 0.35rem 0.45rem;
+  text-align: center;
+  background: var(--shade);
+  border-radius: 8px;
+}
+
+.stats dt {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stats dd {
+  font-family: var(--display);
+  font-size: 0.92rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.energy {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.energyLabel,
+.energyText {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Five paws, lit to the animal's energy. */
+.paws {
+  position: relative;
+  flex: none;
+  width: 6.5rem;
+  height: 1.3rem;
+  background:
+    radial-gradient(ellipse 28% 22% at 50% 70%, var(--hair) 96%, transparent 100%) 0 0 / 1.3rem 1.3rem repeat-x,
+    radial-gradient(ellipse 11% 13% at 20% 40%, var(--hair) 96%, transparent 100%) 0 0 / 1.3rem 1.3rem repeat-x,
+    radial-gradient(ellipse 11% 13% at 40% 20%, var(--hair) 96%, transparent 100%) 0 0 / 1.3rem 1.3rem repeat-x,
+    radial-gradient(ellipse 11% 13% at 62% 20%, var(--hair) 96%, transparent 100%) 0 0 / 1.3rem 1.3rem repeat-x,
+    radial-gradient(ellipse 11% 13% at 82% 40%, var(--hair) 96%, transparent 100%) 0 0 / 1.3rem 1.3rem repeat-x;
+}
+
+.paws::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: calc(var(--n) * 1.3rem);
+  background:
+    radial-gradient(ellipse 28% 22% at 50% 70%, var(--coral) 96%, transparent 100%) 0 0 / 1.3rem 1.3rem repeat-x,
+    radial-gradient(ellipse 11% 13% at 20% 40%, var(--coral) 96%, transparent 100%) 0 0 / 1.3rem 1.3rem repeat-x,
+    radial-gradient(ellipse 11% 13% at 40% 20%, var(--coral) 96%, transparent 100%) 0 0 / 1.3rem 1.3rem repeat-x,
+    radial-gradient(ellipse 11% 13% at 62% 20%, var(--coral) 96%, transparent 100%) 0 0 / 1.3rem 1.3rem repeat-x,
+    radial-gradient(ellipse 11% 13% at 82% 40%, var(--coral) 96%, transparent 100%) 0 0 / 1.3rem 1.3rem repeat-x;
+}
+
+.e1 {
+  --n: 1;
+}
+
+.e2 {
+  --n: 2;
+}
+
+.e3 {
+  --n: 3;
+}
+
+.e5 {
+  --n: 5;
+}
+
+.good {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.good li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.18rem 0.35rem 0.18rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 999px;
+}
+
+.good li span:last-child {
+  padding: 0 0.4rem;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  border-radius: 999px;
+}
+
+.yes {
+  color: var(--on-teal);
+  background: var(--teal);
+}
+
+.yes span:last-child {
+  color: var(--teal);
+  background: var(--on-teal);
+}
+
+.no {
+  color: var(--muted);
+  box-shadow: inset 0 0 0 1.5px var(--rule);
+}
+
+.no span:last-child {
+  color: var(--card);
+  background: var(--muted);
+}
+
+.cardFlavour {
+  margin-top: auto;
+  padding: 0.6rem 0.7rem;
+  font-size: 0.86rem;
+  font-style: italic;
+  line-height: 1.45;
+  background: var(--shade);
+  border-radius: 8px;
+}
+
+.cardsNote {
+  margin-top: 2rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ adopt */
+
+.adoptGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.8fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+  counter-reset: step;
+}
+
+.steps li {
+  position: relative;
+  padding: 1.3rem 1.3rem 1.4rem 4.6rem;
+  background: var(--card);
+  border-radius: 18px;
+  box-shadow: 0 0 0 2px var(--rule);
+  counter-increment: step;
+}
+
+.steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 1.1rem;
+  top: 1.1rem;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--on-coral);
+  background: var(--coral);
+  border-radius: 50%;
+}
+
+.stepName {
+  font-size: 1.35rem;
+}
+
+.stepText {
+  margin-top: 0.3rem;
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+/* The fee, on a luggage-style price tag. */
+.feeTag {
+  position: relative;
+  padding: 2.4rem 1.8rem 1.8rem;
+  color: var(--on-ink);
+  background:
+    radial-gradient(circle at 50% 1.2rem, var(--cream) 0 0.45rem, transparent 0.5rem),
+    var(--ink);
+  clip-path: polygon(20% 0, 80% 0, 100% 12%, 100% 100%, 0 100%, 0 12%);
+  border-radius: 0 0 16px 16px;
+  transform: rotate(-2deg);
+}
+
+.feeTitle {
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.fees {
+  margin-top: 1rem;
+}
+
+.fees div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 2px dotted var(--ink-rule);
+}
+
+.fees dd {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.feeNote {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+}
+
+/* ----------------------------------------------------------------- foster */
+
+.fosterPanel {
+  position: relative;
+  display: grid;
+  justify-items: end;
+  padding: clamp(1.2rem, 4vw, 3.5rem);
+  overflow: hidden;
+  border-radius: 28px;
+  background: var(--shade);
+}
+
+.fosterField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.fosterCard {
+  position: relative;
+  max-width: 40rem;
+  padding: clamp(1.6rem, 4vw, 2.6rem);
+  background: var(--card);
+  border-radius: 22px;
+  box-shadow: 0 30px 50px -30px var(--drop);
+}
+
+.fosterFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 1.6rem;
+}
+
+.fosterFacts div {
+  padding: 0.8rem;
+  background: var(--shade);
+  border-radius: 12px;
+}
+
+.fosterFacts dt {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.fosterFacts dd {
+  font-size: 0.84rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.fosterCard .btnInk {
+  margin-top: 1.6rem;
+}
+
+/* -------------------------------------------------------------- volunteer */
+
+.volGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.roles {
+  display: grid;
+  gap: 1rem;
+}
+
+.roles li {
+  padding: 1.1rem 1.3rem;
+  border-left: 6px solid var(--teal);
+  background: var(--card);
+  border-radius: 0 14px 14px 0;
+}
+
+.roles li:nth-child(2) {
+  border-left-color: var(--coral);
+}
+
+.roles li:nth-child(3) {
+  border-left-color: var(--ink);
+}
+
+.roleName {
+  font-size: 1.3rem;
+}
+
+.roleText {
+  margin-top: 0.2rem;
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+.rotaWrap {
+  position: relative;
+  padding: clamp(1.2rem, 3vw, 2.2rem);
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--ink);
+}
+
+.rotaField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.rota {
+  position: relative;
+  padding: 1.4rem 1.5rem;
+  background: var(--card);
+  border-radius: 16px;
+  transform: rotate(-1deg);
+}
+
+.rotaTitle {
+  font-size: 1.35rem;
+}
+
+.rotaTable {
+  width: 100%;
+  margin-top: 0.8rem;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.rotaTable th,
+.rotaTable td {
+  padding: 0.4rem 0.3rem;
+  text-align: left;
+  border-bottom: 1px dashed var(--rule);
+}
+
+.rotaTable thead th {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.rotaTable tbody th {
+  font-family: var(--display);
+  font-weight: 800;
+}
+
+.full,
+.need {
+  display: inline-block;
+  padding: 0.1rem 0.6rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: 999px;
+}
+
+.full {
+  color: var(--muted);
+  background: var(--shade);
+}
+
+.need {
+  color: var(--on-coral);
+  background: var(--coral);
+}
+
+.rotaNote {
+  margin-top: 0.8rem;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- donate */
+
+.donatePanel {
+  position: relative;
+  padding: clamp(1.2rem, 4vw, 3rem);
+  overflow: hidden;
+  border-radius: 28px;
+  background: var(--teal);
+}
+
+.donateField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.donateGrid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+  gap: clamp(1.2rem, 3vw, 2rem);
+  align-items: stretch;
+}
+
+/* The thermometer: a scale, a tube filling from the bulb. */
+.thermo {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  padding: 1.6rem 1.4rem;
+  background: var(--card);
+  border-radius: 22px;
+}
+
+.thermoGoal {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.gauge {
+  display: grid;
+  grid-template-columns: auto 4.2rem;
+  grid-template-rows: 21rem auto auto;
+  column-gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.ticks {
+  grid-row: 1;
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.4rem 0 0;
+  font-family: var(--display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+  text-align: right;
+  color: var(--muted);
+}
+
+.tube {
+  grid-row: 1;
+  grid-column: 2;
+  position: relative;
+  justify-self: center;
+  width: 2rem;
+  overflow: hidden;
+  border-radius: 999px 999px 0 0;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 calc(25% - 2px), var(--rule) calc(25% - 2px) 25%) 0 0.4rem / 100% calc(100% - 0.4rem) no-repeat,
+    var(--shade);
+  box-shadow: inset 0 0 0 3px var(--rule);
+}
+
+.mercury {
+  position: absolute;
+  left: 0.4rem;
+  right: 0.4rem;
+  bottom: 0;
+  height: calc((100% - 0.4rem) * 0.696);
+  border-radius: 999px 999px 0 0;
+  background: var(--coral);
+}
+
+.bulb {
+  grid-row: 2;
+  grid-column: 2;
+  justify-self: center;
+  width: 4rem;
+  height: 4rem;
+  margin-top: -0.7rem;
+  border-radius: 50%;
+  background: var(--coral);
+  box-shadow: 0 0 0 3px var(--rule), inset -6px -6px 0 color-mix(in oklab, var(--coral) 80%, var(--ink));
+}
+
+.thermoNow {
+  grid-row: 3;
+  grid-column: 1 / -1;
+  display: grid;
+  justify-items: center;
+  margin-top: 1rem;
+}
+
+.thermoNow strong {
+  font-family: var(--display);
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.thermoNow span {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.donateText {
+  padding: clamp(1.6rem, 3vw, 2.4rem);
+  background: var(--card);
+  border-radius: 22px;
+}
+
+.gifts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 1.6rem;
+}
+
+.gifts li {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.9rem 1rem;
+  background: var(--shade);
+  border-radius: 14px;
+}
+
+.gifts strong {
+  font-family: var(--display);
+  font-size: 1.8rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.gifts span {
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.giveForm {
+  display: grid;
+  grid-template-columns: minmax(0, 0.6fr) minmax(0, 1fr) auto;
+  gap: 0.8rem;
+  align-items: end;
+  margin-top: 1.6rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.field label {
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-height: 3.1rem;
+  padding: 0.5rem 0.9rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--card);
+  border: 2px solid var(--rule);
+  border-radius: 12px;
+}
+
+.field select {
+  appearance: none;
+  background:
+    linear-gradient(45deg, transparent 50%, var(--text) 50%) calc(100% - 20px) 50% / 7px 7px no-repeat,
+    linear-gradient(-45deg, transparent 50%, var(--text) 50%) calc(100% - 13px) 50% / 7px 7px no-repeat,
+    var(--card);
+}
+
+/* ------------------------------------------------------------------- lost */
+
+.lostHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem 3rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 2.8rem);
+}
+
+.lostHead .secHead {
+  margin-bottom: 0;
+}
+
+.lostSteps {
+  display: grid;
+  gap: 0.5rem;
+  counter-reset: tip;
+}
+
+.lostSteps li {
+  position: relative;
+  padding-left: 2.2rem;
+  counter-increment: tip;
+}
+
+.lostSteps li::before {
+  content: counter(tip);
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  font-family: var(--display);
+  font-size: 0.9rem;
+  font-weight: 900;
+  color: var(--on-teal);
+  background: var(--teal);
+  border-radius: 50%;
+}
+
+/* The noticeboard: felt, pins and paper. */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.2rem, 3vw, 2.4rem);
+  padding: clamp(1.6rem, 4vw, 3rem);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 25% 25%, color-mix(in oklab, var(--teal) 10%, transparent) 0 1px, transparent 1.5px) 0 0 / 7px 7px,
+    color-mix(in oklab, var(--teal) 22%, var(--cream));
+  box-shadow: inset 0 0 0 10px color-mix(in oklab, var(--teal) 45%, var(--ink));
+}
+
+.notice {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.3rem 0;
+  background: var(--card);
+  box-shadow: 0 16px 24px -16px var(--drop);
+}
+
+.notice:nth-child(1) {
+  transform: rotate(-1.5deg);
+}
+
+.notice:nth-child(2) {
+  transform: rotate(1deg);
+}
+
+.notice:nth-child(3) {
+  transform: rotate(-0.6deg);
+}
+
+/* The pin. */
+.notice::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  width: 1rem;
+  height: 1rem;
+  margin-left: -0.5rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, color-mix(in oklab, var(--coral) 60%, var(--lift)), var(--coral) 60%);
+  box-shadow: 0 3px 3px var(--drop);
+}
+
+.noticeHead {
+  margin-top: 0.4rem;
+  padding: 0.3rem 0.6rem;
+  font-family: var(--display);
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+  border-radius: 8px;
+}
+
+.found .noticeHead {
+  color: var(--on-teal);
+  background: var(--teal);
+}
+
+.lost .noticeHead {
+  color: var(--on-coral);
+  background: var(--coral);
+}
+
+.noticeWhat {
+  margin-top: 0.9rem;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.noticeFacts {
+  margin-top: 0.7rem;
+}
+
+.noticeFacts div {
+  display: grid;
+  grid-template-columns: 3.6rem minmax(0, 1fr);
+  gap: 0.4rem;
+  padding: 0.3rem 0;
+  font-size: 0.92rem;
+}
+
+.noticeFacts dt {
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* Tear-off tabs with the phone number, one already taken. */
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin: 1.2rem -1.3rem 0;
+  border-top: 2px dashed var(--rule);
+}
+
+.tabs li {
+  display: grid;
+  place-items: center;
+  height: 7.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.tabs li + li {
+  border-right: 1.5px dashed var(--rule);
+}
+
+.tabs li:nth-child(3) {
+  visibility: hidden;
+}
+
+/* ------------------------------------------------------------------ visit */
+
+.visitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 0.8fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: end;
+}
+
+.hours div {
+  padding: 0.7rem 0;
+  border-bottom: 2px dotted var(--rule);
+}
+
+.hours dt {
+  font-weight: 700;
+}
+
+.hours dd {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.contact {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.contact a {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-decoration: underline;
+  text-decoration-color: var(--coral);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.contactNote {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.footField {
+  position: relative;
+  height: clamp(100px, 11vw, 144px);
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr));
+  gap: 2rem clamp(1.5rem, 3vw, 3rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.6rem, 5vw, 3.6rem) var(--gut) clamp(3rem, 6vw, 4rem);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--on-ink);
+}
+
+.footSub {
+  margin-top: 0.4rem;
+}
+
+.footCol {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+}
+
+.footLabel {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--on-ink);
+}
+
+.footCol a {
+  color: var(--on-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--ink-rule);
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .nav {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .barDonate {
+    justify-self: end;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 44rem;
+    margin: 0 auto;
+  }
+
+  .footInner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .hero,
+  .adoptGrid,
+  .volGrid,
+  .lostHead,
+  .visitGrid,
+  .donateGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .poster {
+    max-width: 28rem;
+    justify-self: center;
+  }
+
+  .feeTag {
+    max-width: 24rem;
+  }
+
+  .board {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .thermo {
+    justify-self: center;
+    width: min(100%, 20rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.8rem;
+  }
+
+  .markName {
+    font-size: 1.1rem;
+  }
+
+  .barDonate {
+    padding: 0.4rem 0.9rem;
+    font-size: 0.9rem;
+  }
+
+  .cards,
+  .steps,
+  .board,
+  .gifts,
+  .fosterFacts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cards {
+    max-width: 22rem;
+  }
+
+  .heroStats {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .heroStats div {
+    padding: 0.7rem;
+  }
+
+  .heroStats dt {
+    font-size: 1.5rem;
+  }
+
+  .giveForm {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gauge {
+    grid-template-rows: 16rem auto auto;
+  }
+}
+
+@media (max-width: 420px) {
+  .barDonate {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btnCoral,
+  .btnLine,
+  .btnInk {
+    transition: none;
+  }
+
+  .btnCoral:hover,
+  .btnLine:hover,
+  .btnInk:hover {
+    transform: none;
+  }
+}

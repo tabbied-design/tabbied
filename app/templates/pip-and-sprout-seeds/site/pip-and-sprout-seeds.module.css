@@ -1,0 +1,1665 @@
+/* ==========================================================================
+   PIP & SPROUT SEED CO. - heirloom seeds, the seed barn, Ashby Common
+   A Victorian seed catalog. Kraft paper, engraved rules and small caps,
+   fat-face names and fleurons. Every variety is a seed packet shown front
+   and back: the printed front with its picture on a ray burst, a band with
+   the company's name and the variety on a ribbon banner; the back with a
+   gummed flap, a twelve-month sowing chart and the particulars. Seeds are
+   the ornament throughout: nine dots to a cell round the cover, big dots
+   round the swap-day bill, a dusting behind the order coupon.
+   ========================================================================== */
+
+.page {
+  --kraft: #eadfc5;
+  --ink: #2b2a21;
+  --tomato: #c9412d;
+  --leaf: #4e7936;
+  --marigold: #eaa93a;
+  --text: var(--ink);
+  --on-ink: var(--kraft);
+  --on-tomato: var(--kraft);
+  --on-leaf: var(--kraft);
+  --on-marigold: var(--ink);
+  --display: 'Abril Fatface', 'Didot', 'Bodoni 72', Georgia, serif;
+  --serif: 'Sorts Mill Goudy', 'Goudy Old Style', Garamond, Georgia, serif;
+  --caps: 'IM Fell English SC', 'Sorts Mill Goudy', Georgia, serif;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 76rem;
+
+  /* Derived: never roles of their own. */
+  --muted: color-mix(in oklab, var(--text) 72%, var(--kraft));
+  --rule: color-mix(in oklab, var(--text) 24%, transparent);
+  --faint: color-mix(in oklab, var(--text) 10%, transparent);
+  --deep: color-mix(in oklab, var(--kraft) 86%, var(--ink));
+  --flap: color-mix(in oklab, var(--kraft) 92%, var(--ink));
+  --accent-ink: color-mix(in oklab, var(--tomato) 62%, var(--text));
+  --shadow: color-mix(in oklab, var(--ink) 40%, transparent);
+
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.55;
+  background: var(--kraft);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by each surface's lightness, tinted toward an ink. */
+    --text: color-mix(in oklab, oklch(from var(--kraft) clamp(0, (0.62 - l) * 1000, 1) 0 0) 84%, var(--ink));
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--kraft));
+    --on-tomato: oklch(from var(--tomato) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-leaf: oklch(from var(--leaf) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-marigold: oklch(from var(--marigold) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, h4) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.7rem var(--gut);
+  background: color-mix(in srgb, var(--kraft) 95%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 3px double var(--rule);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.markName {
+  font-family: var(--display);
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.markSub {
+  font-family: var(--caps);
+  font-size: 1rem;
+  color: var(--accent-ink);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.2rem clamp(0.9rem, 1.8vw, 1.8rem);
+  font-family: var(--caps);
+  font-size: 1.05rem;
+}
+
+.nav a {
+  color: var(--muted);
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--tomato);
+    text-underline-offset: 5px;
+  }
+}
+
+.barOrder {
+  padding: 0.45rem 1rem 0.5rem;
+  background: var(--tomato);
+  color: var(--on-tomato);
+  font-family: var(--caps);
+  font-size: 1rem;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 2px var(--tomato), inset 0 0 0 3px var(--on-tomato);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  font-family: var(--caps);
+  --template-menu-bg: var(--kraft);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(1.6rem, 4.5vw, 4rem) var(--gut);
+}
+
+.coverField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* The cover: an engraved double rule with a quarter round in each corner. */
+.cover {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.4rem, 5vw, 4.8rem) clamp(1.4rem, 5vw, 4.8rem);
+  background:
+    radial-gradient(circle at 0 0, transparent 0 1.9rem, var(--text) 1.9rem 2.02rem, transparent 2.08rem) 0.9rem 0.9rem / 2.2rem 2.2rem no-repeat,
+    radial-gradient(circle at 100% 0, transparent 0 1.9rem, var(--text) 1.9rem 2.02rem, transparent 2.08rem) calc(100% - 0.9rem) 0.9rem / 2.2rem 2.2rem no-repeat,
+    radial-gradient(circle at 0 100%, transparent 0 1.9rem, var(--text) 1.9rem 2.02rem, transparent 2.08rem) 0.9rem calc(100% - 0.9rem) / 2.2rem 2.2rem no-repeat,
+    radial-gradient(circle at 100% 100%, transparent 0 1.9rem, var(--text) 1.9rem 2.02rem, transparent 2.08rem) calc(100% - 0.9rem) calc(100% - 0.9rem) / 2.2rem 2.2rem no-repeat,
+    var(--kraft);
+  border: 3px solid var(--text);
+  box-shadow:
+    inset 0 0 0 8px var(--kraft),
+    inset 0 0 0 9px var(--text),
+    0 30px 60px -30px var(--shadow);
+}
+
+.coverText {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+.annual {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  width: min(100%, 30rem);
+  font-family: var(--caps);
+  font-size: 1.05rem;
+  letter-spacing: 0.18em;
+}
+
+.annual::before,
+.annual::after {
+  content: '';
+  flex: 1;
+  height: 3px;
+  border-top: 1px solid var(--text);
+  border-bottom: 1px solid var(--text);
+}
+
+.catalogue {
+  margin-top: 0.5rem;
+  font-style: italic;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+}
+
+.title {
+  display: grid;
+  justify-items: center;
+  margin-top: 0.6rem;
+}
+
+.titleMain {
+  font-family: var(--display);
+  font-size: clamp(3.2rem, 8.2vw, 7.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+}
+
+.titleSub {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.7rem;
+  font-family: var(--caps);
+  font-size: clamp(1.2rem, 2.2vw, 1.75rem);
+  letter-spacing: 0.34em;
+  color: var(--accent-ink);
+}
+
+.titleSub::before,
+.titleSub::after {
+  content: '\25C6';
+  font-size: 0.55em;
+  letter-spacing: 0;
+}
+
+.fleuron {
+  margin: 0.9rem 0 0.4rem;
+  font-size: 1.9rem;
+  line-height: 1;
+  color: var(--accent-ink);
+}
+
+.fleuron::before {
+  content: '\2766';
+}
+
+.lede {
+  max-width: 31rem;
+  font-size: clamp(1.1rem, 1.5vw, 1.28rem);
+  line-height: 1.5;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 1.6rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-block;
+  padding: 0.6rem 1.3rem 0.65rem;
+  border: 0;
+  border-radius: 2px;
+  font-family: var(--caps);
+  font-size: 1.1rem;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.btn {
+  background: var(--tomato);
+  color: var(--on-tomato);
+  box-shadow: inset 0 0 0 3px var(--tomato), inset 0 0 0 4px var(--on-tomato);
+}
+
+.btnGhost {
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--text), inset 0 0 0 4px var(--kraft), inset 0 0 0 5px var(--text);
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    background: color-mix(in oklab, var(--tomato) 82%, var(--ink));
+  }
+
+  .btnGhost:hover {
+    background: var(--faint);
+  }
+}
+
+.coverFoot {
+  margin-top: 1.6rem;
+  font-family: var(--caps);
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.heroPacket {
+  display: grid;
+  justify-items: center;
+  gap: 1.1rem;
+}
+
+.heroPacket .front {
+  width: min(21rem, 100%);
+  rotate: 3deg;
+  box-shadow:
+    inset 0 0 0 5px var(--kraft),
+    inset 0 0 0 6px var(--text),
+    0 34px 44px -24px color-mix(in oklab, var(--ink) 75%, transparent);
+}
+
+.heroCaption {
+  max-width: 18rem;
+  font-style: italic;
+  font-size: 0.98rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ packets */
+
+/* Each packet names its band color and the ray behind its picture. */
+.toneTomato {
+  --band: var(--tomato);
+  --on-band: var(--on-tomato);
+  --ray: var(--marigold);
+}
+
+.toneBean {
+  --band: var(--leaf);
+  --on-band: var(--on-leaf);
+  --ray: var(--tomato);
+}
+
+.toneSquash {
+  --band: var(--ink);
+  --on-band: var(--on-ink);
+  --ray: var(--marigold);
+}
+
+.toneCarrot {
+  --band: var(--marigold);
+  --on-band: var(--on-marigold);
+  --ray: var(--leaf);
+}
+
+.toneSunflower {
+  --band: var(--tomato);
+  --on-band: var(--on-tomato);
+  --ray: var(--leaf);
+}
+
+.tonePea {
+  --band: var(--leaf);
+  --on-band: var(--on-leaf);
+  --ray: var(--marigold);
+}
+
+/* The front of a packet: band, picture on its rays, banner, particulars. */
+.front {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  padding: 0.55rem 0.55rem 0.9rem;
+  background: var(--kraft);
+  color: var(--text);
+  border: 2px solid var(--text);
+  border-radius: 2px;
+  text-align: center;
+  box-shadow:
+    inset 0 0 0 5px var(--kraft),
+    inset 0 0 0 6px var(--text),
+    0 18px 28px -18px var(--shadow);
+}
+
+.band {
+  justify-self: stretch;
+  padding: 0.3rem 0.4rem 0.35rem;
+  background: var(--band);
+  color: var(--on-band);
+  font-family: var(--caps);
+  font-size: 0.86rem;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+}
+
+.plate {
+  display: grid;
+  place-items: center;
+  justify-self: stretch;
+  aspect-ratio: 1 / 1.02;
+  margin-top: 0.35rem;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 58%, var(--kraft) 0 18%, transparent 46%),
+    repeating-conic-gradient(from 0deg at 50% 58%, color-mix(in oklab, var(--ray) 30%, var(--kraft)) 0 5deg, var(--kraft) 5deg 10deg);
+  border: 1px solid var(--rule);
+}
+
+.plateArt {
+  width: 80%;
+  max-height: 90%;
+  object-fit: contain;
+}
+
+/* A ribbon banner with notched ends and folded tails. */
+.banner {
+  position: relative;
+  z-index: 1;
+  margin: -1.5rem -0.2rem 0;
+  padding: 0.25rem 1.6rem 0.35rem;
+  background: var(--band);
+  color: var(--on-band);
+  font-family: var(--display);
+  font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+  line-height: 1.15;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 0.8rem) 50%, 100% 100%, 0 100%, 0.8rem 50%);
+  filter: drop-shadow(0 2px 0 color-mix(in oklab, var(--ink) 30%, transparent));
+}
+
+.crop {
+  margin-top: 0.45rem;
+  font-family: var(--caps);
+  font-size: 1.02rem;
+  letter-spacing: 0.1em;
+}
+
+.lot {
+  margin-top: 0.1rem;
+  font-style: italic;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.heroPacket .banner {
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+}
+
+.heroPacket .band {
+  font-size: 1rem;
+}
+
+.heroPacket .crop {
+  font-size: 1.2rem;
+}
+
+/* ------------------------------------------------------------ sections */
+
+.sec {
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.secHead {
+  display: grid;
+  justify-items: center;
+  max-width: 46rem;
+  margin: 0 auto clamp(2.4rem, 5vw, 3.6rem);
+  text-align: center;
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-family: var(--caps);
+  font-size: 1.05rem;
+  letter-spacing: 0.16em;
+  color: var(--accent-ink);
+}
+
+.kicker::before,
+.kicker::after {
+  content: '';
+  width: 2.4rem;
+  height: 3px;
+  border-top: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+}
+
+.secHead h2 {
+  margin-top: 0.5rem;
+  font-family: var(--display);
+  font-size: clamp(2.3rem, 5vw, 3.9rem);
+  line-height: 1.02;
+}
+
+.secNote {
+  margin-top: 0.9rem;
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+
+.secHead::after {
+  content: '\2766';
+  margin-top: 0.9rem;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--accent-ink);
+}
+
+.packetsSec {
+  background: var(--deep);
+  border-top: 3px double var(--rule);
+  border-bottom: 3px double var(--rule);
+}
+
+.packets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2.8rem, 5vw, 4.2rem) clamp(2rem, 4vw, 3.6rem);
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+/* A pair: the front, tilted, laid over the left edge of the back. */
+.pair {
+  display: grid;
+  grid-template-columns: 14.5rem minmax(0, 1fr);
+  align-items: start;
+}
+
+.pair .front {
+  z-index: 2;
+  margin-top: 1.4rem;
+  margin-right: -1.6rem;
+  rotate: -3deg;
+}
+
+.pair:nth-child(even) .front {
+  rotate: 2.5deg;
+}
+
+.back {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  padding: 3rem 1.4rem 1.3rem 2.6rem;
+  background: var(--kraft);
+  color: var(--text);
+  border: 2px solid var(--text);
+  border-radius: 2px;
+  box-shadow: 0 16px 26px -18px var(--shadow);
+}
+
+/* The gummed flap folded down over the top of the back. */
+.back::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.2rem;
+  background: var(--flap);
+  clip-path: polygon(0 0, 100% 0, 100% 30%, 50% 100%, 0 30%);
+  border-bottom: 1px solid var(--rule);
+}
+
+.back::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.2rem;
+  background: linear-gradient(var(--rule), var(--rule)) 0 0 / 100% 1px no-repeat;
+  clip-path: polygon(0 30%, 50% 100%, 100% 30%, 100% calc(30% + 1px), 50% calc(100% + 1px), 0 calc(30% + 1px));
+  opacity: 0.8;
+}
+
+.back h3 {
+  font-family: var(--display);
+  font-size: 1.65rem;
+  line-height: 1.05;
+}
+
+.latin {
+  margin-top: -0.3rem;
+  font-style: italic;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+.blurb {
+  font-size: 1.02rem;
+  line-height: 1.45;
+}
+
+/* The sowing chart: twelve months, three jobs. */
+.chart {
+  display: grid;
+  margin-top: 0.4rem;
+  border-top: 2px solid var(--text);
+  border-bottom: 2px solid var(--text);
+}
+
+.chartHead,
+.chartRow {
+  display: grid;
+  grid-template-columns: 5.6rem repeat(12, minmax(0, 1fr));
+  align-items: center;
+}
+
+.chartHead {
+  font-family: var(--caps);
+  font-size: 0.78rem;
+  text-align: center;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule);
+}
+
+.chartRow {
+  min-height: 1.45rem;
+  border-bottom: 1px solid var(--faint);
+  background: repeating-linear-gradient(90deg, var(--faint) 0 1px, transparent 1px calc((100% - 5.6rem) / 12)) 5.6rem 0 / calc(100% - 5.6rem) 100% no-repeat;
+}
+
+.chartRow:last-child {
+  border-bottom: 0;
+}
+
+.chartLabel {
+  grid-column: 1;
+  font-family: var(--caps);
+  font-size: 0.8rem;
+  line-height: 1.1;
+}
+
+.chartBar {
+  grid-row: 1;
+  height: 0.62rem;
+  margin: 0 1px;
+  border-radius: 1px;
+}
+
+.chartNone {
+  grid-column: 2 / -1;
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--muted);
+  padding-left: 0.3rem;
+}
+
+/* The three jobs, the same everywhere: hatched under cover, solid out. */
+.indoors {
+  background: repeating-linear-gradient(135deg, var(--tomato) 0 2px, color-mix(in oklab, var(--tomato) 35%, var(--kraft)) 2px 4px);
+}
+
+.outdoors {
+  background: var(--leaf);
+}
+
+.harvest {
+  background: var(--marigold);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--marigold) 60%, var(--ink));
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 0;
+  margin-top: 0.3rem;
+}
+
+.facts div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0 0.8rem 0.3rem 0;
+  border-bottom: 1px dotted var(--rule);
+}
+
+.facts div:nth-child(even) {
+  padding: 0 0 0.3rem 0.8rem;
+  border-left: 1px solid var(--rule);
+}
+
+.facts dt {
+  font-family: var(--caps);
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.facts dd {
+  font-size: 0.95rem;
+  line-height: 1.25;
+}
+
+.backNote {
+  margin-top: 0.2rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--rule);
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+/* ------------------------------------------------------------ calendar */
+
+.calWrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  overflow-x: auto;
+  border: 3px double var(--rule);
+  background: color-mix(in oklab, var(--kraft) 94%, var(--ink));
+}
+
+.calInner {
+  position: relative;
+  min-width: 46rem;
+  --name-col: 12rem;
+}
+
+.calendar {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.calCorner {
+  width: var(--name-col);
+  padding: 0.8rem 1rem;
+  font-family: var(--caps);
+  font-weight: 400;
+  font-size: 0.9rem;
+  text-align: left;
+  color: var(--muted);
+  border-bottom: 2px solid var(--text);
+}
+
+.calendar .calMonth {
+  padding: 0.8rem 0;
+  font-family: var(--caps);
+  font-weight: 400;
+  font-size: 1rem;
+  text-align: center;
+  border-bottom: 2px solid var(--text);
+  border-left: 1px solid var(--faint);
+}
+
+.calendar tbody tr + tr > * {
+  border-top: 1px solid var(--rule);
+}
+
+.calName {
+  padding: 0.7rem 1rem;
+  text-align: left;
+  font-weight: 400;
+}
+
+.calVariety {
+  display: block;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  line-height: 1.1;
+}
+
+.calCrop {
+  display: block;
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.calTrack {
+  padding: 0;
+  background: repeating-linear-gradient(90deg, var(--faint) 0 1px, transparent 1px calc(100% / 12), color-mix(in oklab, var(--ink) 4%, transparent) calc(100% / 12) calc(200% / 12));
+}
+
+.calGrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: repeat(3, 0.62rem);
+  row-gap: 0.28rem;
+  padding: 0.7rem 0;
+}
+
+.calBar {
+  border-radius: 999px;
+  margin: 0 3px;
+}
+
+.calGrid .indoors {
+  grid-row: 1;
+}
+
+.calGrid .outdoors {
+  grid-row: 2;
+}
+
+.calGrid .harvest {
+  grid-row: 3;
+}
+
+/* Average frost dates, ruled down the year: May 10 and October 8. */
+.frost {
+  position: absolute;
+  top: 3.05rem;
+  bottom: 0;
+  width: 0;
+  border-left: 2px dashed var(--accent-ink);
+  pointer-events: none;
+}
+
+.frost::before {
+  content: '\2744';
+  position: absolute;
+  top: 0.15rem;
+  left: -0.62rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--kraft) 94%, var(--ink));
+  font-size: 0.85rem;
+  line-height: 1.1rem;
+  text-align: center;
+  color: var(--accent-ink);
+}
+
+.frostLast {
+  left: calc(var(--name-col) + (100% - var(--name-col)) * 0.36);
+}
+
+.frostFirst {
+  left: calc(var(--name-col) + (100% - var(--name-col)) * 0.772);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem 2rem;
+  max-width: var(--max);
+  margin: 1.3rem auto 0;
+  font-family: var(--caps);
+  font-size: 0.98rem;
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.key {
+  display: inline-block;
+  width: 2.2rem;
+  height: 0.62rem;
+  border-radius: 999px;
+}
+
+.keyFrost {
+  display: inline-block;
+  width: 0;
+  height: 1.2rem;
+  border-left: 2px dashed var(--accent-ink);
+}
+
+/* ---------------------------------------------------------------- swap */
+
+.swapSec {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(2.4rem, 5vw, 4.5rem);
+  align-items: center;
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+}
+
+/* The bill: a printed notice in a border of big dots. */
+.bill {
+  position: relative;
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+  background: var(--ink);
+  border-radius: 3px;
+  box-shadow: 0 30px 50px -30px var(--shadow);
+  rotate: -1deg;
+}
+
+.billField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+.billInner {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  padding: clamp(1.6rem, 3.5vw, 2.6rem) clamp(1.2rem, 3vw, 2.4rem);
+  background: var(--kraft);
+  color: var(--text);
+  text-align: center;
+  box-shadow: inset 0 0 0 4px var(--kraft), inset 0 0 0 5px var(--text), inset 0 0 0 7px var(--kraft), inset 0 0 0 8px var(--text);
+}
+
+.billKicker {
+  font-family: var(--caps);
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  color: var(--accent-ink);
+}
+
+.billTitle {
+  margin-top: 0.5rem;
+  font-family: var(--display);
+  font-size: clamp(2.2rem, 4.6vw, 3.6rem);
+  line-height: 1;
+}
+
+.billTitle span {
+  display: block;
+  margin: 0.2rem 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.45em;
+}
+
+.billLede {
+  margin-top: 0.8rem;
+  font-style: italic;
+  font-size: 1.12rem;
+}
+
+.swaps {
+  display: grid;
+  width: 100%;
+  margin-top: 1.4rem;
+  border-top: 3px double var(--rule);
+  text-align: left;
+}
+
+.swaps li {
+  display: grid;
+  grid-template-columns: 6.4rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.swapDate {
+  display: grid;
+  justify-items: center;
+  padding: 0.3rem 0.2rem;
+  border: 1px solid var(--text);
+  box-shadow: inset 0 0 0 2px var(--kraft), inset 0 0 0 3px var(--text);
+}
+
+.swapDate span {
+  font-family: var(--caps);
+  font-size: 0.85rem;
+  line-height: 1.1;
+  color: var(--accent-ink);
+}
+
+.swapDate strong {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.3rem;
+  line-height: 1.1;
+}
+
+.swaps h3 {
+  font-family: var(--caps);
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+.swaps li p:not(.swapDate) {
+  font-size: 0.98rem;
+  line-height: 1.4;
+}
+
+.billFoot {
+  margin-top: 1.1rem;
+  font-family: var(--caps);
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.library {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.libraryTitle {
+  font-family: var(--display);
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+  line-height: 1.05;
+}
+
+.steps {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 1fr);
+  column-gap: 1rem;
+}
+
+.stepNo {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+  background: var(--tomato);
+  color: var(--on-tomato);
+  font-family: var(--display);
+  font-size: 1.5rem;
+  box-shadow: inset 0 0 0 3px var(--tomato), inset 0 0 0 4px var(--on-tomato);
+}
+
+.steps h4 {
+  font-family: var(--caps);
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.steps p {
+  font-size: 1.02rem;
+  line-height: 1.5;
+}
+
+.libraryNote {
+  padding-top: 1rem;
+  border-top: 3px double var(--rule);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------------- guides */
+
+.guides {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.4rem;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.guide {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.5rem 1.5rem 1.2rem;
+  background: var(--kraft);
+  border: 1px solid var(--text);
+  box-shadow: inset 0 0 0 4px var(--kraft), inset 0 0 0 5px var(--rule);
+}
+
+.guideNo {
+  font-family: var(--caps);
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  color: var(--accent-ink);
+}
+
+.guide h3 {
+  font-family: var(--display);
+  font-size: 1.55rem;
+  line-height: 1.08;
+}
+
+.guideBody {
+  font-size: 1.02rem;
+  line-height: 1.5;
+}
+
+.guideTime {
+  align-self: flex-end;
+  margin-top: auto;
+  padding-top: 0.6rem;
+  font-family: var(--caps);
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.guideTime::before {
+  content: '\2767';
+  margin-right: 0.45rem;
+  color: var(--accent-ink);
+}
+
+/* ---------------------------------------------------------------- order */
+
+.orderSec {
+  background: var(--deep);
+  border-top: 3px double var(--rule);
+  border-bottom: 3px double var(--rule);
+}
+
+.orderGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.priceCol {
+  display: grid;
+  gap: 2rem;
+}
+
+.prices {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 2px solid var(--text);
+  border-bottom: 2px solid var(--text);
+}
+
+.prices tr + tr > * {
+  border-top: 1px solid var(--rule);
+}
+
+.prices th {
+  padding: 0.8rem 0.6rem 0.8rem 0;
+  text-align: left;
+  font-weight: 400;
+}
+
+.priceWhat {
+  display: block;
+  font-family: var(--display);
+  font-size: 1.25rem;
+  line-height: 1.15;
+}
+
+.priceDetail {
+  display: block;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.priceLeader {
+  width: 18%;
+  background: radial-gradient(circle, var(--muted) 0 1px, transparent 1.5px) 0 calc(50% + 0.5rem) / 7px 7px repeat-x;
+}
+
+.prices .price {
+  padding-left: 0.6rem;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.shipping {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.shipping div {
+  display: grid;
+  grid-template-columns: 6.6rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.shipping dt {
+  font-family: var(--caps);
+  font-size: 1.05rem;
+  color: var(--accent-ink);
+}
+
+.shipping dd {
+  line-height: 1.45;
+}
+
+/* The coupon: a cut-out form in a dusting of seed, scissors at the edge. */
+.coupon {
+  position: relative;
+  padding: clamp(1.1rem, 2.5vw, 1.8rem);
+  background: var(--kraft);
+  border: 2px dashed var(--text);
+}
+
+.coupon::before {
+  content: '\2702';
+  position: absolute;
+  z-index: 2;
+  top: -0.95rem;
+  left: 1.6rem;
+  padding: 0 0.3rem;
+  background: var(--deep);
+  font-size: 1.3rem;
+  line-height: 1.3;
+}
+
+.couponField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.orderForm {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--kraft);
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--text), inset 0 0 0 4px var(--kraft), inset 0 0 0 5px var(--text);
+}
+
+.formHead {
+  font-family: var(--display);
+  font-size: 2rem;
+  line-height: 1;
+  text-align: center;
+}
+
+.formNote {
+  font-style: italic;
+  text-align: center;
+  line-height: 1.45;
+}
+
+.field {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.field label {
+  font-family: var(--caps);
+  font-size: 1rem;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--text);
+  border-radius: 0;
+  background: color-mix(in oklab, var(--kraft) 94%, var(--ink));
+  color: var(--text);
+  font: inherit;
+  font-size: 1.02rem;
+}
+
+.field select option {
+  background: var(--kraft);
+  color: var(--text);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.orderForm .btn {
+  justify-self: center;
+  margin-top: 0.4rem;
+}
+
+/* --------------------------------------------------------------- garden */
+
+.gardenGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.gardenText {
+  display: grid;
+  gap: 1rem;
+}
+
+.gardenText .kicker {
+  justify-self: start;
+}
+
+.gardenText .kicker::before {
+  display: none;
+}
+
+.gardenText h2 {
+  font-family: var(--display);
+  font-size: clamp(2.1rem, 4.2vw, 3.3rem);
+  line-height: 1.04;
+}
+
+.gardenText p:not(.kicker) {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.signed {
+  font-style: italic;
+  color: var(--muted);
+}
+
+.signed::before {
+  content: '\2766';
+  margin-right: 0.5rem;
+  font-style: normal;
+  color: var(--accent-ink);
+}
+
+.bedsWrap {
+  display: grid;
+  gap: 1.2rem;
+}
+
+/* The trial garden from above: fronds in the beds, kraft paths between. */
+.beds {
+  position: relative;
+  height: clamp(18rem, 32vw, 26rem);
+  overflow: hidden;
+  background: var(--leaf);
+  border: 3px solid var(--text);
+  box-shadow: inset 0 0 0 6px var(--kraft), 0 24px 40px -26px var(--shadow);
+}
+
+.beds::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 calc(25% - 0.9rem), var(--kraft) calc(25% - 0.9rem) 25%),
+    repeating-linear-gradient(180deg, transparent 0 calc(33.34% - 0.9rem), var(--kraft) calc(33.34% - 0.9rem) 33.34%);
+  box-shadow: inset 0.9rem 0.9rem 0 var(--kraft);
+}
+
+.trialFacts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 2px solid var(--text);
+  border-bottom: 2px solid var(--text);
+}
+
+.trialFacts div {
+  padding: 0.7rem 0.8rem;
+}
+
+.trialFacts div + div {
+  border-left: 1px solid var(--rule);
+}
+
+.trialFacts dt {
+  font-family: var(--display);
+  font-size: 1.8rem;
+  line-height: 1.1;
+}
+
+.trialFacts dd {
+  font-style: italic;
+  font-size: 0.92rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1.6rem, 4vw, 3.6rem);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(1.6rem, 4vw, 2.8rem);
+  border: 3px double var(--text);
+}
+
+.visitHead {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.visitHead .kicker {
+  justify-self: start;
+}
+
+.visitHead .kicker::before {
+  display: none;
+}
+
+.visitHead h2 {
+  font-family: var(--display);
+  font-size: clamp(2.1rem, 4vw, 3rem);
+  line-height: 1.04;
+}
+
+.address {
+  font-family: var(--caps);
+  font-size: 1.15rem;
+}
+
+.visitNote {
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.hours {
+  display: grid;
+  border-top: 2px solid var(--text);
+}
+
+.hours div {
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dt {
+  font-family: var(--caps);
+  font-size: 0.98rem;
+  color: var(--accent-ink);
+}
+
+.hours dd {
+  font-size: 1.05rem;
+}
+
+.contact {
+  display: grid;
+  gap: 0.6rem;
+  padding-top: 0.7rem;
+  border-top: 2px solid var(--text);
+}
+
+.contact a {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  overflow-wrap: anywhere;
+}
+
+.contact p {
+  font-style: italic;
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.lastRow {
+  position: relative;
+  height: 4rem;
+  overflow: hidden;
+  border-bottom: 3px double color-mix(in oklab, var(--on-ink) 40%, transparent);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr));
+  gap: 1rem 2.4rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 2.8rem;
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ----------------------------------------------------------- responsive */
+
+@media (max-width: 1160px) {
+  .packets {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 46rem;
+  }
+
+  .guides {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 1rem;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .cover {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .swapSec,
+  .orderGrid,
+  .gardenGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .visit {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .visitHead {
+    grid-column: 1 / -1;
+  }
+
+  .footInner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .barOrder {
+    display: none;
+  }
+
+  .cover {
+    padding: 2.6rem 1.3rem 2.2rem;
+  }
+
+  .annual {
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+  }
+
+  .titleSub {
+    letter-spacing: 0.2em;
+  }
+
+  .pair {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+
+  .pair .front {
+    width: min(14.5rem, 80%);
+    margin: 0 0 -2.2rem;
+  }
+
+  .back {
+    justify-self: stretch;
+    padding: 3.4rem 1.1rem 1.2rem;
+  }
+
+  .chartHead,
+  .chartRow {
+    grid-template-columns: 4.6rem repeat(12, minmax(0, 1fr));
+  }
+
+  .chartRow {
+    background-position: 4.6rem 0;
+    background-size: calc(100% - 4.6rem) 100%;
+    background-image: repeating-linear-gradient(90deg, var(--faint) 0 1px, transparent 1px calc((100% - 4.6rem) / 12));
+  }
+
+  .chartLabel {
+    font-size: 0.72rem;
+  }
+
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .facts div:nth-child(even) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .guides {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .swaps li {
+    grid-template-columns: 5.2rem minmax(0, 1fr);
+  }
+
+  .trialFacts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .trialFacts div:nth-child(3) {
+    border-left: 0;
+  }
+
+  .trialFacts div:nth-child(n + 3) {
+    border-top: 1px solid var(--rule);
+  }
+
+  .priceLeader {
+    display: none;
+  }
+
+  .shipping div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

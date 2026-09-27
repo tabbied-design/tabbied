@@ -1,0 +1,1578 @@
+/* ==========================================================================
+   HOLLIS PIANO SERVICE - piano tuning and repair, Linden Vale
+   Engraved sheet music. The page is the paper of a score: every section
+   title is a tempo marking with its measure number, and sits on a staff of
+   five hairlines that runs the width of the page. The tuning prices are a
+   score of their own, a bar to each service with a dynamic under it and a
+   double bar at the end; the action drawing is called out like a patent
+   plate; the prose of restoration runs round the curve of a grand; the
+   footer is a repeat sign and a coda. Old Standard for the engraving,
+   Spectral for reading.
+   ========================================================================== */
+
+.page {
+  --paper: #f7f3ea;
+  --ink: #171513;
+  --felt: #a5232e;
+  --brass: #b58b3f;
+
+  --text: var(--ink);
+  --on-ink: var(--paper);
+  --on-felt: var(--paper);
+  --on-brass: var(--ink);
+
+  /* Derived: never roles of their own, always mixed from them. */
+  --muted: color-mix(in oklab, var(--text) 68%, var(--paper));
+  --rule: color-mix(in oklab, var(--text) 22%, transparent);
+  --hair: color-mix(in oklab, var(--text) 34%, transparent);
+  --faint: color-mix(in oklab, var(--text) 10%, transparent);
+  --leaf: color-mix(in oklab, var(--paper) 96%, var(--text));
+  --well: color-mix(in oklab, var(--paper) 90%, var(--brass));
+  --ink-muted: color-mix(in oklab, var(--on-ink) 70%, var(--ink));
+
+  /* Five hairlines, 9px apart: the staff. */
+  --staff: repeating-linear-gradient(180deg, var(--hair) 0 1px, transparent 1px 9px) 0 0 / 100% 37px no-repeat;
+
+  --gut: clamp(1.25rem, 4vw, 3rem);
+  --max: 74rem;
+  --engraved: 'Old Standard TT', 'Bodoni 72', Didot, Georgia, serif;
+  --serif: 'Spectral', Georgia, 'Times New Roman', serif;
+
+  font-family: var(--serif);
+  font-size: 1.06rem;
+  font-weight: 400;
+  line-height: 1.62;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by each surface's lightness, tinted toward the other. */
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--ink));
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--paper));
+    --on-felt: oklch(from var(--felt) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-brass: oklch(from var(--brass) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* A dynamic mark: bold italic, the way an engraver sets mf and pp. */
+.dyn,
+.barDyn,
+.areaDyn {
+  font-family: var(--engraved);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ------------------------------------------------------------- the top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.85rem var(--gut) 0.95rem;
+  background: var(--paper);
+  box-shadow: 0 1px 0 var(--rule), 0 4px 0 var(--paper), 0 5px 0 var(--rule);
+}
+
+.mark {
+  display: grid;
+  line-height: 1.05;
+}
+
+.markName {
+  font-family: var(--engraved);
+  font-size: 1.32rem;
+  font-weight: 700;
+}
+
+.markSub {
+  font-family: var(--engraved);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2.2rem);
+}
+
+.nav a {
+  font-family: var(--engraved);
+  font-style: italic;
+  font-size: 1.08rem;
+  color: var(--muted);
+}
+
+.barNote {
+  font-family: var(--engraved);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--paper);
+  font-family: var(--engraved);
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--felt);
+    text-underline-offset: 6px;
+  }
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 6rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+/* The title page: centred, engraved, with the composer set to the right. */
+.titlePage {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  padding: clamp(1.5rem, 3vw, 2.5rem) 0;
+  border-top: 4px double var(--text);
+  border-bottom: 4px double var(--text);
+}
+
+.opus {
+  font-family: var(--engraved);
+  font-style: italic;
+  font-size: 1.12rem;
+  color: var(--muted);
+}
+
+.title {
+  display: grid;
+  margin-top: 1rem;
+  font-family: var(--engraved);
+  font-size: clamp(3rem, 6.8vw, 6rem);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+}
+
+.titleSmall {
+  font-style: italic;
+  font-size: 0.4em;
+  line-height: 1.3;
+}
+
+.composer {
+  justify-self: end;
+  display: grid;
+  margin-top: 1.4rem;
+  text-align: right;
+  font-family: var(--engraved);
+  font-size: 1.25rem;
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+}
+
+.composerSub {
+  font-variant: normal;
+  font-style: italic;
+  font-size: 0.86em;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+.lede {
+  max-width: 34rem;
+  margin-top: 1.6rem;
+  font-size: 1.12rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 1.8rem;
+}
+
+.btn,
+.btnGhost,
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0 1.5rem;
+  font-family: var(--engraved);
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: 1.5px solid var(--text);
+  border-radius: 999px;
+}
+
+.btn,
+.submit {
+  background: var(--text);
+  color: var(--paper);
+}
+
+@media (hover: hover) {
+  .btn:hover,
+  .submit:hover {
+    background: var(--felt);
+    border-color: var(--felt);
+    color: var(--on-felt);
+  }
+
+  .btnGhost:hover {
+    background: var(--faint);
+  }
+}
+
+/* A leaf of manuscript paper, slightly turned, on the desk. */
+.leaf {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-height: 34rem;
+  padding: 1.2rem 1.4rem 1.1rem;
+  background: var(--leaf);
+  box-shadow:
+    0 0 0 1px var(--rule),
+    8px 10px 0 -1px var(--paper),
+    8px 10px 0 0 var(--rule),
+    0 30px 50px -30px var(--hair);
+  rotate: 1.2deg;
+}
+
+.leafTempo {
+  font-family: var(--engraved);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.leafNo {
+  position: absolute;
+  right: 1.4rem;
+  top: 1.2rem;
+  font-family: var(--engraved);
+  font-size: 1rem;
+}
+
+.manuscript {
+  position: relative;
+  margin: 0.9rem 0;
+  overflow: hidden;
+  border-left: 1.5px solid var(--text);
+  border-right: 1.5px solid var(--text);
+}
+
+.leafCap {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  font-style: italic;
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+.leafCap .dyn {
+  font-size: 1.5rem;
+  color: var(--text);
+}
+
+/* -------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut) 0;
+  scroll-margin-top: 4.5rem;
+}
+
+/* The heading of each section: a measure number, a tempo marking, a note,
+   and under them a staff across the page with a bar line at each end. */
+.secHead {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 0.6rem 2rem;
+  align-items: end;
+  margin-bottom: 2.6rem;
+}
+
+.secHead::after {
+  content: '';
+  grid-column: 1 / -1;
+  height: 37px;
+  margin-top: 1.2rem;
+  background: var(--staff);
+  border-left: 1.5px solid var(--text);
+  border-right: 1.5px solid var(--text);
+}
+
+.measure {
+  align-self: start;
+  padding-top: 0.7rem;
+  font-family: var(--engraved);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+.tempo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.5em;
+  font-family: var(--engraved);
+  font-size: clamp(2rem, 3.8vw, 3.2rem);
+  line-height: 1.05;
+}
+
+.tempoWord {
+  font-weight: 700;
+}
+
+.tempoRest {
+  font-style: italic;
+}
+
+.secNote {
+  font-size: 1.02rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.boxTitle {
+  font-family: var(--engraved);
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.small {
+  margin-top: 0.8rem;
+  font-size: 0.94rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- tuning
+   The score: a bar to each service. The staff and its bar lines are drawn
+   on each bar; the last one closes with a double bar. */
+
+.score {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.scoreBar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0.4rem;
+}
+
+.barTop {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  min-height: 2.6rem;
+  padding: 0 1rem 0.5rem 0.4rem;
+}
+
+.barNo {
+  font-family: var(--engraved);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.barName {
+  font-family: var(--engraved);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* The staff of the bar, a bar line at its start; the last closes with a
+   thin and a thick line. */
+.barStaff {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  height: 73px;
+  padding: 0 1rem 0 0.9rem;
+  background: repeating-linear-gradient(180deg, var(--hair) 0 1px, transparent 1px 18px) 0 0 / 100% 73px no-repeat;
+  border-left: 1.5px solid var(--text);
+}
+
+.scoreBar:last-child .barStaff {
+  padding-right: 1.6rem;
+  background:
+    linear-gradient(90deg, transparent calc(100% - 11px), var(--text) calc(100% - 11px) calc(100% - 9.5px), transparent calc(100% - 9.5px) calc(100% - 6px), var(--text) calc(100% - 6px)) 0 0 / 100% 73px no-repeat,
+    repeating-linear-gradient(180deg, var(--hair) 0 1px, transparent 1px 18px) 0 0 / 100% 73px no-repeat;
+}
+
+.barPrice {
+  padding: 0 0.3rem;
+  background: var(--paper);
+  font-family: var(--engraved);
+  font-size: clamp(2rem, 3vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.barTime {
+  padding: 0 0.3rem;
+  background: var(--paper);
+  font-family: var(--engraved);
+  font-style: italic;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.barDyn {
+  padding: 0.55rem 0 0 0.9rem;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.barBody {
+  margin-top: 0.5rem;
+  padding: 0 1.2rem 0 0.9rem;
+  font-size: 0.98rem;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+.scoreFoot {
+  max-width: 44rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ regulation */
+
+.diagram {
+  padding: 0 clamp(0rem, 3vw, 2.5rem);
+}
+
+.diagramPic {
+  position: relative;
+  max-width: 62rem;
+  margin: 4.2rem auto 4.6rem;
+}
+
+.action {
+  width: 100%;
+}
+
+/* A callout: a leader line from the part to its number, which sits in a
+   row above or below the drawing whatever the width. */
+.callout {
+  position: absolute;
+  width: 2.1rem;
+  translate: -50% 0;
+  pointer-events: none;
+}
+
+.calloutUp {
+  top: -3.1rem;
+  height: calc(var(--y) + 3.1rem);
+}
+
+.calloutDown {
+  top: var(--y);
+  height: calc(100% - var(--y) + 3.1rem);
+}
+
+.callout::before {
+  content: '';
+  position: absolute;
+  left: calc(50% - 0.6px);
+  top: 0;
+  bottom: 0;
+  width: 1.2px;
+  background: var(--text);
+}
+
+.callout::after {
+  content: '';
+  position: absolute;
+  left: calc(50% - 5px);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--felt);
+  box-shadow: 0 0 0 2px var(--paper);
+}
+
+.calloutUp::after {
+  bottom: -5px;
+}
+
+.calloutDown::after {
+  top: -5px;
+}
+
+.calloutNo {
+  position: absolute;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: inset 0 0 0 1.5px var(--text);
+  font-family: var(--engraved);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.calloutUp .calloutNo {
+  top: -1.05rem;
+}
+
+.calloutDown .calloutNo {
+  bottom: -1.05rem;
+}
+
+.diagramCap {
+  font-style: italic;
+  font-size: 0.96rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.regGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  margin-top: 2.6rem;
+  align-items: start;
+}
+
+.parts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+}
+
+.parts li {
+  display: grid;
+  grid-template-columns: 2.1rem minmax(0, 1fr);
+  gap: 0.9rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.partNo {
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--text);
+  font-family: var(--engraved);
+  font-weight: 700;
+}
+
+.partName {
+  font-family: var(--engraved);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.partBody {
+  margin-top: 0.15rem;
+  font-size: 0.96rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.repairs {
+  padding: 1.4rem 1.5rem 1.5rem;
+  background: var(--well);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.priceList {
+  display: grid;
+  margin-top: 0.8rem;
+}
+
+.priceList > div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.45rem 0;
+}
+
+/* Dotted leaders, the way a price list is engraved. */
+.priceList dt {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+
+.priceList dt::after {
+  content: '';
+  flex: 1;
+  min-width: 1rem;
+  border-bottom: 1.5px dotted var(--hair);
+}
+
+.priceList dd {
+  font-family: var(--engraved);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------- restoration
+   The grand floats at the start of the essay and the lines run round the
+   curve of its tail. */
+
+.essay {
+  max-width: 64rem;
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.essay::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.grand {
+  float: left;
+  width: min(46%, 27rem);
+  margin: 0.2rem 0 0.6rem;
+  shape-outside: polygon(0 0, 82% 0, 93% 17%, 100% 35%, 100% 56%, 94% 77%, 60% 80%, 53% 100%, 0 100%);
+  shape-margin: 1.4rem;
+}
+
+.essay p + p {
+  margin-top: 1rem;
+}
+
+.essay p {
+  font-weight: 400;
+}
+
+.dropCap::first-letter {
+  float: left;
+  margin: 0.08em 0.1em 0 0;
+  font-family: var(--engraved);
+  font-size: 3.6em;
+  font-weight: 700;
+  line-height: 0.82;
+  color: var(--felt);
+}
+
+.restoreSteps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-top: 2.6rem;
+  border-top: 1.5px solid var(--text);
+}
+
+.restoreSteps li {
+  padding: 1rem 1.2rem 0 0;
+}
+
+.restoreSteps li + li {
+  padding-left: 1.2rem;
+  border-left: 1px solid var(--rule);
+}
+
+.restoreNo {
+  font-family: var(--engraved);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.restoreName {
+  font-family: var(--engraved);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.restoreBody {
+  margin-top: 0.3rem;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------------ how often
+   The planner: each row a staff line, each tuning a note head on it. */
+
+.plannerWrap {
+  overflow-x: auto;
+}
+
+.planner {
+  width: 100%;
+  min-width: 44rem;
+  border-collapse: collapse;
+}
+
+.planner th,
+.planner td {
+  padding: 0;
+  font-weight: 400;
+}
+
+.planner thead th {
+  padding-bottom: 0.7rem;
+  font-family: var(--engraved);
+  font-style: italic;
+  font-size: 1.05rem;
+  text-align: center;
+  color: var(--muted);
+  border-bottom: 1.5px solid var(--text);
+}
+
+.planner thead th:first-child {
+  text-align: left;
+}
+
+.planner tbody th {
+  width: 17rem;
+  padding: 0.9rem 1.4rem 0.9rem 0;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+}
+
+.planWho {
+  display: block;
+  font-family: var(--engraved);
+  font-size: 1.12rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.planNote {
+  display: block;
+  font-size: 0.9rem;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* The line the notes sit on, and a bar line between the months. */
+.planner td {
+  position: relative;
+  height: 4rem;
+  text-align: center;
+  border-bottom: 1px solid var(--rule);
+  background: linear-gradient(180deg, transparent calc(50% - 0.5px), var(--hair) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+}
+
+.planner td + td {
+  box-shadow: inset 1px 0 0 var(--faint);
+}
+
+/* A whole note, tilted the way an engraver cuts it. */
+.note {
+  display: inline-block;
+  width: 1.35rem;
+  height: 0.95rem;
+  vertical-align: middle;
+  border-radius: 50%;
+  background: var(--felt);
+  rotate: -22deg;
+  box-shadow: 0 0 0 2px var(--paper);
+}
+
+/* -------------------------------------------------------------- humidity */
+
+.humidity {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+/* The hygrometer: a hatched dial in a ring of zones, and a needle. */
+.gauge {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 24rem);
+  aspect-ratio: 1;
+  padding: 1.5rem;
+}
+
+.gauge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from -120deg, var(--brass) 0 80deg, var(--text) 80deg 120deg, color-mix(in oklab, var(--felt) 55%, var(--paper)) 120deg 160deg, var(--felt) 160deg 240deg, transparent 240deg);
+  -webkit-mask: radial-gradient(circle closest-side, transparent 0 88%, var(--ink) 88.5% 99%, transparent 99.5%);
+  mask: radial-gradient(circle closest-side, transparent 0 88%, var(--ink) 88.5% 99%, transparent 99.5%);
+}
+
+.dial {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1.5px var(--text), 0 0 0 7px var(--paper), 0 0 0 8px var(--rule);
+}
+
+.needle {
+  position: absolute;
+  left: calc(50% - 3.5px);
+  bottom: 50%;
+  width: 7px;
+  height: 40%;
+  border-radius: 3px 3px 0 0;
+  background: var(--text);
+  clip-path: polygon(50% 0, 100% 12%, 100% 100%, 0 100%, 0 12%);
+  transform-origin: 50% 100%;
+  rotate: -20deg;
+  filter: drop-shadow(0 0 1.5px var(--paper)) drop-shadow(0 0 1.5px var(--paper));
+}
+
+.hub {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1.4rem;
+  height: 1.4rem;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--text);
+  box-shadow: 0 0 0 3px var(--paper);
+}
+
+.gaugeCap {
+  position: absolute;
+  left: 50%;
+  bottom: 2.6rem;
+  translate: -50% 0;
+  display: grid;
+  justify-items: center;
+  padding: 0.4rem 0.8rem;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--rule);
+  text-align: center;
+  font-size: 0.82rem;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.gaugeRead {
+  font-family: var(--engraved);
+  font-style: normal;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.rangeCol {
+  display: grid;
+  gap: 1.6rem;
+}
+
+.ranges {
+  display: grid;
+  border-top: 1.5px solid var(--text);
+}
+
+.ranges li {
+  display: grid;
+  grid-template-columns: 6.5rem 6rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.7rem 0 0.7rem 1rem;
+  border-bottom: 1px solid var(--rule);
+  box-shadow: inset 4px 0 0 var(--zone);
+}
+
+.dry {
+  --zone: var(--brass);
+}
+
+.ok {
+  --zone: var(--text);
+  background: var(--faint);
+}
+
+.damp {
+  --zone: var(--felt);
+}
+
+.rangeFrom {
+  font-family: var(--engraved);
+  font-weight: 700;
+}
+
+.rangeName {
+  font-family: var(--engraved);
+  font-style: italic;
+  font-size: 1.1rem;
+}
+
+.rangeBody {
+  font-size: 0.96rem;
+  font-weight: 400;
+}
+
+.keep {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem 1.6rem;
+  margin-top: -0.8rem;
+}
+
+.keep li {
+  position: relative;
+  padding-left: 1.2rem;
+  font-size: 0.98rem;
+  font-weight: 400;
+}
+
+/* A staccato dot for each. */
+.keep li::before {
+  content: '';
+  position: absolute;
+  left: 0.2rem;
+  top: 0.62em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text);
+}
+
+/* ---------------------------------------------------------------- moving
+   Four articulation marks, each drawn in CSS above its advice. */
+
+.moving {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0 clamp(1rem, 2.5vw, 2rem);
+}
+
+.moving li {
+  display: grid;
+  align-content: start;
+  padding-top: 1.1rem;
+  border-top: 1.5px solid var(--text);
+}
+
+.markSign {
+  position: relative;
+  display: block;
+  width: 3rem;
+  height: 2rem;
+  margin-bottom: 0.4rem;
+}
+
+.accent::before {
+  content: '';
+  position: absolute;
+  left: 0.2rem;
+  top: 0.3rem;
+  width: 2.2rem;
+  height: 1.3rem;
+  background: var(--text);
+  clip-path: polygon(0 0, 100% 44%, 100% 56%, 0 100%, 0 88%, 86% 50%, 0 12%);
+}
+
+.staccato::before {
+  content: '';
+  position: absolute;
+  left: 0.9rem;
+  top: 0.7rem;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--text);
+}
+
+.tenuto::before {
+  content: '';
+  position: absolute;
+  left: 0.2rem;
+  top: 0.9rem;
+  width: 2.2rem;
+  height: 3px;
+  background: var(--text);
+}
+
+.fermata::before {
+  content: '';
+  position: absolute;
+  left: 0.2rem;
+  top: 0.35rem;
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 50%;
+  border: 3px solid var(--text);
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  rotate: -45deg;
+  clip-path: inset(0 0 50% 0);
+  translate: 0 0;
+}
+
+.fermata::after {
+  content: '';
+  position: absolute;
+  left: 1.2rem;
+  top: 1.35rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--text);
+}
+
+.markLabel {
+  font-family: var(--engraved);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.moveName {
+  margin-top: 0.1rem;
+  font-family: var(--engraved);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.moveBody {
+  margin-top: 0.4rem;
+  font-size: 0.98rem;
+  font-weight: 400;
+}
+
+/* ------------------------------------------------------------------ book */
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: stretch;
+}
+
+.form {
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  box-shadow: inset 0 0 0 1px var(--rule);
+  border-top: 4px double var(--text);
+  background: var(--paper);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.4rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  align-content: start;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--engraved);
+  font-style: italic;
+  font-size: 1.02rem;
+  color: var(--muted);
+}
+
+/* An input is a line on the staff: ruled below, open above. */
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 2.7rem;
+  padding: 0.4rem 0.2rem;
+  border: 0;
+  border-bottom: 1.5px solid var(--text);
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 1.04rem;
+}
+
+.field textarea {
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--rule);
+  border-bottom: 1.5px solid var(--text);
+  background: var(--paper);
+  resize: vertical;
+}
+
+.field input::placeholder {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.submit {
+  margin-top: 1.6rem;
+  cursor: pointer;
+}
+
+.diary {
+  position: relative;
+  display: grid;
+  align-items: center;
+  min-height: 24rem;
+  padding: 1.6rem;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.diaryPaper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.diaryCard {
+  position: relative;
+  padding: 1.4rem 1.5rem;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--rule), 0 18px 30px -20px var(--hair);
+}
+
+.diaryPhone {
+  margin-top: 0.6rem;
+  font-family: var(--engraved);
+  font-size: 1.9rem;
+  font-weight: 700;
+}
+
+.diaryMail {
+  font-size: 1.02rem;
+  overflow-wrap: anywhere;
+}
+
+/* ----------------------------------------------------------------- areas */
+
+.areas {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: stretch;
+}
+
+.areaList {
+  display: grid;
+  border-top: 1.5px solid var(--text);
+}
+
+.areaList li {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.areaDyn {
+  font-size: 2.8rem;
+  line-height: 1;
+}
+
+.areaName {
+  font-family: var(--engraved);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.areaFee {
+  font-family: var(--engraved);
+  font-style: italic;
+  color: var(--muted);
+}
+
+.areaTowns {
+  margin-top: 0.3rem;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.roundMap {
+  display: grid;
+  grid-template-rows: minmax(16rem, 1fr) auto;
+  gap: 0.8rem;
+}
+
+.roundField {
+  position: relative;
+  overflow: hidden;
+  border-radius: 46% 54% 50% 50% / 52% 44% 56% 48%;
+  box-shadow: 0 0 0 1.5px var(--text), 0 0 0 7px var(--paper), 0 0 0 8px var(--rule);
+  margin: 8px;
+}
+
+.roundCap {
+  font-style: italic;
+  font-size: 0.96rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ---------------------------------------------------------------- footer
+   A repeat sign and a coda, then the reeded fall board. */
+
+.footer {
+  margin-top: clamp(4rem, 7vw, 6rem);
+}
+
+.coda {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 1.6rem var(--gut);
+}
+
+.coda::before {
+  content: '';
+  position: absolute;
+  left: var(--gut);
+  right: var(--gut);
+  top: calc(50% - 18px);
+  height: 37px;
+  background: var(--staff);
+  z-index: 0;
+}
+
+.repeat,
+.codaText,
+.codaSign {
+  position: relative;
+  z-index: 1;
+}
+
+/* The end-repeat: two dots, a thin line and a thick one. */
+.repeat {
+  width: 1.6rem;
+  height: 37px;
+  background:
+    radial-gradient(circle at 20% 38%, var(--text) 0 3px, transparent 3.5px),
+    radial-gradient(circle at 20% 63%, var(--text) 0 3px, transparent 3.5px),
+    linear-gradient(90deg, transparent 50%, var(--text) 50% 58%, transparent 58% 70%, var(--text) 70%);
+  box-shadow: 0 0 0 6px var(--paper);
+}
+
+.codaText {
+  padding: 0 0.8rem;
+  background: var(--paper);
+  font-family: var(--engraved);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+/* The coda sign: an oval crossed by a vertical and a horizontal stroke. */
+.codaSign {
+  width: 2.6rem;
+  height: 3rem;
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1.5px), var(--text) calc(50% - 1.5px) calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+    linear-gradient(180deg, transparent calc(50% - 1.5px), var(--text) calc(50% - 1.5px) calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+    radial-gradient(ellipse 34% 30% at 50% 50%, transparent 0 78%, var(--text) 80% 100%, transparent 102%),
+    var(--paper);
+  box-shadow: 0 0 0 6px var(--paper);
+}
+
+.fallboard {
+  position: relative;
+  height: 58px;
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) auto minmax(0, 1.3fr);
+  gap: 1rem 2.4rem;
+  align-items: baseline;
+  padding: 2.2rem max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut))) 2.8rem;
+  background: var(--ink);
+  color: var(--ink-muted);
+  font-size: 0.96rem;
+}
+
+.footName {
+  font-family: var(--engraved);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--on-ink);
+}
+
+.footInner a {
+  color: var(--on-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--brass);
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1080px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 1.2rem;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .score {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 2.2rem;
+  }
+
+  .scoreBar:nth-child(2) .barStaff {
+    background:
+      linear-gradient(90deg, transparent calc(100% - 1.5px), var(--text) calc(100% - 1.5px)) 0 0 / 100% 73px no-repeat,
+      repeating-linear-gradient(180deg, var(--hair) 0 1px, transparent 1px 18px) 0 0 / 100% 73px no-repeat;
+  }
+
+  .restoreSteps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 1.4rem;
+  }
+
+  .restoreSteps li:nth-child(4) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .moving {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 1.8rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .leaf {
+    min-height: 22rem;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.4rem;
+  }
+
+  .measure {
+    padding-top: 0;
+  }
+
+  .regGrid,
+  .humidity,
+  .bookGrid,
+  .areas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .parts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    font-size: 1rem;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .barNote {
+    display: none;
+  }
+
+  .composer {
+    justify-self: center;
+    text-align: center;
+  }
+
+  .leaf {
+    rotate: 0deg;
+  }
+
+  .score {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .scoreBar::before,
+  .scoreBar:nth-child(2) .barStaff {
+    background:
+      linear-gradient(90deg, transparent calc(100% - 1.5px), var(--text) calc(100% - 1.5px)) 0 0 / 100% 73px no-repeat,
+      repeating-linear-gradient(180deg, var(--hair) 0 1px, transparent 1px 18px) 0 0 / 100% 73px no-repeat;
+  }
+
+  .diagram {
+    padding: 0;
+  }
+
+  .diagramPic {
+    margin: 3.4rem auto 3.8rem;
+  }
+
+  .calloutNo {
+    width: 1.6rem;
+    height: 1.6rem;
+    font-size: 0.86rem;
+  }
+
+  .callout {
+    width: 1.6rem;
+  }
+
+  .calloutUp {
+    top: -2.3rem;
+    height: calc(var(--y) + 2.3rem);
+  }
+
+  .calloutDown {
+    height: calc(100% - var(--y) + 2.3rem);
+  }
+
+  .calloutUp .calloutNo {
+    top: -0.8rem;
+  }
+
+  .calloutDown .calloutNo {
+    bottom: -0.8rem;
+  }
+
+  .grand {
+    float: none;
+    display: block;
+    width: 80%;
+    margin: 0 auto 1.2rem;
+    shape-outside: none;
+  }
+
+  .restoreSteps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .restoreSteps li,
+  .restoreSteps li + li {
+    padding: 0.9rem 0;
+    border-left: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .ranges li {
+    grid-template-columns: 5.6rem minmax(0, 1fr);
+  }
+
+  .rangeBody {
+    grid-column: 1 / -1;
+  }
+
+  .keep,
+  .moving,
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

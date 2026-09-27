@@ -1,0 +1,2226 @@
+/* ==========================================================================
+   WARM VALVE AUDIO - hi-fi and valve amplifier repair, Harlow Cross
+   The page is the front of a receiver. Brushed aluminium faceplates with
+   fine horizontal streaks, walnut end cheeks, black glass lit amber from
+   behind, VU meters with a red zone, knurled knobs, toggle switches and a
+   red tuning pointer. The header is the tuning dial and the sections are
+   its stations. The speaker grille is a moire of two rulings; a fluted
+   heat sink, a pegboard, a woven turntable mat and grille cloth follow.
+   ========================================================================== */
+
+.page {
+  --alu: #e4e3de;
+  --black: #121212;
+  --amber: #f2a93b;
+  --red: #d23a2e;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --cheek: clamp(12px, 2.2vw, 36px);
+  --label: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
+  --display: 'Syncopate', 'Michroma', 'Arial Black', sans-serif;
+  --mono: 'Share Tech Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --sans: 'Red Hat Text', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Fallbacks; derived from the surfaces below where the browser can. */
+  --bw: var(--black);
+  --lift: var(--alu);
+  --text: var(--black);
+  --on-black: var(--alu);
+  --on-amber: var(--black);
+  --on-red: var(--alu);
+  --glow: var(--amber);
+
+  /* Derived surfaces: never roles of their own, always mixed from them. */
+  --muted: color-mix(in oklab, var(--text) 70%, var(--alu));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --hair: color-mix(in oklab, var(--text) 10%, transparent);
+  --edge: color-mix(in oklab, var(--alu) 82%, var(--bw));
+  --sheen: color-mix(in oklab, var(--alu) 60%, var(--lift));
+  --well: color-mix(in oklab, var(--alu) 92%, var(--lift));
+  --glass: color-mix(in oklab, var(--black) 94%, var(--amber));
+  --glass-muted: color-mix(in oklab, var(--on-black) 64%, var(--black));
+  --glass-rule: color-mix(in oklab, var(--on-black) 14%, transparent);
+  --hole: color-mix(in oklab, var(--black) 84%, var(--alu));
+  --walnut: color-mix(in oklab, var(--amber) 32%, var(--black));
+  --walnut-dark: color-mix(in oklab, var(--amber) 20%, var(--black));
+  --walnut-red: color-mix(in oklab, var(--walnut) 78%, var(--red));
+
+  --brush:
+    repeating-linear-gradient(180deg,
+      color-mix(in oklab, var(--bw) 5%, transparent) 0 1px,
+      transparent 1px 3px,
+      color-mix(in oklab, var(--sheen) 70%, transparent) 3px 4px,
+      transparent 4px 6px,
+      color-mix(in oklab, var(--bw) 3%, transparent) 6px 7px,
+      transparent 7px 9px),
+    linear-gradient(90deg,
+      color-mix(in oklab, var(--alu) 93%, var(--bw)),
+      var(--alu) 20%,
+      var(--sheen) 46%,
+      var(--alu) 68%,
+      color-mix(in oklab, var(--alu) 91%, var(--bw)));
+  --grain:
+    repeating-linear-gradient(90deg,
+      var(--walnut) 0 7px,
+      var(--walnut-dark) 7px 9px,
+      var(--walnut) 9px 15px,
+      var(--walnut-red) 15px 17px,
+      var(--walnut) 17px 27px,
+      var(--walnut-dark) 27px 28px,
+      var(--walnut) 28px 33px);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--alu);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* The two poles of the ground: the one text is pushed toward, and the
+       one a highlight is. */
+    --bw: oklch(from var(--alu) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --lift: oklch(from var(--alu) clamp(0, (l - 0.62) * 1000, 1) 0 0);
+    --text: color-mix(in oklab, var(--bw) 84%, var(--black));
+    --on-black: color-mix(in oklab, oklch(from var(--black) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--alu));
+    --on-amber: color-mix(in oklab, oklch(from var(--amber) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--black));
+    --on-red: color-mix(in oklab, oklch(from var(--red) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--alu));
+    /* Amber that still reads on the black glass, whatever the palette:
+       the amber's hue, lifted to 0.8 lightness when the glass is dark and
+       pressed to 0.35 when a palette makes it light. Mixing with the
+       glass's own pole is what tells the two apart. */
+    --glow: oklch(from color-mix(in oklab, var(--amber) 30%, var(--on-black)) calc(0.35 + 0.45 * clamp(0, (l - 0.5) * 1000, 1)) min(calc(c / 0.3), 0.2) h);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------ the dial (header) */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: clamp(0.8rem, 1.6vw, 1.4rem);
+  padding: 0.6rem calc(var(--gut) + var(--cheek));
+  background: var(--brush);
+  border-bottom: 1px solid var(--rule);
+  box-shadow: 0 1px 0 var(--sheen), 0 10px 24px -18px color-mix(in oklab, var(--black) 70%, transparent);
+}
+
+/* The walnut cheeks, left and right of the bar. */
+.bar::before,
+.bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: var(--cheek);
+  background: var(--grain);
+}
+
+.bar::before {
+  left: 0;
+  box-shadow: inset -2px 0 0 color-mix(in oklab, var(--black) 40%, transparent);
+}
+
+.bar::after {
+  right: 0;
+  box-shadow: inset 2px 0 0 color-mix(in oklab, var(--black) 40%, transparent);
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.badgeMark {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-family: var(--display);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--glow);
+  background: var(--glass);
+  border-radius: 6px;
+  box-shadow: 0 0 0 2px var(--edge), 0 0 0 3px var(--rule);
+}
+
+.badgeName {
+  max-width: 7.5rem;
+  font-family: var(--label);
+  font-size: 0.66rem;
+  line-height: 1.35;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dial {
+  position: relative;
+  height: 3.7rem;
+  overflow: hidden;
+  border-radius: 6px;
+  background:
+    radial-gradient(ellipse 70% 120% at 50% 130%, color-mix(in oklab, var(--amber) 26%, transparent), transparent 70%),
+    var(--glass);
+  box-shadow:
+    inset 0 2px 8px color-mix(in oklab, var(--black) 80%, transparent),
+    0 0 0 3px var(--edge),
+    0 0 0 4px var(--rule);
+}
+
+/* The scale: fine ticks, and a longer one under every frequency. */
+.dial::before {
+  content: '';
+  position: absolute;
+  left: 1.2rem;
+  right: 1.2rem;
+  top: 1.2rem;
+  height: 0.7rem;
+  background:
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--glow) 80%, transparent) 0 1.5px, transparent 1.5px 10%) 0 0 / calc(100% + 1.5px) 100% no-repeat,
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--glow) 45%, transparent) 0 1px, transparent 1px 2%) 0 100% / calc(100% + 1px) 45% no-repeat;
+}
+
+.dialFreqs {
+  position: absolute;
+  top: 0.3rem;
+  left: 1.2rem;
+  right: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  line-height: 1;
+  color: var(--glass-muted);
+}
+
+.dialFreqs span,
+.scaleNums span {
+  display: flex;
+  justify-content: center;
+  width: 0;
+}
+
+.stations {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.45rem;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.stations a {
+  justify-self: center;
+  padding: 0.15rem 0.2rem;
+  font-family: var(--label);
+  font-size: 0.58rem;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--on-black);
+}
+
+@media (hover: hover) {
+  .stations a:hover {
+    color: var(--glow);
+    text-shadow: 0 0 8px color-mix(in oklab, var(--amber) 70%, transparent);
+  }
+}
+
+/* The pointer rests between stations and moves to the one you point at. */
+.pointer {
+  --i: 2.45;
+  position: absolute;
+  top: 0.25rem;
+  bottom: 0.25rem;
+  left: calc((var(--i) + 0.5) / 7 * 100%);
+  width: 2px;
+  background: var(--red);
+  box-shadow: 0 0 6px color-mix(in oklab, var(--red) 80%, transparent);
+  pointer-events: none;
+  transition: left 420ms cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+
+.dial:has(.stations a:nth-child(1):is(:hover, :focus-visible)) .pointer { --i: 0; }
+.dial:has(.stations a:nth-child(2):is(:hover, :focus-visible)) .pointer { --i: 1; }
+.dial:has(.stations a:nth-child(3):is(:hover, :focus-visible)) .pointer { --i: 2; }
+.dial:has(.stations a:nth-child(4):is(:hover, :focus-visible)) .pointer { --i: 3; }
+.dial:has(.stations a:nth-child(5):is(:hover, :focus-visible)) .pointer { --i: 4; }
+.dial:has(.stations a:nth-child(6):is(:hover, :focus-visible)) .pointer { --i: 5; }
+.dial:has(.stations a:nth-child(7):is(:hover, :focus-visible)) .pointer { --i: 6; }
+
+/* The tuning knob, knurled round its edge. */
+.tuner,
+.knob {
+  position: relative;
+  display: block;
+  border-radius: 50%;
+  background: repeating-conic-gradient(color-mix(in oklab, var(--black) 90%, var(--alu)) 0 4deg, color-mix(in oklab, var(--black) 62%, var(--alu)) 4deg 8deg);
+  box-shadow: 0 3px 6px color-mix(in oklab, var(--black) 45%, transparent);
+}
+
+.tuner {
+  width: 3rem;
+  height: 3rem;
+}
+
+.tuner::before,
+.knob::before {
+  content: '';
+  position: absolute;
+  inset: 16%;
+  border-radius: 50%;
+  background: conic-gradient(from 30deg, var(--sheen), var(--edge) 25%, var(--sheen) 50%, var(--edge) 75%, var(--sheen));
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.tuner::after,
+.knob::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  width: 3px;
+  height: 24%;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: var(--red);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  font-family: var(--label);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  --template-menu-bg: var(--alu);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  padding: clamp(1.4rem, 3vw, 2.4rem) 0 clamp(2.4rem, 5vw, 3.6rem);
+  background: var(--brush);
+  border-bottom: 1px solid var(--rule);
+}
+
+.hero::before,
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: var(--cheek);
+  background: var(--grain);
+}
+
+.hero::before {
+  left: 0;
+  box-shadow: inset -3px 0 0 color-mix(in oklab, var(--black) 40%, transparent);
+}
+
+.hero::after {
+  right: 0;
+  box-shadow: inset 3px 0 0 color-mix(in oklab, var(--black) 40%, transparent);
+}
+
+.faceplate {
+  display: grid;
+  grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.4fr);
+  grid-template-areas:
+    'grille window'
+    'grille controls';
+  gap: clamp(1.2rem, 2.2vw, 2rem);
+  max-width: calc(var(--max) + 4rem);
+  margin: 0 auto;
+  padding: 0 calc(var(--gut) + var(--cheek));
+}
+
+/* The speaker: two rulings a few degrees apart, behind a bezel. */
+.grille {
+  grid-area: grille;
+  position: relative;
+  min-height: 24rem;
+  overflow: hidden;
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--alu) 58%, var(--black));
+}
+
+.grille::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 7px var(--edge),
+    inset 0 0 0 8px var(--rule),
+    inset 0 12px 24px -12px color-mix(in oklab, var(--black) 60%, transparent);
+  pointer-events: none;
+}
+
+.window {
+  grid-area: window;
+  position: relative;
+  min-height: clamp(22rem, 36vw, 32rem);
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 10px;
+  background:
+    radial-gradient(ellipse 36% 62% at 76% 42%, color-mix(in oklab, var(--amber) 34%, var(--black)), transparent 72%),
+    var(--glass);
+  box-shadow:
+    inset 0 3px 10px color-mix(in oklab, var(--black) 80%, transparent),
+    0 0 0 5px var(--edge),
+    0 0 0 6px var(--rule);
+}
+
+/* The valve, too big for its window: only the glass and the plates. */
+.valve {
+  position: absolute;
+  z-index: -1;
+  right: 4%;
+  top: -14%;
+  width: clamp(15rem, 27vw, 25rem);
+  transform: rotate(4deg);
+}
+
+.windowText {
+  position: relative;
+  max-width: 34rem;
+  padding: clamp(1.6rem, 3vw, 2.6rem);
+}
+
+.windowKicker {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--label);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--glow);
+}
+
+.windowKicker::before {
+  content: '';
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 8px var(--amber);
+}
+
+.heroName {
+  display: grid;
+  margin-top: 1.3rem;
+  font-family: var(--display);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 0.95;
+}
+
+.heroWarm {
+  font-size: clamp(2rem, 4.6vw, 4rem);
+  letter-spacing: -0.01em;
+  color: var(--on-black);
+  text-shadow: 0 0 22px color-mix(in oklab, var(--amber) 45%, transparent);
+}
+
+.heroAudio {
+  margin-top: 0.4rem;
+  font-size: clamp(1.3rem, 2.8vw, 2.4rem);
+  letter-spacing: 0.5em;
+  color: var(--glow);
+  text-shadow: 0 0 16px color-mix(in oklab, var(--amber) 60%, transparent);
+}
+
+.windowSub {
+  margin-top: 1.1rem;
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  color: var(--glass-muted);
+}
+
+/* The printed dial across the foot of the glass, in front of the valve. */
+.windowScale {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 5.6rem;
+  background: linear-gradient(to top, color-mix(in oklab, var(--black) 80%, transparent) 30%, transparent);
+}
+
+.scaleNums {
+  position: absolute;
+  top: 1rem;
+  left: 2rem;
+  right: 2rem;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: clamp(0.72rem, 1.1vw, 1rem);
+  line-height: 1;
+  color: var(--glow);
+}
+
+.scaleTicks {
+  position: absolute;
+  top: 2.3rem;
+  left: 2rem;
+  right: 2rem;
+  height: 1.2rem;
+  background:
+    repeating-linear-gradient(90deg, var(--glow) 0 2px, transparent 2px 10%) 0 0 / calc(100% + 2px) 100% no-repeat,
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--glow) 55%, transparent) 0 1px, transparent 1px 2%) 0 0 / calc(100% + 1px) 55% no-repeat;
+  border-bottom: 1px solid color-mix(in oklab, var(--glow) 60%, transparent);
+}
+
+.scaleBand {
+  position: absolute;
+  right: 2rem;
+  bottom: 0.7rem;
+  font-family: var(--label);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--glass-muted);
+}
+
+.scalePointer {
+  position: absolute;
+  top: 0.6rem;
+  bottom: 0.6rem;
+  left: 62%;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--red);
+  box-shadow: 0 0 10px color-mix(in oklab, var(--red) 80%, transparent);
+}
+
+.controls {
+  grid-area: controls;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'copy meters'
+    'knobs readouts';
+  gap: 1.6rem clamp(1.4rem, 3vw, 2.6rem);
+  align-items: center;
+  padding: 0.6rem 0.2rem 0;
+}
+
+.heroCopy {
+  grid-area: copy;
+}
+
+.heroLede {
+  max-width: 34rem;
+  font-size: clamp(1rem, 1.3vw, 1.1rem);
+  line-height: 1.6;
+}
+
+.heroAddress {
+  margin-top: 0.8rem;
+  font-family: var(--label);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.3rem;
+}
+
+.pushRed,
+.pushBlack,
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.9rem;
+  padding: 0.6rem 1.1rem;
+  font-family: var(--label);
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.pushRed,
+.submit {
+  color: var(--on-red);
+  background: linear-gradient(180deg, color-mix(in oklab, var(--red) 86%, var(--lift)), var(--red) 40%, color-mix(in oklab, var(--red) 88%, var(--black)));
+  box-shadow: 0 4px 0 color-mix(in oklab, var(--red) 55%, var(--black)), 0 8px 14px -6px color-mix(in oklab, var(--black) 50%, transparent);
+}
+
+.pushBlack {
+  color: var(--on-black);
+  background: linear-gradient(180deg, color-mix(in oklab, var(--black) 82%, var(--alu)), var(--black) 45%);
+  box-shadow: 0 4px 0 color-mix(in oklab, var(--black) 80%, var(--alu)), 0 8px 14px -6px color-mix(in oklab, var(--black) 50%, transparent);
+}
+
+.pushBlack::before {
+  content: '';
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-right: 0.6rem;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 6px var(--amber);
+}
+
+.pushRed:active,
+.pushBlack:active,
+.submit:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 color-mix(in oklab, var(--black) 60%, transparent);
+}
+
+/* VU meters: an amber-lit card, the scale drawn in SVG over it. */
+.meters {
+  grid-area: meters;
+  display: flex;
+  gap: 1rem;
+}
+
+.vu {
+  width: clamp(10rem, 14vw, 13.5rem);
+}
+
+.vuSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: 0.3rem 0.3rem 0;
+  border-radius: 6px;
+  background:
+    radial-gradient(ellipse 90% 110% at 50% 115%, color-mix(in oklab, var(--amber) 55%, var(--lift)), var(--amber) 58%, color-mix(in oklab, var(--amber) 80%, var(--black)));
+  box-shadow:
+    inset 0 0 12px color-mix(in oklab, var(--black) 30%, transparent),
+    0 0 0 4px color-mix(in oklab, var(--black) 90%, var(--alu)),
+    0 0 0 5px var(--rule);
+}
+
+.vuArc,
+.vuRed {
+  fill: none;
+}
+
+.vuArc {
+  stroke: var(--on-amber);
+  stroke-width: 1.4;
+}
+
+.vuRed {
+  stroke: color-mix(in oklab, var(--red) 80%, var(--on-amber));
+  stroke-width: 5;
+}
+
+.vuMajor,
+.vuMinor {
+  stroke: var(--on-amber);
+}
+
+.vuMajor {
+  stroke-width: 1.6;
+}
+
+.vuMinor {
+  stroke-width: 0.9;
+}
+
+.vuNum,
+.vuNumRed,
+.vuSign,
+.vuSignRed,
+.vuUnit {
+  font-family: var(--label);
+  text-anchor: middle;
+}
+
+.vuNum,
+.vuNumRed {
+  font-size: 11px;
+}
+
+.vuNum,
+.vuSign,
+.vuUnit {
+  fill: var(--on-amber);
+}
+
+.vuNumRed,
+.vuSignRed {
+  fill: color-mix(in oklab, var(--red) 70%, var(--on-amber));
+}
+
+.vuSign,
+.vuSignRed {
+  font-size: 16px;
+}
+
+.vuUnit {
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+
+.needle line {
+  stroke: var(--on-amber);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.needle {
+  transform-box: view-box;
+  transform-origin: 100px 150px;
+  transform: rotate(var(--needle, 0deg));
+}
+
+.vuLeft {
+  --needle: -9deg;
+}
+
+.vuRight {
+  --needle: 3deg;
+}
+
+.vuCap {
+  margin-top: 0.7rem;
+  font-family: var(--label);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.knobRow {
+  grid-area: knobs;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.1rem clamp(1.2rem, 2.4vw, 2.2rem);
+}
+
+.knobUnit {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+}
+
+.knob {
+  width: 3.4rem;
+  height: 3.4rem;
+}
+
+.knobUnit:nth-child(1) .knob {
+  transform: rotate(-38deg);
+}
+
+.knobUnit:nth-child(2) .knob {
+  transform: rotate(22deg);
+}
+
+.knobUnit:nth-child(3) .knob {
+  transform: rotate(64deg);
+}
+
+.knobLabel {
+  font-family: var(--label);
+  font-size: 0.56rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* A bat-handle toggle on its plate, with the pilot lamp lit above. */
+.toggle {
+  position: relative;
+  display: block;
+  width: 2.1rem;
+  height: 3.4rem;
+  border-radius: 5px;
+  background: linear-gradient(180deg, var(--sheen), var(--edge));
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.toggle::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0.35rem;
+  width: 0.55rem;
+  height: 1.6rem;
+  margin-left: -0.275rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--edge), var(--sheen) 45%, color-mix(in oklab, var(--alu) 70%, var(--black)));
+  box-shadow: 0 2px 0 color-mix(in oklab, var(--black) 40%, transparent);
+}
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0.45rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-left: -0.35rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, color-mix(in oklab, var(--amber) 50%, var(--lift)), var(--amber) 60%);
+  box-shadow: 0 0 10px var(--amber);
+}
+
+.readouts {
+  grid-area: readouts;
+  display: flex;
+  gap: 0.8rem;
+}
+
+.readouts div {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.readouts dt {
+  font-family: var(--label);
+  font-size: 0.54rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.readouts dd {
+  padding: 0.25rem 0.55rem;
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  line-height: 1.2;
+  color: var(--glow);
+  background: var(--glass);
+  border-radius: 3px;
+  box-shadow: inset 0 1px 4px color-mix(in oklab, var(--black) 70%, transparent), 0 0 0 1px var(--rule);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+  scroll-margin-top: 5rem;
+}
+
+.secHead {
+  max-width: 44rem;
+  margin-bottom: clamp(2.2rem, 4.5vw, 3.2rem);
+}
+
+.secNo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--label);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.secNo::before {
+  content: '';
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--amber) 30%, transparent), 0 0 8px color-mix(in oklab, var(--amber) 70%, transparent);
+}
+
+.secTitle {
+  margin-top: 0.9rem;
+  font-family: var(--display);
+  font-size: clamp(1.7rem, 3.6vw, 2.9rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.secLede {
+  max-width: 40rem;
+  margin-top: 1.1rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* An amber lamp in front of each line. */
+.ledList {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.ledList li {
+  position: relative;
+  padding-left: 1.4rem;
+}
+
+.ledList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 6px color-mix(in oklab, var(--amber) 80%, transparent);
+}
+
+/* ------------------------------------------------------------------- repair */
+
+.repairGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 19rem);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+/* The rack: 19 inch units screwed to the rails, one per kind of machine. */
+.rack {
+  display: grid;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--black) 90%, var(--alu));
+  box-shadow: 0 20px 40px -24px color-mix(in oklab, var(--black) 70%, transparent);
+}
+
+.unit {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 13rem) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.3rem;
+  padding: 1.1rem 3rem;
+  border-radius: 3px;
+  background: var(--brush);
+}
+
+.unit::before,
+.unit::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1.9rem;
+  background:
+    radial-gradient(circle at 50% 24%, var(--hole) 0 4px, var(--edge) 4.5px 6px, transparent 6.5px),
+    radial-gradient(circle at 50% 76%, var(--hole) 0 4px, var(--edge) 4.5px 6px, transparent 6.5px),
+    color-mix(in oklab, var(--alu) 90%, var(--bw));
+}
+
+.unit::before {
+  left: 0;
+  border-right: 1px solid var(--rule);
+}
+
+.unit::after {
+  right: 0;
+  border-left: 1px solid var(--rule);
+}
+
+.unitNo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0;
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  color: var(--glow);
+  background: var(--glass);
+  border-radius: 3px;
+}
+
+.unitName h3 {
+  font-family: var(--label);
+  font-size: 0.86rem;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.unitName p {
+  margin-top: 0.25rem;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.unitNote {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.unitFrom {
+  display: grid;
+  justify-items: end;
+  gap: 0.1rem;
+}
+
+.unitFrom span {
+  font-family: var(--label);
+  font-size: 0.54rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.unitFrom strong {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.notSure {
+  overflow: hidden;
+  padding: 0 1.5rem 1.6rem;
+  border-radius: 10px;
+  background: var(--brush);
+  box-shadow: 0 0 0 1px var(--rule), 0 20px 40px -24px color-mix(in oklab, var(--black) 60%, transparent);
+}
+
+/* The heat sink on top of the unit: fluted fins. */
+.fins {
+  position: relative;
+  height: 9.5rem;
+  margin: 0 -1.5rem 1.4rem;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--alu) 84%, var(--bw));
+  border-bottom: 1px solid var(--rule);
+}
+
+.notSureTitle {
+  font-family: var(--label);
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.notSureText {
+  margin: 0.5rem 0 1rem;
+  color: var(--muted);
+}
+
+.notSurePhone {
+  margin-top: 1.3rem;
+  padding: 0.4rem 0.7rem;
+  font-family: var(--mono);
+  font-size: 1.3rem;
+  text-align: center;
+  color: var(--glow);
+  background: var(--glass);
+  border-radius: 4px;
+}
+
+/* ------------------------------------------------------------------- bench */
+
+/* A full-width band of darker metal behind the bench. */
+.benchSec {
+  border-image: conic-gradient(color-mix(in oklab, var(--alu) 90%, var(--bw)) 0 0) fill 0 // 0 100vw;
+}
+
+.benchGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.benchPhoto {
+  position: sticky;
+  top: 6.5rem;
+}
+
+.benchScene {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 0 0 6px var(--edge), 0 0 0 7px var(--rule), 0 30px 50px -30px color-mix(in oklab, var(--black) 70%, transparent);
+}
+
+/* The pegboard over the bench: square holes in tan board. */
+.pegboard {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--amber) 34%, var(--alu));
+}
+
+.amp {
+  position: absolute;
+  left: 7%;
+  bottom: 2.1rem;
+  width: 86%;
+  filter: drop-shadow(0 18px 14px color-mix(in oklab, var(--black) 45%, transparent));
+}
+
+.benchTop {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2.6rem;
+  background: var(--grain);
+  box-shadow: inset 0 3px 0 color-mix(in oklab, var(--walnut) 70%, var(--lift));
+}
+
+.benchCaption {
+  margin-top: 1.2rem;
+  font-size: 0.92rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* The fee schedule as front-panel readouts. */
+.fees {
+  display: grid;
+  border-top: 1px solid var(--rule);
+}
+
+.fee {
+  display: grid;
+  grid-template-columns: 8rem 7.4rem minmax(0, 1fr);
+  align-items: center;
+  gap: 1.1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.fee dt {
+  font-family: var(--label);
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.feeValue {
+  padding: 0.3rem 0.6rem;
+  font-family: var(--mono);
+  font-size: 1.25rem;
+  line-height: 1.2;
+  text-align: right;
+  white-space: nowrap;
+  color: var(--glow);
+  background: var(--glass);
+  border-radius: 3px;
+  box-shadow: inset 0 1px 4px color-mix(in oklab, var(--black) 70%, transparent);
+}
+
+.feeNote {
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.kit {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem 1.4rem;
+  margin-top: 1.8rem;
+  font-size: 0.92rem;
+}
+
+.kit li {
+  position: relative;
+  padding-left: 1.3rem;
+}
+
+.kit li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 5px color-mix(in oklab, var(--red) 70%, transparent);
+}
+
+/* ---------------------------------------------------------------- restore */
+
+/* The signal path: six stages joined by a wire, each on a jack. */
+.path {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1.2rem;
+  counter-reset: stage;
+}
+
+.path::before {
+  content: '';
+  position: absolute;
+  left: 1.3rem;
+  right: 1.3rem;
+  top: 1.25rem;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--red);
+}
+
+.path li {
+  position: relative;
+  padding-top: 3.5rem;
+  counter-increment: stage;
+}
+
+.path li::before {
+  content: counter(stage);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-family: var(--mono);
+  font-size: 1rem;
+  color: var(--glow);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--glass) 0 56%, var(--edge) 58% 70%, var(--sheen) 72%);
+  box-shadow: 0 0 0 1px var(--rule), 0 3px 6px color-mix(in oklab, var(--black) 30%, transparent);
+}
+
+.pathName {
+  font-family: var(--label);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pathText {
+  margin-top: 0.35rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.restos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.4rem;
+  margin-top: clamp(2.6rem, 5vw, 3.6rem);
+}
+
+/* A spec plate, screwed on at the four corners. */
+.resto {
+  position: relative;
+  padding: 1.6rem 1.6rem 1.3rem;
+  border-radius: 6px;
+  background:
+    radial-gradient(circle at 12px 12px, var(--hole) 0 3px, var(--edge) 3.5px 4.5px, transparent 5px),
+    radial-gradient(circle at calc(100% - 12px) 12px, var(--hole) 0 3px, var(--edge) 3.5px 4.5px, transparent 5px),
+    radial-gradient(circle at 12px calc(100% - 12px), var(--hole) 0 3px, var(--edge) 3.5px 4.5px, transparent 5px),
+    radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), var(--hole) 0 3px, var(--edge) 3.5px 4.5px, transparent 5px),
+    var(--brush);
+  box-shadow: 0 0 0 1px var(--rule), 0 18px 30px -22px color-mix(in oklab, var(--black) 60%, transparent);
+}
+
+.restoName {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.restoYear {
+  margin-top: 0.2rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.restoTable {
+  width: 100%;
+  margin-top: 1.1rem;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.restoTable th,
+.restoTable td {
+  padding: 0.5rem 0;
+  text-align: left;
+  border-bottom: 1px solid var(--hair);
+}
+
+.restoTable thead th {
+  font-family: var(--label);
+  font-size: 0.54rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule);
+}
+
+.restoTable tbody th {
+  font-weight: 500;
+}
+
+.restoTable td {
+  font-family: var(--mono);
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+.restoTable .after {
+  color: var(--text);
+}
+
+.restoTable .after::before {
+  content: '';
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-right: 0.45rem;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 5px color-mix(in oklab, var(--amber) 80%, transparent);
+}
+
+.restoFoot {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 1.1rem;
+}
+
+.restoFoot span {
+  font-family: var(--label);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.restoFoot strong {
+  font-family: var(--display);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------ valves */
+
+/* The stock list on black glass, lit like the tester's roll chart. */
+.valvePanel {
+  padding: clamp(1.6rem, 4vw, 3rem);
+  border-radius: 12px;
+  color: var(--on-black);
+  background:
+    radial-gradient(ellipse 60% 80% at 90% 0%, color-mix(in oklab, var(--amber) 18%, transparent), transparent 70%),
+    var(--glass);
+  box-shadow:
+    inset 0 3px 12px color-mix(in oklab, var(--black) 70%, transparent),
+    0 0 0 6px var(--edge),
+    0 0 0 7px var(--rule);
+}
+
+.valveHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 1rem 3rem;
+  align-items: end;
+  margin-bottom: 2rem;
+}
+
+.panelNo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--label);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--glass-muted);
+}
+
+.panelNo::before {
+  content: '';
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 8px var(--amber);
+}
+
+.panelTitle {
+  margin-top: 0.9rem;
+  font-family: var(--display);
+  font-size: clamp(1.7rem, 3.6vw, 2.9rem);
+  font-weight: 700;
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: var(--glow);
+  text-shadow: 0 0 20px color-mix(in oklab, var(--amber) 40%, transparent);
+}
+
+.panelNote {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--glass-muted);
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.valveTable {
+  width: 100%;
+  min-width: 44rem;
+  border-collapse: collapse;
+}
+
+.valveTable th,
+.valveTable td {
+  padding: 0.85rem 0.9rem 0.85rem 0;
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: 1px solid var(--glass-rule);
+}
+
+.valveTable thead th {
+  font-family: var(--label);
+  font-size: 0.56rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--glass-muted);
+  border-bottom: 1px solid color-mix(in oklab, var(--glow) 50%, transparent);
+}
+
+.valveType {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--glow);
+  white-space: nowrap;
+}
+
+.valveTable td {
+  font-size: 0.95rem;
+}
+
+.valveMake {
+  color: var(--glass-muted);
+}
+
+.valveTable .num {
+  text-align: right;
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  white-space: nowrap;
+}
+
+.valveTable thead .num {
+  font-family: var(--label);
+  font-size: 0.56rem;
+}
+
+.stock {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.92rem;
+  white-space: nowrap;
+}
+
+.stock::before {
+  content: '';
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--led);
+  box-shadow: 0 0 6px var(--led);
+}
+
+.full {
+  --led: var(--amber);
+}
+
+.low {
+  --led: var(--red);
+}
+
+.ask {
+  --led: var(--glass-muted);
+}
+
+/* -------------------------------------------------------------- turntables */
+
+.ttGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+/* The deck: walnut plinth, a strobed platter, the woven mat, the arm. */
+.deck {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  border-radius: 10px;
+  background: var(--grain);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--walnut) 70%, var(--lift)),
+    0 10px 0 var(--walnut-dark),
+    0 30px 40px -20px color-mix(in oklab, var(--black) 70%, transparent);
+}
+
+.platter {
+  position: absolute;
+  left: 7%;
+  top: 50%;
+  width: 66%;
+  aspect-ratio: 1;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: repeating-conic-gradient(var(--sheen) 0 2deg, color-mix(in oklab, var(--alu) 60%, var(--black)) 2deg 4deg);
+  box-shadow: 0 10px 18px color-mix(in oklab, var(--black) 55%, transparent), 0 0 0 2px var(--edge);
+}
+
+.mat {
+  position: absolute;
+  inset: 5%;
+  overflow: hidden;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--black) 75%, var(--alu));
+  box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--black) 80%, transparent);
+}
+
+.spindle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 5%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--sheen), var(--edge));
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--black) 80%, transparent);
+}
+
+.armBase {
+  position: absolute;
+  right: 8%;
+  top: 11%;
+  width: 14%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, var(--sheen), var(--edge) 60%, color-mix(in oklab, var(--alu) 60%, var(--black)));
+  box-shadow: 0 4px 8px color-mix(in oklab, var(--black) 50%, transparent);
+}
+
+.arm {
+  position: absolute;
+  right: 14.4%;
+  top: 17%;
+  width: 1.4%;
+  height: 58%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--edge), var(--sheen) 50%, var(--edge));
+  transform: rotate(24deg);
+  transform-origin: 50% 0;
+  box-shadow: 3px 4px 4px color-mix(in oklab, var(--black) 40%, transparent);
+}
+
+.arm::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -0.6rem;
+  width: 1.1rem;
+  height: 1.6rem;
+  transform: translateX(-50%) rotate(-12deg);
+  border-radius: 3px;
+  background: linear-gradient(180deg, var(--edge), color-mix(in oklab, var(--black) 80%, var(--alu)));
+}
+
+.speed {
+  position: absolute;
+  right: 5%;
+  bottom: 7%;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.speed span {
+  padding: 0.25rem 0.5rem;
+  font-family: var(--label);
+  font-size: 0.62rem;
+  color: var(--on-black);
+  background: color-mix(in oklab, var(--black) 88%, var(--alu));
+  border-radius: 3px;
+}
+
+.speed span:first-child {
+  color: var(--on-amber);
+  background: var(--amber);
+  box-shadow: 0 0 8px color-mix(in oklab, var(--amber) 70%, transparent);
+}
+
+.services {
+  border-top: 1px solid var(--rule);
+}
+
+.services div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.3rem 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.services dt {
+  font-family: var(--label);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.servicePrice {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.serviceNote {
+  grid-column: 1 / -1;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- buy/sell */
+
+.buyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 19rem);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+/* A shop tag: brushed card, corners clipped, a punched hole with its ring. */
+.tag {
+  position: relative;
+  display: grid;
+  gap: 0.5rem;
+  padding: 1.5rem 1.5rem 1.4rem 3.2rem;
+  background:
+    radial-gradient(circle at 1.5rem 1.9rem, var(--alu) 0 5px, color-mix(in oklab, var(--red) 80%, var(--black)) 5.5px 7px, transparent 7.5px),
+    var(--brush);
+  clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%, 0 14px);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.tagName {
+  font-family: var(--label);
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tagNote {
+  font-size: 0.94rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.tagGrade {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.3rem;
+}
+
+.gradeLabel,
+.gradeText {
+  font-family: var(--label);
+  font-size: 0.54rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Five LED segments, lit to the grade. */
+.gradeBar {
+  width: 6.4rem;
+  height: 0.6rem;
+  background:
+    repeating-linear-gradient(90deg, var(--amber) 0 1.05rem, transparent 1.05rem 1.3rem) 0 0 / var(--lit) 100% no-repeat,
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--text) 16%, transparent) 0 1.05rem, transparent 1.05rem 1.3rem);
+}
+
+.g5 {
+  --lit: 100%;
+}
+
+.g4 {
+  --lit: 5.2rem;
+}
+
+.tagPrice {
+  margin-top: 0.3rem;
+  font-family: var(--display);
+  font-size: 1.45rem;
+  font-weight: 700;
+}
+
+.weBuy {
+  overflow: hidden;
+  padding: 0 1.5rem 1.6rem;
+  border-radius: 10px;
+  color: var(--on-black);
+  background: var(--glass);
+  box-shadow: 0 0 0 5px var(--edge), 0 0 0 6px var(--rule);
+}
+
+/* A speaker's grille cloth across the top of the panel. */
+.cloth {
+  position: relative;
+  height: 9rem;
+  margin: 0 -1.5rem 1.4rem;
+  overflow: hidden;
+  background: var(--walnut);
+  border-bottom: 3px solid var(--edge);
+}
+
+.weBuyTitle {
+  margin-bottom: 1rem;
+  font-family: var(--label);
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--glow);
+}
+
+.weBuyNote {
+  margin-top: 1.2rem;
+  font-size: 0.92rem;
+  color: var(--glass-muted);
+}
+
+/* ---------------------------------------------------------------- drop off */
+
+.dropGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+/* Opening hours on a clock-radio display. */
+.clock {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1.2rem 1.4rem;
+  border-radius: 8px;
+  background: var(--glass);
+  box-shadow: inset 0 2px 8px color-mix(in oklab, var(--black) 70%, transparent), 0 0 0 5px var(--edge), 0 0 0 6px var(--rule);
+}
+
+.clock div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.3rem 0;
+}
+
+.clock div + div {
+  border-top: 1px dashed var(--glass-rule);
+}
+
+.clock dt {
+  font-family: var(--label);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--glass-muted);
+}
+
+.clock dd {
+  font-family: var(--mono);
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  color: var(--glow);
+  text-shadow: 0 0 10px color-mix(in oklab, var(--amber) 45%, transparent);
+}
+
+.dropAddress {
+  margin-top: 1.8rem;
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.dropContact {
+  margin-top: 0.4rem;
+}
+
+.dropContact a {
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 3px;
+}
+
+.form {
+  padding: clamp(1.6rem, 4vw, 2.6rem);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 14px 14px, var(--hole) 0 3px, var(--edge) 3.5px 4.5px, transparent 5px),
+    radial-gradient(circle at calc(100% - 14px) 14px, var(--hole) 0 3px, var(--edge) 3.5px 4.5px, transparent 5px),
+    radial-gradient(circle at 14px calc(100% - 14px), var(--hole) 0 3px, var(--edge) 3.5px 4.5px, transparent 5px),
+    radial-gradient(circle at calc(100% - 14px) calc(100% - 14px), var(--hole) 0 3px, var(--edge) 3.5px 4.5px, transparent 5px),
+    var(--brush);
+  box-shadow: 0 0 0 1px var(--rule), 0 24px 40px -26px color-mix(in oklab, var(--black) 70%, transparent);
+}
+
+.formTitle {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+  margin-top: 1.4rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--label);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 2.8rem;
+  padding: 0.6rem 0.75rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--well);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  box-shadow: inset 0 1px 3px color-mix(in oklab, var(--black) 18%, transparent);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: color-mix(in oklab, var(--muted) 70%, transparent);
+}
+
+.field select {
+  appearance: none;
+  background:
+    linear-gradient(45deg, transparent 50%, var(--text) 50%) calc(100% - 18px) 50% / 6px 6px no-repeat,
+    linear-gradient(-45deg, transparent 50%, var(--text) 50%) calc(100% - 12px) 50% / 6px 6px no-repeat,
+    var(--well);
+}
+
+.switches {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1.4rem;
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+/* The checkbox drawn as a slide switch with an amber lamp when on. */
+.switch input {
+  flex: none;
+  position: relative;
+  width: 2.8rem;
+  height: 1.5rem;
+  margin: 0;
+  appearance: none;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--black) 30%, var(--alu));
+  box-shadow: inset 0 1px 3px color-mix(in oklab, var(--black) 40%, transparent);
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.switch input::before {
+  content: '';
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, var(--sheen), var(--edge));
+  box-shadow: 0 1px 3px color-mix(in oklab, var(--black) 50%, transparent);
+  transition: transform 160ms ease;
+}
+
+.switch input:checked {
+  background: var(--amber);
+}
+
+.switch input:checked::before {
+  transform: translateX(1.3rem);
+}
+
+.switch label {
+  font-size: 0.95rem;
+}
+
+.submit {
+  margin-top: 1.6rem;
+  min-width: 12rem;
+}
+
+.formSmall {
+  margin-top: 0.9rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  color: var(--on-black);
+  background: var(--glass);
+}
+
+.footGrille {
+  position: relative;
+  height: clamp(100px, 11vw, 150px);
+  overflow: hidden;
+  background: var(--grain);
+  border-top: 6px solid var(--edge);
+  border-bottom: 1px solid var(--glass-rule);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr));
+  gap: 2rem clamp(1.5rem, 3vw, 3rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.6rem, 5vw, 3.6rem) var(--gut) clamp(3rem, 6vw, 4rem);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--glass-muted);
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--glow);
+}
+
+.footSub {
+  margin-top: 0.5rem;
+  font-family: var(--label);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.footCol {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+}
+
+.footLabel {
+  font-family: var(--label);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--on-black);
+}
+
+.footCol a {
+  color: var(--on-black);
+  text-decoration: underline;
+  text-decoration-color: var(--glass-rule);
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .stations {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .unit {
+    grid-template-columns: 3.2rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      'no name from'
+      'no note note';
+    row-gap: 0.5rem;
+  }
+
+  .unitNo {
+    grid-area: no;
+    align-self: start;
+  }
+
+  .unitName {
+    grid-area: name;
+  }
+
+  .unitNote {
+    grid-area: note;
+  }
+
+  .unitFrom {
+    grid-area: from;
+  }
+
+  .controls {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'copy'
+      'meters'
+      'knobs'
+      'readouts';
+  }
+}
+
+@media (max-width: 1000px) {
+  .faceplate {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'window'
+      'grille'
+      'controls';
+  }
+
+  .grille {
+    min-height: 9rem;
+  }
+
+  .repairGrid,
+  .buyGrid,
+  .benchGrid,
+  .ttGrid,
+  .dropGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .benchPhoto {
+    position: relative;
+    top: 0;
+  }
+
+  .path {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 2rem;
+  }
+
+  .path::before {
+    display: none;
+  }
+
+  .restos {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 34rem;
+  }
+
+  .valveHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .dial {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .tuner {
+    display: none;
+  }
+
+  .windowText {
+    max-width: 100%;
+    padding-bottom: 7rem;
+    background: linear-gradient(90deg, color-mix(in oklab, var(--glass) 88%, transparent) 30%, transparent 85%);
+  }
+
+  .valve {
+    right: -12%;
+    width: 16rem;
+    opacity: 0.85;
+  }
+
+  .unit {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'no from'
+      'name name'
+      'note note';
+    padding: 1rem 2.6rem;
+  }
+
+  .unitNo {
+    justify-self: start;
+    padding: 0.2rem 0.6rem;
+  }
+
+  .unit::before,
+  .unit::after {
+    width: 1.6rem;
+  }
+
+  .fee {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .feeNote {
+    grid-column: 1 / -1;
+  }
+
+  .kit,
+  .shelf,
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .path {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .meters {
+    flex-wrap: wrap;
+  }
+
+  .vu {
+    width: calc(50% - 0.5rem);
+  }
+
+  .readouts {
+    flex-wrap: wrap;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pointer,
+  .pushRed,
+  .pushBlack,
+  .submit,
+  .switch input,
+  .switch input::before {
+    transition: none;
+  }
+}

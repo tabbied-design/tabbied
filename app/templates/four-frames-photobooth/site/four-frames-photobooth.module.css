@@ -1,0 +1,2019 @@
+/* ==========================================================================
+   FOUR FRAMES - photo booth hire, 18 Arcade Row, Merrytown
+   Photo booth strips taped to the page. Every portrait is a strip of four
+   frames on white print paper, the same sitter moved a little between
+   shots, stuck up at an angle with torn tape. The booth itself stands in
+   the hero: a red curtain in folds, a lens that says look here, a price
+   plate, the button and the strip slot. The house backdrop (two blocks
+   with a channel between them) is the lead pattern, and the backdrops you
+   can hire are pattern fields hung from a stand. Type is a wide poster
+   grotesk for display, a plain sans to read and a mono for the stamps.
+   ========================================================================== */
+
+.page {
+  --paper: #f4f0e8;
+  --black: #141414;
+  --red: #d0342c;
+  --teal: #1f8c8c;
+
+  --display: 'Rubik Mono One', 'Arial Black', 'Helvetica Neue', sans-serif;
+  --sans: 'Reddit Sans', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'Reddit Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 84rem;
+
+  /* Derived text and surfaces; the @supports block below does it properly. */
+  --text: var(--black);
+  --on-black: var(--paper);
+  --on-red: var(--paper);
+  --on-teal: var(--paper);
+  --print: var(--paper);
+  --on-print: var(--black);
+  --dev-black: var(--black);
+  --dev-red: var(--red);
+  --dev-teal: var(--teal);
+
+  --muted: color-mix(in oklab, var(--text) 68%, var(--paper));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --panel: color-mix(in oklab, var(--paper) 92%, var(--text));
+  --shadow: color-mix(in oklab, var(--black) 34%, transparent);
+  --print-muted: color-mix(in oklab, var(--on-print) 62%, var(--print));
+  --black-muted: color-mix(in oklab, var(--on-black) 68%, var(--black));
+  --black-rule: color-mix(in oklab, var(--on-black) 18%, transparent);
+  --chrome: color-mix(in oklab, var(--on-black) 62%, var(--black));
+  --chrome-hi: color-mix(in oklab, var(--on-black) 86%, var(--black));
+  --curtain-dark: color-mix(in oklab, var(--red) 58%, var(--black));
+  --curtain-hi: color-mix(in oklab, var(--red) 84%, var(--print));
+  --booth-bg: color-mix(in oklab, var(--print) 80%, var(--dev-black));
+  --tape: color-mix(in oklab, color-mix(in oklab, var(--print) 82%, var(--dev-black)) 58%, transparent);
+  --tape-hi: color-mix(in oklab, var(--print) 40%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the surface's lightness, tinted toward an ink. */
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 84%, var(--black));
+    --on-black: color-mix(in oklab, oklch(from var(--black) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--paper));
+    --on-red: oklch(from var(--red) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-teal: oklch(from var(--teal) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    /* Print paper is always light, as photo paper is, whatever the ground,
+       with a little of the ground mixed in so a re-color still reaches the
+       prints; the developing inks are always dark enough to hold a face. */
+    --print: color-mix(in oklab, oklch(from var(--paper) max(l, 0.96) min(c, 0.02) h) 86%, var(--paper));
+    --dev-black: oklch(from var(--black) min(l, 0.27) c h);
+    --dev-red: oklch(from var(--red) min(l, 0.5) c h);
+    --dev-teal: oklch(from var(--teal) min(l, 0.47) c h);
+    --on-print: color-mix(in oklab, var(--dev-black) 86%, var(--print));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.8rem var(--gut);
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 2px solid var(--text);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+/* The mark: a tiny strip of four frames. */
+.markStrip {
+  display: grid;
+  gap: 2px;
+  padding: 3px 3px 5px;
+  background: var(--print);
+  border-radius: 2px;
+  box-shadow: 0 0 0 1.5px var(--text);
+  transform: rotate(-6deg);
+}
+
+.markStrip span {
+  display: block;
+  width: 12px;
+  height: 7px;
+  border-radius: 1.5px;
+  background: var(--dev-black);
+}
+
+.markStrip span:nth-child(2) {
+  background: var(--dev-red);
+}
+
+.markStrip span:nth-child(3) {
+  background: var(--dev-teal);
+}
+
+.markName {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--red);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
+}
+
+.barCta {
+  padding: 0.6rem 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--on-red);
+  background: var(--red);
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px var(--text);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--paper);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.heroText {
+  align-self: center;
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.kicker::before {
+  content: '';
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--red) 24%, transparent);
+}
+
+.title {
+  position: relative;
+  display: grid;
+  margin-top: 1.4rem;
+  font-family: var(--display);
+  font-size: clamp(3rem, 7vw, 6.4rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.titleLine:first-child {
+  position: relative;
+  width: max-content;
+}
+
+/* Flash marks off the corner of the first word. */
+.titleLine:first-child::after {
+  content: '';
+  position: absolute;
+  top: -0.32em;
+  right: -0.62em;
+  width: 0.62em;
+  height: 0.62em;
+  background: var(--red);
+  clip-path: polygon(50% 0, 60% 36%, 100% 22%, 68% 52%, 96% 84%, 56% 68%, 40% 100%, 36% 64%, 0 70%, 28% 44%, 6% 14%, 42% 30%);
+}
+
+.lede {
+  max-width: 34rem;
+  margin-top: 1.6rem;
+  font-size: clamp(1.05rem, 1.35vw, 1.2rem);
+  line-height: 1.55;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+  padding: 0 1.4rem;
+  font-weight: 700;
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px var(--text);
+}
+
+.btn {
+  color: var(--on-red);
+  background: var(--red);
+  box-shadow: 0 0 0 2px var(--text), 4px 4px 0 2px var(--text);
+}
+
+.btnGhost {
+  background: var(--paper);
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 34rem;
+  margin-top: 2.6rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--text);
+}
+
+.heroFacts dt {
+  font-family: var(--display);
+  font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.heroFacts dd {
+  margin-top: 0.35rem;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+/* The garage wall: the house backdrop, a floor, the booth and the strips. */
+.wall {
+  position: relative;
+  min-height: 46rem;
+}
+
+.wallField {
+  position: absolute;
+  inset: 0 0 5.5rem;
+  overflow: hidden;
+  border-radius: 18px 18px 0 0;
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 5.5rem;
+  border-radius: 0 0 18px 18px;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 3.4rem, var(--rule) 3.4rem calc(3.4rem + 1px)),
+    linear-gradient(color-mix(in oklab, var(--paper) 78%, var(--text)), color-mix(in oklab, var(--paper) 88%, var(--text)));
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+/* ---- the booth, drawn in em so it scales as one object ---- */
+
+.booth {
+  position: absolute;
+  z-index: 2;
+  left: 7%;
+  bottom: 2.4rem;
+  display: flex;
+  flex-direction: column;
+  width: 25em;
+  font-size: clamp(8.5px, 0.98vw, 14px);
+  filter: drop-shadow(0 1.4em 1.2em var(--shadow));
+}
+
+.boothSign {
+  position: relative;
+  padding: 0.55em 0 0.6em;
+  font-family: var(--display);
+  font-size: 2.3em;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--on-red);
+  background:
+    radial-gradient(circle, var(--print) 0 0.07em, transparent 0.08em) 0.05em 0.08em / 0.46em 0.24em repeat-x,
+    radial-gradient(circle, var(--print) 0 0.07em, transparent 0.08em) 0.05em calc(100% - 0.08em) / 0.46em 0.24em repeat-x,
+    var(--red);
+  border-radius: 0.28em 0.28em 0 0;
+  box-shadow: inset 0 0 0 0.07em var(--curtain-dark);
+}
+
+.boothBody {
+  display: grid;
+  grid-template-columns: 57% 43%;
+  height: 30em;
+  background: var(--black);
+  border: 0.35em solid color-mix(in oklab, var(--black) 78%, var(--on-black));
+  border-top: 0;
+}
+
+.bay {
+  position: relative;
+  margin: 1.3em 0 0 1.3em;
+  overflow: hidden;
+  background:
+    linear-gradient(to top, color-mix(in oklab, var(--on-black) 20%, var(--black)) 0 18%, transparent 18%),
+    color-mix(in oklab, var(--on-black) 9%, var(--black));
+  border-radius: 0.3em 0.3em 0 0;
+}
+
+.rod {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0.55em;
+  background: linear-gradient(var(--chrome-hi), var(--chrome));
+}
+
+/* The stool inside the booth, seen past the drawn-back curtain. */
+.stool {
+  position: absolute;
+  left: 50%;
+  bottom: 18%;
+  width: 7em;
+  height: 1.4em;
+  background: var(--curtain-dark);
+  border-radius: 0.7em;
+}
+
+.stool::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 0.9em;
+  height: 5.4em;
+  margin-left: -0.45em;
+  background: var(--chrome);
+}
+
+/* The curtain in folds, gathered to the left with a scalloped hem. */
+.curtain {
+  position: absolute;
+  top: 0.4em;
+  left: 0;
+  bottom: 0;
+  width: 44%;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--curtain-hi) 0,
+    var(--red) 0.45em,
+    var(--curtain-dark) 1.05em,
+    var(--red) 1.55em,
+    var(--curtain-hi) 1.8em
+  );
+  -webkit-mask:
+    radial-gradient(0.95em 0.7em at 50% 0, var(--black) 96%, transparent) 0 100% / 1.8em 0.7em repeat-x,
+    linear-gradient(var(--black), var(--black)) 0 0 / 100% calc(100% - 0.68em) no-repeat;
+  mask:
+    radial-gradient(0.95em 0.7em at 50% 0, var(--black) 96%, transparent) 0 100% / 1.8em 0.7em repeat-x,
+    linear-gradient(var(--black), var(--black)) 0 0 / 100% calc(100% - 0.68em) no-repeat;
+}
+
+.curtain::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: -0.3em;
+  top: 46%;
+  height: 0.9em;
+  background: var(--chrome-hi);
+  border-radius: 0.45em;
+}
+
+.console {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9em;
+  padding: 1.6em 0.9em 1.2em;
+}
+
+/* The flash lamp, with its marks going off around it. */
+.flash {
+  position: relative;
+  width: 6.2em;
+  height: 2.2em;
+  background: linear-gradient(var(--print), color-mix(in oklab, var(--print) 78%, var(--black)));
+  border: 0.25em solid var(--chrome);
+  border-radius: 0.4em;
+}
+
+.flash::before {
+  content: '';
+  position: absolute;
+  inset: -1.5em -1.1em;
+  background: repeating-conic-gradient(from 3deg, var(--print) 0 5deg, transparent 5deg 30deg);
+  -webkit-mask: radial-gradient(closest-side, transparent 70%, var(--black) 72% 96%, transparent 98%);
+  mask: radial-gradient(closest-side, transparent 70%, var(--black) 72% 96%, transparent 98%);
+  opacity: 0.85;
+}
+
+.lookHere {
+  margin-top: 0.35em;
+  font-family: var(--mono);
+  font-size: 0.95em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-black);
+}
+
+.lookHere::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  margin: 0.25em auto 0;
+  border: 0.4em solid transparent;
+  border-top-color: var(--on-black);
+  border-bottom: 0;
+}
+
+.lens {
+  position: relative;
+  width: 5.6em;
+  height: 5.6em;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--dev-teal) 60%, var(--black)) 0 14%,
+    var(--black) 15% 30%,
+    var(--chrome) 31% 36%,
+    color-mix(in oklab, var(--black) 88%, var(--on-black)) 37% 60%,
+    var(--chrome-hi) 61% 67%,
+    var(--chrome) 68% 100%
+  );
+}
+
+.lens::after {
+  content: '';
+  position: absolute;
+  top: 30%;
+  left: 34%;
+  width: 0.7em;
+  height: 0.45em;
+  border-radius: 50%;
+  background: var(--print);
+  opacity: 0.8;
+  transform: rotate(-30deg);
+}
+
+.plate {
+  display: grid;
+  justify-items: center;
+  width: 8.4em;
+  padding: 0.5em 0.4em 0.55em;
+  color: color-mix(in oklab, var(--black) 92%, var(--on-black));
+  background:
+    radial-gradient(circle at 0.55em 0.55em, var(--chrome) 0 0.2em, transparent 0.22em),
+    radial-gradient(circle at calc(100% - 0.55em) 0.55em, var(--chrome) 0 0.2em, transparent 0.22em),
+    radial-gradient(circle at 0.55em calc(100% - 0.55em), var(--chrome) 0 0.2em, transparent 0.22em),
+    radial-gradient(circle at calc(100% - 0.55em) calc(100% - 0.55em), var(--chrome) 0 0.2em, transparent 0.22em),
+    linear-gradient(160deg, var(--chrome-hi), color-mix(in oklab, var(--on-black) 70%, var(--black)));
+  border-radius: 0.35em;
+}
+
+.plateSmall {
+  font-family: var(--mono);
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.plateBig {
+  font-family: var(--display);
+  font-size: 1.6em;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.button {
+  width: 2.8em;
+  height: 2.8em;
+  border-radius: 50%;
+  background: radial-gradient(circle at 36% 32%, var(--curtain-hi) 0 18%, var(--red) 40%, var(--curtain-dark) 100%);
+  box-shadow: 0 0 0 0.3em var(--chrome), 0 0 0 0.5em color-mix(in oklab, var(--black) 70%, var(--on-black));
+}
+
+.slot {
+  display: grid;
+  justify-items: center;
+  gap: 0.35em;
+  margin-top: auto;
+}
+
+.slotLabel {
+  font-family: var(--mono);
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--black-muted);
+}
+
+.slot::after {
+  content: '';
+  width: 5.4em;
+  height: 0.7em;
+  background: var(--dev-black);
+  border-radius: 0.35em;
+  box-shadow: inset 0 0 0 0.16em var(--chrome), 0 0.9em 0 -0.18em var(--print);
+}
+
+.boothBase {
+  height: 1.7em;
+  margin: 0 -0.7em;
+  background: linear-gradient(var(--chrome), color-mix(in oklab, var(--black) 72%, var(--on-black)));
+  border-radius: 0.3em;
+}
+
+/* ------------------------------------------------------------ photo strips */
+
+.strip {
+  --strip-pad: 7px;
+  display: block;
+  width: 140px;
+  padding: var(--strip-pad) var(--strip-pad) 0;
+  background: var(--print);
+  border-radius: 3px;
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--dev-black) 14%, transparent),
+    0 14px 26px -14px var(--shadow),
+    0 2px 4px -2px var(--shadow);
+}
+
+.frames {
+  display: grid;
+  gap: var(--strip-pad);
+}
+
+.frame {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1.08;
+  overflow: hidden;
+  background:
+    radial-gradient(90% 70% at 50% 30%, color-mix(in oklab, var(--print) 90%, var(--dev-black)), var(--booth-bg));
+  border-radius: 5px;
+}
+
+.shot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  transform-origin: 50% 32%;
+}
+
+/* Four shots a second apart: the sitter leans, turns, comes closer. */
+.shotA {
+  transform: translate(0, 1%) scale(1.12);
+}
+
+.shotB {
+  transform: translate(-7%, -1%) scale(1.2) rotate(-4deg);
+}
+
+.shotC {
+  transform: translate(6%, 3%) scale(1.3) rotate(3deg);
+}
+
+.shotD {
+  transform: translate(-2%, -4%) scale(1.06) rotate(-1deg);
+}
+
+.stamp {
+  padding: 6px 0 7px;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-align: center;
+  color: var(--print-muted);
+}
+
+/* Torn tape, translucent, with ragged ends. */
+.tape {
+  position: absolute;
+  z-index: 3;
+  top: -13px;
+  left: 50%;
+  width: 78px;
+  height: 25px;
+  margin-left: -39px;
+  background:
+    linear-gradient(180deg, var(--tape-hi), transparent 60%),
+    var(--tape);
+  transform: rotate(-5deg);
+  clip-path: polygon(0 10%, 5% 0, 18% 6%, 33% 1%, 52% 5%, 70% 0, 88% 5%, 96% 0, 100% 16%, 97% 34%, 100% 52%, 96% 70%, 100% 90%, 94% 100%, 76% 95%, 58% 100%, 40% 96%, 22% 100%, 6% 95%, 0 86%, 3% 66%, 0 48%, 4% 30%);
+}
+
+.tapeFoot {
+  top: auto;
+  bottom: -11px;
+  transform: rotate(6deg);
+}
+
+.strip {
+  position: relative;
+}
+
+.stripHero {
+  position: absolute;
+  z-index: 3;
+  top: 2.4rem;
+  right: 16%;
+  width: clamp(116px, 10.4vw, 150px);
+  transform: rotate(4deg);
+}
+
+.stripHeroTwo {
+  position: absolute;
+  z-index: 4;
+  top: 9rem;
+  right: -1.2rem;
+  width: clamp(104px, 9vw, 130px);
+  transform: rotate(-7deg);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 7rem) var(--gut);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 0.8rem 3rem;
+  margin-bottom: clamp(2.2rem, 4vw, 3.4rem);
+}
+
+.secNo,
+.secNoDark {
+  grid-column: 1 / -1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.secNo::before,
+.secNoDark::before {
+  content: '';
+  width: 1.1rem;
+  height: 0.8rem;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+}
+
+.secTitle {
+  font-family: var(--display);
+  font-size: clamp(2rem, 4.6vw, 3.9rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.secNote {
+  max-width: 34rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- booths */
+
+.booths {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.2rem, 2.4vw, 2rem);
+}
+
+.boothCard {
+  display: flex;
+  flex-direction: column;
+  overflow: clip;
+  overflow-clip-margin: 20px;
+  background: var(--panel);
+  border-radius: 18px;
+  box-shadow: 0 0 0 2px var(--text);
+}
+
+.cardTop {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 30rem;
+  border-bottom: 2px solid var(--text);
+}
+
+.cardField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 16px 16px 0 0;
+}
+
+.stripCard {
+  width: 112px;
+  transform: rotate(-3deg);
+}
+
+.cardOpen .stripCard {
+  transform: rotate(2.5deg);
+}
+
+.cardFlicker .stripCard {
+  transform: rotate(-1.5deg);
+}
+
+.cardNo {
+  position: absolute;
+  z-index: 2;
+  top: 0.9rem;
+  left: 0.9rem;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--paper);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--text);
+}
+
+.cardBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1.5rem 1.5rem 1.6rem;
+}
+
+.cardKind {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cardName {
+  margin-top: 0.4rem;
+  font-family: var(--display);
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.cardBlurb {
+  margin-top: 0.9rem;
+  font-size: 0.98rem;
+}
+
+.specs {
+  display: grid;
+  gap: 0.1rem;
+  margin: 1.2rem 0 1.4rem;
+  border-top: 1px solid var(--rule);
+}
+
+.specs div {
+  display: grid;
+  grid-template-columns: 6.2rem minmax(0, 1fr);
+  gap: 0.8rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.specs dt {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 0.15rem;
+}
+
+.specs dd {
+  font-size: 0.92rem;
+}
+
+.cardPrice {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 0.45rem 0.9rem;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  color: var(--on-black);
+  background: var(--black);
+  border-radius: 999px;
+}
+
+/* ----------------------------------------------------------------- packages */
+
+.packagesSec {
+  position: relative;
+  padding: clamp(4rem, 8vw, 7rem) var(--gut);
+  border-block: 2px solid var(--text);
+}
+
+.packField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.packInner {
+  position: relative;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.packInner .secHead {
+  width: fit-content;
+  max-width: 100%;
+  padding: 1.6rem 1.8rem;
+  background: var(--paper);
+  border-radius: 16px;
+  box-shadow: 0 0 0 2px var(--text);
+  grid-template-columns: auto minmax(0, 26rem);
+}
+
+.plates {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.2rem, 2.4vw, 2rem);
+}
+
+/* A price plate, screwed on at the corners. */
+.plate3 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.8rem 1.8rem;
+  background: var(--paper);
+  border-radius: 16px;
+  box-shadow: 0 0 0 2px var(--text), 6px 6px 0 2px var(--text);
+}
+
+.plate3:nth-child(2) {
+  color: var(--on-black);
+  background: var(--black);
+}
+
+.screws {
+  position: absolute;
+  inset: 0.8rem;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 5px 5px, currentColor 0 1px, transparent 1.5px),
+    radial-gradient(circle at calc(100% - 5px) 5px, currentColor 0 1px, transparent 1.5px),
+    radial-gradient(circle at 5px calc(100% - 5px), currentColor 0 1px, transparent 1.5px),
+    radial-gradient(circle at calc(100% - 5px) calc(100% - 5px), currentColor 0 1px, transparent 1.5px);
+}
+
+.screws::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 5px 5px, transparent 0 3.5px, color-mix(in oklab, currentColor 50%, transparent) 4px 5px, transparent 5.5px),
+    radial-gradient(circle at calc(100% - 5px) 5px, transparent 0 3.5px, color-mix(in oklab, currentColor 50%, transparent) 4px 5px, transparent 5.5px),
+    radial-gradient(circle at 5px calc(100% - 5px), transparent 0 3.5px, color-mix(in oklab, currentColor 50%, transparent) 4px 5px, transparent 5.5px),
+    radial-gradient(circle at calc(100% - 5px) calc(100% - 5px), transparent 0 3.5px, color-mix(in oklab, currentColor 50%, transparent) 4px 5px, transparent 5.5px);
+}
+
+.plateHours {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.plateHoursBig {
+  font-family: var(--display);
+  font-size: clamp(3.4rem, 6vw, 4.8rem);
+  line-height: 0.9;
+}
+
+.plateHoursUnit {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.plateName {
+  margin-top: 0.9rem;
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.platePrice {
+  margin-top: 0.2rem;
+  font-family: var(--display);
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.plateNote {
+  margin-top: 0.3rem;
+  font-size: 0.92rem;
+  opacity: 0.75;
+}
+
+.plateList {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 1.3rem;
+  padding-top: 1.1rem;
+  border-top: 2px dashed color-mix(in oklab, currentColor 40%, transparent);
+}
+
+.plateList li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 0.95rem;
+}
+
+.plateList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.42em;
+  width: 0.7rem;
+  height: 0.7rem;
+  background: var(--red);
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+}
+
+.extras {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem 2rem;
+  margin-top: 2.2rem;
+  padding: 1.2rem 1.6rem;
+  background: var(--paper);
+  border-radius: 14px;
+  box-shadow: 0 0 0 2px var(--text);
+}
+
+.extrasTitle {
+  font-family: var(--display);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+}
+
+.extrasList {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.6rem 1.6rem;
+}
+
+.extrasList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px dotted var(--muted);
+}
+
+.extrasList dt {
+  font-size: 0.92rem;
+}
+
+.extrasList dd {
+  font-family: var(--mono);
+  font-size: 0.88rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- backdrops */
+
+.backdropGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 2.3fr) minmax(0, 1fr);
+  gap: clamp(1.6rem, 3vw, 3rem);
+  align-items: start;
+}
+
+/* The stand: a crossbar with the four backdrops clipped to it. */
+.stand {
+  position: relative;
+  padding: 0 1.4rem 1.6rem;
+}
+
+.stand::before,
+.stand::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  background: linear-gradient(90deg, var(--muted), var(--text));
+  border-radius: 4px;
+}
+
+.stand::before {
+  left: 0;
+}
+
+.stand::after {
+  right: 0;
+}
+
+.crossbar {
+  display: block;
+  height: 10px;
+  margin: 0 -1.4rem 1.4rem;
+  background: linear-gradient(var(--muted), var(--text));
+  border-radius: 5px;
+}
+
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.swatch {
+  position: relative;
+}
+
+/* The clip that holds each backdrop to the bar. */
+.swatch::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: -1.9rem;
+  left: 50%;
+  width: 16px;
+  height: 2.4rem;
+  margin-left: -8px;
+  background: var(--text);
+  border-radius: 3px;
+}
+
+.swatchField {
+  position: relative;
+  height: 20rem;
+  overflow: hidden;
+  border-radius: 4px 4px 10px 10px;
+  box-shadow: 0 0 0 2px var(--text), 0 18px 30px -18px var(--shadow);
+}
+
+.swatchName {
+  margin-top: 1rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.swatchNote {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* The props trunk: a black box with a lid and a latch. */
+.trunk {
+  position: relative;
+  padding: 2.8rem 1.6rem 1.8rem;
+  color: var(--on-black);
+  background: var(--black);
+  border-radius: 14px;
+  box-shadow: 0 0 0 2px var(--text), 0 0 0 7px var(--paper), 0 0 0 9px var(--text);
+}
+
+.trunk::before {
+  content: '';
+  position: absolute;
+  top: 1.2rem;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--chrome);
+}
+
+.trunk::after {
+  content: '';
+  position: absolute;
+  top: 0.75rem;
+  left: 50%;
+  width: 34px;
+  height: 22px;
+  margin-left: -17px;
+  background: var(--chrome-hi);
+  border-radius: 4px;
+  box-shadow: inset 0 -6px 0 var(--chrome);
+}
+
+.trunkTitle {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  text-transform: uppercase;
+}
+
+.propList {
+  display: grid;
+  gap: 0.2rem;
+  margin-top: 1.2rem;
+}
+
+.propList li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--black-rule);
+}
+
+.propList li::before {
+  content: '';
+  flex: none;
+  width: 0.9rem;
+  height: 0.55rem;
+  background: var(--red);
+  border-radius: 2px;
+  box-shadow: 0 0 0 2px var(--black), 0 0 0 3px var(--black-muted);
+}
+
+.trunkNote {
+  margin-top: 1.2rem;
+  font-size: 0.9rem;
+  color: var(--black-muted);
+}
+
+/* ---------------------------------------------------------------------- how */
+
+.howSec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(4rem, 8vw, 7rem);
+}
+
+/* The steps are a strip on its side: four frames on print paper. */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  padding: 12px 12px 12px;
+  background: var(--print);
+  border-radius: 6px;
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--dev-black) 14%, transparent),
+    0 24px 40px -24px var(--shadow);
+  transform: rotate(-0.6deg);
+}
+
+.step {
+  position: relative;
+  min-height: 17rem;
+  padding: 1.4rem 1.3rem 1.5rem;
+  overflow: hidden;
+  color: var(--print);
+  background: var(--dev-black);
+  border-radius: 8px;
+}
+
+.step:nth-child(2) {
+  background: var(--dev-teal);
+}
+
+.step:nth-child(3) {
+  background: var(--dev-red);
+}
+
+.stepNo {
+  display: block;
+  font-family: var(--display);
+  font-size: 4.2rem;
+  line-height: 1;
+}
+
+/* A flash going off behind each number. */
+.step::before {
+  content: '';
+  position: absolute;
+  top: -1.6rem;
+  right: -1.6rem;
+  width: 8rem;
+  height: 8rem;
+  background: repeating-conic-gradient(from 8deg, currentColor 0 6deg, transparent 6deg 24deg);
+  -webkit-mask: radial-gradient(closest-side, transparent 40%, var(--black) 42% 96%, transparent 98%);
+  mask: radial-gradient(closest-side, transparent 40%, var(--black) 42% 96%, transparent 98%);
+  opacity: 0.35;
+}
+
+.stepTitle {
+  margin-top: 1.4rem;
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.stepText {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  opacity: 0.86;
+}
+
+.stepsFoot {
+  margin-top: 2rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- events */
+
+.eventsSec {
+  padding: clamp(4rem, 8vw, 7rem) var(--gut);
+  background: var(--panel);
+  border-block: 2px solid var(--text);
+}
+
+.eventsSec > .secHead {
+  max-width: var(--max);
+  margin-inline: auto;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: 136px minmax(0, 1fr) 136px;
+  grid-template-rows: auto auto;
+  align-items: start;
+  gap: 2.4rem clamp(1.4rem, 3vw, 2.6rem);
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.stripBoard {
+  grid-row: 1 / span 2;
+  width: 136px;
+  margin-top: 1.4rem;
+  transform: rotate(-4deg);
+}
+
+.stripBoardTwo {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  width: 136px;
+  margin-top: 4rem;
+  transform: rotate(5deg);
+}
+
+/* The summer's tally, printed like the stamp along a strip's foot. */
+.tally {
+  grid-column: 2;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  color: var(--on-black);
+  background: var(--black);
+  border-radius: 12px;
+  box-shadow: 0 0 0 2px var(--text);
+}
+
+.tally div {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: 0.3rem;
+  padding: 1.1rem 1.3rem 1.2rem;
+}
+
+.tally div + div {
+  border-left: 1px dashed var(--black-rule);
+}
+
+.tally dt {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--black-muted);
+}
+
+.tally dd {
+  font-family: var(--display);
+  font-size: clamp(1.4rem, 2.4vw, 2.1rem);
+  line-height: 1;
+}
+
+.notes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.2rem 1.6rem;
+  padding-top: 1.2rem;
+}
+
+.note {
+  position: relative;
+  padding: 1.6rem 1.3rem 1.3rem;
+  color: var(--on-print);
+  background: var(--print);
+  border-radius: 3px;
+  box-shadow: 0 16px 26px -18px var(--shadow), 0 0 0 1px color-mix(in oklab, var(--dev-black) 10%, transparent);
+  transform: rotate(-1.2deg);
+}
+
+.note:nth-child(2n) {
+  transform: rotate(1.4deg);
+}
+
+.note:nth-child(3n) {
+  transform: rotate(-0.4deg);
+}
+
+.noteTape {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 70px;
+  height: 22px;
+  margin-left: -35px;
+  background: linear-gradient(180deg, var(--tape-hi), transparent 60%), var(--tape);
+  transform: rotate(3deg);
+  clip-path: polygon(0 12%, 6% 0, 25% 6%, 45% 0, 66% 5%, 88% 0, 100% 10%, 96% 32%, 100% 55%, 95% 78%, 100% 100%, 78% 94%, 55% 100%, 32% 95%, 10% 100%, 0 90%, 4% 68%, 0 44%, 5% 24%);
+}
+
+.noteDate {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--print-muted);
+}
+
+.noteWhat {
+  margin-top: 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.noteWhere {
+  margin-top: 0.15rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--print-muted);
+}
+
+.noteText {
+  margin-top: 0.8rem;
+  font-size: 0.95rem;
+}
+
+.noteCount {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.25rem 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--print);
+  background: var(--dev-black);
+  border-radius: 999px;
+}
+
+.note:nth-child(3n + 2) .noteCount {
+  background: var(--dev-teal);
+}
+
+.note:nth-child(3n) .noteCount {
+  background: var(--dev-red);
+}
+
+/* ------------------------------------------------------------------ enquire */
+
+.enquireSec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 7rem) var(--gut);
+}
+
+/* The booth's front: black panel, curtain down the left side. */
+.enquire {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1.6fr) minmax(0, 1fr);
+  overflow: hidden;
+  color: var(--on-black);
+  background: var(--black);
+  border-radius: 20px;
+  box-shadow: 0 0 0 2px var(--text), 0 30px 50px -30px var(--shadow);
+}
+
+.enquireCurtain {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--curtain-hi) 0,
+    var(--red) 0.6rem,
+    var(--curtain-dark) 1.4rem,
+    var(--red) 2.1rem,
+    var(--curtain-hi) 2.4rem
+  );
+  box-shadow: inset -10px 0 16px -8px var(--shadow);
+}
+
+.form {
+  padding: clamp(2rem, 4vw, 3.2rem);
+}
+
+.secNoDark {
+  color: var(--black-muted);
+}
+
+.formTitle {
+  margin-top: 0.8rem;
+  font-family: var(--display);
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.formNote {
+  max-width: 32rem;
+  margin-top: 0.9rem;
+  color: var(--black-muted);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+  margin-top: 1.8rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--black-muted);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 2.9rem;
+  padding: 0.6rem 0.8rem;
+  font: inherit;
+  font-size: 0.98rem;
+  color: var(--on-print);
+  background: var(--print);
+  border: 0;
+  border-radius: 8px;
+  box-shadow: inset 0 2px 0 color-mix(in oklab, var(--dev-black) 18%, transparent);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.6rem;
+  padding: 0.85rem 1.6rem 0.85rem 0.9rem;
+  font: inherit;
+  font-weight: 800;
+  color: var(--on-red);
+  background: var(--red);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 0 0 3px var(--chrome);
+}
+
+.submit::before {
+  content: '';
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 36% 32%, var(--curtain-hi) 0 20%, var(--red) 45%, var(--curtain-dark));
+  box-shadow: 0 0 0 2px var(--on-red);
+}
+
+/* The garage card, taped to the booth front. */
+.garage {
+  position: relative;
+  align-self: start;
+  margin: clamp(2rem, 4vw, 3.2rem) clamp(1.4rem, 3vw, 2.6rem) 2rem 0;
+  padding: 1.8rem 1.5rem 1.5rem;
+  color: var(--on-print);
+  background: var(--print);
+  border-radius: 3px;
+  transform: rotate(1.5deg);
+  box-shadow: 0 20px 30px -18px var(--shadow);
+}
+
+.garage::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 80px;
+  height: 24px;
+  margin-left: -40px;
+  background: linear-gradient(180deg, var(--tape-hi), transparent 60%), var(--tape);
+  transform: rotate(-4deg);
+  clip-path: polygon(0 12%, 6% 0, 25% 6%, 45% 0, 66% 5%, 88% 0, 100% 10%, 96% 32%, 100% 55%, 95% 78%, 100% 100%, 78% 94%, 55% 100%, 32% 95%, 10% 100%, 0 90%, 4% 68%, 0 44%, 5% 24%);
+}
+
+.garageTitle {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  text-transform: uppercase;
+}
+
+.garageText {
+  margin-top: 0.6rem;
+  font-size: 0.95rem;
+}
+
+.hours {
+  display: grid;
+  margin-top: 1rem;
+  border-top: 1px solid color-mix(in oklab, var(--on-print) 18%, transparent);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--on-print) 18%, transparent);
+}
+
+.hours dt {
+  font-size: 0.9rem;
+}
+
+.hours dd {
+  font-family: var(--mono);
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.contact {
+  margin-top: 0.7rem;
+  font-weight: 700;
+}
+
+.contact + .contact {
+  margin-top: 0.2rem;
+}
+
+.contact a {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--on-print) 30%, transparent);
+  text-underline-offset: 4px;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  position: relative;
+  border-top: 2px solid var(--text);
+}
+
+.footField {
+  position: relative;
+  height: 64px;
+  overflow: hidden;
+  border-bottom: 2px solid var(--text);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: auto repeat(3, minmax(0, 1fr));
+  align-items: baseline;
+  gap: 1rem 2.4rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2rem var(--gut) 2.6rem;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}
+
+.footText {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.footText a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------------- hover */
+
+@media (hover: hover) {
+  .btn,
+  .btnGhost,
+  .barCta,
+  .submit {
+    transition: transform 160ms ease;
+  }
+
+  .btn:hover,
+  .btnGhost:hover,
+  .barCta:hover,
+  .submit:hover {
+    transform: translate(-1px, -2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btnGhost,
+  .barCta,
+  .submit {
+    transition: none;
+  }
+
+  .btn:hover,
+  .btnGhost:hover,
+  .barCta:hover,
+  .submit:hover {
+    transform: none;
+  }
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .barCta {
+    justify-self: end;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wall {
+    min-height: 44rem;
+  }
+
+  .booths {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+
+  .plates {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 34rem;
+  }
+
+  .extras {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .extrasList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .backdropGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .board {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto;
+  }
+
+  .notes {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tally {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  .stripBoard,
+  .stripBoardTwo {
+    grid-row: 1;
+    grid-column: auto;
+    justify-self: center;
+    margin-top: 1rem;
+  }
+
+  .enquire {
+    grid-template-columns: 4rem minmax(0, 1fr);
+  }
+
+  .garage {
+    grid-column: 2;
+    margin: 0 clamp(1.4rem, 4vw, 3.2rem) 2.6rem;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .barCta {
+    display: none;
+  }
+
+  .secHead,
+  .packInner .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroFacts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.8rem;
+  }
+
+  .heroFacts div {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    align-items: baseline;
+    gap: 0.8rem;
+  }
+
+  .heroFacts dd {
+    margin-top: 0;
+  }
+
+  .wall {
+    min-height: 36rem;
+  }
+
+  .wallField {
+    inset: 0 0 4rem;
+  }
+
+  .floor {
+    height: 4rem;
+  }
+
+  .booth {
+    left: 3%;
+    bottom: 1.6rem;
+    font-size: 7px;
+  }
+
+  .stripHero {
+    top: 1.4rem;
+    right: 5.1rem;
+    width: 78px;
+  }
+
+  .stripHeroTwo {
+    top: 8.4rem;
+    right: 0.3rem;
+    width: 76px;
+  }
+
+  .hero {
+    padding-bottom: 1rem;
+  }
+
+  .strip {
+    --strip-pad: 5px;
+  }
+
+  .stripHero .stamp,
+  .stripHeroTwo .stamp {
+    font-size: 0.48rem;
+  }
+
+  .swatches {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 2.8rem;
+  }
+
+  .swatchField {
+    height: 14rem;
+  }
+
+  .swatch:nth-child(n + 3)::before {
+    display: none;
+  }
+
+  .stand::before,
+  .stand::after {
+    display: none;
+  }
+
+  .stand {
+    padding-inline: 0;
+  }
+
+  .crossbar {
+    margin-inline: 0;
+  }
+
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 22rem;
+    margin-inline: auto;
+    transform: rotate(-1deg);
+  }
+
+  .step {
+    min-height: 0;
+  }
+
+  .notes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stripBoard,
+  .stripBoardTwo {
+    width: 124px;
+  }
+
+  .tally {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tally div:nth-child(3) {
+    border-left: 0;
+  }
+
+  .tally div:nth-child(n + 3) {
+    border-top: 1px dashed var(--black-rule);
+  }
+
+  .extrasList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .enquire {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .enquireCurtain {
+    height: 3.2rem;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--curtain-hi) 0,
+      var(--red) 0.6rem,
+      var(--curtain-dark) 1.4rem,
+      var(--red) 2.1rem,
+      var(--curtain-hi) 2.4rem
+    );
+  }
+
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .garage {
+    grid-column: 1;
+    margin: 0 1.2rem 2rem;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

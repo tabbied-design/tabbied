@@ -1,0 +1,1796 @@
+/* ==========================================================================
+   SUNWARD SOLAR - solar panels and home batteries, Brightwater
+   An engineer's page: a white ground ruled like graph paper, the navy of a
+   panel's cells, and numbers set in a mono as if read off an inverter. The
+   hero pairs a live dashboard with a polar sun-path chart for the town,
+   drawn over an array of cells filling with light row by row (the lead
+   pattern). The house appears twice, at noon and at nine in the evening;
+   the dark sections are panels of cells with their thin silver lines.
+   ========================================================================== */
+
+.page {
+  --white: #f6f7f2;
+  --navy: #152238;
+  --sun: #f5b82e;
+  --green: #3a9a5b;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --sans: 'Geologica', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'Reddit Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --text: var(--navy);
+  --on-navy: var(--white);
+  --on-sun: var(--navy);
+  --on-green: var(--white);
+
+  /* Derived surfaces and inks: all mixed from the four roles. */
+  --muted: color-mix(in oklab, var(--text) 66%, var(--white));
+  --rule: color-mix(in oklab, var(--text) 14%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 32%, transparent);
+  --panel: color-mix(in oklab, var(--white) 94%, var(--navy));
+  --card: color-mix(in oklab, var(--white) 70%, var(--panel));
+  --navy-muted: color-mix(in oklab, var(--on-navy) 70%, var(--navy));
+  --navy-rule: color-mix(in oklab, var(--on-navy) 16%, transparent);
+  --cell-line: color-mix(in oklab, var(--on-navy) 13%, transparent);
+  --graph: color-mix(in oklab, var(--text) 6%, transparent);
+  --sun-mark: color-mix(in oklab, var(--sun) 70%, var(--text));
+  --shadow: color-mix(in oklab, var(--navy) 24%, transparent);
+
+  /* The house, by day and by night. */
+  --sky-day: color-mix(in oklab, var(--sun) 16%, var(--white));
+  --wall-day: color-mix(in oklab, var(--white) 88%, var(--navy));
+  --wall-night: color-mix(in oklab, var(--navy) 60%, var(--white));
+  --roof-night: color-mix(in oklab, var(--navy) 62%, var(--green));
+  --tree-night: color-mix(in oklab, var(--green) 40%, var(--navy));
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 350;
+  line-height: 1.55;
+  background: var(--white);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--white) clamp(0, (0.62 - l) * 1000, 1) 0 0) 84%, var(--navy));
+    --on-navy: color-mix(in oklab, oklch(from var(--navy) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--white));
+    --on-sun: oklch(from var(--sun) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-green: oklch(from var(--green) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, dl, dd, ol, ul, figure, blockquote) {
+  margin: 0;
+}
+
+.page :where(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.85rem var(--gut);
+  background: color-mix(in oklab, var(--white) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+/* The mark: a sun half over the horizon line. */
+.markSun {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  background:
+    linear-gradient(180deg, transparent 58%, var(--text) 58% 66%, transparent 66%),
+    linear-gradient(180deg, var(--sun) 0 58%, transparent 58%);
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.markName {
+  font-size: 1.12rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.8rem;
+}
+
+.nav a {
+  font-size: 0.9rem;
+  font-weight: 450;
+  color: var(--muted);
+}
+
+.barCta {
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  background: var(--navy);
+  color: var(--on-navy);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--text);
+  }
+
+  .barCta:hover,
+  .btn:hover {
+    background: color-mix(in oklab, var(--navy) 84%, var(--green));
+  }
+
+  .btnLine:hover {
+    background: var(--panel);
+  }
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--white);
+}
+
+/* ------------------------------------------------------------------- common */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  column-gap: 1.5rem;
+  row-gap: 0.9rem;
+  max-width: 52rem;
+  margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.secNum {
+  grid-row: span 2;
+  padding-top: 0.6rem;
+  border-top: 3px solid var(--sun);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.secTitle {
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.secLede {
+  grid-column: 2;
+  max-width: 40rem;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.btn,
+.btnLine {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.98rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn {
+  border: 0;
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.btnLine {
+  border: 1.5px solid var(--rule-strong);
+  color: var(--text);
+}
+
+.tileLabel {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  border-bottom: 1px solid var(--rule);
+  background:
+    linear-gradient(90deg, var(--graph) 1px, transparent 1px) 0 0 / 2rem 2rem,
+    linear-gradient(var(--graph) 1px, transparent 1px) 0 0 / 2rem 2rem,
+    var(--white);
+}
+
+.heroText {
+  display: grid;
+  align-content: center;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 42rem;
+  justify-self: end;
+  padding: clamp(3rem, 7vw, 5.5rem) clamp(1.5rem, 4vw, 3.5rem) clamp(3rem, 6vw, 4.5rem) var(--gut);
+}
+
+.kicker {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.name {
+  font-size: clamp(3rem, 6.2vw, 5.6rem);
+  font-weight: 750;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.lede {
+  max-width: 34rem;
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.dash {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow: 0 20px 40px -32px var(--shadow);
+}
+
+.dashHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.3rem 1rem;
+  padding: 0 0.2rem;
+}
+
+.dashTitle {
+  font-size: 0.92rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.dashLive {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.dashLive::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--green) 25%, transparent);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.tile {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+  min-width: 0;
+  padding: 0.85rem 0.9rem 0.9rem;
+  border-radius: 10px;
+  background: var(--white);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.tileValue {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.tileValue strong {
+  font-size: clamp(1.5rem, 2.2vw, 1.95rem);
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.tileValue span {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.tileNote {
+  font-size: 0.76rem;
+  line-height: 1.3;
+  color: var(--muted);
+}
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.25rem;
+  align-items: end;
+  height: 4.2rem;
+}
+
+.week li {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 0.2rem;
+  height: 100%;
+  justify-items: center;
+}
+
+.weekBar {
+  align-self: end;
+  width: 100%;
+  height: var(--h);
+  border-radius: 3px 3px 0 0;
+  background: var(--green);
+}
+
+.week li:nth-child(2) .weekBar {
+  background: var(--sun);
+  box-shadow: inset 0 0 0 1px var(--sun-mark);
+}
+
+.weekDay {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  line-height: 1;
+  color: var(--muted);
+}
+
+/* The right half: an array of cells filling with light, the chart on it. */
+.heroArt {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 44rem;
+  padding: clamp(2rem, 4vw, 3.5rem);
+  overflow: hidden;
+  background: var(--navy);
+}
+
+.array {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.sunPath {
+  position: relative;
+  display: grid;
+  gap: 0;
+  width: min(100%, 31rem);
+  border-radius: 20px;
+  background: var(--white);
+  color: var(--text);
+  box-shadow: 0 30px 60px -30px var(--shadow), 0 0 0 1px var(--rule);
+}
+
+.chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: 0.8rem 0.8rem 0;
+  overflow: visible;
+}
+
+.chartFace {
+  fill: var(--white);
+  stroke: var(--text);
+  stroke-width: 1.5;
+}
+
+.chartRing {
+  fill: none;
+  stroke: var(--rule-strong);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+}
+
+.chartAxis {
+  stroke: var(--rule);
+  stroke-width: 1;
+}
+
+.chartRoof {
+  fill: color-mix(in oklab, var(--green) 16%, transparent);
+  stroke: color-mix(in oklab, var(--green) 60%, transparent);
+  stroke-width: 1;
+  stroke-dasharray: 2 3;
+}
+
+.chartTick {
+  stroke: var(--text);
+  stroke-width: 1.5;
+}
+
+.chartCardinal {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 700;
+  fill: var(--text);
+}
+
+.chartDeg {
+  font-family: var(--mono);
+  font-size: 10px;
+  fill: var(--muted);
+}
+
+.chartAlt {
+  font-family: var(--mono);
+  font-size: 9px;
+  fill: var(--muted);
+}
+
+.chartCase {
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 9;
+  stroke-linecap: round;
+}
+
+.chartPath {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.chartHour {
+  stroke: var(--white);
+  stroke-width: 1.5;
+}
+
+.path_june .chartPath,
+.path_june .chartHour {
+  stroke: var(--sun-mark);
+}
+
+.path_june .chartHour {
+  fill: var(--sun);
+}
+
+.path_equinox .chartPath {
+  stroke: var(--green);
+}
+
+.path_equinox .chartHour {
+  fill: var(--green);
+  stroke: var(--white);
+}
+
+.path_december .chartPath {
+  stroke: var(--text);
+  stroke-dasharray: 1 7;
+  stroke-width: 4.5;
+}
+
+.path_december .chartHour {
+  fill: var(--text);
+}
+
+.path_june .chartPath {
+  stroke: var(--sun);
+  stroke-width: 5;
+}
+
+.chartHome {
+  fill: var(--text);
+}
+
+.legend {
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.4rem 1.5rem 1.4rem;
+}
+
+.legendTitle {
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.legendList {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.legendList li {
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr);
+  column-gap: 0.7rem;
+  align-items: baseline;
+}
+
+.legendList li::before {
+  content: '';
+  grid-row: span 2;
+  align-self: center;
+  height: 4px;
+  border-radius: 2px;
+}
+
+.key_june::before {
+  background: var(--sun);
+  box-shadow: 0 0 0 1px var(--sun-mark);
+}
+
+.key_equinox::before {
+  background: var(--green);
+}
+
+.key_december::before {
+  background: repeating-linear-gradient(90deg, var(--text) 0 3px, transparent 3px 7px);
+}
+
+.legendLabel {
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.legendNote {
+  grid-column: 2;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.legendRoof {
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- day/night */
+
+.moments {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+.moment {
+  display: grid;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 0 0 1px var(--rule);
+}
+
+.momentSky {
+  position: relative;
+  display: grid;
+  place-items: end center;
+  min-height: 26rem;
+  padding: 3.5rem 2rem 0;
+  overflow: hidden;
+}
+
+.noon .momentSky {
+  background: var(--sky-day);
+}
+
+.night .momentSky {
+  background: var(--navy);
+}
+
+.rays,
+.stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.rays {
+  opacity: 0.55;
+  -webkit-mask: linear-gradient(180deg, var(--navy) 0 40%, transparent 85%);
+  mask: linear-gradient(180deg, var(--navy) 0 40%, transparent 85%);
+}
+
+.stars {
+  -webkit-mask: linear-gradient(180deg, var(--navy) 0 45%, transparent 80%);
+  mask: linear-gradient(180deg, var(--navy) 0 45%, transparent 80%);
+}
+
+.clock {
+  position: absolute;
+  top: 1.2rem;
+  left: 1.4rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.noon .clock {
+  background: var(--white);
+  color: var(--text);
+}
+
+.night .clock {
+  background: color-mix(in oklab, var(--navy) 80%, var(--on-navy));
+  color: var(--on-navy);
+}
+
+.house {
+  position: relative;
+  width: min(100%, 27rem);
+  margin-bottom: -1.2rem;
+}
+
+.momentCap {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  padding: 1.4rem 1.6rem 1.6rem;
+}
+
+.noon .momentCap {
+  background: var(--white);
+  color: var(--text);
+  border-top: 1px solid var(--rule);
+}
+
+.night .momentCap {
+  background: color-mix(in oklab, var(--navy) 88%, var(--on-navy));
+  color: var(--on-navy);
+}
+
+.momentTitle {
+  font-size: 1.25rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.momentStats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.momentStats div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.2rem;
+  padding-top: 0.6rem;
+  border-top: 2px solid var(--rule);
+}
+
+.night .momentStats div {
+  border-top-color: var(--navy-rule);
+}
+
+.noon .momentStats div:first-child {
+  border-top-color: var(--sun);
+}
+
+.night .momentStats div:nth-child(3) {
+  border-top-color: var(--sun);
+}
+
+.momentStats dt {
+  font-size: 0.78rem;
+  line-height: 1.3;
+  opacity: 0.78;
+}
+
+.momentStats dd {
+  font-family: var(--mono);
+  font-size: 1.12rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+/* ---------------------------------------------------------------------- how */
+
+/* A panel of cells: silver lines on navy, the busbars every third line. */
+.how {
+  margin-top: clamp(4.5rem, 9vw, 7.5rem);
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+  background:
+    linear-gradient(90deg, var(--cell-line) 1px, transparent 1px) 0 0 / 3.5rem 3.5rem,
+    linear-gradient(var(--cell-line) 1px, transparent 1px) 0 0 / 3.5rem 3.5rem,
+    var(--navy);
+  color: var(--on-navy);
+}
+
+.howInner {
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.how .secNum,
+.how .secLede {
+  color: var(--navy-muted);
+}
+
+.flow {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+}
+
+/* The cable that joins them. */
+.flow::before {
+  content: '';
+  position: absolute;
+  top: 2.5rem;
+  left: 10%;
+  right: 10%;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, var(--sun) 0 12px, transparent 12px 20px);
+}
+
+.node {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.6rem;
+}
+
+.icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 16px;
+  background: var(--white);
+  box-shadow: 0 0 0 5px var(--navy), 0 0 0 6px var(--navy-rule);
+}
+
+.icon span {
+  position: relative;
+  display: block;
+}
+
+.icon_panel span {
+  width: 3rem;
+  height: 2.2rem;
+  border-radius: 2px;
+  background:
+    linear-gradient(90deg, var(--cell-line-on) 1px, transparent 1px) 0 0 / 25% 50%,
+    linear-gradient(var(--cell-line-on) 1px, transparent 1px) 0 0 / 25% 50%,
+    var(--navy);
+  box-shadow: 0 0 0 2px var(--text);
+  transform: perspective(6rem) rotateX(28deg);
+  --cell-line-on: color-mix(in oklab, var(--on-navy) 60%, transparent);
+}
+
+.icon_inverter span {
+  width: 2.6rem;
+  height: 3rem;
+  border: 2.5px solid var(--text);
+  border-radius: 5px;
+  background:
+    radial-gradient(circle, var(--green) 0 3px, transparent 3.5px) 30% 22% / 100% 100% no-repeat,
+    radial-gradient(circle, var(--sun) 0 3px, transparent 3.5px) 70% 22% / 100% 100% no-repeat,
+    repeating-linear-gradient(180deg, var(--text) 0 2px, transparent 2px 6px) 50% 80% / 60% 40% no-repeat;
+}
+
+.icon_battery span {
+  width: 3.2rem;
+  height: 1.7rem;
+  border: 2.5px solid var(--text);
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--green) 0 78%, transparent 78%) 3px 3px / calc(100% - 6px) calc(100% - 6px) no-repeat;
+}
+
+.icon_battery span::after {
+  content: '';
+  position: absolute;
+  right: -0.45rem;
+  top: 50%;
+  width: 0.3rem;
+  height: 0.7rem;
+  margin-top: -0.35rem;
+  border-radius: 0 2px 2px 0;
+  background: var(--text);
+}
+
+.icon_house span {
+  width: 3rem;
+  height: 2.8rem;
+  background:
+    linear-gradient(var(--sun), var(--sun)) 50% 100% / 26% 42% no-repeat,
+    var(--text);
+  clip-path: polygon(50% 0, 100% 42%, 88% 42%, 88% 100%, 12% 100%, 12% 42%, 0 42%);
+}
+
+.icon_grid span {
+  width: 2.6rem;
+  height: 3.2rem;
+  background: var(--text);
+  clip-path: polygon(44% 0, 56% 0, 60% 18%, 100% 18%, 100% 26%, 62% 26%, 66% 40%, 88% 40%, 88% 47%, 68% 47%, 84% 100%, 70% 100%, 50% 56%, 30% 100%, 16% 100%, 32% 47%, 12% 47%, 12% 40%, 34% 40%, 38% 26%, 0 26%, 0 18%, 40% 18%);
+}
+
+.nodeNum {
+  margin-top: 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--sun);
+}
+
+.nodeName {
+  font-size: 1.3rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.nodeBody {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--navy-muted);
+}
+
+/* ------------------------------------------------------------------ savings */
+
+.saveGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20rem;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: stretch;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  background: var(--white);
+}
+
+.roofs {
+  width: 100%;
+  min-width: 44rem;
+  border-collapse: collapse;
+}
+
+.roofs th,
+.roofs td {
+  padding: 1.05rem 1.1rem;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.roofs tbody tr:last-child th,
+.roofs tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.roofs thead th {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--panel);
+}
+
+.roofs tbody th {
+  font-weight: 550;
+}
+
+.roofs .num {
+  text-align: right;
+  font-family: var(--mono);
+  font-size: 0.92rem;
+  white-space: nowrap;
+}
+
+.roofs thead .num {
+  font-size: 0.7rem;
+}
+
+.saving {
+  font-weight: 700;
+}
+
+.cellLabel {
+  display: none;
+}
+
+.genCol {
+  width: 30%;
+}
+
+.gen {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.genBar {
+  flex: none;
+  width: calc(var(--w) * 0.62);
+  min-width: 0.5rem;
+  height: 0.8rem;
+  border-radius: 2px;
+  background:
+    linear-gradient(90deg, var(--sun-mark) 1px, transparent 1px) 0 0 / 0.5rem 100%,
+    var(--sun);
+}
+
+.genNum {
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+
+.assume {
+  display: grid;
+  grid-template-rows: minmax(9rem, 1fr) auto;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  background: var(--white);
+}
+
+.sheet {
+  position: relative;
+  overflow: hidden;
+}
+
+.assumeCard {
+  position: relative;
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.3rem 1.3rem 1.4rem;
+  border-top: 3px solid var(--sun);
+  background: var(--white);
+  color: var(--text);
+}
+
+.assumeTitle {
+  font-size: 1.05rem;
+  font-weight: 650;
+}
+
+.assumeList {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.assumeList dt {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.assumeList dd {
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+/* ----------------------------------------------------------------- packages */
+
+.packs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+  align-items: stretch;
+}
+
+.pack {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  background: var(--white);
+}
+
+.packBig {
+  box-shadow: 0 0 0 2px var(--text);
+}
+
+/* The top of each card is a panel: navy cells in a silver frame. */
+.packPanel {
+  position: relative;
+  display: grid;
+  align-content: end;
+  gap: 0.2rem;
+  min-height: 11rem;
+  padding: 1.5rem 1.6rem 1.3rem;
+  background:
+    linear-gradient(90deg, var(--cell-line) 1px, transparent 1px) 0 0 / 16.66% 33.33%,
+    linear-gradient(var(--cell-line) 1px, transparent 1px) 0 0 / 16.66% 33.33%,
+    var(--navy);
+  color: var(--on-navy);
+  box-shadow: inset 0 0 0 6px color-mix(in oklab, var(--navy) 70%, var(--on-navy));
+}
+
+.packKw {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+}
+
+.packKw strong {
+  font-size: 4.2rem;
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+}
+
+.packKw span {
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--sun);
+}
+
+.packPanels {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--navy-muted);
+}
+
+.packFlag {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: var(--sun);
+  color: var(--on-sun);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.packBody {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 0.8rem;
+  padding: 1.5rem 1.6rem 1.6rem;
+}
+
+.packName {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.packYear {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.packGets {
+  display: grid;
+  gap: 0.45rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule);
+}
+
+.packGets li {
+  display: grid;
+  grid-template-columns: 0.9rem minmax(0, 1fr);
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* A tiny cell for a bullet. */
+.packGets li::before {
+  content: '';
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-top: 0.35rem;
+  border-radius: 2px;
+  background:
+    linear-gradient(90deg, transparent 45%, var(--cell-line-dark) 45% 55%, transparent 55%),
+    linear-gradient(transparent 45%, var(--cell-line-dark) 45% 55%, transparent 55%),
+    var(--green);
+  --cell-line-dark: color-mix(in oklab, var(--on-green) 60%, transparent);
+}
+
+.packPrice {
+  display: grid;
+  gap: 0.1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+}
+
+.packPrice strong {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.packPrice span {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.band {
+  position: relative;
+  height: 128px;
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+/* ------------------------------------------------------------------ install */
+
+.caseGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.caseText {
+  display: grid;
+  gap: 1.3rem;
+}
+
+.caseText .secNum {
+  width: 4rem;
+}
+
+.caseLede {
+  max-width: 36rem;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.caseFigures {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--rule);
+  border-left: 1px solid var(--rule);
+}
+
+.caseFigures div {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1.1rem 1.1rem 1.2rem;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.caseFigures dt {
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.caseFigures dd {
+  font-size: 0.86rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.quote {
+  display: grid;
+  gap: 0.7rem;
+  padding: 1.4rem 1.5rem;
+  border-left: 4px solid var(--sun);
+  background: var(--panel);
+}
+
+.quote p {
+  font-size: 1.2rem;
+  font-weight: 450;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+}
+
+.quote cite {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-style: normal;
+  color: var(--muted);
+}
+
+.caseSide {
+  position: relative;
+  display: grid;
+  padding-bottom: 7rem;
+}
+
+.roofView {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.monthly {
+  position: absolute;
+  left: -1.5rem;
+  right: 1.5rem;
+  bottom: 0;
+  display: grid;
+  gap: 0.8rem;
+  padding: 1.2rem 1.3rem 1.1rem;
+  border-radius: 14px;
+  background: var(--white);
+  box-shadow: 0 0 0 1px var(--rule), 0 24px 40px -24px var(--shadow);
+}
+
+.months {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 0.3rem;
+  height: 6.5rem;
+}
+
+.months li {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 0.25rem;
+  height: 100%;
+  justify-items: center;
+}
+
+.monthBar {
+  align-self: end;
+  width: 100%;
+  height: var(--h);
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(180deg, var(--sun), var(--green));
+}
+
+.monthName {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.monthNote {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- grants */
+
+.grants {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.grant {
+  display: grid;
+  align-content: start;
+  gap: 0.7rem;
+  padding: 1.4rem 1.4rem 1.6rem;
+  border: 1px solid var(--rule);
+  border-top: 4px solid var(--green);
+  border-radius: 4px 4px 14px 14px;
+  background: var(--white);
+}
+
+.grantAmount {
+  font-family: var(--mono);
+  font-size: 2.2rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.grantName {
+  font-size: 1.1rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.grantBody {
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- survey */
+
+.survey {
+  margin-top: clamp(4.5rem, 9vw, 7.5rem);
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+  background:
+    linear-gradient(90deg, var(--graph) 1px, transparent 1px) 0 0 / 2rem 2rem,
+    linear-gradient(var(--graph) 1px, transparent 1px) 0 0 / 2rem 2rem,
+    var(--panel);
+  border-top: 1px solid var(--rule);
+}
+
+.surveyInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  align-items: start;
+}
+
+.surveyText {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.surveyText .secNum {
+  width: 4rem;
+}
+
+.surveyLede {
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.surveySteps {
+  display: grid;
+  gap: 0.7rem;
+  counter-reset: step;
+}
+
+.surveySteps li {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: 0.8rem;
+  counter-increment: step;
+}
+
+.surveySteps li::before {
+  content: counter(step);
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 6px;
+  background: var(--navy);
+  color: var(--on-navy);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.surveyAddr {
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  font-weight: 550;
+}
+
+.surveyContact a {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  justify-items: start;
+  gap: 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  border-radius: 20px;
+  background: var(--white);
+  box-shadow: 0 0 0 1px var(--rule), 0 30px 60px -40px var(--shadow);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-height: 2.9rem;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--text);
+  font: inherit;
+}
+
+.field input:focus,
+.field select:focus {
+  outline: 2px solid var(--green);
+  outline-offset: 1px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.check input {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: var(--green);
+}
+
+.formNote {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  position: relative;
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.footField {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+  -webkit-mask: linear-gradient(180deg, transparent, var(--navy) 70%);
+  mask: linear-gradient(180deg, transparent, var(--navy) 70%);
+}
+
+.footInner {
+  display: grid;
+  gap: 0.6rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.5rem var(--gut) 3.5rem;
+}
+
+.footBrand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.4rem;
+}
+
+.footBrand .markSun {
+  box-shadow: inset 0 0 0 2px var(--on-navy);
+  background:
+    linear-gradient(180deg, transparent 58%, var(--on-navy) 58% 66%, transparent 66%),
+    linear-gradient(180deg, var(--sun) 0 58%, transparent 58%);
+}
+
+.footName {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.footAddr {
+  max-width: 40rem;
+}
+
+.footSmall {
+  font-size: 0.88rem;
+  color: var(--navy-muted);
+}
+
+.footSmall a {
+  color: var(--on-navy);
+  border-bottom: 1px solid var(--navy-rule);
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grants {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .flow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 2.5rem;
+  }
+
+  .flow::before {
+    display: none;
+  }
+}
+
+@media (max-width: 1000px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .barCta {
+    justify-self: end;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroText {
+    justify-self: stretch;
+    max-width: none;
+  }
+
+  .heroArt {
+    min-height: 0;
+  }
+
+  .moments,
+  .saveGrid,
+  .caseGrid,
+  .surveyInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .assume {
+    grid-template-rows: 8rem auto;
+  }
+
+  .packs {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 34rem;
+  }
+
+  .caseSide {
+    max-width: 34rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .barCta {
+    display: none;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secNum {
+    grid-row: auto;
+    width: 3rem;
+  }
+
+  .secLede {
+    grid-column: 1;
+  }
+
+  .tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tileWeek {
+    grid-column: 1 / -1;
+  }
+
+  .heroArt {
+    padding: 2rem 1rem;
+  }
+
+  .legend {
+    padding: 0.4rem 1.1rem 1.2rem;
+  }
+
+  .momentSky {
+    min-height: 0;
+    padding: 3.8rem 1rem 0;
+  }
+
+  .momentStats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 0.9rem;
+  }
+
+  .flow {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 2rem;
+  }
+
+  .flow::before {
+    display: block;
+    top: 2.5rem;
+    bottom: 2.5rem;
+    left: 2.5rem;
+    right: auto;
+    width: 3px;
+    height: auto;
+    background: repeating-linear-gradient(180deg, var(--sun) 0 12px, transparent 12px 20px);
+  }
+
+  .node {
+    grid-template-columns: 5rem minmax(0, 1fr);
+    column-gap: 1.2rem;
+    row-gap: 0.3rem;
+  }
+
+  .icon {
+    grid-row: span 3;
+  }
+
+  .nodeNum {
+    margin-top: 0.3rem;
+  }
+
+  .caseFigures {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .roofs {
+    min-width: 0;
+  }
+
+  .roofs thead {
+    display: none;
+  }
+
+  .roofs tbody tr {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.6rem 0.8rem;
+    padding: 1.1rem 1.1rem 1.2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .roofs tbody tr:last-child {
+    border-bottom: 0;
+  }
+
+  .roofs tbody th,
+  .roofs tbody td {
+    padding: 0;
+    border: 0;
+  }
+
+  .roofs tbody th {
+    grid-column: 1 / -1;
+    font-size: 1.02rem;
+  }
+
+  .roofs .genCol {
+    grid-column: 1 / -1;
+    width: auto;
+  }
+
+  .roofs tbody .num {
+    display: grid;
+    gap: 0.1rem;
+    text-align: left;
+  }
+
+  .cellLabel {
+    display: block;
+    font-size: 0.64rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .monthly {
+    left: 0.8rem;
+    right: 0.8rem;
+  }
+
+  .grants {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

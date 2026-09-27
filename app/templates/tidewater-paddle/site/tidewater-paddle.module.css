@@ -1,0 +1,2217 @@
+/* ==========================================================================
+   TIDEWATER PADDLE CO. - kayak and paddleboard hire, Heron Reach
+   An Admiralty chart and a tide almanac. The page is chart paper inside a
+   graduated neatline (the latitude scale runs down both edges); the brand
+   sits in a cartouche with a double rule; depths are scattered in the
+   margins as italic soundings; a compass rose is drawn in CSS. The estuary
+   picture is the illustrated chart, pinned with the turning point of each
+   route, and one kayak drawing in four colorways is the fleet. Type: IM Fell
+   for the chart lettering, Libre Caslon for reading, and a semi-condensed
+   grotesk for the figures of the almanac.
+   ========================================================================== */
+
+.page {
+  --chart: #f2eedf;
+  --navy: #14294a;
+  --buoy: #d9482f;
+  --shallows: #71b8b0;
+
+  --text: var(--navy);
+  --on-navy: var(--chart);
+  --on-buoy: var(--chart);
+  --on-shallows: var(--navy);
+
+  /* Derived: never roles of their own, always mixed from them. */
+  --muted: color-mix(in oklab, var(--text) 72%, var(--chart));
+  --rule: color-mix(in oklab, var(--text) 24%, transparent);
+  --hair: color-mix(in oklab, var(--text) 12%, transparent);
+  --panel: color-mix(in oklab, var(--chart) 95%, var(--text));
+  --wash: color-mix(in oklab, var(--shallows) 20%, var(--chart));
+  --land: color-mix(in oklab, var(--chart) 82%, var(--buoy));
+  --navy-muted: color-mix(in oklab, var(--on-navy) 70%, var(--navy));
+  --navy-rule: color-mix(in oklab, var(--on-navy) 20%, transparent);
+
+  --gut: clamp(1.25rem, 4vw, 3rem);
+  --frame: clamp(8px, 1.6vw, 22px);
+  --max: 76rem;
+  --fell: 'IM Fell English SC', 'IM Fell English', Georgia, serif;
+  --fell-it: 'IM Fell English', Georgia, serif;
+  --serif: 'Libre Caslon Text', Georgia, 'Times New Roman', serif;
+  --figs: 'Sofia Sans Semi Condensed', 'Arial Narrow', 'Helvetica Neue', sans-serif;
+
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--chart);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink. */
+    --text: color-mix(in oklab, oklch(from var(--chart) clamp(0, (0.62 - l) * 1000, 1) 0 0) 82%, var(--navy));
+    --on-navy: color-mix(in oklab, oklch(from var(--navy) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--chart));
+    --on-buoy: oklch(from var(--buoy) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-shallows: oklch(from var(--shallows) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------- the top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.7rem calc(var(--frame) + 1.6rem);
+  background: var(--chart);
+}
+
+/* The longitude scale along the foot of the bar: alternate filled and open
+   minutes between two hairlines, the way a chart's border is graduated. */
+.bar::after {
+  content: '';
+  position: absolute;
+  left: var(--frame);
+  right: var(--frame);
+  bottom: 0;
+  height: 7px;
+  border: 1px solid var(--text);
+  background: repeating-linear-gradient(90deg, var(--text) 0 48px, transparent 48px 96px);
+}
+
+.mark {
+  display: grid;
+  line-height: 1;
+}
+
+.markName {
+  font-family: var(--fell);
+  font-size: 1.28rem;
+  letter-spacing: 0.02em;
+}
+
+.markSub {
+  margin-top: 0.2rem;
+  font-family: var(--fell-it);
+  font-style: italic;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem clamp(0.9rem, 1.7vw, 1.7rem);
+}
+
+.nav a {
+  font-family: var(--figs);
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.barNote {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--figs);
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A can buoy: the channel mark the boathouse is moored beside. */
+.barNote::before {
+  content: '';
+  width: 0.62rem;
+  height: 0.8rem;
+  border-radius: 2px 2px 0 0;
+  background: var(--buoy);
+  box-shadow: 0 0 0 1px var(--rule);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--chart);
+  font-family: var(--figs);
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--buoy);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+}
+
+/* --------------------------------------------------------------- the sheet
+   The neatline: a graduated latitude scale down both edges of the page. */
+
+.sheet {
+  position: relative;
+  padding-bottom: 2rem;
+}
+
+.sheet::before,
+.sheet::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--frame);
+  width: 7px;
+  border: 1px solid var(--text);
+  outline: 1px solid var(--rule);
+  outline-offset: 4px;
+  background: repeating-linear-gradient(180deg, var(--text) 0 48px, transparent 48px 96px);
+  pointer-events: none;
+}
+
+.sheet::after {
+  left: auto;
+  right: var(--frame);
+}
+
+/* Soundings: italic depths in metres, the decimal set small and low. */
+.snd {
+  position: absolute;
+  font-family: var(--fell-it);
+  font-style: italic;
+  font-size: 1.02rem;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.snd sub {
+  font-size: 0.66em;
+  vertical-align: -0.28em;
+  margin-left: 0.04em;
+}
+
+.margin {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: stretch;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(3rem, 6vw, 4.5rem);
+}
+
+.hero > .margin {
+  left: calc(50% - 50vw);
+  right: calc(50% - 50vw);
+}
+
+/* The cartouche: the chart's title block in a double rule. */
+.cartouche {
+  position: relative;
+  align-self: center;
+  padding: clamp(1.6rem, 3vw, 2.6rem);
+  border: 3px double var(--text);
+  background: var(--chart);
+  text-align: center;
+}
+
+.cartouche::before {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 1px solid var(--rule);
+  pointer-events: none;
+}
+
+.chartNo {
+  font-family: var(--figs);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  margin-top: 1.1rem;
+  font-family: var(--fell);
+  font-size: clamp(2.6rem, 5.4vw, 4.7rem);
+  line-height: 0.98;
+  letter-spacing: 0.01em;
+}
+
+.trade {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 1rem;
+  font-family: var(--fell-it);
+  font-style: italic;
+  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+}
+
+.trade::before,
+.trade::after {
+  content: '';
+  flex: 1;
+  height: 0;
+  border-top: 3px double var(--rule);
+}
+
+.place {
+  margin-top: 0.35rem;
+  font-family: var(--fell);
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+}
+
+.scale {
+  margin-top: 0.8rem;
+  font-family: var(--fell-it);
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.lede {
+  max-width: 32rem;
+  margin: 1.4rem auto 0;
+  font-size: 1.02rem;
+  line-height: 1.65;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-top: 1.6rem;
+}
+
+.btn,
+.btnGhost,
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.9rem;
+  padding: 0 1.35rem;
+  border: 1.5px solid var(--text);
+  font-family: var(--figs);
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.btn,
+.submit {
+  background: var(--buoy);
+  color: var(--on-buoy);
+  border-color: var(--buoy);
+}
+
+.btnGhost {
+  background: transparent;
+}
+
+@media (hover: hover) {
+  .btn:hover,
+  .submit:hover {
+    background: color-mix(in oklab, var(--buoy) 86%, var(--text));
+  }
+
+  .btnGhost:hover {
+    background: var(--panel);
+  }
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 1.8rem;
+  border-top: 1px solid var(--rule);
+}
+
+.heroFacts > div {
+  padding: 0.85rem 0.5rem 0;
+}
+
+.heroFacts > div + div {
+  border-left: 1px solid var(--hair);
+}
+
+.heroFacts dt {
+  font-family: var(--figs);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  margin-top: 0.25rem;
+  font-family: var(--figs);
+  font-size: 0.98rem;
+  line-height: 1.3;
+}
+
+/* The plate: the chart itself, sandbars over the paper. */
+.plate {
+  position: relative;
+  min-height: 38rem;
+  border: 1.5px solid var(--text);
+  outline: 1px solid var(--rule);
+  outline-offset: 6px;
+  background: var(--chart);
+}
+
+.plateField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* The graticule over the bars: two meridians and two parallels. */
+.plateMarks {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent calc(33.3% - 0.5px), var(--rule) calc(33.3% - 0.5px) calc(33.3% + 0.5px), transparent calc(33.3% + 0.5px)),
+    linear-gradient(90deg, transparent calc(66.6% - 0.5px), var(--rule) calc(66.6% - 0.5px) calc(66.6% + 0.5px), transparent calc(66.6% + 0.5px)),
+    linear-gradient(180deg, transparent calc(33.3% - 0.5px), var(--rule) calc(33.3% - 0.5px) calc(33.3% + 0.5px), transparent calc(33.3% + 0.5px)),
+    linear-gradient(180deg, transparent calc(66.6% - 0.5px), var(--rule) calc(66.6% - 0.5px) calc(66.6% + 0.5px), transparent calc(66.6% + 0.5px));
+}
+
+/* Chart lettering keeps a halo of paper round it over the bars. */
+.plateMarks .snd,
+.placeName,
+.lat,
+.lon {
+  color: var(--text);
+  text-shadow:
+    0 0 3px var(--chart),
+    0 0 3px var(--chart),
+    0 0 6px var(--chart);
+}
+
+.placeName {
+  position: absolute;
+  font-family: var(--fell-it);
+  font-style: italic;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pnSaltings {
+  left: 8%;
+  top: 27%;
+  font-size: clamp(1rem, 1.7vw, 1.45rem);
+}
+
+.pnReach {
+  right: 9%;
+  top: 48%;
+  font-size: 0.95rem;
+}
+
+.pnBar {
+  left: 6%;
+  top: 88%;
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+}
+
+.lat,
+.lon {
+  position: absolute;
+  padding: 0.1rem 0.3rem;
+  font-family: var(--figs);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  background: var(--chart);
+}
+
+.latTop {
+  left: -1px;
+  top: calc(33.3% - 0.7rem);
+}
+
+.latBottom {
+  left: -1px;
+  top: calc(66.6% - 0.7rem);
+}
+
+.lonLeft {
+  left: calc(33.3% - 2rem);
+  top: -1px;
+}
+
+.lonRight {
+  left: calc(66.6% - 2rem);
+  top: -1px;
+}
+
+/* The compass rose: a degree ring, a four-point star with shaded halves,
+   a smaller one on the diagonals, and north lettered at the top. */
+.rose {
+  position: absolute;
+  right: 6%;
+  bottom: 8%;
+  width: clamp(10rem, 17vw, 15rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--chart) 88%, transparent);
+  box-shadow: 0 0 0 1px var(--text), 0 0 0 5px var(--chart), 0 0 0 6px var(--rule);
+}
+
+.roseRing {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: repeating-conic-gradient(var(--text) 0 0.6deg, transparent 0.6deg 10deg);
+  -webkit-mask: radial-gradient(circle, transparent 0 calc(50% - 10px), var(--navy) calc(50% - 10px) 50%, transparent 50%);
+  mask: radial-gradient(circle, transparent 0 calc(50% - 10px), var(--navy) calc(50% - 10px) 50%, transparent 50%);
+}
+
+.roseStar,
+.roseStar2 {
+  position: absolute;
+  inset: 13%;
+  background: repeating-conic-gradient(var(--text) 0 45deg, var(--chart) 45deg 90deg);
+  clip-path: polygon(50% 0, 57% 43%, 100% 50%, 57% 57%, 50% 100%, 43% 57%, 0 50%, 43% 43%);
+  filter: drop-shadow(0 0 0.6px var(--text)) drop-shadow(0 0 0.6px var(--text));
+}
+
+.roseStar2 {
+  inset: 24%;
+  transform: rotate(45deg);
+  background: repeating-conic-gradient(var(--buoy) 0 45deg, var(--chart) 45deg 90deg);
+}
+
+/* Drawn over the stars as a separate outline so both halves read. */
+.roseStar::after,
+.roseStar2::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-conic-gradient(from -0.5deg, var(--text) 0 1deg, transparent 1deg 45deg);
+}
+
+.roseHub {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--chart);
+  border: 2px solid var(--text);
+}
+
+.roseN {
+  position: absolute;
+  left: 50%;
+  top: -2.3rem;
+  translate: -50% 0;
+  font-family: var(--fell);
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--text);
+  text-shadow: 0 0 4px var(--chart), 0 0 4px var(--chart);
+}
+
+.plateCap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2.2rem;
+  font-family: var(--fell-it);
+  font-style: italic;
+  font-size: 0.86rem;
+  color: var(--muted);
+  text-align: right;
+}
+
+/* -------------------------------------------------------------- sections */
+
+.sec {
+  position: relative;
+  scroll-margin-top: 4.5rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut) 0;
+}
+
+.sec > .margin {
+  left: calc(50% - 50vw);
+  right: calc(50% - 50vw);
+}
+
+.secHead {
+  position: relative;
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1rem 2.5rem;
+  align-items: end;
+  padding-bottom: 1.4rem;
+  margin-bottom: 2.4rem;
+  border-bottom: 3px double var(--rule);
+}
+
+.secNo {
+  align-self: start;
+  padding-top: 0.6rem;
+  font-family: var(--figs);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.secHead h2,
+.form h2 {
+  font-family: var(--fell);
+  font-size: clamp(2rem, 3.6vw, 3.1rem);
+  line-height: 1.02;
+}
+
+.secHead h2:last-child {
+  grid-column: 2 / -1;
+}
+
+.secNote {
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- routes */
+
+.routeGrid {
+  display: grid;
+  gap: 2rem;
+}
+
+.estuary {
+  position: relative;
+}
+
+.estuaryFrame {
+  position: relative;
+  overflow: hidden;
+  border: 1.5px solid var(--text);
+  outline: 1px solid var(--rule);
+  outline-offset: 6px;
+  background: var(--chart);
+}
+
+/* The picture at its own ratio, pulled up to crop most of the empty sky;
+   the pins are placed in percent of this box, so they stay on the chart. */
+.estuaryPic {
+  position: relative;
+  margin-top: -9%;
+  aspect-ratio: 1536 / 1024;
+}
+
+/* The water shows through the picture's transparent channel: a stipple
+   wash below the horizon, plain paper for the sky above it. */
+.water {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 25%;
+  bottom: 0;
+  overflow: hidden;
+  background: var(--wash);
+}
+
+.estuaryArt {
+  position: relative;
+  width: 100%;
+}
+
+.skyLabel {
+  position: absolute;
+  left: 4%;
+  top: 15%;
+  font-family: var(--fell-it);
+  font-style: italic;
+  font-size: clamp(0.8rem, 1.1vw, 1rem);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* A pin: the number in a buoy disc on a leader line, the point on the water. */
+.pin {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.pin::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  bottom: 0;
+  width: 2px;
+  height: 2.4rem;
+  background: var(--text);
+  box-shadow: 0 0 0 1px var(--chart);
+}
+
+.pin::after {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--chart);
+  border: 2px solid var(--text);
+}
+
+.pinNo {
+  position: absolute;
+  left: 0;
+  bottom: 2.3rem;
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: var(--buoy);
+  color: var(--on-buoy);
+  box-shadow: 0 0 0 2px var(--chart), 0 0 0 3.5px var(--text);
+  font-family: var(--figs);
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.estuaryCap {
+  margin-top: 1.1rem;
+  font-family: var(--fell-it);
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.routes {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0 clamp(1rem, 2vw, 1.6rem);
+}
+
+.route {
+  display: grid;
+  grid-template-rows: auto auto;
+  align-content: start;
+  gap: 0.8rem;
+  padding: 1rem 0 0;
+  border-top: 2px solid var(--text);
+}
+
+.routeNo {
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background: var(--buoy);
+  color: var(--on-buoy);
+  box-shadow: 0 0 0 2px var(--chart), 0 0 0 3.5px var(--text);
+  font-family: var(--figs);
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.routeBody {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.routeBody h3 {
+  font-family: var(--fell);
+  font-size: 1.4rem;
+  line-height: 1.15;
+}
+
+.routeNote {
+  margin-top: 0.3rem;
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.routeStats {
+  display: grid;
+  margin-top: auto;
+  padding-top: 0.9rem;
+  font-family: var(--figs);
+}
+
+.routeStats > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.8rem;
+  padding: 0.3rem 0;
+  border-top: 1px solid var(--hair);
+}
+
+.routeNote {
+  padding-bottom: 0.2rem;
+}
+
+.routeStats dt {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.routeStats dd {
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: right;
+}
+
+.routeStats > .routeTide {
+  display: block;
+  padding-top: 0.45rem;
+}
+
+.routeTide dd {
+  margin-top: 0.15rem;
+  text-align: left;
+  font-family: var(--fell-it);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+/* ----------------------------------------------------------------- fleet */
+
+.rack {
+  position: relative;
+  padding: 1rem 0 0.5rem;
+}
+
+/* The two uprights of the rack, behind the boats. */
+.post {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(58% * 0.2);
+  width: 14px;
+  border: 1.5px solid var(--text);
+  background:
+    repeating-linear-gradient(180deg, transparent 0 22px, var(--hair) 22px 23px),
+    var(--land);
+}
+
+.postRight {
+  left: calc(58% * 0.78);
+}
+
+.boats {
+  position: relative;
+  display: grid;
+}
+
+.boat {
+  display: grid;
+  grid-template-columns: 58% minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
+  padding: 1.4rem 0;
+}
+
+.boat + .boat {
+  border-top: 1px dashed var(--rule);
+}
+
+.boatPic {
+  position: relative;
+  padding-bottom: 0.4rem;
+}
+
+.kayak {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+/* A rack arm under the hull at each upright. */
+.arm {
+  position: absolute;
+  left: calc(20% - 12px);
+  bottom: 22%;
+  width: 38px;
+  height: 10px;
+  border: 1.5px solid var(--text);
+  border-radius: 0 0 6px 6px;
+  background: var(--land);
+}
+
+.armRight {
+  left: calc(78% - 12px);
+}
+
+/* Sanderling has no drawing: its outline on the rack, like a mark on a
+   chart whose position is approximate. */
+.board {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 94%;
+  margin: 0 auto;
+  aspect-ratio: 7 / 1;
+  border: 2px dashed var(--text);
+  border-radius: 50% / 50%;
+  background: color-mix(in oklab, var(--chart) 80%, var(--shallows));
+}
+
+.boardPad {
+  position: absolute;
+  left: 34%;
+  right: 30%;
+  top: 22%;
+  bottom: 22%;
+  border-radius: 8px;
+  background: repeating-linear-gradient(90deg, var(--shallows) 0 6px, transparent 6px 10px);
+  opacity: 0.8;
+}
+
+.boardFin {
+  position: absolute;
+  right: 10%;
+  top: 80%;
+  width: 5%;
+  height: 42%;
+  background: var(--text);
+  clip-path: polygon(0 0, 100% 0, 60% 100%, 30% 100%);
+}
+
+.boatBoard .arm {
+  bottom: 12%;
+}
+
+.tag {
+  position: relative;
+  padding: 1rem 1.2rem 1.1rem;
+  border: 1px solid var(--text);
+  background: var(--chart);
+}
+
+.tagNo {
+  font-family: var(--figs);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.boatName {
+  font-family: var(--fell);
+  font-size: clamp(1.7rem, 2.6vw, 2.2rem);
+  line-height: 1;
+}
+
+.boatKind {
+  margin-top: 0.2rem;
+  font-family: var(--fell-it);
+  font-style: italic;
+  font-size: 1.05rem;
+}
+
+.boatSpec {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.tariff {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 0.85rem;
+  border-top: 1px solid var(--rule);
+}
+
+.tariff > div {
+  padding-top: 0.55rem;
+}
+
+.tariff > div + div {
+  padding-left: 0.8rem;
+  border-left: 1px solid var(--hair);
+}
+
+.tariff dt {
+  font-family: var(--figs);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tariff dd {
+  font-family: var(--figs);
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.included {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: 1rem 2.5rem;
+  margin-top: 2rem;
+  padding: 1.1rem 0;
+  border-top: 3px double var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.includedTitle {
+  font-family: var(--fell);
+  font-size: 1.15rem;
+}
+
+.included ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 2rem;
+  font-family: var(--figs);
+  font-size: 1rem;
+}
+
+.included li::before {
+  content: '';
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.55rem;
+  border-radius: 50%;
+  background: var(--buoy);
+}
+
+/* ----------------------------------------------------------------- tides */
+
+.tidesSec {
+  padding-top: calc(clamp(3.5rem, 7vw, 6rem) + 4.5rem);
+}
+
+/* The swell: a band of waves across the full width of the sheet. */
+.swell {
+  position: absolute;
+  top: clamp(2rem, 4vw, 3rem);
+  left: calc(50% - 50vw + var(--frame) + 20px);
+  right: calc(50% - 50vw + var(--frame) + 20px);
+  height: 64px;
+  overflow: hidden;
+  border-top: 1.5px solid var(--text);
+  border-bottom: 1.5px solid var(--text);
+}
+
+.today {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: clamp(1.8rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.curveFig {
+  padding: 1.2rem 1.2rem 1rem;
+  border: 1px solid var(--text);
+  background: var(--chart);
+}
+
+.curveCap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4rem 1rem;
+  padding-bottom: 0.8rem;
+  margin-bottom: 0.8rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.curveDay {
+  font-family: var(--fell);
+  font-size: 1.3rem;
+}
+
+.curveKey {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--figs);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.curveKey::before {
+  content: '';
+  width: 1.1rem;
+  height: 0.7rem;
+  background: color-mix(in oklab, var(--buoy) 24%, var(--chart));
+  border: 1px solid var(--buoy);
+}
+
+.curveScroll {
+  overflow-x: auto;
+  padding: 0.4rem 0 0.2rem;
+}
+
+.curve {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.night {
+  fill: var(--hair);
+}
+
+.window {
+  fill: color-mix(in oklab, var(--buoy) 18%, transparent);
+  stroke: var(--buoy);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+
+.gridLine {
+  stroke: var(--hair);
+  stroke-width: 1;
+}
+
+.tick {
+  stroke: var(--text);
+  stroke-width: 1.5;
+}
+
+.axisText {
+  font-family: var(--figs);
+  font-size: 17px;
+  font-weight: 600;
+  fill: var(--muted);
+}
+
+.curveArea {
+  fill: color-mix(in oklab, var(--shallows) 34%, transparent);
+}
+
+.curveLine {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.curveDot {
+  fill: var(--chart);
+  stroke: var(--text);
+  stroke-width: 2.5;
+}
+
+.curveLabel {
+  font-family: var(--figs);
+  font-size: 18px;
+  font-weight: 700;
+  fill: var(--text);
+  paint-order: stroke;
+  stroke: var(--chart);
+  stroke-width: 5px;
+}
+
+.curveNote {
+  margin-top: 0.6rem;
+  font-family: var(--fell-it);
+  font-style: italic;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.reading {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--text);
+}
+
+.reading > div {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.reading dt {
+  font-family: var(--figs);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.reading dd {
+  margin-top: 0.15rem;
+  font-size: 0.94rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.tableWrap {
+  margin-top: 2.6rem;
+  overflow-x: auto;
+  border: 1.5px solid var(--text);
+  background: var(--chart);
+}
+
+.tides {
+  width: 100%;
+  min-width: 46rem;
+  border-collapse: collapse;
+  font-family: var(--figs);
+  font-variant-numeric: tabular-nums;
+}
+
+.tides th,
+.tides td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+}
+
+.tides thead th {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-navy);
+  background: var(--navy);
+  border-bottom: 0;
+}
+
+.tides tbody th {
+  width: 8.5rem;
+  white-space: nowrap;
+  border-right: 1px solid var(--rule);
+}
+
+.tides tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.tDay {
+  font-family: var(--fell);
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.tDate {
+  margin-left: 0.5rem;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.tKind {
+  display: inline-block;
+  min-width: 1.9rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.tTime {
+  font-size: 1.12rem;
+  font-weight: 700;
+}
+
+.tHeight {
+  margin-left: 0.45rem;
+  font-family: var(--fell-it);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+.tHeight::after {
+  content: ' m';
+  font-size: 0.8em;
+}
+
+/* The high water the best window is built on. */
+.tBest {
+  background: color-mix(in oklab, var(--buoy) 14%, var(--chart));
+  box-shadow: inset 3px 0 0 var(--buoy);
+}
+
+.tWindow {
+  font-size: 1.05rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.isToday {
+  background: var(--wash);
+}
+
+.isToday th {
+  box-shadow: inset 4px 0 0 var(--text);
+}
+
+/* ----------------------------------------------------------------- trips */
+
+.trips {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+.trip {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border: 1px solid var(--text);
+  background: var(--chart);
+}
+
+.trip::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px solid var(--hair);
+  pointer-events: none;
+}
+
+/* The inset: a small chart of each trip's sky. */
+.inset {
+  position: relative;
+  height: 11rem;
+  overflow: hidden;
+  border-bottom: 1px solid var(--text);
+  background: var(--navy);
+}
+
+.dawn {
+  background:
+    repeating-linear-gradient(180deg, transparent 0 9px, var(--navy-rule) 9px 10px),
+    linear-gradient(180deg, var(--navy) 0 30%, color-mix(in oklab, var(--navy) 60%, var(--buoy)) 100%);
+}
+
+.dawn .insetMark {
+  position: absolute;
+  left: 50%;
+  bottom: -4.2rem;
+  width: 8.4rem;
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: repeating-linear-gradient(180deg, var(--buoy) 0 8px, transparent 8px 12px);
+  box-shadow: 0 0 0 2px var(--buoy);
+}
+
+.moon {
+  display: grid;
+  place-items: center;
+}
+
+.moonField {
+  position: relative;
+  display: block;
+  width: 8.6rem;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--navy);
+  box-shadow: 0 0 0 2px var(--on-navy), 0 0 0 8px var(--navy-rule);
+}
+
+.birds {
+  background:
+    radial-gradient(circle at 20% 110%, var(--shallows) 0 30%, transparent 30.5%),
+    radial-gradient(circle at 78% 120%, var(--shallows) 0 34%, transparent 34.5%),
+    var(--navy);
+}
+
+/* A skein of geese, drawn as chevrons. */
+.birds .insetMark {
+  position: absolute;
+  left: 22%;
+  top: 22%;
+  width: 56%;
+  height: 40%;
+  background:
+    linear-gradient(35deg, transparent 46%, var(--on-navy) 46% 54%, transparent 54%) 0 60% / 16% 26% no-repeat,
+    linear-gradient(-35deg, transparent 46%, var(--on-navy) 46% 54%, transparent 54%) 14% 60% / 16% 26% no-repeat,
+    linear-gradient(35deg, transparent 46%, var(--on-navy) 46% 54%, transparent 54%) 30% 30% / 16% 26% no-repeat,
+    linear-gradient(-35deg, transparent 46%, var(--on-navy) 46% 54%, transparent 54%) 44% 30% / 16% 26% no-repeat,
+    linear-gradient(35deg, transparent 46%, var(--on-navy) 46% 54%, transparent 54%) 62% 0 / 16% 26% no-repeat,
+    linear-gradient(-35deg, transparent 46%, var(--on-navy) 46% 54%, transparent 54%) 76% 0 / 16% 26% no-repeat,
+    linear-gradient(35deg, transparent 46%, var(--on-navy) 46% 54%, transparent 54%) 58% 88% / 12% 20% no-repeat,
+    linear-gradient(-35deg, transparent 46%, var(--on-navy) 46% 54%, transparent 54%) 69% 88% / 12% 20% no-repeat;
+}
+
+.tripBody {
+  display: flex;
+  flex-direction: column;
+  padding: 1.3rem 1.4rem 1.4rem;
+}
+
+.tripBody h3 {
+  font-family: var(--fell);
+  font-size: 1.65rem;
+  line-height: 1.05;
+}
+
+.tripWhen {
+  margin-top: 0.3rem;
+  font-family: var(--fell-it);
+  font-style: italic;
+  font-size: 1.02rem;
+}
+
+.tripText {
+  margin-top: 0.8rem;
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+.tripFacts {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--figs);
+}
+
+.tripFacts > div {
+  display: grid;
+  grid-template-columns: 4.6rem minmax(0, 1fr);
+  gap: 0.6rem;
+  align-items: baseline;
+}
+
+.tripFacts dt {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tripFacts dd {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.tripNext {
+  margin-top: auto;
+  padding-top: 1rem;
+  font-family: var(--figs);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.tripNext::before {
+  content: '';
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  background: var(--buoy);
+}
+
+/* ---------------------------------------------------------------- launch */
+
+.notes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border: 1px solid var(--text);
+}
+
+.note {
+  padding: 1.4rem 1.5rem 1.6rem;
+}
+
+.note + .note {
+  border-left: 1px solid var(--rule);
+}
+
+.note h3 {
+  display: grid;
+  gap: 0.2rem;
+  font-family: var(--fell);
+  font-size: 1.4rem;
+  line-height: 1.1;
+}
+
+.noteKey {
+  font-family: var(--figs);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.caution {
+  background: color-mix(in oklab, var(--buoy) 8%, var(--chart));
+}
+
+.caution .noteKey {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--text);
+}
+
+.caution .noteKey::before {
+  content: '!';
+  display: grid;
+  place-items: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  background: var(--buoy);
+  color: var(--on-buoy);
+  font-size: 0.8rem;
+  letter-spacing: 0;
+}
+
+.note ol {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 1rem;
+  counter-reset: note;
+}
+
+.note li {
+  position: relative;
+  padding-left: 1.8rem;
+  font-size: 0.96rem;
+  line-height: 1.5;
+  counter-increment: note;
+}
+
+.note li::before {
+  content: '(' counter(note) ')';
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  font-family: var(--fell-it);
+  font-style: italic;
+  color: var(--muted);
+}
+
+.flags {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.34fr) minmax(0, 1fr);
+  margin-top: 2rem;
+  border: 1px solid var(--text);
+  background: var(--chart);
+}
+
+.lashing {
+  position: relative;
+  min-height: 12rem;
+  overflow: hidden;
+  border-right: 1px solid var(--text);
+}
+
+.flagsBody {
+  padding: 1.4rem 1.6rem 1.5rem;
+}
+
+.flagsTitle {
+  font-family: var(--fell);
+  font-size: 1.4rem;
+}
+
+.flagList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem 1.6rem;
+  margin-top: 1rem;
+}
+
+.flagList li {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  gap: 0.2rem 0.9rem;
+  align-items: start;
+}
+
+/* A pennant on a staff, in the flag's color. */
+.flag {
+  grid-row: span 2;
+  position: relative;
+  width: 2.6rem;
+  height: 2.8rem;
+  border-left: 2px solid var(--text);
+}
+
+.flag::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.15rem;
+  width: 2.3rem;
+  height: 1.6rem;
+  background: var(--flag);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  box-shadow: inset 0 0 0 1px var(--text);
+}
+
+.flag_shallows {
+  --flag: var(--shallows);
+}
+
+.flag_navy {
+  --flag: var(--navy);
+}
+
+.flag_buoy {
+  --flag: var(--buoy);
+}
+
+.flagName {
+  font-family: var(--figs);
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.flagBody {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ book */
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: stretch;
+}
+
+.form {
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+  border: 3px double var(--text);
+  background: var(--chart);
+}
+
+.form .secNo {
+  padding-top: 0;
+  margin-bottom: 0.6rem;
+}
+
+.formNote {
+  max-width: 36rem;
+  margin-top: 0.8rem;
+  color: var(--muted);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+  margin-top: 1.6rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--figs);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 2.8rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--rule);
+  border-bottom: 2px solid var(--text);
+  border-radius: 0;
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+  font-family: var(--figs);
+  font-size: 1rem;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 1.2rem;
+  font-size: 0.96rem;
+}
+
+.check input {
+  width: 1.2rem;
+  height: 1.2rem;
+  accent-color: var(--buoy);
+}
+
+.submit {
+  margin-top: 1.5rem;
+  cursor: pointer;
+}
+
+.desk {
+  position: relative;
+  display: grid;
+  align-items: end;
+  min-height: 26rem;
+  overflow: hidden;
+  border: 1.5px solid var(--text);
+  outline: 1px solid var(--rule);
+  outline-offset: 6px;
+  padding: 1.4rem;
+}
+
+.deskField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.deskCard {
+  position: relative;
+  padding: 1.3rem 1.4rem 1.4rem;
+  border: 1px solid var(--text);
+  background: var(--chart);
+}
+
+.deskTitle {
+  font-family: var(--fell);
+  font-size: 1.6rem;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+
+.deskCard p {
+  font-size: 0.96rem;
+}
+
+.deskPhone {
+  margin-top: 0.9rem;
+  font-family: var(--figs);
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.deskMail {
+  font-family: var(--figs);
+  font-size: 1rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.deskSmall {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+}
+
+.deskCard .deskSmall {
+  font-size: 0.86rem;
+}
+
+/* ----------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(1.5rem, 3.5vw, 3rem);
+  padding-bottom: 3rem;
+}
+
+.address {
+  font-family: var(--fell);
+  font-size: 1.55rem;
+  line-height: 1.2;
+}
+
+.position {
+  display: inline-block;
+  margin-top: 0.8rem;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--text);
+  font-family: var(--figs);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  white-space: pre;
+}
+
+.visitNote {
+  margin-top: 0.9rem;
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+.hours,
+.getting {
+  display: grid;
+  align-content: start;
+  border-top: 1px solid var(--text);
+}
+
+.hours > div,
+.getting > div {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.hours dt,
+.getting dt {
+  font-family: var(--figs);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hours dd {
+  font-family: var(--figs);
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.getting dd {
+  margin-top: 0.2rem;
+  font-size: 0.94rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  position: relative;
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.footSwell {
+  position: relative;
+  height: 56px;
+  overflow: hidden;
+  border-top: 1.5px solid var(--text);
+  border-bottom: 1.5px solid var(--on-navy);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto minmax(0, 1.2fr);
+  gap: 1rem 2.5rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 2.6rem;
+  font-size: 0.9rem;
+  color: var(--navy-muted);
+}
+
+.footName {
+  font-family: var(--fell);
+  font-size: 1.35rem;
+  color: var(--on-navy);
+}
+
+.footInner a {
+  color: var(--on-navy);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1180px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 1.2rem;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .margin {
+    display: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    padding-bottom: 5rem;
+  }
+
+  .plate {
+    min-height: 30rem;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .secNo {
+    padding-top: 0;
+  }
+
+  .routeGrid,
+  .today,
+  .bookGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .routes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.6rem 1.6rem;
+  }
+
+  .secHead h2:last-child {
+    grid-column: auto;
+  }
+
+  .trips {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .trip {
+    grid-template-rows: none;
+    grid-template-columns: 14rem minmax(0, 1fr);
+  }
+
+  .inset {
+    height: auto;
+    min-height: 12rem;
+    border-bottom: 0;
+    border-right: 1px solid var(--text);
+  }
+
+  .notes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .note + .note {
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .flagList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .visit {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .visitWhere {
+    grid-column: 1 / -1;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .page {
+    --frame: 6px;
+    --gut: 1.5rem;
+  }
+
+  .bar {
+    padding-inline: 1.25rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .barNote {
+    display: none;
+  }
+
+  .sheet::before,
+  .sheet::after {
+    width: 4px;
+    border-width: 0.5px;
+    outline: 0;
+    background: repeating-linear-gradient(180deg, var(--text) 0 32px, transparent 32px 64px);
+  }
+
+  .bar::after {
+    left: 6px;
+    right: 6px;
+    height: 5px;
+    background: repeating-linear-gradient(90deg, var(--text) 0 32px, transparent 32px 64px);
+  }
+
+  .heroFacts {
+    grid-template-columns: minmax(0, 1fr);
+    text-align: left;
+  }
+
+  .heroFacts > div + div {
+    border-left: 0;
+    border-top: 1px solid var(--hair);
+  }
+
+  .heroFacts > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.6rem 0;
+  }
+
+  .heroFacts dd {
+    margin-top: 0;
+    text-align: right;
+  }
+
+  .plate {
+    min-height: 24rem;
+  }
+
+
+  .rose {
+    width: 8.4rem;
+    right: 7%;
+    bottom: 9%;
+  }
+
+  .roseN {
+    top: -1.9rem;
+    font-size: 1.2rem;
+  }
+
+  .plateCap {
+    text-align: left;
+    bottom: -2.8rem;
+  }
+
+  .pinNo {
+    width: 1.6rem;
+    height: 1.6rem;
+    font-size: 0.86rem;
+    bottom: 1.6rem;
+  }
+
+  .pin::before {
+    height: 1.7rem;
+  }
+
+  .skyLabel {
+    display: none;
+  }
+
+  .routes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .route {
+    grid-template-rows: none;
+    grid-template-columns: 2.4rem minmax(0, 1fr);
+    gap: 1rem;
+    padding-bottom: 1.2rem;
+    border-top-width: 1px;
+  }
+
+  .cartouche {
+    padding: 1.5rem 1.1rem;
+  }
+
+  .pnSaltings {
+    top: 15%;
+  }
+
+  .pnReach {
+    right: 6%;
+    top: 34%;
+  }
+
+  .pnBar {
+    left: 6%;
+    top: 49%;
+    letter-spacing: 0.14em;
+  }
+
+  .arm {
+    display: none;
+  }
+
+  .curve {
+    min-width: 36rem;
+  }
+
+  .latTop {
+    top: calc(33.3% - 0.2rem);
+  }
+
+  .boat {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.8rem;
+  }
+
+  .post {
+    display: none;
+  }
+
+  .tariff dd {
+    font-size: 1.25rem;
+  }
+
+  .included {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .trip {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .inset {
+    height: 9rem;
+    min-height: 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--text);
+  }
+
+  .flags {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lashing {
+    min-height: 4rem;
+    border-right: 0;
+    border-bottom: 1px solid var(--text);
+  }
+
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .desk {
+    min-height: 22rem;
+  }
+
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

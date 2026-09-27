@@ -1,0 +1,1807 @@
+/* ==========================================================================
+   EIGHT FOLDS - dumpling house, 31 Lantern Street, Riverside
+   Bamboo steamers from above and the dim sum order sheet. Steamers are
+   circles with a slatted rim drawn in CSS and a pattern for the woven lid;
+   the hero's front lid has a round window cut clean through it, and the
+   soup dumpling sits inside on its cabbage leaf. The menu is a printed order
+   sheet: columns, stamps down the side, tick boxes, a pencil. Chopsticks on
+   a rest divide the page like a laid table.
+   ========================================================================== */
+
+.page {
+  --bamboo: #eed8a6;
+  --soy: #2a1f17;
+  --chili: #c6362e;
+  --scallion: #6a994b;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --serif: 'Gelasio', Georgia, 'Times New Roman', serif;
+  --sans: 'Gantari', 'Helvetica Neue', Arial, sans-serif;
+  --hand: 'Reenie Beanie', 'Bradley Hand', 'Segoe Print', cursive;
+  --text: var(--soy);
+  --on-soy: var(--bamboo);
+  --on-chili: var(--bamboo);
+  --on-scallion: var(--soy);
+  --paper: var(--bamboo);
+  --on-paper: var(--soy);
+  --on-kraft: var(--soy);
+
+  /* Derived surfaces, never roles of their own. */
+  --muted: color-mix(in oklab, var(--text) 70%, var(--bamboo));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 50%, transparent);
+  --shadow: color-mix(in oklab, var(--soy) 30%, transparent);
+  /* Wood is the ground darkened toward the ink the text is set in, so a
+     steamer keeps its edge on a dark ground as on a light one. */
+  --wood-ink: color-mix(in oklab, var(--text) 45%, var(--soy));
+  --slat-a: color-mix(in oklab, var(--bamboo) 74%, var(--wood-ink));
+  --slat-b: color-mix(in oklab, var(--bamboo) 88%, var(--wood-ink));
+  --rim-line: color-mix(in oklab, var(--bamboo) 35%, var(--wood-ink));
+  --lid-wood: color-mix(in oklab, var(--bamboo) 62%, var(--wood-ink));
+  --inside: color-mix(in oklab, var(--soy) 72%, var(--bamboo));
+  --leaf: color-mix(in oklab, var(--scallion) 62%, var(--bamboo));
+  --leaf-vein: color-mix(in oklab, var(--scallion) 40%, var(--paper));
+  --kraft: color-mix(in oklab, var(--bamboo) 72%, var(--wood-ink));
+  --vinegar: color-mix(in oklab, var(--soy) 82%, var(--chili));
+  --paper-muted: color-mix(in oklab, var(--on-paper) 64%, var(--paper));
+  --paper-rule: color-mix(in oklab, var(--on-paper) 18%, transparent);
+  --paper-rule-strong: color-mix(in oklab, var(--on-paper) 55%, transparent);
+  --graphite: color-mix(in oklab, var(--on-paper) 80%, var(--paper));
+  --soy-muted: color-mix(in oklab, var(--on-soy) 68%, var(--soy));
+  --soy-rule: color-mix(in oklab, var(--on-soy) 16%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  line-height: 1.55;
+  background: var(--bamboo);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the surface's lightness, tinted toward an ink. */
+    --text: color-mix(in oklab, oklch(from var(--bamboo) clamp(0, (0.62 - l) * 1000, 1) 0 0) 82%, var(--soy));
+    --on-soy: color-mix(in oklab, oklch(from var(--soy) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--bamboo));
+    --on-chili: oklch(from var(--chili) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-scallion: oklch(from var(--scallion) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    /* The order sheet and the steamer liners: the ground lifted toward
+       paper, whatever the ground is. */
+    --paper: oklch(from var(--bamboo) max(calc(l + (1 - l) * 0.62), 0.82) calc(c * 0.4) h);
+    --on-paper: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--soy));
+    --on-kraft: color-mix(in oklab, oklch(from var(--kraft) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--soy));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.75rem var(--gut);
+  background: var(--bamboo);
+  border-bottom: 1px solid var(--rule);
+  box-shadow: 0 1px 0 var(--rule), 0 4px 0 -2px var(--rule);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+/* A steamer seen from above, as a logo. */
+.markBasket {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, var(--lid-wood) 0 52%, var(--rim-line) 54% 58%, transparent 60%),
+    repeating-conic-gradient(var(--slat-a) 0 10deg, var(--slat-b) 10deg 20deg);
+  box-shadow: 0 0 0 1.5px var(--rim-line);
+}
+
+.markName {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.barNote {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 0.78rem;
+  line-height: 1.25;
+  color: var(--muted);
+}
+
+.barNote a {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--bamboo);
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--chili);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+}
+
+/* ---------------------------------------------------------------- shared */
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.kicker::before {
+  content: '';
+  flex: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--chili);
+}
+
+.small {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.btn,
+.btnLine {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.9rem;
+  padding: 0.5rem 1.3rem;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.btn {
+  color: var(--on-chili);
+  background: var(--chili);
+}
+
+.btnLine {
+  border: 1.5px solid var(--text);
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    background: color-mix(in oklab, var(--chili) 84%, var(--soy));
+  }
+
+  .btnLine:hover {
+    color: var(--on-soy);
+    background: var(--soy);
+    border-color: var(--soy);
+  }
+}
+
+/* A steamer from above: a slatted rim with a dark line where it meets the
+   lid or the basket. */
+.steamer,
+.basket {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: repeating-conic-gradient(var(--slat-a) 0 1.6deg, var(--slat-b) 1.6deg 3.2deg);
+  box-shadow: 0 1.2rem 2rem -0.8rem var(--shadow), 0 0 0 2px var(--rim-line);
+}
+
+.steamer::before,
+.basket::after {
+  content: '';
+  position: absolute;
+  inset: 3%;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px color-mix(in oklab, var(--rim-line) 55%, transparent);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  box-sizing: border-box;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) clamp(2rem, 4vw, 3rem);
+}
+
+.title {
+  margin-top: 1.2rem;
+  font-family: var(--serif);
+  font-size: clamp(3.8rem, 8.6vw, 7.6rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+}
+
+.subtitle {
+  margin-top: 0.8rem;
+  font-family: var(--serif);
+  font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.lede {
+  max-width: 32rem;
+  margin-top: 1.5rem;
+  font-size: clamp(1.05rem, 1.3vw, 1.18rem);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.8rem;
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 32rem;
+  margin-top: 2.4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.heroFacts dt {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.heroFacts dd {
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+/* The table: two steamers, the vinegar dish and a pair of chopsticks, all
+   placed in shares of the table's width. */
+.table {
+  position: relative;
+  width: min(100%, 40rem);
+  justify-self: end;
+  aspect-ratio: 1 / 1.07;
+  container-type: inline-size;
+}
+
+.steamerBack {
+  position: absolute;
+  top: 0;
+  right: 2cqi;
+  width: 50cqi;
+}
+
+.steamerFront {
+  position: absolute;
+  top: 19cqi;
+  left: 0;
+  width: 76cqi;
+}
+
+.lidPlain,
+.lid,
+.inside {
+  position: absolute;
+  inset: 7%;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.lidPlain,
+.lid {
+  background: var(--lid-wood);
+  box-shadow: inset 0 0 0 0.6cqi color-mix(in oklab, var(--soy) 20%, transparent);
+}
+
+/* The window: a round hole through the lid layer. */
+.lid {
+  -webkit-mask: radial-gradient(24% 24% at 60% 58%, transparent 98.5%, var(--soy) 100%);
+  mask: radial-gradient(24% 24% at 60% 58%, transparent 98.5%, var(--soy) 100%);
+}
+
+.inside {
+  background-color: var(--inside);
+  background-image: repeating-linear-gradient(90deg, color-mix(in oklab, var(--bamboo) 14%, transparent) 0 2px, transparent 2px 9px);
+}
+
+.leaf {
+  position: absolute;
+  left: 34%;
+  top: 32%;
+  width: 52%;
+  height: 52%;
+  border-radius: 46% 54% 50% 50%;
+  background:
+    repeating-conic-gradient(from 10deg at 50% 50%, var(--leaf-vein) 0 1.2deg, transparent 1.2deg 40deg),
+    radial-gradient(circle at 50% 45%, color-mix(in oklab, var(--leaf) 80%, var(--paper)) 0 30%, var(--leaf) 75%);
+}
+
+.heroDumpling {
+  position: absolute;
+  left: 41%;
+  top: 40.5%;
+  width: 38%;
+  filter: drop-shadow(0 0.8cqi 0.8cqi color-mix(in oklab, var(--soy) 45%, transparent));
+}
+
+/* The cut edge of the window, and the lid's shadow falling inside it. */
+.windowEdge {
+  position: absolute;
+  left: 37.96%;
+  top: 36.24%;
+  width: 41.28%;
+  height: 41.28%;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 0.55cqi var(--rim-line),
+    0 0 0 1cqi var(--slat-b),
+    inset 0.6cqi 1.4cqi 1.8cqi color-mix(in oklab, var(--soy) 55%, transparent);
+  pointer-events: none;
+}
+
+.dish {
+  position: absolute;
+  right: 3cqi;
+  bottom: 3cqi;
+  width: 22cqi;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--vinegar) 0 56%, color-mix(in oklab, var(--paper) 80%, var(--soy)) 58% 62%, var(--paper) 64%);
+  box-shadow: 0 0.8cqi 1.6cqi -0.4cqi var(--shadow), 0 0 0 1px var(--rule);
+}
+
+.ginger {
+  position: absolute;
+  top: 44%;
+  left: 36%;
+  width: 22%;
+  height: 4%;
+  border-radius: 2px;
+  background: color-mix(in oklab, var(--bamboo) 80%, var(--chili));
+  rotate: 24deg;
+}
+
+.ginger:nth-child(2) {
+  top: 52%;
+  left: 42%;
+  rotate: -18deg;
+}
+
+.ginger:nth-child(3) {
+  top: 38%;
+  left: 48%;
+  width: 16%;
+  rotate: 62deg;
+}
+
+.heroSticks {
+  position: absolute;
+  right: -3cqi;
+  bottom: 17cqi;
+  width: 50cqi;
+  height: 6cqi;
+  rotate: -24deg;
+  pointer-events: none;
+}
+
+.heroSticks span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1.5cqi;
+  background: linear-gradient(90deg, var(--chili) 0 22%, color-mix(in oklab, var(--wood-ink) 78%, var(--bamboo)) 22%);
+  clip-path: polygon(0 0, 100% 30%, 100% 70%, 0 100%);
+  filter: drop-shadow(0 0.6cqi 0.4cqi var(--shadow));
+}
+
+.heroSticks span:first-child {
+  top: 0;
+}
+
+.heroSticks span:last-child {
+  top: 3cqi;
+  rotate: 2deg;
+}
+
+.tableNote {
+  position: absolute;
+  left: 4cqi;
+  bottom: 0;
+  font-family: var(--hand);
+  font-size: clamp(1.6rem, 4.4cqi, 2.4rem);
+  line-height: 1;
+  color: var(--muted);
+  rotate: -3deg;
+}
+
+/* ------------------------------------------------------- chopstick rest */
+
+.rest {
+  position: relative;
+  height: 4.5rem;
+  max-width: var(--max);
+  margin: clamp(1.5rem, 4vw, 3rem) auto 0;
+}
+
+.rest::before {
+  content: '';
+  position: absolute;
+  left: var(--gut);
+  right: var(--gut);
+  top: 50%;
+  border-top: 1px dashed var(--rule-strong);
+}
+
+.restBody {
+  position: absolute;
+  left: calc(50% - 1.9rem);
+  top: calc(50% - 0.35rem);
+  width: 3.8rem;
+  height: 1.3rem;
+  border-radius: 45% 45% 30% 30% / 70% 70% 30% 30%;
+  background: radial-gradient(ellipse at 40% 30%, color-mix(in oklab, var(--scallion) 55%, var(--paper)) 0 20%, var(--scallion) 70%);
+  box-shadow: 0 0.35rem 0.5rem -0.2rem var(--shadow);
+}
+
+.stickA,
+.stickB {
+  position: absolute;
+  left: calc(50% - 8rem);
+  width: min(20rem, 72vw);
+  height: 0.5rem;
+  background: linear-gradient(90deg, color-mix(in oklab, var(--wood-ink) 84%, var(--bamboo)) 0 70%, var(--chili) 70% 76%, color-mix(in oklab, var(--wood-ink) 84%, var(--bamboo)) 76%);
+  clip-path: polygon(0 0, 100% 30%, 100% 70%, 0 100%);
+  filter: drop-shadow(0 0.3rem 0.2rem var(--shadow));
+}
+
+.stickA {
+  top: calc(50% - 0.75rem);
+  rotate: 2.5deg;
+}
+
+.stickB {
+  top: calc(50% - 0.45rem);
+  left: calc(50% - 7.2rem);
+  rotate: -1.5deg;
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  box-sizing: border-box;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) clamp(2rem, 4vw, 3rem);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 0.8rem clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3.2rem);
+}
+
+.secHead .kicker {
+  grid-column: 1 / -1;
+}
+
+.secHead h2,
+.classText h2 {
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 4.6vw, 3.9rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.secNote {
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- the folds */
+
+.foldGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+.pleatWrap {
+  position: relative;
+  width: min(100%, 26rem);
+  aspect-ratio: 1;
+  justify-self: center;
+  container-type: inline-size;
+}
+
+/* The dumpling from the top: eight pleats, each a lit face and a shaded
+   one, gathered to a twisted knot. */
+.pleats {
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, transparent 0 30%, color-mix(in oklab, var(--soy) 18%, transparent) 100%),
+    repeating-conic-gradient(from -22.5deg, var(--paper) 0 26deg, color-mix(in oklab, var(--paper) 70%, var(--soy)) 26deg 45deg);
+  box-shadow: 0 0 0 2px var(--text), 0 1rem 1.6rem -0.6rem var(--shadow);
+}
+
+.knot {
+  position: absolute;
+  inset: 40%;
+  border-radius: 50%;
+  background: conic-gradient(from 30deg, var(--paper), color-mix(in oklab, var(--paper) 60%, var(--soy)), var(--paper), color-mix(in oklab, var(--paper) 60%, var(--soy)), var(--paper));
+  box-shadow: 0 0 0 2px var(--text);
+}
+
+.pleatNums li {
+  --a: calc(var(--i) * 45deg);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 2.3rem;
+  height: 2.3rem;
+  margin: -1.15rem 0 0 -1.15rem;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--on-chili);
+  background: var(--chili);
+  border-radius: 50%;
+  transform: rotate(var(--a)) translateY(-45cqi) rotate(calc(-1 * var(--a)));
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(1.5rem, 3vw, 2.5rem);
+  counter-reset: none;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  gap: 0 0.8rem;
+  padding: 0.95rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.stepN {
+  grid-row: span 2;
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.stepTitle {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
+.stepNote {
+  margin-top: 0.2rem;
+  font-size: 0.93rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* The kitchen story on the rolling mat. */
+.kitchen {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 24rem;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding: clamp(1.5rem, 4vw, 3rem);
+  overflow: hidden;
+  background: var(--lid-wood);
+  border-radius: 8px;
+}
+
+.mat {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.8;
+}
+
+.kitchenCard {
+  position: relative;
+  max-width: 36rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  color: var(--on-paper);
+  background: var(--paper);
+  border-radius: 4px;
+  box-shadow: 0 1.2rem 2.4rem -1rem var(--shadow);
+}
+
+.cardTitle {
+  margin-bottom: 0.7rem;
+  font-family: var(--serif);
+  font-size: 1.8rem;
+}
+
+.kitchenFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--paper-rule);
+}
+
+.kitchenFacts dt {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.kitchenFacts dd {
+  margin-top: 0.25rem;
+  font-size: 0.84rem;
+  line-height: 1.35;
+  color: var(--paper-muted);
+}
+
+/* -------------------------------------------------------- the order sheet */
+
+.sheetWrap {
+  --side: 17rem;
+  --gap: clamp(2rem, 4vw, 3.5rem);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--side);
+  column-gap: var(--gap);
+}
+
+/* One sheet of paper behind the whole first column. It is positioned, so
+   it takes no cell from the rows the sections are placed in. */
+.sheetWrap::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: calc(100% - var(--side) - var(--gap));
+  z-index: -1;
+  background: var(--paper);
+  border-radius: 3px;
+  box-shadow: 0 1.4rem 2.6rem -1.2rem var(--shadow), 0 0 0 1px var(--paper-rule);
+  rotate: -0.4deg;
+}
+
+.catRow {
+  display: contents;
+}
+
+.sheetTop,
+.cat,
+.sheetFoot {
+  grid-column: 1;
+  color: var(--on-paper);
+}
+
+.sheetTop {
+  grid-row: 1;
+  padding: 0 clamp(1rem, 2.6vw, 2rem) 0;
+}
+
+.printBand {
+  position: relative;
+  height: 40px;
+  margin: 0 calc(-1 * clamp(1rem, 2.6vw, 2rem));
+  overflow: hidden;
+  border-radius: 3px 3px 0 0;
+  background: var(--paper);
+  border-bottom: 2px solid var(--on-paper);
+}
+
+.sheetHeadRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.3rem 1rem;
+  margin-top: 1.2rem;
+}
+
+.sheetBrand {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.sheetKind {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--paper-muted);
+}
+
+.blanks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 2rem;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--paper-muted);
+}
+
+.blank {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.pencilIn {
+  display: inline-block;
+  min-width: 4.5rem;
+  padding: 0 0.3rem;
+  font-family: var(--hand);
+  font-size: 2.2rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--graphite);
+  border-bottom: 1px solid var(--paper-rule-strong);
+}
+
+.colHeads {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 3rem 4.6rem 7.2rem;
+  gap: 0.8rem;
+  margin: 1.2rem 0 0 3.6rem;
+  padding: 0.5rem 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--paper-muted);
+  border-top: 2px solid var(--on-paper);
+  border-bottom: 1px solid var(--paper-rule-strong);
+}
+
+.colHeads span:nth-child(2),
+.colHeads span:nth-child(3) {
+  text-align: right;
+}
+
+.colHeads span:nth-child(4) {
+  text-align: center;
+}
+
+/* The pencil on the table, beside the sheet. */
+.pencil {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  justify-self: start;
+  width: 15rem;
+  height: 0.85rem;
+  margin-left: -1rem;
+  rotate: -24deg;
+  background:
+    linear-gradient(90deg, var(--graphite) 0 4%, color-mix(in oklab, var(--bamboo) 70%, var(--paper)) 4% 13%, var(--scallion) 13% 88%, color-mix(in oklab, var(--bamboo) 50%, var(--soy)) 88% 92%, var(--chili) 92%);
+  clip-path: polygon(0 50%, 13% 0, 100% 0, 100% 100%, 13% 100%);
+  filter: drop-shadow(0 0.4rem 0.25rem var(--shadow));
+}
+
+.cat {
+  display: grid;
+  grid-template-columns: 2.8rem minmax(0, 1fr);
+  gap: 0.8rem;
+  padding: 1.2rem clamp(1rem, 2.6vw, 2rem) 0.8rem;
+}
+
+.stamp {
+  align-self: start;
+  justify-self: center;
+  padding: 0.7rem 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+  rotate: 181.5deg;
+  color: var(--on-chili);
+  background: var(--chili);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--on-chili) 35%, transparent);
+  opacity: 0.94;
+}
+
+.items {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.items th,
+.items td {
+  padding: 0.55rem 0;
+  vertical-align: middle;
+  border-bottom: 1px dotted var(--paper-rule-strong);
+}
+
+.items th {
+  text-align: left;
+  font-weight: 400;
+}
+
+.itemName {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.itemNote {
+  display: block;
+  font-size: 0.86rem;
+  line-height: 1.35;
+  color: var(--paper-muted);
+}
+
+.pcs,
+.price {
+  padding-left: 0.8rem !important;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.pcs {
+  width: 3rem;
+  color: var(--paper-muted);
+}
+
+.price {
+  width: 4.6rem;
+  font-weight: 600;
+}
+
+.boxes {
+  width: 7.2rem;
+  padding-left: 0.8rem !important;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.box {
+  position: relative;
+  display: inline-block;
+  width: 1.45rem;
+  height: 1.45rem;
+  margin: 0 0.15rem;
+  vertical-align: middle;
+  border: 1.5px solid var(--paper-rule-strong);
+}
+
+.pencilMark {
+  position: absolute;
+  inset: -0.75rem -0.4rem 0 0.1rem;
+  font-family: var(--hand);
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--graphite);
+  rotate: -8deg;
+}
+
+.side {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.pencilNote {
+  max-width: 15rem;
+  font-family: var(--hand);
+  font-size: 2.35rem;
+  line-height: 0.95;
+  color: var(--text);
+  rotate: -4deg;
+}
+
+.sheetFoot {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.5rem;
+  align-items: end;
+  padding: 1.2rem clamp(1rem, 2.6vw, 2rem) 1.6rem;
+  font-size: 0.88rem;
+  color: var(--paper-muted);
+  border-top: 2px solid var(--on-paper);
+  margin: 0.4rem clamp(1rem, 2.6vw, 2rem) 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.total {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--on-paper);
+}
+
+/* Open baskets beside their section of the sheet. */
+.basket {
+  width: 13rem;
+}
+
+.basket::before {
+  content: '';
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  box-shadow: inset 0 0.5rem 0.9rem color-mix(in oklab, var(--soy) 40%, transparent);
+}
+
+.basketSmall {
+  width: 9.5rem;
+}
+
+.linerPaper::before {
+  background-color: var(--paper);
+  background-image: radial-gradient(circle, color-mix(in oklab, var(--soy) 22%, transparent) 0 2px, transparent 2.5px);
+  background-size: 16px 16px;
+  background-position: center;
+}
+
+.linerLeaf::before {
+  background:
+    repeating-conic-gradient(from 14deg, var(--leaf-vein) 0 1.4deg, transparent 1.4deg 36deg),
+    radial-gradient(circle at 50% 45%, color-mix(in oklab, var(--leaf) 75%, var(--paper)) 0 25%, var(--leaf) 80%);
+}
+
+.linerSoy::before {
+  background-color: var(--inside);
+  background-image: repeating-linear-gradient(90deg, color-mix(in oklab, var(--bamboo) 16%, transparent) 0 2px, transparent 2px 9px);
+}
+
+.hargow,
+.siumai,
+.xlb,
+.bao {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  filter: drop-shadow(0 0.35rem 0.35rem color-mix(in oklab, var(--soy) 40%, transparent));
+}
+
+.hargow {
+  width: 70%;
+}
+
+.siumai {
+  width: 56%;
+}
+
+.xlb {
+  width: 64%;
+}
+
+.bao {
+  width: 66%;
+}
+
+.pair {
+  display: grid;
+  justify-items: end;
+}
+
+.pair .basketSmall {
+  justify-self: start;
+  margin-top: -3.2rem;
+  margin-left: -1rem;
+}
+
+/* ---------------------------------------------------------------- the class */
+
+.classGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.board {
+  position: relative;
+  width: min(100%, 34rem);
+  aspect-ratio: 1;
+  justify-self: center;
+}
+
+/* A round tray of the house's printed pattern, rimmed like a steamer. */
+.tray {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 0 0 0 0.9rem var(--slat-b), 0 0 0 1rem var(--rim-line), 0 1.8rem 2.4rem -1rem var(--shadow);
+}
+
+.ticket {
+  position: absolute;
+  right: -0.5rem;
+  bottom: 6%;
+  width: 13.5rem;
+  padding: 1.1rem 1.2rem 1.2rem;
+  color: var(--on-paper);
+  background: var(--paper);
+  border-top: 5px solid var(--chili);
+  box-shadow: 0 1rem 1.8rem -0.8rem var(--shadow);
+  rotate: 4deg;
+}
+
+.ticketTop {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper-muted);
+}
+
+.ticketTime {
+  margin-top: 0.3rem;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.ticketPrice {
+  font-family: var(--serif);
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.ticketNote {
+  margin-top: 0.6rem;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  color: var(--paper-muted);
+}
+
+.classText h2 {
+  margin: 1rem 0 1rem;
+}
+
+.parts {
+  margin-top: 1.6rem;
+  border-left: 2px solid var(--text);
+}
+
+.parts li {
+  display: grid;
+  grid-template-columns: 4.2rem minmax(0, 1fr);
+  gap: 0 0.8rem;
+  padding: 0.6rem 0 0.6rem 1rem;
+}
+
+.partTime {
+  grid-row: span 2;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.partTitle {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+.partNote {
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.dates {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin-top: 1.6rem;
+}
+
+.dates li {
+  display: flex;
+  flex-direction: column;
+  padding: 0.7rem 0.8rem;
+  border: 1.5px solid var(--text);
+  border-radius: 6px;
+}
+
+.dateDay {
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.dateSeats {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.dates .dateFull {
+  color: var(--on-soy);
+  background: var(--soy);
+  border-color: var(--soy);
+}
+
+.dates .dateFull .dateSeats {
+  color: var(--soy-muted);
+}
+
+/* --------------------------------------------------------------- frozen bags */
+
+.freezer {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2rem, 4vw, 3.2rem) clamp(1.2rem, 3vw, 2.8rem);
+  background: var(--soy);
+  border-radius: 8px;
+}
+
+.frost {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.45;
+}
+
+.bags {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+  align-items: end;
+}
+
+/* A kraft bag with a pinked heat seal across the top. */
+.bag {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-height: 21rem;
+  padding: 2.4rem 1rem 1.2rem;
+  color: var(--on-kraft);
+  background:
+    linear-gradient(90deg, color-mix(in oklab, var(--soy) 12%, transparent) 0 6%, transparent 6% 94%, color-mix(in oklab, var(--soy) 12%, transparent) 94%),
+    var(--kraft);
+  border-radius: 2px 2px 6px 6px;
+  box-shadow: 0 1.2rem 1.6rem -0.9rem color-mix(in oklab, var(--soy) 70%, transparent);
+}
+
+.bag::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background:
+    linear-gradient(135deg, var(--soy) 50%, transparent 50%) 0 0 / 12px 12px repeat-x,
+    linear-gradient(225deg, var(--soy) 50%, transparent 50%) 0 0 / 12px 12px repeat-x;
+}
+
+.bag::after {
+  content: '';
+  position: absolute;
+  top: 1.2rem;
+  left: 8%;
+  right: 8%;
+  border-top: 2px dashed color-mix(in oklab, var(--on-kraft) 25%, transparent);
+}
+
+.bag:nth-child(2) {
+  min-height: 19rem;
+}
+
+.bag:nth-child(4) {
+  min-height: 17rem;
+}
+
+.label {
+  padding: 1rem 1rem 1.1rem;
+  color: var(--on-paper);
+  background: var(--paper);
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px var(--paper-rule);
+}
+
+.labelBrand {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--paper-muted);
+}
+
+.labelName {
+  margin-top: 0.2rem;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  line-height: 1.15;
+}
+
+.labelNote {
+  margin-top: 0.4rem;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  color: var(--paper-muted);
+}
+
+.labelPrices {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 0.8rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--paper-rule);
+}
+
+.labelPrices div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.labelPrices dt {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--paper-muted);
+}
+
+.labelPrices dt::after {
+  content: ' for';
+}
+
+.labelPrices dd {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.bagTag {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--on-chili);
+  background: var(--chili);
+  border-radius: 999px;
+  rotate: -3deg;
+}
+
+.cook {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 3vw, 2.5rem);
+  margin-top: clamp(1.6rem, 3vw, 2.4rem);
+}
+
+.cook div {
+  padding-top: 0.8rem;
+  border-top: 2px solid var(--text);
+}
+
+.cook dt {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.cook dd {
+  margin-top: 0.2rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- visit */
+
+.frieze {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 3vw, 3rem);
+  text-align: center;
+}
+
+.tier {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 1.2rem;
+  border-bottom: 2px solid var(--text);
+}
+
+.steamerArt {
+  width: min(100%, 14rem);
+}
+
+.tierDays {
+  margin-top: 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tierTime {
+  font-family: var(--serif);
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.closed {
+  margin-top: 1rem;
+  text-align: center;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--muted);
+}
+
+.visitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.addrLine {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.addrTown {
+  font-family: var(--serif);
+  font-size: clamp(1.3rem, 2.4vw, 1.8rem);
+  font-style: italic;
+  color: var(--muted);
+}
+
+.addrNote {
+  max-width: 32rem;
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+.contactLine {
+  display: flex;
+  flex-direction: column;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.contactLine:first-child {
+  border-top: 1px solid var(--rule);
+}
+
+.contactLine span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contactLine a {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.contact .pencilNote {
+  margin-top: 1.2rem;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(3rem, 7vw, 5rem);
+  color: var(--soy-muted);
+  background: var(--soy);
+  font-size: 0.9rem;
+}
+
+.hem {
+  position: relative;
+  height: 108px;
+  overflow: hidden;
+  background: var(--soy);
+}
+
+.footInner {
+  box-sizing: border-box;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+}
+
+.footInner p {
+  margin-top: 0.3rem;
+}
+
+.footName {
+  margin-bottom: 0.8rem;
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--on-soy);
+}
+
+.footer a {
+  color: var(--on-soy);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .bags {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sheetWrap {
+    --side: 13rem;
+  }
+
+  .basket {
+    width: 11rem;
+  }
+
+  .basketSmall {
+    width: 8rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .nav,
+  .barNote {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .table {
+    justify-self: center;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .foldGrid,
+  .classGrid,
+  .visitGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .classText {
+    order: -1;
+  }
+}
+
+/* The sheet on a phone: the baskets and the pencil notes sit on the paper,
+   after their section. */
+@media (max-width: 760px) {
+  .sheetWrap {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sheetWrap::before {
+    width: 100%;
+  }
+
+  .pencil {
+    display: none;
+  }
+
+  .side {
+    grid-column: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 0.4rem 1rem 1.2rem;
+  }
+
+  .sheetWrap::before {
+    rotate: 0deg;
+  }
+
+  .pair {
+    display: flex;
+    align-items: center;
+  }
+
+  .pair .basketSmall {
+    margin: 0 0 0 -1.5rem;
+  }
+
+  .pencilNote {
+    color: var(--graphite);
+  }
+
+  .contact .pencilNote {
+    color: var(--text);
+  }
+
+  .colHeads {
+    display: none;
+  }
+
+  .cat {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stamp {
+    justify-self: start;
+    writing-mode: horizontal-tb;
+    rotate: -1.5deg;
+    padding: 0.3rem 0.7rem;
+  }
+
+  .items tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 0.2rem 0.8rem;
+    align-items: center;
+    padding: 0.55rem 0;
+    border-bottom: 1px dotted var(--paper-rule-strong);
+  }
+
+  .items th {
+    grid-column: 1 / -1;
+  }
+
+  .items th,
+  .items td {
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .pcs,
+  .price,
+  .boxes {
+    width: auto;
+    padding-left: 0 !important;
+  }
+
+  .pcs {
+    text-align: left;
+  }
+
+  .pcs:not(:empty)::after {
+    content: ' pcs';
+  }
+
+  .boxes {
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  .price {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .sheetFoot {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dates {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cook {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .frieze {
+    gap: 0.6rem;
+  }
+
+  .tierTime {
+    font-size: 1.15rem;
+  }
+
+  .tierDays {
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+  }
+}
+
+@media (max-width: 520px) {
+  .bags {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bag,
+  .bag:nth-child(2),
+  .bag:nth-child(4) {
+    min-height: 0;
+  }
+
+  .bagTag {
+    margin-top: 1rem;
+  }
+
+  .heroFacts {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .kitchenFacts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ticket {
+    right: 0;
+    width: 11.5rem;
+  }
+
+  .ticketPrice {
+    font-size: 2.3rem;
+  }
+
+  .frieze {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tier {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: 0 1rem;
+    align-items: center;
+    text-align: left;
+    padding-bottom: 0.8rem;
+  }
+
+  .steamerArt {
+    grid-row: span 2;
+  }
+
+  .tierDays {
+    margin-top: 0;
+    font-size: 0.74rem;
+  }
+
+  .tierTime {
+    font-size: 1.6rem;
+  }
+}

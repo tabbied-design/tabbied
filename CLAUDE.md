@@ -144,12 +144,12 @@ and it changed no behavior: same MCP handler, same statelessness, same
 JSON 404); auth, generations, media, and the AI gateway land with the bindings
 they need. See `agent-outputs/20260827-studio-ai-plan.md`.
 
-The export is comfortably inside the platform limits - roughly 11,100 files
-against a 20,000 free-plan ceiling, largest file 2.8 MB against 25 MiB - but
+The export is comfortably inside the platform limits - roughly 13,100 files
+against a 20,000 free-plan ceiling, largest file 3.0 MB against 25 MiB - but
 both are counted per Worker *version*. Don't treat that file count as stable:
 most of it is per-route RSC payloads, and a Next minor can move it a lot (16.3
 cut ~1,400 files off 16.2's output without changing a page). What is stable is
-`public/downloads/`, a flat 5,228 files for 227 sites (the artwork ones ship
+`public/downloads/`, a flat 6,450 files for 277 sites (the artwork ones ship
 their pictures in both packages), so a batch of new template sites is the
 thing most likely to actually threaten the ceiling. `wrangler deploy` prints
 the count it uploaded.
@@ -244,7 +244,7 @@ and *not* `zip` - so CI stayed green while the first Workers deploy died with
 fflate (zero dependencies), so the only thing the packaging step needs is the
 Node that is already running it. Don't reintroduce a PATH lookup here. Two
 details it depends on: every directory gets its own zero-length `<name>/`
-entry, because 98 of the 227 sites reference no images and their empty
+entry, because 106 of the 277 sites reference no image files and their empty
 `images/` (and the React package's `public/`) would otherwise vanish from
 the download;
 and entries carry the source file's real mtime, which `zip -r` did and fflate
@@ -270,7 +270,7 @@ The two formats are built in opposite directions, and that is the point:
   source to copy - hand-porting is the trap the derive-don't-port strategy
   above exists to avoid.
 - **React is a copy of the page**, because a template page already *is* a plain
-  React component. The only Next.js API any of the 227 uses is `export const
+  React component. The only Next.js API any of the 277 uses is `export const
   metadata`; there is no next/image, next/link, `'use client'` or
   `generateStaticParams` anywhere. So `page.tsx` ships as authored and only the
   frame changes: metadata lifted into `index.html`, workspace imports pointed
@@ -302,7 +302,7 @@ code: the placeholders already carry their config as `data-*` attributes
 `hydratePatterns()` call revives the whole page.
 
 A site fails loudly rather than shipping broken: more than one CSS module on a
-page, or two hashed names collapsing onto one plain name. All 227 sites
+page, or two hashed names collapsing onto one plain name. All 277 sites
 package, so `KNOWN_UNSUPPORTED` is empty - anything that throws is a new
 problem and exits non-zero.
 
@@ -374,7 +374,7 @@ Four things worth not re-litigating:
   footer) and an edit reaches all of them; the generator fails the build if
   they don't currently agree.
 
-All 227 sites are annotated. The 222 bespoke pages were done by
+All 277 sites are annotated. The 272 bespoke pages were done by
 `scripts/annotate-templates.mjs`, a one-time codemod (`npm run
 annotate:templates`) - run it after adding a new bespoke template, and note it
 skips any page already carrying `data-edit-root`, so a hand-annotated page is
@@ -447,8 +447,8 @@ from the download, had the footer and nothing else. Each of them now renders
 `components/template/TemplateMenu` in its header: a copy of the nav's links
 (same `data-edit` ids, which is allowed, and the editable gate checks they
 agree) behind a "Menu" toggle. The 30 minimal templates, the 70 artwork
-ones and the 50 small-business ones were built with it, so 207 of the 227
-carry one. Four things it depends on:
+ones, the 50 small-business ones and the 50 picture-led ones were built
+with it, so 257 of the 277 carry one. Four things it depends on:
 
 - **It is a `<details>`, because the HTML package has no React left.** Open
   and shut are the browser's own there. Closing on a followed link, an
@@ -527,6 +527,10 @@ Five things worth not re-litigating:
 - **The HTML package inlines every `--artwork-mask`** as a data URI
   (`inlineArtworkMasks` in the packager). A CSS mask is a CORS fetch, and
   a page opened from disk, as its README says to, is refused every one.
+  Each file is inlined once, as a `--artwork-src-N` property on `:root` in
+  the head, and every use reads it with `var()`: inlined at each use, a
+  drawing repeated as twenty list bullets put twenty copies in the page,
+  and Longmeadow's HTML came to 4.2 MB (246 KB once per file).
 - **A pattern fill's pattern is the Artwork's only child**, and the
   annotator treats the Artwork as the pattern's wrapper, so the
   `data-edit-pattern` and `data-edit-roles` it writes land on `<Artwork>`,
@@ -596,6 +600,65 @@ only: three empty target ids read by `.page:has(:global(#text-larger:target))`
 it). The Studio preview turns fragment links into scrolls, so the switch
 does nothing there.
 
+## The picture set - fifty ways to use a generated picture
+
+The last 50 entries in `lib/templateSites.ts` (2026-09-27, seed prefix
+`pic-`) are single-page sites for businesses no earlier set covered: a
+kayak hire, a natural history museum, a stained glass studio, a piano
+tuner, a roller rink, a branch library, a seed company, a sleep clinic, a
+sawmill, a funeral director, a drone surveyor, an animal shelter and so on.
+Each takes its layout from an object of its trade (a tide almanac, a card
+catalog, seed packets, a contact sheet, a nutrition facts label, passport
+pages, an audio editor's timeline, a hi-fi faceplate, an 8-bit game), each
+leads with a design no earlier template leads with, and all fifty follow
+the small-business set's any-palette rules above. What they add is range in
+how a page uses its pictures: 152 recolorable ones, all through `Artwork`,
+so the recolor gate holds every one to the palette.
+
+The uses, so the next batch can reach for one on purpose:
+
+- **A pattern as the sky.** A scene generated with an empty transparent sky
+  (`art-bg-*`, `fit="cover"`) over a pattern field: the pattern shows above
+  the roofline (Northbound Motel, Sleepwell, Halfmoon Balloons).
+- **One file, several colorways.** Layer inks are keyed by layer name, so
+  copies of one picture can rotate which role each layer takes: a kayak
+  fleet, four locomotive liveries, six seed packets, stickers.
+- **Day and night.** The same scene twice, the night inks `color-mix`ed
+  darker from the roles, never a hex (Windfall Cider, Sunward Solar).
+- **A silhouette cut from a pattern** (`mode="fill"`): circus performers,
+  a geode, a terrier, a mushroom; and as a *shadow*, the fill copy skewed
+  behind a duotone of the same picture (Ferro Forge's anvil).
+- **Sequences and repeats.** A lunge five times at rising opacity (Riposte),
+  gulls along a rail, a paper-cut garland, a border strip tiled down a
+  margin, knives in a knife roll, portraits in photo booth strips.
+- **Diagrams.** Numbered callouts over a drawing (a piano action, an oak, a
+  workshop diorama), pins over an illustrated chart, GIS overlays drawn over
+  an aerial photograph.
+- **Framing and cropping.** Postage stamps, a porthole, a rosette, a lit
+  puppet screen, a tuning-dial window; a picture drawn at several times
+  its box and cropped to a detail (the museum's moth, the valve).
+- **Type and text.** A figure standing inside giant type (Terrace's server),
+  body text wrapped round a picture with `shape-outside` (Hollis's grand).
+- **Hover.** A tint copy over a fill copy of the same picture; the tint
+  fades only inside `@media (hover: hover)`, with no transition under
+  reduced motion (Loudhouse, Spore & Soil).
+- **Scroll-snap rows** of pictures: a mineral drawer, a sculpture trail.
+
+Eight prompt sets were added for styles the batch needed: `art-glass` and
+`art-papercut` (layered masks), `art-pixel` and `art-iso` (layered
+vectors), `art-silhouette`, `art-pictogram` and `art-manual` (one ink), and
+`art-aerial` (tone, untrimmed, filling its frame). Three things learned:
+
+- **A traced picture is inlined in the page.** A `layers` picture rendered
+  as `vector` puts its paths in the HTML, and an isometric allotment traced
+  to 198 KB of it. Past about 100 KB, promote it with `render: "masks"`.
+- **Anything off the key colors fails promotion**, and the model reaches
+  for brown baskets and gray paths. Naming the key color for each part in
+  the subject ("the basket drawn in solid black") fixed all three failures.
+- **A page that stacks a light "paper" on its ground** (an order sheet, a
+  crate label) keeps it light on a dark palette by deriving it with relative
+  color from the ground, not by a role of its own.
+
 ## Template screenshots on the cards
 
 Every template has a screenshot in `public/template-shots/<slug>.webp`: the
@@ -664,7 +727,8 @@ re-litigating:
   itself, so a large batch of one look sits together on the last pages.
   The first 177 were laid out by `spreadTemplates` and frozen as they were
   first published; the fifty small-business sites were appended after them
-  (2026-09-26), spread among themselves.
+  (2026-09-26), spread among themselves, and the fifty picture-led sites
+  (2026-09-27, `pic-`) after those.
 - **The URL is read after mount, not with `useSearchParams`**, the same as
   the pattern library's `?page=`: `useSearchParams` in a static export
   renders the whole route on the client. The first paint is All, page 1,
@@ -746,7 +810,7 @@ it hairline at the ~20px the navs draw it at. Scale the box, never the stroke.
 
 **The wordmark's font is declared by `Logo` itself**, not by a route and not
 by the root layout. `plexMono` and `ebGaramond` are applied by the routes that
-use them; the lockup is in a dozen mastheads and in none of the 227 template
+use them; the lockup is in a dozen mastheads and in none of the 277 template
 pages, so the component that draws the word is the only place that knows
 where the font is actually read.
 
@@ -1081,7 +1145,7 @@ another). Five things worth not re-litigating:
   (`components/template/ChooseTemplate.tsx`): how many are chosen, what this
   one costs, and at the limit the chosen ones and "Request more". The page
   learns what is chosen from `GET /api/account/templates`, read once per
-  page into a small store (`lib/myTemplates.ts`) the 227 gallery cards
+  page into a small store (`lib/myTemplates.ts`) the 277 gallery cards
   share. Someone who opens a zip's URL directly is held to the same five.
 - **A click and a fetch are answered differently.** A navigation (a download
   link, told by `Sec-Fetch-Mode`) is sent where the answer is: to
@@ -1151,14 +1215,14 @@ they stay reachable from the framed template preview and from the account.
 The rest of this section describes the flow as built, for when it comes back.
 
 `/studio` takes a description of a business and `/studio/results` answers with
-three template sites. Studio answers with what the repo actually has: 227
+three template sites. Studio answers with what the repo actually has: 277
 finished template sites, each on one of the 338 patterns and one of the 437
 palettes, each with a real page and a real zip. (The AI tier this was designed
 against - `agent-outputs/20260827-studio-ai-plan.md` - has since landed; see
 below. The matcher was not replaced by it.)
 
 - **`lib/studioMatch.ts` is pure and isomorphic; `lib/studioDirections.ts` is
-  server-only.** The index - 227 entries of names, palettes and vocabulary - is
+  server-only.** The index - 277 entries of names, palettes and vocabulary - is
   built at build time and passed to the client as plain data. Importing the
   catalog (384 KB) or the template data into the browser to match against it is
   the thing this split exists to prevent.
@@ -1303,7 +1367,7 @@ the template and shows the result.
   `planEdits`, which is pure and so runs in the Worker with no DOM; one repair
   retry; a second failure writes the three-string `directionToEdits` floor as
   revision 1 with `source: 'fallback'`, and the workspace says so. Because the
-  document is keyed by slot id, **this reaches all 227 templates today** -
+  document is keyed by slot id, **this reaches all 277 templates today** -
   `data-edit-copy` roles matter only for the cheap card-stage preview.
 - **Sites are pinned and versioned.** `site` records `specVersion` and a
   SHA-256 of the packaged `index.html` it was authored against; `GET
