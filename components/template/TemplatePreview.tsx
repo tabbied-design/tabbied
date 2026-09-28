@@ -18,6 +18,7 @@ import { initials } from 'components/nav';
 import ImpersonationNotice from 'components/nav/ImpersonationNotice';
 import Toaster from 'components/Toaster';
 import { signOut, useSessionUser } from 'lib/authClient';
+import { stopImpersonating } from 'lib/impersonation';
 import { ebGaramond, plexMono, plexSans } from 'lib/fonts';
 import { chosenOf, customizeHref as customizerFor, startDownload } from 'lib/myTemplates';
 import useMediaQuery from 'lib/useMediaQuery';
@@ -38,7 +39,7 @@ export default function TemplatePreview({
       bar does not. */
   topic: string;
 }) {
-  const { user, isPending } = useSessionUser();
+  const { user, isPending, impersonating } = useSessionUser();
   const router = useRouter();
   // The width SiteWorkspace.module.css hides the customizer's rail below.
   const narrow = useMediaQuery('(max-width: 768px)');
@@ -168,7 +169,9 @@ export default function TemplatePreview({
               <Menu.Portal>
                 <Menu.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>
                   <Menu.Popup className={styles.menu}>
-                    <div className={styles.menuEmail}>{user.email}</div>
+                    <div className={styles.menuEmail}>
+                      {impersonating ? `Viewing as ${user.email}` : user.email}
+                    </div>
                     <Menu.Separator className={styles.menuRule} />
                     <Menu.Item className={styles.menuItem} render={<Link href="/account/" prefetch={false} />}>
                       My account
@@ -183,14 +186,19 @@ export default function TemplatePreview({
                       Settings
                     </Menu.Item>
                     <Menu.Separator className={styles.menuRule} />
+                    {/* A borrowed session ends by handing the admin's back. */}
                     <Menu.Item
                       className={styles.menuItem}
                       onClick={async () => {
+                        if (impersonating) {
+                          await stopImpersonating().catch(() => undefined);
+                          return;
+                        }
                         await signOut();
                         router.push('/');
                       }}
                     >
-                      Sign out
+                      {impersonating ? 'Stop impersonating' : 'Sign out'}
                     </Menu.Item>
                   </Menu.Popup>
                 </Menu.Positioner>

@@ -15,6 +15,7 @@ import { Menu } from '@base-ui-components/react/menu';
 import { initials } from 'components/nav';
 import ImpersonationNotice from 'components/nav/ImpersonationNotice';
 import { signOut, useSessionUser } from 'lib/authClient';
+import { stopImpersonating } from 'lib/impersonation';
 import styles from './CustomizerBar.module.css';
 
 /** Where the way back leads, by who is looking at what. */
@@ -63,7 +64,7 @@ export default function CustomizerBar({
   /** When the latest revision was saved, or null for a site not saved yet. */
   editedAt: string | Date | null;
 }) {
-  const { user, isPending } = useSessionUser();
+  const { user, isPending, impersonating } = useSessionUser();
   const router = useRouter();
   const back = template
     ? { href: `/templates/${template}/`, label: 'Template', aria: 'Back to the template' }
@@ -188,7 +189,9 @@ export default function CustomizerBar({
             <Menu.Portal>
               <Menu.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>
                 <Menu.Popup className={`${styles.menu} ${styles.accountMenu}`}>
-                  <div className={styles.menuEmail}>{user.email}</div>
+                  <div className={styles.menuEmail}>
+                    {impersonating ? `Viewing as ${user.email}` : user.email}
+                  </div>
                   <Menu.Separator className={styles.menuRule} />
                   <Menu.Item className={styles.menuItem} render={<Link href="/account/" prefetch={false} />}>
                     My account
@@ -207,14 +210,19 @@ export default function CustomizerBar({
                     Settings
                   </Menu.Item>
                   <Menu.Separator className={styles.menuRule} />
+                  {/* A borrowed session ends by handing the admin's back. */}
                   <Menu.Item
                     className={styles.menuItem}
                     onClick={async () => {
+                      if (impersonating) {
+                        await stopImpersonating().catch(() => undefined);
+                        return;
+                      }
                       await signOut();
                       router.push('/');
                     }}
                   >
-                    Sign out
+                    {impersonating ? 'Stop impersonating' : 'Sign out'}
                   </Menu.Item>
                 </Menu.Popup>
               </Menu.Positioner>

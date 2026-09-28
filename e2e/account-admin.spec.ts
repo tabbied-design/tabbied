@@ -383,21 +383,39 @@ test.describe('acting on accounts', () => {
     await expect(notice).toContainText('pat@example.com');
     await expect(notice.getByRole('button', { name: 'Stop impersonating' })).toBeVisible();
 
+    // The account menu says whose account this is, and its last item hands
+    // the admin's session back rather than signing out of both.
+    await page.getByRole('button', { name: 'Account menu' }).click();
+    await expect(page.getByText('Viewing as pat@example.com').first()).toBeVisible();
+    await expect(page.getByRole('menuitem', { name: 'Stop impersonating' })).toBeVisible();
+    await expect(page.getByRole('menuitem', { name: 'Sign out' })).toHaveCount(0);
+    await page.keyboard.press('Escape');
+
     // The admin pages are closed while it lasts, and say how to get them back.
     await page.goto('/admin/');
     await expect(page.getByRole('heading', { name: /You are viewing as/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Stop impersonating' })).toBeVisible();
 
     const stopped: string[] = [];
+    const signedOut: string[] = [];
+    await page.route('**/api/auth/sign-out', (route) => {
+      signedOut.push(route.request().method());
+      return route.fulfill({ status: 200, contentType: 'application/json', body: '{"success":true}' });
+    });
     await page.route('**/api/auth/admin/stop-impersonating', async (route) => {
       stopped.push(route.request().method());
       await page.unroute('**/api/auth/get-session');
       await stubSession(page, 'admin');
       return route.fulfill({ status: 200, contentType: 'application/json', body: '{"session":{},"user":{}}' });
     });
-    await page.getByRole('button', { name: 'Stop impersonating' }).click();
-    // Back where the admin started.
+    // Stopped from the account menu, where "Sign out" used to be.
+    await page.goto('/account/');
+    await page.getByRole('button', { name: 'Account menu' }).click();
+    await page.getByRole('menuitem', { name: 'Stop impersonating' }).click();
+    // Back where the admin started, still signed in as the admin.
     await page.waitForURL(/\/admin\/users\/\?filter=x$/);
     expect(stopped).toEqual(['POST']);
+    expect(signedOut).toEqual([]);
     await expect(page.getByRole('link', { name: 'sam@example.com' })).toBeVisible();
   });
 

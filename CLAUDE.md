@@ -1557,8 +1557,12 @@ things worth not re-litigating:
   the customizer's, the template preview's) renders `ImpersonationNotice`,
   a pill portaled to `<body>` and fixed, because the bars state their
   heights and the dark one's backdrop blur would become a fixed child's
-  containing block. Stopping returns to the page the admin started from
-  (per tab, in sessionStorage).
+  containing block. The account menus (SiteNav, the customizer's, the
+  template preview's) head themselves "Viewing as" and put "Stop
+  impersonating" where "Sign out" was: better-auth's sign-out ends the
+  borrowed session and leaves the admin's own in a cookie nothing reads, so
+  signing out there signed the admin out too. Stopping returns to the page
+  the admin started from (per tab, in sessionStorage).
 - **A test user is an address, not a flag.** `@tabbied.test` (`.test` is
   reserved and never resolves) is the whole definition, matched as a suffix
   so `tabbied.testing.com` is not one and "Remove all" cannot reach it.
