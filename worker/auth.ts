@@ -7,7 +7,7 @@ import { drizzle } from 'drizzle-orm/d1';
 import * as schema from './db/schema';
 import type { Env } from './env';
 import { isDev } from './env';
-import { sendMail } from './lib/mail';
+import { resetPasswordEmail, sendMail, verificationEmail } from './lib/mail';
 
 // better-auth over D1, built per request. It is a factory for the same reason
 // `buildServer` is on the MCP side: an isolate is shared across requests, so a
@@ -181,12 +181,7 @@ export function buildAuth(env: Env) {
       // the first gate on a throwaway address spending AI budget.
       requireEmailVerification: true,
       sendResetPassword: async ({ user, url }) => {
-        await sendMail(env, {
-          to: user.email,
-          subject: 'Reset your Tabbied password',
-          url,
-          text: `Reset your Tabbied password:\n\n${url}\n\nIf you didn't ask for this, ignore it.`,
-        });
+        await sendMail(env, { to: user.email, ...resetPasswordEmail(url) });
       },
     },
 
@@ -199,12 +194,7 @@ export function buildAuth(env: Env) {
       sendOnSignUp: true,
       autoSignInAfterVerification: true,
       sendVerificationEmail: async ({ user, url }) => {
-        await sendMail(env, {
-          to: user.email,
-          subject: 'Confirm your Tabbied account',
-          url,
-          text: `Confirm your Tabbied account:\n\n${url}`,
-        });
+        await sendMail(env, { to: user.email, ...verificationEmail(url) });
       },
     },
 

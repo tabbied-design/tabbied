@@ -1494,7 +1494,9 @@ whatever text Studio wrote, so putting them back is a UI change.
   is either `ADMIN_EMAILS` (a comma-separated var or secret; the role is set
   on sign-up, or on the next sign-in for an account that already exists) or
   `npm run admin:grant -- you@example.com` (a D1 UPDATE; `--remote` for
-  production); after that `/admin/users` does it through the client plugin.
+  production), for every admin after the first too: the directory has no
+  "Make admin" button any more, so the role only ever comes from outside the
+  app, and taking it away is an UPDATE in D1 (and out of `ADMIN_EMAILS`).
   The caps page is read-only because the caps are constants.
 - **`ADMIN_EMAILS` promotes in front of the endpoint, not in a session hook,
   and `/api/health` counts it.** Three things make this setting look broken
@@ -1523,6 +1525,57 @@ out of `dev_mail`; run them **after** a build, not during one: `next build`
 empties `out/` and the assets binding reads from there, which reads as a
 random failure in `beforeAll`. Each test file pays its own setup (about 10s),
 so a new test joins an existing file unless it needs a fresh database.
+
+## The admin's hands on an account - impersonate, ban, remove, test users
+
+The directory (`/admin/users`) shows a Plan column (everyone is `free`
+during the beta; `PLAN` in `worker/lib/users.ts` is the one place that says
+so) and a Template Quota, and each row ends in an ellipsis menu,
+`components/admin/UserActions.tsx`: Impersonate, Ban or Unban, Remove. The
+same menu sits on a user's detail view and on `/admin/test-users`. Five
+things worth not re-litigating:
+
+- **Remove is ours; impersonate and ban are better-auth's.** better-auth's
+  `remove-user` deletes the row and the sessions, and D1 cascades the rest,
+  but R2 does not: the person's uploads (`up/<id>/`), their directions'
+  images (`gen/<generation>/`) and their sites' pictures
+  (`gen/site/<site>/`) would stay. `DELETE /api/admin/users/:id` runs
+  `removeUsers`, which reads those owners, deletes the rows, then the bytes
+  by prefix (`deletePrefix`, shared with a site's own delete). A new R2
+  prefix owned by a person belongs in that list.
+- **The menu greys out what the Worker refuses, and says why.** Not your
+  own row; not another admin's Impersonate (better-auth refuses it) or
+  Remove (ours refuses it: an `ADMIN_EMAILS` address would come straight
+  back as an admin); not a banned account's Impersonate (its session cannot
+  be created). The reasons are shown before the click, the refusals stay
+  server-side.
+- **Impersonating is a borrowed session, visible everywhere it can be.**
+  `lib/impersonation.ts` swaps the cookie for one of the person's (an hour,
+  `impersonatedBy` set) and lands on `/account/`; the admin tier then answers
+  404 to it like to any member, so `AdminPage` shows "You are viewing as"
+  with a way back instead of "Not found". Every page with a bar (SiteNav,
+  the customizer's, the template preview's) renders `ImpersonationNotice`,
+  a pill portaled to `<body>` and fixed, because the bars state their
+  heights and the dark one's backdrop blur would become a fixed child's
+  containing block. Stopping returns to the page the admin started from
+  (per tab, in sessionStorage).
+- **A test user is an address, not a flag.** `@tabbied.test` (`.test` is
+  reserved and never resolves) is the whole definition, matched as a suffix
+  so `tabbied.testing.com` is not one and "Remove all" cannot reach it.
+  `POST /api/admin/test-users` makes one verified account per call, only on
+  that domain: better-auth hashes with scrypt in plain JS here (no
+  `node:crypto` without `nodejs_compat`), so a batch in one request would
+  spend that CPU several times over; the page loops and reports progress.
+  The password is shown once on the page, since only its hash is kept.
+- **The email preview renders what is sent, not a copy of it.**
+  `worker/lib/mail.ts` builds each message (`verificationEmail`,
+  `approvalEmail`, ...) apart from sending it, and both the senders and
+  `worker/lib/emailPreview.ts` call the builders, so `/admin/emails` shows
+  the bytes a person receives. A new message in `mail.ts` needs an entry
+  there or the page quietly stops describing the mail. A test copy goes
+  only to the admin asking (there is no address field), behind a burst
+  gate like every route that sends mail. Links carry `PREVIEW-ONLY` tokens
+  that confirm, reset and grant nothing.
 
 ## Agent-facing docs - all generated, never hand-edited
 

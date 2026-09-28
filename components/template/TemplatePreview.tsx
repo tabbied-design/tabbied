@@ -15,6 +15,7 @@ import { Popover } from '@base-ui-components/react/popover';
 import { ChevronDown } from 'lucide-react';
 import LogoMark from 'components/logo/LogoMark';
 import { initials } from 'components/nav';
+import ImpersonationNotice from 'components/nav/ImpersonationNotice';
 import Toaster from 'components/Toaster';
 import { signOut, useSessionUser } from 'lib/authClient';
 import { ebGaramond, plexMono, plexSans } from 'lib/fonts';
@@ -58,6 +59,7 @@ export default function TemplatePreview({
     <div
       className={`${styles.page} ${plexMono.variable} ${plexSans.variable} ${ebGaramond.variable}`}
     >
+      <ImpersonationNotice />
       {/* The page's heading, for a screen reader and an outline: the bar is
           chrome and the template is in a frame, so nothing else names it. */}
       <h1 className={styles.srOnly}>

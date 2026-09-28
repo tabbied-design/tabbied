@@ -10,6 +10,13 @@ The Worker sends four kinds of message, all through `worker/lib/mail.ts`:
 | More templates: <name> | the team | a later request, for review |
 | You have more Tabbied templates / About your request | the person | an admin grants or declines a reviewed request |
 
+Each message is built by its own function in `mail.ts` (`verificationEmail`,
+`approvalEmail`, `requestDecisionEmail`, ...) and sent separately, so the
+admin's **Email preview** (`/admin/emails/`) can render every one with the
+same code, from sample data, and send a test copy of any of them to the
+admin's own address. A message added to `mail.ts` needs an entry in
+`worker/lib/emailPreview.ts` too.
+
 The first-request email is scheduled with Resend's `scheduled_at` rather than
 sent at once, which is the design's "usually within 5 minutes". Scheduled
 messages show in Resend's dashboard under Emails until they go, and can be

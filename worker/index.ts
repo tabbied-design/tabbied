@@ -28,7 +28,7 @@ import { drizzle } from 'drizzle-orm/d1';
 import * as schema from './db/schema';
 import { requireUser } from './lib/session';
 import { forgetDownload, logDownload, parseDownloadName, takesCopy } from './lib/downloads';
-import { teamRecipients } from './lib/mail';
+import { mailProvider, teamRecipients } from './lib/mail';
 import { claimTemplate, limitMessage, mayTake, releaseTemplate, templateStatus } from './lib/templates';
 import media from './routes/media';
 import account from './routes/account';
@@ -403,7 +403,7 @@ api.get('/health', async (c) => {
     schema,
     adminEmails: configuredAdmins(c.env).length,
     mail: {
-      provider: c.env.RESEND_API_KEY ? 'resend' : isDev(c.env) ? 'dev-mail' : 'none',
+      provider: mailProvider(c.env),
       teamInboxes: teamRecipients(c.env).length,
     },
   });

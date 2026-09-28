@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Menu } from '@base-ui-components/react/menu';
 import { initials } from 'components/nav';
+import ImpersonationNotice from 'components/nav/ImpersonationNotice';
 import { signOut, useSessionUser } from 'lib/authClient';
 import styles from './CustomizerBar.module.css';
 
@@ -72,6 +73,7 @@ export default function CustomizerBar({
 
   return (
     <header className={styles.bar}>
+      <ImpersonationNotice />
       <Link href={back.href} prefetch={false} className={styles.back} aria-label={back.aria}>
         <span className={styles.backCircle} aria-hidden="true">
           <svg

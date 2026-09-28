@@ -1,14 +1,16 @@
 'use client';
 
-// The admin panels, one per page. Tables over the /api/admin reads, with the
-// two actions the tier has - role and ban - going through better-auth's own
-// admin endpoints via the client plugin.
+// The admin panels, one per page. Tables over the /api/admin reads; what can
+// be done to an account (impersonate, ban, remove) is the row's menu,
+// UserActions.
 import { useMemo, useState, type ReactNode } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight, ArrowUpDown, ChevronDown, ChevronUp } from 'lucide-react';
 import { ApiError, apiFetch, apiUrl } from 'lib/apiFetch';
-import { authClient } from 'lib/authClient';
+import { useSessionUser } from 'lib/authClient';
 import { initials } from 'components/nav';
+import UserActions from './UserActions';
 import { money, useAdminData, when } from './useAdminData';
 import styles from './admin.module.css';
 
@@ -149,7 +151,7 @@ export function OverviewPanel() {
 
 // ---- users ------------------------------------------------------------------
 
-type UserRow = {
+export type UserRow = {
   id: string;
   name: string;
   email: string;
@@ -157,12 +159,31 @@ type UserRow = {
   role: string | null;
   banned: boolean | null;
   createdAt: string;
+  /** 'free' for everyone during the beta; the Worker says so (lib/users.ts). */
+  plan?: string;
+  /** Made by the Test users page, on the reserved domain. */
+  test?: boolean;
   sites: number;
   generations: number;
   /** Templates chosen, against the person's allowance (five plus any grant). */
   chosen: number;
   allowance: number;
 };
+
+/** "free" as the directory prints it. */
+export const planLabel = (plan = 'free') => plan.charAt(0).toUpperCase() + plan.slice(1);
+
+/** The name, and what is worth knowing at a glance beside it. */
+export function PersonName({ row, self }: { row: UserRow; self: boolean }) {
+  return (
+    <div className={styles.nameRow}>
+      <p className={styles.personName}>{row.name || row.email}</p>
+      {self ? <span className={styles.tag}>You</span> : null}
+      {row.role === 'admin' ? <span className={styles.tag}>Admin</span> : null}
+      {row.test ? <span className={`${styles.tag} ${styles.tagTest}`}>Test</span> : null}
+    </div>
+  );
+}
 
 const FILTERS = ['All users', 'Active', 'All chosen', 'Banned', 'Admins', 'Unverified'] as const;
 type Filter = (typeof FILTERS)[number];
@@ -201,8 +222,8 @@ function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number;
   const [filter, setFilter] = useState<Filter>('All users');
   const [statusSort, setStatusSort] = useState<0 | 1 | 2>(0);
   const [page, setPage] = useState(0);
-  const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const { user: me } = useSessionUser();
   const { data, error, reload } = useAdminData<{ users: UserRow[] }>(
     `/api/admin/users?q=${encodeURIComponent(query)}&limit=${compact ? pageSize : 200}`
   );
@@ -218,15 +239,6 @@ function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number;
   const current = Math.min(page, pageCount - 1);
   const start = current * pageSize;
   const slice = rows.slice(start, start + pageSize);
-
-  const act = async (id: string, action: () => Promise<{ error?: { message?: string } | null }>) => {
-    setBusy(id);
-    setMessage(null);
-    const result = await action();
-    setBusy(null);
-    if (result.error) setMessage(result.error.message ?? 'That did not work.');
-    else reload();
-  };
 
   return (
     <>
@@ -281,9 +293,14 @@ function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number;
       <div className={`${styles.panel} ${styles.scroll}`}>
         <div className={`${styles.tableHead} ${styles.userCols}`} aria-hidden="true">
           <div>User</div>
-          <div>Role</div>
+          <div>Plan</div>
           <div>Registered</div>
-          <div>Templates chosen</div>
+          {/* Two lines, so the column is as narrow as its figures. */}
+          <div>
+            Template
+            <br />
+            Quota
+          </div>
           <div>Remaining</div>
           <button
             type="button"
@@ -315,46 +332,23 @@ function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number;
                   {initials(row.name, row.email)}
                 </span>
                 <div className={styles.personText}>
-                  <p className={styles.personName}>{row.name}</p>
+                  <PersonName row={row} self={row.id === me?.id} />
                   <Link href={`/admin/users/?id=${row.id}`} prefetch={false} className={styles.personEmail}>
                     {row.email}
                   </Link>
                 </div>
               </div>
-              <div className={styles.cell} data-label="Role">{row.role === 'admin' ? 'Admin' : 'Member'}</div>
+              <div className={styles.cell} data-label="Plan">
+                <span className={styles.plan}>{planLabel(row.plan)}</span>
+              </div>
               <div className={`${styles.cell} ${styles.cellDim}`} data-label="Registered">{day(row.createdAt)}</div>
-              <div className={styles.cell} data-label="Templates chosen">
+              <div className={styles.cell} data-label="Template quota">
                 {row.chosen} / {row.allowance}
               </div>
               <div className={styles.cell} data-label="Remaining">{Math.max(0, row.allowance - row.chosen)}</div>
               <Status row={row} />
               <div className={styles.actions}>
-                <button
-                  type="button"
-                  className={styles.small}
-                  disabled={busy !== null}
-                  onClick={() =>
-                    void act(row.id, () =>
-                      authClient.admin.setRole({ userId: row.id, role: row.role === 'admin' ? 'user' : 'admin' })
-                    )
-                  }
-                >
-                  {row.role === 'admin' ? 'Remove admin' : 'Make admin'}
-                </button>
-                <button
-                  type="button"
-                  className={styles.small}
-                  disabled={busy !== null}
-                  onClick={() =>
-                    void act(row.id, () =>
-                      row.banned
-                        ? authClient.admin.unbanUser({ userId: row.id })
-                        : authClient.admin.banUser({ userId: row.id, banReason: 'Banned from the admin page' })
-                    )
-                  }
-                >
-                  {row.banned ? 'Unban' : 'Ban'}
-                </button>
+                <UserActions row={row} self={row.id === me?.id} onChanged={reload} onError={setMessage} />
               </div>
             </div>
           ))
@@ -405,7 +399,10 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 export function UserDetailPanel({ id }: { id: string }) {
-  const { data, error } = useAdminData<{
+  const [message, setMessage] = useState<string | null>(null);
+  const { user: me } = useSessionUser();
+  const router = useRouter();
+  const { data, error, reload } = useAdminData<{
     user: UserRow & { banReason: string | null; banExpires: string | null };
     sites: { id: string; slug: string; title: string; updatedAt: string }[];
     generations: { id: string; description: string; source: string; model: string; createdAt: string }[];
@@ -417,19 +414,33 @@ export function UserDetailPanel({ id }: { id: string }) {
 
   return (
     <div className={styles.cards}>
+      {message ? (
+        <p className={styles.error} role="alert" style={{ margin: 0 }}>
+          {message}
+        </p>
+      ) : null}
       <div className={styles.card}>
-        <div className={styles.person}>
-          <span className={styles.avatar} aria-hidden="true">
-            {initials(data.user.name, data.user.email)}
-          </span>
-          <div className={styles.personText}>
-            <p className={styles.personName}>{data.user.name}</p>
-            <span className={styles.personEmail}>{data.user.email}</span>
+        <div className={styles.cardHead}>
+          <div className={styles.person}>
+            <span className={styles.avatar} aria-hidden="true">
+              {initials(data.user.name, data.user.email)}
+            </span>
+            <div className={styles.personText}>
+              <PersonName row={data.user} self={data.user.id === me?.id} />
+              <span className={styles.personEmail}>{data.user.email}</span>
+            </div>
           </div>
+          <UserActions
+            row={data.user}
+            self={data.user.id === me?.id}
+            onChanged={reload}
+            onRemoved={() => router.push('/admin/users/')}
+            onError={setMessage}
+          />
         </div>
         <p className={styles.quiet} style={{ marginTop: 16, marginBottom: 0 }}>
-          Joined {when(data.user.createdAt)}, {data.user.role === 'admin' ? 'admin' : 'member'},{' '}
-          {data.user.emailVerified ? 'verified' : 'unverified'}
+          Joined {when(data.user.createdAt)}, {planLabel(data.user.plan)} plan,{' '}
+          {data.user.role === 'admin' ? 'admin' : 'member'}, {data.user.emailVerified ? 'verified' : 'unverified'}
           {data.user.banned ? `, banned${data.user.banReason ? `: ${data.user.banReason}` : ''}` : ''}
         </p>
       </div>

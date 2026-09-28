@@ -8,6 +8,7 @@ import { initials } from 'components/nav';
 import { plexMono, plexSans } from 'lib/fonts';
 import { apiFetch } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';
+import { stopImpersonating } from 'lib/impersonation';
 import styles from './admin.module.css';
 
 // The admin frame: a sidebar naming the sections, a topbar with the one
@@ -19,12 +20,14 @@ import styles from './admin.module.css';
 const LINKS = [
   ['/admin/', 'Overview'],
   ['/admin/users/', 'Users'],
+  ['/admin/test-users/', 'Test users'],
   ['/admin/requests/', 'Requests'],
   ['/admin/usage/', 'AI usage'],
   ['/admin/generations/', 'Generations'],
   ['/admin/templates/', 'Templates'],
   ['/admin/uploads/', 'Uploads'],
   ['/admin/quotas/', 'Quotas'],
+  ['/admin/emails/', 'Email preview'],
   ['/admin/mail/', 'Mail'],
 ] as const;
 
@@ -36,6 +39,7 @@ type UserRow = {
   role: string | null;
   banned: boolean | null;
   createdAt: string;
+  plan?: string;
   sites: number;
   generations: number;
   chosen: number;
@@ -65,13 +69,14 @@ const EXPORT_PAGE = 200;
  */
 async function exportUsers() {
   const { users } = await apiFetch<{ users: UserRow[] }>(`/api/admin/users?limit=${EXPORT_PAGE}`);
-  const header = ['id', 'name', 'email', 'verified', 'role', 'banned', 'joined', 'templates_chosen', 'template_allowance', 'sites', 'generations'];
+  const header = ['id', 'name', 'email', 'verified', 'plan', 'role', 'banned', 'joined', 'templates_chosen', 'template_allowance', 'sites', 'generations'];
   const lines = users.map((user) =>
     [
       user.id,
       user.name,
       user.email,
       user.emailVerified,
+      user.plan ?? 'free',
       user.role ?? 'user',
       Boolean(user.banned),
       user.createdAt,
@@ -111,13 +116,37 @@ export default function AdminPage({
   children: ReactNode;
 }) {
   const pathname = usePathname();
-  const { user, isPending } = useSessionUser();
+  const { user, isPending, impersonating } = useSessionUser();
   const [exporting, setExporting] = useState<'busy' | 'failed' | null>(null);
+  const [leaving, setLeaving] = useState(false);
 
   if (isPending) {
     return (
       <div className={styles.wrap}>
         <p className={styles.quiet}>Checking your session...</p>
+      </div>
+    );
+  }
+
+  // An admin looking through someone's account has, for now, their access:
+  // none. The way back is here as well as in the corner pill, since this is
+  // where an admin comes looking for it.
+  if (user && impersonating) {
+    return (
+      <div className={`${styles.wrap} ${plexSans.variable}`}>
+        <h1 className={styles.title}>You are viewing as {user.email}</h1>
+        <p className={styles.quiet}>The admin pages come back when you stop impersonating.</p>
+        <button
+          type="button"
+          className={styles.button}
+          disabled={leaving}
+          onClick={() => {
+            setLeaving(true);
+            stopImpersonating().catch(() => setLeaving(false));
+          }}
+        >
+          {leaving ? 'Stopping...' : 'Stop impersonating'}
+        </button>
       </div>
     );
   }

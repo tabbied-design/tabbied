@@ -171,6 +171,15 @@ export async function requestOf(db: Db, userId: string) {
   return row ?? null;
 }
 
+/**
+ * The link in a first request's email, on the configured origin. Never the
+ * host the request arrived on, which is the Worker's port under `npm run dev`
+ * and the alias on a preview. The admin's Email preview builds its sample
+ * from the same function.
+ */
+export const activationUrl = (origin: string, token: string) =>
+  `${origin}/api/account/templates/activate?token=${encodeURIComponent(token)}`;
+
 /** A random link token, and the hash that is all the database keeps of it. */
 export async function newLinkToken(): Promise<{ token: string; hash: string }> {
   const bytes = crypto.getRandomValues(new Uint8Array(32));

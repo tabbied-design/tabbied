@@ -41,6 +41,7 @@ import {
   siteJsonSchema,
   siteSlots,
 } from '../ai/siteSchema';
+import { deletePrefix } from '../lib/media';
 import { ensurePalette } from '../lib/palette';
 import { checkQuota, recordUsage } from '../lib/quota';
 import { consume } from '../lib/ratelimit';
@@ -777,19 +778,7 @@ sites.delete('/:id', async (c) => {
     return c.json({ error: 'Not yours to change.' }, 403);
   }
 
-  const prefix = `gen/site/${row.site.id}/`;
-  let cursor: string | undefined;
-
-  do {
-    const listed = await c.env.MEDIA.list({ prefix, cursor });
-
-    if (listed.objects.length > 0) {
-      await c.env.MEDIA.delete(listed.objects.map((object) => object.key));
-    }
-
-    cursor = listed.truncated ? listed.cursor : undefined;
-  } while (cursor);
-
+  await deletePrefix(c.env.MEDIA, `gen/site/${row.site.id}/`);
   await db.delete(site).where(eq(site.id, row.site.id));
 
   return c.json({ deleted: row.site.id });

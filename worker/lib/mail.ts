@@ -34,6 +34,32 @@ const DEFAULT_FROM = 'Tabbied <hello@tabbied.com>';
 
 const recipients = (to: string | string[]) => (Array.isArray(to) ? to : [to]);
 
+/** What `sendMail` will do with a message: `/api/health` and the admin's Email preview both say it. */
+export const mailProvider = (env: Env): 'resend' | 'dev-mail' | 'none' =>
+  env.RESEND_API_KEY ? 'resend' : isDev(env) ? 'dev-mail' : 'none';
+
+/**
+ * What a message says, apart from who it goes to and when. Every message the
+ * Worker sends is built by one of the functions below and handed to
+ * `sendMail`, and the admin's Email preview renders the same functions, so the
+ * page shows the bytes a person receives rather than a copy of them.
+ */
+export type Message = Pick<Mail, 'subject' | 'text' | 'html' | 'url'>;
+
+/** Sign-up's confirmation link (better-auth's `sendVerificationEmail`). */
+export const verificationEmail = (url: string): Message => ({
+  subject: 'Confirm your Tabbied account',
+  url,
+  text: `Confirm your Tabbied account:\n\n${url}`,
+});
+
+/** "Forgot password" (better-auth's `sendResetPassword`). */
+export const resetPasswordEmail = (url: string): Message => ({
+  subject: 'Reset your Tabbied password',
+  url,
+  text: `Reset your Tabbied password:\n\n${url}\n\nIf you didn't ask for this, ignore it.`,
+});
+
 export async function sendMail(env: Env, mail: Mail): Promise<void> {
   if (!env.RESEND_API_KEY) {
     if (!isDev(env)) {
@@ -120,10 +146,7 @@ const firstName = (name: string) => name.trim().split(/\s+/)[0] ?? '';
  * (the 24 September design, "5 more templates, on us"). Inline styles and a
  * table, because a mail client reads no stylesheet and little layout.
  */
-export async function sendApprovalLink(
-  env: Env,
-  approval: { email: string; name: string; url: string; granted: number; total: number; sendAt?: Date }
-): Promise<void> {
+export function approvalEmail(approval: { name: string; url: string; granted: number; total: number }): Message {
   const hi = firstName(approval.name);
   const greeting = hi ? `Hi ${hi},` : 'Hi,';
   const body = `Thanks for telling us about your work. Click below to add ${approval.granted} more website templates to your account, and you'll be able to choose up to ${approval.total}.`;
@@ -139,11 +162,9 @@ export async function sendApprovalLink(
   const faint = '#6e7278';
   const rule = '#ebebeb';
 
-  await sendMail(env, {
-    to: approval.email,
+  return {
     subject: `Your ${approval.granted} extra templates are ready`,
     url: approval.url,
-    sendAt: approval.sendAt,
     text: [
       greeting,
       '',
@@ -183,25 +204,29 @@ export async function sendApprovalLink(
 </td></tr></table>
 <p style="max-width:600px;margin:0 auto;padding:18px 4px 0;font:400 12px/1.6 ${sans};color:${faint};text-align:left">You're getting this because you requested more templates on tabbied.com.</p>
 </td></tr></table></body></html>`,
-  });
+  };
 }
 
-/** A request for review arrived: tell the team, with a reply going to the person. */
-export async function notifyTemplateRequest(
+export async function sendApprovalLink(
   env: Env,
-  request: {
-    name: string;
-    email: string;
-    note: string;
-    used: number;
-    total: number;
-    answers?: string[];
-    origin?: string;
-  }
+  approval: { email: string; name: string; url: string; granted: number; total: number; sendAt?: Date }
 ): Promise<void> {
-  await sendMail(env, {
-    to: teamRecipients(env),
-    replyTo: request.email,
+  await sendMail(env, { to: approval.email, sendAt: approval.sendAt, ...approvalEmail(approval) });
+}
+
+type TemplateRequestNotice = {
+  name: string;
+  email: string;
+  note: string;
+  used: number;
+  total: number;
+  answers?: string[];
+  origin?: string;
+};
+
+/** A request for review arrived: what the team reads. */
+export function templateRequestEmail(request: TemplateRequestNotice): Message {
+  return {
     subject: `More templates: ${request.name || request.email}`,
     text: [
       `${request.name || request.email} <${request.email}> has chosen ${request.used} of ${request.total} templates and asked for more.`,
@@ -212,20 +237,22 @@ export async function notifyTemplateRequest(
       `Grant or decline it: ${adminLink(request.origin)}`,
       'Replying to this message writes to them directly.',
     ].join('\n'),
-  });
+  };
 }
 
-/** An admin answered: tell the person, in a sentence they can act on. */
-export async function notifyRequestDecision(
-  env: Env,
-  decision: { email: string; status: 'granted' | 'declined'; granted: number; total: number; origin?: string }
-): Promise<void> {
+/** Tell the team, with a reply going to the person. */
+export async function notifyTemplateRequest(env: Env, request: TemplateRequestNotice): Promise<void> {
+  await sendMail(env, { to: teamRecipients(env), replyTo: request.email, ...templateRequestEmail(request) });
+}
+
+type RequestDecision = { status: 'granted' | 'declined'; granted: number; total: number; origin?: string };
+
+/** An admin answered: what the person reads, in a sentence they can act on. */
+export function requestDecisionEmail(decision: RequestDecision): Message {
   const account = `${decision.origin ?? 'https://tabbied.com'}/account/`;
   const granted = decision.status === 'granted';
 
-  await sendMail(env, {
-    to: decision.email,
-    replyTo: teamRecipients(env)[0],
+  return {
     subject: granted ? 'You have more Tabbied templates' : 'About your request for more Tabbied templates',
     text: granted
       ? [
@@ -240,5 +267,10 @@ export async function notifyRequestDecision(
           '',
           'Reply to this message if you want to tell us more.',
         ].join('\n'),
-  });
+  };
+}
+
+/** Tell the person, with a reply going to the team. */
+export async function notifyRequestDecision(env: Env, decision: RequestDecision & { email: string }): Promise<void> {
+  await sendMail(env, { to: decision.email, replyTo: teamRecipients(env)[0], ...requestDecisionEmail(decision) });
 }

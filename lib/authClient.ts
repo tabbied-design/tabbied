@@ -37,10 +37,17 @@ export type SessionUser = {
 export function useSessionUser(): {
   user: SessionUser | null;
   isPending: boolean;
+  /** An admin is looking through this account (lib/impersonation.ts). */
+  impersonating: boolean;
 } {
   const { data, isPending } = authClient.useSession();
-  const session = data as unknown as { user?: SessionUser } | null;
+  const session = data as unknown as {
+    user?: SessionUser;
+    // The admin plugin's, set on a session an admin started as someone else.
+    session?: { impersonatedBy?: string | null };
+  } | null;
   const user = session?.user ?? null;
+  const impersonating = Boolean(user && session?.session?.impersonatedBy);
 
   // Keep the masthead's hint (SESSION_HINT_KEY) in step with the session.
   useEffect(() => {
@@ -54,7 +61,7 @@ export function useSessionUser(): {
     }
   }, [user, isPending]);
 
-  return { user, isPending };
+  return { user, isPending, impersonating };
 }
 
 /**

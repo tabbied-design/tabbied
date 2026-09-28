@@ -8,6 +8,7 @@ import { plexMono } from 'lib/fonts';
 import { useSyncExternalStore } from 'react';
 import { SESSION_HINT_KEY, readSessionHint, signOut, useSessionUser } from 'lib/authClient';
 import useMediaQuery from 'lib/useMediaQuery';
+import ImpersonationNotice from './ImpersonationNotice';
 import styles from './SiteNav.module.css';
 
 // The site's masthead, in two tones: ink on paper (`light`) and paper on the
@@ -130,6 +131,7 @@ export default function SiteNav({
       suppressHydrationWarning
     >
       <script dangerouslySetInnerHTML={{ __html: HINT_SCRIPT }} />
+      <ImpersonationNotice />
 
       <Link href="/" className={styles.logo} aria-label="Tabbied home" prefetch={false}>
         {/* A hair larger on the dark ground, which eats a little of the

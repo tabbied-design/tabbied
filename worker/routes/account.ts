@@ -14,6 +14,7 @@ import {
   REQUEST_CHOICES,
   REQUEST_NOTE_MAX,
   activateLink,
+  activationUrl,
   claimTemplate,
   limitMessage,
   newLinkToken,
@@ -222,13 +223,6 @@ const requestSchema = z.object({
   note: z.string().trim().max(REQUEST_NOTE_MAX).optional(),
 });
 
-/**
- * The link in a first request's email, on the configured origin. Never the
- * host the request arrived on, which is the Worker's port under `npm run dev`
- * and the alias on a preview.
- */
-const activationUrl = (origin: string, token: string) =>
-  `${origin}/api/account/templates/activate?token=${encodeURIComponent(token)}`;
 
 async function personOf(db: ReturnType<typeof drizzle<typeof schema>>, userId: string) {
   const [person] = await db
