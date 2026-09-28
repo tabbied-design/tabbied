@@ -355,6 +355,71 @@ test.describe('acting on accounts', () => {
     await expect(page.getByRole('link', { name: 'sam@example.com' })).toHaveCount(0);
   });
 
+  test("managing a person's templates: remove some, reset, and add to the limit", async ({ page }) => {
+    await stubSession(page, 'admin');
+    await page.route('**/api/admin/users?*', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ testDomain: 'tabbied.test', users: [userRow({ chosen: 2 })] }) })
+    );
+    const detail = {
+      user: { ...userRow({ chosen: 2 }), banReason: null, banExpires: null },
+      sites: [{ id: 's1', slug: 'verdant', title: 'Sam Plants', updatedAt: '2026-09-02T00:00:00Z' }],
+      generations: [],
+      usageToday: [],
+      templates: {
+        used: 2,
+        total: 5,
+        left: 3,
+        chosen: [
+          { slug: 'verdant', createdAt: '2026-09-01T00:00:00Z' },
+          { slug: 'solstice', createdAt: '2026-09-03T00:00:00Z' },
+        ],
+        grants: [] as unknown[],
+      },
+    };
+    await page.route('**/api/admin/users/u2', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(detail) })
+    );
+    const removals: unknown[] = [];
+    await page.route('**/api/admin/users/u2/templates/remove', (route) => {
+      removals.push(route.request().postDataJSON());
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ removed: ['verdant'], sitesDeleted: 1, used: 1, total: 5 }) });
+    });
+    const grants: unknown[] = [];
+    await page.route('**/api/admin/users/u2/grants', (route) => {
+      grants.push(route.request().postDataJSON());
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ grant: { id: 'g1', granted: 6 }, total: 11, mailed: true }) });
+    });
+
+    await page.goto('/admin/users/');
+    await page.getByRole('button', { name: 'Actions for Sam' }).click();
+    await page.getByRole('menuitem', { name: 'Manage templates' }).click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByRole('heading', { name: 'Templates for Sam' })).toBeVisible();
+    await expect(dialog.getByText('1 customized site')).toBeVisible();
+
+    // One template: the warning names the site that goes with it, and nothing is sent until confirmed.
+    await dialog.getByRole('checkbox', { name: /verdant/ }).check();
+    await dialog.getByRole('button', { name: 'Remove selected (1)' }).click();
+    await expect(dialog.getByText(/Remove verdant from sam@example.com\? This also deletes 1 customized site/)).toBeVisible();
+    expect(removals).toEqual([]);
+    await dialog.getByRole('button', { name: 'Remove 1 template' }).click();
+    await expect(dialog.getByText('Removed 1 template and 1 customized site.')).toBeVisible();
+    expect(removals).toEqual([{ slugs: ['verdant'] }]);
+
+    // Reset asks too, and sends "all" rather than a list.
+    await dialog.getByRole('button', { name: 'Reset all' }).click();
+    await dialog.getByRole('button', { name: 'Reset all' }).click();
+    await expect.poll(() => removals).toEqual([{ slugs: ['verdant'] }, { all: true }]);
+
+    // Adding: the stepper, an admins-only note, and the email on by default.
+    await dialog.getByRole('button', { name: 'One more' }).click();
+    await dialog.getByRole('textbox', { name: 'Note for admins' }).fill('Workshop');
+    await expect(dialog.getByRole('checkbox', { name: 'Email sam@example.com' })).toBeChecked();
+    await dialog.getByRole('button', { name: 'Add 6 templates' }).click();
+    await expect(dialog.getByText('Added 6 templates. They can now choose 11. sam@example.com has been told.')).toBeVisible();
+    expect(grants).toEqual([{ granted: 6, note: 'Workshop', notify: true }]);
+  });
+
   test('impersonating: into the account, a way back on every page, and back', async ({ page }) => {
     await stubSession(page, 'admin');
     await page.route('**/api/admin/users?*', (route) =>

@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import { Dialog } from '@base-ui-components/react/dialog';
 import { Menu } from '@base-ui-components/react/menu';
-import { Ban, Ellipsis, Trash2, VenetianMask } from 'lucide-react';
+import { Ban, Ellipsis, LayoutTemplate, Trash2, VenetianMask } from 'lucide-react';
 import { ApiError, apiFetch } from 'lib/apiFetch';
 import { authClient } from 'lib/authClient';
 import { plexSans } from 'lib/fonts';
 import { startImpersonating } from 'lib/impersonation';
+import TemplatesDialog from './TemplatesDialog';
 import styles from './admin.module.css';
 
 // The last cell of a row in the users directory and the test users list: an
@@ -47,7 +48,10 @@ export default function UserActions({
   onChanged,
   onRemoved = onChanged,
   onError,
+  profileLink = true,
 }: {
+  /** The templates dialog links to the person's page; not from that page. */
+  profileLink?: boolean;
   row: AccountRow;
   /** The row is the admin looking at it. */
   self: boolean;
@@ -59,6 +63,7 @@ export default function UserActions({
   onError: (message: string | null) => void;
 }) {
   const [busy, setBusy] = useState(false);
+  const [managing, setManaging] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [removeError, setRemoveError] = useState<string | null>(null);
   const why = refusal(row, self);
@@ -122,6 +127,10 @@ export default function UserActions({
                 <Ban size={15} aria-hidden="true" />
                 {row.banned ? 'Unban' : 'Ban'}
               </Menu.Item>
+              <Menu.Item className={styles.rowMenuItem} onClick={() => setManaging(true)}>
+                <LayoutTemplate size={15} aria-hidden="true" />
+                Manage templates
+              </Menu.Item>
               <Menu.Separator className={styles.rowMenuRule} />
               <Menu.Item
                 className={`${styles.rowMenuItem} ${styles.rowMenuDanger}`}
@@ -139,6 +148,8 @@ export default function UserActions({
           </Menu.Positioner>
         </Menu.Portal>
       </Menu.Root>
+
+      <TemplatesDialog person={row} open={managing} onOpenChange={setManaging} onChanged={onChanged} profileLink={profileLink} />
 
       <Dialog.Root open={confirming} onOpenChange={(open) => (busy ? null : setConfirming(open))}>
         <Dialog.Portal>

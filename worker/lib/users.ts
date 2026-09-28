@@ -1,7 +1,7 @@
-import { inArray, sql } from 'drizzle-orm';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/d1';
 import * as schema from '../db/schema';
-import { generation, site, user } from '../db/schema';
+import { generation, site, templateChoice, user } from '../db/schema';
 import type { Env } from '../env';
 import { deletePrefix } from './media';
 
@@ -72,4 +72,30 @@ export async function removeUsers(env: Env, ids: string[]): Promise<number> {
   }
 
   return removed;
+}
+
+/**
+ * Take chosen templates back from a person, and with each one what they made
+ * on it: their sites on that template (a site is a customized copy of it),
+ * those sites' revisions (they cascade) and pictures (they do not, so they go
+ * by prefix first, as a site's own delete does). The slot is free again at
+ * once. Returns how many sites went with them.
+ */
+export async function removeChosenTemplates(env: Env, userId: string, slugs: string[]): Promise<number> {
+  const db = drizzle(env.DB, { schema });
+  let sitesDeleted = 0;
+
+  for (let start = 0; start < slugs.length; start += BATCH) {
+    const batch = slugs.slice(start, start + BATCH);
+    const mine = and(eq(site.userId, userId), inArray(site.slug, batch));
+    const sites = await db.select({ id: site.id }).from(site).where(mine);
+
+    await Promise.all(sites.map((row) => deletePrefix(env.MEDIA, `gen/site/${row.id}/`)));
+    await db.delete(site).where(mine);
+    await db.delete(templateChoice).where(and(eq(templateChoice.userId, userId), inArray(templateChoice.slug, batch)));
+
+    sitesDeleted += sites.length;
+  }
+
+  return sitesDeleted;
 }

@@ -358,6 +358,35 @@ export function requestDecisionEmail(decision: RequestDecision): Message {
   };
 }
 
+/**
+ * An admin added templates without being asked (/admin/users): what the
+ * person reads. Not the decision email, which thanks them for a request they
+ * never sent here.
+ */
+export function adminGrantEmail(grant: { granted: number; total: number; origin?: string }): Message {
+  const account = `${grant.origin ?? 'https://tabbied.com'}/account/`;
+  const templates = `${grant.granted} template${grant.granted === 1 ? '' : 's'}`;
+
+  return {
+    subject: 'You have more Tabbied templates',
+    text: [
+      `We've added ${templates} to your account, so you can now choose ${grant.total} in all.`,
+      '',
+      `Choose them from the template library: ${account}`,
+      '',
+      'Reply to this message if you have any questions.',
+    ].join('\n'),
+  };
+}
+
+/** Tell the person, with a reply going to the team. */
+export async function notifyAdminGrant(
+  env: Env,
+  grant: { email: string; granted: number; total: number; origin?: string }
+): Promise<void> {
+  await sendMail(env, { to: grant.email, replyTo: teamRecipients(env)[0], ...adminGrantEmail(grant) });
+}
+
 /** Tell the person, with a reply going to the team. */
 export async function notifyRequestDecision(env: Env, decision: RequestDecision & { email: string }): Promise<void> {
   await sendMail(env, { to: decision.email, replyTo: teamRecipients(env)[0], ...requestDecisionEmail(decision) });

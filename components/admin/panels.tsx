@@ -10,6 +10,7 @@ import { ArrowLeft, ArrowRight, ArrowUpDown, ChevronDown, ChevronUp } from 'luci
 import { ApiError, apiFetch, apiUrl } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';
 import { initials } from 'components/nav';
+import TemplatesDialog from './TemplatesDialog';
 import UserActions from './UserActions';
 import { money, useAdminData, when } from './useAdminData';
 import styles from './admin.module.css';
@@ -400,6 +401,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 export function UserDetailPanel({ id }: { id: string }) {
   const [message, setMessage] = useState<string | null>(null);
+  const [managing, setManaging] = useState(false);
   const { user: me } = useSessionUser();
   const router = useRouter();
   const { data, error, reload } = useAdminData<{
@@ -407,7 +409,13 @@ export function UserDetailPanel({ id }: { id: string }) {
     sites: { id: string; slug: string; title: string; updatedAt: string }[];
     generations: { id: string; description: string; source: string; model: string; createdAt: string }[];
     usageToday: { endpoint: string; calls: number; cost: number; cap: number | null }[];
-    templates: { used: number; total: number; left: number; chosen: { slug: string; createdAt: string }[] };
+    templates: {
+      used: number;
+      total: number;
+      left: number;
+      chosen: { slug: string; createdAt: string }[];
+      grants: { id: string; granted: number }[];
+    };
   }>(`/api/admin/users/${id}`);
 
   if (!data) return <Load error={error} />;
@@ -436,6 +444,7 @@ export function UserDetailPanel({ id }: { id: string }) {
             onChanged={reload}
             onRemoved={() => router.push('/admin/users/')}
             onError={setMessage}
+            profileLink={false}
           />
         </div>
         <p className={styles.quiet} style={{ marginTop: 16, marginBottom: 0 }}>
@@ -445,10 +454,18 @@ export function UserDetailPanel({ id }: { id: string }) {
         </p>
       </div>
 
-      <Section title="Templates">
+      <div className={styles.card}>
+        <div className={styles.cardHead}>
+          <h2 className={styles.h3}>Templates</h2>
+          <button type="button" className={styles.small} onClick={() => setManaging(true)}>
+            Manage
+          </button>
+        </div>
         <p className={styles.quiet} style={{ margin: '0 0 14px' }}>
           {data.templates.used} of {data.templates.total} chosen, {data.templates.left} left.
-          {data.templates.total > 5 ? ' Includes a granted request.' : ''}
+          {data.templates.grants.length
+            ? ` ${data.templates.grants.reduce((sum, row) => sum + row.granted, 0)} of them added by an admin.`
+            : ''}
         </p>
         {data.templates.chosen.length > 0 ? (
           <ul className={styles.plainList}>
@@ -462,7 +479,14 @@ export function UserDetailPanel({ id }: { id: string }) {
             ))}
           </ul>
         ) : null}
-      </Section>
+      </div>
+      <TemplatesDialog
+        person={data.user}
+        open={managing}
+        onOpenChange={setManaging}
+        onChanged={reload}
+        profileLink={false}
+      />
 
       <Section title="Today">
         {data.usageToday.length === 0 ? (

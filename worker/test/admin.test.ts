@@ -205,7 +205,7 @@ describe('acting on accounts', () => {
     };
     expect(preview.provider).toBe('dev-mail');
     expect(preview.to).toBe('keeper@example.com');
-    expect(preview.emails.map((email) => email.key)).toEqual(['verify', 'reset', 'approval', 'request', 'granted', 'declined']);
+    expect(preview.emails.map((email) => email.key)).toEqual(['verify', 'reset', 'approval', 'request', 'granted', 'added', 'declined']);
     const approval = preview.emails.find((email) => email.key === 'approval')!;
     expect(approval.subject).toBe('Your 5 extra templates are ready');
     expect(approval.html).toContain('PREVIEW-ONLY');
@@ -225,6 +225,73 @@ describe('acting on accounts', () => {
     expect(await env.DB.prepare('SELECT email FROM dev_mail WHERE email = ?').bind('victim@example.com').first()).toBeNull();
 
     expect((await call('emails/test', { method: 'POST', body: JSON.stringify({ key: 'nope' }) })).status).toBe(400);
+  });
+
+  it("takes chosen templates back, with the sites made on them, and adds to a person's limit", async () => {
+    const cookie = await signIn('chooser@example.com');
+    const { id } = (await env.DB.prepare('SELECT id FROM user WHERE email = ?').bind('chooser@example.com').first<{ id: string }>())!;
+    for (const slug of ['verdant', 'solstice', 'cobalt-works']) {
+      await env.DB.prepare('INSERT INTO template_choice (id, user_id, slug) VALUES (?, ?, ?)').bind(`choice-${slug}`, id, slug).run();
+    }
+    // A customized site on verdant, with a revision and a picture.
+    await env.DB.prepare('INSERT INTO site (id, user_id, slug, title, spec_version, template_hash) VALUES (?, ?, ?, ?, ?, ?)')
+      .bind('site-verdant', id, 'verdant', 'Pat Plants', 1, 'hash')
+      .run();
+    await env.DB.prepare('INSERT INTO revision (id, site_id, n, edits, source, model) VALUES (?, ?, ?, ?, ?, ?)')
+      .bind('rev-verdant', 'site-verdant', 1, '{}', 'manual', 'none')
+      .run();
+    const picture = 'gen/site/site-verdant/1/hero.webp';
+    await env.MEDIA.put(picture, new Uint8Array([1]));
+
+    const remove = (body: unknown) => call(`users/${id}/templates/remove`, { method: 'POST', body: JSON.stringify(body) });
+
+    // One template: its choice, its site, the site's revision and picture go; the rest stay.
+    const one = (await remove({ slugs: ['verdant', 'never-chosen'] }).then((r) => r.json())) as {
+      removed: string[];
+      sitesDeleted: number;
+      used: number;
+    };
+    expect(one).toMatchObject({ removed: ['verdant'], sitesDeleted: 1, used: 2 });
+    expect(await env.DB.prepare('SELECT id FROM site WHERE id = ?').bind('site-verdant').first()).toBeNull();
+    expect(await env.DB.prepare('SELECT id FROM revision WHERE id = ?').bind('rev-verdant').first()).toBeNull();
+    expect(await env.MEDIA.get(picture)).toBeNull();
+
+    // Reset: every other one.
+    const all = (await remove({ all: true }).then((r) => r.json())) as { removed: string[]; used: number };
+    expect(all.removed.sort()).toEqual(['cobalt-works', 'solstice']);
+    expect(all.used).toBe(0);
+    expect((await remove({})).status).toBe(400);
+
+    // Adding to the limit: counted everywhere the allowance is read, mailed when asked.
+    expect((await call(`users/${id}/grants`, { method: 'POST', body: JSON.stringify({ granted: 21 }) })).status).toBe(400);
+    const grant = (await call(`users/${id}/grants`, {
+      method: 'POST',
+      body: JSON.stringify({ granted: 3, note: 'Workshop attendee', notify: true }),
+    }).then((r) => r.json())) as { grant: { id: string }; total: number; mailed: boolean };
+    expect(grant.total).toBe(8);
+    expect(grant.mailed).toBe(true);
+    const mail = await env.DB.prepare('SELECT subject, body FROM dev_mail WHERE email = ?').bind('chooser@example.com').first<{ subject: string; body: string }>();
+    expect(mail?.subject).toBe('You have more Tabbied templates');
+    expect(mail?.body).toContain('choose 8 in all');
+
+    // The person's own page reads the same allowance.
+    const theirs = (await SELF.fetch(`${ORIGIN}/api/account/templates`, { headers: { cookie } }).then((r) => r.json())) as { total: number };
+    expect(theirs.total).toBe(8);
+    const detail = (await call(`users/${id}`).then((r) => r.json())) as {
+      templates: { total: number; grants: { granted: number; note: string; grantedBy: string | null }[] };
+    };
+    expect(detail.templates.grants).toEqual([expect.objectContaining({ granted: 3, note: 'Workshop attendee', grantedBy: 'keeper@example.com' })]);
+
+    // A quiet grant sends nothing; taking one back lowers the limit again.
+    const quiet = (await call(`users/${id}/grants`, { method: 'POST', body: JSON.stringify({ granted: 2, notify: false }) }).then((r) => r.json())) as {
+      grant: { id: string };
+      total: number;
+      mailed: boolean | null;
+    };
+    expect(quiet).toMatchObject({ total: 10, mailed: null });
+    const undone = (await call(`users/${id}/grants/${grant.grant.id}`, { method: 'DELETE' }).then((r) => r.json())) as { total: number };
+    expect(undone.total).toBe(7);
+    expect((await call(`users/${id}/grants/${grant.grant.id}`, { method: 'DELETE' })).status).toBe(404);
   });
 
   it('lets an admin see the site as a member, and come back', async () => {

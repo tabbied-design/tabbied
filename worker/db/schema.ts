@@ -354,6 +354,29 @@ export const templateRequest = sqliteTable(
   ]
 );
 
+/**
+ * Templates an admin added to a person's allowance without being asked
+ * (/admin/users). Counted by `allowanceSql` beside granted requests, and kept
+ * out of `templateRequest` because a grant is not something the person
+ * asked for: the request flow reads the latest request row as theirs.
+ */
+export const templateGrant = sqliteTable(
+  'template_grant',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    granted: integer('granted').notNull(),
+    /** Why, for the admins; never shown to the person. */
+    note: text('note').notNull().default(''),
+    /** The admin who added it. Not a foreign key, so the history outlives them. */
+    grantedBy: text('granted_by'),
+    createdAt: createdAt(),
+  },
+  (table) => [index('template_grant_user_idx').on(table.userId)]
+);
+
 /** A file in R2 under up/<userId>/<uuid>. The bytes never touch D1. */
 export const upload = sqliteTable(
   'upload',

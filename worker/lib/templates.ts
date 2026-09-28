@@ -27,8 +27,9 @@ export const FIRST_REQUEST_GRANT = 5;
 const COUNTED = sql`('activated', 'granted')`;
 
 /**
- * The SQL for a person's allowance: the free five plus every grant that
- * took. `userId` is a value, or a column expression for a list that wants
+ * The SQL for a person's allowance: the free five, plus every request grant
+ * that took, plus every template an admin added without a request
+ * (`template_grant`). `userId` is a value, or a column expression for a list that wants
  * the subquery correlated to each of its rows (qualified by hand, as the
  * drizzle note in CLAUDE.md says). The inner table is aliased so a query
  * over template_request itself still correlates to its outer row.
@@ -40,6 +41,9 @@ export const allowanceSql = (userId: string | SQL) => sql`(
   ${FREE_TEMPLATES} + coalesce((
     select sum(r.granted) from template_request r
     where r.user_id = ${userId} and r.status in ${COUNTED}
+  ), 0) + coalesce((
+    select sum(g.granted) from template_grant g
+    where g.user_id = ${userId}
   ), 0)
 )`;
 

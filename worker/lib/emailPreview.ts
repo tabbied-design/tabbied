@@ -1,4 +1,5 @@
 import {
+  adminGrantEmail,
   approvalEmail,
   requestDecisionEmail,
   resetPasswordEmail,
@@ -93,6 +94,13 @@ export const EMAIL_PREVIEWS: EmailPreview[] = [
     to: 'person',
     when: 'An admin grants a reviewed request',
     build: (origin) => requestDecisionEmail({ status: 'granted', granted: 5, total: 15, origin }),
+  },
+  {
+    key: 'added',
+    name: 'Templates added',
+    to: 'person',
+    when: 'An admin adds templates from the users page, with "Email them" ticked',
+    build: (origin) => adminGrantEmail({ granted: 5, total: 10, origin }),
   },
   {
     key: 'declined',

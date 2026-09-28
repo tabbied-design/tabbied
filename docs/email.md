@@ -9,6 +9,7 @@ The Worker sends four kinds of message, all through `worker/lib/mail.ts`:
 | Your 5 extra templates are ready | the person | five minutes after a first "Request more"; HTML, with a single-use link that adds 5 |
 | More templates: <name> | the team | a later request, for review |
 | You have more Tabbied templates / About your request | the person | an admin grants or declines a reviewed request |
+| You have more Tabbied templates | the person | an admin adds templates from `/admin/users` with "Email them" ticked |
 
 The three messages to a person with a link in them are designed, and share
 one layout, `designedHtml` in `mail.ts`: the mark, a mono eyebrow, a heading,

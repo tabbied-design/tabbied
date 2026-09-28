@@ -1175,8 +1175,9 @@ another). Five things worth not re-litigating:
   `/admin/requests/`, where granting adds 1 to 20, declining adds none, Undo
   puts it back, and a decision mails the person. One request may be open at
   a time, checked in the insert itself (`openRequest`). The allowance is
-  five plus every `granted` whose status is `activated` or `granted`, and
-  that rule is one `allowanceSql`, read by the person's page, the claim and
+  five plus every `granted` whose status is `activated` or `granted`, plus
+  every admin grant (`template_grant`, below), and that rule is one
+  `allowanceSql`, read by the person's page, the claim and
   both admin lists alike; the users directory once carried a copy of its
   own that read a single grant row and left `activated` out, so an account
   that had followed the link showed 10 / 5 there. Emailed links are built
@@ -1571,6 +1572,21 @@ things worth not re-litigating:
   `node:crypto` without `nodejs_compat`), so a batch in one request would
   spend that CPU several times over; the page loops and reports progress.
   The password is shown once on the page, since only its hash is kept.
+- **An admin changes a person's templates from the same menu.** "Manage
+  templates" (`TemplatesDialog`) takes chosen templates back (some, or all:
+  Reset) and adds 1 to 20 to the limit without a request. Taking one back
+  deletes what the person made on it too, their sites on that template and
+  those sites' pictures (`removeChosenTemplates`), and the dialog says how
+  many before it happens. An addition is a `template_grant` row, not a
+  `template_request`: the request flow reads the latest request row as the
+  person's own, so a grant stored there would pose as their request.
+  `allowanceSql` counts both. The "Email them" box is on by default and
+  sends `adminGrantEmail`, not the decision email, which thanks the person
+  for a request they never sent. A grant can be taken back; what the person
+  already chose stays chosen, as for an early account over the limit.
+  Migration 0009 made the table, and `allowanceSql` reads it on every claim,
+  so **0009 must be applied to production before the code that reads it
+  deploys**: without it every download and the account page fail.
 - **The email preview renders what is sent, not a copy of it.**
   `worker/lib/mail.ts` builds each message (`verificationEmail`,
   `approvalEmail`, ...) apart from sending it, and both the senders and

@@ -3,6 +3,20 @@
 import { useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import {
+  FlaskConical,
+  Gauge,
+  Images,
+  Inbox,
+  LayoutDashboard,
+  LayoutTemplate,
+  Mailbox,
+  MailOpen,
+  Sparkles,
+  Users,
+  WandSparkles,
+  type LucideIcon,
+} from 'lucide-react';
 import { Logo } from 'components/logo';
 import { initials } from 'components/nav';
 import { plexMono, plexSans } from 'lib/fonts';
@@ -17,19 +31,19 @@ import styles from './admin.module.css';
 // 404 to anyone else, so a person who defeats this sees an empty page and
 // nothing more.
 
-const LINKS = [
-  ['/admin/', 'Overview'],
-  ['/admin/users/', 'Users'],
-  ['/admin/test-users/', 'Test users'],
-  ['/admin/requests/', 'Requests'],
-  ['/admin/usage/', 'AI usage'],
-  ['/admin/generations/', 'Generations'],
-  ['/admin/templates/', 'Templates'],
-  ['/admin/uploads/', 'Uploads'],
-  ['/admin/quotas/', 'Quotas'],
-  ['/admin/emails/', 'Email preview'],
-  ['/admin/mail/', 'Mail'],
-] as const;
+const LINKS: [href: string, label: string, Icon: LucideIcon][] = [
+  ['/admin/', 'Overview', LayoutDashboard],
+  ['/admin/users/', 'Users', Users],
+  ['/admin/test-users/', 'Test users', FlaskConical],
+  ['/admin/requests/', 'Requests', Inbox],
+  ['/admin/usage/', 'AI usage', Sparkles],
+  ['/admin/generations/', 'Generations', WandSparkles],
+  ['/admin/templates/', 'Templates', LayoutTemplate],
+  ['/admin/uploads/', 'Uploads', Images],
+  ['/admin/quotas/', 'Quotas', Gauge],
+  ['/admin/emails/', 'Email preview', MailOpen],
+  ['/admin/mail/', 'Mail', Mailbox],
+];
 
 type UserRow = {
   id: string;
@@ -170,7 +184,7 @@ export default function AdminPage({
         </Link>
 
         <nav className={styles.nav} aria-label="Admin">
-          {LINKS.map(([href, label]) => {
+          {LINKS.map(([href, label, Icon]) => {
             const current = pathname === href || pathname === href.replace(/\/$/, '');
             return (
               <Link
@@ -180,6 +194,7 @@ export default function AdminPage({
                 className={`${styles.navLink} ${current ? styles.navOn : ''}`}
                 aria-current={current ? 'page' : undefined}
               >
+                <Icon className={styles.navIcon} size={17} strokeWidth={1.75} aria-hidden="true" />
                 {label}
               </Link>
             );

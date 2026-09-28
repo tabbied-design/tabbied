@@ -3,19 +3,19 @@ import { and, desc, eq, gte, like, ne, or, sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/d1';
 import { z } from 'zod';
 import * as schema from '../db/schema';
-import { aiUsage, devMail, generation, revision, site, templateChoice, templateRequest, upload, user } from '../db/schema';
+import { aiUsage, devMail, generation, revision, site, templateChoice, templateGrant, templateRequest, upload, user } from '../db/schema';
 import type { Env } from '../env';
 import { APIError } from 'better-auth/api';
 import { buildAuth } from '../auth';
 import { isDev } from '../env';
 import { EMAIL_PREVIEWS } from '../lib/emailPreview';
-import { mailProvider, notifyRequestDecision, sendMail } from '../lib/mail';
+import { mailProvider, notifyAdminGrant, notifyRequestDecision, sendMail } from '../lib/mail';
 import { FREE_TEMPLATES, MAX_GRANT, allowanceSql, templateStatus } from '../lib/templates';
 import { DAILY_CAPS, startOfUtcDay } from '../lib/quota';
 import { consume } from '../lib/ratelimit';
 import { authConfigured } from '../lib/session';
 import { loadEditableCatalog } from '../lib/templateAssets';
-import { PLAN, TEST_EMAIL_DOMAIN, isTestEmail, removeUsers, testEmailSql } from '../lib/users';
+import { PLAN, TEST_EMAIL_DOMAIN, isTestEmail, removeChosenTemplates, removeUsers, testEmailSql } from '../lib/users';
 
 // The admin tier: reads over everything, for people whose user row says
 // `role = 'admin'`. Bans and impersonation are better-auth's own endpoints
@@ -187,7 +187,7 @@ admin.get('/users/:id', async (c) => {
     return c.json({ error: 'Not found' }, 404);
   }
 
-  const [sites, generations, usage, templates] = await Promise.all([
+  const [sites, generations, usage, templates, grants] = await Promise.all([
     db
       .select({ id: site.id, slug: site.slug, title: site.title, updatedAt: site.updatedAt })
       .from(site)
@@ -206,6 +206,18 @@ admin.get('/users/:id', async (c) => {
       .where(and(eq(aiUsage.userId, id), gte(aiUsage.createdAt, startOfUtcDay())))
       .groupBy(aiUsage.endpoint),
     templateStatus(db, id),
+    db
+      .select({
+        id: templateGrant.id,
+        granted: templateGrant.granted,
+        note: templateGrant.note,
+        createdAt: templateGrant.createdAt,
+        // Qualified by hand, as in /users: the admin's address, while they last.
+        grantedBy: sql<string | null>`(select u.email from ${user} u where u.id = ${templateGrant}.granted_by)`,
+      })
+      .from(templateGrant)
+      .where(eq(templateGrant.userId, id))
+      .orderBy(desc(templateGrant.createdAt)),
   ]);
 
   return c.json({
@@ -230,8 +242,120 @@ admin.get('/users/:id', async (c) => {
       total: templates.total,
       left: templates.left,
       chosen: templates.chosen,
+      grants,
     },
   });
+});
+
+// ---- A person's templates -----------------------------------------------------
+// What an admin can do to someone's allowance without a request: take chosen
+// templates back (one, several, or all of them) and add to the limit. Taking a
+// template back also deletes what the person made on it, their sites and those
+// sites' pictures (lib/users.ts). Adding writes a template_grant row, which
+// allowanceSql counts beside granted requests, and can mail the person.
+
+const removeTemplatesSchema = z.union([
+  z.object({ all: z.literal(true) }),
+  z.object({ slugs: z.array(z.string().min(1).max(120)).min(1).max(500) }),
+]);
+
+admin.post('/users/:id/templates/remove', async (c) => {
+  const parsed = removeTemplatesSchema.safeParse(await c.req.json().catch(() => null));
+
+  if (!parsed.success) {
+    return c.json({ error: 'Name the templates to remove, or all of them.' }, 400);
+  }
+
+  const db = drizzle(c.env.DB, { schema });
+  const id = c.req.param('id');
+  const [person] = await db.select({ id: user.id }).from(user).where(eq(user.id, id)).limit(1);
+
+  if (!person) {
+    return c.json({ error: 'Not found' }, 404);
+  }
+
+  // Only what is actually chosen: a slug the person does not have is not an error, just nothing.
+  const wanted = 'all' in parsed.data ? null : new Set(parsed.data.slugs);
+  const chosen = await db.select({ slug: templateChoice.slug }).from(templateChoice).where(eq(templateChoice.userId, id));
+  const slugs = chosen.map((row) => row.slug).filter((slug) => !wanted || wanted.has(slug));
+  const sitesDeleted = await removeChosenTemplates(c.env, id, slugs);
+  const status = await templateStatus(db, id);
+
+  return c.json({ removed: slugs, sitesDeleted, used: status.used, total: status.total });
+});
+
+const grantSchema = z.object({
+  granted: z.number().int().min(1).max(MAX_GRANT),
+  note: z.string().trim().max(500).default(''),
+  notify: z.boolean().default(true),
+});
+
+admin.post('/users/:id/grants', async (c) => {
+  const parsed = grantSchema.safeParse(await c.req.json().catch(() => null));
+
+  if (!parsed.success) {
+    return c.json({ error: `Add 1 to ${MAX_GRANT} templates.` }, 400);
+  }
+
+  const who = c.get('admin');
+  const db = drizzle(c.env.DB, { schema });
+  const id = c.req.param('id');
+  const [person] = await db.select({ email: user.email }).from(user).where(eq(user.id, id)).limit(1);
+
+  if (!person) {
+    return c.json({ error: 'Not found' }, 404);
+  }
+
+  const { granted, note, notify } = parsed.data;
+
+  // Each notified grant is a real message, so it sits behind a burst gate like
+  // every route here that sends mail. A quiet grant sends nothing.
+  if (notify) {
+    const burst = await consume(db, { key: `grantmail:${who.id}`, max: 20, windowSeconds: 10 * 60 });
+
+    if (!burst.ok) {
+      return c.json({ error: 'That is twenty emails in ten minutes. Untick "Email them", or try again shortly.' }, 429, {
+        'retry-after': String(burst.retryAfter),
+      });
+    }
+  }
+
+  const [row] = await db
+    .insert(templateGrant)
+    .values({ id: crypto.randomUUID(), userId: id, granted, note, grantedBy: who.id })
+    .returning();
+  const status = await templateStatus(db, id);
+  let mailed: boolean | null = null;
+
+  if (notify) {
+    // Written first, mailed second: a failed send is reported, never unwinds the grant.
+    mailed = await notifyAdminGrant(c.env, { email: person.email, granted, total: status.total, origin: c.env.PUBLIC_ORIGIN })
+      .then(() => true)
+      .catch((error) => {
+        console.error('[mail] admin grant notice failed', error);
+        return false;
+      });
+  }
+
+  return c.json({ grant: { id: row.id, granted: row.granted }, total: status.total, mailed });
+});
+
+/** Take a grant back: a mistyped number, say. Nothing chosen is taken away; the person just has fewer left. */
+admin.delete('/users/:id/grants/:grantId', async (c) => {
+  const db = drizzle(c.env.DB, { schema });
+  const id = c.req.param('id');
+  const [row] = await db
+    .delete(templateGrant)
+    .where(and(eq(templateGrant.id, c.req.param('grantId')), eq(templateGrant.userId, id)))
+    .returning({ id: templateGrant.id });
+
+  if (!row) {
+    return c.json({ error: 'Not found' }, 404);
+  }
+
+  const status = await templateStatus(db, id);
+
+  return c.json({ removed: row.id, total: status.total });
 });
 
 /**

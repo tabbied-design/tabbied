@@ -97,13 +97,10 @@
   background-color: oklch(0 0 0 / 0.04);
 }
 
-.navLink::before {
+/* Each section's lucide icon, grey until it is the page you are on. */
+.navIcon {
   flex: none;
-  width: 8px;
-  height: 8px;
-  background-color: oklch(0 0 0 / 0.18);
-  border-radius: 50%;
-  content: '';
+  color: oklch(0.55 0.01 260);
 }
 
 .navOn {
@@ -115,8 +112,8 @@
   background-color: oklch(0.96 0.03 168);
 }
 
-.navOn::before {
-  background-color: var(--a-mint);
+.navOn .navIcon {
+  color: var(--a-teal);
 }
 
 .sideFoot {
@@ -1558,6 +1555,118 @@
 .dialogDanger:disabled {
   cursor: default;
   opacity: 0.6;
+}
+
+/* -- The templates dialog ---------------------------------------------------- */
+
+.dialogWide {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+.dialogSection {
+  margin: 0 0 10px;
+  font: 600 14px var(--a-sans);
+}
+
+.dialogRule {
+  height: 1px;
+  margin: 22px 0;
+  background-color: oklch(0 0 0 / 0.08);
+}
+
+.dialogLink {
+  margin-right: auto;
+  align-self: center;
+  font: 400 14px var(--a-sans);
+  color: var(--a-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.tplList {
+  display: grid;
+  gap: 2px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.tplRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.tplRow:hover {
+  background-color: oklch(0 0 0 / 0.035);
+}
+
+.tplRow input,
+.checkRow input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--a-ink);
+}
+
+.tplName {
+  font: 500 14px var(--a-mono);
+}
+
+.tplMeta {
+  font: 400 13px var(--a-sans);
+  color: var(--a-dim);
+}
+
+/* What a removal takes with it, said before it happens. */
+.confirmBox {
+  margin: 4px 0 0;
+  padding: 14px 16px;
+  font: 400 14px / 1.55 var(--a-sans);
+  color: oklch(0.38 0.12 25);
+  background-color: oklch(0.52 0.2 25 / 0.07);
+  border-radius: 10px;
+}
+
+.confirmBox p {
+  margin: 0 0 12px;
+}
+
+.grantRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.grantNote {
+  flex: 1;
+  min-width: 180px;
+}
+
+.checkRow {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  margin: 0 0 16px;
+  font: 400 14px var(--a-sans);
+  cursor: pointer;
+}
+
+.grantItem {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 6px 0;
+  font: 400 14px var(--a-sans);
 }
 
 /* -- Narrow screens -------------------------------------------------------- */
