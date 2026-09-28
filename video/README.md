@@ -1,8 +1,15 @@
-# The Tabbied showcase video
+# The Tabbied showcase videos
 
-A ~22 second, 1080p30 product video, authored in [Remotion](https://www.remotion.dev)
-(React). The patterns in it are live Tabbied designs rendered by the package,
-not recordings; the product scenes are screenshots of the real site.
+Two 1080p30 product videos, authored in [Remotion](https://www.remotion.dev)
+(React), telling the same story two ways:
+
+- **Showcase** (`src/Showcase.tsx`, ~22s): the product itself, with the pattern
+  library, the editor, the template gallery and a site in a browser window.
+- **Motion** (`src/motion/`, ~21s): motion graphics, told in type and shapes
+  (see "The motion cut" below).
+
+The patterns in both are live Tabbied designs rendered by the package, not
+recordings; the product scenes are screenshots of the real site.
 
 ```bash
 # once, at the repo root: the package the video renders patterns with
@@ -10,14 +17,15 @@ npm ci && npm run build --workspace tabbied
 
 # here
 npm ci
-npm run studio                 # scrub the timeline in a browser
+npm run studio                 # scrub either timeline in a browser
 npm run render                 # out/tabbied-showcase.mp4
+npm run render:motion          # out/tabbied-motion.mp4
 ```
 
 Rendering needs a Chromium. Remotion downloads its own headless shell unless
 `TABBIED_CHROMIUM` points at one already installed (the variable the
-`tabbied` CLI reads too). A render of the whole video takes about a minute on
-four cores; `--concurrency=N` sets how many browser tabs share it.
+`tabbied` CLI reads too). Each video takes about a minute to render on four
+cores; `--concurrency=N` sets how many browser tabs share it.
 
 ## Why it is its own package
 
@@ -61,14 +69,40 @@ so nothing it does on its own clock can reach a frame. The trap that made the
 mute necessary: Remotion moves the composition into its canvas after
 rendering it, every `<css-doodle>` reconnects, and css-doodle reloads on a
 timer that, under load, fires after the field is ready; the rebuilt cells
-then animated in. `PatternField.tsx` has the details. With it, the whole
-video renders byte-identical with `--concurrency=1` and `--concurrency=4`.
+then animated in. `PatternField.tsx` has the details. With it, both videos
+render byte-identical with `--concurrency=1` and `--concurrency=4`.
 
 Not every design's transition covers its whole change: some animate only a
 size or an angle and cut the colors, and some paint with gradients, which CSS
 cannot interpolate. That is how they behave on the site too, but in a video
 it reads as a flicker, so the scenes use designs that morph through, and the
 recolor scene dissolves between two fields instead of relying on the design.
+
+## The motion cut
+
+Seven beats, each in its own file under `src/motion/`, laid end to end in
+`Motion.tsx`: a field opening cell by cell under "Generative patterns.", the
+count of designs cut out of the ground so a field shows through the digits,
+three recolors, four densities side by side, the template screenshots on a
+tilted board, the install line, and the lockup. Each beat hands over with a
+cut of its own rather than a cross-fade, from the pieces in `kit.tsx`:
+
+- **A grid wipe**, square cells growing corner to corner until the frame is
+  ground, or shrinking to reveal it: the pattern engine's own grid as the cut.
+- **A zoom through the 8** of "338" until the field fills the frame. The
+  palette beat opens on the same design, seed and palette, so the hand-over
+  is invisible.
+- **Bar wipes** in the incoming palette's colors; the field underneath is
+  swapped while they cover it.
+- **A circle** opening onto the lockup. It is a radial-gradient mask, not a
+  `clip-path`: a clip-path circle's anti-aliased edge came out a few pixels
+  different from one browser tab to the next, which is enough to break a
+  byte-identical render.
+
+Type sits on solid blocks of the ground color (`Tag`), never on a gradient
+over the pattern. Which design and palette each beat uses is `MOTION` in
+`scripts/prepare.mjs`, all calm library palettes, checked against the
+catalog and the library on every render.
 
 ## Licensing
 

@@ -104,7 +104,7 @@ export function Pointer({ x, y, press }: { x: number; y: number; press: number }
 
 // The docs page's code panel (components/react-docs-page), colored by the same
 // tokenizer, showing the first `chars` characters with a caret after them.
-const TOKEN_COLOR: Record<TokenKind, string> = {
+export const TOKEN_COLOR: Record<TokenKind, string> = {
   plain: '#dadde4',
   comment: '#80838c',
   string: C.mint,

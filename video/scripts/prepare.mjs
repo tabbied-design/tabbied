@@ -4,7 +4,8 @@
 //   src/generated/data.json      the counts the site quotes, the designs on the
 //                                pattern carousel and their palettes, the
 //                                palettes the recolor scene cycles and the
-//                                outro's, the templates on the rails
+//                                outro's, the motion cut's designs and
+//                                palettes, the templates on the rails
 //   public/generated/templates/  those templates' committed screenshots
 //
 // Both are gitignored and rewritten on every `npm run render` / `studio`.
@@ -43,6 +44,27 @@ const recolor = RECOLOR.map(libraryPalette);
 
 // The field behind the closing lockup: quiet, so the mark is what reads.
 const outro = libraryPalette('lib-graphite');
+
+// The motion-graphics cut (src/motion): one design per beat, each in a calm
+// library palette. `palettes` is the order the bar wipes recolor through, and
+// its first entry is what the "338" beat shows, so the zoom-through lands on
+// the same picture the palette beat starts from.
+const MOTION = {
+  intro: { design: 'radius', palette: 'lib-denim' },
+  count: { design: 'ogee', palettes: ['lib-harvest', 'lib-seaglass', 'lib-sable', 'lib-dune'] },
+  density: { design: 'bauhaus', palette: 'lib-terracotta' },
+  outro: { design: 'veil', palette: 'lib-graphite' },
+};
+const designSlugs = new Set(designs.map((design) => design.slug));
+for (const { design } of Object.values(MOTION)) {
+  if (!designSlugs.has(design)) throw new Error(`prepare: no design "${design}" in the catalog`);
+}
+const motion = {
+  intro: { design: MOTION.intro.design, palette: libraryPalette(MOTION.intro.palette) },
+  count: { design: MOTION.count.design, palettes: MOTION.count.palettes.map(libraryPalette) },
+  density: { design: MOTION.density.design, palette: libraryPalette(MOTION.density.palette) },
+  outro: { design: MOTION.outro.design, palette: libraryPalette(MOTION.outro.palette) },
+};
 
 // The pattern carousel: designs in the gallery's own order, each in a library
 // palette, the way the gallery's default "Random per pattern" draws its cards.
@@ -113,6 +135,7 @@ const data = {
   carousel,
   recolor,
   outro,
+  motion,
   templates,
 };
 mkdirSync(path.join(videoRoot, 'src/generated'), { recursive: true });

@@ -1,8 +1,6 @@
-import { useEffect, useState } from 'react';
-import { continueRender, delayRender } from 'remotion';
 import { TransitionSeries, linearTiming } from '@remotion/transitions';
 import { fade } from '@remotion/transitions/fade';
-import { FONT_FACES } from './brand';
+import { useFontGate } from './brand';
 import { Patterns } from './scenes/Patterns';
 import { Recolor } from './scenes/Recolor';
 import { Editor } from './scenes/Editor';
@@ -28,12 +26,7 @@ export const SHOWCASE_FRAMES =
   SCENES.reduce((sum, scene) => sum + scene.frames, 0) - FADE * (SCENES.length - 1);
 
 export function Showcase() {
-  // Hold the first frame until every face has loaded, so no frame is drawn
-  // in a fallback font.
-  const [handle] = useState(() => delayRender('fonts'));
-  useEffect(() => {
-    Promise.all(FONT_FACES.map((face) => document.fonts.load(face))).then(() => continueRender(handle));
-  }, [handle]);
+  useFontGate();
 
   return (
     <TransitionSeries>

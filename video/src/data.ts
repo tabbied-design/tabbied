@@ -8,5 +8,11 @@ export const data = generated as {
   carousel: { slug: string; palette: string[] }[];
   recolor: LibraryPalette[];
   outro: LibraryPalette;
+  motion: {
+    intro: { design: string; palette: LibraryPalette };
+    count: { design: string; palettes: LibraryPalette[] };
+    density: { design: string; palette: LibraryPalette };
+    outro: { design: string; palette: LibraryPalette };
+  };
   templates: string[];
 };

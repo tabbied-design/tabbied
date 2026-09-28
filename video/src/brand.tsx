@@ -1,8 +1,9 @@
-import type { CSSProperties, ReactNode } from 'react';
-import { interpolate, useCurrentFrame, Easing } from 'remotion';
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
+import { continueRender, delayRender, interpolate, useCurrentFrame, Easing } from 'remotion';
 import '@fontsource/ibm-plex-sans/400.css';
 import '@fontsource/ibm-plex-sans/500.css';
 import '@fontsource/ibm-plex-sans/600.css';
+import '@fontsource/ibm-plex-sans/700.css';
 import '@fontsource/ibm-plex-mono/400.css';
 import '@fontsource/ibm-plex-mono/500.css';
 import '@fontsource/cormorant-garamond/300.css';
@@ -25,11 +26,12 @@ export const F = {
   word: '"Cormorant Garamond", Georgia, serif',
 };
 
-// Every face the video draws, for the font gate in Showcase.
+// Every face the video draws, for useFontGate.
 export const FONT_FACES = [
   `400 16px "IBM Plex Sans"`,
   `500 16px "IBM Plex Sans"`,
   `600 16px "IBM Plex Sans"`,
+  `700 16px "IBM Plex Sans"`,
   `400 16px "IBM Plex Mono"`,
   `500 16px "IBM Plex Mono"`,
   `300 16px "Cormorant Garamond"`,
@@ -52,16 +54,26 @@ export function useRise(start: number, length = 12) {
   });
 }
 
-// The Tabbied mark (components/logo/LogoMark.tsx).
+// Hold the first frame until every face has loaded, so no frame is drawn in a
+// fallback font. Each composition calls it once, at its root.
+export function useFontGate() {
+  const [handle] = useState(() => delayRender('fonts'));
+  useEffect(() => {
+    Promise.all(FONT_FACES.map((face) => document.fonts.load(face))).then(() => continueRender(handle));
+  }, [handle]);
+}
+
+// The Tabbied mark (components/logo/LogoMark.tsx), with an optional draw-on:
+// `draw` runs 0 -> 1 as the two strokes are traced.
 const LEFT = 'M191 261 H277 C277 172.6 205.4 101 116 101 V311 C116 401.1 188.7 474 277 474 V312 H221';
 const RIGHT = 'M414 261 H328 C328 172.6 399.6 101 489 101 V311 C489 401.1 416.3 474 328 474 V312 H391';
 
-export function LogoMark({ size, style }: { size: number; style?: CSSProperties }) {
+export function LogoMark({ size, draw = 1, style }: { size: number; draw?: number; style?: CSSProperties }) {
   return (
     <svg viewBox="107 92 391 391" width={size} height={size} style={{ display: 'block', ...style }}>
       <g fill="none" stroke="currentColor" strokeWidth="17">
         {[LEFT, RIGHT].map((d) => (
-          <path key={d} d={d} />
+          <path key={d} d={d} pathLength={1} strokeDasharray={1} strokeDashoffset={1 - draw} />
         ))}
       </g>
     </svg>
