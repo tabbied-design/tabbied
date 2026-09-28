@@ -4,11 +4,21 @@ The Worker sends four kinds of message, all through `worker/lib/mail.ts`:
 
 | Message | To | When |
 | --- | --- | --- |
-| Confirm your Tabbied account | the person | sign-up (better-auth) |
-| Reset your Tabbied password | the person | "Forgot password" (better-auth) |
+| Confirm your Tabbied account | the person | sign-up (better-auth); HTML, with a link that lasts `AUTH_LINK_HOURS` |
+| Reset your Tabbied password | the person | "Forgot password" (better-auth); HTML, with a single-use link that lasts `AUTH_LINK_HOURS` |
 | Your 5 extra templates are ready | the person | five minutes after a first "Request more"; HTML, with a single-use link that adds 5 |
 | More templates: <name> | the team | a later request, for review |
 | You have more Tabbied templates / About your request | the person | an admin grants or declines a reviewed request |
+
+The three messages to a person with a link in them are designed, and share
+one layout, `designedHtml` in `mail.ts`: the mark, a mono eyebrow, a heading,
+a black pill button, a note under it, a rule, and the sign-off, with inline
+styles and tables because a mail client reads no stylesheet. The two
+better-auth mails also write their link out under the button, for a client
+that will not follow it, and say how long it lasts: `AUTH_LINK_HOURS`, which
+`worker/auth.ts` hands to better-auth as both lifetimes, so the sentence and
+the link cannot disagree. Every message keeps a plain-text part that says the
+same thing.
 
 Each message is built by its own function in `mail.ts` (`verificationEmail`,
 `approvalEmail`, `requestDecisionEmail`, ...) and sent separately, so the

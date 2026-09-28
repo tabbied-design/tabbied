@@ -39,9 +39,10 @@ export const EMAIL_PREVIEWS: EmailPreview[] = [
     when: 'Sign-up (better-auth)',
     // better-auth's own shape for the link: its endpoint, then where to land.
     build: (origin) =>
-      verificationEmail(
-        `${origin}/api/auth/verify-email?token=${TOKEN}&callbackURL=${encodeURIComponent(`${origin}/verify-email/`)}`
-      ),
+      verificationEmail({
+        name: SAMPLE.name,
+        url: `${origin}/api/auth/verify-email?token=${TOKEN}&callbackURL=${encodeURIComponent(`${origin}/verify-email/`)}`,
+      }),
   },
   {
     key: 'reset',
@@ -49,9 +50,10 @@ export const EMAIL_PREVIEWS: EmailPreview[] = [
     to: 'person',
     when: '"Forgot password" (better-auth)',
     build: (origin) =>
-      resetPasswordEmail(
-        `${origin}/api/auth/reset-password/${TOKEN}?callbackURL=${encodeURIComponent(`${origin}/reset-password/`)}`
-      ),
+      resetPasswordEmail({
+        name: SAMPLE.name,
+        url: `${origin}/api/auth/reset-password/${TOKEN}?callbackURL=${encodeURIComponent(`${origin}/reset-password/`)}`,
+      }),
   },
   {
     key: 'approval',

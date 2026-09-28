@@ -46,19 +46,6 @@ export const mailProvider = (env: Env): 'resend' | 'dev-mail' | 'none' =>
  */
 export type Message = Pick<Mail, 'subject' | 'text' | 'html' | 'url'>;
 
-/** Sign-up's confirmation link (better-auth's `sendVerificationEmail`). */
-export const verificationEmail = (url: string): Message => ({
-  subject: 'Confirm your Tabbied account',
-  url,
-  text: `Confirm your Tabbied account:\n\n${url}`,
-});
-
-/** "Forgot password" (better-auth's `sendResetPassword`). */
-export const resetPasswordEmail = (url: string): Message => ({
-  subject: 'Reset your Tabbied password',
-  url,
-  text: `Reset your Tabbied password:\n\n${url}\n\nIf you didn't ask for this, ignore it.`,
-});
 
 export async function sendMail(env: Env, mail: Mail): Promise<void> {
   if (!env.RESEND_API_KEY) {
@@ -142,16 +129,48 @@ const escapeHtml = (value: string) =>
 const firstName = (name: string) => name.trim().split(/\s+/)[0] ?? '';
 
 /**
- * The first request's email: a link that adds the templates when followed
- * (the 24 September design, "5 more templates, on us"). Inline styles and a
- * table, because a mail client reads no stylesheet and little layout.
+ * How long better-auth's confirmation and reset links last. auth.ts hands the
+ * same number to both settings, so what an email says is what the link does.
  */
-export function approvalEmail(approval: { name: string; url: string; granted: number; total: number }): Message {
-  const hi = firstName(approval.name);
-  const greeting = hi ? `Hi ${hi},` : 'Hi,';
-  const body = `Thanks for telling us about your work. Click below to add ${approval.granted} more website templates to your account, and you'll be able to choose up to ${approval.total}.`;
-  const after =
-    'If you need more after these, send another request from your account. Our team reviews those personally and replies within 2 business days.';
+export const AUTH_LINK_HOURS = 1;
+
+const hours = (n: number) => `${n} hour${n === 1 ? '' : 's'}`;
+
+/** "Hi Pat," or, for an account with no name, "Hi,". */
+const greetingFor = (name: string) => {
+  const hi = firstName(name);
+  return hi ? `Hi ${hi},` : 'Hi,';
+};
+
+/**
+ * The parts of a designed message, as plain text: the layout escapes all of
+ * it, so a person's name reaches the markup as characters, never as tags.
+ */
+type Designed = {
+  eyebrow: string;
+  title: string;
+  /** Above the button: the greeting, then what the message is for. */
+  lead: string[];
+  action: { label: string; url: string };
+  /** Under the button, small. */
+  note: string;
+  /** Write the link out under the note, for a client that will not follow the button. */
+  spellOut?: boolean;
+  /** Under the rule, ending with the sign-off. */
+  after: string[];
+  /** Under the card: why this address got it. */
+  footer: string;
+};
+
+/**
+ * The one layout every designed message shares (the 24 September design,
+ * first drawn for "5 more templates, on us"). Inline styles and tables,
+ * because a mail client reads no stylesheet and little layout. The fonts load
+ * where a client allows it (Apple Mail, iOS) and fall back elsewhere. The mark
+ * is components/logo/LogoMark's paths, inline: a client that drops SVG
+ * (Gmail) is left with the wordmark alone.
+ */
+function designedHtml(mail: Designed): string {
   const sans = "'IBM Plex Sans',Helvetica,Arial,sans-serif";
   // The design's oklch colors as hex, since few mail clients read oklch():
   // ink at 0.3, 0.4, 0.5 and 0.55 lightness, and an 8% black rule on white.
@@ -161,6 +180,92 @@ export function approvalEmail(approval: { name: string; url: string; granted: nu
   const note = '#606369';
   const faint = '#6e7278';
   const rule = '#ebebeb';
+  // Paragraphs `between` apart, the last one `last` from what follows.
+  const lines = (list: string[], style: string, between: string, last: string) =>
+    list
+      .map((line, index) => `<p style="margin:${index === list.length - 1 ? last : between};${style}">${escapeHtml(line)}</p>`)
+      .join('\n');
+  const spelled = mail.spellOut
+    ? `<br><a href="${escapeHtml(mail.action.url)}" style="color:${text};text-decoration:underline;word-break:break-all">${escapeHtml(mail.action.url)}</a>`
+    : '';
+
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300&amp;family=IBM+Plex+Sans:wght@400;600&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap" rel="stylesheet">
+</head><body style="margin:0;padding:0;background:#f2f3f6">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f2f3f6;padding:40px 16px 80px">
+<tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border:1px solid ${rule};border-radius:14px">
+<tr><td style="padding:44px 44px 36px;font-family:${sans};color:#0e0e13">
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 40px"><tr>
+<td style="padding:0 10px 0 0;vertical-align:middle"><svg viewBox="107 92 391 391" width="20" height="20" style="display:block" aria-hidden="true"><g fill="none" stroke="#0e0e13" stroke-width="17"><path d="M191 261 H277 C277 172.6 205.4 101 116 101 V311 C116 401.1 188.7 474 277 474 V312 H221"/><path d="M414 261 H328 C328 172.6 399.6 101 489 101 V311 C489 401.1 416.3 474 328 474 V312 H391"/></g></svg></td>
+<td style="vertical-align:middle;font:300 19px 'Cormorant Garamond',Georgia,serif;color:#0e0e13">tabbied</td>
+</tr></table>
+<p style="margin:0 0 12px;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:#005c44">${escapeHtml(mail.eyebrow)}</p>
+<h1 style="margin:0 0 18px;font:700 32px/1.15 'Proxima Nova',${sans};letter-spacing:-.015em">${escapeHtml(mail.title)}</h1>
+${lines(mail.lead, `font:400 16px/1.65 ${sans};color:${text}`, '0 0 14px', '0 0 28px')}
+<a href="${escapeHtml(mail.action.url)}" style="display:inline-block;padding:15px 28px;border-radius:999px;background:#0e0e13;color:#ffffff;font:600 15px ${sans};text-decoration:none">${escapeHtml(mail.action.label)}</a>
+<p style="margin:16px 0 36px;font:400 13.5px/1.6 ${sans};color:${note}">${escapeHtml(mail.note)}${spelled}</p>
+<div style="height:1px;background:${rule};margin-bottom:24px"></div>
+${lines(mail.after, `font:400 14.5px/1.6 ${sans};color:${quiet}`, '0 0 20px', '0')}
+</td></tr></table>
+<p style="max-width:600px;margin:0 auto;padding:18px 4px 0;font:400 12px/1.6 ${sans};color:${faint};text-align:left">${escapeHtml(mail.footer)}</p>
+</td></tr></table></body></html>`;
+}
+
+/** Sign-up's confirmation link (better-auth's `sendVerificationEmail`). */
+export function verificationEmail(confirm: { name: string; url: string }): Message {
+  const greeting = greetingFor(confirm.name);
+  const body = 'Confirm this address to finish setting up your Tabbied account.';
+  const expiry = `The link expires in ${hours(AUTH_LINK_HOURS)}.`;
+  const after = "If you didn't sign up for Tabbied, you can ignore this email.";
+
+  return {
+    subject: 'Confirm your Tabbied account',
+    url: confirm.url,
+    text: [greeting, '', `${body} Follow this link:`, '', confirm.url, '', expiry, '', after, '', 'The Tabbied team'].join('\n'),
+    html: designedHtml({
+      eyebrow: 'Your account',
+      title: 'Confirm your email',
+      lead: [greeting, body],
+      action: { label: 'Confirm email', url: confirm.url },
+      note: `${expiry} If the button does nothing, paste this link into your browser:`,
+      spellOut: true,
+      after: [after, 'The Tabbied team'],
+      footer: "You're getting this because this address was used to sign up on tabbied.com.",
+    }),
+  };
+}
+
+/** "Forgot password" (better-auth's `sendResetPassword`). */
+export function resetPasswordEmail(reset: { name: string; url: string }): Message {
+  const greeting = greetingFor(reset.name);
+  const body = 'Someone asked to reset the password for your Tabbied account. Choose a new one below.';
+  const expiry = `The link works once and expires in ${hours(AUTH_LINK_HOURS)}.`;
+  const after = "If you didn't ask for this, ignore this email: your password stays as it is.";
+
+  return {
+    subject: 'Reset your Tabbied password',
+    url: reset.url,
+    text: [greeting, '', body, '', reset.url, '', expiry, '', after, '', 'The Tabbied team'].join('\n'),
+    html: designedHtml({
+      eyebrow: 'Your account',
+      title: 'Reset your password',
+      lead: [greeting, body],
+      action: { label: 'Choose a new password', url: reset.url },
+      note: `${expiry} If the button does nothing, paste this link into your browser:`,
+      spellOut: true,
+      after: [after, 'The Tabbied team'],
+      footer: "You're getting this because a password reset was asked for on tabbied.com with this address.",
+    }),
+  };
+}
+
+/** The first request's email: a link that adds the templates when followed. */
+export function approvalEmail(approval: { name: string; url: string; granted: number; total: number }): Message {
+  const greeting = greetingFor(approval.name);
+  const body = `Thanks for telling us about your work. Click below to add ${approval.granted} more website templates to your account, and you'll be able to choose up to ${approval.total}.`;
+  const after =
+    'If you need more after these, send another request from your account. Our team reviews those personally and replies within 2 business days.';
 
   return {
     subject: `Your ${approval.granted} extra templates are ready`,
@@ -178,32 +283,15 @@ export function approvalEmail(approval: { name: string; url: string; granted: nu
       '',
       'The Tabbied team',
     ].join('\n'),
-    // The fonts load where a client allows it (Apple Mail, iOS) and fall back
-    // elsewhere. The mark is components/logo/LogoMark's paths, inline: a client
-    // that drops SVG (Gmail) is left with the wordmark alone.
-    html: `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300&amp;family=IBM+Plex+Sans:wght@400;600&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap" rel="stylesheet">
-</head><body style="margin:0;padding:0;background:#f2f3f6">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f2f3f6;padding:40px 16px 80px">
-<tr><td align="center">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border:1px solid ${rule};border-radius:14px">
-<tr><td style="padding:44px 44px 36px;font-family:${sans};color:#0e0e13">
-<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 40px"><tr>
-<td style="padding:0 10px 0 0;vertical-align:middle"><svg viewBox="107 92 391 391" width="20" height="20" style="display:block" aria-hidden="true"><g fill="none" stroke="#0e0e13" stroke-width="17"><path d="M191 261 H277 C277 172.6 205.4 101 116 101 V311 C116 401.1 188.7 474 277 474 V312 H221"/><path d="M414 261 H328 C328 172.6 399.6 101 489 101 V311 C489 401.1 416.3 474 328 474 V312 H391"/></g></svg></td>
-<td style="vertical-align:middle;font:300 19px 'Cormorant Garamond',Georgia,serif;color:#0e0e13">tabbied</td>
-</tr></table>
-<p style="margin:0 0 12px;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:#005c44">Your request</p>
-<h1 style="margin:0 0 18px;font:700 32px/1.15 'Proxima Nova',${sans};letter-spacing:-.015em">${approval.granted} more templates, on us</h1>
-<p style="margin:0 0 14px;font:400 16px/1.65 ${sans};color:${text}">${escapeHtml(greeting)}</p>
-<p style="margin:0 0 28px;font:400 16px/1.65 ${sans};color:${text}">${escapeHtml(body)}</p>
-<a href="${escapeHtml(approval.url)}" style="display:inline-block;padding:15px 28px;border-radius:999px;background:#0e0e13;color:#ffffff;font:600 15px ${sans};text-decoration:none">Add ${approval.granted} templates</a>
-<p style="margin:16px 0 36px;font:400 13.5px/1.6 ${sans};color:${note}">The link works once and expires in 7 days.</p>
-<div style="height:1px;background:${rule};margin-bottom:24px"></div>
-<p style="margin:0 0 20px;font:400 14.5px/1.6 ${sans};color:${quiet}">${escapeHtml(after)}</p>
-<p style="margin:0;font:400 14.5px/1.6 ${sans};color:${quiet}">The Tabbied team</p>
-</td></tr></table>
-<p style="max-width:600px;margin:0 auto;padding:18px 4px 0;font:400 12px/1.6 ${sans};color:${faint};text-align:left">You're getting this because you requested more templates on tabbied.com.</p>
-</td></tr></table></body></html>`,
+    html: designedHtml({
+      eyebrow: 'Your request',
+      title: `${approval.granted} more templates, on us`,
+      lead: [greeting, body],
+      action: { label: `Add ${approval.granted} templates`, url: approval.url },
+      note: 'The link works once and expires in 7 days.',
+      after: [after, 'The Tabbied team'],
+      footer: "You're getting this because you requested more templates on tabbied.com.",
+    }),
   };
 }
 

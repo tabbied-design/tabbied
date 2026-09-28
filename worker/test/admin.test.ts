@@ -1,5 +1,6 @@
 import { SELF, env } from 'cloudflare:test';
 import { beforeAll, describe, expect, it } from 'vitest';
+import { AUTH_LINK_HOURS, verificationEmail } from '../lib/mail';
 import { ORIGIN, json, signIn } from './helpers';
 
 const ROUTES = ['overview', 'users', 'usage', 'generations', 'templates', 'uploads', 'quotas', 'mail', 'emails'];
@@ -208,7 +209,13 @@ describe('acting on accounts', () => {
     const approval = preview.emails.find((email) => email.key === 'approval')!;
     expect(approval.subject).toBe('Your 5 extra templates are ready');
     expect(approval.html).toContain('PREVIEW-ONLY');
-    expect(preview.emails.find((email) => email.key === 'verify')!.html).toBeNull();
+    // The two better-auth mails are designed too, and carry the link twice:
+    // on the button and written out for a client that will not follow it.
+    for (const key of ['verify', 'reset']) {
+      const html = preview.emails.find((email) => email.key === key)!.html!;
+      expect(html, key).toContain('<!DOCTYPE html>');
+      expect(html.match(/PREVIEW-ONLY/g)?.length, key).toBe(3);
+    }
 
     // A body naming another address is ignored: there is no field for one.
     const sent = await call('emails/test', { method: 'POST', body: JSON.stringify({ key: 'reset', to: 'victim@example.com' }) });
@@ -247,5 +254,23 @@ describe('acting on accounts', () => {
     expect(stop.status, await stop.clone().text()).toBe(200);
     const back = [...new Map([...as.split('; '), ...cookieOf(stop).split('; ')].map((pair) => [pair.split('=')[0], pair] as const)).values()].join('; ');
     expect((await SELF.fetch(`${ORIGIN}/api/admin/overview`, { headers: { cookie: back } })).status).toBe(200);
+  });
+});
+
+describe('the account emails', () => {
+  it('say how long the link lasts, and better-auth is told the same', async () => {
+    const mail = verificationEmail({ name: 'Pat <b>Lee</b>', url: 'https://tabbied.com/x?token=a&b=c' });
+    // A name reaches the markup as characters, and the link's ampersand as an entity.
+    expect(mail.html).toContain('Hi Pat,');
+    expect(mail.html).not.toContain('<b>');
+    expect(mail.html).toContain('token=a&amp;b=c');
+    expect(mail.text).toContain(`expires in ${AUTH_LINK_HOURS} hour`);
+
+    // A real sign-up's link carries the lifetime the email states.
+    await signIn('lifetime@example.com');
+    const row = await env.DB.prepare('SELECT url FROM dev_mail WHERE email = ?').bind('lifetime@example.com').first<{ url: string }>();
+    const token = new URL(row!.url).searchParams.get('token')!;
+    const claims = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))) as { iat: number; exp: number };
+    expect(claims.exp - claims.iat).toBe(AUTH_LINK_HOURS * 3600);
   });
 });

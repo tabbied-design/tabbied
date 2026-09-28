@@ -7,7 +7,7 @@ import { drizzle } from 'drizzle-orm/d1';
 import * as schema from './db/schema';
 import type { Env } from './env';
 import { isDev } from './env';
-import { resetPasswordEmail, sendMail, verificationEmail } from './lib/mail';
+import { AUTH_LINK_HOURS, resetPasswordEmail, sendMail, verificationEmail } from './lib/mail';
 
 // better-auth over D1, built per request. It is a factory for the same reason
 // `buildServer` is on the MCP side: an isolate is shared across requests, so a
@@ -180,8 +180,11 @@ export function buildAuth(env: Env) {
       // The account cannot sign in until the link is followed, which is also
       // the first gate on a throwaway address spending AI budget.
       requireEmailVerification: true,
+      // Set rather than left to the default, so the email's "expires in"
+      // and the link are one number (lib/mail.ts).
+      resetPasswordTokenExpiresIn: AUTH_LINK_HOURS * 3600,
       sendResetPassword: async ({ user, url }) => {
-        await sendMail(env, { to: user.email, ...resetPasswordEmail(url) });
+        await sendMail(env, { to: user.email, ...resetPasswordEmail({ name: user.name, url }) });
       },
     },
 
@@ -193,8 +196,9 @@ export function buildAuth(env: Env) {
     emailVerification: {
       sendOnSignUp: true,
       autoSignInAfterVerification: true,
+      expiresIn: AUTH_LINK_HOURS * 3600,
       sendVerificationEmail: async ({ user, url }) => {
-        await sendMail(env, { to: user.email, ...verificationEmail(url) });
+        await sendMail(env, { to: user.email, ...verificationEmail({ name: user.name, url }) });
       },
     },
 
