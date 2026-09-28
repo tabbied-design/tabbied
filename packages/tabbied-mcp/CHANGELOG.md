@@ -1,5 +1,14 @@
 # tabbied-mcp
 
+## 0.2.2
+
+### Patch Changes
+
+- [#90](https://github.com/tabbied-design/tabbied/pull/90) [`3421294`](https://github.com/tabbied-design/tabbied/commit/342129407ac2076c9cfa1fab5189ec9860bd9c26) Thanks [@subwaymatch](https://github.com/subwaymatch)! - `tabbied render --format` is listed in `--help` and accepts only `svg` or `png`. Any other value used to fall through to the SVG exporter (for a design that cannot export SVG too) and write an SVG under whatever name `--out` gave; it now fails with a message. The llms reference and the `search_designs` tool's `svgExport` description no longer say every unsupported design is a conic sweep: the 32 cover double and dashed borders, 3D transforms, `color-mix()` and exports that miss pixel parity too.
+
+- Updated dependencies [[`8be10c1`](https://github.com/tabbied-design/tabbied/commit/8be10c12c4d4fb883ff95df3000632b056804588), [`3421294`](https://github.com/tabbied-design/tabbied/commit/342129407ac2076c9cfa1fab5189ec9860bd9c26), [`c0c10d1`](https://github.com/tabbied-design/tabbied/commit/c0c10d1582f5b05d18a0cb1b9821389abd48e74a), [`8be10c1`](https://github.com/tabbied-design/tabbied/commit/8be10c12c4d4fb883ff95df3000632b056804588), [`c79af0a`](https://github.com/tabbied-design/tabbied/commit/c79af0a493c8b75fe0a18d64bd9a74f245937809)]:
+  - tabbied@0.7.0
+
 ## 0.2.1
 
 ### Patch Changes
