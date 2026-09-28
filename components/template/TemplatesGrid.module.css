@@ -299,6 +299,14 @@
   white-space: nowrap;
 }
 
+/* Customize and "All n chosen" carry lucide icons, set on the text's line. */
+.textLink,
+.quiet {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
 .textLink {
   color: var(--h-fg);
   text-decoration: underline;
@@ -371,7 +379,8 @@
 }
 
 .caret {
-  font-size: 9px;
+  flex: none;
+  margin-left: -2px;
   opacity: 0.6;
 }
 

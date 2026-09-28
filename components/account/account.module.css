@@ -17,10 +17,12 @@
   max-width: 900px;
 }
 
-/* The link back to the overview, as a quiet row under the masthead. */
+/* The link back to the overview, as a quiet row under the masthead: 40px
+   below the bar (it sat on it), and the head that follows starts 40px
+   closer, so the title stays where it was. */
 .backLink {
   display: inline-block;
-  margin: 0 0 28px;
+  margin: 40px 0 0;
   font: 400 12px var(--s-mono);
   color: oklch(0.45 0.01 260);
   letter-spacing: 0.14em;
@@ -44,6 +46,10 @@
    design does at every width; the link's own row sets the others' rhythm. */
 .head:first-child {
   margin-top: 72px;
+}
+
+.backLink + .head {
+  margin-top: 44px;
 }
 
 .narrow .head {
@@ -610,6 +616,14 @@
     gap: 20px;
     align-items: flex-start;
     margin-top: 40px;
+  }
+
+  .backLink {
+    margin-top: 28px;
+  }
+
+  .backLink + .head {
+    margin-top: 32px;
   }
 
   .title {

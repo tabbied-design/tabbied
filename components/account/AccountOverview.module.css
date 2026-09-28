@@ -325,12 +325,17 @@
 }
 
 .caret {
-  font-size: 9px;
+  flex: none;
+  margin-left: -2px;
   opacity: 0.55;
 }
 
-/* The artboard's link: the arrow is a character, underlined with the word. */
+/* The artboard's link, with a lucide palette before the word and an arrow
+   after it; the underline is the word's alone. */
 .customize {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
   font: 400 15px var(--s-sans);
   color: var(--s-ink);
   white-space: nowrap;
