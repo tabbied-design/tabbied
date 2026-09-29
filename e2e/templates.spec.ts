@@ -292,7 +292,7 @@ for (const fixture of FIXTURES) {
 }
 
 // The gallery's cards follow the account (lib/myTemplates.ts): a visitor is
-// asked to sign in, a person sees Choose template or, for a template of
+// asked to sign in, a person sees Add to my templates or, for a template of
 // theirs, Customize and a Download menu of the two zips. The session and the
 // person's templates are stubbed, since `serve out` has no Worker.
 const signedIn = {
@@ -483,17 +483,17 @@ test.describe('the /templates gallery', () => {
       expect(names).toContain(`${[...roots][0]}/index.html`);
     }
 
-    // Another template: Choose template asks, and only the confirm spends one.
+    // Another template: Add to my templates asks, and only the confirm spends one.
     await page.getByRole('button', { name: 'All', exact: true }).click();
-    await page.getByRole('button', { name: 'Choose template' }).first().click();
+    await page.getByRole('button', { name: 'Add to my templates' }).first().click();
     const dialog = page.getByRole('dialog');
     await expect(dialog.getByText('1 of 5 templates chosen')).toBeVisible();
     await expect(dialog.getByRole('heading', { name: /as one of your templates\?$/ })).toBeVisible();
     await dialog.getByRole('button', { name: 'Cancel' }).click();
     expect(posted).toEqual([]);
 
-    await page.getByRole('button', { name: 'Choose template' }).first().click();
-    await page.getByRole('dialog').getByRole('button', { name: 'Choose template' }).click();
+    await page.getByRole('button', { name: 'Add to my templates' }).first().click();
+    await page.getByRole('dialog').getByRole('button', { name: 'Add to my templates' }).click();
     await expect(page.getByRole('button', { name: /^Yours \(2\)/ })).toBeVisible();
     expect(posted).toHaveLength(1);
   });

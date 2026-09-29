@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Send } from 'lucide-react';
+import { ChevronDown, ChevronRight, Send } from 'lucide-react';
 import { ApiError, apiFetch } from 'lib/apiFetch';
 import { useAdminData } from './useAdminData';
 import styles from './admin.module.css';
@@ -82,19 +82,24 @@ function SendTest({ preview }: { preview: Preview }) {
       <h2 className={styles.h3}>Send a live test</h2>
       <p className={styles.cardSub}>Delivers the real message to your own inbox, to check how a mail client draws it.</p>
       <div className={styles.formRow}>
-        <select
-          className={styles.select}
-          aria-label="Email to send"
-          value={key}
-          disabled={off || status.kind === 'sending'}
-          onChange={(event) => setKey(event.target.value)}
-        >
-          {preview.emails.map((email) => (
-            <option key={email.key} value={email.key}>
-              {email.name}
-            </option>
-          ))}
-        </select>
+        {/* The native arrow is drawn over by a lucide chevron, so the
+            control looks the same in every browser. */}
+        <span className={styles.selectWrap}>
+          <select
+            className={styles.select}
+            aria-label="Email to send"
+            value={key}
+            disabled={off || status.kind === 'sending'}
+            onChange={(event) => setKey(event.target.value)}
+          >
+            {preview.emails.map((email) => (
+              <option key={email.key} value={email.key}>
+                {email.name}
+              </option>
+            ))}
+          </select>
+          <ChevronDown className={styles.selectIcon} size={16} strokeWidth={1.8} aria-hidden="true" />
+        </span>
         <button
           type="button"
           className={`${styles.button} ${styles.buttonIcon}`}
@@ -161,7 +166,10 @@ export default function EmailPreviewPanel() {
 
           {email.html ? (
             <details className={styles.mailDetails}>
-              <summary>Plain-text version</summary>
+              <summary>
+                <ChevronRight className={styles.mailDetailsIcon} size={15} strokeWidth={1.8} aria-hidden="true" />
+                Plain-text version
+              </summary>
               <pre className={styles.pre}>{email.text}</pre>
             </details>
           ) : null}

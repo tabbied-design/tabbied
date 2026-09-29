@@ -1,11 +1,11 @@
 'use client';
 
 // The one confirmation before a template becomes one of a person's chosen
-// few. Every way to take a template that is not already the person's (Choose
-// template on a card, Customize or a download from the preview's menu) asks
-// first, because it spends one of a small number. At the limit the dialog
-// names the chosen ones and points at the account page, where "Request more"
-// lives.
+// few. Every way to take a template that is not already the person's ("Add
+// to my templates" on a card, Customize or a download from the preview's
+// menu) asks first, because it spends one of a small number. At the limit
+// the dialog names the chosen ones and points at the account page, where
+// "Request more" lives.
 //
 // The Worker enforces the rule (worker/lib/templates.ts); a person who skips
 // this dialog, by opening a zip's URL, is held to the same allowance.
@@ -31,7 +31,7 @@ export type TemplateAction = 'choose' | 'customize' | 'download';
 type Pending = { slug: string; name: string; action: TemplateAction; run: () => void };
 
 const CTA: Record<TemplateAction, string> = {
-  choose: 'Choose template',
+  choose: 'Add to my templates',
   customize: 'Use template & customize',
   download: 'Use template & download',
 };

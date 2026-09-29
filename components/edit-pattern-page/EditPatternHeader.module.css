@@ -128,10 +128,10 @@
   box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.28);
 }
 
-/* The caret after "Export": a small solid triangle, dimmed. */
+/* The caret after "Export": a lucide chevron, dimmed. */
 .caret {
-  margin-left: 6px;
-  font-size: 9px;
+  flex: none;
+  margin: 0 -4px 0 6px;
   opacity: 0.55;
 }
 

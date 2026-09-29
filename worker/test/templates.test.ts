@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { ORIGIN, json, signIn } from './helpers';
 
 // Five templates per account during the beta. A template becomes a person's
-// on its first download, its first customizer save, or "Choose template";
+// on its first download, its first customizer save, or "Add to my templates";
 // after that it is theirs to take as often as they like. The zip route tells
 // a navigation apart from a fetch: a click is sent where the answer is, a
 // fetch gets JSON.
@@ -137,7 +137,7 @@ describe('template downloads', () => {
 });
 
 describe('choosing templates', () => {
-  it('"Choose template" claims one without taking it, once', async () => {
+  it('"Add to my templates" claims one without taking it, once', async () => {
     const cookie = await signIn('chooser@example.com');
 
     const chosen = await choose(cookie, 'verdant');

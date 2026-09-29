@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
 import Link from 'next/link';
-import { ArrowRight, CircleCheck, Palette, Plus } from 'lucide-react';
+import { CircleCheck, Eye, Palette, Plus } from 'lucide-react';
 import type { PatternDefinition } from 'tabbied';
 import {
   TEMPLATE_CATEGORIES,
@@ -29,9 +29,7 @@ export type TemplateCard = {
   n: number;
   name: string;
   topic: string;
-  pattern: string;
   art: PatternDefinition;
-  paletteName: string;
   colors: string[];
   seed: string;
   category: TemplateCategory;
@@ -102,7 +100,6 @@ function Footer({ c, templates, guard, here }: { c: TemplateCard; templates: MyT
         <Link href={customizeHref(c.slug, chosen)} prefetch={false} className={s.textLink}>
           <Palette size={14} strokeWidth={1.8} aria-hidden="true" />
           Customize
-          <ArrowRight size={13} strokeWidth={1.8} aria-hidden="true" />
         </Link>
         <DownloadMenu name={c.name} chosen={chosen} side="top" classes={MENU} />
       </div>
@@ -113,10 +110,12 @@ function Footer({ c, templates, guard, here }: { c: TemplateCard; templates: MyT
     return (
       <div className={s.dl}>
         <a href={c.href} className={s.quietLink}>
-          Preview &#x2192;
+          <Eye size={14} strokeWidth={1.8} aria-hidden="true" />
+          Preview
         </a>
         <button type="button" className={`${s.pill} ${s.pillSolid}`} onClick={() => guard(c.slug, c.name, 'choose', () => {})}>
-          Choose template
+          <Plus size={14} strokeWidth={2} aria-hidden="true" />
+          Add to my templates
         </button>
       </div>
     );
@@ -161,6 +160,12 @@ function Card({ c, templates, guard, here }: { c: TemplateCard; templates: MyTem
     // cannot nest inside another. The card link covers everything above it.
     <div className={s.card} style={vars}>
       <a className={s.cardLink} href={c.href}>
+        {/* A browser's title bar, as the homepage's template rails draw it. */}
+        <span className={s.chrome} aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </span>
         <div className={s.thumb}>
           {c.shot ? (
             // The site itself, with its pattern as the accent in the corner;
@@ -189,18 +194,12 @@ function Card({ c, templates, guard, here }: { c: TemplateCard; templates: MyTem
           </span>
         </div>
         <div className={s.body}>
-          <div className={s.main}>
-            <h3>{c.name}</h3>
-            <p>{c.topic}</p>
-            <div className={s.sw} aria-hidden="true">
-              {c.colors.slice(1, 1 + MAX_SWATCHES).map((col, i) => (
-                <span key={i} style={{ background: col }} />
-              ))}
-            </div>
-          </div>
-          <div className={s.meta}>
-            <span>{c.paletteName}</span>
-            <span>{c.pattern}</span>
+          <h3>{c.name}</h3>
+          <p>{c.topic}</p>
+          <div className={s.sw} aria-hidden="true">
+            {c.colors.slice(1, 1 + MAX_SWATCHES).map((col, i) => (
+              <span key={i} style={{ background: col }} />
+            ))}
           </div>
         </div>
       </a>

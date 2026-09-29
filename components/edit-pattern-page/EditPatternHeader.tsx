@@ -6,6 +6,7 @@ import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 're
 import { Menu } from '@base-ui-components/react/menu';
 import {
   ArrowDownToLine,
+  ChevronDown,
   ChevronLeft,
   FileCode,
   ImageDown,
@@ -232,9 +233,7 @@ export default function EditPatternHeader({
             aria-label="Export"
           >
             <span className={styles.label}>Export</span>
-            <span className={styles.caret} aria-hidden="true">
-              {'\u25BE'}
-            </span>
+            <ChevronDown className={styles.caret} size={15} strokeWidth={1.8} aria-hidden="true" />
           </Menu.Trigger>
         )}
       </div>

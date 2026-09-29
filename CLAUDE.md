@@ -561,11 +561,14 @@ Orthodontics and Easel Evenings have none: the aligner never generated
 cleanly, and Easel's pattern canvas on the easel is the point.
 
 **They are built to take any palette, which the earlier sets are not.** The
-customizer puts a library palette's color0 on role 0 and cycles its other
-colors through the remaining roles, so role 1 is not guaranteed to contrast
-with the ground (Midnight Oil puts #1b263b on #0d1b2a) and the ground may
-be dark, pastel or saturated. Crumb Bakehouse under Midnight Oil is dark
-text on a dark ground. These fifty follow three rules, and a new template
+customizer used to put a library palette's color0 on role 0 and cycle its
+other colors through the remaining roles, so role 1 was not guaranteed to
+contrast with the ground (Midnight Oil puts #1b263b on #0d1b2a): Crumb
+Bakehouse under Midnight Oil was dark text on a dark ground. The fit is by
+contrast now (the customizer section below), which keeps each text ink
+readable on the ground, but the ground may still be dark, pastel or
+saturated, and only a page whose surfaces and text derive from it reads
+under all of them. These fifty follow three rules, and a new template
 should too:
 
 - **Roles are real palette colors only**: the ground plus two to five inks.
@@ -1120,7 +1123,7 @@ Things worth not re-litigating:
 ## Five templates per account - chosen once, then unlimited
 
 During the beta every account chooses five website templates. Choosing is
-explicit ("Choose template" on a gallery card) or implicit (the first
+explicit ("Add to my templates" on a gallery card) or implicit (the first
 download of a template, or the first customizer Save of it), and once a
 template is chosen its colors and patterns can be changed and it can be
 downloaded as often as the person likes. This replaced a cap of thirty
@@ -1441,9 +1444,38 @@ whatever text Studio wrote, so putting them back is a UI change.
   pickers are still there, behind the pencil on a row (`PaletteDialog`), which
   is what keeps a color nobody shipped reachable. A library palette carries
   3-7 colors and a template declares as many roles as its stylesheet reads,
-  so `lib/studioPalettes.ts` fits one to the other by cycling the inks - and
-  leaves a role the template authored as `transparent` alone, because that is
-  what lets a field read over a photograph.
+  so `lib/studioPalettes.ts` fits one to the other, and leaves a role the
+  template authored as `transparent` alone, because that is what lets a
+  field read over a photograph.
+- **The fit is by contrast, not by position.** Cycling the inks round the
+  roles lost 37% of the text that read in a template's own colors (measured
+  on every page, 277 templates by 44 palettes); the fit loses under 1%. The
+  inks are ranked on both sides by contrast with their own ground and each
+  role takes the library ink at its rank, the weakest sharing when the
+  library is short; a role the template set within 1.3:1 of its ground (a
+  panel, a band) is that ink diluted into the new ground to the same
+  distance, so a pale band stays pale; and an ink the template set as text
+  (4.5:1 or more, and its strongest ink whatever it was) is moved toward
+  black or white until it reads at 7:1 or its own contrast, any other ink
+  set at 3:1 keeping 3:1. 7, not 4.5, because pages draw muted copy as a
+  mix or a partial opacity of a text ink. 29% of the fitted roles end up
+  off the library color. Relighting every role to the lightness it had in
+  the template was tried and dropped: it moved 58% of them and cut the
+  remaining loss by about 15%.
+- **`e2e/palette-fit.spec.ts` is the gate, and it is a ratchet.** It loads
+  every template with JavaScript and transitions off, fits five stress
+  palettes (Midnight Oil, Sorbet, Ember, Mono, Electric) and measures each
+  run of text against the backgrounds it actually sits on; text whose color
+  or background did not move is a literal in the stylesheet, which no
+  palette reaches, and is not counted. What is still lost comes from how
+  particular templates are built (a section filled with one accent under
+  text in another, where the library has no second color to keep them
+  apart), so `e2e/palette-fit.known.json` records each
+  template's loss and a template may not get more than a point worse; one
+  missing from it, a new template, may lose nothing. Tighten it with
+  `UPDATE_PALETTE_FIT=1` after fixing a template. Transitions matter: a card
+  that eases its background over 180ms is measured in the old palette
+  otherwise, which once made a third of the losses look like the fit's.
 - **The preview runtime carries the whole catalog.** It used to bundle the
   231 designs the packaged templates mount, which was right while a preview
   could only re-color a field; a shuffle can swap to any of the 338, and a

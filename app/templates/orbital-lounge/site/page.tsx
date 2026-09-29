@@ -189,7 +189,7 @@ export default function OrbitalPage() {
       <link
         rel="stylesheet"
         precedence="default"
-        href="https://fonts.googleapis.com/css2?family=Righteous&family=Outfit:wght@300..700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400..700&family=Outfit:wght@300..700&display=swap"
       />
 
       <header className={s.bar}>

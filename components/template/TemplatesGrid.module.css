@@ -125,6 +125,23 @@
   text-decoration: none;
 }
 
+/* A browser's title bar over the site's first screen: three dots on the
+   card's own dark ground, drawn as the homepage's template rails draw it
+   (HomeTemplates.module.css). */
+.chrome {
+  display: flex;
+  flex: none;
+  gap: 4px;
+  padding: 8px 10px;
+}
+
+.chrome span {
+  width: 6px;
+  height: 6px;
+  background-color: oklch(1 0 0 / 0.18);
+  border-radius: 50%;
+}
+
 .thumb {
   position: relative;
   aspect-ratio: 4 / 3;
@@ -204,26 +221,19 @@
 }
 
 .body {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 18px 18px 16px;
-}
-
-.main {
   min-width: 0;
+  padding: 18px 18px 16px;
 }
 
 /* The name is display type, Proxima Nova, as the artboard sets it; the
    topic under it is body copy. */
-.main h3 {
+.body h3 {
   margin: 0 0 5px;
   font: 600 16px var(--h-display);
   color: var(--h-fg);
 }
 
-.main p {
+.body p {
   margin: 0 0 11px;
   font: 400 13px var(--h-sans);
   color: oklch(0.66 0.01 260);
@@ -240,30 +250,6 @@
   height: 13px;
   border-radius: 3px;
   box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.14);
-}
-
-/* The palette and the pattern, named at the right in the mono. */
-.meta {
-  display: flex;
-  flex: none;
-  flex-direction: column;
-  gap: 7px;
-  max-width: 45%;
-  font: 300 11px var(--h-mono);
-  color: oklch(0.72 0.01 260);
-  letter-spacing: 0.1em;
-  text-align: right;
-  text-transform: uppercase;
-}
-
-.meta span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.meta span + span {
-  color: oklch(0.55 0.01 260);
 }
 
 /* ---- The footer ---- */
@@ -299,8 +285,10 @@
   white-space: nowrap;
 }
 
-/* Customize and "All n chosen" carry lucide icons, set on the text's line. */
+/* Customize, Preview and "All n chosen" carry lucide icons, set on the
+   text's line. */
 .textLink,
+.quietLink,
 .quiet {
   display: inline-flex;
   gap: 6px;
@@ -309,8 +297,7 @@
 
 .textLink {
   color: var(--h-fg);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration: none;
 }
 
 .textLink:hover,
@@ -356,7 +343,7 @@
   background: oklch(1 0 0 / 0.1);
 }
 
-/* "Choose template": the one filled pill, the card's first step. The
+/* "Add to my templates": the one filled pill, the card's first step. The
    artboard draws it with no ring, so it stands 2px shorter than the
    outlined pills. */
 .pillSolid {

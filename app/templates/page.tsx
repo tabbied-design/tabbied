@@ -44,7 +44,6 @@ export default function TemplatesGallery() {
       name: x.brand,
       topic: x.topic,
       pattern: x.pattern,
-      paletteName: x.paletteName,
       colors: x.colors,
       seed: `RCT${i}`,
       family: 'first',
@@ -55,7 +54,6 @@ export default function TemplatesGallery() {
       name: x.name,
       topic: x.topic,
       pattern: x.patternSlug,
-      paletteName: x.paletteName,
       colors: x.palette,
       seed: x.seed,
       // The seed's prefix names the batch: dir, set, bold, img, min, art.

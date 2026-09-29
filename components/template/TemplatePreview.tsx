@@ -16,6 +16,7 @@ import { ArrowUpRight, ChevronDown } from 'lucide-react';
 import LogoMark from 'components/logo/LogoMark';
 import { initials } from 'components/nav';
 import ImpersonationNotice from 'components/nav/ImpersonationNotice';
+import MenuIcon, { MENU_ICONS } from 'components/nav/MenuIcon';
 import Toaster from 'components/Toaster';
 import { signOut, useSessionUser } from 'lib/authClient';
 import { stopImpersonating } from 'lib/impersonation';
@@ -174,15 +175,19 @@ export default function TemplatePreview({
                     </div>
                     <Menu.Separator className={styles.menuRule} />
                     <Menu.Item className={styles.menuItem} render={<Link href="/account/" prefetch={false} />}>
+                      <MenuIcon icon={MENU_ICONS.account} className={styles.menuIcon} />
                       My account
                     </Menu.Item>
                     <Menu.Item className={styles.menuItem} render={<Link href="/patterns/" prefetch={false} />}>
+                      <MenuIcon icon={MENU_ICONS.patterns} className={styles.menuIcon} />
                       Patterns
                     </Menu.Item>
                     <Menu.Item className={styles.menuItem} render={<Link href="/templates/" prefetch={false} />}>
+                      <MenuIcon icon={MENU_ICONS.websites} className={styles.menuIcon} />
                       Websites
                     </Menu.Item>
                     <Menu.Item className={styles.menuItem} render={<Link href="/account/settings/" prefetch={false} />}>
+                      <MenuIcon icon={MENU_ICONS.settings} className={styles.menuIcon} />
                       Settings
                     </Menu.Item>
                     <Menu.Separator className={styles.menuRule} />
@@ -198,6 +203,10 @@ export default function TemplatePreview({
                         router.push('/');
                       }}
                     >
+                      <MenuIcon
+                        icon={impersonating ? MENU_ICONS.stopImpersonating : MENU_ICONS.signOut}
+                        className={styles.menuIcon}
+                      />
                       {impersonating ? 'Stop impersonating' : 'Sign out'}
                     </Menu.Item>
                   </Menu.Popup>
@@ -217,8 +226,8 @@ export default function TemplatePreview({
             <span className={styles.dot} aria-hidden="true" />
             <span className={styles.dot} aria-hidden="true" />
             <span className={styles.pill}>tabbied.com/templates/{slug}/site/</span>
-            <a className={styles.open} href={`/templates/${slug}/site/`}>
-              Open the page
+            <a className={styles.open} href={`/templates/${slug}/site/`} target="_blank" rel="noopener">
+              Open in new tab
               <ArrowUpRight size={13} strokeWidth={1.8} aria-hidden="true" />
             </a>
           </div>
