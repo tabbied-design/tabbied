@@ -3,11 +3,26 @@
 import { useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import {
+  FlaskConical,
+  Gauge,
+  Images,
+  Inbox,
+  LayoutDashboard,
+  LayoutTemplate,
+  Lock,
+  MailOpen,
+  Sparkles,
+  Users,
+  WandSparkles,
+  type LucideIcon,
+} from 'lucide-react';
 import { Logo } from 'components/logo';
 import { initials } from 'components/nav';
 import { plexMono, plexSans } from 'lib/fonts';
 import { apiFetch } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';
+import { stopImpersonating } from 'lib/impersonation';
 import styles from './admin.module.css';
 
 // The admin frame: a sidebar naming the sections, a topbar with the one
@@ -16,17 +31,20 @@ import styles from './admin.module.css';
 // 404 to anyone else, so a person who defeats this sees an empty page and
 // nothing more.
 
-const LINKS = [
-  ['/admin/', 'Overview'],
-  ['/admin/users/', 'Users'],
-  ['/admin/requests/', 'Requests'],
-  ['/admin/usage/', 'AI usage'],
-  ['/admin/generations/', 'Generations'],
-  ['/admin/templates/', 'Templates'],
-  ['/admin/uploads/', 'Uploads'],
-  ['/admin/quotas/', 'Quotas'],
-  ['/admin/mail/', 'Mail'],
-] as const;
+// Quotas is last and says it is read-only: its numbers are constants in the
+// code, changed by a commit (the page says how), not from here.
+const LINKS: [href: string, label: string, Icon: LucideIcon, readOnly?: boolean][] = [
+  ['/admin/', 'Overview', LayoutDashboard],
+  ['/admin/users/', 'Users', Users],
+  ['/admin/test-users/', 'Test users', FlaskConical],
+  ['/admin/requests/', 'Requests', Inbox],
+  ['/admin/usage/', 'AI usage', Sparkles],
+  ['/admin/generations/', 'Generations', WandSparkles],
+  ['/admin/templates/', 'Templates', LayoutTemplate],
+  ['/admin/uploads/', 'Uploads', Images],
+  ['/admin/emails/', 'Email preview', MailOpen],
+  ['/admin/quotas/', 'Quotas', Gauge, true],
+];
 
 type UserRow = {
   id: string;
@@ -36,6 +54,7 @@ type UserRow = {
   role: string | null;
   banned: boolean | null;
   createdAt: string;
+  plan?: string;
   sites: number;
   generations: number;
   chosen: number;
@@ -65,13 +84,14 @@ const EXPORT_PAGE = 200;
  */
 async function exportUsers() {
   const { users } = await apiFetch<{ users: UserRow[] }>(`/api/admin/users?limit=${EXPORT_PAGE}`);
-  const header = ['id', 'name', 'email', 'verified', 'role', 'banned', 'joined', 'templates_chosen', 'template_allowance', 'sites', 'generations'];
+  const header = ['id', 'name', 'email', 'verified', 'plan', 'role', 'banned', 'joined', 'templates_chosen', 'template_allowance', 'sites', 'generations'];
   const lines = users.map((user) =>
     [
       user.id,
       user.name,
       user.email,
       user.emailVerified,
+      user.plan ?? 'free',
       user.role ?? 'user',
       Boolean(user.banned),
       user.createdAt,
@@ -111,13 +131,37 @@ export default function AdminPage({
   children: ReactNode;
 }) {
   const pathname = usePathname();
-  const { user, isPending } = useSessionUser();
+  const { user, isPending, impersonating } = useSessionUser();
   const [exporting, setExporting] = useState<'busy' | 'failed' | null>(null);
+  const [leaving, setLeaving] = useState(false);
 
   if (isPending) {
     return (
       <div className={styles.wrap}>
         <p className={styles.quiet}>Checking your session...</p>
+      </div>
+    );
+  }
+
+  // An admin looking through someone's account has, for now, their access:
+  // none. The way back is here as well as in the corner pill, since this is
+  // where an admin comes looking for it.
+  if (user && impersonating) {
+    return (
+      <div className={`${styles.wrap} ${plexSans.variable}`}>
+        <h1 className={styles.title}>You are viewing as {user.email}</h1>
+        <p className={styles.quiet}>The admin pages come back when you stop impersonating.</p>
+        <button
+          type="button"
+          className={styles.button}
+          disabled={leaving}
+          onClick={() => {
+            setLeaving(true);
+            stopImpersonating().catch(() => setLeaving(false));
+          }}
+        >
+          {leaving ? 'Stopping...' : 'Stop impersonating'}
+        </button>
       </div>
     );
   }
@@ -141,7 +185,7 @@ export default function AdminPage({
         </Link>
 
         <nav className={styles.nav} aria-label="Admin">
-          {LINKS.map(([href, label]) => {
+          {LINKS.map(([href, label, Icon, readOnly]) => {
             const current = pathname === href || pathname === href.replace(/\/$/, '');
             return (
               <Link
@@ -151,7 +195,14 @@ export default function AdminPage({
                 className={`${styles.navLink} ${current ? styles.navOn : ''}`}
                 aria-current={current ? 'page' : undefined}
               >
+                <Icon className={styles.navIcon} size={17} strokeWidth={1.75} aria-hidden="true" />
                 {label}
+                {readOnly ? (
+                  <span className={styles.navTag}>
+                    <Lock size={11} strokeWidth={2} aria-hidden="true" />
+                    Read-only
+                  </span>
+                ) : null}
               </Link>
             );
           })}

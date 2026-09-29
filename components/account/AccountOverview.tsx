@@ -11,6 +11,7 @@
 // gallery), and `?activated=`, where the emailed link lands.
 import { useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
+import { ArrowRight, Palette } from 'lucide-react';
 import { Dialog } from '@base-ui-components/react/dialog';
 import Toaster, { toaster } from 'components/Toaster';
 import { ApiError, apiFetch } from 'lib/apiFetch';
@@ -133,7 +134,9 @@ function TemplateRow({ row, entry }: { row: ChosenTemplate; entry: TemplateIndex
       <div className={styles.rowActions}>
         <DownloadMenu name={name} chosen={row} side="bottom" classes={MENU} />
         <Link href={customizeHref(row.slug, row)} prefetch={false} className={styles.customize}>
-          Customize &#x2192;
+          <Palette size={15} strokeWidth={1.8} aria-hidden="true" />
+          Customize
+          <ArrowRight size={14} strokeWidth={1.8} aria-hidden="true" />
         </Link>
       </div>
     </div>

@@ -1,24 +1,28 @@
 import { Hono } from 'hono';
-import { and, desc, eq, gte, like, or, sql } from 'drizzle-orm';
+import { and, desc, eq, gte, like, ne, or, sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/d1';
 import { z } from 'zod';
 import * as schema from '../db/schema';
-import { aiUsage, devMail, generation, revision, site, templateChoice, templateRequest, upload, user } from '../db/schema';
+import { aiUsage, generation, revision, site, templateChoice, templateGrant, templateRequest, upload, user } from '../db/schema';
 import type { Env } from '../env';
+import { APIError } from 'better-auth/api';
 import { buildAuth } from '../auth';
-import { isDev } from '../env';
-import { notifyRequestDecision } from '../lib/mail';
-import { FREE_TEMPLATES, MAX_GRANT, allowanceSql, templateStatus } from '../lib/templates';
+import { EMAIL_PREVIEWS } from '../lib/emailPreview';
+import { mailProvider, notifyAdminGrant, notifyRequestDecision, sendMail } from '../lib/mail';
+import { FREE_TEMPLATES, MAX_GRANT, allowanceSql, rawAllowanceSql, templateStatus } from '../lib/templates';
 import { DAILY_CAPS, startOfUtcDay } from '../lib/quota';
+import { consume } from '../lib/ratelimit';
 import { authConfigured } from '../lib/session';
 import { loadEditableCatalog } from '../lib/templateAssets';
+import { PLAN, TEST_EMAIL_DOMAIN, isTestEmail, removeChosenTemplates, removeUsers, testEmailSql } from '../lib/users';
 
 // The admin tier: reads over everything, for people whose user row says
 // `role = 'admin'`. Bans and impersonation are better-auth's own endpoints
-// under /api/auth/admin/*. Every route runs the gate; the pages hiding
-// themselves is cosmetic.
+// under /api/auth/admin/*; removing an account is here, because R2 does not
+// cascade and better-auth's remove-user would leave the person's pictures
+// behind. Every route runs the gate; the pages hiding themselves is cosmetic.
 
-type AdminUser = { id: string; role?: string | null };
+type AdminUser = { id: string; email: string; role?: string | null };
 
 async function requireAdmin(env: Env, headers: Headers): Promise<AdminUser | null> {
   // No secret, no admins: see requireUser for why this is not a lookup.
@@ -35,7 +39,7 @@ async function requireAdmin(env: Env, headers: Headers): Promise<AdminUser | nul
   return current && current.role === 'admin' ? current : null;
 }
 
-const admin = new Hono<{ Bindings: Env }>();
+const admin = new Hono<{ Bindings: Env; Variables: { admin: AdminUser } }>();
 
 admin.use('*', async (c, next) => {
   const who = await requireAdmin(c.env, c.req.raw.headers);
@@ -46,6 +50,8 @@ admin.use('*', async (c, next) => {
     return c.json({ error: 'Not found' }, 404);
   }
 
+  // The routes that act on accounts need to know whose they are not to touch.
+  c.set('admin', who);
   await next();
 });
 
@@ -107,6 +113,8 @@ admin.get('/overview', async (c) => {
 const listQuery = z.object({
   q: z.string().trim().max(120).optional(),
   limit: z.coerce.number().int().min(1).max(200).default(50),
+  /** `test`: only the accounts the Test users page made (lib/users.ts). */
+  scope: z.enum(['all', 'test']).default('all'),
 });
 
 const usageQuery = z.object({
@@ -118,11 +126,11 @@ const badQuery = (c: { json: (body: unknown, status: 400) => Response }) =>
   c.json({ error: 'Bad query.' }, 400);
 
 admin.get('/users', async (c) => {
-  const query = listQuery.safeParse({ q: c.req.query('q'), limit: c.req.query('limit') });
+  const query = listQuery.safeParse({ q: c.req.query('q'), limit: c.req.query('limit'), scope: c.req.query('scope') });
 
   if (!query.success) return badQuery(c);
 
-  const { q, limit } = query.data;
+  const { q, limit, scope } = query.data;
   const db = drizzle(c.env.DB, { schema });
 
   const rows = await db
@@ -145,13 +153,21 @@ admin.get('/users', async (c) => {
       allowance: sql<number>`${allowanceSql(sql`${user}.id`)}`,
     })
     .from(user)
-    .where(q ? or(like(user.email, `%${q}%`), like(user.name, `%${q}%`)) : undefined)
+    .where(
+      and(
+        q ? or(like(user.email, `%${q}%`), like(user.name, `%${q}%`)) : undefined,
+        scope === 'test' ? testEmailSql : undefined
+      )
+    )
     .orderBy(desc(user.createdAt))
     .limit(limit);
 
   return c.json({
+    testDomain: TEST_EMAIL_DOMAIN,
     users: rows.map((row) => ({
       ...row,
+      plan: PLAN,
+      test: isTestEmail(row.email),
       sites: Number(row.sites),
       generations: Number(row.generations),
       chosen: Number(row.chosen),
@@ -170,7 +186,7 @@ admin.get('/users/:id', async (c) => {
     return c.json({ error: 'Not found' }, 404);
   }
 
-  const [sites, generations, usage, templates] = await Promise.all([
+  const [sites, generations, usage, templates, grants] = await Promise.all([
     db
       .select({ id: site.id, slug: site.slug, title: site.title, updatedAt: site.updatedAt })
       .from(site)
@@ -189,10 +205,34 @@ admin.get('/users/:id', async (c) => {
       .where(and(eq(aiUsage.userId, id), gte(aiUsage.createdAt, startOfUtcDay())))
       .groupBy(aiUsage.endpoint),
     templateStatus(db, id),
+    db
+      .select({
+        id: templateGrant.id,
+        granted: templateGrant.granted,
+        note: templateGrant.note,
+        createdAt: templateGrant.createdAt,
+        // Qualified by hand, as in /users: the admin's address, while they last.
+        grantedBy: sql<string | null>`(select u.email from ${user} u where u.id = ${templateGrant}.granted_by)`,
+      })
+      .from(templateGrant)
+      .where(eq(templateGrant.userId, id))
+      .orderBy(desc(templateGrant.createdAt)),
   ]);
 
   return c.json({
-    user: { id: row.id, name: row.name, email: row.email, emailVerified: row.emailVerified, role: row.role, banned: row.banned, banReason: row.banReason, banExpires: row.banExpires, createdAt: row.createdAt },
+    user: {
+      id: row.id,
+      name: row.name,
+      email: row.email,
+      emailVerified: row.emailVerified,
+      role: row.role,
+      banned: row.banned,
+      banReason: row.banReason,
+      banExpires: row.banExpires,
+      createdAt: row.createdAt,
+      plan: PLAN,
+      test: isTestEmail(row.email),
+    },
     sites,
     generations,
     usageToday: usage.map((u) => ({ ...u, calls: Number(u.calls), cost: Number(u.cost), cap: DAILY_CAPS[u.endpoint as keyof typeof DAILY_CAPS]?.calls ?? null })),
@@ -201,8 +241,304 @@ admin.get('/users/:id', async (c) => {
       total: templates.total,
       left: templates.left,
       chosen: templates.chosen,
+      grants,
     },
   });
+});
+
+// ---- A person's templates -----------------------------------------------------
+// What an admin can do to someone's allowance without a request: take chosen
+// templates back (one, several, or all of them) and set the limit, up or down
+// but never under the free five. Taking a template back also deletes what the
+// person made on it, their sites and those sites' pictures (lib/users.ts).
+// Setting the limit writes the difference as a template_grant row, which
+// allowanceSql counts beside granted requests; a raise can mail the person.
+
+const removeTemplatesSchema = z.union([
+  z.object({ all: z.literal(true) }),
+  z.object({ slugs: z.array(z.string().min(1).max(120)).min(1).max(500) }),
+]);
+
+admin.post('/users/:id/templates/remove', async (c) => {
+  const parsed = removeTemplatesSchema.safeParse(await c.req.json().catch(() => null));
+
+  if (!parsed.success) {
+    return c.json({ error: 'Name the templates to remove, or all of them.' }, 400);
+  }
+
+  const db = drizzle(c.env.DB, { schema });
+  const id = c.req.param('id');
+  const [person] = await db.select({ id: user.id }).from(user).where(eq(user.id, id)).limit(1);
+
+  if (!person) {
+    return c.json({ error: 'Not found' }, 404);
+  }
+
+  // Only what is actually chosen: a slug the person does not have is not an error, just nothing.
+  const wanted = 'all' in parsed.data ? null : new Set(parsed.data.slugs);
+  const chosen = await db.select({ slug: templateChoice.slug }).from(templateChoice).where(eq(templateChoice.userId, id));
+  const slugs = chosen.map((row) => row.slug).filter((slug) => !wanted || wanted.has(slug));
+  const sitesDeleted = await removeChosenTemplates(c.env, id, slugs);
+  const status = await templateStatus(db, id);
+
+  return c.json({ removed: slugs, sitesDeleted, used: status.used, total: status.total });
+});
+
+const limitSchema = z.object({
+  /** The limit wanted: at least the free five. */
+  limit: z.number().int().min(FREE_TEMPLATES).max(10_000),
+  note: z.string().trim().max(500).default(''),
+  /** Mail the person; only a raise is announced. */
+  notify: z.boolean().default(true),
+});
+
+admin.post('/users/:id/grants', async (c) => {
+  const parsed = limitSchema.safeParse(await c.req.json().catch(() => null));
+
+  if (!parsed.success) {
+    return c.json({ error: `Set a limit of ${FREE_TEMPLATES} or more.` }, 400);
+  }
+
+  const who = c.get('admin');
+  const db = drizzle(c.env.DB, { schema });
+  const id = c.req.param('id');
+  const [person] = await db.select({ email: user.email }).from(user).where(eq(user.id, id)).limit(1);
+
+  if (!person) {
+    return c.json({ error: 'Not found' }, 404);
+  }
+
+  const { limit, note } = parsed.data;
+  const raw = await db.get<{ raw: number }>(sql`select ${rawAllowanceSql(id)} as raw`);
+  const before = Math.max(FREE_TEMPLATES, Number(raw?.raw ?? FREE_TEMPLATES));
+
+  if (limit === before) {
+    return c.json({ error: `Their limit is already ${limit}.` }, 400);
+  }
+
+  if (limit - before > MAX_GRANT) {
+    return c.json({ error: `Raise a limit by at most ${MAX_GRANT} at a time.` }, 400);
+  }
+
+  // The difference from the unfloored sum, so the new limit is exactly what
+  // was asked even where earlier changes had pushed the sum under the floor.
+  const granted = limit - Number(raw?.raw ?? FREE_TEMPLATES);
+  const notify = parsed.data.notify && limit > before;
+
+  // Each notified grant is a real message, so it sits behind a burst gate like
+  // every route here that sends mail. A quiet change sends nothing.
+  if (notify) {
+    const burst = await consume(db, { key: `grantmail:${who.id}`, max: 20, windowSeconds: 10 * 60 });
+
+    if (!burst.ok) {
+      return c.json({ error: 'That is twenty emails in ten minutes. Untick "Email them", or try again shortly.' }, 429, {
+        'retry-after': String(burst.retryAfter),
+      });
+    }
+  }
+
+  const [row] = await db
+    .insert(templateGrant)
+    .values({ id: crypto.randomUUID(), userId: id, granted, note, grantedBy: who.id })
+    .returning();
+  const status = await templateStatus(db, id);
+  let mailed: boolean | null = null;
+
+  if (notify) {
+    // Written first, mailed second: a failed send is reported, never unwinds the grant.
+    mailed = await notifyAdminGrant(c.env, { email: person.email, granted: limit - before, total: status.total, origin: c.env.PUBLIC_ORIGIN })
+      .then(() => true)
+      .catch((error) => {
+        console.error('[mail] admin grant notice failed', error);
+        return false;
+      });
+  }
+
+  return c.json({ grant: { id: row.id, granted: row.granted }, total: status.total, mailed });
+});
+
+/**
+ * Take a change back: a mistyped number, say. Nothing chosen is taken away,
+ * and the floor keeps the limit at five or more whatever is undone.
+ */
+admin.delete('/users/:id/grants/:grantId', async (c) => {
+  const db = drizzle(c.env.DB, { schema });
+  const id = c.req.param('id');
+  const [row] = await db
+    .delete(templateGrant)
+    .where(and(eq(templateGrant.id, c.req.param('grantId')), eq(templateGrant.userId, id)))
+    .returning({ id: templateGrant.id });
+
+  if (!row) {
+    return c.json({ error: 'Not found' }, 404);
+  }
+
+  const status = await templateStatus(db, id);
+
+  return c.json({ removed: row.id, total: status.total });
+});
+
+/**
+ * Remove an account and everything hanging off it (lib/users.ts). Not your
+ * own, which would lock you out mid-click, and not another admin's: the role
+ * comes from outside the app (ADMIN_EMAILS or `npm run admin:grant`), and an
+ * address in ADMIN_EMAILS would come straight back as an admin on sign-up.
+ */
+admin.delete('/users/:id', async (c) => {
+  const who = c.get('admin');
+  const id = c.req.param('id');
+
+  if (id === who.id) {
+    return c.json({ error: 'You cannot remove your own account from here.' }, 400);
+  }
+
+  const db = drizzle(c.env.DB, { schema });
+  const [row] = await db.select({ id: user.id, role: user.role }).from(user).where(eq(user.id, id)).limit(1);
+
+  if (!row) {
+    return c.json({ error: 'Not found' }, 404);
+  }
+
+  if (row.role === 'admin') {
+    return c.json({ error: 'Admins are not removed from here. Take the role away in D1, and out of ADMIN_EMAILS, first.' }, 409);
+  }
+
+  await removeUsers(c.env, [row.id]);
+
+  return c.json({ removed: row.id });
+});
+
+// ---- Test users ----------------------------------------------------------------
+// Disposable accounts for trying what a member sees (the five templates, the
+// "Request more" rounds, a customized download) without a real inbox. Made
+// verified on the reserved domain, since nothing sent there arrives, and only
+// there: this route cannot make an account that looks like a person's.
+//
+// One account per call. better-auth hashes the password with scrypt in plain
+// JS (the Worker has no node:crypto), and a batch in one request would spend
+// that CPU several times over; the page loops instead, and says how far it got.
+
+const testUserSchema = z.object({
+  password: z.string().min(8).max(128),
+  /** The address before the @; generated when absent. */
+  prefix: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .regex(/^[a-z0-9](?:[a-z0-9._+-]{0,38}[a-z0-9])?$/)
+    .optional(),
+});
+
+/** Five base-36 characters from the CSPRNG: these become live sign-ins. */
+const randomSlug = () =>
+  Array.from(crypto.getRandomValues(new Uint8Array(5)), (byte) => (byte % 36).toString(36)).join('');
+
+admin.post('/test-users', async (c) => {
+  const parsed = testUserSchema.safeParse(await c.req.json().catch(() => null));
+
+  if (!parsed.success) {
+    return c.json(
+      { error: 'A password of 8 to 128 characters, and an address of letters, digits, dots and dashes.' },
+      400
+    );
+  }
+
+  const slug = randomSlug();
+  const local = parsed.data.prefix || `test-${slug}`;
+
+  try {
+    const created = await buildAuth(c.env).api.createUser({
+      body: {
+        email: `${local}@${TEST_EMAIL_DOMAIN}`,
+        password: parsed.data.password,
+        name: `Test user ${parsed.data.prefix || slug}`,
+        // Nothing sent to the domain arrives, so the link could never be followed.
+        data: { emailVerified: true },
+      },
+      // better-auth checks the caller's permission again from the session.
+      headers: c.req.raw.headers,
+    });
+
+    return c.json({ user: { id: created.user.id, email: created.user.email, name: created.user.name } });
+  } catch (error) {
+    // Its message is written for a person ("User already exists. Use another email.").
+    if (error instanceof APIError) {
+      return c.json({ error: error.message || 'Could not create that account.' }, 400);
+    }
+
+    throw error;
+  }
+});
+
+/** Every test account at once, but never an admin's or your own. */
+admin.delete('/test-users', async (c) => {
+  const who = c.get('admin');
+  const db = drizzle(c.env.DB, { schema });
+  const rows = await db
+    .select({ id: user.id })
+    .from(user)
+    .where(and(testEmailSql, ne(user.id, who.id), sql`(${user.role} is null or ${user.role} <> 'admin')`));
+
+  return c.json({ removed: await removeUsers(c.env, rows.map((row) => row.id)) });
+});
+
+// ---- Email preview ---------------------------------------------------------------
+// Every message the Worker sends, rendered by the functions that send it
+// (lib/emailPreview.ts), and a way to send one to yourself to see it in a
+// real client. Only ever to the admin asking: never a caller-supplied
+// address, so this cannot relay mail anywhere.
+
+const emailKeys = EMAIL_PREVIEWS.map((email) => email.key) as [string, ...string[]];
+
+/** Where this page is served from: the lockup image is fetched from here (lib/emailPreview.ts). */
+const hereOf = (url: string) => new URL(url).origin;
+
+admin.get('/emails', (c) =>
+  c.json({
+    provider: mailProvider(c.env),
+    to: c.get('admin').email,
+    emails: EMAIL_PREVIEWS.map(({ build, ...about }) => {
+      const message = build(c.env.PUBLIC_ORIGIN, hereOf(c.req.url));
+
+      return { ...about, subject: message.subject, text: message.text, html: message.html ?? null };
+    }),
+  })
+);
+
+admin.post('/emails/test', async (c) => {
+  const parsed = z.object({ key: z.enum(emailKeys) }).safeParse(await c.req.json().catch(() => null));
+
+  if (!parsed.success) {
+    return c.json({ error: `Send one of: ${emailKeys.join(', ')}.` }, 400);
+  }
+
+  const provider = mailProvider(c.env);
+
+  if (provider === 'none') {
+    return c.json({ error: 'Sending is not configured here: RESEND_API_KEY is not set.' }, 400);
+  }
+
+  const who = c.get('admin');
+  const db = drizzle(c.env.DB, { schema });
+  // Each call is a real message (see CLAUDE.md, "Request more").
+  const burst = await consume(db, { key: `mailtest:${who.id}`, max: 10, windowSeconds: 10 * 60 });
+
+  if (!burst.ok) {
+    return c.json({ error: 'That is ten test emails in ten minutes. Try again shortly.' }, 429, {
+      'retry-after': String(burst.retryAfter),
+    });
+  }
+
+  const email = EMAIL_PREVIEWS.find((entry) => entry.key === parsed.data.key)!;
+
+  try {
+    await sendMail(c.env, { to: who.email, ...email.build(c.env.PUBLIC_ORIGIN, hereOf(c.req.url)) });
+  } catch (error) {
+    console.error('[mail] test send failed', error);
+    return c.json({ error: error instanceof Error ? error.message : 'The email could not be sent.' }, 502);
+  }
+
+  return c.json({ to: who.email, provider });
 });
 
 // ---- "Request more" --------------------------------------------------------
@@ -508,17 +844,5 @@ admin.get('/quotas', (c) =>
     editable: false,
   })
 );
-
-/** Dev only: the mailbox verification and reset links land in with no mail key. */
-admin.get('/mail', async (c) => {
-  if (!isDev(c.env)) {
-    return c.json({ error: 'Not found' }, 404);
-  }
-
-  const db = drizzle(c.env.DB, { schema });
-  const rows = await db.select().from(devMail).orderBy(desc(devMail.createdAt)).limit(100);
-
-  return c.json({ mail: rows });
-});
 
 export default admin;

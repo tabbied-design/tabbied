@@ -413,7 +413,11 @@
   border-radius: 999px;
 }
 
+/* The page on its own, with a lucide arrow saying it leaves the frame. */
 .open {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
   margin-left: auto;
   font: 400 12px var(--s-sans);
   color: var(--s-dim);

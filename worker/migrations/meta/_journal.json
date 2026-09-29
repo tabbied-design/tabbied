@@ -64,6 +64,13 @@
       "when": 1790272513990,
       "tag": "0008_template_request_rounds",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1790638234979,
+      "tag": "0009_template_grants",
+      "breakpoints": true
     }
   ]
 }

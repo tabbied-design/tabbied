@@ -7,7 +7,9 @@ import { Logo } from 'components/logo';
 import { plexMono } from 'lib/fonts';
 import { useSyncExternalStore } from 'react';
 import { SESSION_HINT_KEY, readSessionHint, signOut, useSessionUser } from 'lib/authClient';
+import { stopImpersonating } from 'lib/impersonation';
 import useMediaQuery from 'lib/useMediaQuery';
+import ImpersonationNotice from './ImpersonationNotice';
 import styles from './SiteNav.module.css';
 
 // The site's masthead, in two tones: ink on paper (`light`) and paper on the
@@ -68,7 +70,7 @@ export default function SiteNav({
   sticky?: boolean;
   className?: string;
 }) {
-  const { user, isPending } = useSessionUser();
+  const { user, isPending, impersonating } = useSessionUser();
   const hinted = useSyncExternalStore(noSubscription, readSessionHint, () => false);
   const likely = !user && isPending && hinted;
   const router = useRouter();
@@ -130,6 +132,7 @@ export default function SiteNav({
       suppressHydrationWarning
     >
       <script dangerouslySetInnerHTML={{ __html: HINT_SCRIPT }} />
+      <ImpersonationNotice />
 
       <Link href="/" className={styles.logo} aria-label="Tabbied home" prefetch={false}>
         {/* A hair larger on the dark ground, which eats a little of the
@@ -170,7 +173,9 @@ export default function SiteNav({
                 sideOffset={10}
               >
                 <Menu.Popup className={styles.menu}>
-                  <div className={styles.menuEmail}>{user.email}</div>
+                  <div className={styles.menuEmail}>
+                    {impersonating ? `Viewing as ${user.email}` : user.email}
+                  </div>
                   <Menu.Separator className={styles.menuRule} />
                   {item('/account', 'My account')}
                   {narrow && DESTINATIONS.map(([href, label]) => item(href, label))}
@@ -179,9 +184,15 @@ export default function SiteNav({
                       /api/admin route checks the role again for itself. */}
                   {user.role === 'admin' && item('/admin', 'Admin')}
                   <Menu.Separator className={styles.menuRule} />
+                  {/* A borrowed session ends by handing the admin's back:
+                      signing out here would end both (lib/impersonation.ts). */}
                   <Menu.Item
                     className={styles.menuItem}
                     onClick={async () => {
+                      if (impersonating) {
+                        await stopImpersonating().catch(() => undefined);
+                        return;
+                      }
                       // Leave whether or not the sign-out call succeeded,
                       // so a rejection is never unhandled.
                       try {
@@ -191,7 +202,7 @@ export default function SiteNav({
                       }
                     }}
                   >
-                    Sign out
+                    {impersonating ? 'Stop impersonating' : 'Sign out'}
                   </Menu.Item>
                 </Menu.Popup>
               </Menu.Positioner>

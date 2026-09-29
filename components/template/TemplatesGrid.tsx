@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
 import Link from 'next/link';
+import { ArrowRight, CircleCheck, Palette, Plus } from 'lucide-react';
 import type { PatternDefinition } from 'tabbied';
 import {
   TEMPLATE_CATEGORIES,
@@ -99,7 +100,9 @@ function Footer({ c, templates, guard, here }: { c: TemplateCard; templates: MyT
     return (
       <div className={s.dl}>
         <Link href={customizeHref(c.slug, chosen)} prefetch={false} className={s.textLink}>
-          Customize &#x2192;
+          <Palette size={14} strokeWidth={1.8} aria-hidden="true" />
+          Customize
+          <ArrowRight size={13} strokeWidth={1.8} aria-hidden="true" />
         </Link>
         <DownloadMenu name={c.name} chosen={chosen} side="top" classes={MENU} />
       </div>
@@ -121,7 +124,10 @@ function Footer({ c, templates, guard, here }: { c: TemplateCard; templates: MyT
 
   return (
     <div className={s.dl}>
-      <span className={s.quiet}>All {templates.total} chosen</span>
+      <span className={s.quiet}>
+        <CircleCheck size={14} strokeWidth={1.8} aria-hidden="true" />
+        All {templates.total} chosen
+      </span>
       {/* A click opens the at-limit dialog, as the artboard has it: the
           chosen templates, where a request stands, and the way to ask. The
           href is the account's request form, for a new tab. */}
@@ -135,6 +141,7 @@ function Footer({ c, templates, guard, here }: { c: TemplateCard; templates: MyT
           guard(c.slug, c.name, 'choose', () => {});
         }}
       >
+        <Plus size={14} strokeWidth={1.8} aria-hidden="true" />
         Request more
       </Link>
     </div>

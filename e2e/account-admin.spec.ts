@@ -9,19 +9,29 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const REPO_ROOT = path.join(__dirname, '..');
-const REQUIRED = ['account', 'account/sites', 'admin', 'admin/users', 'admin/requests'].map((route) =>
+const REQUIRED = ['account', 'account/sites', 'admin', 'admin/users', 'admin/requests', 'admin/test-users', 'admin/emails'].map((route) =>
   path.join(REPO_ROOT, 'out', route, 'index.html')
 );
 
-const session = (role: string | null) => ({
-  session: { id: 's', userId: 'u1', expiresAt: '2030-01-01T00:00:00Z' },
+const session = (role: string | null, impersonatedBy: string | null = null) => ({
+  session: { id: 's', userId: 'u1', expiresAt: '2030-01-01T00:00:00Z', impersonatedBy },
   user: { id: 'u1', name: 'Pat', email: 'pat@example.com', emailVerified: true, role },
 });
 
-const stubSession = (page: Page, role: string | null | 'none') =>
+const stubSession = (page: Page, role: string | null | 'none', impersonatedBy: string | null = null) =>
   page.route('**/api/auth/get-session', (route) =>
-    route.fulfill({ status: 200, contentType: 'application/json', body: role === 'none' ? 'null' : JSON.stringify(session(role)) })
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: role === 'none' ? 'null' : JSON.stringify(session(role, impersonatedBy)),
+    })
   );
+
+const userRow = (overrides: Record<string, unknown> = {}) => ({
+  id: 'u2', name: 'Sam', email: 'sam@example.com', emailVerified: true, role: null, banned: false,
+  createdAt: '2026-09-01T00:00:00Z', plan: 'free', test: false, sites: 1, generations: 2, chosen: 5, allowance: 5,
+  ...overrides,
+});
 
 test.describe('account and admin pages', () => {
   test.skip(REQUIRED.some((file) => !fs.existsSync(file)), 'run `npm run build` first');
@@ -215,7 +225,7 @@ test.describe('account and admin pages', () => {
       route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ users: [{ id: 'u2', name: 'Sam', email: 'sam@example.com', emailVerified: true, role: null, banned: false, createdAt: '2026-09-01T00:00:00Z', sites: 1, generations: 2, chosen: 5, allowance: 5 }] }),
+        body: JSON.stringify({ testDomain: 'tabbied.test', users: [userRow()] }),
       })
     );
 
@@ -233,10 +243,10 @@ test.describe('account and admin pages', () => {
 
     await page.goto('/admin/users/');
     await expect(page.getByRole('link', { name: 'sam@example.com' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Make admin' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Ban' })).toBeVisible();
-    await expect(page.getByText('5 / 5')).toBeVisible();
-    await expect(page.getByText('All 5 chosen')).toBeVisible();
+    // A full quota is the quota in red, not a status.
+    await expect(page.locator('[class*="__quotaFull"]')).toContainText('5 / 5');
+    await expect(page.getByRole('link', { name: 'Test users' })).toHaveAttribute('href', '/admin/test-users/');
+    await expect(page.getByRole('link', { name: 'Email preview' })).toHaveAttribute('href', '/admin/emails/');
 
     // Requests: a message from someone at the limit, granted with the stepper.
     const decisions: unknown[] = [];
@@ -271,5 +281,311 @@ test.describe('account and admin pages', () => {
     await page.getByRole('button', { name: 'One fewer' }).click();
     await page.getByRole('button', { name: 'Grant 3' }).click();
     await expect.poll(() => decisions).toEqual([{ status: 'granted', granted: 3 }]);
+  });
+});
+
+test.describe('acting on accounts', () => {
+  test.skip(REQUIRED.some((file) => !fs.existsSync(file)), 'run `npm run build` first');
+
+  test.beforeEach(async ({ page }) => {
+    await page.route(/https:\/\/(use\.typekit\.net|fonts\.googleapis\.com|fonts\.gstatic\.com)\//, (route) => route.abort());
+  });
+
+  test('the directory: a plan, a template quota, and a menu per row', async ({ page }) => {
+    await stubSession(page, 'admin');
+    let users = [
+      userRow(),
+      userRow({ id: 'u1', name: 'Pat', email: 'pat@example.com', role: 'admin', chosen: 1 }),
+      userRow({ id: 'u3', name: 'Test user abc12', email: 'test-abc12@tabbied.test', test: true, chosen: 0 }),
+      userRow({ id: 'u4', name: 'Robin', email: 'robin@example.com', emailVerified: false, chosen: 0 }),
+    ];
+    await page.route('**/api/admin/users?*', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ testDomain: 'tabbied.test', users }) })
+    );
+
+    await page.goto('/admin/users/');
+    // CSS Modules keep the authored name after a double underscore.
+    const row = (text: string) => page.locator('[class*="__row"]').filter({ hasText: text });
+    const sam = row('sam@example.com');
+    await expect(sam.getByText('Free', { exact: true })).toBeVisible();
+    // Plan where Role was, and the quota's heading on two lines.
+    const head = await page.locator('[class*="__tableHead"]').innerText();
+    expect(head).toMatch(/\bPLAN\b/);
+    expect(head).not.toMatch(/ROLE/);
+    expect(head).toMatch(/TEMPLATE\nQUOTA/);
+    // No Status column: what it said is a badge by the name, or the quota's color.
+    expect(head).not.toMatch(/STATUS/);
+    await expect(row('robin@example.com').getByText('Unverified', { exact: true })).toBeVisible();
+    await expect(sam.locator('[class*="__quotaFull"]')).toContainText('5 / 5');
+    await expect(row('tabbied.test').locator('[class*="__quotaFull"]')).toHaveCount(0);
+    // "Make admin" is gone; an admin is a tag by the name.
+    await expect(page.getByRole('button', { name: /admin/i })).toHaveCount(0);
+    await expect(row('pat@example.com').getByText('Admin', { exact: true })).toBeVisible();
+    await expect(row('tabbied.test').getByText('Test', { exact: true })).toBeVisible();
+
+    // Your own row offers nothing, and says why.
+    await page.getByRole('button', { name: 'Actions for Pat' }).click();
+    await expect(page.getByRole('menuitem', { name: 'Impersonate' })).toHaveAttribute('aria-disabled', 'true');
+    await expect(page.getByRole('menuitem', { name: 'Remove' })).toHaveAttribute('aria-disabled', 'true');
+    await expect(page.getByText('This is you.')).toBeVisible();
+    await page.keyboard.press('Escape');
+
+    // Ban goes to better-auth, then the list reloads.
+    const bans: unknown[] = [];
+    await page.route('**/api/auth/admin/ban-user', (route) => {
+      bans.push(route.request().postDataJSON());
+      users = users.map((row) => (row.id === 'u2' ? { ...row, banned: true } : row));
+      return route.fulfill({ status: 200, contentType: 'application/json', body: '{"user":{}}' });
+    });
+    await page.getByRole('button', { name: 'Actions for Sam' }).click();
+    await page.getByRole('menuitem', { name: 'Ban' }).click();
+    await expect.poll(() => bans).toEqual([{ userId: 'u2', banReason: 'Banned from the admin page' }]);
+    await expect(sam.getByText('Banned', { exact: true })).toBeVisible();
+
+    // Remove asks first, then deletes through the admin API.
+    const removed: string[] = [];
+    await page.route('**/api/admin/users/u2', (route) => {
+      removed.push(route.request().method());
+      users = users.filter((row) => row.id !== 'u2');
+      return route.fulfill({ status: 200, contentType: 'application/json', body: '{"removed":"u2"}' });
+    });
+    await page.getByRole('button', { name: 'Actions for Sam' }).click();
+    await expect(page.getByRole('menuitem', { name: 'Unban' })).toBeVisible();
+    await page.getByRole('menuitem', { name: 'Remove' }).click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByRole('heading', { name: 'Remove Sam?' })).toBeVisible();
+    expect(removed).toEqual([]);
+    await dialog.getByRole('button', { name: 'Remove account' }).click();
+    await expect(dialog).toHaveCount(0);
+    expect(removed).toEqual(['DELETE']);
+    await expect(page.getByRole('link', { name: 'sam@example.com' })).toHaveCount(0);
+  });
+
+  test("managing a person's templates: remove some, reset, and add to the limit", async ({ page }) => {
+    await stubSession(page, 'admin');
+    await page.route('**/api/admin/users?*', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ testDomain: 'tabbied.test', users: [userRow({ chosen: 2 })] }) })
+    );
+    const detail = {
+      user: { ...userRow({ chosen: 2 }), banReason: null, banExpires: null },
+      sites: [{ id: 's1', slug: 'verdant', title: 'Sam Plants', updatedAt: '2026-09-02T00:00:00Z' }],
+      generations: [],
+      usageToday: [],
+      templates: {
+        used: 2,
+        total: 8,
+        left: 6,
+        chosen: [
+          { slug: 'verdant', createdAt: '2026-09-01T00:00:00Z' },
+          { slug: 'solstice', createdAt: '2026-09-03T00:00:00Z' },
+        ],
+        grants: [] as unknown[],
+      },
+    };
+    await page.route('**/api/admin/users/u2', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(detail) })
+    );
+    const removals: unknown[] = [];
+    await page.route('**/api/admin/users/u2/templates/remove', (route) => {
+      removals.push(route.request().postDataJSON());
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ removed: ['verdant'], sitesDeleted: 1, used: 1, total: 5 }) });
+    });
+    const grants: unknown[] = [];
+    await page.route('**/api/admin/users/u2/grants', (route) => {
+      const body = route.request().postDataJSON() as { limit: number; notify: boolean };
+      grants.push(body);
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ grant: { id: 'g1', granted: body.limit - 8 }, total: body.limit, mailed: body.notify ? true : null }),
+      });
+    });
+
+    await page.goto('/admin/users/');
+    await page.getByRole('button', { name: 'Actions for Sam' }).click();
+    await page.getByRole('menuitem', { name: 'Manage templates' }).click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByRole('heading', { name: 'Templates for Sam' })).toBeVisible();
+    await expect(dialog.getByText('1 customized site')).toBeVisible();
+
+    // One template: the warning names the site that goes with it, and nothing is sent until confirmed.
+    await dialog.getByRole('checkbox', { name: /verdant/ }).check();
+    await dialog.getByRole('button', { name: 'Remove selected (1)' }).click();
+    await expect(dialog.getByText(/Remove verdant from sam@example.com\? This also deletes 1 customized site/)).toBeVisible();
+    expect(removals).toEqual([]);
+    await dialog.getByRole('button', { name: 'Remove 1 template' }).click();
+    await expect(dialog.getByText('Removed 1 template and 1 customized site.')).toBeVisible();
+    expect(removals).toEqual([{ slugs: ['verdant'] }]);
+
+    // Reset asks too, and sends "all" rather than a list.
+    await dialog.getByRole('button', { name: 'Reset all' }).click();
+    await dialog.getByRole('button', { name: 'Reset all' }).click();
+    await expect.poll(() => removals).toEqual([{ slugs: ['verdant'] }, { all: true }]);
+
+    // Lowering: never under five, and a decrease is not an email.
+    const fewer = dialog.getByRole('button', { name: 'One fewer' });
+    await expect(dialog.getByRole('button', { name: 'No change' })).toBeDisabled();
+    for (let i = 0; i < 3; i++) await fewer.click();
+    await expect(fewer).toBeDisabled();
+    await expect(dialog.getByRole('checkbox', { name: /Email/ })).toHaveCount(0);
+    await dialog.getByRole('button', { name: 'One more' }).click();
+    await dialog.getByRole('button', { name: 'Lower to 6' }).click();
+    await expect(dialog.getByText('Lowered their limit to 6.')).toBeVisible();
+
+    // Raising: an admins-only note, and the email on by default.
+    await dialog.getByRole('button', { name: 'One more' }).click();
+    await dialog.getByRole('textbox', { name: 'Note for admins' }).fill('Workshop');
+    await expect(dialog.getByRole('checkbox', { name: 'Email sam@example.com' })).toBeChecked();
+    await dialog.getByRole('button', { name: 'Raise to 9' }).click();
+    await expect(dialog.getByText('Raised their limit to 9. sam@example.com has been told.')).toBeVisible();
+    expect(grants).toEqual([
+      { limit: 6, note: '', notify: false },
+      { limit: 9, note: 'Workshop', notify: true },
+    ]);
+
+    // The pencil beside the quota opens the same dialog.
+    await dialog.getByRole('button', { name: 'Done' }).click();
+    await expect(dialog).toHaveCount(0);
+    await page.getByRole('button', { name: 'Manage templates for Sam' }).click();
+    await expect(page.getByRole('dialog').getByRole('heading', { name: 'Templates for Sam' })).toBeVisible();
+  });
+
+  test('impersonating: into the account, a way back on every page, and back', async ({ page }) => {
+    await stubSession(page, 'admin');
+    await page.route('**/api/admin/users?*', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ testDomain: 'tabbied.test', users: [userRow()] }) })
+    );
+    await page.route('**/api/account/templates', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ used: 0, total: 5, left: 5, chosen: [], request: null, firstUsed: false }) })
+    );
+    const started: unknown[] = [];
+    await page.route('**/api/auth/admin/impersonate-user', async (route) => {
+      started.push(route.request().postDataJSON());
+      // From here the browser holds Sam's session, marked as borrowed.
+      await page.unroute('**/api/auth/get-session');
+      await stubSession(page, null, 'u1');
+      return route.fulfill({ status: 200, contentType: 'application/json', body: '{"session":{},"user":{}}' });
+    });
+
+    await page.goto('/admin/users/?filter=x');
+    await page.getByRole('button', { name: 'Actions for Sam' }).click();
+    await page.getByRole('menuitem', { name: 'Impersonate' }).click();
+    await page.waitForURL('**/account/');
+    expect(started).toEqual([{ userId: 'u2' }]);
+
+    // Every page with a bar says whose account this is.
+    const notice = page.getByRole('status').filter({ hasText: 'Viewing as' });
+    await expect(notice).toContainText('pat@example.com');
+    await expect(notice.getByRole('button', { name: 'Stop impersonating' })).toBeVisible();
+
+    // The account menu says whose account this is, and its last item hands
+    // the admin's session back rather than signing out of both.
+    await page.getByRole('button', { name: 'Account menu' }).click();
+    await expect(page.getByText('Viewing as pat@example.com').first()).toBeVisible();
+    await expect(page.getByRole('menuitem', { name: 'Stop impersonating' })).toBeVisible();
+    await expect(page.getByRole('menuitem', { name: 'Sign out' })).toHaveCount(0);
+    await page.keyboard.press('Escape');
+
+    // The admin pages are closed while it lasts, and say how to get them back.
+    await page.goto('/admin/');
+    await expect(page.getByRole('heading', { name: /You are viewing as/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Stop impersonating' })).toBeVisible();
+
+    const stopped: string[] = [];
+    const signedOut: string[] = [];
+    await page.route('**/api/auth/sign-out', (route) => {
+      signedOut.push(route.request().method());
+      return route.fulfill({ status: 200, contentType: 'application/json', body: '{"success":true}' });
+    });
+    await page.route('**/api/auth/admin/stop-impersonating', async (route) => {
+      stopped.push(route.request().method());
+      await page.unroute('**/api/auth/get-session');
+      await stubSession(page, 'admin');
+      return route.fulfill({ status: 200, contentType: 'application/json', body: '{"session":{},"user":{}}' });
+    });
+    // Stopped from the account menu, where "Sign out" used to be.
+    await page.goto('/account/');
+    await page.getByRole('button', { name: 'Account menu' }).click();
+    await page.getByRole('menuitem', { name: 'Stop impersonating' }).click();
+    // Back where the admin started, still signed in as the admin.
+    await page.waitForURL(/\/admin\/users\/\?filter=x$/);
+    expect(stopped).toEqual(['POST']);
+    expect(signedOut).toEqual([]);
+    await expect(page.getByRole('link', { name: 'sam@example.com' })).toBeVisible();
+  });
+
+  test('test users: made one at a time, credentials shown once, removed together', async ({ page }) => {
+    await stubSession(page, 'admin');
+    let users: ReturnType<typeof userRow>[] = [];
+    await page.route('**/api/admin/users?*', (route) => {
+      expect(new URL(route.request().url()).searchParams.get('scope')).toBe('test');
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ testDomain: 'tabbied.test', users }) });
+    });
+    const made: { password: string; prefix?: string }[] = [];
+    await page.route('**/api/admin/test-users', (route) => {
+      if (route.request().method() === 'DELETE') {
+        users = [];
+        return route.fulfill({ status: 200, contentType: 'application/json', body: '{"removed":3}' });
+      }
+      const body = route.request().postDataJSON() as { password: string; prefix?: string };
+      made.push(body);
+      const email = `${body.prefix ?? `test-${made.length}`}@tabbied.test`;
+      users = [userRow({ id: `t${made.length}`, name: `Test user ${made.length}`, email, test: true, chosen: 0 }), ...users];
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ user: { id: `t${made.length}`, email } }) });
+    });
+
+    await page.goto('/admin/test-users/');
+    await expect(page.getByText('No test users yet')).toBeVisible();
+    const password = page.getByRole('textbox', { name: 'Password' });
+    await expect(password).toHaveValue(/^test-[a-z0-9]{8}$/);
+    await page.getByRole('textbox', { name: /Email/ }).fill('checkout-flow');
+    await page.getByRole('button', { name: 'Create test user' }).click();
+    await expect(page.getByText('checkout-flow@tabbied.test').first()).toBeVisible();
+    expect(made).toEqual([{ password: await password.inputValue(), prefix: 'checkout-flow' }]);
+
+    // Several at once: the address field goes, one call each.
+    await page.getByRole('spinbutton', { name: 'How many' }).fill('2');
+    await expect(page.getByRole('textbox', { name: /Email/ })).toHaveCount(0);
+    await page.getByRole('button', { name: 'Create 2 test users' }).click();
+    await expect(page.getByText('Made 2 accounts')).toBeVisible();
+    expect(made.slice(1).map((body) => body.prefix)).toEqual([undefined, undefined]);
+    await expect(page.getByText('3 accounts on @tabbied.test')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Remove all' }).click();
+    await page.getByRole('button', { name: 'Yes, remove all' }).click();
+    await expect(page.getByText('No test users yet')).toBeVisible();
+  });
+
+  test('email preview: every message, drawn as sent, and a test copy to yourself', async ({ page }) => {
+    await stubSession(page, 'admin');
+    await page.route('**/api/admin/emails', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          provider: 'resend',
+          to: 'pat@example.com',
+          emails: [
+            { key: 'verify', name: 'Account confirmation', to: 'person', when: 'Sign-up (better-auth)', subject: 'Confirm your Tabbied account', text: 'Confirm your Tabbied account:\n\nhttps://tabbied.com/x', html: null },
+            { key: 'approval', name: 'Extra templates link', to: 'person', when: 'Later', subject: 'Your 5 extra templates are ready', text: 'Hi Pat,', html: '<!DOCTYPE html><html><body><h1>5 more templates, on us</h1></body></html>' },
+          ],
+        }),
+      })
+    );
+    const sent: unknown[] = [];
+    await page.route('**/api/admin/emails/test', (route) => {
+      sent.push(route.request().postDataJSON());
+      return route.fulfill({ status: 200, contentType: 'application/json', body: '{"to":"pat@example.com","provider":"resend"}' });
+    });
+
+    await page.goto('/admin/emails/');
+    await expect(page.getByRole('heading', { name: 'Account confirmation' })).toBeVisible();
+    await expect(page.getByText('Confirm your Tabbied account:', { exact: false })).toBeVisible();
+    await expect(page.frameLocator('iframe[title="Extra templates link email"]').getByRole('heading', { name: '5 more templates, on us' })).toBeVisible();
+
+    await page.getByRole('combobox', { name: 'Email to send' }).selectOption('approval');
+    await page.getByRole('button', { name: 'Send test email' }).click();
+    await expect(page.getByText('Extra templates link is on its way to pat@example.com.')).toBeVisible();
+    expect(sent).toEqual([{ key: 'approval' }]);
   });
 });

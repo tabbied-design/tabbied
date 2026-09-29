@@ -1057,7 +1057,9 @@ everything around them works, which is how "Make this one" read as a
 broken model call when 0003 had never reached production. `GET /api/health`
 reports `schema.expected` against `schema.applied` (read from wrangler's
 `d1_migrations` ledger), and `status: "degraded"` there is the whole
-diagnosis. Then `wrangler secret put BETTER_AUTH_SECRET`. Until that secret
+diagnosis. Only *behind* is degraded: a database ahead of the deployed code
+(a migration applied before the build that reads it, the safe order, as 0009
+was) reads `ok`, and the 503 relabeling follows the same rule. Then `wrangler secret put BETTER_AUTH_SECRET`. Until that secret
 exists `/api/auth/*` answers 503 and nothing else changes, the intended
 degradation, not an outage. `.dev.vars` is gitignored;
 `.dev.vars.example` documents the shape.
@@ -1175,7 +1177,8 @@ another). Five things worth not re-litigating:
   `/admin/requests/`, where granting adds 1 to 20, declining adds none, Undo
   puts it back, and a decision mails the person. One request may be open at
   a time, checked in the insert itself (`openRequest`). The allowance is
-  five plus every `granted` whose status is `activated` or `granted`, and
+  five plus every `granted` whose status is `activated` or `granted`, plus
+  every admin change (`template_grant`, below), never under five, and
   that rule is one `allowanceSql`, read by the person's page, the claim and
   both admin lists alike; the users directory once carried a copy of its
   own that read a single grant row and left `activated` out, so an account
@@ -1494,7 +1497,9 @@ whatever text Studio wrote, so putting them back is a UI change.
   is either `ADMIN_EMAILS` (a comma-separated var or secret; the role is set
   on sign-up, or on the next sign-in for an account that already exists) or
   `npm run admin:grant -- you@example.com` (a D1 UPDATE; `--remote` for
-  production); after that `/admin/users` does it through the client plugin.
+  production), for every admin after the first too: the directory has no
+  "Make admin" button any more, so the role only ever comes from outside the
+  app, and taking it away is an UPDATE in D1 (and out of `ADMIN_EMAILS`).
   The caps page is read-only because the caps are constants.
 - **`ADMIN_EMAILS` promotes in front of the endpoint, not in a session hook,
   and `/api/health` counts it.** Three things make this setting look broken
@@ -1523,6 +1528,88 @@ out of `dev_mail`; run them **after** a build, not during one: `next build`
 empties `out/` and the assets binding reads from there, which reads as a
 random failure in `beforeAll`. Each test file pays its own setup (about 10s),
 so a new test joins an existing file unless it needs a fresh database.
+
+## The admin's hands on an account - impersonate, ban, remove, test users
+
+The directory (`/admin/users`) shows a Plan column (everyone is `free`
+during the beta; `PLAN` in `worker/lib/users.ts` is the one place that says
+so) and a Template Quota, red once everything allowed is chosen, with a
+pencil that opens Manage templates. There is no Status column: Unverified
+and Banned are badges by the name. Each row ends in an ellipsis menu,
+`components/admin/UserActions.tsx`: Impersonate, Ban or Unban, Remove. The
+same menu sits on a user's detail view and on `/admin/test-users`. Five
+things worth not re-litigating:
+
+- **Remove is ours; impersonate and ban are better-auth's.** better-auth's
+  `remove-user` deletes the row and the sessions, and D1 cascades the rest,
+  but R2 does not: the person's uploads (`up/<id>/`), their directions'
+  images (`gen/<generation>/`) and their sites' pictures
+  (`gen/site/<site>/`) would stay. `DELETE /api/admin/users/:id` runs
+  `removeUsers`, which reads those owners, deletes the rows, then the bytes
+  by prefix (`deletePrefix`, shared with a site's own delete). A new R2
+  prefix owned by a person belongs in that list.
+- **The menu greys out what the Worker refuses, and says why.** Not your
+  own row; not another admin's Impersonate (better-auth refuses it) or
+  Remove (ours refuses it: an `ADMIN_EMAILS` address would come straight
+  back as an admin); not a banned account's Impersonate (its session cannot
+  be created). The reasons are shown before the click, the refusals stay
+  server-side.
+- **Impersonating is a borrowed session, visible everywhere it can be.**
+  `lib/impersonation.ts` swaps the cookie for one of the person's (an hour,
+  `impersonatedBy` set) and lands on `/account/`; the admin tier then answers
+  404 to it like to any member, so `AdminPage` shows "You are viewing as"
+  with a way back instead of "Not found". Every page with a bar (SiteNav,
+  the customizer's, the template preview's) renders `ImpersonationNotice`,
+  a pill portaled to `<body>` and fixed, because the bars state their
+  heights and the dark one's backdrop blur would become a fixed child's
+  containing block. The account menus (SiteNav, the customizer's, the
+  template preview's) head themselves "Viewing as" and put "Stop
+  impersonating" where "Sign out" was: better-auth's sign-out ends the
+  borrowed session and leaves the admin's own in a cookie nothing reads, so
+  signing out there signed the admin out too. Stopping returns to the page
+  the admin started from (per tab, in sessionStorage).
+- **A test user is an address, not a flag.** `@tabbied.test` (`.test` is
+  reserved and never resolves) is the whole definition, matched as a suffix
+  so `tabbied.testing.com` is not one and "Remove all" cannot reach it.
+  `POST /api/admin/test-users` makes one verified account per call, only on
+  that domain: better-auth hashes with scrypt in plain JS here (no
+  `node:crypto` without `nodejs_compat`), so a batch in one request would
+  spend that CPU several times over; the page loops and reports progress.
+  The password is shown once on the page, since only its hash is kept.
+- **An admin changes a person's templates from the same menu.** "Manage
+  templates" (`TemplatesDialog`) takes chosen templates back (some, or all:
+  Reset) and sets the limit without a request: up by at most 20 at a time,
+  or down, never under the free five. Taking one back
+  deletes what the person made on it too, their sites on that template and
+  those sites' pictures (`removeChosenTemplates`), and the dialog says how
+  many before it happens. A change is a `template_grant` row holding the
+  difference (negative to lower), not a `template_request`: the request flow
+  reads the latest request row as the person's own, so a grant stored there
+  would pose as their request. `allowanceSql` counts both and floors the sum
+  at `FREE_TEMPLATES`, so no combination of decreases and undone grants
+  takes anyone under five; the route writes the difference from the
+  unfloored sum (`rawAllowanceSql`), so the limit set is exactly the one
+  asked for. Only a raise is mailed: "Email them" is on by default and sends
+  `adminGrantEmail`, not the decision email, which thanks the person for a
+  request they never sent. A change can be taken back; what the person
+  already chose stays chosen, as for an early account over the limit.
+  Migration 0009 made the table, and `allowanceSql` reads it on every claim,
+  so **0009 must be applied to production before the code that reads it
+  deploys**: without it every download and the account page fail.
+- **The email preview renders what is sent, not a copy of it.**
+  `worker/lib/mail.ts` builds each message (`verificationEmail`,
+  `approvalEmail`, ...) apart from sending it, and both the senders and
+  `worker/lib/emailPreview.ts` call the builders, so `/admin/emails` shows
+  the bytes a person receives. A new message in `mail.ts` needs an entry
+  there or the page quietly stops describing the mail. A test copy goes
+  only to the admin asking (there is no address field), behind a burst
+  gate like every route that sends mail. Links carry `PREVIEW-ONLY` tokens
+  that confirm, reset and grant nothing. The lockup in designed mail is a
+  hosted PNG (`public/email/tabbied-lockup.png`, captured from `Logo` by
+  `scripts/capture-email-lockup.mjs`), because Gmail strips inline SVG and
+  ignores web fonts. There is no admin page for the dev mailbox: `dev_mail`
+  exists only in local development, where the `wrangler d1 execute` query in
+  `.dev.vars.example` reads it, and the tests read it directly.
 
 ## Agent-facing docs - all generated, never hand-edited
 

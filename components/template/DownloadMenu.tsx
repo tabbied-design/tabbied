@@ -6,6 +6,7 @@
 // draws the menu in its own module, since a portaled popup carries its own
 // tokens, so the classes come from the caller.
 import { Menu } from '@base-ui-components/react/menu';
+import { ChevronDown, Download } from 'lucide-react';
 import { toaster } from 'components/Toaster';
 import type { ChosenTemplate } from 'lib/myTemplates';
 import { downloadCustomisedSite } from 'lib/studioDownload';
@@ -49,7 +50,9 @@ export default function DownloadMenu({
   return (
     <Menu.Root>
       <Menu.Trigger className={classes.trigger}>
-        Download <span className={classes.caret} aria-hidden="true">&#x25BE;</span>
+        <Download size={14} strokeWidth={1.8} aria-hidden="true" />
+        Download
+        <ChevronDown className={classes.caret} size={14} strokeWidth={1.8} aria-hidden="true" />
       </Menu.Trigger>
       <Menu.Portal>
         <Menu.Positioner side={side} align="end" sideOffset={8} className={classes.positioner}>

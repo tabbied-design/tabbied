@@ -1,8 +1,14 @@
 /* The admin tier's shell and pieces: a sidebar with the sections, a sticky
    topbar, and a gray working surface with white cards on it. The admin pages
-   carry no other chrome, so the tokens live here. */
+   carry no other chrome, so the tokens live here. The signed-out page, the
+   row menu and the dialogs sit outside .shell (the last two are portaled to
+   <body>), so they declare the same set rather than reading it: a `font:`
+   naming an undeclared property is invalid as a whole. */
 
-.shell {
+.shell,
+.wrap,
+.rowMenu,
+.dialog {
   --a-ink: #0e0e13;
   --a-paper: #ffffff;
   --a-ground: #f6f6f7;
@@ -17,7 +23,9 @@
   --a-display: 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'),
     'Helvetica Neue', Helvetica, Arial, sans-serif;
   --a-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
 
+.shell {
   display: grid;
   grid-template-columns: 264px minmax(0, 1fr);
   min-height: 100vh;
@@ -33,6 +41,7 @@
   padding: 80px 24px;
   font-family: var(--a-sans);
   color: var(--a-ink);
+  overflow-wrap: anywhere;
 }
 
 /* -- Sidebar --------------------------------------------------------------- */
@@ -88,13 +97,25 @@
   background-color: oklch(0 0 0 / 0.04);
 }
 
-.navLink::before {
+/* A section that only reads (Quotas): said at the row's end. */
+.navTag {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  margin-left: auto;
+  padding: 2px 7px;
+  font: 400 10.5px var(--a-mono);
+  color: var(--a-dim);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  border: 1px solid oklch(0 0 0 / 0.1);
+  border-radius: 999px;
+}
+
+/* Each section's lucide icon, grey until it is the page you are on. */
+.navIcon {
   flex: none;
-  width: 8px;
-  height: 8px;
-  background-color: oklch(0 0 0 / 0.18);
-  border-radius: 50%;
-  content: '';
+  color: oklch(0.55 0.01 260);
 }
 
 .navOn {
@@ -106,8 +127,8 @@
   background-color: oklch(0.96 0.03 168);
 }
 
-.navOn::before {
-  background-color: var(--a-mint);
+.navOn .navIcon {
+  color: var(--a-teal);
 }
 
 .sideFoot {
@@ -425,7 +446,8 @@
 
 .cardHead {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 12px 20px;
   align-items: flex-start;
   justify-content: space-between;
 }
@@ -513,29 +535,6 @@
   background-color: oklch(0 0 0 / 0.025);
 }
 
-.sortHead {
-  display: flex;
-  gap: 7px;
-  align-items: center;
-  padding: 0;
-  font: inherit;
-  color: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.sortHead[data-on] {
-  color: var(--a-ink);
-}
-
-/* Off the text's line box, so the header row stays as tall as its words. */
-.sortHead svg {
-  display: block;
-}
-
 .row {
   display: grid;
   gap: 16px;
@@ -549,13 +548,14 @@
   border-top: none;
 }
 
-/* Seven columns need about 1,080px, with room for "Templates chosen" on one
-   line as the design sets it; narrower than that the panel scrolls sideways
-   rather than crushing the person's name to nothing, and at 1024px and under
-   the rows stack instead (below). */
+/* Six columns need about 860px, with "Template Quota" on two lines, the
+   status as badges by the name, and the actions folded into one ellipsis;
+   narrower than that the panel scrolls sideways rather than crushing the
+   person's name to nothing, and at 1024px and under the rows stack instead
+   (below). */
 .userCols {
-  grid-template-columns: minmax(200px, 2fr) 90px 120px 140px 100px 110px minmax(170px, auto);
-  min-width: 1080px;
+  grid-template-columns: minmax(260px, 2fr) 80px 120px 110px 96px 40px;
+  min-width: 860px;
 }
 
 .person {
@@ -580,6 +580,90 @@
 
 .personText {
   min-width: 0;
+}
+
+/* The name, then its tags; the name gives way first. */
+.nameRow {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  min-width: 0;
+}
+
+.tag {
+  flex: none;
+  padding: 2px 8px;
+  font: 500 11px / 1.4 var(--a-sans);
+  color: oklch(0.42 0.01 260);
+  background-color: oklch(0 0 0 / 0.055);
+  border-radius: 999px;
+}
+
+.tagTest {
+  color: oklch(0.42 0.1 65);
+  background-color: oklch(0.95 0.06 80);
+}
+
+.tagBanned {
+  color: oklch(0.5 0.19 25);
+  background-color: oklch(0.52 0.2 25 / 0.1);
+}
+
+/* Words for a screen reader that the eye gets from a color. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The quota and its pencil, which opens Manage templates. */
+.quota {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Every template the person may choose is chosen. */
+.quotaFull {
+  font-weight: 600;
+  color: oklch(0.55 0.19 25);
+}
+
+.quotaEdit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  color: oklch(0.55 0.01 260);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.quotaEdit:hover {
+  color: var(--a-ink);
+  background-color: oklch(0 0 0 / 0.05);
+}
+
+.quotaEdit:focus-visible {
+  border-color: var(--a-ink);
+  outline: none;
+}
+
+/* One plan during the beta, drawn as the design's pill so a second one is
+   a label, not a layout. */
+.plan {
+  display: inline-block;
+  padding: 3px 10px;
+  font: 500 12.5px / 1.4 var(--a-sans);
+  background-color: oklch(0 0 0 / 0.055);
+  border-radius: 999px;
 }
 
 .personName {
@@ -615,47 +699,6 @@
 .cellDim {
   font-size: 14px;
   color: oklch(0.42 0.01 260);
-}
-
-.status {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  font: 400 15px var(--a-sans);
-}
-
-.status::before {
-  flex: none;
-  width: 7px;
-  height: 7px;
-  background-color: var(--a-mint);
-  border-radius: 50%;
-  content: '';
-}
-
-.statusBanned {
-  font-weight: 600;
-  color: oklch(0.55 0.19 25);
-}
-
-.statusBanned::before,
-.statusQuiet::before {
-  display: none;
-}
-
-.statusQuiet {
-  color: var(--a-dim);
-}
-
-/* Every template the person may choose is chosen: the people who write in.
-   The dot stays, transparent, so the words line up with "Active". */
-.statusFull {
-  font-weight: 600;
-  color: oklch(0.55 0.19 25);
-}
-
-.statusFull::before {
-  background-color: transparent;
 }
 
 .plainList {
@@ -1055,9 +1098,606 @@
   white-space: nowrap;
 }
 
+/* minmax(0, 1fr), not the implicit auto track: a card holding a wide table
+   would otherwise grow to the table and push the page sideways on a phone,
+   rather than letting the table scroll inside it. */
 .cards {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 18px;
+}
+
+/* -- Forms: the test users page and the email preview's sender ------------- */
+
+.formRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-top: 22px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.fieldLabel {
+  font: 500 14px var(--a-sans);
+}
+
+.fieldHint {
+  font-weight: 400;
+  color: var(--a-dim);
+}
+
+.input,
+.select {
+  box-sizing: border-box;
+  height: 42px;
+  padding: 0 14px;
+  font: 400 14px var(--a-sans);
+  color: var(--a-ink);
+  background-color: oklch(0 0 0 / 0.045);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  outline: none;
+}
+
+.input:focus,
+.select:focus {
+  background-color: var(--a-paper);
+  border-color: var(--a-ink);
+}
+
+.input:disabled,
+.select:disabled {
+  opacity: 0.6;
+}
+
+.inputCount {
+  width: 96px;
+}
+
+.inputMono {
+  width: 210px;
+  font-family: var(--a-mono);
+}
+
+.select {
+  min-width: 220px;
+  padding-right: 10px;
+  cursor: pointer;
+}
+
+.emailField {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.emailDomain {
+  font: 400 14px var(--a-sans);
+  color: var(--a-dim);
+  white-space: nowrap;
+}
+
+/* The primary button with an icon before its words, 42px to sit level with
+   the fields. */
+.buttonIcon {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  height: 42px;
+}
+
+/* What was just made, once: the credentials to copy. */
+.made {
+  margin-top: 22px;
+  padding: 16px 18px;
+  background-color: oklch(0 0 0 / 0.03);
+  border-radius: 12px;
+}
+
+.madeHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.madeHead .small {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.madeTitle {
+  margin: 0;
+  font: 500 14px / 1.5 var(--a-sans);
+}
+
+.madeList {
+  margin: 12px 0 0;
+  overflow-x: auto;
+  font: 400 12.5px / 1.9 var(--a-mono);
+}
+
+.madeNote {
+  margin: 10px 0 0;
+  font: 400 12.5px / 1.5 var(--a-sans);
+  color: var(--a-dim);
+}
+
+/* A row of quiet text actions in a card's head: Refresh, Remove all. */
+.quietAction {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  padding: 8px 10px;
+  font: 500 14px var(--a-sans);
+  color: oklch(0.4 0.01 260);
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.quietAction:hover:enabled {
+  color: var(--a-ink);
+  background-color: oklch(0 0 0 / 0.04);
+}
+
+.quietAction:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.quietDanger,
+.quietDanger:hover:enabled {
+  color: oklch(0.52 0.2 25);
+}
+
+.emptyCenter {
+  margin: 0;
+  padding: 56px 0 44px;
+  font: 400 14.5px var(--a-sans);
+  color: var(--a-dim);
+  text-align: center;
+}
+
+/* The test users list sits in a card, so its table runs to the card's
+   edges rather than inside a second border. */
+.testTable {
+  margin: 18px -30px 0;
+}
+
+.testTable .table th:first-child,
+.testTable .table td:first-child {
+  padding-left: 30px;
+}
+
+.testTable .table td {
+  vertical-align: middle;
+}
+
+.testPerson {
+  max-width: 360px;
+}
+
+.mono {
+  font-family: var(--a-mono);
+  font-size: 12.5px;
+}
+
+.menuCell {
+  width: 40px;
+  padding-right: 22px !important;
+}
+
+.ok {
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  font: 400 13px / 1.5 var(--a-sans);
+  color: oklch(0.38 0.1 168);
+  background-color: oklch(0.95 0.05 168);
+  border-radius: 10px;
+}
+
+/* -- Email preview ---------------------------------------------------------- */
+
+.subjectLabel {
+  font-weight: 600;
+  color: var(--a-ink);
+}
+
+.mailMeta {
+  margin: 10px 0 0;
+  font: 400 13px var(--a-sans);
+  color: var(--a-dim);
+}
+
+/* The inbox ground a message is drawn on. */
+.mailStage {
+  margin-top: 20px;
+  padding: 16px;
+  background-color: oklch(0 0 0 / 0.03);
+  border: 1px solid oklch(0 0 0 / 0.06);
+  border-radius: 14px;
+}
+
+.mailFrame {
+  display: block;
+  width: 100%;
+  background-color: #fff;
+  border: none;
+  border-radius: 10px;
+}
+
+/* Plain text as a client shows it: the reader's sans, wrapped, links as
+   typed. */
+.mailText {
+  box-sizing: border-box;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 28px 30px;
+  font: 400 15px / 1.6 var(--a-sans);
+  color: var(--a-ink);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.mailDetails {
+  margin-top: 14px;
+}
+
+.mailDetails summary {
+  font: 400 14px var(--a-sans);
+  color: var(--a-muted);
+  cursor: pointer;
+}
+
+.mailDetails .pre {
+  margin-top: 10px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* -- A row's menu and the confirm dialog ------------------------------------ */
+
+.rowMenuTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  color: oklch(0.4 0.01 260);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.rowMenuTrigger:hover:enabled,
+.rowMenuTrigger[data-popup-open] {
+  color: var(--a-ink);
+  background-color: oklch(0 0 0 / 0.05);
+}
+
+.rowMenuTrigger:focus-visible {
+  border-color: var(--a-ink);
+  outline: none;
+}
+
+.rowMenuTrigger:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.rowMenuPositioner {
+  z-index: 70;
+}
+
+.rowMenu {
+  box-sizing: border-box;
+  min-width: 200px;
+  max-width: 260px;
+  padding: 6px;
+  font-family: var(--a-sans);
+  color: var(--a-ink);
+  background-color: var(--a-paper);
+  border-radius: 12px;
+  outline: none;
+  box-shadow:
+    0 0 0 1px oklch(0 0 0 / 0.08),
+    0 12px 32px oklch(0 0 0 / 0.16);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+  transform-origin: var(--transform-origin);
+}
+
+.rowMenu[data-starting-style],
+.rowMenu[data-ending-style] {
+  opacity: 0;
+  transform: scale(0.97);
+}
+
+.rowMenuItem {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 9px 12px;
+  font: 400 14px var(--a-sans);
+  color: var(--a-ink);
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
+}
+
+.rowMenuItem svg {
+  flex: none;
+  color: oklch(0.5 0.01 260);
+}
+
+.rowMenuItem[data-highlighted] {
+  background-color: oklch(0 0 0 / 0.05);
+}
+
+.rowMenuItem[data-disabled] {
+  color: oklch(0.7 0.01 260);
+  cursor: default;
+}
+
+.rowMenuItem[data-disabled] svg {
+  color: inherit;
+}
+
+.rowMenuDanger,
+.rowMenuDanger svg {
+  color: oklch(0.52 0.2 25);
+}
+
+.rowMenuRule {
+  height: 1px;
+  margin: 5px 6px;
+  background-color: oklch(0 0 0 / 0.08);
+}
+
+.rowMenuNote {
+  margin: 4px 0 0;
+  padding: 8px 12px 6px;
+  font: 400 12px / 1.45 var(--a-sans);
+  color: var(--a-dim);
+  border-top: 1px solid oklch(0 0 0 / 0.08);
+}
+
+.dialogBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: oklch(0.1 0.01 260 / 0.45);
+}
+
+.dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 91;
+  box-sizing: border-box;
+  width: min(440px, calc(100vw - 32px));
+  padding: 28px;
+  font-family: var(--a-sans);
+  color: var(--a-ink);
+  background-color: var(--a-paper);
+  border-radius: 16px;
+  box-shadow: 0 24px 60px oklch(0 0 0 / 0.3);
+  transform: translate(-50%, -50%);
+}
+
+.dialogTitle {
+  margin: 0 0 10px;
+  font: 700 22px / 1.25 var(--a-display);
+  overflow-wrap: anywhere;
+}
+
+.dialogBody {
+  margin: 0 0 22px;
+  font: 400 14.5px / 1.6 var(--a-sans);
+  color: var(--a-muted);
+  overflow-wrap: anywhere;
+}
+
+.dialogActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.dialogCancel,
+.dialogDanger {
+  padding: 10px 18px;
+  font: 600 14px var(--a-sans);
+  white-space: nowrap;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.dialogCancel {
+  color: var(--a-ink);
+  background: var(--a-paper);
+  border: 1px solid oklch(0 0 0 / 0.14);
+}
+
+.dialogCancel:hover:enabled {
+  background-color: oklch(0 0 0 / 0.035);
+}
+
+.dialogDanger {
+  color: #fff;
+  background-color: oklch(0.52 0.2 25);
+  border: 1px solid oklch(0.52 0.2 25);
+}
+
+.dialogDanger:hover:enabled {
+  background-color: oklch(0.46 0.19 25);
+}
+
+.dialogCancel:disabled,
+.dialogDanger:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* -- Quotas: how to change them -------------------------------------------------- */
+
+.howTo {
+  margin-top: 18px;
+}
+
+.howTo code,
+.steps code {
+  font: 400 12.5px var(--a-mono);
+}
+
+.steps {
+  margin: 0 0 14px;
+  padding-left: 22px;
+  font: 400 14px / 1.65 var(--a-sans);
+}
+
+.steps > li + li {
+  margin-top: 8px;
+}
+
+.steps ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  color: oklch(0.35 0.01 260);
+}
+
+/* -- The templates dialog ---------------------------------------------------- */
+
+.dialogWide {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+.dialogSection {
+  margin: 0 0 10px;
+  font: 600 14px var(--a-sans);
+}
+
+.dialogRule {
+  height: 1px;
+  margin: 22px 0;
+  background-color: oklch(0 0 0 / 0.08);
+}
+
+.dialogLink {
+  margin-right: auto;
+  align-self: center;
+  font: 400 14px var(--a-sans);
+  color: var(--a-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.tplList {
+  display: grid;
+  gap: 2px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.tplRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.tplRow:hover {
+  background-color: oklch(0 0 0 / 0.035);
+}
+
+.tplRow input,
+.checkRow input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--a-ink);
+}
+
+.tplName {
+  font: 500 14px var(--a-mono);
+}
+
+.tplMeta {
+  font: 400 13px var(--a-sans);
+  color: var(--a-dim);
+}
+
+/* What a removal takes with it, said before it happens. */
+.confirmBox {
+  margin: 4px 0 0;
+  padding: 14px 16px;
+  font: 400 14px / 1.55 var(--a-sans);
+  color: oklch(0.38 0.12 25);
+  background-color: oklch(0.52 0.2 25 / 0.07);
+  border-radius: 10px;
+}
+
+.confirmBox p {
+  margin: 0 0 12px;
+}
+
+.grantRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.grantNote {
+  flex: 1;
+  min-width: 180px;
+}
+
+.checkRow {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  margin: 0 0 16px;
+  font: 400 14px var(--a-sans);
+  cursor: pointer;
+}
+
+.grantItem {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 6px 0;
+  font: 400 14px var(--a-sans);
 }
 
 /* -- Narrow screens -------------------------------------------------------- */
@@ -1105,11 +1745,24 @@
   }
 
   .userCols {
+    position: relative;
     min-width: 0;
   }
 
   .actions {
     justify-content: flex-start;
+  }
+
+  /* Stacked, a row's menu goes to its top corner, level with the name,
+     rather than trailing under the status on a line of its own. */
+  .userCols .actions {
+    position: absolute;
+    top: 19px;
+    right: 18px;
+  }
+
+  .userCols .person {
+    padding-right: 40px;
   }
 
   /* The design's 56px pills put four pages and the arrows past a phone's
@@ -1131,12 +1784,44 @@
   .barLabel:nth-child(even) {
     visibility: hidden;
   }
+
+  .mailStage {
+    padding: 8px;
+  }
+
+  .mailText {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .field,
+  .emailField,
+  .formRow .button,
+  .select {
+    width: 100%;
+  }
+
+  .inputCount,
+  .inputMono {
+    width: 100%;
+  }
+
+  .emailField .input {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .formRow .button {
+    justify-content: center;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .navLink,
   .button,
-  .pill {
+  .pill,
+  .rowMenu {
     transition: none;
   }
 }

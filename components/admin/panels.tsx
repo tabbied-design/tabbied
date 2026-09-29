@@ -1,14 +1,17 @@
 'use client';
 
-// The admin panels, one per page. Tables over the /api/admin reads, with the
-// two actions the tier has - role and ban - going through better-auth's own
-// admin endpoints via the client plugin.
+// The admin panels, one per page. Tables over the /api/admin reads; what can
+// be done to an account (impersonate, ban, remove) is the row's menu,
+// UserActions.
 import { useMemo, useState, type ReactNode } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, ArrowUpDown, ChevronDown, ChevronUp } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, ArrowRight, ChevronDown, SquarePen } from 'lucide-react';
 import { ApiError, apiFetch, apiUrl } from 'lib/apiFetch';
-import { authClient } from 'lib/authClient';
+import { useSessionUser } from 'lib/authClient';
 import { initials } from 'components/nav';
+import TemplatesDialog from './TemplatesDialog';
+import UserActions from './UserActions';
 import { money, useAdminData, when } from './useAdminData';
 import styles from './admin.module.css';
 
@@ -149,7 +152,7 @@ export function OverviewPanel() {
 
 // ---- users ------------------------------------------------------------------
 
-type UserRow = {
+export type UserRow = {
   id: string;
   name: string;
   email: string;
@@ -157,12 +160,60 @@ type UserRow = {
   role: string | null;
   banned: boolean | null;
   createdAt: string;
+  /** 'free' for everyone during the beta; the Worker says so (lib/users.ts). */
+  plan?: string;
+  /** Made by the Test users page, on the reserved domain. */
+  test?: boolean;
   sites: number;
   generations: number;
   /** Templates chosen, against the person's allowance (five plus any grant). */
   chosen: number;
   allowance: number;
 };
+
+/** "free" as the directory prints it. */
+export const planLabel = (plan = 'free') => plan.charAt(0).toUpperCase() + plan.slice(1);
+
+/**
+ * "3 / 5", with the way to change it: the pencil opens Manage templates. Red
+ * once every template the person may choose is chosen: the people who write in.
+ */
+export function QuotaEdit({ row, onEdit }: { row: UserRow; onEdit: () => void }) {
+  const full = row.chosen >= row.allowance;
+
+  return (
+    <span className={`${styles.quota} ${full ? styles.quotaFull : ''}`}>
+      <span title={full ? `All ${row.allowance} chosen` : undefined}>
+        {row.chosen} / {row.allowance}
+        {full ? <span className={styles.srOnly}> (all chosen)</span> : null}
+      </span>
+      <button
+        type="button"
+        className={styles.quotaEdit}
+        aria-label={`Manage templates for ${row.name || row.email}`}
+        title="Manage templates"
+        onClick={onEdit}
+      >
+        <SquarePen size={14} strokeWidth={1.8} aria-hidden="true" />
+      </button>
+    </span>
+  );
+}
+
+/** The name, and what is worth knowing at a glance beside it. */
+export function PersonName({ row, self }: { row: UserRow; self: boolean }) {
+  return (
+    <div className={styles.nameRow}>
+      <p className={styles.personName}>{row.name || row.email}</p>
+      {self ? <span className={styles.tag}>You</span> : null}
+      {row.role === 'admin' ? <span className={styles.tag}>Admin</span> : null}
+      {row.test ? <span className={`${styles.tag} ${styles.tagTest}`}>Test</span> : null}
+      {/* What the Status column used to say, where the eye already is. */}
+      {!row.emailVerified ? <span className={styles.tag}>Unverified</span> : null}
+      {row.banned ? <span className={`${styles.tag} ${styles.tagBanned}`}>Banned</span> : null}
+    </div>
+  );
+}
 
 const FILTERS = ['All users', 'Active', 'All chosen', 'Banned', 'Admins', 'Unverified'] as const;
 type Filter = (typeof FILTERS)[number];
@@ -182,51 +233,31 @@ const matchesFilter = (row: UserRow, filter: Filter) =>
           ? row.role === 'admin'
           : !row.emailVerified;
 
-/** Banned, unverified, at the limit, or active - in that order of what matters. */
-function Status({ row }: { row: UserRow }) {
-  if (row.banned) return <span className={`${styles.status} ${styles.statusBanned}`}>Banned</span>;
-  if (!row.emailVerified) return <span className={`${styles.status} ${styles.statusQuiet}`}>Unverified</span>;
-  if (allChosen(row)) return <span className={`${styles.status} ${styles.statusFull}`}>All {row.allowance} chosen</span>;
-  return <span className={styles.status}>Active</span>;
-}
-
 /**
  * The directory: search goes to the API (it is what knows every row), the
- * filter, the sort and the pages are the browser's over what came back.
+ * filter and the pages are the browser's over what came back. There is no
+ * Status column: a ban or a missing verification is a badge by the name, and
+ * a full quota is the quota in red.
  * The overview shows the first handful of it; the users page all of it.
  */
 function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number; compact?: boolean }) {
   const [draft, setDraft] = useState('');
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('All users');
-  const [statusSort, setStatusSort] = useState<0 | 1 | 2>(0);
   const [page, setPage] = useState(0);
-  const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [managing, setManaging] = useState<UserRow | null>(null);
+  const { user: me } = useSessionUser();
   const { data, error, reload } = useAdminData<{ users: UserRow[] }>(
     `/api/admin/users?q=${encodeURIComponent(query)}&limit=${compact ? pageSize : 200}`
   );
 
-  const rows = useMemo(() => {
-    const filtered = (data?.users ?? []).filter((row) => matchesFilter(row, filter));
-    if (!statusSort) return filtered;
-    const rank = (row: UserRow) => (row.banned ? 3 : !row.emailVerified ? 2 : allChosen(row) ? 1 : 0);
-    return [...filtered].sort((a, b) => (statusSort === 1 ? rank(b) - rank(a) : rank(a) - rank(b)) || a.name.localeCompare(b.name));
-  }, [data, filter, statusSort]);
+  const rows = useMemo(() => (data?.users ?? []).filter((row) => matchesFilter(row, filter)), [data, filter]);
 
   const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
   const current = Math.min(page, pageCount - 1);
   const start = current * pageSize;
   const slice = rows.slice(start, start + pageSize);
-
-  const act = async (id: string, action: () => Promise<{ error?: { message?: string } | null }>) => {
-    setBusy(id);
-    setMessage(null);
-    const result = await action();
-    setBusy(null);
-    if (result.error) setMessage(result.error.message ?? 'That did not work.');
-    else reload();
-  };
 
   return (
     <>
@@ -281,25 +312,15 @@ function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number;
       <div className={`${styles.panel} ${styles.scroll}`}>
         <div className={`${styles.tableHead} ${styles.userCols}`} aria-hidden="true">
           <div>User</div>
-          <div>Role</div>
+          <div>Plan</div>
           <div>Registered</div>
-          <div>Templates chosen</div>
+          {/* Two lines, so the column is as narrow as its figures. */}
+          <div>
+            Template
+            <br />
+            Quota
+          </div>
           <div>Remaining</div>
-          <button
-            type="button"
-            className={styles.sortHead}
-            data-on={statusSort ? '' : undefined}
-            onClick={() => {
-              setStatusSort(((statusSort + 1) % 3) as 0 | 1 | 2);
-              setPage(0);
-            }}
-            title="Sort by status"
-          >
-            <span>Status</span>
-            <span aria-hidden="true">
-              {statusSort === 0 ? <ArrowUpDown size={13} /> : statusSort === 1 ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-            </span>
-          </button>
           <div />
         </div>
 
@@ -315,51 +336,36 @@ function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number;
                   {initials(row.name, row.email)}
                 </span>
                 <div className={styles.personText}>
-                  <p className={styles.personName}>{row.name}</p>
+                  <PersonName row={row} self={row.id === me?.id} />
                   <Link href={`/admin/users/?id=${row.id}`} prefetch={false} className={styles.personEmail}>
                     {row.email}
                   </Link>
                 </div>
               </div>
-              <div className={styles.cell} data-label="Role">{row.role === 'admin' ? 'Admin' : 'Member'}</div>
+              <div className={styles.cell} data-label="Plan">
+                <span className={styles.plan}>{planLabel(row.plan)}</span>
+              </div>
               <div className={`${styles.cell} ${styles.cellDim}`} data-label="Registered">{day(row.createdAt)}</div>
-              <div className={styles.cell} data-label="Templates chosen">
-                {row.chosen} / {row.allowance}
+              <div className={styles.cell} data-label="Template quota">
+                <QuotaEdit row={row} onEdit={() => setManaging(row)} />
               </div>
               <div className={styles.cell} data-label="Remaining">{Math.max(0, row.allowance - row.chosen)}</div>
-              <Status row={row} />
               <div className={styles.actions}>
-                <button
-                  type="button"
-                  className={styles.small}
-                  disabled={busy !== null}
-                  onClick={() =>
-                    void act(row.id, () =>
-                      authClient.admin.setRole({ userId: row.id, role: row.role === 'admin' ? 'user' : 'admin' })
-                    )
-                  }
-                >
-                  {row.role === 'admin' ? 'Remove admin' : 'Make admin'}
-                </button>
-                <button
-                  type="button"
-                  className={styles.small}
-                  disabled={busy !== null}
-                  onClick={() =>
-                    void act(row.id, () =>
-                      row.banned
-                        ? authClient.admin.unbanUser({ userId: row.id })
-                        : authClient.admin.banUser({ userId: row.id, banReason: 'Banned from the admin page' })
-                    )
-                  }
-                >
-                  {row.banned ? 'Unban' : 'Ban'}
-                </button>
+                <UserActions row={row} self={row.id === me?.id} onChanged={reload} onError={setMessage} />
               </div>
             </div>
           ))
         )}
       </div>
+
+      {managing ? (
+        <TemplatesDialog
+          person={managing}
+          open
+          onOpenChange={(open) => (open ? null : setManaging(null))}
+          onChanged={reload}
+        />
+      ) : null}
 
       {compact || !data ? null : (
         <div className={styles.pager}>
@@ -405,39 +411,75 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 export function UserDetailPanel({ id }: { id: string }) {
-  const { data, error } = useAdminData<{
+  const [message, setMessage] = useState<string | null>(null);
+  const [managing, setManaging] = useState(false);
+  const { user: me } = useSessionUser();
+  const router = useRouter();
+  const { data, error, reload } = useAdminData<{
     user: UserRow & { banReason: string | null; banExpires: string | null };
     sites: { id: string; slug: string; title: string; updatedAt: string }[];
     generations: { id: string; description: string; source: string; model: string; createdAt: string }[];
     usageToday: { endpoint: string; calls: number; cost: number; cap: number | null }[];
-    templates: { used: number; total: number; left: number; chosen: { slug: string; createdAt: string }[] };
+    templates: {
+      used: number;
+      total: number;
+      left: number;
+      chosen: { slug: string; createdAt: string }[];
+      grants: { id: string; granted: number }[];
+    };
   }>(`/api/admin/users/${id}`);
 
   if (!data) return <Load error={error} />;
 
   return (
     <div className={styles.cards}>
+      {message ? (
+        <p className={styles.error} role="alert" style={{ margin: 0 }}>
+          {message}
+        </p>
+      ) : null}
       <div className={styles.card}>
-        <div className={styles.person}>
-          <span className={styles.avatar} aria-hidden="true">
-            {initials(data.user.name, data.user.email)}
-          </span>
-          <div className={styles.personText}>
-            <p className={styles.personName}>{data.user.name}</p>
-            <span className={styles.personEmail}>{data.user.email}</span>
+        <div className={styles.cardHead}>
+          <div className={styles.person}>
+            <span className={styles.avatar} aria-hidden="true">
+              {initials(data.user.name, data.user.email)}
+            </span>
+            <div className={styles.personText}>
+              <PersonName row={data.user} self={data.user.id === me?.id} />
+              <span className={styles.personEmail}>{data.user.email}</span>
+            </div>
           </div>
+          <UserActions
+            row={data.user}
+            self={data.user.id === me?.id}
+            onChanged={reload}
+            onRemoved={() => router.push('/admin/users/')}
+            onError={setMessage}
+            profileLink={false}
+          />
         </div>
         <p className={styles.quiet} style={{ marginTop: 16, marginBottom: 0 }}>
-          Joined {when(data.user.createdAt)}, {data.user.role === 'admin' ? 'admin' : 'member'},{' '}
-          {data.user.emailVerified ? 'verified' : 'unverified'}
+          Joined {when(data.user.createdAt)}, {planLabel(data.user.plan)} plan,{' '}
+          {data.user.role === 'admin' ? 'admin' : 'member'}, {data.user.emailVerified ? 'verified' : 'unverified'}
           {data.user.banned ? `, banned${data.user.banReason ? `: ${data.user.banReason}` : ''}` : ''}
         </p>
       </div>
 
-      <Section title="Templates">
+      <div className={styles.card}>
+        <div className={styles.cardHead}>
+          <h2 className={styles.h3}>Templates</h2>
+          <button type="button" className={styles.small} onClick={() => setManaging(true)}>
+            Manage
+          </button>
+        </div>
         <p className={styles.quiet} style={{ margin: '0 0 14px' }}>
           {data.templates.used} of {data.templates.total} chosen, {data.templates.left} left.
-          {data.templates.total > 5 ? ' Includes a granted request.' : ''}
+          {data.templates.grants.length
+            ? (() => {
+                const net = data.templates.grants.reduce((sum, row) => sum + row.granted, 0);
+                return net ? ` Admins changed it by ${net > 0 ? '+' : ''}${net}.` : '';
+              })()
+            : ''}
         </p>
         {data.templates.chosen.length > 0 ? (
           <ul className={styles.plainList}>
@@ -451,7 +493,14 @@ export function UserDetailPanel({ id }: { id: string }) {
             ))}
           </ul>
         ) : null}
-      </Section>
+      </div>
+      <TemplatesDialog
+        person={data.user}
+        open={managing}
+        onOpenChange={setManaging}
+        onChanged={reload}
+        profileLink={false}
+      />
 
       <Section title="Today">
         {data.usageToday.length === 0 ? (
@@ -772,46 +821,51 @@ export function QuotasPanel() {
           </tbody>
         </table>
       </div>
-      <p className={styles.footnote}>
-        Read-only. The caps live in <code>worker/lib/quota.ts</code> and the burst windows in the routes; editing them here would mean a settings table read on every call.
-      </p>
+      <div className={`${styles.card} ${styles.howTo}`}>
+        <h2 className={styles.h3}>Changing a quota</h2>
+        <p className={styles.quiet}>
+          These are constants in the code rather than settings, so a change ships like any other code change. A
+          settings table would be a database read on every request.
+        </p>
+        <ol className={styles.steps}>
+          <li>
+            Change the number where it is defined:
+            <ul>
+              <li>
+                Daily AI caps (the table above): <code>DAILY_CAPS</code> in <code>worker/lib/quota.ts</code>.
+              </li>
+              <li>
+                Templates every account may choose, and the floor no limit goes under:{' '}
+                <code>FREE_TEMPLATES</code> in <code>worker/lib/templates.ts</code>, and its copies in{' '}
+                <code>lib/myTemplates.ts</code>, which the pages print, and{' '}
+                <code>components/admin/TemplatesDialog.tsx</code>. The first two also hold{' '}
+                <code>FIRST_REQUEST_GRANT</code>, what a first request&apos;s emailed link adds.
+              </li>
+              <li>
+                The most one grant or one change raises a limit by: <code>MAX_GRANT</code> in{' '}
+                <code>worker/lib/templates.ts</code>, and in <code>components/admin/panels.tsx</code> and{' '}
+                <code>TemplatesDialog.tsx</code>.
+              </li>
+              <li>
+                Burst limits (requests a minute): the <code>BURST</code> table at the top of{' '}
+                <code>worker/routes/account.ts</code>, <code>sites.ts</code> and <code>studio.ts</code>.
+              </li>
+            </ul>
+          </li>
+          <li>
+            Check it locally: <code>npm run test:worker</code>, then <code>npm run build</code>, which rebuilds the
+            pages that print a number.
+          </li>
+          <li>
+            Merge to main. The deploy rebuilds the site and the Worker, and the new numbers apply from the next
+            request: no migration, and no stored data changes.
+          </li>
+        </ol>
+        <p className={styles.quiet} style={{ margin: 0 }}>
+          For one person rather than everyone, use Manage templates on the Users page.
+        </p>
+      </div>
     </>
-  );
-}
-
-export function MailPanel() {
-  const { data, error } = useAdminData<{ mail: { email: string; subject: string; url: string; createdAt: string }[] }>('/api/admin/mail');
-  if (!data) return <Load error={error ?? 'Only available in development.'} />;
-  return (
-    <div className={`${styles.panel} ${styles.scroll}`}>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>When</th>
-            <th>To</th>
-            <th>Subject</th>
-            <th>Link</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.mail.map((m, i) => (
-            <tr key={i}>
-              <td>{when(m.createdAt)}</td>
-              <td>{m.email}</td>
-              <td>{m.subject}</td>
-              <td>
-                <a href={m.url}>Open</a>
-              </td>
-            </tr>
-          ))}
-          {data.mail.length === 0 ? (
-            <tr>
-              <td colSpan={4} className={styles.empty}>Nothing yet.</td>
-            </tr>
-          ) : null}
-        </tbody>
-      </table>
-    </div>
   );
 }
 

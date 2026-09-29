@@ -4,11 +4,39 @@ The Worker sends four kinds of message, all through `worker/lib/mail.ts`:
 
 | Message | To | When |
 | --- | --- | --- |
-| Confirm your Tabbied account | the person | sign-up (better-auth) |
-| Reset your Tabbied password | the person | "Forgot password" (better-auth) |
+| Confirm your Tabbied account | the person | sign-up (better-auth); HTML, with a link that lasts `AUTH_LINK_HOURS` |
+| Reset your Tabbied password | the person | "Forgot password" (better-auth); HTML, with a single-use link that lasts `AUTH_LINK_HOURS` |
 | Your 5 extra templates are ready | the person | five minutes after a first "Request more"; HTML, with a single-use link that adds 5 |
 | More templates: <name> | the team | a later request, for review |
 | You have more Tabbied templates / About your request | the person | an admin grants or declines a reviewed request |
+| You have more Tabbied templates | the person | an admin raises a limit from `/admin/users` with "Email them" ticked (a decrease is never mailed) |
+
+The three messages to a person with a link in them are designed, and share
+one layout, `designedHtml` in `mail.ts`: the mark, a mono eyebrow, a heading,
+a black pill button, a note under it, a rule, and the sign-off, with inline
+styles and tables because a mail client reads no stylesheet. The two
+better-auth mails also write their link out under the button, for a client
+that will not follow it, and say how long it lasts: `AUTH_LINK_HOURS`, which
+`worker/auth.ts` hands to better-auth as both lifetimes, so the sentence and
+the link cannot disagree. Every message keeps a plain-text part that says the
+same thing.
+
+The lockup at the top is a hosted picture, `public/email/tabbied-lockup.png`,
+not the inline SVG and web font the site draws it with: Gmail strips `<svg>`
+from mail and ignores web fonts, which left a Gmail reader with the word
+"tabbied" in Georgia and no mark. It is served from `PUBLIC_ORIGIN` in real
+mail (the Email preview, and its test sends, take it from whichever host the
+admin is on, so a PR preview shows it before it is live). The PNG is a 3x
+capture of `components/logo/Logo`, on white so a client's dark mode cannot
+lose the ink; after the mark changes, recapture it with
+`npm run build && node scripts/capture-email-lockup.mjs`.
+
+Each message is built by its own function in `mail.ts` (`verificationEmail`,
+`approvalEmail`, `requestDecisionEmail`, ...) and sent separately, so the
+admin's **Email preview** (`/admin/emails/`) can render every one with the
+same code, from sample data, and send a test copy of any of them to the
+admin's own address. A message added to `mail.ts` needs an entry in
+`worker/lib/emailPreview.ts` too.
 
 The first-request email is scheduled with Resend's `scheduled_at` rather than
 sent at once, which is the design's "usually within 5 minutes". Scheduled
