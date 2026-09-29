@@ -1,0 +1,582 @@
+{
+  "align-physio": {
+    "lib-sorbet": 0.1
+  },
+  "beaufort": {
+    "lib-midnightoil": 0.4,
+    "lib-sorbet": 19.9
+  },
+  "betonpark": {
+    "lib-ember": 3.5,
+    "lib-electric": 3.5
+  },
+  "birk-mobler": {
+    "lib-sorbet": 4.5
+  },
+  "bloom-events": {
+    "lib-midnightoil": 0.3,
+    "lib-ember": 0.3,
+    "lib-electric": 0.3
+  },
+  "blue-note-room": {
+    "lib-midnightoil": 3.9,
+    "lib-sorbet": 8,
+    "lib-ember": 3.9,
+    "lib-electric": 3.9
+  },
+  "bogen-papier": {
+    "lib-sorbet": 0.1,
+    "lib-ember": 10.2,
+    "lib-mono": 0.1,
+    "lib-electric": 0.1
+  },
+  "bolt-and-bench": {
+    "lib-ember": 1.1,
+    "lib-electric": 1.1
+  },
+  "bonbon-club": {
+    "lib-midnightoil": 1.4,
+    "lib-ember": 1.4,
+    "lib-electric": 1.4
+  },
+  "bright-pane-windows": {
+    "lib-ember": 0.2,
+    "lib-electric": 0.2
+  },
+  "bright-smiles-kids": {
+    "lib-midnightoil": 0.7,
+    "lib-sorbet": 0.3,
+    "lib-ember": 0.7,
+    "lib-electric": 0.7
+  },
+  "bureau-vektor": {
+    "lib-midnightoil": 4.1,
+    "lib-sorbet": 12.5,
+    "lib-ember": 1.2
+  },
+  "cadence-music": {
+    "lib-sorbet": 1.9
+  },
+  "cairn-expeditions": {
+    "lib-sorbet": 0.8,
+    "lib-mono": 0.8
+  },
+  "caldera-rail": {
+    "lib-sorbet": 1.8
+  },
+  "cellar-door-wines": {
+    "lib-sorbet": 0.1
+  },
+  "cerulean-swim": {
+    "lib-midnightoil": 6,
+    "lib-sorbet": 1.8,
+    "lib-ember": 6,
+    "lib-mono": 4.9,
+    "lib-electric": 6
+  },
+  "chronometrie-bex": {
+    "lib-midnightoil": 5.6,
+    "lib-ember": 5.6,
+    "lib-mono": 2.4,
+    "lib-electric": 3.8
+  },
+  "clearwater-dental": {
+    "lib-sorbet": 21.7,
+    "lib-ember": 0.4,
+    "lib-electric": 0.4
+  },
+  "common-table": {
+    "lib-midnightoil": 1,
+    "lib-sorbet": 1.1,
+    "lib-ember": 1,
+    "lib-electric": 1
+  },
+  "commons-cowork": {
+    "lib-midnightoil": 0.5,
+    "lib-sorbet": 1,
+    "lib-ember": 7.4,
+    "lib-electric": 7.4
+  },
+  "coral-cove-beach-club": {
+    "lib-midnightoil": 6.9,
+    "lib-ember": 6.9,
+    "lib-electric": 6.9
+  },
+  "crabapple-orchard": {
+    "lib-sorbet": 0.6,
+    "lib-mono": 0.6
+  },
+  "crosscut-timber": {
+    "lib-sorbet": 0.7
+  },
+  "easel-evenings": {
+    "lib-ember": 0.3,
+    "lib-electric": 0.3
+  },
+  "eight-folds-dumplings": {
+    "lib-midnightoil": 23.1,
+    "lib-ember": 23.1,
+    "lib-electric": 23.1
+  },
+  "el-farolito-truck": {
+    "lib-midnightoil": 0.2,
+    "lib-sorbet": 0.7,
+    "lib-ember": 0.9,
+    "lib-mono": 0.4,
+    "lib-electric": 0.9
+  },
+  "ember-and-oak": {
+    "lib-sorbet": 5
+  },
+  "facet": {
+    "lib-sorbet": 6.6
+  },
+  "falzbogen": {
+    "lib-midnightoil": 2.5,
+    "lib-sorbet": 2.9
+  },
+  "fennel-and-thyme": {
+    "lib-sorbet": 0.5
+  },
+  "fernhill-gardens": {
+    "lib-sorbet": 0.7,
+    "lib-mono": 0.7
+  },
+  "fonds-aubert": {
+    "lib-sorbet": 0.3
+  },
+  "forge-strength": {
+    "lib-sorbet": 1.6,
+    "lib-ember": 3.5,
+    "lib-electric": 3.5
+  },
+  "form-and-field": {
+    "lib-sorbet": 2.8
+  },
+  "four-frames-photobooth": {
+    "lib-electric": 1.4
+  },
+  "frequenz": {
+    "lib-midnightoil": 0.1,
+    "lib-sorbet": 4
+  },
+  "glockenhof": {
+    "lib-midnightoil": 0.4,
+    "lib-sorbet": 19.9
+  },
+  "grafit": {
+    "lib-midnightoil": 3.1,
+    "lib-sorbet": 5,
+    "lib-ember": 0.4,
+    "lib-electric": 0.4
+  },
+  "grain-and-glow": {
+    "lib-midnightoil": 0.4,
+    "lib-sorbet": 0.4,
+    "lib-ember": 0.4,
+    "lib-electric": 0.5
+  },
+  "hafen-sechs": {
+    "lib-sorbet": 4.3
+  },
+  "halbfett": {
+    "lib-sorbet": 0.3
+  },
+  "harbor-light-tours": {
+    "lib-midnightoil": 1.8,
+    "lib-sorbet": 1.8,
+    "lib-ember": 1.8,
+    "lib-electric": 1.8
+  },
+  "high-pass-lodge": {
+    "lib-ember": 0.3,
+    "lib-electric": 0.3
+  },
+  "hive-and-honey": {
+    "lib-sorbet": 1.9,
+    "lib-ember": 1.4,
+    "lib-mono": 0.6,
+    "lib-electric": 1.4
+  },
+  "hollis-hart": {
+    "lib-midnightoil": 0.4,
+    "lib-sorbet": 0.4,
+    "lib-ember": 0.4,
+    "lib-electric": 0.7
+  },
+  "hopscotch-museum": {
+    "lib-ember": 0.2
+  },
+  "inkwell-tattoo": {
+    "lib-midnightoil": 0.5,
+    "lib-sorbet": 2,
+    "lib-ember": 0.5,
+    "lib-electric": 0.5
+  },
+  "isobar": {
+    "lib-midnightoil": 4.1,
+    "lib-sorbet": 10.7,
+    "lib-ember": 0.8,
+    "lib-electric": 0.8
+  },
+  "kaella": {
+    "lib-sorbet": 1.2
+  },
+  "keel-wealth": {
+    "lib-sorbet": 1.2
+  },
+  "kessler-auto": {
+    "lib-midnightoil": 0.4,
+    "lib-sorbet": 0.5,
+    "lib-ember": 0.4,
+    "lib-mono": 0.1,
+    "lib-electric": 0.4
+  },
+  "keyway-locksmiths": {
+    "lib-ember": 11.2,
+    "lib-electric": 11.2
+  },
+  "kiln-aoi": {
+    "lib-sorbet": 4.1
+  },
+  "klangwerk": {
+    "lib-sorbet": 3.4
+  },
+  "konzerthaus-halden": {
+    "lib-midnightoil": 1.8,
+    "lib-sorbet": 0.3,
+    "lib-ember": 1.8,
+    "lib-electric": 1.8
+  },
+  "kubus": {
+    "lib-sorbet": 36.9,
+    "lib-mono": 3.1
+  },
+  "kupferwalz": {
+    "lib-midnightoil": 1.2,
+    "lib-sorbet": 17.5
+  },
+  "lantern-rock": {
+    "lib-midnightoil": 2.7,
+    "lib-sorbet": 2.7
+  },
+  "last-and-awl": {
+    "lib-midnightoil": 0.1
+  },
+  "lichtfeld": {
+    "lib-sorbet": 3.6
+  },
+  "linden-guesthouse": {
+    "lib-sorbet": 2.6
+  },
+  "linie-nord": {
+    "lib-midnightoil": 5.9,
+    "lib-sorbet": 2.7,
+    "lib-ember": 3.6,
+    "lib-mono": 2.5,
+    "lib-electric": 2.3
+  },
+  "little-acorns": {
+    "lib-midnightoil": 0.2,
+    "lib-ember": 0.2,
+    "lib-electric": 0.2
+  },
+  "little-fins-swim": {
+    "lib-midnightoil": 0.3,
+    "lib-ember": 0.3,
+    "lib-electric": 0.3
+  },
+  "loop-club-coding": {
+    "lib-midnightoil": 0.7,
+    "lib-ember": 0.5,
+    "lib-mono": 1.7
+  },
+  "lumen-portraits": {
+    "lib-sorbet": 1.3,
+    "lib-electric": 0.4
+  },
+  "madrigal-strings": {
+    "lib-sorbet": 1.2,
+    "lib-mono": 1.2
+  },
+  "maison-ambre": {
+    "lib-midnightoil": 1.7,
+    "lib-sorbet": 8.4,
+    "lib-mono": 6.7
+  },
+  "marais-blanc": {
+    "lib-midnightoil": 0.4,
+    "lib-sorbet": 15
+  },
+  "meeple-and-mug": {
+    "lib-midnightoil": 6.3,
+    "lib-sorbet": 6.3,
+    "lib-ember": 8.2,
+    "lib-electric": 8.2
+  },
+  "mesa-outfitters": {
+    "lib-sorbet": 3.9
+  },
+  "mesura": {
+    "lib-sorbet": 0.9
+  },
+  "meterware": {
+    "lib-sorbet": 0.4
+  },
+  "mistral-cycles": {
+    "lib-sorbet": 1,
+    "lib-mono": 1
+  },
+  "nachtzug": {
+    "lib-sorbet": 4.8
+  },
+  "nocturne": {
+    "lib-sorbet": 5.9
+  },
+  "nori-sushi": {
+    "lib-midnightoil": 0.6,
+    "lib-sorbet": 0.6,
+    "lib-ember": 0.6,
+    "lib-electric": 0.6
+  },
+  "northside-plumbing": {
+    "lib-midnightoil": 0.6,
+    "lib-sorbet": 0.6,
+    "lib-ember": 0.6,
+    "lib-electric": 0.6
+  },
+  "nullpunkt": {
+    "lib-sorbet": 0.9
+  },
+  "nullsec": {
+    "lib-midnightoil": 4.6,
+    "lib-sorbet": 4.6
+  },
+  "offshore-surf": {
+    "lib-midnightoil": 3.2,
+    "lib-ember": 3.2,
+    "lib-electric": 3.2
+  },
+  "old-town-walks": {
+    "lib-sorbet": 1.3,
+    "lib-mono": 0.9
+  },
+  "orbital-lounge": {
+    "lib-midnightoil": 0.2,
+    "lib-sorbet": 0.2,
+    "lib-ember": 3.1,
+    "lib-electric": 3.1
+  },
+  "orgelwerk": {
+    "lib-sorbet": 12.2
+  },
+  "osteria-lume": {
+    "lib-sorbet": 0.3
+  },
+  "oxbow-workshop": {
+    "lib-midnightoil": 1.9,
+    "lib-ember": 1.9,
+    "lib-electric": 1.9
+  },
+  "parkside-family-medicine": {
+    "lib-midnightoil": 2.4,
+    "lib-ember": 2.4,
+    "lib-electric": 2.4
+  },
+  "passform": {
+    "lib-sorbet": 0.5
+  },
+  "pawsh-grooming": {
+    "lib-sorbet": 3.8,
+    "lib-mono": 2.3
+  },
+  "pixelmelt": {
+    "lib-midnightoil": 6.1,
+    "lib-sorbet": 9.4
+  },
+  "platen-press": {
+    "lib-sorbet": 2,
+    "lib-ember": 0.2,
+    "lib-mono": 1.8,
+    "lib-electric": 0.2
+  },
+  "pointe-and-pulse": {
+    "lib-midnightoil": 0.1,
+    "lib-sorbet": 1.7,
+    "lib-ember": 0.8,
+    "lib-mono": 1.7,
+    "lib-electric": 0.8
+  },
+  "presse-neun": {
+    "lib-midnightoil": 0.4,
+    "lib-sorbet": 0.9,
+    "lib-ember": 0.4,
+    "lib-electric": 0.4
+  },
+  "pressed-juice": {
+    "lib-ember": 1.5,
+    "lib-electric": 1.5
+  },
+  "purpurhaus": {
+    "lib-sorbet": 13.2
+  },
+  "quanta-robotics": {
+    "lib-sorbet": 23.2,
+    "lib-mono": 19.8
+  },
+  "ringmark": {
+    "lib-sorbet": 13.7
+  },
+  "rye-and-levain": {
+    "lib-sorbet": 0.2
+  },
+  "saffron-house": {
+    "lib-sorbet": 0.3
+  },
+  "salzhaus": {
+    "lib-midnightoil": 1.3,
+    "lib-sorbet": 4.7,
+    "lib-ember": 1.3,
+    "lib-electric": 1.3
+  },
+  "scoop-and-cone": {
+    "lib-midnightoil": 2.6,
+    "lib-ember": 2.6,
+    "lib-electric": 2.6
+  },
+  "sichtbeton": {
+    "lib-sorbet": 1.1,
+    "lib-ember": 0.4,
+    "lib-electric": 0.4
+  },
+  "silbersalz": {
+    "lib-sorbet": 0.3
+  },
+  "slice-theory": {
+    "lib-sorbet": 0.4
+  },
+  "solstice": {
+    "lib-sorbet": 7.9
+  },
+  "spin-cycle-laundry": {
+    "lib-midnightoil": 1.3,
+    "lib-sorbet": 0.1,
+    "lib-ember": 2.9,
+    "lib-electric": 2.9
+  },
+  "spoke-and-chain": {
+    "lib-midnightoil": 4,
+    "lib-ember": 4,
+    "lib-electric": 4
+  },
+  "spruce-cleaning": {
+    "lib-midnightoil": 0.9,
+    "lib-ember": 0.9,
+    "lib-electric": 0.9
+  },
+  "stillpoint-yoga": {
+    "lib-sorbet": 4.4
+  },
+  "stropline-barbers": {
+    "lib-midnightoil": 0.9,
+    "lib-sorbet": 1.8,
+    "lib-ember": 0.6,
+    "lib-mono": 0.3,
+    "lib-electric": 0.6
+  },
+  "suds-car-wash": {
+    "lib-sorbet": 2.1
+  },
+  "sunday-market": {
+    "lib-sorbet": 1.5,
+    "lib-mono": 1.2
+  },
+  "tally-and-co": {
+    "lib-sorbet": 15.8
+  },
+  "the-gimlet": {
+    "lib-sorbet": 5.5
+  },
+  "the-glasshouse": {
+    "lib-ember": 0.1,
+    "lib-electric": 0.1
+  },
+  "the-rialto-cinema": {
+    "lib-sorbet": 3.5,
+    "lib-ember": 0.4,
+    "lib-electric": 0.4
+  },
+  "thread-and-hem": {
+    "lib-sorbet": 4.9,
+    "lib-mono": 1.7
+  },
+  "tidy-ledger": {
+    "lib-sorbet": 3.4
+  },
+  "tiefsee": {
+    "lib-sorbet": 14.8,
+    "lib-mono": 1.5
+  },
+  "tin-roof-guitars": {
+    "lib-ember": 0.9,
+    "lib-mono": 0.9,
+    "lib-electric": 0.9
+  },
+  "veil-and-vow": {
+    "lib-sorbet": 9.7
+  },
+  "velo-criterium": {
+    "lib-sorbet": 16.4,
+    "lib-ember": 16.5,
+    "lib-electric": 18.2
+  },
+  "verdant": {
+    "lib-sorbet": 6.7
+  },
+  "vinyl-vault": {
+    "lib-midnightoil": 8.2,
+    "lib-sorbet": 8.2,
+    "lib-ember": 8.2,
+    "lib-electric": 8.2
+  },
+  "wayfarer-travel": {
+    "lib-midnightoil": 0.1,
+    "lib-sorbet": 1.1,
+    "lib-ember": 0.8,
+    "lib-mono": 0.3,
+    "lib-electric": 0.8
+  },
+  "werkraum": {
+    "lib-sorbet": 0.6
+  },
+  "werkstatt-neun": {
+    "lib-sorbet": 0.3
+  },
+  "wick-and-wax": {
+    "lib-midnightoil": 1.1,
+    "lib-sorbet": 3.1,
+    "lib-ember": 1.1,
+    "lib-electric": 1.1
+  },
+  "wild-stem": {
+    "lib-sorbet": 0.4,
+    "lib-mono": 0.1
+  },
+  "xerox-riot": {
+    "lib-midnightoil": 0.1,
+    "lib-sorbet": 1,
+    "lib-ember": 0.9,
+    "lib-mono": 0.1,
+    "lib-electric": 0.9
+  },
+  "zenith-observatory": {
+    "lib-sorbet": 15,
+    "lib-mono": 9.7
+  },
+  "zwoelfton": {
+    "lib-midnightoil": 5.2,
+    "lib-sorbet": 20.6,
+    "lib-ember": 3.2,
+    "lib-mono": 29.9
+  }
+}
