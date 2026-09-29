@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { TabbiedPattern } from 'tabbied/react';
-import { radius, quilt } from 'tabbied/patterns';
+import { maze, mixtape, quilt, radius, vitrail, wander } from 'tabbied/patterns';
 import { plexMono, plexSans } from 'lib/fonts';
+import { PALETTE_LIBRARY } from 'lib/paletteLibrary';
 import { PACKAGE_VERSION, PATTERN_COUNT } from 'lib/siteCounts';
 import SiteNav from 'components/nav';
 import HomeFooter from 'components/main-page/HomeFooter';
@@ -46,6 +47,18 @@ const SECTIONS: DocsSection[] = [
 
 const installCode = `npm install tabbied`;
 
+// A palette from the library the gallery offers, by id. The examples take their
+// colors from there rather than inventing them, and a renamed id fails the
+// build instead of drawing a pattern in no colors.
+function libraryPalette(id: string) {
+  const palette = PALETTE_LIBRARY.find((entry) => entry.id === id);
+  if (!palette) throw new Error(`No palette "${id}" in lib/paletteLibrary`);
+  return { ...palette, variable: palette.name.toLowerCase().replace(/[^a-z0-9]/g, '') };
+}
+
+const quoteColors = (colors: string[]) =>
+  `[${colors.map((color) => `'${color}'`).join(', ')}]`;
+
 const basicCode = `import { TabbiedPattern } from 'tabbied/react';
 import { radius } from 'tabbied/patterns';
 
@@ -54,74 +67,87 @@ export function Banner() {
   return <TabbiedPattern pattern={radius} seed="k9Pz" height={320} />;
 }`;
 
-const treeShakeCode = `// Import only what you render - bundlers ship just those presets.
-import { radius, windowpane } from 'tabbied/patterns';
+const treeShakeCode = `// Import only what you render: bundlers ship just those presets.
+import { radius, vitrail } from 'tabbied/patterns';
 
 // Building a gallery? The full record pulls in every design.
 import { patterns } from 'tabbied/patterns';`;
 
 const boxCode = `// Default: fill the containing block. .panel is 100% wide, 400px tall.
 <div className="panel">
-  <TabbiedPattern pattern={radius} />
+  <TabbiedPattern pattern={wander} />
 </div>
 
 // Fill the width, cap it, and let the ratio set the height.
-<TabbiedPattern pattern={radius} maxWidth={960} aspectRatio={3 / 2} />
+<TabbiedPattern pattern={wander} maxWidth={960} aspectRatio={3 / 2} />
 
 // Pin one axis; numbers are px, strings are CSS.
-<TabbiedPattern pattern={radius} height={320} />
-<TabbiedPattern pattern={radius} height="40vh" maxHeight={520} />
+<TabbiedPattern pattern={wander} height={320} />
+<TabbiedPattern pattern={wander} height="40vh" maxHeight={520} />
 
 // Hand sizing back to a class name.
-<TabbiedPattern pattern={radius} fill={false} className="hero-art" />`;
+<TabbiedPattern pattern={wander} fill={false} className="hero-art" />`;
 
 const fitCode = `// grid (default): the cell grid adapts to the container size
-<TabbiedPattern pattern={radius} fit="grid" />
+<TabbiedPattern pattern={vitrail} fit="grid" />
 
 // cover: a fixed-resolution render scaled uniformly to fill the box.
 // Every design is cell-tiled, so the render adapts to the box's shape
 // and tiles it with whole cells - nothing is cropped mid-cell
-<TabbiedPattern pattern={radius} fit="cover" />
+<TabbiedPattern pattern={vitrail} fit="cover" />
 
 // fixed: an explicit canvas size in px (what the Tabbied editor uses)
-<TabbiedPattern pattern={radius} fit="fixed" width={360} height={540} />`;
+<TabbiedPattern pattern={vitrail} fit="fixed" width={360} height={540} />`;
 
-const paletteCode = `<TabbiedPattern
-  pattern={radius}
-  seed="k9Pz"
-  // color0 (the background) comes first
-  palette={['#0b132b', '#5bc0be', '#6fffe9', '#ff6b6b']}
-  fit="cover"
-  height={280}
-/>`;
+// One design in three palettes at one seed, so the only variable on show is
+// the palette. Ocean has four colors to mixtape's six, which is the cycling
+// the prose describes.
+const PALETTE_DEMOS = ['lib-sunset', 'lib-ocean', 'lib-bauhaus'].map(libraryPalette);
+
+const paletteCode = `// color0 (the background) comes first, then the inks.
+${PALETTE_DEMOS.map(
+  ({ variable, colors }) => `const ${variable} = ${quoteColors(colors)};`
+).join('\n')}
+
+${PALETTE_DEMOS.map(
+  ({ variable }) =>
+    `<TabbiedPattern pattern={mixtape} seed="k9Pz" palette={${variable}} height={180} />`
+).join('\n')}`;
 
 const transparentCode = `// Any CSS color works for a slot - including 'transparent',
 // which drops the background entirely.
 <TabbiedPattern
-  pattern={radius}
+  pattern={wander}
   palette={['transparent', '#232529', '#ff3d8b']}
 />`;
 
+// The same maze at one seed, thin and then heavy: the option is the only
+// thing that changes between the two.
+const OPTION_DEMOS = [4, 14];
+
 const optionsCode = `// Option ids come from the preset (the same controls the editor shows).
-// Radius takes a grid size and a shape frequency.
-<TabbiedPattern
-  pattern={radius}
-  seed="k9Pz"
-  options={{ grid: '4x6', frequency: 0.6 }}
-  fit="cover"
-  height={280}
-/>`;
+// Maze takes a grid size, a shape frequency and a line thickness.
+${OPTION_DEMOS.map(
+  (thickness) =>
+    `<TabbiedPattern pattern={maze} seed="k9Pz" options={{ thickness: ${thickness} }} height={180} />`
+).join('\n')}`;
+
+// The live demo is a client component, so it takes its palette from here and
+// the sample below shows the same one.
+const RESEED_PALETTE = libraryPalette('lib-candy');
 
 const reseedCode = `import { useRef } from 'react';
 import { TabbiedPattern, type TabbiedPatternHandle } from 'tabbied/react';
-import { radius } from 'tabbied/patterns';
+import { blossom } from 'tabbied/patterns';
+
+const ${RESEED_PALETTE.variable} = ${quoteColors(RESEED_PALETTE.colors)};
 
 export function Reseedable() {
   const ref = useRef<TabbiedPatternHandle>(null);
 
   return (
     <>
-      <TabbiedPattern ref={ref} pattern={radius} fit="cover" />
+      <TabbiedPattern ref={ref} pattern={blossom} palette={${RESEED_PALETTE.variable}} fit="cover" />
       <button onClick={() => ref.current?.redraw()}>Redraw</button>
       <button onClick={() => ref.current?.exportImage()}>Export PNG</button>
     </>
@@ -140,29 +166,29 @@ const animatedCode = `// Reseed on a timer (the gallery's shimmer). Ticks are sk
 />`;
 
 const a11yCode = `// Decorative (default): hidden from assistive tech.
-<TabbiedPattern pattern={radius} />
+<TabbiedPattern pattern={ring} />
 
 // Meaningful image: exposed with role="img" and a label.
 <TabbiedPattern
-  pattern={radius}
+  pattern={ring}
   decorative={false}
-  ariaLabel="Generative pattern of quarter circles"
+  ariaLabel="Generative pattern of rings"
 />`;
 
 const ssrCode = `// App Router: works directly in a Server Component tree - the
 // component itself is the client boundary.
 import { TabbiedPattern } from 'tabbied/react';
-import { radius } from 'tabbied/patterns';
+import { pebble } from 'tabbied/patterns';
 
 export default function Page() {
-  return <TabbiedPattern pattern={radius} height={320} />;
+  return <TabbiedPattern pattern={pebble} height={320} />;
 }`;
 
 const coreCode = `import { createPattern } from 'tabbied';
-import { radius } from 'tabbied/patterns';
+import { foliage } from 'tabbied/patterns';
 
 const controller = createPattern(document.querySelector('#stage'), {
-  pattern: radius,
+  pattern: foliage,
   seed: 'k9Pz',
   redrawInterval: 5200, // optional: reseed on a timer, gates included
   // Measured fits (grid/cover) mount asynchronously, once the
@@ -200,7 +226,7 @@ const myPattern: PatternDefinition = {
   },
 };`;
 
-// The fit-mode gallery. Every entry draws `radius` at the same seed into the
+// The fit-mode gallery. Every entry draws `vitrail` at the same seed into the
 // same landscape and portrait boxes, so the only variable on show is `fit`.
 const FIT_DEMOS = [
   {
@@ -247,7 +273,7 @@ function FitDemo({
 }) {
   const pattern = (
     <TabbiedPattern
-      pattern={radius}
+      pattern={vitrail}
       seed="k9Pz"
       fit={fit}
       density={0.25}
@@ -591,10 +617,12 @@ export default function ReactDocsPage() {
 
                 <Section id="installation" title="Installation">
                   <p>
-                    React is an <em>optional</em> peer dependency - you only
-                    need it for the <Code>tabbied/react</Code> entry point.
-                    The only hard dependency is css-doodle, which is
-                    installed automatically.
+                    In a React app this is the whole install. The component
+                    renders with the React your app already has (18 or 19),
+                    so there is nothing else to add. React is an{' '}
+                    <em>optional</em> peer dependency, which keeps it out of
+                    projects that only use the vanilla core; the one hard
+                    dependency, css-doodle, comes with the package.
                   </p>
                   <CodeBlock
                     code={installCode}
@@ -655,14 +683,14 @@ export default function ReactDocsPage() {
                       <figure className={styles.fitItem}>
                         <div className={styles.boxDemoFill}>
                           <TabbiedPattern
-                            pattern={radius}
+                            pattern={wander}
                             seed="k9Pz"
                             density={0.25}
                           />
                         </div>
                         <figcaption className={styles.fitCaption}>
                           <code>
-                            &lt;TabbiedPattern pattern={'{radius}'} /&gt;
+                            &lt;TabbiedPattern pattern={'{wander}'} /&gt;
                           </code>
                           No sizing props - it fills the 120px-tall box it was
                           dropped into.
@@ -670,7 +698,7 @@ export default function ReactDocsPage() {
                       </figure>
                       <figure className={styles.fitItem}>
                         <TabbiedPattern
-                          pattern={radius}
+                          pattern={wander}
                           seed="k9Pz"
                           density={0.25}
                           maxWidth={320}
@@ -774,15 +802,37 @@ export default function ReactDocsPage() {
                     cycle back through your inks, so a two-color palette
                     redraws the whole design in your two colors.
                   </p>
+                  <p>
+                    Below, one design at one seed in three palettes from the
+                    gallery&apos;s library. Ocean has four colors to the
+                    design&apos;s six, so its inks repeat.
+                  </p>
                   <Example code={paletteCode}>
-                    <TabbiedPattern
-                      pattern={radius}
-                      seed="k9Pz"
-                      palette={['#0b132b', '#5bc0be', '#6fffe9', '#ff6b6b']}
-                      fit="cover"
-                      className={styles.demoArt}
-                      style={{ width: '100%', height: 280 }}
-                    />
+                    <div className={styles.variantGrid}>
+                      {PALETTE_DEMOS.map(({ id, name, colors }) => (
+                        <figure key={id} className={styles.fitItem}>
+                          <TabbiedPattern
+                            pattern={mixtape}
+                            seed="k9Pz"
+                            palette={colors}
+                            height={180}
+                            className={styles.demoArt}
+                          />
+                          <figcaption className={styles.fitCaption}>
+                            <code>{name}</code>
+                            <span className={styles.swatches} aria-hidden="true">
+                              {colors.map((color, index) => (
+                                <span
+                                  key={index}
+                                  className={styles.swatch}
+                                  style={{ backgroundColor: color }}
+                                />
+                              ))}
+                            </span>
+                          </figcaption>
+                        </figure>
+                      ))}
+                    </div>
                   </Example>
                   <CodeBlock
                     code={transparentCode}
@@ -808,14 +858,22 @@ export default function ReactDocsPage() {
                     can build your own controls against them.
                   </p>
                   <Example code={optionsCode}>
-                    <TabbiedPattern
-                      pattern={radius}
-                      seed="k9Pz"
-                      options={{ grid: '4x6', frequency: 0.6 }}
-                      fit="cover"
-                      className={styles.demoArt}
-                      style={{ width: '100%', height: 280 }}
-                    />
+                    <div className={styles.variantGrid}>
+                      {OPTION_DEMOS.map((thickness) => (
+                        <figure key={thickness} className={styles.fitItem}>
+                          <TabbiedPattern
+                            pattern={maze}
+                            seed="k9Pz"
+                            options={{ thickness }}
+                            height={180}
+                            className={styles.demoArt}
+                          />
+                          <figcaption className={styles.fitCaption}>
+                            <code>{`thickness: ${thickness}`}</code>
+                          </figcaption>
+                        </figure>
+                      ))}
+                    </div>
                   </Example>
                   <Callout>
                     <p>
@@ -840,7 +898,7 @@ export default function ReactDocsPage() {
                     Try it:
                   </p>
                   <Example code={reseedCode}>
-                    <ReseedExportDemo />
+                    <ReseedExportDemo palette={RESEED_PALETTE.colors} />
                   </Example>
                   <p>
                     <Code>exportImage()</Code> accepts{' '}
