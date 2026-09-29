@@ -29,9 +29,7 @@ export type TemplateCard = {
   n: number;
   name: string;
   topic: string;
-  pattern: string;
   art: PatternDefinition;
-  paletteName: string;
   colors: string[];
   seed: string;
   category: TemplateCategory;
@@ -162,6 +160,12 @@ function Card({ c, templates, guard, here }: { c: TemplateCard; templates: MyTem
     // cannot nest inside another. The card link covers everything above it.
     <div className={s.card} style={vars}>
       <a className={s.cardLink} href={c.href}>
+        {/* A browser's title bar, as the homepage's template rails draw it. */}
+        <span className={s.chrome} aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </span>
         <div className={s.thumb}>
           {c.shot ? (
             // The site itself, with its pattern as the accent in the corner;
@@ -190,18 +194,12 @@ function Card({ c, templates, guard, here }: { c: TemplateCard; templates: MyTem
           </span>
         </div>
         <div className={s.body}>
-          <div className={s.main}>
-            <h3>{c.name}</h3>
-            <p>{c.topic}</p>
-            <div className={s.sw} aria-hidden="true">
-              {c.colors.slice(1, 1 + MAX_SWATCHES).map((col, i) => (
-                <span key={i} style={{ background: col }} />
-              ))}
-            </div>
-          </div>
-          <div className={s.meta}>
-            <span>{c.paletteName}</span>
-            <span>{c.pattern}</span>
+          <h3>{c.name}</h3>
+          <p>{c.topic}</p>
+          <div className={s.sw} aria-hidden="true">
+            {c.colors.slice(1, 1 + MAX_SWATCHES).map((col, i) => (
+              <span key={i} style={{ background: col }} />
+            ))}
           </div>
         </div>
       </a>

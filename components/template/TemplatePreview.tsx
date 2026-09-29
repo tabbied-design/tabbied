@@ -226,8 +226,8 @@ export default function TemplatePreview({
             <span className={styles.dot} aria-hidden="true" />
             <span className={styles.dot} aria-hidden="true" />
             <span className={styles.pill}>tabbied.com/templates/{slug}/site/</span>
-            <a className={styles.open} href={`/templates/${slug}/site/`}>
-              Open the page
+            <a className={styles.open} href={`/templates/${slug}/site/`} target="_blank" rel="noopener">
+              Open in new tab
               <ArrowUpRight size={13} strokeWidth={1.8} aria-hidden="true" />
             </a>
           </div>

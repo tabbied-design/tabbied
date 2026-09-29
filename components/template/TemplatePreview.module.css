@@ -422,7 +422,8 @@
   border-radius: 999px;
 }
 
-/* The page on its own, with a lucide arrow saying it leaves the frame. */
+/* The site on its own, in a new tab, with a lucide arrow saying it leaves
+   the frame. */
 .open {
   display: inline-flex;
   gap: 3px;
