@@ -155,7 +155,7 @@ account.get('/templates', async (c) => {
   });
 });
 
-// "Choose template": make one of the person's templates without taking it
+// "Add to my templates": make one of the person's templates without taking it
 // yet. The same claim a first download or a first customizer save makes.
 account.post('/templates', async (c) => {
   const userId = await requireUser(c.env, c.req.raw.headers);

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Menu } from '@base-ui-components/react/menu';
+import type { LucideIcon } from 'lucide-react';
 import { Logo } from 'components/logo';
 import { plexMono } from 'lib/fonts';
 import { useSyncExternalStore } from 'react';
@@ -10,6 +11,7 @@ import { SESSION_HINT_KEY, readSessionHint, signOut, useSessionUser } from 'lib/
 import { stopImpersonating } from 'lib/impersonation';
 import useMediaQuery from 'lib/useMediaQuery';
 import ImpersonationNotice from './ImpersonationNotice';
+import MenuIcon, { MENU_ICONS } from './MenuIcon';
 import styles from './SiteNav.module.css';
 
 // The site's masthead, in two tones: ink on paper (`light`) and paper on the
@@ -37,9 +39,9 @@ const noSubscription = () => () => {};
 type NavTone = 'dark' | 'light';
 
 const DESTINATIONS = [
-  ['/patterns', 'Patterns'],
-  ['/templates', 'Websites'],
-  ['/docs/react', 'React Component'],
+  ['/patterns', 'Patterns', MENU_ICONS.patterns],
+  ['/templates', 'Websites', MENU_ICONS.websites],
+  ['/docs/react', 'React Component', MENU_ICONS.react],
 ] as const;
 
 /** Two letters for the circle: first and last name, or the start of the email. */
@@ -105,7 +107,7 @@ export default function SiteNav({
     .filter(isCurrent)
     .reduce<string | null>((best, href) => (!best || href.length > best.length ? href : best), null);
 
-  const item = (href: string, label: string) => (
+  const item = (href: string, label: string, icon: LucideIcon) => (
     <Menu.Item
       key={href}
       className={styles.menuItem}
@@ -117,6 +119,7 @@ export default function SiteNav({
         />
       }
     >
+      <MenuIcon icon={icon} className={styles.menuIcon} />
       {label}
     </Menu.Item>
   );
@@ -177,12 +180,12 @@ export default function SiteNav({
                     {impersonating ? `Viewing as ${user.email}` : user.email}
                   </div>
                   <Menu.Separator className={styles.menuRule} />
-                  {item('/account', 'My account')}
-                  {narrow && DESTINATIONS.map(([href, label]) => item(href, label))}
-                  {item('/account/settings', 'Settings')}
+                  {item('/account', 'My account', MENU_ICONS.account)}
+                  {narrow && DESTINATIONS.map(([href, label, icon]) => item(href, label, icon))}
+                  {item('/account/settings', 'Settings', MENU_ICONS.settings)}
                   {/* This decides only whether the way in is drawn: every
                       /api/admin route checks the role again for itself. */}
-                  {user.role === 'admin' && item('/admin', 'Admin')}
+                  {user.role === 'admin' && item('/admin', 'Admin', MENU_ICONS.admin)}
                   <Menu.Separator className={styles.menuRule} />
                   {/* A borrowed session ends by handing the admin's back:
                       signing out here would end both (lib/impersonation.ts). */}
@@ -202,6 +205,10 @@ export default function SiteNav({
                       }
                     }}
                   >
+                    <MenuIcon
+                      icon={impersonating ? MENU_ICONS.stopImpersonating : MENU_ICONS.signOut}
+                      className={styles.menuIcon}
+                    />
                     {impersonating ? 'Stop impersonating' : 'Sign out'}
                   </Menu.Item>
                 </Menu.Popup>
@@ -229,9 +236,9 @@ export default function SiteNav({
                   sideOffset={10}
                 >
                   <Menu.Popup className={styles.menu}>
-                    {DESTINATIONS.map(([href, label]) => item(href, label))}
+                    {DESTINATIONS.map(([href, label, icon]) => item(href, label, icon))}
                     <Menu.Separator className={styles.menuRule} />
-                    {item(signInHref, 'Sign in')}
+                    {item(signInHref, 'Sign in', MENU_ICONS.signIn)}
                   </Menu.Popup>
                 </Menu.Positioner>
               </Menu.Portal>

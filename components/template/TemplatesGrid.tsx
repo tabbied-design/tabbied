@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
 import Link from 'next/link';
-import { ArrowRight, CircleCheck, Palette, Plus } from 'lucide-react';
+import { CircleCheck, Eye, Palette, Plus } from 'lucide-react';
 import type { PatternDefinition } from 'tabbied';
 import {
   TEMPLATE_CATEGORIES,
@@ -102,7 +102,6 @@ function Footer({ c, templates, guard, here }: { c: TemplateCard; templates: MyT
         <Link href={customizeHref(c.slug, chosen)} prefetch={false} className={s.textLink}>
           <Palette size={14} strokeWidth={1.8} aria-hidden="true" />
           Customize
-          <ArrowRight size={13} strokeWidth={1.8} aria-hidden="true" />
         </Link>
         <DownloadMenu name={c.name} chosen={chosen} side="top" classes={MENU} />
       </div>
@@ -113,10 +112,12 @@ function Footer({ c, templates, guard, here }: { c: TemplateCard; templates: MyT
     return (
       <div className={s.dl}>
         <a href={c.href} className={s.quietLink}>
-          Preview &#x2192;
+          <Eye size={14} strokeWidth={1.8} aria-hidden="true" />
+          Preview
         </a>
         <button type="button" className={`${s.pill} ${s.pillSolid}`} onClick={() => guard(c.slug, c.name, 'choose', () => {})}>
-          Choose template
+          <Plus size={14} strokeWidth={2} aria-hidden="true" />
+          Add to my templates
         </button>
       </div>
     );

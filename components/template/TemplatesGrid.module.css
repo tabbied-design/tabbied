@@ -299,8 +299,10 @@
   white-space: nowrap;
 }
 
-/* Customize and "All n chosen" carry lucide icons, set on the text's line. */
+/* Customize, Preview and "All n chosen" carry lucide icons, set on the
+   text's line. */
 .textLink,
+.quietLink,
 .quiet {
   display: inline-flex;
   gap: 6px;
@@ -356,7 +358,7 @@
   background: oklch(1 0 0 / 0.1);
 }
 
-/* "Choose template": the one filled pill, the card's first step. The
+/* "Add to my templates": the one filled pill, the card's first step. The
    artboard draws it with no ring, so it stands 2px shorter than the
    outlined pills. */
 .pillSolid {

@@ -1120,7 +1120,7 @@ Things worth not re-litigating:
 ## Five templates per account - chosen once, then unlimited
 
 During the beta every account chooses five website templates. Choosing is
-explicit ("Choose template" on a gallery card) or implicit (the first
+explicit ("Add to my templates" on a gallery card) or implicit (the first
 download of a template, or the first customizer Save of it), and once a
 template is chosen its colors and patterns can be changed and it can be
 downloaded as often as the person likes. This replaced a cap of thirty

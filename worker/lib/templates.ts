@@ -5,7 +5,7 @@ import type { Db } from './quota';
 // The templates a person has made theirs.
 //
 // During the beta every account may choose five website templates. A
-// template is chosen explicitly ("Choose template"), or on the first
+// template is chosen explicitly ("Add to my templates"), or on the first
 // download of it, or on the first customizer save of it; once chosen it is
 // downloaded and customized as often as the person likes. "Request more"
 // (`templateRequest`) adds to that: a first request by an emailed link that

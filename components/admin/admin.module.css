@@ -1166,10 +1166,27 @@
   font-family: var(--a-mono);
 }
 
+/* The select draws no arrow of its own; a lucide chevron sits over its
+   right edge instead, and lets a click through to the control. */
+.selectWrap {
+  position: relative;
+  display: inline-flex;
+}
+
 .select {
   min-width: 220px;
-  padding-right: 10px;
+  padding-right: 38px;
   cursor: pointer;
+  appearance: none;
+}
+
+.selectIcon {
+  position: absolute;
+  top: 50%;
+  right: 13px;
+  color: var(--a-muted);
+  pointer-events: none;
+  transform: translateY(-50%);
 }
 
 .emailField {
@@ -1356,10 +1373,29 @@
   margin-top: 14px;
 }
 
+/* The browser's disclosure triangle is replaced by a lucide chevron that
+   turns down while the details are open. */
 .mailDetails summary {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
   font: 400 14px var(--a-sans);
   color: var(--a-muted);
+  list-style: none;
   cursor: pointer;
+}
+
+.mailDetails summary::-webkit-details-marker {
+  display: none;
+}
+
+.mailDetailsIcon {
+  flex: none;
+  transition: transform 150ms ease;
+}
+
+.mailDetails[open] .mailDetailsIcon {
+  transform: rotate(90deg);
 }
 
 .mailDetails .pre {
@@ -1798,6 +1834,7 @@
   .field,
   .emailField,
   .formRow .button,
+  .selectWrap,
   .select {
     width: 100%;
   }
@@ -1821,7 +1858,8 @@
   .navLink,
   .button,
   .pill,
-  .rowMenu {
+  .rowMenu,
+  .mailDetailsIcon {
     transition: none;
   }
 }
