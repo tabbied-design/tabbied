@@ -2,7 +2,7 @@
    ORBITAL - listening bar, Lisbon
    Space age, 1960s. Everything is round: capsule buttons, circular badges,
    panels with corners the size of a saucer, and thin orbit rings drawn as
-   circular borders. Righteous for display, Outfit for everything else. Warm
+   circular borders. Unbounded for display, Outfit for everything else. Warm
    cream paper, deep indigo ink, one orange and one teal. The panels float
    inside the page with a gutter around them rather than running edge to
    edge, so the cream reads as the sky they sit in.
@@ -19,7 +19,7 @@
   --gut: clamp(1rem, 3.5vw, 3rem);
   --max: 76rem;
   --round: clamp(1.6rem, 4vw, 3rem);
-  --display: 'Righteous', 'Arial Rounded MT Bold', 'Helvetica Neue', sans-serif;
+  --display: 'Unbounded', 'Arial Rounded MT Bold', 'Helvetica Neue', sans-serif;
 
   font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 400;
