@@ -243,8 +243,8 @@ test.describe('account and admin pages', () => {
 
     await page.goto('/admin/users/');
     await expect(page.getByRole('link', { name: 'sam@example.com' })).toBeVisible();
-    await expect(page.getByText('5 / 5')).toBeVisible();
-    await expect(page.getByText('All 5 chosen')).toBeVisible();
+    // A full quota is the quota in red, not a status.
+    await expect(page.locator('[class*="__quotaFull"]')).toContainText('5 / 5');
     await expect(page.getByRole('link', { name: 'Test users' })).toHaveAttribute('href', '/admin/test-users/');
     await expect(page.getByRole('link', { name: 'Email preview' })).toHaveAttribute('href', '/admin/emails/');
 
@@ -297,6 +297,7 @@ test.describe('acting on accounts', () => {
       userRow(),
       userRow({ id: 'u1', name: 'Pat', email: 'pat@example.com', role: 'admin', chosen: 1 }),
       userRow({ id: 'u3', name: 'Test user abc12', email: 'test-abc12@tabbied.test', test: true, chosen: 0 }),
+      userRow({ id: 'u4', name: 'Robin', email: 'robin@example.com', emailVerified: false, chosen: 0 }),
     ];
     await page.route('**/api/admin/users?*', (route) =>
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ testDomain: 'tabbied.test', users }) })
@@ -312,6 +313,11 @@ test.describe('acting on accounts', () => {
     expect(head).toMatch(/\bPLAN\b/);
     expect(head).not.toMatch(/ROLE/);
     expect(head).toMatch(/TEMPLATE\nQUOTA/);
+    // No Status column: what it said is a badge by the name, or the quota's color.
+    expect(head).not.toMatch(/STATUS/);
+    await expect(row('robin@example.com').getByText('Unverified', { exact: true })).toBeVisible();
+    await expect(sam.locator('[class*="__quotaFull"]')).toContainText('5 / 5');
+    await expect(row('tabbied.test').locator('[class*="__quotaFull"]')).toHaveCount(0);
     // "Make admin" is gone; an admin is a tag by the name.
     await expect(page.getByRole('button', { name: /admin/i })).toHaveCount(0);
     await expect(row('pat@example.com').getByText('Admin', { exact: true })).toBeVisible();
@@ -334,7 +340,7 @@ test.describe('acting on accounts', () => {
     await page.getByRole('button', { name: 'Actions for Sam' }).click();
     await page.getByRole('menuitem', { name: 'Ban' }).click();
     await expect.poll(() => bans).toEqual([{ userId: 'u2', banReason: 'Banned from the admin page' }]);
-    await expect(sam.getByText('Banned')).toBeVisible();
+    await expect(sam.getByText('Banned', { exact: true })).toBeVisible();
 
     // Remove asks first, then deletes through the admin API.
     const removed: string[] = [];
@@ -367,8 +373,8 @@ test.describe('acting on accounts', () => {
       usageToday: [],
       templates: {
         used: 2,
-        total: 5,
-        left: 3,
+        total: 8,
+        left: 6,
         chosen: [
           { slug: 'verdant', createdAt: '2026-09-01T00:00:00Z' },
           { slug: 'solstice', createdAt: '2026-09-03T00:00:00Z' },
@@ -386,8 +392,13 @@ test.describe('acting on accounts', () => {
     });
     const grants: unknown[] = [];
     await page.route('**/api/admin/users/u2/grants', (route) => {
-      grants.push(route.request().postDataJSON());
-      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ grant: { id: 'g1', granted: 6 }, total: 11, mailed: true }) });
+      const body = route.request().postDataJSON() as { limit: number; notify: boolean };
+      grants.push(body);
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ grant: { id: 'g1', granted: body.limit - 8 }, total: body.limit, mailed: body.notify ? true : null }),
+      });
     });
 
     await page.goto('/admin/users/');
@@ -411,13 +422,26 @@ test.describe('acting on accounts', () => {
     await dialog.getByRole('button', { name: 'Reset all' }).click();
     await expect.poll(() => removals).toEqual([{ slugs: ['verdant'] }, { all: true }]);
 
-    // Adding: the stepper, an admins-only note, and the email on by default.
+    // Lowering: never under five, and a decrease is not an email.
+    const fewer = dialog.getByRole('button', { name: 'One fewer' });
+    await expect(dialog.getByRole('button', { name: 'No change' })).toBeDisabled();
+    for (let i = 0; i < 3; i++) await fewer.click();
+    await expect(fewer).toBeDisabled();
+    await expect(dialog.getByRole('checkbox', { name: /Email/ })).toHaveCount(0);
+    await dialog.getByRole('button', { name: 'One more' }).click();
+    await dialog.getByRole('button', { name: 'Lower to 6' }).click();
+    await expect(dialog.getByText('Lowered their limit to 6.')).toBeVisible();
+
+    // Raising: an admins-only note, and the email on by default.
     await dialog.getByRole('button', { name: 'One more' }).click();
     await dialog.getByRole('textbox', { name: 'Note for admins' }).fill('Workshop');
     await expect(dialog.getByRole('checkbox', { name: 'Email sam@example.com' })).toBeChecked();
-    await dialog.getByRole('button', { name: 'Add 6 templates' }).click();
-    await expect(dialog.getByText('Added 6 templates. They can now choose 11. sam@example.com has been told.')).toBeVisible();
-    expect(grants).toEqual([{ granted: 6, note: 'Workshop', notify: true }]);
+    await dialog.getByRole('button', { name: 'Raise to 9' }).click();
+    await expect(dialog.getByText('Raised their limit to 9. sam@example.com has been told.')).toBeVisible();
+    expect(grants).toEqual([
+      { limit: 6, note: '', notify: false },
+      { limit: 9, note: 'Workshop', notify: true },
+    ]);
 
     // The pencil beside the quota opens the same dialog.
     await dialog.getByRole('button', { name: 'Done' }).click();

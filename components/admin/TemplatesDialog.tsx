@@ -9,7 +9,8 @@ import { useAdminData } from './useAdminData';
 import styles from './admin.module.css';
 
 // A person's templates, as an admin handles them: take chosen ones back (some,
-// or all of them) and add to the limit without a request. Taking one back also
+// or all of them) and set the limit, up or down but never under the free five,
+// without a request. Taking one back also
 // deletes the person's sites made on it, pictures included, and says so before
 // it happens; adding can email them. Every rule is the Worker's
 // (/api/admin/users/:id/templates/remove and /grants); this is the form.
@@ -27,8 +28,11 @@ type Detail = {
   };
 };
 
-/** The most one grant adds; the Worker holds the same number. */
+/** The most one change raises a limit by; the Worker holds the same number. */
 const MAX_GRANT = 20;
+
+/** The floor under every limit, the free templates; the Worker holds the same number. */
+const FREE_TEMPLATES = 5;
 
 const day = (value: string | Date) =>
   new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
@@ -55,7 +59,8 @@ function Body({
   const { data, error, reload } = useAdminData<Detail>(`/api/admin/users/${person.id}`);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [confirming, setConfirming] = useState<'selected' | 'all' | null>(null);
-  const [amount, setAmount] = useState(5);
+  // The limit being set; null follows the current one (and does again after a save).
+  const [target, setTarget] = useState<number | null>(null);
   const [note, setNote] = useState('');
   const [notify, setNotify] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -94,21 +99,25 @@ function Body({
       return `Removed ${plural(answer.removed.length, 'template')}${answer.sitesDeleted ? ` and ${plural(answer.sitesDeleted, 'customized site')}` : ''}.`;
     });
 
-  const grant = () =>
+  const limit = target ?? templates.total;
+  const raising = limit > templates.total;
+
+  const saveLimit = () =>
     act(async () => {
       const answer = await apiFetch<{ total: number; mailed: boolean | null }>(`/api/admin/users/${person.id}/grants`, {
         method: 'POST',
-        body: JSON.stringify({ granted: amount, note, notify }),
+        body: JSON.stringify({ limit, note, notify: notify && raising }),
       });
       setNote('');
+      setTarget(null);
       const mailed = answer.mailed === false ? ` The email to ${person.email} did not send.` : answer.mailed ? ` ${person.email} has been told.` : '';
-      return `Added ${plural(amount, 'template')}. They can now choose ${answer.total}.${mailed}`;
+      return `${raising ? 'Raised' : 'Lowered'} their limit to ${answer.total}.${mailed}`;
     });
 
   const takeBack = (id: string, granted: number) =>
     act(async () => {
       const answer = await apiFetch<{ total: number }>(`/api/admin/users/${person.id}/grants/${id}`, { method: 'DELETE' });
-      return `Took back ${plural(granted, 'template')}. They can now choose ${answer.total}.`;
+      return `Took back the change of ${granted > 0 ? '+' : ''}${granted}. Their limit is ${answer.total}.`;
     });
 
   const toggle = (slug: string) =>
@@ -195,14 +204,29 @@ function Body({
 
       <div className={styles.dialogRule} />
 
-      <h3 className={styles.dialogSection}>Add to their limit</h3>
+      <h3 className={styles.dialogSection}>Their limit</h3>
+      <p className={styles.tplMeta} style={{ margin: '0 0 12px' }}>
+        Now {templates.total}. Never under {FREE_TEMPLATES}; up to {MAX_GRANT} more at a time.
+      </p>
       <div className={styles.grantRow}>
         <div className={styles.stepper}>
-          <button type="button" aria-label="One fewer" disabled={busy || amount <= 1} onClick={() => setAmount(amount - 1)}>
+          <button
+            type="button"
+            aria-label="One fewer"
+            disabled={busy || limit <= FREE_TEMPLATES}
+            onClick={() => setTarget(limit - 1)}
+          >
             &#x2212;
           </button>
-          <span aria-live="polite">{amount}</span>
-          <button type="button" aria-label="One more" disabled={busy || amount >= MAX_GRANT} onClick={() => setAmount(amount + 1)}>
+          <span aria-live="polite" aria-label={`Limit ${limit}`}>
+            {limit}
+          </span>
+          <button
+            type="button"
+            aria-label="One more"
+            disabled={busy || limit >= templates.total + MAX_GRANT}
+            onClick={() => setTarget(limit + 1)}
+          >
             +
           </button>
         </div>
@@ -217,24 +241,39 @@ function Body({
           onChange={(event) => setNote(event.target.value)}
         />
       </div>
-      <label className={styles.checkRow}>
-        <input type="checkbox" checked={notify} disabled={busy} onChange={(event) => setNotify(event.target.checked)} />
-        Email {person.email}
-      </label>
-      <button type="button" className={styles.button} disabled={busy} onClick={() => void grant()}>
-        Add {plural(amount, 'template')}
+      {/* Only a raise is news worth an email; a decrease is quiet. */}
+      {raising ? (
+        <label className={styles.checkRow}>
+          <input type="checkbox" checked={notify} disabled={busy} onChange={(event) => setNotify(event.target.checked)} />
+          Email {person.email}
+        </label>
+      ) : null}
+      {limit < templates.used ? (
+        <p className={styles.tplMeta} style={{ margin: '0 0 14px' }}>
+          They have chosen {templates.used}. They keep all of them, but cannot choose another until they are under
+          the limit.
+        </p>
+      ) : null}
+      <button
+        type="button"
+        className={styles.button}
+        disabled={busy || limit === templates.total}
+        onClick={() => void saveLimit()}
+      >
+        {limit === templates.total ? 'No change' : raising ? `Raise to ${limit}` : `Lower to ${limit}`}
       </button>
 
       {templates.grants.length > 0 ? (
         <>
           <h3 className={styles.dialogSection} style={{ marginTop: 22 }}>
-            Added by admins
+            Changed by admins
           </h3>
           <ul className={styles.tplList}>
             {templates.grants.map((row) => (
               <li key={row.id} className={styles.grantItem}>
                 <span>
-                  +{row.granted} on {day(row.createdAt)}
+                  {row.granted > 0 ? '+' : ''}
+                  {row.granted} on {day(row.createdAt)}
                   {row.grantedBy ? ` by ${row.grantedBy}` : ''}
                   {row.note ? <span className={styles.tplMeta}> &#xB7; {row.note}</span> : null}
                 </span>

@@ -6,7 +6,7 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, ArrowRight, ArrowUpDown, ChevronDown, ChevronUp, SquarePen } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronDown, SquarePen } from 'lucide-react';
 import { ApiError, apiFetch, apiUrl } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';
 import { initials } from 'components/nav';
@@ -174,11 +174,19 @@ export type UserRow = {
 /** "free" as the directory prints it. */
 export const planLabel = (plan = 'free') => plan.charAt(0).toUpperCase() + plan.slice(1);
 
-/** "3 / 5", with the way to change it: the pencil opens Manage templates. */
+/**
+ * "3 / 5", with the way to change it: the pencil opens Manage templates. Red
+ * once every template the person may choose is chosen: the people who write in.
+ */
 export function QuotaEdit({ row, onEdit }: { row: UserRow; onEdit: () => void }) {
+  const full = row.chosen >= row.allowance;
+
   return (
-    <span className={styles.quota}>
-      {row.chosen} / {row.allowance}
+    <span className={`${styles.quota} ${full ? styles.quotaFull : ''}`}>
+      <span title={full ? `All ${row.allowance} chosen` : undefined}>
+        {row.chosen} / {row.allowance}
+        {full ? <span className={styles.srOnly}> (all chosen)</span> : null}
+      </span>
       <button
         type="button"
         className={styles.quotaEdit}
@@ -200,6 +208,9 @@ export function PersonName({ row, self }: { row: UserRow; self: boolean }) {
       {self ? <span className={styles.tag}>You</span> : null}
       {row.role === 'admin' ? <span className={styles.tag}>Admin</span> : null}
       {row.test ? <span className={`${styles.tag} ${styles.tagTest}`}>Test</span> : null}
+      {/* What the Status column used to say, where the eye already is. */}
+      {!row.emailVerified ? <span className={styles.tag}>Unverified</span> : null}
+      {row.banned ? <span className={`${styles.tag} ${styles.tagBanned}`}>Banned</span> : null}
     </div>
   );
 }
@@ -222,24 +233,17 @@ const matchesFilter = (row: UserRow, filter: Filter) =>
           ? row.role === 'admin'
           : !row.emailVerified;
 
-/** Banned, unverified, at the limit, or active - in that order of what matters. */
-function Status({ row }: { row: UserRow }) {
-  if (row.banned) return <span className={`${styles.status} ${styles.statusBanned}`}>Banned</span>;
-  if (!row.emailVerified) return <span className={`${styles.status} ${styles.statusQuiet}`}>Unverified</span>;
-  if (allChosen(row)) return <span className={`${styles.status} ${styles.statusFull}`}>All {row.allowance} chosen</span>;
-  return <span className={styles.status}>Active</span>;
-}
-
 /**
  * The directory: search goes to the API (it is what knows every row), the
- * filter, the sort and the pages are the browser's over what came back.
+ * filter and the pages are the browser's over what came back. There is no
+ * Status column: a ban or a missing verification is a badge by the name, and
+ * a full quota is the quota in red.
  * The overview shows the first handful of it; the users page all of it.
  */
 function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number; compact?: boolean }) {
   const [draft, setDraft] = useState('');
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('All users');
-  const [statusSort, setStatusSort] = useState<0 | 1 | 2>(0);
   const [page, setPage] = useState(0);
   const [message, setMessage] = useState<string | null>(null);
   const [managing, setManaging] = useState<UserRow | null>(null);
@@ -248,12 +252,7 @@ function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number;
     `/api/admin/users?q=${encodeURIComponent(query)}&limit=${compact ? pageSize : 200}`
   );
 
-  const rows = useMemo(() => {
-    const filtered = (data?.users ?? []).filter((row) => matchesFilter(row, filter));
-    if (!statusSort) return filtered;
-    const rank = (row: UserRow) => (row.banned ? 3 : !row.emailVerified ? 2 : allChosen(row) ? 1 : 0);
-    return [...filtered].sort((a, b) => (statusSort === 1 ? rank(b) - rank(a) : rank(a) - rank(b)) || a.name.localeCompare(b.name));
-  }, [data, filter, statusSort]);
+  const rows = useMemo(() => (data?.users ?? []).filter((row) => matchesFilter(row, filter)), [data, filter]);
 
   const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
   const current = Math.min(page, pageCount - 1);
@@ -322,21 +321,6 @@ function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number;
             Quota
           </div>
           <div>Remaining</div>
-          <button
-            type="button"
-            className={styles.sortHead}
-            data-on={statusSort ? '' : undefined}
-            onClick={() => {
-              setStatusSort(((statusSort + 1) % 3) as 0 | 1 | 2);
-              setPage(0);
-            }}
-            title="Sort by status"
-          >
-            <span>Status</span>
-            <span aria-hidden="true">
-              {statusSort === 0 ? <ArrowUpDown size={13} /> : statusSort === 1 ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-            </span>
-          </button>
           <div />
         </div>
 
@@ -366,7 +350,6 @@ function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number;
                 <QuotaEdit row={row} onEdit={() => setManaging(row)} />
               </div>
               <div className={styles.cell} data-label="Remaining">{Math.max(0, row.allowance - row.chosen)}</div>
-              <Status row={row} />
               <div className={styles.actions}>
                 <UserActions row={row} self={row.id === me?.id} onChanged={reload} onError={setMessage} />
               </div>
@@ -492,7 +475,10 @@ export function UserDetailPanel({ id }: { id: string }) {
         <p className={styles.quiet} style={{ margin: '0 0 14px' }}>
           {data.templates.used} of {data.templates.total} chosen, {data.templates.left} left.
           {data.templates.grants.length
-            ? ` ${data.templates.grants.reduce((sum, row) => sum + row.granted, 0)} of them added by an admin.`
+            ? (() => {
+                const net = data.templates.grants.reduce((sum, row) => sum + row.granted, 0);
+                return net ? ` Admins changed it by ${net > 0 ? '+' : ''}${net}.` : '';
+              })()
             : ''}
         </p>
         {data.templates.chosen.length > 0 ? (
@@ -849,13 +835,16 @@ export function QuotasPanel() {
                 Daily AI caps (the table above): <code>DAILY_CAPS</code> in <code>worker/lib/quota.ts</code>.
               </li>
               <li>
-                Templates every account may choose: <code>FREE_TEMPLATES</code> in <code>worker/lib/templates.ts</code>,
-                and its copy in <code>lib/myTemplates.ts</code>, which the pages print. The same two files hold{' '}
+                Templates every account may choose, and the floor no limit goes under:{' '}
+                <code>FREE_TEMPLATES</code> in <code>worker/lib/templates.ts</code>, and its copies in{' '}
+                <code>lib/myTemplates.ts</code>, which the pages print, and{' '}
+                <code>components/admin/TemplatesDialog.tsx</code>. The first two also hold{' '}
                 <code>FIRST_REQUEST_GRANT</code>, what a first request&apos;s emailed link adds.
               </li>
               <li>
-                The most one grant adds: <code>MAX_GRANT</code> in <code>worker/lib/templates.ts</code>, and in{' '}
-                <code>components/admin/panels.tsx</code> and <code>TemplatesDialog.tsx</code>.
+                The most one grant or one change raises a limit by: <code>MAX_GRANT</code> in{' '}
+                <code>worker/lib/templates.ts</code>, and in <code>components/admin/panels.tsx</code> and{' '}
+                <code>TemplatesDialog.tsx</code>.
               </li>
               <li>
                 Burst limits (requests a minute): the <code>BURST</code> table at the top of{' '}

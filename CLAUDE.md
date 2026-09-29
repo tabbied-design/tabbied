@@ -1178,8 +1178,8 @@ another). Five things worth not re-litigating:
   puts it back, and a decision mails the person. One request may be open at
   a time, checked in the insert itself (`openRequest`). The allowance is
   five plus every `granted` whose status is `activated` or `granted`, plus
-  every admin grant (`template_grant`, below), and that rule is one
-  `allowanceSql`, read by the person's page, the claim and
+  every admin change (`template_grant`, below), never under five, and
+  that rule is one `allowanceSql`, read by the person's page, the claim and
   both admin lists alike; the users directory once carried a copy of its
   own that read a single grant row and left `activated` out, so an account
   that had followed the link showed 10 / 5 there. Emailed links are built
@@ -1533,7 +1533,9 @@ so a new test joins an existing file unless it needs a fresh database.
 
 The directory (`/admin/users`) shows a Plan column (everyone is `free`
 during the beta; `PLAN` in `worker/lib/users.ts` is the one place that says
-so) and a Template Quota, and each row ends in an ellipsis menu,
+so) and a Template Quota, red once everything allowed is chosen, with a
+pencil that opens Manage templates. There is no Status column: Unverified
+and Banned are badges by the name. Each row ends in an ellipsis menu,
 `components/admin/UserActions.tsx`: Impersonate, Ban or Unban, Remove. The
 same menu sits on a user's detail view and on `/admin/test-users`. Five
 things worth not re-litigating:
@@ -1576,15 +1578,20 @@ things worth not re-litigating:
   The password is shown once on the page, since only its hash is kept.
 - **An admin changes a person's templates from the same menu.** "Manage
   templates" (`TemplatesDialog`) takes chosen templates back (some, or all:
-  Reset) and adds 1 to 20 to the limit without a request. Taking one back
+  Reset) and sets the limit without a request: up by at most 20 at a time,
+  or down, never under the free five. Taking one back
   deletes what the person made on it too, their sites on that template and
   those sites' pictures (`removeChosenTemplates`), and the dialog says how
-  many before it happens. An addition is a `template_grant` row, not a
-  `template_request`: the request flow reads the latest request row as the
-  person's own, so a grant stored there would pose as their request.
-  `allowanceSql` counts both. The "Email them" box is on by default and
-  sends `adminGrantEmail`, not the decision email, which thanks the person
-  for a request they never sent. A grant can be taken back; what the person
+  many before it happens. A change is a `template_grant` row holding the
+  difference (negative to lower), not a `template_request`: the request flow
+  reads the latest request row as the person's own, so a grant stored there
+  would pose as their request. `allowanceSql` counts both and floors the sum
+  at `FREE_TEMPLATES`, so no combination of decreases and undone grants
+  takes anyone under five; the route writes the difference from the
+  unfloored sum (`rawAllowanceSql`), so the limit set is exactly the one
+  asked for. Only a raise is mailed: "Email them" is on by default and sends
+  `adminGrantEmail`, not the decision email, which thanks the person for a
+  request they never sent. A change can be taken back; what the person
   already chose stays chosen, as for an early account over the limit.
   Migration 0009 made the table, and `allowanceSql` reads it on every claim,
   so **0009 must be applied to production before the code that reads it

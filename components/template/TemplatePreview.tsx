@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Menu } from '@base-ui-components/react/menu';
 import { Popover } from '@base-ui-components/react/popover';
-import { ChevronDown } from 'lucide-react';
+import { ArrowUpRight, ChevronDown } from 'lucide-react';
 import LogoMark from 'components/logo/LogoMark';
 import { initials } from 'components/nav';
 import ImpersonationNotice from 'components/nav/ImpersonationNotice';
@@ -219,6 +219,7 @@ export default function TemplatePreview({
             <span className={styles.pill}>tabbied.com/templates/{slug}/site/</span>
             <a className={styles.open} href={`/templates/${slug}/site/`}>
               Open the page
+              <ArrowUpRight size={13} strokeWidth={1.8} aria-hidden="true" />
             </a>
           </div>
           <iframe

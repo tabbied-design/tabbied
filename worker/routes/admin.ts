@@ -9,7 +9,7 @@ import { APIError } from 'better-auth/api';
 import { buildAuth } from '../auth';
 import { EMAIL_PREVIEWS } from '../lib/emailPreview';
 import { mailProvider, notifyAdminGrant, notifyRequestDecision, sendMail } from '../lib/mail';
-import { FREE_TEMPLATES, MAX_GRANT, allowanceSql, templateStatus } from '../lib/templates';
+import { FREE_TEMPLATES, MAX_GRANT, allowanceSql, rawAllowanceSql, templateStatus } from '../lib/templates';
 import { DAILY_CAPS, startOfUtcDay } from '../lib/quota';
 import { consume } from '../lib/ratelimit';
 import { authConfigured } from '../lib/session';
@@ -248,10 +248,11 @@ admin.get('/users/:id', async (c) => {
 
 // ---- A person's templates -----------------------------------------------------
 // What an admin can do to someone's allowance without a request: take chosen
-// templates back (one, several, or all of them) and add to the limit. Taking a
-// template back also deletes what the person made on it, their sites and those
-// sites' pictures (lib/users.ts). Adding writes a template_grant row, which
-// allowanceSql counts beside granted requests, and can mail the person.
+// templates back (one, several, or all of them) and set the limit, up or down
+// but never under the free five. Taking a template back also deletes what the
+// person made on it, their sites and those sites' pictures (lib/users.ts).
+// Setting the limit writes the difference as a template_grant row, which
+// allowanceSql counts beside granted requests; a raise can mail the person.
 
 const removeTemplatesSchema = z.union([
   z.object({ all: z.literal(true) }),
@@ -283,17 +284,19 @@ admin.post('/users/:id/templates/remove', async (c) => {
   return c.json({ removed: slugs, sitesDeleted, used: status.used, total: status.total });
 });
 
-const grantSchema = z.object({
-  granted: z.number().int().min(1).max(MAX_GRANT),
+const limitSchema = z.object({
+  /** The limit wanted: at least the free five. */
+  limit: z.number().int().min(FREE_TEMPLATES).max(10_000),
   note: z.string().trim().max(500).default(''),
+  /** Mail the person; only a raise is announced. */
   notify: z.boolean().default(true),
 });
 
 admin.post('/users/:id/grants', async (c) => {
-  const parsed = grantSchema.safeParse(await c.req.json().catch(() => null));
+  const parsed = limitSchema.safeParse(await c.req.json().catch(() => null));
 
   if (!parsed.success) {
-    return c.json({ error: `Add 1 to ${MAX_GRANT} templates.` }, 400);
+    return c.json({ error: `Set a limit of ${FREE_TEMPLATES} or more.` }, 400);
   }
 
   const who = c.get('admin');
@@ -305,10 +308,25 @@ admin.post('/users/:id/grants', async (c) => {
     return c.json({ error: 'Not found' }, 404);
   }
 
-  const { granted, note, notify } = parsed.data;
+  const { limit, note } = parsed.data;
+  const raw = await db.get<{ raw: number }>(sql`select ${rawAllowanceSql(id)} as raw`);
+  const before = Math.max(FREE_TEMPLATES, Number(raw?.raw ?? FREE_TEMPLATES));
+
+  if (limit === before) {
+    return c.json({ error: `Their limit is already ${limit}.` }, 400);
+  }
+
+  if (limit - before > MAX_GRANT) {
+    return c.json({ error: `Raise a limit by at most ${MAX_GRANT} at a time.` }, 400);
+  }
+
+  // The difference from the unfloored sum, so the new limit is exactly what
+  // was asked even where earlier changes had pushed the sum under the floor.
+  const granted = limit - Number(raw?.raw ?? FREE_TEMPLATES);
+  const notify = parsed.data.notify && limit > before;
 
   // Each notified grant is a real message, so it sits behind a burst gate like
-  // every route here that sends mail. A quiet grant sends nothing.
+  // every route here that sends mail. A quiet change sends nothing.
   if (notify) {
     const burst = await consume(db, { key: `grantmail:${who.id}`, max: 20, windowSeconds: 10 * 60 });
 
@@ -328,7 +346,7 @@ admin.post('/users/:id/grants', async (c) => {
 
   if (notify) {
     // Written first, mailed second: a failed send is reported, never unwinds the grant.
-    mailed = await notifyAdminGrant(c.env, { email: person.email, granted, total: status.total, origin: c.env.PUBLIC_ORIGIN })
+    mailed = await notifyAdminGrant(c.env, { email: person.email, granted: limit - before, total: status.total, origin: c.env.PUBLIC_ORIGIN })
       .then(() => true)
       .catch((error) => {
         console.error('[mail] admin grant notice failed', error);
@@ -339,7 +357,10 @@ admin.post('/users/:id/grants', async (c) => {
   return c.json({ grant: { id: row.id, granted: row.granted }, total: status.total, mailed });
 });
 
-/** Take a grant back: a mistyped number, say. Nothing chosen is taken away; the person just has fewer left. */
+/**
+ * Take a change back: a mistyped number, say. Nothing chosen is taken away,
+ * and the floor keeps the limit at five or more whatever is undone.
+ */
 admin.delete('/users/:id/grants/:grantId', async (c) => {
   const db = drizzle(c.env.DB, { schema });
   const id = c.req.param('id');

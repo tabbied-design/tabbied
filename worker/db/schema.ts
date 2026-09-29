@@ -355,8 +355,8 @@ export const templateRequest = sqliteTable(
 );
 
 /**
- * Templates an admin added to a person's allowance without being asked
- * (/admin/users). Counted by `allowanceSql` beside granted requests, and kept
+ * A change an admin made to a person's allowance without being asked
+ * (/admin/users): positive to raise it, negative to lower it. Counted by `allowanceSql` beside granted requests, and kept
  * out of `templateRequest` because a grant is not something the person
  * asked for: the request flow reads the latest request row as theirs.
  */

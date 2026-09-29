@@ -27,17 +27,12 @@ export const FIRST_REQUEST_GRANT = 5;
 const COUNTED = sql`('activated', 'granted')`;
 
 /**
- * The SQL for a person's allowance: the free five, plus every request grant
- * that took, plus every template an admin added without a request
- * (`template_grant`). `userId` is a value, or a column expression for a list that wants
- * the subquery correlated to each of its rows (qualified by hand, as the
- * drizzle note in CLAUDE.md says). The inner table is aliased so a query
- * over template_request itself still correlates to its outer row.
- *
- * Every reader of the allowance uses this one implementation, so the
- * account page, the claim and the admin lists cannot disagree.
+ * A person's allowance before its floor: the free five, plus every request
+ * grant that took, plus every change an admin made without a request
+ * (`template_grant`, which may be negative: an admin can lower a limit).
+ * The grants route sets a limit by writing the difference from this.
  */
-export const allowanceSql = (userId: string | SQL) => sql`(
+export const rawAllowanceSql = (userId: string | SQL) => sql`(
   ${FREE_TEMPLATES} + coalesce((
     select sum(r.granted) from template_request r
     where r.user_id = ${userId} and r.status in ${COUNTED}
@@ -46,6 +41,19 @@ export const allowanceSql = (userId: string | SQL) => sql`(
     where g.user_id = ${userId}
   ), 0)
 )`;
+
+/**
+ * The SQL for a person's allowance: `rawAllowanceSql`, never below the free
+ * five. The floor is what lets an admin lower a limit safely: undoing a
+ * request grant after a decrease cannot take anyone under five. `userId` is a value, or a column expression for a list that wants
+ * the subquery correlated to each of its rows (qualified by hand, as the
+ * drizzle note in CLAUDE.md says). The inner table is aliased so a query
+ * over template_request itself still correlates to its outer row.
+ *
+ * Every reader of the allowance uses this one implementation, so the
+ * account page, the claim and the admin lists cannot disagree.
+ */
+export const allowanceSql = (userId: string | SQL) => sql`max(${FREE_TEMPLATES}, ${rawAllowanceSql(userId)})`;
 
 type ChosenTemplate = { slug: string; createdAt: Date };
 

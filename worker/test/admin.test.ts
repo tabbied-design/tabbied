@@ -262,17 +262,21 @@ describe('acting on accounts', () => {
     expect(all.used).toBe(0);
     expect((await remove({})).status).toBe(400);
 
-    // Adding to the limit: counted everywhere the allowance is read, mailed when asked.
-    expect((await call(`users/${id}/grants`, { method: 'POST', body: JSON.stringify({ granted: 21 }) })).status).toBe(400);
-    const grant = (await call(`users/${id}/grants`, {
-      method: 'POST',
-      body: JSON.stringify({ granted: 3, note: 'Workshop attendee', notify: true }),
-    }).then((r) => r.json())) as { grant: { id: string }; total: number; mailed: boolean };
-    expect(grant.total).toBe(8);
-    expect(grant.mailed).toBe(true);
+    // Setting the limit: counted everywhere the allowance is read, mailed only on a raise.
+    const setLimit = (body: unknown) => call(`users/${id}/grants`, { method: 'POST', body: JSON.stringify(body) });
+    expect((await setLimit({ limit: 4 })).status).toBe(400);
+    expect((await setLimit({ limit: 26 })).status).toBe(400);
+    const raise = (await setLimit({ limit: 8, note: 'Workshop attendee', notify: true }).then((r) => r.json())) as {
+      grant: { id: string; granted: number };
+      total: number;
+      mailed: boolean;
+    };
+    expect(raise).toMatchObject({ grant: { granted: 3 }, total: 8, mailed: true });
     const mail = await env.DB.prepare('SELECT subject, body FROM dev_mail WHERE email = ?').bind('chooser@example.com').first<{ subject: string; body: string }>();
     expect(mail?.subject).toBe('You have more Tabbied templates');
+    expect(mail?.body).toContain("We've added 3 templates");
     expect(mail?.body).toContain('choose 8 in all');
+    expect((await setLimit({ limit: 8 })).status).toBe(400);
 
     // The person's own page reads the same allowance.
     const theirs = (await SELF.fetch(`${ORIGIN}/api/account/templates`, { headers: { cookie } }).then((r) => r.json())) as { total: number };
@@ -282,16 +286,17 @@ describe('acting on accounts', () => {
     };
     expect(detail.templates.grants).toEqual([expect.objectContaining({ granted: 3, note: 'Workshop attendee', grantedBy: 'keeper@example.com' })]);
 
-    // A quiet grant sends nothing; taking one back lowers the limit again.
-    const quiet = (await call(`users/${id}/grants`, { method: 'POST', body: JSON.stringify({ granted: 2, notify: false }) }).then((r) => r.json())) as {
-      grant: { id: string };
-      total: number;
-      mailed: boolean | null;
-    };
-    expect(quiet).toMatchObject({ total: 10, mailed: null });
-    const undone = (await call(`users/${id}/grants/${grant.grant.id}`, { method: 'DELETE' }).then((r) => r.json())) as { total: number };
-    expect(undone.total).toBe(7);
-    expect((await call(`users/${id}/grants/${grant.grant.id}`, { method: 'DELETE' })).status).toBe(404);
+    // A quiet raise sends nothing; a decrease is never mailed, whatever the box says.
+    expect(await setLimit({ limit: 10, notify: false }).then((r) => r.json())).toMatchObject({ total: 10, mailed: null });
+    await env.DB.prepare('DELETE FROM dev_mail WHERE email = ?').bind('chooser@example.com').run();
+    expect(await setLimit({ limit: 5, notify: true }).then((r) => r.json())).toMatchObject({ grant: { granted: -5 }, total: 5, mailed: null });
+    expect(await env.DB.prepare('SELECT email FROM dev_mail WHERE email = ?').bind('chooser@example.com').first()).toBeNull();
+
+    // Never under five: taking back the first raise leaves the sum at 2, the limit at 5.
+    expect(await call(`users/${id}/grants/${raise.grant.id}`, { method: 'DELETE' }).then((r) => r.json())).toMatchObject({ total: 5 });
+    // And a limit set from there is exactly the one asked for.
+    expect(await setLimit({ limit: 6, notify: false }).then((r) => r.json())).toMatchObject({ total: 6 });
+    expect((await call(`users/${id}/grants/${raise.grant.id}`, { method: 'DELETE' })).status).toBe(404);
   });
 
   it('lets an admin see the site as a member, and come back', async () => {
