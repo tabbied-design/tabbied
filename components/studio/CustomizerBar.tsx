@@ -12,6 +12,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Menu } from '@base-ui-components/react/menu';
+import { ChevronDown } from 'lucide-react';
 import { initials } from 'components/nav';
 import ImpersonationNotice from 'components/nav/ImpersonationNotice';
 import { signOut, useSessionUser } from 'lib/authClient';
@@ -115,9 +116,7 @@ export default function CustomizerBar({
               <path d="M12 4v10m0 0 4-4m-4 4-4-4M5 19h14" />
             </svg>
             <span className={styles.downloadLabel}>{downloading ? 'Preparing...' : 'Download'}</span>
-            <span className={styles.caret} aria-hidden="true">
-              &#x25BE;
-            </span>
+            <ChevronDown className={styles.caret} size={14} strokeWidth={1.8} aria-hidden="true" />
           </Menu.Trigger>
           <Menu.Portal>
             <Menu.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>
