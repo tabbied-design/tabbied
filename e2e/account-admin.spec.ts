@@ -418,6 +418,12 @@ test.describe('acting on accounts', () => {
     await dialog.getByRole('button', { name: 'Add 6 templates' }).click();
     await expect(dialog.getByText('Added 6 templates. They can now choose 11. sam@example.com has been told.')).toBeVisible();
     expect(grants).toEqual([{ granted: 6, note: 'Workshop', notify: true }]);
+
+    // The pencil beside the quota opens the same dialog.
+    await dialog.getByRole('button', { name: 'Done' }).click();
+    await expect(dialog).toHaveCount(0);
+    await page.getByRole('button', { name: 'Manage templates for Sam' }).click();
+    await expect(page.getByRole('dialog').getByRole('heading', { name: 'Templates for Sam' })).toBeVisible();
   });
 
   test('impersonating: into the account, a way back on every page, and back', async ({ page }) => {

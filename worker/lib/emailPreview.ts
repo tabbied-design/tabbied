@@ -15,7 +15,10 @@ import { FIRST_REQUEST_GRANT, FREE_TEMPLATES, activationUrl } from './templates'
 // the page quietly stops describing what people receive.
 //
 // The links carry an obviously fake token, so a test copy followed from an
-// inbox confirms, resets and grants nothing.
+// inbox confirms, resets and grants nothing. The links are built on
+// PUBLIC_ORIGIN, as real mail's are; the lockup image comes from wherever the
+// admin is looking (`imageOrigin`), so a PR preview deployment shows it, and
+// sends it, before the image is live on the production host.
 
 const TOKEN = 'PREVIEW-ONLY.not-a-real-token';
 
@@ -29,7 +32,7 @@ export type EmailPreview = {
   to: 'person' | 'team';
   /** What sends it. */
   when: string;
-  build: (origin: string) => Message;
+  build: (origin: string, imageOrigin: string) => Message;
 };
 
 export const EMAIL_PREVIEWS: EmailPreview[] = [
@@ -39,8 +42,9 @@ export const EMAIL_PREVIEWS: EmailPreview[] = [
     to: 'person',
     when: 'Sign-up (better-auth)',
     // better-auth's own shape for the link: its endpoint, then where to land.
-    build: (origin) =>
+    build: (origin, imageOrigin) =>
       verificationEmail({
+        origin: imageOrigin,
         name: SAMPLE.name,
         url: `${origin}/api/auth/verify-email?token=${TOKEN}&callbackURL=${encodeURIComponent(`${origin}/verify-email/`)}`,
       }),
@@ -50,8 +54,9 @@ export const EMAIL_PREVIEWS: EmailPreview[] = [
     name: 'Password reset',
     to: 'person',
     when: '"Forgot password" (better-auth)',
-    build: (origin) =>
+    build: (origin, imageOrigin) =>
       resetPasswordEmail({
+        origin: imageOrigin,
         name: SAMPLE.name,
         url: `${origin}/api/auth/reset-password/${TOKEN}?callbackURL=${encodeURIComponent(`${origin}/reset-password/`)}`,
       }),
@@ -61,8 +66,9 @@ export const EMAIL_PREVIEWS: EmailPreview[] = [
     name: 'Extra templates link',
     to: 'person',
     when: 'Five minutes after a first "Request more"',
-    build: (origin) =>
+    build: (origin, imageOrigin) =>
       approvalEmail({
+        origin: imageOrigin,
         name: SAMPLE.name,
         url: activationUrl(origin, TOKEN),
         granted: FIRST_REQUEST_GRANT,

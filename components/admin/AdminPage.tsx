@@ -10,7 +10,7 @@ import {
   Inbox,
   LayoutDashboard,
   LayoutTemplate,
-  Mailbox,
+  Lock,
   MailOpen,
   Sparkles,
   Users,
@@ -31,7 +31,9 @@ import styles from './admin.module.css';
 // 404 to anyone else, so a person who defeats this sees an empty page and
 // nothing more.
 
-const LINKS: [href: string, label: string, Icon: LucideIcon][] = [
+// Quotas is last and says it is read-only: its numbers are constants in the
+// code, changed by a commit (the page says how), not from here.
+const LINKS: [href: string, label: string, Icon: LucideIcon, readOnly?: boolean][] = [
   ['/admin/', 'Overview', LayoutDashboard],
   ['/admin/users/', 'Users', Users],
   ['/admin/test-users/', 'Test users', FlaskConical],
@@ -40,9 +42,8 @@ const LINKS: [href: string, label: string, Icon: LucideIcon][] = [
   ['/admin/generations/', 'Generations', WandSparkles],
   ['/admin/templates/', 'Templates', LayoutTemplate],
   ['/admin/uploads/', 'Uploads', Images],
-  ['/admin/quotas/', 'Quotas', Gauge],
   ['/admin/emails/', 'Email preview', MailOpen],
-  ['/admin/mail/', 'Mail', Mailbox],
+  ['/admin/quotas/', 'Quotas', Gauge, true],
 ];
 
 type UserRow = {
@@ -184,7 +185,7 @@ export default function AdminPage({
         </Link>
 
         <nav className={styles.nav} aria-label="Admin">
-          {LINKS.map(([href, label, Icon]) => {
+          {LINKS.map(([href, label, Icon, readOnly]) => {
             const current = pathname === href || pathname === href.replace(/\/$/, '');
             return (
               <Link
@@ -196,6 +197,12 @@ export default function AdminPage({
               >
                 <Icon className={styles.navIcon} size={17} strokeWidth={1.75} aria-hidden="true" />
                 {label}
+                {readOnly ? (
+                  <span className={styles.navTag}>
+                    <Lock size={11} strokeWidth={2} aria-hidden="true" />
+                    Read-only
+                  </span>
+                ) : null}
               </Link>
             );
           })}

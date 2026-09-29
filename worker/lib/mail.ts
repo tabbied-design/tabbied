@@ -143,10 +143,20 @@ const greetingFor = (name: string) => {
 };
 
 /**
+ * The lockup at the head of every designed message: public/email/, captured
+ * from components/logo/Logo at 3x on the card's white, drawn at this size. An
+ * image, not the inline SVG the site draws, because Gmail strips <svg> from
+ * mail, and not live text, because mail clients ignore the web font.
+ */
+const LOCKUP = { path: '/email/tabbied-lockup.png', width: 88, height: 25 };
+
+/**
  * The parts of a designed message, as plain text: the layout escapes all of
  * it, so a person's name reaches the markup as characters, never as tags.
  */
 type Designed = {
+  /** Where the lockup image is served from: PUBLIC_ORIGIN for real mail. */
+  origin: string;
   eyebrow: string;
   title: string;
   /** Above the button: the greeting, then what the message is for. */
@@ -166,9 +176,9 @@ type Designed = {
  * The one layout every designed message shares (the 24 September design,
  * first drawn for "5 more templates, on us"). Inline styles and tables,
  * because a mail client reads no stylesheet and little layout. The fonts load
- * where a client allows it (Apple Mail, iOS) and fall back elsewhere. The mark
- * is components/logo/LogoMark's paths, inline: a client that drops SVG
- * (Gmail) is left with the wordmark alone.
+ * where a client allows it (Apple Mail, iOS) and fall back elsewhere. The
+ * lockup is a hosted PNG (LOCKUP); a client that blocks remote images shows
+ * its alt text, set in a serif like the wordmark.
  */
 function designedHtml(mail: Designed): string {
   const sans = "'IBM Plex Sans',Helvetica,Arial,sans-serif";
@@ -196,10 +206,7 @@ function designedHtml(mail: Designed): string {
 <tr><td align="center">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border:1px solid ${rule};border-radius:14px">
 <tr><td style="padding:44px 44px 36px;font-family:${sans};color:#0e0e13">
-<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 40px"><tr>
-<td style="padding:0 10px 0 0;vertical-align:middle"><svg viewBox="107 92 391 391" width="20" height="20" style="display:block" aria-hidden="true"><g fill="none" stroke="#0e0e13" stroke-width="17"><path d="M191 261 H277 C277 172.6 205.4 101 116 101 V311 C116 401.1 188.7 474 277 474 V312 H221"/><path d="M414 261 H328 C328 172.6 399.6 101 489 101 V311 C489 401.1 416.3 474 328 474 V312 H391"/></g></svg></td>
-<td style="vertical-align:middle;font:300 19px 'Cormorant Garamond',Georgia,serif;color:#0e0e13">tabbied</td>
-</tr></table>
+<img src="${escapeHtml(`${mail.origin}${LOCKUP.path}`)}" width="${LOCKUP.width}" height="${LOCKUP.height}" alt="tabbied" style="display:block;width:${LOCKUP.width}px;height:${LOCKUP.height}px;margin:0 0 40px;border:0;outline:none;text-decoration:none;font:300 19px Georgia,serif;color:#0e0e13">
 <p style="margin:0 0 12px;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:#005c44">${escapeHtml(mail.eyebrow)}</p>
 <h1 style="margin:0 0 18px;font:700 32px/1.15 'Proxima Nova',${sans};letter-spacing:-.015em">${escapeHtml(mail.title)}</h1>
 ${lines(mail.lead, `font:400 16px/1.65 ${sans};color:${text}`, '0 0 14px', '0 0 28px')}
@@ -213,7 +220,7 @@ ${lines(mail.after, `font:400 14.5px/1.6 ${sans};color:${quiet}`, '0 0 20px', '0
 }
 
 /** Sign-up's confirmation link (better-auth's `sendVerificationEmail`). */
-export function verificationEmail(confirm: { name: string; url: string }): Message {
+export function verificationEmail(confirm: { name: string; url: string; origin: string }): Message {
   const greeting = greetingFor(confirm.name);
   const body = 'Confirm this address to finish setting up your Tabbied account.';
   const expiry = `The link expires in ${hours(AUTH_LINK_HOURS)}.`;
@@ -224,6 +231,7 @@ export function verificationEmail(confirm: { name: string; url: string }): Messa
     url: confirm.url,
     text: [greeting, '', `${body} Follow this link:`, '', confirm.url, '', expiry, '', after, '', 'The Tabbied team'].join('\n'),
     html: designedHtml({
+      origin: confirm.origin,
       eyebrow: 'Your account',
       title: 'Confirm your email',
       lead: [greeting, body],
@@ -237,7 +245,7 @@ export function verificationEmail(confirm: { name: string; url: string }): Messa
 }
 
 /** "Forgot password" (better-auth's `sendResetPassword`). */
-export function resetPasswordEmail(reset: { name: string; url: string }): Message {
+export function resetPasswordEmail(reset: { name: string; url: string; origin: string }): Message {
   const greeting = greetingFor(reset.name);
   const body = 'Someone asked to reset the password for your Tabbied account. Choose a new one below.';
   const expiry = `The link works once and expires in ${hours(AUTH_LINK_HOURS)}.`;
@@ -248,6 +256,7 @@ export function resetPasswordEmail(reset: { name: string; url: string }): Messag
     url: reset.url,
     text: [greeting, '', body, '', reset.url, '', expiry, '', after, '', 'The Tabbied team'].join('\n'),
     html: designedHtml({
+      origin: reset.origin,
       eyebrow: 'Your account',
       title: 'Reset your password',
       lead: [greeting, body],
@@ -261,7 +270,13 @@ export function resetPasswordEmail(reset: { name: string; url: string }): Messag
 }
 
 /** The first request's email: a link that adds the templates when followed. */
-export function approvalEmail(approval: { name: string; url: string; granted: number; total: number }): Message {
+export function approvalEmail(approval: {
+  name: string;
+  url: string;
+  granted: number;
+  total: number;
+  origin: string;
+}): Message {
   const greeting = greetingFor(approval.name);
   const body = `Thanks for telling us about your work. Click below to add ${approval.granted} more website templates to your account, and you'll be able to choose up to ${approval.total}.`;
   const after =
@@ -284,6 +299,7 @@ export function approvalEmail(approval: { name: string; url: string; granted: nu
       'The Tabbied team',
     ].join('\n'),
     html: designedHtml({
+      origin: approval.origin,
       eyebrow: 'Your request',
       title: `${approval.granted} more templates, on us`,
       lead: [greeting, body],
@@ -299,7 +315,11 @@ export async function sendApprovalLink(
   env: Env,
   approval: { email: string; name: string; url: string; granted: number; total: number; sendAt?: Date }
 ): Promise<void> {
-  await sendMail(env, { to: approval.email, sendAt: approval.sendAt, ...approvalEmail(approval) });
+  await sendMail(env, {
+    to: approval.email,
+    sendAt: approval.sendAt,
+    ...approvalEmail({ ...approval, origin: env.PUBLIC_ORIGIN }),
+  });
 }
 
 type TemplateRequestNotice = {

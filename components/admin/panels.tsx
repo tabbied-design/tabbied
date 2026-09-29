@@ -6,7 +6,7 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, ArrowRight, ArrowUpDown, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpDown, ChevronDown, ChevronUp, SquarePen } from 'lucide-react';
 import { ApiError, apiFetch, apiUrl } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';
 import { initials } from 'components/nav';
@@ -174,6 +174,24 @@ export type UserRow = {
 /** "free" as the directory prints it. */
 export const planLabel = (plan = 'free') => plan.charAt(0).toUpperCase() + plan.slice(1);
 
+/** "3 / 5", with the way to change it: the pencil opens Manage templates. */
+export function QuotaEdit({ row, onEdit }: { row: UserRow; onEdit: () => void }) {
+  return (
+    <span className={styles.quota}>
+      {row.chosen} / {row.allowance}
+      <button
+        type="button"
+        className={styles.quotaEdit}
+        aria-label={`Manage templates for ${row.name || row.email}`}
+        title="Manage templates"
+        onClick={onEdit}
+      >
+        <SquarePen size={14} strokeWidth={1.8} aria-hidden="true" />
+      </button>
+    </span>
+  );
+}
+
 /** The name, and what is worth knowing at a glance beside it. */
 export function PersonName({ row, self }: { row: UserRow; self: boolean }) {
   return (
@@ -224,6 +242,7 @@ function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number;
   const [statusSort, setStatusSort] = useState<0 | 1 | 2>(0);
   const [page, setPage] = useState(0);
   const [message, setMessage] = useState<string | null>(null);
+  const [managing, setManaging] = useState<UserRow | null>(null);
   const { user: me } = useSessionUser();
   const { data, error, reload } = useAdminData<{ users: UserRow[] }>(
     `/api/admin/users?q=${encodeURIComponent(query)}&limit=${compact ? pageSize : 200}`
@@ -344,7 +363,7 @@ function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number;
               </div>
               <div className={`${styles.cell} ${styles.cellDim}`} data-label="Registered">{day(row.createdAt)}</div>
               <div className={styles.cell} data-label="Template quota">
-                {row.chosen} / {row.allowance}
+                <QuotaEdit row={row} onEdit={() => setManaging(row)} />
               </div>
               <div className={styles.cell} data-label="Remaining">{Math.max(0, row.allowance - row.chosen)}</div>
               <Status row={row} />
@@ -355,6 +374,15 @@ function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number;
           ))
         )}
       </div>
+
+      {managing ? (
+        <TemplatesDialog
+          person={managing}
+          open
+          onOpenChange={(open) => (open ? null : setManaging(null))}
+          onChanged={reload}
+        />
+      ) : null}
 
       {compact || !data ? null : (
         <div className={styles.pager}>
@@ -807,46 +835,48 @@ export function QuotasPanel() {
           </tbody>
         </table>
       </div>
-      <p className={styles.footnote}>
-        Read-only. The caps live in <code>worker/lib/quota.ts</code> and the burst windows in the routes; editing them here would mean a settings table read on every call.
-      </p>
+      <div className={`${styles.card} ${styles.howTo}`}>
+        <h2 className={styles.h3}>Changing a quota</h2>
+        <p className={styles.quiet}>
+          These are constants in the code rather than settings, so a change ships like any other code change. A
+          settings table would be a database read on every request.
+        </p>
+        <ol className={styles.steps}>
+          <li>
+            Change the number where it is defined:
+            <ul>
+              <li>
+                Daily AI caps (the table above): <code>DAILY_CAPS</code> in <code>worker/lib/quota.ts</code>.
+              </li>
+              <li>
+                Templates every account may choose: <code>FREE_TEMPLATES</code> in <code>worker/lib/templates.ts</code>,
+                and its copy in <code>lib/myTemplates.ts</code>, which the pages print. The same two files hold{' '}
+                <code>FIRST_REQUEST_GRANT</code>, what a first request&apos;s emailed link adds.
+              </li>
+              <li>
+                The most one grant adds: <code>MAX_GRANT</code> in <code>worker/lib/templates.ts</code>, and in{' '}
+                <code>components/admin/panels.tsx</code> and <code>TemplatesDialog.tsx</code>.
+              </li>
+              <li>
+                Burst limits (requests a minute): the <code>BURST</code> table at the top of{' '}
+                <code>worker/routes/account.ts</code>, <code>sites.ts</code> and <code>studio.ts</code>.
+              </li>
+            </ul>
+          </li>
+          <li>
+            Check it locally: <code>npm run test:worker</code>, then <code>npm run build</code>, which rebuilds the
+            pages that print a number.
+          </li>
+          <li>
+            Merge to main. The deploy rebuilds the site and the Worker, and the new numbers apply from the next
+            request: no migration, and no stored data changes.
+          </li>
+        </ol>
+        <p className={styles.quiet} style={{ margin: 0 }}>
+          For one person rather than everyone, use Manage templates on the Users page.
+        </p>
+      </div>
     </>
-  );
-}
-
-export function MailPanel() {
-  const { data, error } = useAdminData<{ mail: { email: string; subject: string; url: string; createdAt: string }[] }>('/api/admin/mail');
-  if (!data) return <Load error={error ?? 'Only available in development.'} />;
-  return (
-    <div className={`${styles.panel} ${styles.scroll}`}>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>When</th>
-            <th>To</th>
-            <th>Subject</th>
-            <th>Link</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.mail.map((m, i) => (
-            <tr key={i}>
-              <td>{when(m.createdAt)}</td>
-              <td>{m.email}</td>
-              <td>{m.subject}</td>
-              <td>
-                <a href={m.url}>Open</a>
-              </td>
-            </tr>
-          ))}
-          {data.mail.length === 0 ? (
-            <tr>
-              <td colSpan={4} className={styles.empty}>Nothing yet.</td>
-            </tr>
-          ) : null}
-        </tbody>
-      </table>
-    </div>
   );
 }
 

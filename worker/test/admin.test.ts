@@ -3,7 +3,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { AUTH_LINK_HOURS, verificationEmail } from '../lib/mail';
 import { ORIGIN, json, signIn } from './helpers';
 
-const ROUTES = ['overview', 'users', 'usage', 'generations', 'templates', 'uploads', 'quotas', 'mail', 'emails'];
+const ROUTES = ['overview', 'users', 'usage', 'generations', 'templates', 'uploads', 'quotas', 'emails'];
 
 const cookieOf = (response: Response) =>
   response.headers
@@ -326,11 +326,14 @@ describe('acting on accounts', () => {
 
 describe('the account emails', () => {
   it('say how long the link lasts, and better-auth is told the same', async () => {
-    const mail = verificationEmail({ name: 'Pat <b>Lee</b>', url: 'https://tabbied.com/x?token=a&b=c' });
+    const mail = verificationEmail({ name: 'Pat <b>Lee</b>', url: 'https://tabbied.com/x?token=a&b=c', origin: 'https://tabbied.com' });
     // A name reaches the markup as characters, and the link's ampersand as an entity.
     expect(mail.html).toContain('Hi Pat,');
     expect(mail.html).not.toContain('<b>');
     expect(mail.html).toContain('token=a&amp;b=c');
+    // The lockup is a hosted picture, never inline SVG: Gmail strips <svg>.
+    expect(mail.html).toContain('<img src="https://tabbied.com/email/tabbied-lockup.png"');
+    expect(mail.html).not.toContain('<svg');
     expect(mail.text).toContain(`expires in ${AUTH_LINK_HOURS} hour`);
 
     // A real sign-up's link carries the lifetime the email states.

@@ -3,11 +3,10 @@ import { and, desc, eq, gte, like, ne, or, sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/d1';
 import { z } from 'zod';
 import * as schema from '../db/schema';
-import { aiUsage, devMail, generation, revision, site, templateChoice, templateGrant, templateRequest, upload, user } from '../db/schema';
+import { aiUsage, generation, revision, site, templateChoice, templateGrant, templateRequest, upload, user } from '../db/schema';
 import type { Env } from '../env';
 import { APIError } from 'better-auth/api';
 import { buildAuth } from '../auth';
-import { isDev } from '../env';
 import { EMAIL_PREVIEWS } from '../lib/emailPreview';
 import { mailProvider, notifyAdminGrant, notifyRequestDecision, sendMail } from '../lib/mail';
 import { FREE_TEMPLATES, MAX_GRANT, allowanceSql, templateStatus } from '../lib/templates';
@@ -470,12 +469,15 @@ admin.delete('/test-users', async (c) => {
 
 const emailKeys = EMAIL_PREVIEWS.map((email) => email.key) as [string, ...string[]];
 
+/** Where this page is served from: the lockup image is fetched from here (lib/emailPreview.ts). */
+const hereOf = (url: string) => new URL(url).origin;
+
 admin.get('/emails', (c) =>
   c.json({
     provider: mailProvider(c.env),
     to: c.get('admin').email,
     emails: EMAIL_PREVIEWS.map(({ build, ...about }) => {
-      const message = build(c.env.PUBLIC_ORIGIN);
+      const message = build(c.env.PUBLIC_ORIGIN, hereOf(c.req.url));
 
       return { ...about, subject: message.subject, text: message.text, html: message.html ?? null };
     }),
@@ -509,7 +511,7 @@ admin.post('/emails/test', async (c) => {
   const email = EMAIL_PREVIEWS.find((entry) => entry.key === parsed.data.key)!;
 
   try {
-    await sendMail(c.env, { to: who.email, ...email.build(c.env.PUBLIC_ORIGIN) });
+    await sendMail(c.env, { to: who.email, ...email.build(c.env.PUBLIC_ORIGIN, hereOf(c.req.url)) });
   } catch (error) {
     console.error('[mail] test send failed', error);
     return c.json({ error: error instanceof Error ? error.message : 'The email could not be sent.' }, 502);
@@ -821,17 +823,5 @@ admin.get('/quotas', (c) =>
     editable: false,
   })
 );
-
-/** Dev only: the mailbox verification and reset links land in with no mail key. */
-admin.get('/mail', async (c) => {
-  if (!isDev(c.env)) {
-    return c.json({ error: 'Not found' }, 404);
-  }
-
-  const db = drizzle(c.env.DB, { schema });
-  const rows = await db.select().from(devMail).orderBy(desc(devMail.createdAt)).limit(100);
-
-  return c.json({ mail: rows });
-});
 
 export default admin;

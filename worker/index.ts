@@ -179,11 +179,20 @@ const SCHEMA_BEHIND = /no such (table|column)/i;
 /** The newest migration this build ships, from drizzle's own journal. */
 const EXPECTED_MIGRATION = journal.entries.at(-1)?.tag ?? null;
 
+/** Every migration this build knows, oldest first. */
+const MIGRATIONS = journal.entries.map((entry) => entry.tag);
+
 /**
  * What the database has actually had applied, against what this build
  * expects. `d1_migrations` is wrangler's ledger (one row per applied file);
  * a database that has never been migrated has no such table, which reads
  * as "nothing applied" rather than as an error.
+ *
+ * `current` means "not behind". A database ahead of the code is the safe
+ * order (a migration applied before the build that reads it deploys), and a
+ * ledger naming a migration this build has never heard of is newer than it;
+ * reading either as degraded sent every 500 in between out as "the schema
+ * is behind".
  */
 async function schemaStatus(env: Env) {
   let applied: string | null = null;
@@ -197,7 +206,12 @@ async function schemaStatus(env: Env) {
     applied = null;
   }
 
-  return { expected: EXPECTED_MIGRATION, applied, current: applied === EXPECTED_MIGRATION };
+  const behind =
+    EXPECTED_MIGRATION !== null &&
+    (applied === null ||
+      (MIGRATIONS.includes(applied) && MIGRATIONS.indexOf(applied) < MIGRATIONS.indexOf(EXPECTED_MIGRATION)));
+
+  return { expected: EXPECTED_MIGRATION, applied, current: !behind };
 }
 
 app.onError(async (error, c) => {
@@ -253,7 +267,7 @@ app.onError(async (error, c) => {
   // be relabeled.
   const schema = await schemaStatus(c.env);
 
-  if (schema.expected && schema.applied && schema.applied !== schema.expected) {
+  if (schema.expected && schema.applied && !schema.current) {
     return c.json(
       {
         error: 'The database schema is behind this deployment. Apply the pending migrations.',
@@ -388,6 +402,7 @@ api.use('*', async (c, next) => {
 //
 //   schema       `degraded`, with `applied` behind `expected`, means a
 //                migration never reached this database (routes answer 503).
+//                Ahead is `ok`: migrating before deploying is the safe order.
 //   adminEmails  a count, never the addresses. Zero with the variable set on
 //                the Worker means it is misspelled, on another environment, or
 //                a Text variable that `wrangler deploy` replaced (use a Secret).

@@ -21,6 +21,16 @@ that will not follow it, and say how long it lasts: `AUTH_LINK_HOURS`, which
 the link cannot disagree. Every message keeps a plain-text part that says the
 same thing.
 
+The lockup at the top is a hosted picture, `public/email/tabbied-lockup.png`,
+not the inline SVG and web font the site draws it with: Gmail strips `<svg>`
+from mail and ignores web fonts, which left a Gmail reader with the word
+"tabbied" in Georgia and no mark. It is served from `PUBLIC_ORIGIN` in real
+mail (the Email preview, and its test sends, take it from whichever host the
+admin is on, so a PR preview shows it before it is live). The PNG is a 3x
+capture of `components/logo/Logo`, on white so a client's dark mode cannot
+lose the ink; after the mark changes, recapture it with
+`npm run build && node scripts/capture-email-lockup.mjs`.
+
 Each message is built by its own function in `mail.ts` (`verificationEmail`,
 `approvalEmail`, `requestDecisionEmail`, ...) and sent separately, so the
 admin's **Email preview** (`/admin/emails/`) can render every one with the

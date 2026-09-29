@@ -4,7 +4,8 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { Check, Copy, Plus, RefreshCw, Trash2 } from 'lucide-react';
 import { ApiError, apiFetch } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';
-import { PersonName, planLabel, type UserRow } from './panels';
+import { PersonName, QuotaEdit, planLabel, type UserRow } from './panels';
+import TemplatesDialog from './TemplatesDialog';
 import UserActions from './UserActions';
 import { useAdminData } from './useAdminData';
 import styles from './admin.module.css';
@@ -43,6 +44,7 @@ export default function TestUsersPanel() {
   const [copied, setCopied] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [removeAll, setRemoveAll] = useState<'idle' | 'confirm' | 'busy'>('idle');
+  const [managing, setManaging] = useState<UserRow | null>(null);
 
   useEffect(() => {
     setPassword((current) => current || `test-${randomSlug(8)}`);
@@ -284,7 +286,7 @@ export default function TestUsersPanel() {
                       <span className={styles.plan}>{planLabel(row.plan)}</span>
                     </td>
                     <td>
-                      {row.chosen} / {row.allowance}
+                      <QuotaEdit row={row} onEdit={() => setManaging(row)} />
                     </td>
                     <td className={styles.cellDim}>{day(row.createdAt)}</td>
                     <td className={styles.menuCell}>
@@ -296,6 +298,15 @@ export default function TestUsersPanel() {
             </table>
           </div>
         )}
+
+        {managing ? (
+          <TemplatesDialog
+            person={managing}
+            open
+            onOpenChange={(open) => (open ? null : setManaging(null))}
+            onChanged={reload}
+          />
+        ) : null}
 
         <p className={styles.footnote}>
           Test users are ordinary accounts, told apart only by the reserved @{domain} domain, and safe to remove at

@@ -184,7 +184,7 @@ export function buildAuth(env: Env) {
       // and the link are one number (lib/mail.ts).
       resetPasswordTokenExpiresIn: AUTH_LINK_HOURS * 3600,
       sendResetPassword: async ({ user, url }) => {
-        await sendMail(env, { to: user.email, ...resetPasswordEmail({ name: user.name, url }) });
+        await sendMail(env, { to: user.email, ...resetPasswordEmail({ name: user.name, url, origin: env.PUBLIC_ORIGIN }) });
       },
     },
 
@@ -198,7 +198,7 @@ export function buildAuth(env: Env) {
       autoSignInAfterVerification: true,
       expiresIn: AUTH_LINK_HOURS * 3600,
       sendVerificationEmail: async ({ user, url }) => {
-        await sendMail(env, { to: user.email, ...verificationEmail({ name: user.name, url }) });
+        await sendMail(env, { to: user.email, ...verificationEmail({ name: user.name, url, origin: env.PUBLIC_ORIGIN }) });
       },
     },
 

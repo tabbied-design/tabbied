@@ -1057,7 +1057,9 @@ everything around them works, which is how "Make this one" read as a
 broken model call when 0003 had never reached production. `GET /api/health`
 reports `schema.expected` against `schema.applied` (read from wrangler's
 `d1_migrations` ledger), and `status: "degraded"` there is the whole
-diagnosis. Then `wrangler secret put BETTER_AUTH_SECRET`. Until that secret
+diagnosis. Only *behind* is degraded: a database ahead of the deployed code
+(a migration applied before the build that reads it, the safe order, as 0009
+was) reads `ok`, and the 503 relabeling follows the same rule. Then `wrangler secret put BETTER_AUTH_SECRET`. Until that secret
 exists `/api/auth/*` answers 503 and nothing else changes, the intended
 degradation, not an outage. `.dev.vars` is gitignored;
 `.dev.vars.example` documents the shape.
@@ -1595,7 +1597,12 @@ things worth not re-litigating:
   there or the page quietly stops describing the mail. A test copy goes
   only to the admin asking (there is no address field), behind a burst
   gate like every route that sends mail. Links carry `PREVIEW-ONLY` tokens
-  that confirm, reset and grant nothing.
+  that confirm, reset and grant nothing. The lockup in designed mail is a
+  hosted PNG (`public/email/tabbied-lockup.png`, captured from `Logo` by
+  `scripts/capture-email-lockup.mjs`), because Gmail strips inline SVG and
+  ignores web fonts. There is no admin page for the dev mailbox: `dev_mail`
+  exists only in local development, where the `wrangler d1 execute` query in
+  `.dev.vars.example` reads it, and the tests read it directly.
 
 ## Agent-facing docs - all generated, never hand-edited
 

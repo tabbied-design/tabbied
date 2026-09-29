@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import Link from 'next/link';
 import { Send } from 'lucide-react';
 import { ApiError, apiFetch } from 'lib/apiFetch';
 import { useAdminData } from './useAdminData';
@@ -70,7 +69,7 @@ function SendTest({ preview }: { preview: Preview }) {
         kind: 'sent',
         message:
           preview.provider === 'dev-mail'
-            ? `${name} was written to the dev mailbox for ${preview.to}.`
+            ? `${name} was written to dev_mail for ${preview.to}.`
             : `${name} is on its way to ${preview.to}.`,
       });
     } catch (cause) {
@@ -115,13 +114,7 @@ function SendTest({ preview }: { preview: Preview }) {
         {off ? (
           <>Sending is not configured here: RESEND_API_KEY is not set.</>
         ) : preview.provider === 'dev-mail' ? (
-          <>
-            No RESEND_API_KEY in this environment, so a test copy is written to the{' '}
-            <Link href="/admin/mail/" prefetch={false}>
-              dev mailbox
-            </Link>{' '}
-            instead of sent.
-          </>
+          <>No RESEND_API_KEY in this environment, so a test copy is written to the dev_mail table in D1 instead of sent.</>
         ) : (
           <>
             Sent only to your own address, {preview.to}, with a sample link that confirms, resets and grants nothing.
