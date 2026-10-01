@@ -152,8 +152,8 @@ export default function HomeHero({
 
             <p className={styles.lede}>
               Explore a growing library of {patternCount} customizable patterns
-              and {templateCount} free website templates, ready to edit,
-              download, and use.
+              and {templateCount} website templates, ready to edit, download,
+              and use.
             </p>
           </div>
         </div>

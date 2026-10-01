@@ -300,11 +300,9 @@
 }
 
 /* Grey, with the page you are on in ink and bold, as every artboard's menu
-   has it. Each row leads with its icon (MenuIcon.tsx). */
+   has it. */
 .menuItem {
-  display: flex;
-  gap: 10px;
-  align-items: center;
+  display: block;
   box-sizing: border-box;
   width: 100%;
   padding: 9px 12px;
@@ -331,15 +329,6 @@
 .menuItem[aria-current='page']:hover {
   font-weight: 600;
   color: #0e0e13;
-}
-
-.menuIcon {
-  flex: none;
-  opacity: 0.8;
-}
-
-.menuItem[aria-current='page'] .menuIcon {
-  opacity: 1;
 }
 
 /* ---- Narrow ---- */
