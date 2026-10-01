@@ -1072,8 +1072,11 @@ Things worth not re-litigating:
 - **`worker/db/schema.ts` is the source of truth and `worker/migrations` is
   emitted from it** (`npm run db:generate`). better-auth's four tables are
   transcribed from its own `getAuthTables()` output rather than guessed - run
-  it after an upgrade, because a field added upstream is a migration here
-  (that is how `account.issuer` was caught).
+  it after an upgrade, because a field added or dropped upstream is a
+  migration here. `account.issuer` was both: 1.7.0 required it, and 1.7.3
+  stopped writing it, so the NOT NULL column failed every sign-up until
+  migration 0010 dropped it. better-auth checks the schema at startup since
+  1.7.3 and logs "Drizzle schema mismatch" when the two disagree.
 - **`buildAuth` is a factory**, for the same reason `buildServer` is on the
   MCP side: an isolate is shared across requests, so capturing bindings in a
   module-scope singleton works locally and breaks under concurrency.

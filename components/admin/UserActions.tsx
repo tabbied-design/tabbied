@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Dialog } from '@base-ui-components/react/dialog';
-import { Menu } from '@base-ui-components/react/menu';
+import { Dialog } from '@base-ui/react/dialog';
+import { Menu } from '@base-ui/react/menu';
 import { Ban, Ellipsis, LayoutTemplate, Trash2, VenetianMask } from 'lucide-react';
 import { ApiError, apiFetch } from 'lib/apiFetch';
 import { authClient } from 'lib/authClient';

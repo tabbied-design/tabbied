@@ -1,6 +1,6 @@
 'use client';
 
-import { Slider } from '@base-ui-components/react/slider';
+import { Slider } from '@base-ui/react/slider';
 import styles from './ValueSlider.module.css';
 
 type ValueSliderProps = {
