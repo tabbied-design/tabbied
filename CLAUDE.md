@@ -13,6 +13,12 @@ the site's `/mcp` endpoint and a `tabbied-mcp` stdio bin), and
 `tabbied-templates` in `packages/tabbied-templates/` (the editable-section
 spec and its apply engine - see below).
 
+`examples/` holds standalone projects that consume `tabbied` from npm, as an
+outside app would (`examples/grace-hopper-video`, a Remotion film, is the
+first). They are not workspaces and the root tsconfig excludes them, so the
+site's install, typecheck and deploy never see their dependencies; each has
+its own lockfile and README.
+
 ```bash
 npm run dev                          # site (predev builds both packages)
 npm run build:packages               # codegen + tsc for tabbied, then tabbied-mcp

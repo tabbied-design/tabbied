@@ -1,0 +1,47 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "quality": "low",
+  "style": "A bold black-and-white screen-print illustration: solid black ink, bright white highlights and a coarse halftone for the mid-tones, crisp edges, high contrast, no color at all. The subject alone, centered, nothing else in frame, no floor and no shadow under it. No text, letters, numbers, or logos.",
+  "images": [
+    {
+      "id": "hopper",
+      "size": "1024x1536",
+      "subject": "A head-and-shoulders portrait of an elderly woman who is a United States Navy rear admiral in the 1980s: short curly silver hair, a kind, sharp, amused expression, a dark navy dress-blue uniform jacket with a white shirt collar and a wide gold stripe on the cuff, facing three-quarters to the left."
+    },
+    {
+      "id": "alarm-clock",
+      "size": "1024x1024",
+      "subject": "A vintage 1910s wind-up twin-bell alarm clock with its back taken off: two round bells on top, a striker, the round dial and hands, and a few loose brass gears and a coiled spring floating beside it as if just taken apart."
+    },
+    {
+      "id": "mark-one",
+      "size": "1536x1024",
+      "subject": "A long section of a 1940s electromechanical computer seen from the front at a slight angle: tall glass-fronted cabinets packed with rows of rotary counter wheels, relays, switches and bundles of cables, in a single continuous run."
+    },
+    {
+      "id": "moth",
+      "size": "1024x1024",
+      "subject": "A single moth seen from directly above with its wings spread flat, like a pinned specimen, held down by two short strips of clear adhesive tape across its wings."
+    },
+    {
+      "id": "tape-reel",
+      "size": "1024x1024",
+      "subject": "A 1950s computer magnetic tape reel seen from the front at a slight angle: a large metal reel with spoked holes, wound with dark tape, a loose length of tape curling away from it."
+    },
+    {
+      "id": "punch-cards",
+      "size": "1024x1024",
+      "subject": "A small loose fan of 1950s computer punched cards, each a thin rectangle with one clipped corner and neat columns of small rectangular holes punched through it."
+    },
+    {
+      "id": "wire",
+      "size": "1536x1024",
+      "subject": "One short length of insulated copper wire lying in a loose, gentle S-curve, both ends stripped to show the bare copper strands."
+    },
+    {
+      "id": "medal",
+      "size": "1024x1536",
+      "subject": "A medal hanging from a short ribbon: a five-pointed star with beveled edges and a round central disc dotted with small stars, small eagles between the star's points, the ribbon folded at the top."
+    }
+  ]
+}
