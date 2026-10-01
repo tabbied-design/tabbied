@@ -46,11 +46,15 @@ const SNIPPET = [
 
 export const Outro: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, durationInFrames } = useVideoConfig();
   const card = useEntrance(62, 18);
+  const fade = interpolate(frame, [durationInFrames - 14, durationInFrames - 1], [1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
 
   return (
-    <AbsoluteFill style={{ background: GROUND }}>
+    <AbsoluteFill style={{ background: GROUND, opacity: fade }}>
       <div
         style={{
           position: 'absolute',

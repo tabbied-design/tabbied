@@ -21,6 +21,7 @@ export const Cobol: React.FC = () => {
   const band = useEntrance(0);
   const cards = useEntrance(20, 14);
   const sheet = useEntrance(30);
+  const marker = useEntrance(62);
 
   return (
     <AbsoluteFill style={{ background: LAMINATE }}>
@@ -61,7 +62,8 @@ export const Cobol: React.FC = () => {
             color: INK,
             marginTop: 26,
             padding: '4px 12px',
-            background: MUSTARD,
+            // A highlighter pass that lands just ahead of the words.
+            background: `linear-gradient(${MUSTARD}, ${MUSTARD}) no-repeat 0 0 / ${marker * 100}% 100%`,
           }}
         />
       </div>
