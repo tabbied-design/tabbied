@@ -13,7 +13,7 @@ import styles from 'components/main-page/home.module.css';
 
 export const metadata: Metadata = pageMetadata({
   title: 'Tabbied - Free generative patterns and website templates',
-  description: `Explore a growing library of ${PATTERN_COUNT} customizable patterns and ${TEMPLATE_COUNT} free website templates, ready to edit, download, and use.`,
+  description: `Explore a growing library of ${PATTERN_COUNT} customizable patterns and ${TEMPLATE_COUNT} website templates, ready to edit, download, and use.`,
   path: '/',
 });
 

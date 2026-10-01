@@ -284,11 +284,8 @@
   background-color: oklch(0 0 0 / 0.08);
 }
 
-/* Each row leads with its icon (components/nav/MenuIcon.tsx). */
 .menuItem {
-  display: flex;
-  gap: 10px;
-  align-items: center;
+  display: block;
   width: 100%;
   padding: 9px 12px;
   font: 400 13px var(--s-sans);
@@ -313,15 +310,6 @@
 .menuItemOn:hover {
   font-weight: 600;
   color: #0e0e13;
-}
-
-.menuIcon {
-  flex: none;
-  opacity: 0.8;
-}
-
-.menuItemOn .menuIcon {
-  opacity: 1;
 }
 
 /* ---- The person ---------------------------------------------------------- */
