@@ -43,6 +43,18 @@ export function takesCopy(request: Request): boolean {
   return !range || /^bytes=0-/.test(range.trim());
 }
 
+/**
+ * A path inside a React package's unzipped folder (`/downloads/<slug>-react/`),
+ * which is never served. The folder is the template's authored source, in the
+ * deploy only because the zip beside it is made from it; the zip, behind the
+ * claim, is the one way that source leaves. Nothing on the site reads the
+ * folder (the e2e suite reads it from disk), unlike the HTML package's, which
+ * the customizer and the Studio preview draw from.
+ */
+export function isReactSource(pathname: string): boolean {
+  return /^\/downloads\/[a-z0-9-]+-react(?:\/|$)/.test(pathname);
+}
+
 /** `<slug>-<format>.zip`, or null for any other file under /downloads. */
 export function parseDownloadName(file: string): { slug: string; format: DownloadFormat } | null {
   const match = /^([a-z0-9-]+)-(html|react)\.zip$/.exec(file);

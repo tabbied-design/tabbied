@@ -156,7 +156,11 @@ Three things that are explicit here and were implicit or automatic on Vercel:
   template zip is a signed-in act that makes the template one of the
   person's five (see "Five templates per account" below), and the edge
   would otherwise hand it to anyone. The Worker gates `<slug>-<format>.zip` and passes everything else
-  under the folder, the packaged pages the previews read, back to the binding.
+  under the folder, the packaged pages the previews read, back to the binding,
+  except the React package's unzipped folder (`<slug>-react/`), which answers
+  404 (`isReactSource`): it is the template's authored source, in the deploy
+  only because its zip is made from it, and the zip is the one way that source
+  leaves. The e2e suite reads that folder from disk, so it never notices.
   `/templates/*/` is the other: the live template pages, which the Worker
   serves with the license notice added (see "Licensing" below). It names the
   pages only (`*` is a deep match, and the trailing slash keeps the RSC

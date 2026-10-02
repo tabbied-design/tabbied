@@ -31,7 +31,7 @@ import journal from './migrations/meta/_journal.json';
 import { drizzle } from 'drizzle-orm/d1';
 import * as schema from './db/schema';
 import { requireUser } from './lib/session';
-import { forgetDownload, logDownload, parseDownloadName, takesCopy } from './lib/downloads';
+import { forgetDownload, isReactSource, logDownload, parseDownloadName, takesCopy } from './lib/downloads';
 import { mailProvider, teamRecipients } from './lib/mail';
 import { claimTemplate, limitMessage, mayTake, releaseTemplate, templateStatus } from './lib/templates';
 import { templateSlugOf, withLicenseNotice } from './lib/notice';
@@ -320,6 +320,12 @@ const backTo = (request: Request): string => {
     return '/templates/';
   }
 };
+
+// The React package's unzipped folder answers as if it were not there: its
+// zip is the way that source leaves (isReactSource).
+app.get('/downloads/*', (c, next) =>
+  isReactSource(new URL(c.req.url).pathname) ? c.text('Not found', 404) : next()
+);
 
 app.get('/downloads/:file', async (c, next) => {
   const named = parseDownloadName(c.req.param('file'));
