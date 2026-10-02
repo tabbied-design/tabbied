@@ -2,6 +2,7 @@
   "name": "Ring",
   "slug": "ring",
   "galleryOrder": 11,
+  "description": "A spaced grid of small broken rings, each one printed twice a little off register, like marks from a rubber stamp.",
   "galleryWhite": true,
   "palette": [
     "#FF3D8B",

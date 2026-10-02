@@ -71,6 +71,13 @@
       "when": 1790638234979,
       "tag": "0009_template_grants",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1790872959745,
+      "tag": "0010_account_without_issuer",
+      "breakpoints": true
     }
   ]
 }

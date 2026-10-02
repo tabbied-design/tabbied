@@ -188,6 +188,35 @@ test.describe('Tabbied site', () => {
     expect(Math.abs((after?.y ?? 0) - (before?.y ?? 0))).toBeLessThan(4);
   });
 
+  test('searching a palette name keeps the designs and the chosen palette', async ({
+    page,
+  }) => {
+    await page.goto('/patterns');
+    await page
+      .locator('main css-doodle')
+      .first()
+      .waitFor({ state: 'attached', timeout: 15000 });
+
+    // Choose a palette, then search for another by name: the grid keeps every
+    // design (a palette is applied to them, not a filter on them), the intro
+    // says what matched, and the chosen row stays in the rail.
+    const rail = page.locator('aside');
+    const search = rail.getByLabel('Search palettes and designs');
+    await search.fill('sorbet');
+    await rail.getByRole('button', { name: /^Sorbet/ }).first().click();
+    await search.fill('ocean');
+
+    await expect(page.getByText(/No pattern is called "ocean"/)).toBeVisible();
+    await expect(page.getByText('No designs match your search.')).toHaveCount(0);
+    await expect(page.locator('main css-doodle').first()).toBeAttached();
+    await expect(rail.getByRole('button', { name: /^Sorbet/ }).first()).toBeVisible();
+    await expect(rail.getByRole('button', { name: /^Ocean/ }).first()).toBeVisible();
+
+    // A word that names nothing still empties the grid and says so.
+    await search.fill('zzzz');
+    await expect(page.getByText('No designs match your search.')).toBeVisible();
+  });
+
   test('the palette rail shows a scrollable, infinite palette list', async ({
     page,
   }) => {
@@ -722,6 +751,25 @@ test.describe('Template preview and customize', () => {
     await expect(dialog.getByRole('button', { name: 'Use template & download' })).toBeVisible();
   });
 
+  test('signing up names the terms and the password rule', async ({ page }) => {
+    await page.goto('/sign-up/');
+
+    // The account is what a template's license is granted to.
+    await expect(page.getByRole('link', { name: 'Terms of Service' })).toHaveAttribute(
+      'href',
+      '/terms-of-service/'
+    );
+    await expect(page.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute(
+      'href',
+      '/privacy-policy/'
+    );
+    await expect(page.getByLabel('Password')).toHaveAccessibleDescription('At least 8 characters.');
+
+    // Signing in makes no account, so it says neither.
+    await page.goto('/sign-in/');
+    await expect(page.getByRole('link', { name: 'Terms of Service' })).toHaveCount(0);
+  });
+
   test('customizing while signed out goes to sign-in with the way back', async ({ page }) => {
     // No Worker behind the export: the session read fails and reads as
     // signed out, which is the case a fresh visitor is in.
@@ -824,6 +872,128 @@ test.describe('Share cards and canonical URLs', () => {
     // The template page is what the downloads are made from: tabbied.com's
     // card and canonical would ride into every site built on it.
     expect(await head(page, '/templates/verdant/site/')).toMatchObject({ canonical: null, image: null, card: null });
+  });
+
+  test('patterns and templates share a 1200x630 card of their own', async ({ page, request }) => {
+    expect(await head(page, '/patterns/')).toMatchObject({
+      canonical: 'https://tabbied.com/patterns/',
+      image: 'https://tabbied.com/og.png',
+      card: 'summary_large_image',
+    });
+    expect(await head(page, '/patterns/radius/')).toMatchObject({
+      image: 'https://tabbied.com/og/patterns/radius.jpg',
+      card: 'summary_large_image',
+    });
+    // The website itself, not the pattern under it.
+    expect(await head(page, '/templates/verdant/')).toMatchObject({
+      image: 'https://tabbied.com/og/templates/verdant.jpg',
+    });
+
+    for (const path of ['/og/patterns/radius.jpg', '/og/templates/verdant.jpg']) {
+      const response = await request.get(path);
+      expect(response.status(), path).toBe(200);
+      const bytes = await response.body();
+      // JPEG SOF0 carries height then width; find the frame header.
+      const sof = bytes.indexOf(Buffer.from([0xff, 0xc0]));
+      expect([bytes.readUInt16BE(sof + 7), bytes.readUInt16BE(sof + 5)], path).toEqual([1200, 630]);
+    }
+  });
+
+  test('a pattern page has its heading in the server HTML', async ({ request }) => {
+    // The editor renders in the browser only; the export carries the name
+    // and the description for whatever reads the page without running it.
+    const html = await (await request.get('/patterns/radius/')).text();
+    expect(html).toMatch(/<h1[^>]*>Radius<\/h1>/);
+    expect(html).toMatch(/<p[^>]*>Quarter circles, half circles and whole discs/);
+  });
+});
+
+test.describe('MCP docs page', () => {
+  test('says how to connect, and the footer and the React docs lead to it', async ({ page }) => {
+    await page.goto('/docs/mcp');
+
+    await expect(page.getByRole('heading', { level: 1, name: 'The MCP server' })).toBeVisible();
+    await expect(
+      page.getByText('claude mcp add --transport http tabbied https://tabbied.com/mcp')
+    ).toBeVisible();
+    await expect(page.getByText('codex mcp add tabbied --url https://tabbied.com/mcp')).toBeVisible();
+    for (const client of ['Claude (web and desktop)', 'ChatGPT', 'Codex']) {
+      await expect(page.getByRole('heading', { level: 3, name: client }).first()).toBeVisible();
+    }
+    // Every tool the server registers has a row; render_design is the local one.
+    for (const tool of [
+      'search_designs',
+      'preview_design',
+      'get_design',
+      'get_docs',
+      'list_templates',
+      'get_template',
+      'render_design',
+    ]) {
+      await expect(page.getByRole('cell', { name: tool, exact: true })).toBeVisible();
+    }
+
+    await expect(page.locator('footer').getByRole('link', { name: 'MCP server' })).toHaveAttribute(
+      'href',
+      '/docs/mcp/'
+    );
+
+    await page.goto('/docs/react');
+    await expect(page.getByRole('link', { name: 'Tabbied MCP server' })).toHaveAttribute(
+      'href',
+      '/docs/mcp/'
+    );
+  });
+});
+
+test.describe('A link to the page already open', () => {
+  // Next's router does nothing for a click on a link to the current URL; these
+  // go back to the top instead (components/SamePageLink).
+  const scrollY = (page: import('@playwright/test').Page) =>
+    page.evaluate(() => Math.round(window.scrollY));
+
+  const scrollDown = async (page: import('@playwright/test').Page) => {
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await expect.poll(() => scrollY(page)).toBeGreaterThan(400);
+  };
+
+  test('goes back to the top, from the footers and the masthead', async ({ page }) => {
+    await page.goto('/docs/mcp/');
+    await scrollDown(page);
+    await page.locator('footer').getByRole('link', { name: 'MCP server' }).click();
+    await expect.poll(() => scrollY(page)).toBe(0);
+
+    // A #section the contents rail left in the address goes with it.
+    await page.goto('/docs/react/#api');
+    await scrollDown(page);
+    await page.locator('footer').getByRole('link', { name: 'Docs', exact: true }).click();
+    await expect.poll(() => scrollY(page)).toBe(0);
+    expect(new URL(page.url()).hash).toBe('');
+
+    // The legal pages' own footer.
+    await page.goto('/privacy-policy/');
+    await scrollDown(page);
+    await page.locator('footer').getByRole('link', { name: 'Privacy Policy' }).click();
+    await expect.poll(() => scrollY(page)).toBe(0);
+
+    // The library pins the masthead, so its own destination is on screen.
+    await page.goto('/patterns/');
+    await scrollDown(page);
+    await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Patterns' }).click();
+    await expect.poll(() => scrollY(page)).toBe(0);
+    expect(new URL(page.url()).pathname).toBe('/patterns/');
+  });
+
+  test('goes back to the top from the phone menu', async ({ page }) => {
+    // Below 768px the destinations are in the menu and nowhere else.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/patterns/');
+    await scrollDown(page);
+    await page.getByRole('button', { name: 'Menu' }).click();
+    await page.getByRole('menuitem', { name: 'Patterns', exact: true }).click();
+    await expect.poll(() => scrollY(page)).toBe(0);
+    await expect(page.getByRole('menu')).toBeHidden();
+    expect(new URL(page.url()).pathname).toBe('/patterns/');
   });
 });
 

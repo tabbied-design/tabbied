@@ -298,6 +298,30 @@
   background-color: oklch(0.62 0.01 260);
 }
 
+/* Numbered steps, for setup done in an app's settings rather than in a file. */
+.steps {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps li {
+  position: relative;
+  margin-top: 10px;
+  padding-left: 28px;
+  counter-increment: step;
+}
+
+.steps li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute;
+  top: 0.2em;
+  left: 0;
+  font: 400 12px var(--h-mono);
+  color: var(--h-teal);
+}
+
 /* The package's three entry points, as three cards. */
 .entries {
   display: grid;

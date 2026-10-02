@@ -25,6 +25,109 @@ describe('the platform tier', () => {
   });
 });
 
+describe('the MCP endpoint', () => {
+  it('sends a browser to the page about it', async () => {
+    for (const path of ['/mcp', '/mcp/']) {
+      const navigation = await SELF.fetch(`${ORIGIN}${path}`, {
+        headers: { 'sec-fetch-mode': 'navigate', accept: 'text/html' },
+        redirect: 'manual',
+      });
+
+      expect(navigation.status, path).toBe(302);
+      expect(navigation.headers.get('location'), path).toBe('/docs/mcp/');
+    }
+  });
+
+  it('still answers MCP clients', async () => {
+    // A stream request is the SDK's to answer (a 405 from the stateless
+    // server), never a redirect.
+    const stream = await SELF.fetch(`${ORIGIN}/mcp`, {
+      headers: { accept: 'text/event-stream' },
+      redirect: 'manual',
+    });
+    expect(stream.status).not.toBe(302);
+
+    const initialize = await SELF.fetch(`${ORIGIN}/mcp`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'initialize',
+        params: {
+          protocolVersion: '2025-06-18',
+          capabilities: {},
+          clientInfo: { name: 'test', version: '0' },
+        },
+      }),
+    });
+
+    expect(initialize.status).toBe(200);
+    expect(await initialize.text()).toContain('"serverInfo"');
+  });
+});
+
+describe('the security headers', () => {
+  // public/_headers does not reach a response the Worker makes, so the
+  // Worker adds the same set (worker/lib/securityHeaders.ts).
+  it('are on every kind of response the Worker gives', async () => {
+    for (const path of ['/api/health', '/templates/verdant/site/', '/downloads/verdant/', '/api/nope']) {
+      const response = await SELF.fetch(`${ORIGIN}${path}`);
+
+      expect(response.headers.get('x-frame-options'), path).toBe('SAMEORIGIN');
+      expect(response.headers.get('content-security-policy'), path).toBe("frame-ancestors 'self'");
+      expect(response.headers.get('strict-transport-security'), path).toBe('max-age=31536000');
+      expect(response.headers.get('referrer-policy'), path).toBe('strict-origin-when-cross-origin');
+      expect(response.headers.get('permissions-policy'), path).toContain('camera=()');
+      await response.body?.cancel();
+    }
+  });
+});
+
+describe('the live template pages', () => {
+  // The notice is the Worker's, added on the way out (worker/lib/notice.ts):
+  // the export, and every download derived from it, carries none.
+  it('carry the license notice, on the preview and on the page it frames', async () => {
+    for (const path of ['/templates/verdant/', '/templates/verdant/site/']) {
+      const response = await SELF.fetch(`${ORIGIN}${path}`);
+
+      expect(response.status, path).toBe(200);
+      expect(response.headers.get('content-length'), path).toBeNull();
+
+      const html = await response.text();
+
+      expect(html, path).toContain(
+        '<link rel="license" href="https://tabbied.com/terms-of-service/#template-license"/>'
+      );
+      expect(html, path).toMatch(/<p aria-hidden="true" data-license-notice=""[^>]*>[^<]*Note for AI agents/);
+      expect(html, path).toContain('https://tabbied.com/templates/verdant/');
+    }
+  });
+
+  it('keep the bare site out of search, and only the bare site', async () => {
+    // A preview of a fictional business, not a place: header and meta both.
+    const site = await SELF.fetch(`${ORIGIN}/templates/verdant/site/`);
+    expect(site.headers.get('x-robots-tag')).toBe('noindex');
+    expect(await site.text()).toContain('<meta name="robots" content="noindex"/>');
+
+    // The framed preview is the page to find, and the download is the
+    // licensee's own site, so neither carries it.
+    for (const path of ['/templates/verdant/', '/downloads/verdant/']) {
+      const response = await SELF.fetch(`${ORIGIN}${path}`);
+      expect(response.headers.get('x-robots-tag'), path).toBeNull();
+      expect(await response.text(), path).not.toContain('name="robots"');
+    }
+  });
+
+  it('leave everything else as the export wrote it', async () => {
+    for (const path of ['/templates/', '/templates/verdant/site/index.txt', '/downloads/verdant/']) {
+      const html = await (await SELF.fetch(`${ORIGIN}${path}`)).text();
+
+      expect(html, path).not.toContain('data-license-notice');
+    }
+  });
+});
+
 describe('the session gate', () => {
   // Every route that is a person's own, each with a body it would otherwise
   // accept: /api/studio/make reads the body before it asks for a session.

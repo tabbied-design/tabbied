@@ -7,7 +7,7 @@
 // they are clicked: a color picker fires an event per drag frame, and planning
 // and re-running the whole page on each of them is unusable.
 import { useEffect, useState } from 'react';
-import { Dialog } from '@base-ui-components/react/dialog';
+import { Dialog } from '@base-ui/react/dialog';
 import { Check, X } from 'lucide-react';
 // A color the picker cannot show is kept as authored rather than filled in;
 // the same test the rail's palette fitting uses.

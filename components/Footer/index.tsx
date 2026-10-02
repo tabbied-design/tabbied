@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import SamePageLink from 'components/SamePageLink';
 import { Container, Row, Col } from 'components/layout';
 import styles from './Footer.module.css';
 
@@ -52,14 +52,14 @@ export default function Footer() {
 
             <ul className={styles.linkList}>
               <li>
-                <Link href="/privacy-policy" prefetch={false}>
+                <SamePageLink href="/privacy-policy" prefetch={false}>
                   Privacy Policy
-                </Link>
+                </SamePageLink>
               </li>
               <li>
-                <Link href="/terms-of-service" prefetch={false}>
+                <SamePageLink href="/terms-of-service" prefetch={false}>
                   Terms of Service
-                </Link>
+                </SamePageLink>
               </li>
               <li>
                 <a href="https://github.com/tabbied-design/tabbied/">

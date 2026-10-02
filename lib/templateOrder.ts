@@ -1,9 +1,10 @@
 /**
  * The order the template gallery shows its sites in, and how it was made.
  *
- * The order is committed (`GALLERY_ORDER`, below) and only ever grows at the
- * end, so the cards on a page, and on each category's pages, stay where
- * they are when templates are added: a link to `?page=3` keeps meaning the
+ * The order is committed (`GALLERY_ORDER`, below): a hand-picked lead
+ * (`GALLERY_LEAD`), then the spread, which only ever grows at the end, so
+ * the cards on a page, and on each category's pages, stay where they are
+ * when templates are added: a link to `?page=3` keeps meaning the
  * same cards. A template the list does not name fails the export, like one
  * with no category, and the error prints the lines to append.
  *
@@ -102,6 +103,15 @@ export function orderTemplates<T extends Spreadable & { slug: string }>(items: r
   const bySlug = new Map(items.map((item) => [item.slug, item]));
   const listed = new Set(GALLERY_ORDER);
 
+  // A template moved into GALLERY_LEAD but left in GALLERY_SPREAD would show twice.
+  if (listed.size !== GALLERY_ORDER.length) {
+    const seen = new Set<string>();
+    const twice = GALLERY_ORDER.filter((slug) => seen.has(slug) || !seen.add(slug));
+    throw new Error(
+      `templateOrder: GALLERY_ORDER names ${twice.join(', ')} twice - take it out of GALLERY_SPREAD when it joins GALLERY_LEAD`
+    );
+  }
+
   const stale = GALLERY_ORDER.filter((slug) => !bySlug.has(slug));
   if (stale.length > 0) {
     throw new Error(
@@ -113,7 +123,7 @@ export function orderTemplates<T extends Spreadable & { slug: string }>(items: r
   if (missing.length > 0) {
     const lines = spreadTemplates(missing, GALLERY_ORDER.length).map((item) => `  '${item.slug}',`);
     throw new Error(
-      `templateOrder: ${missing.length} template(s) not in GALLERY_ORDER - append these to the end of it in lib/templateOrder.ts:\n${lines.join('\n')}`
+      `templateOrder: ${missing.length} template(s) not in GALLERY_ORDER - append these to the end of GALLERY_SPREAD in lib/templateOrder.ts:\n${lines.join('\n')}`
     );
   }
 
@@ -121,13 +131,48 @@ export function orderTemplates<T extends Spreadable & { slug: string }>(items: r
 }
 
 /**
- * The gallery's order. Append only: a new template goes at the end, in the
- * order `orderTemplates` prints for it.
+ * The cards the gallery opens with, picked by hand and shown in this order
+ * ahead of the spread. Unlike an addition, changing it moves the cards after
+ * it, which is the point: it is an editorial choice, not growth. The
+ * spread's neighbor rules don't bind it (e2e/templates.spec.ts checks them
+ * after the lead). The homepage's template rails show these too.
  */
-export const GALLERY_ORDER: readonly string[] = [
+export const GALLERY_LEAD: readonly string[] = [
+  // 2026-10-02: picked for the top of the first page.
+  'verdant',
+  'continue-arcade-bar',
+  'halfmoon-balloons',
+  'cerulean-swim',
+  'muddy-paws-mobile',
+  'high-pass-lodge',
+  'restore-clinic',
+  'pinewood-rv',
+  'chronometrie-bex',
+  'zwoelfton',
+  'madrigal-strings',
+  'cadence-music',
+  'caldera-rail',
+  'orbital-lounge',
+  'konzerthaus-halden',
+  // 2026-10-02, later: eight more after them.
+  'fix-it-repair-cafe',
+  'four-frames-photobooth',
+  'sleepwell-clinic',
+  'second-life-vintage',
+  'big-yard-dog-daycare',
+  'casa-olivo',
+  'forge-strength',
+  'heron-point-golf',
+];
+
+/**
+ * Everything else, as spreadTemplates laid it out, less the lead. Append
+ * only: a new template goes at the end, in the order `orderTemplates`
+ * prints for it.
+ */
+const GALLERY_SPREAD: readonly string[] = [
   // 2026-09-26: the first 177, laid out by spreadTemplates (seed 177).
   'veil-and-vow',
-  'orbital-lounge',
   'quiet-harbor',
   'linie-nord',
   'tin-roof-guitars',
@@ -163,7 +208,6 @@ export const GALLERY_ORDER: readonly string[] = [
   'lumen-portraits',
   'little-acorns',
   'cobalt-works',
-  'heron-point-golf',
   'kubus',
   'pinecone-camp',
   'purpurhaus',
@@ -183,18 +227,15 @@ export const GALLERY_ORDER: readonly string[] = [
   'polish-nail-bar',
   'kiln-aoi',
   'osteria-lume',
-  'zwoelfton',
   'oxbow-workshop',
   'slice-theory',
   'linden-guesthouse',
   'the-rialto-cinema',
-  'madrigal-strings',
   'brim-hat-shop',
   'piquant-provisions',
   'coral-cove-beach-club',
   'atelier-vane',
   'suds-car-wash',
-  'cadence-music',
   'vinyl-vault',
   'nordlicht',
   'parkside-family-medicine',
@@ -207,7 +248,6 @@ export const GALLERY_ORDER: readonly string[] = [
   'salzhaus',
   'whitlock-ames',
   'hachi-ramen',
-  'konzerthaus-halden',
   'birk-mobler',
   'crabapple-orchard',
   'hafen-sechs',
@@ -219,11 +259,9 @@ export const GALLERY_ORDER: readonly string[] = [
   'terrace-hill-winery',
   'norrbolt',
   'spin-cycle-laundry',
-  'caldera-rail',
   'blue-note-room',
   'grafit',
   'lakeshore-cabins',
-  'forge-strength',
   'satchel-and-strap',
   'sammlung-weiss',
   'trailhead-club',
@@ -239,7 +277,6 @@ export const GALLERY_ORDER: readonly string[] = [
   'tinker-toys',
   'presse-neun',
   'el-farolito-truck',
-  'cerulean-swim',
   'sable-and-pine',
   'clearwater-dental',
   'cacao-and-co',
@@ -261,12 +298,9 @@ export const GALLERY_ORDER: readonly string[] = [
   'fernhill-gardens',
   'clear-view-optical',
   'isobar',
-  'high-pass-lodge',
   'harbour-ledger',
   'nullpunkt',
-  'restore-clinic',
   'parallel-studio',
-  'pinewood-rv',
   'mesura',
   'inkwell-tattoo',
   'velo-criterium',
@@ -275,10 +309,8 @@ export const GALLERY_ORDER: readonly string[] = [
   'silbersalz',
   'falzbogen',
   'scoop-and-cone',
-  'chronometrie-bex',
   'little-fins-swim',
   'tally-and-co',
-  'verdant',
   'pixelmelt',
   'keel-wealth',
   'mistral-cycles',
@@ -308,7 +340,6 @@ export const GALLERY_ORDER: readonly string[] = [
   'birchwood-sauna',
   'panel-break-comics',
   'bright-pane-windows',
-  'casa-olivo',
   'tack-and-button',
   'willow-midwifery',
   'kettle-and-leaf',
@@ -335,12 +366,10 @@ export const GALLERY_ORDER: readonly string[] = [
   'long-table-catering',
   'saffron-house',
   'arc-orthodontics',
-  'muddy-paws-mobile',
   'hearth-insurance',
   'ridgecap-roofing',
   'rind-and-curd',
   'byte-fix-repair',
-  'second-life-vintage',
   'fresh-coat-decorators',
   'beet-street-grocer',
   'posy-wedding-flowers',
@@ -350,7 +379,6 @@ export const GALLERY_ORDER: readonly string[] = [
   'blue-plate-diner',
   'tatami-dojo',
   'mainspring-repair',
-  'big-yard-dog-daycare',
   'chatterbox-speech',
   'velvet-cat-grooming',
   'post-oak-smokehouse',
@@ -377,7 +405,6 @@ export const GALLERY_ORDER: readonly string[] = [
   'geode-and-co',
   'rowan-street-allotments',
   'second-chance-shelter',
-  'fix-it-repair-cafe',
   'loop-club-coding',
   'lantern-puppet-theatre',
   'spore-and-soil',
@@ -389,16 +416,12 @@ export const GALLERY_ORDER: readonly string[] = [
   'orbit-roller-rink',
   'salt-and-vinegar-fish-bar',
   'branch-line-models',
-  'four-frames-photobooth',
-  'continue-arcade-bar',
   'hollis-piano',
-  'halfmoon-balloons',
   'eight-folds-dumplings',
   'alder-and-stone-funeral',
   'lumen-film-festival',
   'big-top-circus-school',
   'pip-and-sprout-seeds',
-  'sleepwell-clinic',
   'longmeadow-equine',
   'hollowmere-sculpture-park',
   'northside-fablab',
@@ -406,3 +429,6 @@ export const GALLERY_ORDER: readonly string[] = [
   'crosscut-timber',
   'plate-and-pulse-nutrition',
 ];
+
+/** The gallery's order: the hand-picked lead, then the spread. */
+export const GALLERY_ORDER: readonly string[] = [...GALLERY_LEAD, ...GALLERY_SPREAD];

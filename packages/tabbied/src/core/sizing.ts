@@ -90,6 +90,7 @@ export type PatternBoxSize = {
   /**
    * CSS `aspect-ratio` (e.g. `3 / 2` or `1.5`). Derives the height from the
    * width, so it pairs with `maxWidth` in a parent that has no fixed height.
+   * The editor's `W:H` form (`"2:3"`) is accepted too and written as `2 / 3`.
    */
   aspectRatio?: number | string;
 };
@@ -105,6 +106,19 @@ export type PatternBoxStyle = {
 
 const cssLength = (value: number | string): string =>
   typeof value === 'number' ? `${value}px` : value;
+
+// `2:3` is how the editor, its share links and the catalog name a ratio, so
+// it is what people and agents pass. CSS has no such syntax: written through,
+// it is an invalid `aspect-ratio`, the box gets no height, and nothing draws.
+const W_H_RATIO = /^\s*(\d+(?:\.\d+)?)\s*:\s*(\d+(?:\.\d+)?)\s*$/;
+
+const cssAspectRatio = (value: number | string): string => {
+  if (typeof value === 'number') return String(value);
+
+  const match = W_H_RATIO.exec(value);
+
+  return match ? `${match[1]} / ${match[2]}` : value;
+};
 
 /**
  * Turn the box props into CSS. `tabbied/react` spreads the result into the
@@ -142,7 +156,7 @@ export function resolveBoxStyle(size: PatternBoxSize = {}): PatternBoxStyle {
   }
 
   if (aspectRatio != null) {
-    style.aspectRatio = String(aspectRatio);
+    style.aspectRatio = cssAspectRatio(aspectRatio);
   }
 
   return style;

@@ -8,6 +8,7 @@ import * as schema from './db/schema';
 import type { Env } from './env';
 import { isDev } from './env';
 import { AUTH_LINK_HOURS, resetPasswordEmail, sendMail, verificationEmail } from './lib/mail';
+import { deleteMedia, mediaPrefixes } from './lib/users';
 
 // better-auth over D1, built per request. It is a factory for the same reason
 // `buildServer` is on the MCP side: an isolate is shared across requests, so a
@@ -103,6 +104,9 @@ async function grantConfiguredAdmin(
 
 export function buildAuth(env: Env) {
   const db = drizzle(env.DB, { schema });
+  // Someone deleting their own account: R2 prefixes read before the row goes,
+  // deleted after, keyed by the account. Per instance, like everything here.
+  const doomedMedia = new Map<string, string[]>();
 
   return betterAuth({
     // Unset only in dev: every caller checks first (`authConfigured`, or the
@@ -191,7 +195,21 @@ export function buildAuth(env: Env) {
     user: {
       // With no verification mail configured better-auth asks for the password
       // instead, which is the right friction for an irreversible action.
-      deleteUser: { enabled: true },
+      //
+      // better-auth deletes the row and D1 cascades the rest, but nothing
+      // cascades into R2: without these hooks the person's pictures outlived
+      // the account the Settings page says takes them. The same order as an
+      // admin's removal (lib/users.ts): owners read first, bytes after rows.
+      deleteUser: {
+        enabled: true,
+        beforeDelete: async (doomed) => {
+          doomedMedia.set(doomed.id, await mediaPrefixes(env, [doomed.id]));
+        },
+        afterDelete: async (gone) => {
+          await deleteMedia(env, doomedMedia.get(gone.id) ?? []);
+          doomedMedia.delete(gone.id);
+        },
+      },
     },
     emailVerification: {
       sendOnSignUp: true,

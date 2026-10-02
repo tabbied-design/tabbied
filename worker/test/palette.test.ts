@@ -60,4 +60,17 @@ describe('ensurePalette', () => {
     expect(result.status).toBe('rejected');
     expect(result.colors).toEqual(FALLBACK);
   });
+
+  it('treats an opaque alpha as no alpha, in both widths', () => {
+    // isHexColor accepts `#rgba` and `#rrggbbaa`; `#ffff` and `#ffffffff`
+    // are the white ground too.
+    for (const ink of ['#ffff', '#ffffffff', '#FFFFFFFF']) {
+      expect(ensurePalette(['#ffffff', ink], FALLBACK).status).toBe('rejected');
+    }
+
+    expect(ensurePalette(['#ffffff', '#123456ff'], FALLBACK).colors).toEqual([
+      '#ffffff',
+      '#123456',
+    ]);
+  });
 });

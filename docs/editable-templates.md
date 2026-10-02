@@ -220,6 +220,14 @@ so a swapped field can always be drawn. The download rebuilt in the browser
 (`lib/studioDownload.ts`) rewrites the packaged bootstrap's import list to the
 designs the page mounts *now* for the same reason.
 
+**Without a swap, options merge.** An edit that names some of a field's
+options changes those and keeps the rest: `{ frequency: 0.5 }` on a field
+authored `grid: 10x15; frequency: 0.8` writes `grid: 10x15; frequency: 0.5`.
+Until tabbied-templates 0.2.2 it wrote the edited options alone, so the grid
+fell back to the design's default and the layout changed under a one-slider
+edit. A swap still replaces: options sent with a new slug are the new design's
+whole set, and with none the field draws at the new design's defaults.
+
 **The engine never touches classes.** It sets text, attributes, and inline
 custom properties, nothing else. The HTML download ships a stylesheet trimmed
 to the classes its markup actually uses (`trimUnusedRules` in

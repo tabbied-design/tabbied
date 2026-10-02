@@ -11,16 +11,14 @@ import CodeBlock from 'components/react-docs-page/CodeBlock';
 import Example from 'components/react-docs-page/Example';
 import ReseedExportDemo from 'components/react-docs-page/ReseedExportDemo';
 import DocsNav from 'components/react-docs-page/DocsNav';
-import {
-  sectionIndex,
-  type DocsSection,
-} from 'components/react-docs-page/sections';
+import { Callout, Code, docsSection } from 'components/react-docs-page/parts';
+import type { DocsSection } from 'components/react-docs-page/sections';
 import home from 'components/main-page/home.module.css';
 import styles from 'components/react-docs-page/ReactDocs.module.css';
 import { pageMetadata } from 'lib/seo';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Documentation - Tabbied',
+  title: 'React component - Tabbied',
   description:
     'Documentation for the tabbied npm package: render, resize, recolor, reseed, and export Tabbied generative patterns in React or vanilla JavaScript.',
   path: '/docs/react/',
@@ -44,6 +42,8 @@ const SECTIONS: DocsSection[] = [
   { id: 'vanilla', label: 'Vanilla JavaScript' },
   { id: 'api', label: 'API reference' },
 ];
+
+const Section = docsSection(SECTIONS);
 
 const installCode = `npm install tabbied`;
 
@@ -246,20 +246,6 @@ const FIT_DEMOS = [
   },
 ] as const;
 
-function Code({ children }: { children: ReactNode }) {
-  return <code className={styles.inlineCode}>{children}</code>;
-}
-
-// An aside beside the prose, labelled so it reads as one.
-function Callout({ children }: { children: ReactNode }) {
-  return (
-    <aside className={styles.callout}>
-      <span className={styles.calloutLabel}>Note</span>
-      {children}
-    </aside>
-  );
-}
-
 // One fit mode, drawn into both box shapes. Density 0.25 (90px cells) keeps
 // the cells big enough to read as shapes, and to show whether they stay square.
 function FitDemo({
@@ -292,35 +278,6 @@ function FitDemo({
         {note}
       </figcaption>
     </figure>
-  );
-}
-
-// A docs section: its index (its position in the contents rail), an anchored,
-// hover-linkable heading, and the body.
-function Section({
-  id,
-  title,
-  children,
-}: {
-  id: string;
-  title: string;
-  children: ReactNode;
-}) {
-  const index = SECTIONS.findIndex((section) => section.id === id) + 1;
-
-  return (
-    <section id={id} className={styles.section}>
-      <span className={styles.sectionIndex} aria-hidden="true">
-        {sectionIndex(index)}
-      </span>
-      <h2 className={styles.subhead}>
-        {title}
-        <a className={styles.anchor} href={`#${id}`} aria-label={`Link to ${title}`}>
-          #
-        </a>
-      </h2>
-      {children}
-    </section>
   );
 }
 
@@ -402,7 +359,9 @@ const PROPS: PropRow[] = [
     type: 'number | string',
     description: (
       <>
-        CSS <Code>aspect-ratio</Code>: derives the height from the width.
+        CSS <Code>aspect-ratio</Code>: derives the height from the width.{' '}
+        <Code>&quot;3 / 2&quot;</Code>, <Code>1.5</Code> and the editor&apos;s{' '}
+        <Code>&quot;3:2&quot;</Code> all work.
       </>
     ),
   },
@@ -475,6 +434,17 @@ const PROPS: PropRow[] = [
       <>
         <Code>true</Code> renders an aria-hidden image; <Code>false</Code>{' '}
         exposes <Code>role=&quot;img&quot;</Code> with <Code>ariaLabel</Code>.
+      </>
+    ),
+  },
+  {
+    name: 'ariaLabel',
+    type: 'string',
+    defaultValue: 'pattern name',
+    description: (
+      <>
+        The accessible name when <Code>decorative={'{false}'}</Code>; ignored
+        otherwise.
       </>
     ),
   },
@@ -612,6 +582,11 @@ export default function ReactDocsPage() {
                     and options always draw the same design, at any size.
                     That makes patterns safe to use as reproducible brand
                     assets - a seed is a design you can keep.
+                  </p>
+                  <p>
+                    Working with an AI assistant? The{' '}
+                    <a href="/docs/mcp/">Tabbied MCP server</a> lets it search
+                    the designs and look at them before it writes the code.
                   </p>
                 </Section>
 

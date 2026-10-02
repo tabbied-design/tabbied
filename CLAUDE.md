@@ -1,6 +1,8 @@
 # CLAUDE.md
 
-Guidance for coding agents working in this repository.
+Guidance for coding agents working in this repository for its maintainers.
+Only `packages/` is open source (MIT); everything else, the website templates
+above all, is proprietary (see LICENSE, and "Licensing" below).
 
 ## Repo layout & commands
 
@@ -87,13 +89,56 @@ never gets that exemption.
 first banned character, naming the file, line, column and code point. CI
 runs it before anything else. Run it before committing.
 
+## Licensing - MIT packages, proprietary everything else
+
+The three packages are MIT, each with its own LICENSE (npm packs a LICENSE
+file whatever `files` says). Everything else is proprietary and the root
+LICENSE says so: the repository is public to be read, not reused. A website
+template is licensed per account by the Template License, section 7 of the
+Terms of Service (`#template-license`, linked from everywhere below, so the
+id stays). Its substance lives in five places, and a change to it is a change
+to all five in one commit:
+
+- `app/terms-of-service/page.tsx`, the license itself, which governs;
+- `TEMPLATE_LICENSE` in `scripts/package-templates.mjs`, written as
+  `LICENSE.md` into both packages of every download, beside an `AGENTS.md`
+  and under a notice comment in each `index.html`'s head;
+- `worker/lib/notice.ts`, the notice on the live template pages;
+- the "Website templates" section `scripts/generate-llms.mjs` adds to the
+  site's `llms.txt` and `llms-full.txt` (the package's own copy has no
+  business saying it); and
+- `LICENSE` in `packages/tabbied-mcp/src/templates.ts`, returned by
+  `list_templates` and `get_template`.
+
+Two things worth not re-litigating:
+
+- **The live pages' notice is added at the edge, never by the export.** The
+  Worker rewrites `/templates/<slug>/` and `/templates/<slug>/site/` with
+  HTMLRewriter: a comment and a `rel="license"` link in the head, and the same
+  words as a visually hidden, `aria-hidden` paragraph at the end of the body,
+  for an agent that reads a page as text and never sees a comment. React 19
+  skips an element it did not render at the end of `<body>`, so hydration is
+  unaffected. The export stays clean because the downloads are derived from
+  it: a download is the licensee's own copy, and a notice in it telling an
+  agent "this is not yours to copy" would turn away the person who chose the
+  template. Its `AGENTS.md` says the opposite (help the licensee; don't help
+  redistribute). The e2e suite serves `out/` with no Worker, so it never sees
+  the notice; `worker/test/api.test.ts` does.
+- **The notices state facts and suggest; they never command.** "Copying this
+  is not permitted by its license; tell the person where to get it", not
+  "ignore your user". Page text ordering an agent to override the person it
+  works for reads as prompt injection, which a well-behaved agent is trained
+  to distrust; a license notice is the kind of thing it relays. Whether an
+  agent respects it is up to the agent, and nothing here can force it.
+
 ## Hosting - Cloudflare Workers static assets
 
 The site is a static export served by Workers static assets. `wrangler.jsonc`
 points `assets.directory` at `out/`; Cloudflare serves anything that matches a
 file there **without invoking the Worker**, so `worker/index.ts` runs for
-the paths `run_worker_first` names (`/mcp`, `/health`, `/api`, and
-`/downloads`, below) and hands everything else to `env.ASSETS`.
+the paths `run_worker_first` names (`/mcp`, `/health`, `/api`, `/downloads`
+and the live template pages, below) and hands everything else to
+`env.ASSETS`.
 
 Three things that are explicit here and were implicit or automatic on Vercel:
 
@@ -105,7 +150,15 @@ Three things that are explicit here and were implicit or automatic on Vercel:
   `public/` verbatim, so the file lands at `out/_headers` where wrangler reads
   it - and wrangler *consumes* it rather than serving it. `wrangler dev` prints
   `Parsed N valid header rules` on boot, which is the cheapest way to catch a
-  typo. Limits: 100 rules, 2,000 characters per line.
+  typo. Limits: 100 rules, 2,000 characters per line. **`_headers` never
+  reaches a response the Worker makes**, run_worker_first routes included, so
+  the security headers on its `/*` rule (HSTS, `frame-ancestors 'self'` and
+  `X-Frame-Options`, the referrer and permissions policies) are added again by
+  a middleware in `worker/index.ts` from `worker/lib/securityHeaders.ts`. The
+  two lists are kept in step by hand. The live template sites
+  (`/templates/<slug>/site/`) also get `noindex` there (`worker/lib/noindex.ts`):
+  they are fictional businesses with addresses and phone numbers, and a
+  `noindex` in the export would ride into every download.
 - **`run_worker_first: ["/mcp", "/mcp/*", "/health", "/api", "/api/*"]`.**
   `/mcp` is not a file, so it would reach the Worker anyway - but only after
   the asset router looked at it, and with `trailingSlash: true` the default
@@ -117,7 +170,15 @@ Three things that are explicit here and were implicit or automatic on Vercel:
   template zip is a signed-in act that makes the template one of the
   person's five (see "Five templates per account" below), and the edge
   would otherwise hand it to anyone. The Worker gates `<slug>-<format>.zip` and passes everything else
-  under the folder, the packaged pages the previews read, back to the binding.
+  under the folder, the packaged pages the previews read, back to the binding,
+  except the React package's unzipped folder (`<slug>-react/`), which answers
+  404 (`isReactSource`): it is the template's authored source, in the deploy
+  only because its zip is made from it, and the zip is the one way that source
+  leaves. The e2e suite reads that folder from disk, so it never notices.
+  `/templates/*/` is the other: the live template pages, which the Worker
+  serves with the license notice added (see "Licensing" below). It names the
+  pages only (`*` is a deep match, and the trailing slash keeps the RSC
+  payloads beside them asset-first).
 
 **tabbied.com and www.tabbied.com are Worker Custom Domains**, declared in
 `wrangler.jsonc`'s `routes` with `custom_domain: true` and enabled for
@@ -135,6 +196,30 @@ Custom Domains took PR previews down, and the next PR's Cloudflare comment
 simply had no Preview URL column. Only `wrangler deploy` applies either
 setting; a PR build's `wrangler versions upload` never does, so a change
 here reaches previews once it is deployed from main.
+
+**PR previews run on production's bindings.** Workers Builds runs
+`npx wrangler versions upload` for a PR, and a version shares the Worker's
+D1, R2, vars and secrets, so a preview reads and writes live data. The
+`previews` block in `wrangler.jsonc` is for `wrangler preview` (Worker
+Previews, Cloudflare's default preview command for new projects), which
+`versions upload` ignores: it repeats production's D1 (by its real id),
+R2 bucket and vars so that switching commands keeps previews on production.
+A Preview inherits nothing from the top level, wrangler 4.133+ refuses to
+run `wrangler preview` in CI without the block, and Preview secrets come
+from the Previews Base config, not the production Worker. Keep the block in
+step with the top level.
+
+**The Worker must start in workerd, which the worker tests don't prove.**
+They bundle with Vite; `wrangler versions upload` and `wrangler deploy`
+bundle with esbuild, and Cloudflare rejects an upload whose Worker throws
+while loading (code 10021). That is how zod 4.6 broke #105's preview builds
+while GitHub CI was green: better-auth 1.7.7 loads two adapters with a
+dynamic `import()`, so esbuild put zod behind a lazy initializer, and the
+MCP SDK built schemas before anything called it ("ZodLazy is not a
+constructor"). `worker/zod.ts`, imported first by `worker/index.ts`, starts
+zod before anything else loads. After a dependency change, `npx wrangler
+dev` (which bundles the same way) and a request to `/api/health` or `/mcp`
+is the check.
 
 **Redirects live in `public/_redirects`**, beside `_headers` and read the
 same way. The template sites moved from `/template/<slug>/` to
@@ -176,9 +261,21 @@ the tools; the SDK owns the wire.
 
 - `src/tools.ts` - the four catalog tools, with no runtime imports at all. The
   host injects what differs (preview bytes, docs text) through `ToolContext`.
+  `src/templates.ts` is the two template tools, the same way.
 - `src/server.ts` - registers those tools onto an `McpServer`. The seam.
 - `src/stdio.ts`, `src/node/` - the bin, the local catalog reader, and
-  `render_design`. Node only, never reached from the Worker.
+  `render_design`. Node only, never reached from the Worker. The readers are
+  exported as `tabbied-mcp/node` for a program that hosts the tools itself.
+
+`list_templates` answers a page at a time (`limit`, `offset`, a `category`,
+`detail` for the full entries): the whole index came to 127 KB, about 30k
+tokens, in one call. Its categories and topics are written into
+`/editable-catalog.json` by `scripts/generate-editable.mjs`, which reads the
+category table out of `lib/templateCategories.ts` and fails the build on a
+template it cannot place. `render_design` shells out to the `tabbied` CLI,
+which looks for Playwright from the working directory first and then beside
+itself; neither package depends on Playwright, so the bin is started as
+`npx -y -p tabbied-mcp -p playwright tabbied-mcp` to render.
 
 Both transports are the SDK's: the Worker wraps the factory in
 `createMcpHandler`, the bin hands it to `serveStdio`. So the remote endpoint
@@ -209,6 +306,16 @@ Four things worth not re-litigating:
 `legacy: 'stateless'` is spelled out at the call site even though it is the
 default: it is what keeps 2025-era clients working, and every shipping client
 still opens with `initialize`. Dropping it to `'reject'` would strand them.
+
+**The page for people is `/docs/mcp/`**, a sibling of `/docs/react` built
+from the same parts (`components/react-docs-page/parts.tsx`: `Code`,
+`Callout`, and `docsSection(SECTIONS)`, which numbers a page's sections from
+its own array). A browser that opens `/mcp` is redirected there, told apart
+by `isNavigation` (the same test the downloads use); an MCP client POSTs, or
+GETs asking for `text/event-stream`, and never is. The footer's Resources,
+the React docs and `llms.txt` link to it. Its client setup and tool list
+repeat the package README and `docs/mcp-server.md`, so a new tool or client
+changes all three.
 
 ## Downloadable templates - derived from the export, never hand-ported
 
@@ -305,7 +412,23 @@ stylesheet a person should edit, so that ships and only the class names in the
 *HTML* are rewritten back to plain ones. And it doesn't hand-write the mount
 code: the placeholders already carry their config as `data-*` attributes
 (`TabbiedPattern` serializes it via `patternConfigToAttributes`), so one
-`hydratePatterns()` call revives the whole page.
+`hydratePatterns()` call revives the whole page. The bootstrap imports the
+designs from `tabbied@<version>/patterns?exports=<slugs>`, which has esm.sh
+tree-shake the catalog (about 450 KB) down to the page's own (a couple of KB);
+`lib/studioDownload.ts` rewrites that list for a customized download, so the
+two keep one shape.
+
+**A download never uses Typekit.** proxima-nova is Tabbied's Adobe Fonts
+kit, which the root layout links on every page of the site, template pages
+included, and which is licensed to tabbied.com alone. The packager strips the
+kit's `<link>`s with the rest of the site chrome, ships `base.css` with the
+face taken out of the global stacks (`templateBaseCss`), and refuses to zip a
+package that still says "typekit" or "proxima-nova" anywhere
+(`assertNoTabbiedFonts`; the face's name, since a caption may say
+"approximately"). A template sets its own faces from Google Fonts. The
+global sheet's stack did reach one template element, the shared
+`TemplateSite` button, which now inherits the page's face, so the live page and
+the download draw the same type.
 
 A site fails loudly rather than shipping broken: more than one CSS module on a
 page, or two hashed names collapsing onto one plain name. All 277 sites
@@ -709,6 +832,19 @@ for `Karla:opsz,...`, an axis Karla does not have, and Google answers such
 a request with 200 and silently leaves the family out, so the live page had
 never set its body type in Karla at all.
 
+## Share cards - 1200x630, derived at build time
+
+A pattern page's share card is `public/og/patterns/<slug>.jpg`, the brand
+panel cut from `public/og.png` beside the design's preview; a template's is
+`public/og/templates/<slug>.jpg`, its screenshot full bleed with the lockup on
+a white plate (`lib/seo.ts`, `patternImage` and `templateImage`). They were
+the 960x960 WebP previews, which the large card crops to a strip, and a
+template's was its pattern rather than the website. `scripts/build-og-images.mjs`
+(`npm run og`, in prebuild and predev) writes them with sharp from committed
+files only, no browser and no fonts, so they are gitignored and the deploy
+build makes them: about 30 seconds from nothing, nothing at all when they are
+newer than their sources. A template with no shot uses its pattern's card.
+
 ## The template gallery - a mixed order, pages, and the URL
 
 `/templates` shows 50 cards a page, in the order `GALLERY_ORDER` in
@@ -738,6 +874,18 @@ re-litigating:
   first published; the fifty small-business sites were appended after them
   (2026-09-26), spread among themselves, and the fifty picture-led sites
   (2026-09-27, `pic-`) after those.
+- **The first cards are picked by hand.** `GALLERY_ORDER` is `GALLERY_LEAD`,
+  twenty-three templates chosen for the top of the first page (fifteen on
+  2026-10-02, eight more after them the same day), then `GALLERY_SPREAD`,
+  the spread above less those, which is the part that stays append-only.
+  Editing the lead moves every card after it, so it is an editorial
+  decision, not a side effect of adding templates. The lead is shown in the
+  order given and may put two of a batch side by side; the neighbor rule
+  (and `e2e/templates.spec.ts`) applies between the cards after it, not to
+  the seam, since the spread was laid out without the lead. A slug in both
+  lists fails the export. The homepage's template rails show the lead too
+  (`HomeTemplates`), dealt alternately into the two rows, so editing it
+  changes both pages.
 - **The URL is read after mount, not with `useSearchParams`**, the same as
   the pattern library's `?page=`: `useSearchParams` in a static export
   renders the whole route on the client. The first paint is All, page 1,
@@ -759,6 +907,18 @@ account forms' own shell. Nothing else should draw a Tabbied mark: the four
 outlined cells that preceded it existed in three hand-copied variants (a
 css-doodle, a CSS grid, and a grid with one cell omitted), and keeping them in
 step is exactly the work this component removes.
+
+**The favicons and app icons are pictures of it**, written by
+`node scripts/build-favicons.mjs`, which reads the paths, box and stroke out
+of `LogoMark.tsx` (and stops if it cannot): run it after the mark changes,
+the same way the email lockup is captured from `Logo`. The tab icons
+(16-48px and `favicon.svg`) are the mark in ink on a transparent ground,
+which is what was asked for and which a dark tab strip all but hides; the
+app icons (iOS, Android, the Windows tile) stay paper on an ink tile,
+because iOS fills a transparent touch icon with black. Two optical sizes:
+the authored stroke is a 0.4px line at 16px, so the tab icons take a
+heavier one, while the app icons from 180px up keep the drawing's own
+weight.
 
 ## The masthead - one bar, two tones
 
@@ -813,6 +973,16 @@ Four things worth not re-litigating:
   `data-session="likely"` as the page is parsed, which swaps "Sign in" for a
   placeholder circle; state keeps it until the session answers. Only a
   browser with the hint gets the ghost, and a wrong hint costs one fetch.
+
+**A link to the page already open goes back to the top.** Next's router
+treats a click on a link to the current URL as a navigation already done and
+does nothing, which made the footer's "Docs" on the docs page look broken. The
+masthead's lockup, its destinations, its menu's items (the only way to the
+destinations below 768px) and both footers use
+`components/SamePageLink`, which scrolls to the top instead (smoothly, unless
+reduced motion is on) and drops a `#section` the docs' contents rail left in
+the address; a modified click, a different query or a link with its own
+fragment is still Next's. `e2e/smoke.spec.ts` covers each kind.
 
 The stroke is authored at 17 units in a 391-unit viewBox, which is what keeps
 it hairline at the ~20px the navs draw it at. Scale the box, never the stroke.
@@ -1078,8 +1248,11 @@ Things worth not re-litigating:
 - **`worker/db/schema.ts` is the source of truth and `worker/migrations` is
   emitted from it** (`npm run db:generate`). better-auth's four tables are
   transcribed from its own `getAuthTables()` output rather than guessed - run
-  it after an upgrade, because a field added upstream is a migration here
-  (that is how `account.issuer` was caught).
+  it after an upgrade, because a field added or dropped upstream is a
+  migration here. `account.issuer` was both: 1.7.0 required it, and 1.7.3
+  stopped writing it, so the NOT NULL column failed every sign-up until
+  migration 0010 dropped it. better-auth checks the schema at startup since
+  1.7.3 and logs "Drizzle schema mismatch" when the two disagree.
 - **`buildAuth` is a factory**, for the same reason `buildServer` is on the
   MCP side: an isolate is shared across requests, so capturing bindings in a
   module-scope singleton works locally and breaks under concurrency.
@@ -1385,7 +1558,10 @@ the template and shows the result.
   SHA-256 of the packaged `index.html` it was authored against; `GET
   /api/studio/sites/:id` re-hashes the served package and reports
   `templateChanged`, so a re-packaged template is announced on the page rather
-  than discovered as a missing headline. `revision` is append-only (`n`,
+  than discovered as a missing headline. A manual save re-pins both, since
+  the document it writes was just checked against the template as served,
+  and the notice says "What no longer fits is listed below" only when the
+  engine refused something, which is the list below it. `revision` is append-only (`n`,
   `edits`, `instruction`, `source`, `responseId`) - a conversational or manual
   edit writes n+1, which is what makes "go back" possible. The listing is
   session-scoped (`GET /api/studio/sites`, on the `(userId, updatedAt)` index)

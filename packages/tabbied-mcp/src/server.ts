@@ -20,9 +20,14 @@ import type { Tool } from './types.js';
  * values instead of silently matching nothing.
  */
 export function buildServer(tools: Tool[]): McpServer {
+  // `listChanged: false` because the list never changes: a server is built
+  // per request (per connection on stdio) with its tools fixed, and nothing
+  // ever sends the notification. Left unset, the SDK advertises it as true the
+  // moment the first tool registers, inviting a modern client to listen for
+  // a change that cannot come.
   const server = new McpServer(
     { name: SERVER_NAME, version: VERSION },
-    { capabilities: { tools: {} }, instructions: INSTRUCTIONS }
+    { capabilities: { tools: { listChanged: false } }, instructions: INSTRUCTIONS }
   );
 
   for (const tool of tools) {
@@ -34,6 +39,9 @@ export function buildServer(tools: Tool[]): McpServer {
         inputSchema: fromJsonSchema<Record<string, unknown>>(
           tool.definition.inputSchema
         ),
+        ...(tool.definition.annotations
+          ? { annotations: tool.definition.annotations }
+          : {}),
       },
       async (args) => (await tool.run(args ?? {})) as never
     );

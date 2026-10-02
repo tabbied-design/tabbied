@@ -93,6 +93,52 @@ const galleryNameOf = (slug) => {
   return match ? decodeEntities(match[1]).trim() : '';
 };
 
+// The gallery category and the one-line topic of every template, so the MCP
+// `list_templates` tool can filter on the one and summarize with the other.
+// The topic is read off the export, out/studio-index.json, which the first
+// `next build` writes from the template registries. No exported file carries
+// the category, so the table is read out of lib/templateCategories.ts, the
+// way check:thumbnails reads galleryThumbnails.ts; a template the parse
+// misses fails below, since the gallery's own build has already proved the
+// table complete.
+const studioIndexPath = path.join(repoRoot, 'out', 'studio-index.json');
+const topics = new Map(
+  existsSync(studioIndexPath)
+    ? JSON.parse(readFileSync(studioIndexPath, 'utf8')).entries.map((entry) => [
+        entry.slug,
+        entry.topic,
+      ])
+    : []
+);
+
+if (topics.size === 0) {
+  console.warn(
+    'editable: out/studio-index.json is missing - catalog entries will carry ' +
+      'no topic. Run `next build` first.'
+  );
+}
+
+const categories = (() => {
+  const source = readFileSync(
+    path.join(repoRoot, 'lib', 'templateCategories.ts'),
+    'utf8'
+  );
+  const known = new Set(
+    [
+      ...(/TEMPLATE_CATEGORIES = \[([\s\S]*?)\]/.exec(source)?.[1] ?? '').matchAll(
+        /'([^']+)'/g
+      ),
+    ].map((match) => match[1])
+  );
+  const table = /const BY_SLUG[^=]*= \{([\s\S]*?)\n\};/.exec(source)?.[1] ?? '';
+
+  return new Map(
+    [...table.matchAll(/^\s*'?([a-z0-9-]+)'?: '([^']+)',?\s*$/gm)]
+      .filter((match) => known.has(match[2]))
+      .map((match) => [match[1], match[2]])
+  );
+})();
+
 const fontsOf = (html) => {
   const href = /<link[^>]+href="(https:\/\/fonts\.googleapis\.com\/[^"]+)"/i.exec(
     html
@@ -183,6 +229,14 @@ for (const slug of slugs) {
     continue;
   }
 
+  if (!categories.has(slug)) {
+    failures.push(
+      `${slug}: no category read from lib/templateCategories.ts - the table ` +
+        'or the way this script parses it has changed'
+    );
+    continue;
+  }
+
   writeFileSync(
     path.join(outDir, `${slug}.json`),
     `${JSON.stringify(spec, null, 2)}\n`
@@ -203,12 +257,14 @@ if (failures.length > 0) {
 const counts = (spec, kind) =>
   spec.slots.filter((slot) => slot.kind === kind).length;
 
-// The aggregate index the MCP `list_templates` tool serves, small enough to
-// return whole. Merged rather than rewritten when slugs are named, so
+// The aggregate index the MCP `list_templates` tool filters and pages
+// through. Merged rather than rewritten when slugs are named, so
 // `npm run editable <slug>` keeps the other templates.
 const entryOf = (spec) => ({
     slug: spec.site.slug,
     name: spec.site.name,
+    category: categories.get(spec.site.slug),
+    ...(topics.has(spec.site.slug) ? { topic: topics.get(spec.site.slug) } : {}),
     href: `/templates/${spec.site.slug}/site/`,
     spec: `/editable/${spec.site.slug}.json`,
     palette: spec.palette.colors,

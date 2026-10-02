@@ -134,6 +134,13 @@
   border-color: var(--a-ink);
 }
 
+.hint {
+  display: block;
+  margin-top: 8px;
+  font: 400 12.5px var(--a-sans);
+  color: var(--a-dim);
+}
+
 /* "Forgot your password?" - sits between the fields and the button, on a
    row as tall as the design's (a 16px line around 13.5px text), so the
    button below lands where it is drawn. */
@@ -192,6 +199,22 @@
   color: var(--a-ink);
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.legal {
+  margin: 14px 0 0;
+  font: 400 12.5px / 1.55 var(--a-sans);
+  color: var(--a-muted);
+}
+
+.legal a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.legal a:hover {
+  color: var(--a-ink);
 }
 
 @media (max-width: 768px) {

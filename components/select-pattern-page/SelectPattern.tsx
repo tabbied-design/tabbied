@@ -29,6 +29,7 @@ import GalleryChipShelf from './GalleryChipShelf';
 import GalleryCard from './GalleryCard';
 import GalleryScrollRestorer from './GalleryScrollRestorer';
 import { flushGridBottom } from './flushGridBottom';
+import { mergePalettes } from 'lib/paletteList';
 import styles from './SelectPattern.module.css';
 
 const PER_PAGE = 24;
@@ -206,7 +207,15 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
     if (selectedId === id) setSelectedId(RANDOM_PALETTE_ID);
   };
 
-  const filtered = useMemo(
+  // One box searches both lists. A query that names palettes and no design
+  // ("ocean") keeps the whole grid, since a palette is something to apply to
+  // the designs, not a filter on them; the intro says what matched instead
+  // of the grid going empty.
+  const paletteMatches = useMemo(
+    () => (search.trim() ? mergePalettes(savedPalettes, PALETTE_LIBRARY, search).length : 0),
+    [savedPalettes, search]
+  );
+  const designMatches = useMemo(
     () =>
       gallery.filter(
         (item) =>
@@ -214,6 +223,8 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
       ),
     [gallery, search]
   );
+  const paletteOnlySearch = designMatches.length === 0 && paletteMatches > 0;
+  const filtered = paletteOnlySearch ? gallery : designMatches;
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const clampedPage = Math.min(page, pageCount);
@@ -355,12 +366,22 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
           <h1 ref={titleRef} className={styles.title} tabIndex={-1}>
             Pick a pattern
           </h1>
-          <p className={styles.intro}>
-            {filtered.length} {filtered.length === 1 ? 'pattern' : 'patterns'},
-            each drawn live in your browser. Pick a color palette to recolor
-            the library (edit its colors if you want your own), then choose
-            a pattern to customize.
-          </p>
+          {paletteOnlySearch ? (
+            <p className={styles.intro} role="status">
+              No pattern is called &quot;{search.trim()}&quot;, so all {filtered.length}{' '}
+              are shown.{' '}
+              {paletteMatches === 1
+                ? 'One palette matches: choose it from the palettes to recolor them.'
+                : `${paletteMatches} palettes match: choose one from the palettes to recolor them.`}
+            </p>
+          ) : (
+            <p className={styles.intro}>
+              {filtered.length} {filtered.length === 1 ? 'pattern' : 'patterns'},
+              each drawn live in your browser. Pick a color palette to recolor
+              the library (edit its colors if you want your own), then choose
+              a pattern to customize.
+            </p>
+          )}
         </div>
 
         {hasResults ? (

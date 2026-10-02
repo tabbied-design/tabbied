@@ -67,7 +67,9 @@ export function onColor(hex: string): string {
   return luminance(hex) < 0.55 ? '#ffffff' : '#151515';
 }
 
-const HEX_COLOR = /^#(?:[0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
+// Every length toRgb reads, `#rgba` included: a color it can parse and this
+// refuses (or the reverse) is a palette one check passes and the next drops.
+const HEX_COLOR = /^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
 
 export const isHexColor = (value: unknown): value is string =>
   typeof value === 'string' && HEX_COLOR.test(value.trim());

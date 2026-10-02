@@ -5,7 +5,7 @@
 // original in both formats (links to the Worker's gated route). Each place
 // draws the menu in its own module, since a portaled popup carries its own
 // tokens, so the classes come from the caller.
-import { Menu } from '@base-ui-components/react/menu';
+import { Menu } from '@base-ui/react/menu';
 import { ChevronDown, Download } from 'lucide-react';
 import { toaster } from 'components/Toaster';
 import type { ChosenTemplate } from 'lib/myTemplates';
@@ -30,7 +30,16 @@ export type DownloadMenuClasses = {
   menuLabel: string;
   menuItem: string;
   menuRule: string;
+  /** The line under the customized version saying why it has one format. */
+  menuNote: string;
 };
+
+// Why the customized version is HTML only: the edits are applied to the
+// packaged page, which has no React left in it; the React project is the
+// template's authored source, and a document of edits cannot be written into
+// JSX. Said where the missing button would be, rather than left to guess.
+export const CUSTOMIZED_FORMAT_NOTE =
+  'HTML only: your colors and patterns are written into the page. The React project is the original source.';
 
 export default function DownloadMenu({
   name,
@@ -64,6 +73,7 @@ export default function DownloadMenu({
                   <Menu.Item className={classes.menuItem} onClick={() => saveCustomised(site.id)}>
                     HTML &amp; CSS
                   </Menu.Item>
+                  <p className={classes.menuNote}>{CUSTOMIZED_FORMAT_NOTE}</p>
                 </Menu.Group>
                 <Menu.Separator className={classes.menuRule} />
               </>

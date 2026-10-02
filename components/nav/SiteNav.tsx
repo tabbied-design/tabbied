@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import SamePageLink from 'components/SamePageLink';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu } from '@base-ui-components/react/menu';
-import type { LucideIcon } from 'lucide-react';
+import { Menu } from '@base-ui/react/menu';
 import { Logo } from 'components/logo';
 import { plexMono } from 'lib/fonts';
 import { useSyncExternalStore } from 'react';
@@ -11,7 +11,6 @@ import { SESSION_HINT_KEY, readSessionHint, signOut, useSessionUser } from 'lib/
 import { stopImpersonating } from 'lib/impersonation';
 import useMediaQuery from 'lib/useMediaQuery';
 import ImpersonationNotice from './ImpersonationNotice';
-import MenuIcon, { MENU_ICONS } from './MenuIcon';
 import styles from './SiteNav.module.css';
 
 // The site's masthead, in two tones: ink on paper (`light`) and paper on the
@@ -39,9 +38,9 @@ const noSubscription = () => () => {};
 type NavTone = 'dark' | 'light';
 
 const DESTINATIONS = [
-  ['/patterns', 'Patterns', MENU_ICONS.patterns],
-  ['/templates', 'Websites', MENU_ICONS.websites],
-  ['/docs/react', 'React Component', MENU_ICONS.react],
+  ['/patterns', 'Patterns'],
+  ['/templates', 'Websites'],
+  ['/docs/react', 'React Component'],
 ] as const;
 
 /** Two letters for the circle: first and last name, or the start of the email. */
@@ -107,19 +106,18 @@ export default function SiteNav({
     .filter(isCurrent)
     .reduce<string | null>((best, href) => (!best || href.length > best.length ? href : best), null);
 
-  const item = (href: string, label: string, icon: LucideIcon) => (
+  const item = (href: string, label: string) => (
     <Menu.Item
       key={href}
       className={styles.menuItem}
       render={
-        <Link
+        <SamePageLink
           href={href}
           prefetch={false}
           aria-current={href === menuCurrent ? 'page' : undefined}
         />
       }
     >
-      <MenuIcon icon={icon} className={styles.menuIcon} />
       {label}
     </Menu.Item>
   );
@@ -137,22 +135,22 @@ export default function SiteNav({
       <script dangerouslySetInnerHTML={{ __html: HINT_SCRIPT }} />
       <ImpersonationNotice />
 
-      <Link href="/" className={styles.logo} aria-label="Tabbied home" prefetch={false}>
+      <SamePageLink href="/" className={styles.logo} aria-label="Tabbied home" prefetch={false}>
         {/* A hair larger on the dark ground, which eats a little of the
             hairline stroke. */}
         <Logo size={tone === 'dark' ? 21 : 20} wordSize={tone === 'dark' ? 19 : 18} />
-      </Link>
+      </SamePageLink>
 
       <nav className={styles.links} aria-label="Main">
         {DESTINATIONS.map(([href, label]) => (
-          <Link
+          <SamePageLink
             key={href}
             href={href}
             prefetch={false}
             aria-current={isCurrent(href) ? 'page' : undefined}
           >
             {label}
-          </Link>
+          </SamePageLink>
         ))}
       </nav>
 
@@ -180,12 +178,12 @@ export default function SiteNav({
                     {impersonating ? `Viewing as ${user.email}` : user.email}
                   </div>
                   <Menu.Separator className={styles.menuRule} />
-                  {item('/account', 'My account', MENU_ICONS.account)}
-                  {narrow && DESTINATIONS.map(([href, label, icon]) => item(href, label, icon))}
-                  {item('/account/settings', 'Settings', MENU_ICONS.settings)}
+                  {item('/account', 'My account')}
+                  {narrow && DESTINATIONS.map(([href, label]) => item(href, label))}
+                  {item('/account/settings', 'Settings')}
                   {/* This decides only whether the way in is drawn: every
                       /api/admin route checks the role again for itself. */}
-                  {user.role === 'admin' && item('/admin', 'Admin', MENU_ICONS.admin)}
+                  {user.role === 'admin' && item('/admin', 'Admin')}
                   <Menu.Separator className={styles.menuRule} />
                   {/* A borrowed session ends by handing the admin's back:
                       signing out here would end both (lib/impersonation.ts). */}
@@ -205,10 +203,6 @@ export default function SiteNav({
                       }
                     }}
                   >
-                    <MenuIcon
-                      icon={impersonating ? MENU_ICONS.stopImpersonating : MENU_ICONS.signOut}
-                      className={styles.menuIcon}
-                    />
                     {impersonating ? 'Stop impersonating' : 'Sign out'}
                   </Menu.Item>
                 </Menu.Popup>
@@ -236,9 +230,9 @@ export default function SiteNav({
                   sideOffset={10}
                 >
                   <Menu.Popup className={styles.menu}>
-                    {DESTINATIONS.map(([href, label, icon]) => item(href, label, icon))}
+                    {DESTINATIONS.map(([href, label]) => item(href, label))}
                     <Menu.Separator className={styles.menuRule} />
-                    {item(signInHref, 'Sign in', MENU_ICONS.signIn)}
+                    {item(signInHref, 'Sign in')}
                   </Menu.Popup>
                 </Menu.Positioner>
               </Menu.Portal>

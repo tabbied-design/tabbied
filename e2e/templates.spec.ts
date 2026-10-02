@@ -142,6 +142,20 @@ for (const fixture of FIXTURES) {
     expect(html).not.toMatch(/<!--\/?\$[!?]?-->/);
     expect(html).not.toContain('data-precedence');
 
+    // Tabbied's Adobe Fonts kit is licensed to tabbied.com: a download never
+    // loads it or names its face, in either package.
+    const base = fs.readFileSync(path.join(TEMPLATE_DIR, 'styles', 'base.css'), 'utf-8');
+    const reactBase = fs.readFileSync(
+      path.join(dirFor(`${fixture.slug}-react`), 'src', 'base.css'),
+      'utf-8'
+    );
+    for (const text of [html, base, reactBase]) expect(text).not.toMatch(/typekit|proxima[-\s]nova/i);
+
+    // esm.sh is asked for the page's own designs, not the whole catalog.
+    const imported = /import \{ ([^}]+) \} from 'https:\/\/esm\.sh\/tabbied@[^/']+\/patterns\?exports=([a-z0-9,]+)'/.exec(html);
+    expect(imported, 'the bootstrap imports a tree-shaken patterns entry').not.toBeNull();
+    expect(imported![2].split(',')).toEqual(imported![1].split(', '));
+
     // Assets are relative, so the folder works opened from disk.
     expect(html).not.toMatch(/(?:src|href)="\/images\//);
     if (fixture.hero) expect(html).toContain(`./images/${fixture.hero}`);
@@ -401,7 +415,10 @@ test.describe('the /templates gallery', () => {
 
     // The order mixes the batches the templates were made in. A seed's
     // prefix names the batch (art-, min-, dir-, ...; the first five have
-    // none), and no two neighbors on a page share one (lib/templateOrder.ts).
+    // none), and past the hand-picked lead no two neighbors on a page share
+    // one (lib/templateOrder.ts). The lead's last card and the spread's first
+    // are not compared: the spread was laid out without the lead, so that
+    // pair is whatever the lead happens to end on.
     const registry = fs.readFileSync(path.join(REPO_ROOT, 'lib', 'templateSites.ts'), 'utf-8');
     const batchOf = new Map(
       [...registry.matchAll(/slug: '([^']+)'.*?seed: '([a-z]+)-/g)].map((m) => [m[1], m[2]] as const)
@@ -410,15 +427,24 @@ test.describe('the /templates gallery', () => {
     const firstPage = await cards.locator('a[href^="/templates/"][href$="/"]').evaluateAll((links) =>
       [...new Set(links.map((link) => link.getAttribute('href')!.split('/')[2]).filter(Boolean))]
     );
-    // And the order is the committed one, which only grows at the end: a
-    // page keeps its cards when templates are added.
+    // And the order is the committed one: the hand-picked lead, then the
+    // spread, which only grows at the end, so a page keeps its cards when
+    // templates are added.
     const committed = fs.readFileSync(path.join(REPO_ROOT, 'lib', 'templateOrder.ts'), 'utf-8');
-    const galleryOrder = [...committed.slice(committed.indexOf('GALLERY_ORDER: readonly')).matchAll(/^  '([^']+)',$/gm)].map((m) => m[1]);
+    const slugsIn = (text: string) => [...text.matchAll(/^  '([^']+)',$/gm)].map((m) => m[1]);
+    const leadAt = committed.indexOf('GALLERY_LEAD: readonly');
+    const spreadAt = committed.indexOf('GALLERY_SPREAD: readonly');
+    const lead = slugsIn(committed.slice(leadAt, spreadAt));
+    const galleryOrder = [...lead, ...slugsIn(committed.slice(spreadAt))];
+    expect(lead.length).toBeGreaterThan(0);
     expect(firstPage).toEqual(galleryOrder.slice(0, 50));
 
     const batches = firstPage.map((slug) => batchOf.get(slug) ?? 'first');
     expect(new Set(batches).size).toBeGreaterThanOrEqual(4);
-    batches.slice(1).forEach((batch, i) => expect(batch, `${firstPage[i]} then ${firstPage[i + 1]}`).not.toBe(batches[i]));
+    batches.forEach((batch, i) => {
+      if (i <= lead.length) return;
+      expect(batch, `${firstPage[i - 1]} then ${firstPage[i]}`).not.toBe(batches[i - 1]);
+    });
   });
 
   test('a chosen template downloads a real zip, and choosing another asks first', async ({ page }) => {

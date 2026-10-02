@@ -191,9 +191,11 @@
   height: 100%;
 }
 
+/* Bottom left, opposite the pattern tile: at the top it sat on the
+   screenshot's headline, which is the part of a site the crop keeps. */
 .num {
   position: absolute;
-  top: 14px;
+  bottom: 14px;
   left: 14px;
   z-index: 3;
   display: flex;
@@ -401,6 +403,13 @@
   color: oklch(0.5 0.01 260);
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+.menuNote {
+  margin: 0;
+  padding: 2px 12px 8px;
+  font: 400 12px / 1.45 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  color: oklch(0.5 0.01 260);
 }
 
 .menuItem {

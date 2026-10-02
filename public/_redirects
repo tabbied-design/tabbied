@@ -7,3 +7,11 @@
 /template/ /templates/ 301
 /template/:slug /templates/:slug/site/ 301
 /template/:slug/ /templates/:slug/site/ 301
+
+# /docs/ is not a page: the React docs are the first, and the footer's "Docs"
+# goes there too. The editable-templates reference lives on GitHub; tabbied-mcp
+# 0.2.3 and earlier linked it here, at a page that never existed.
+/docs /docs/react/ 302
+/docs/ /docs/react/ 302
+/docs/editable-templates https://github.com/tabbied-design/tabbied/blob/main/docs/editable-templates.md 302
+/docs/editable-templates/ https://github.com/tabbied-design/tabbied/blob/main/docs/editable-templates.md 302

@@ -26,6 +26,9 @@ const REPO = 'https://github.com/tabbied-design/tabbied';
 
 export function buildLlmsTexts(catalog) {
   const { designs, count, version } = catalog;
+  // esm.sh resolves a bare `tabbied` to whatever is latest; the examples pin
+  // the minor line they were written against.
+  const minor = version.split('.').slice(0, 2).join('.');
 
   // ---- llms.txt (the short index) ------------------------------------------
 
@@ -39,7 +42,7 @@ Designs are referred to by slug and imported individually - \`import { radius } 
 
 ## Docs
 
-- [MCP server](${SITE}/mcp): if you speak the Model Context Protocol, connect to this endpoint instead of reading files - it is the only route that lets you *look* at a design before choosing it. Tools: \`search_designs\`, \`preview_design\`, \`get_design\`, \`get_docs\`, \`list_templates\`, \`get_template\`. Run \`npx -y tabbied-mcp\` locally to also get \`render_design\`.
+- [MCP server](${SITE}/docs/mcp/): if you speak the Model Context Protocol, connect to ${SITE}/mcp instead of reading files - it is the only route that lets you *look* at a design before choosing it. Tools: \`search_designs\`, \`preview_design\`, \`get_design\`, \`get_docs\`, \`list_templates\`, \`get_template\`. Run \`npx -y -p tabbied-mcp -p playwright tabbied-mcp\` locally (after \`npx playwright install chromium\`) to also get \`render_design\`.
 - [llms-full.txt](${SITE}/llms-full.txt): the complete API contract, integration recipes, and a one-line entry for every design. Start here - it is designed to be enough on its own.
 - [catalog.json](${SITE}/catalog.json): every design with its description, tags, palette, options, preview URL, and SVG-export support. Use it to look up one design in detail. Also shipped in the package at \`tabbied/catalog.json\`.
 - [React component reference](${SITE}/docs/react/): props, sizing, and live examples.
@@ -110,14 +113,16 @@ only route that lets you *see* the designs while choosing:
 
 \`\`\`bash
 claude mcp add --transport http tabbied ${SITE}/mcp    # nothing to install
-claude mcp add tabbied -- npx -y tabbied-mcp           # local, adds rendering
+npx playwright install chromium                        # once, for local rendering
+claude mcp add tabbied -- npx -y -p tabbied-mcp -p playwright tabbied-mcp   # local, adds rendering
 \`\`\`
 
 Tools: \`search_designs\` (the filters above, as a query), \`preview_design\`
 (returns the rendered image for up to six slugs), \`get_design\`, \`get_docs\`,
-\`list_templates\` and \`get_template\` (the editable template sites),
-and - locally only, since it needs a browser - \`render_design\` for SVG/PNG
-files. Endpoint: ${SITE}/mcp. Package: \`tabbied-mcp\`.
+\`list_templates\` and \`get_template\` (the editable template sites, listed
+a page at a time by category or query), and - locally only, since it needs a
+browser - \`render_design\` for SVG/PNG files. Endpoint: ${SITE}/mcp.
+Package: \`tabbied-mcp\` (Node 20+).
 
 ## React
 
@@ -225,10 +230,11 @@ layout. Absolutely position it and keep the copy above it:
 Pick a \`density: "sparse"\` design (or lower its \`frequency\` option) and a
 palette whose background contrasts with the text.
 
-**Section divider** - a short full-width band between sections:
+**Section divider** - a short full-width band between sections (decorative,
+so hidden from assistive tech, by default):
 
 \`\`\`tsx
-<TabbiedPattern pattern={radius} height={120} aria-hidden />
+<TabbiedPattern pattern={radius} height={120} />
 \`\`\`
 
 **Card texture** - a dense, fine design at low height variance; give the card
@@ -265,7 +271,7 @@ ${SITE}/patterns/<slug>/?seed=<seed>&palette=<color0>&palette=<color1>&...&aspec
 \`\`\`
 
 \`palette\` repeats (background first, URL-encode the \`#\`), \`aspectRatio\` is
-one of 1:2 | 2:3 | 1:1 | 3:2 | 2:1 (the ids in src/core/aspectRatio.ts),
+one of 1:2 | 2:3 | 1:1 | 3:2 | 2:1 (\`ASPECT_RATIO_IDS\`, exported by \`tabbied\`),
 \`density\` is a number from 0 (coarse) to 1 (fine) on the same scale as the
 \`density\` prop, and each design option appears under its own id
 (\`frequency=0.6\`). The \`grid\` option is not a link parameter: the editor
@@ -345,8 +351,8 @@ page needs no build step and no component:
 <div data-pattern="ortho" data-palette="transparent, #C9C8C1" data-fit="grid"
      data-redraw-interval="5200" style="width:100%;height:60vh"></div>
 <script type="module">
-  import { hydratePatterns } from 'https://esm.sh/tabbied';
-  import { patterns } from 'https://esm.sh/tabbied/patterns';
+  import { hydratePatterns } from 'https://esm.sh/tabbied@${minor}';
+  import { patterns } from 'https://esm.sh/tabbied@${minor}/patterns';
   hydratePatterns({ patterns });
 </script>
 \`\`\`
@@ -377,11 +383,20 @@ npx tabbied list --good-for hero-background --density sparse
 npx tabbied info radius
 \`\`\`
 
-Rendering runs css-doodle in a headless browser via whatever Playwright the
-project already has (\`playwright\`, \`playwright-core\`, or
-\`@playwright/test\`); pass \`--browser <path>\` (or set \`TABBIED_CHROMIUM\`) to
-use a specific Chromium binary. \`--out\`'s extension (or \`--format svg|png\`)
-picks SVG or PNG; the ${designs.filter((design) => !design.svgExport.supported).length} \`[no SVG]\` designs below render as PNG only.
+Rendering runs css-doodle in a headless browser through Playwright, which the
+package does not install. The CLI uses \`playwright\`, \`playwright-core\` or
+\`@playwright/test\`, looked up from the current directory first:
+
+\`\`\`bash
+npm i -D playwright && npx playwright install chromium     # in a project
+npx -y -p tabbied -p playwright tabbied render radius --out hero.svg   # nothing installed
+\`\`\`
+
+The second form also needs \`npx playwright install chromium\` once. Pass
+\`--browser <path>\` (or set \`TABBIED_CHROMIUM\`) to use a specific Chromium
+binary. Every flag also takes \`--flag=value\`. \`--out\`'s extension (or
+\`--format svg|png\`) picks SVG or PNG, and an SVG is cut to \`--size\` in every
+fit; the ${designs.filter((design) => !design.svgExport.supported).length} \`[no SVG]\` designs below render as PNG only.
 
 ## SVG export
 
@@ -456,8 +471,15 @@ if (isMain) {
     await readFile(path.join(packageRoot, 'catalog.json'), 'utf-8')
   );
   const { llmsFull } = buildLlmsTexts(catalog);
-  await writeFile(path.join(packageRoot, 'llms.txt'), llmsFull);
+  // The same text the site serves as llms-full.txt, under the name the
+  // convention gives the short index; said in the file, so the two names do
+  // not read as two documents.
+  const shipped = llmsFull.replace(
+    /^(> Generated from [^\n]*)$/m,
+    `$1\n> In the npm package this full reference is llms.txt; the site serves it as ${SITE}/llms-full.txt, beside the short index.`
+  );
+  await writeFile(path.join(packageRoot, 'llms.txt'), shipped);
   console.log(
-    `generate-llms: wrote llms.txt (${Math.round(Buffer.byteLength(llmsFull) / 102.4) / 10} KB) for ${catalog.count} designs`
+    `generate-llms: wrote llms.txt (${Math.round(Buffer.byteLength(shipped) / 102.4) / 10} KB) for ${catalog.count} designs`
   );
 }

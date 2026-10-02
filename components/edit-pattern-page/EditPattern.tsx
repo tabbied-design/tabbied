@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { Dialog } from '@base-ui-components/react/dialog';
+import { Dialog } from '@base-ui/react/dialog';
 import {
   Check,
   Image as ImageIcon,
@@ -62,6 +62,9 @@ import styles from './EditPattern.module.css';
 // (a single number, or no grid at all): the 60px cell most designs open at.
 const DEFAULT_DENSITY = 0.5;
 
+// A downloaded PNG's long edge, in pixels ("Export a 3000px PNG").
+const EXPORT_LONG_EDGE = 3000;
+
 // Longest edge of the little aspect-ratio glyph rectangle, in pixels.
 const RATIO_GLYPH_SIZE = 16;
 
@@ -96,13 +99,15 @@ const loadImage = (url: string) =>
   });
 
 /**
- * The pattern's PNG cut to `width x height` from its top-left corner, over
- * the picture (cover-fitted) when there is one. css-doodle exports the whole
- * canvas, which is snapped to whole cells and larger than the plate (see
- * `canvas` in the editor), so the file is the plate as the stage showed it.
+ * The pattern's PNG cut to `crop` from its top-left corner and drawn at
+ * `width x height`, over the picture (cover-fitted) when there is one.
+ * css-doodle exports the whole canvas, which is snapped to whole cells and
+ * larger than the plate (see `canvas` in the editor), so the file is the plate
+ * as the stage showed it.
  */
 const cropExport = async (
   patternPng: Blob,
+  crop: { width: number; height: number },
   width: number,
   height: number,
   imageUrl: string | null
@@ -129,9 +134,11 @@ const cropExport = async (
       context.drawImage(photo, (width - photoWidth) / 2, (height - photoHeight) / 2, photoWidth, photoHeight);
     }
 
-    // At its own size, so what lands on the canvas is the pattern's top-left
-    // corner: the part of it the frame showed.
-    context.drawImage(patternImage, 0, 0);
+    // The pattern's top-left `crop` (the part the frame showed), scaled to
+    // the file's size: the capture is taken at a whole-number scale, which
+    // keeps css-doodle's raster crisp, and lands here a little larger.
+    context.imageSmoothingQuality = 'high';
+    context.drawImage(patternImage, 0, 0, crop.width, crop.height, 0, 0, width, height);
 
     return await new Promise<Blob>((resolve, reject) =>
       canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error('toBlob failed'))), 'image/png')
@@ -825,7 +832,12 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   };
 
   const exportPattern = () => runExport(async () => {
-    const scale = Math.ceil(3000 / Math.max(width, height));
+    // The file's long edge is exactly EXPORT_LONG_EDGE, as the site promises;
+    // the capture is the nearest whole scale above it (css-doodle takes an
+    // integer, and at 1 it multiplies by the screen's pixel ratio instead),
+    // cut down to size.
+    const fileScale = EXPORT_LONG_EDGE / Math.max(width, height);
+    const scale = Math.max(2, Math.ceil(fileScale));
 
     try {
       // `detail` returns the whole canvas with its own ground; cropExport
@@ -836,7 +848,13 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
       if (!result) throw new Error('nothing to export');
 
-      const png = await cropExport(result.blob, width * scale, height * scale, backgroundImage);
+      const png = await cropExport(
+        result.blob,
+        { width: width * scale, height: height * scale },
+        Math.round(width * fileScale),
+        Math.round(height * fileScale),
+        backgroundImage
+      );
       saveBlob(png, `${pattern.slug}.png`);
       toaster.add({
         title: backgroundImage ? 'PNG downloaded, with the background image' : 'PNG downloaded',
@@ -930,18 +948,30 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
       )
       .join(', ');
 
+    // The plate's ratio goes in as CSS's own `W / H`: the box fills its
+    // parent's width and takes its height from the ratio, so the snippet
+    // draws in a parent with no height of its own, which is most of them.
+    const [ratioW, ratioH] = ASPECT_RATIOS[aspectRatio];
+    const componentName = `${pattern.slug.charAt(0).toUpperCase()}${pattern.slug.slice(1)}Pattern`;
+
     const lines = [
       `import { TabbiedPattern } from 'tabbied/react';`,
       `import { ${pattern.slug} } from 'tabbied/patterns';`,
       ``,
-      `// Fills its parent by default - add height, maxWidth or aspectRatio to bound it.`,
-      `<TabbiedPattern`,
-      `  pattern={${pattern.slug}}`,
-      `  seed="${seed}"`,
-      ...(hasGrid ? [`  density={${density}}`] : []),
-      `  palette={[${paletteLiteral}]}`,
-      ...(optionEntries.length ? [`  options={{ ${optionsLiteral} }}`] : []),
-      `/>`,
+      `// As wide as its parent, at the ${aspectRatio} ratio it was designed at.`,
+      `// Add maxWidth to bound it, or swap aspectRatio for a fixed height.`,
+      `export function ${componentName}() {`,
+      `  return (`,
+      `    <TabbiedPattern`,
+      `      pattern={${pattern.slug}}`,
+      `      seed="${seed}"`,
+      `      aspectRatio="${ratioW} / ${ratioH}"`,
+      ...(hasGrid ? [`      density={${density}}`] : []),
+      `      palette={[${paletteLiteral}]}`,
+      ...(optionEntries.length ? [`      options={{ ${optionsLiteral} }}`] : []),
+      `    />`,
+      `  );`,
+      `}`,
     ];
 
     try {

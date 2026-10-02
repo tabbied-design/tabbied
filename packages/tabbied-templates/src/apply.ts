@@ -7,7 +7,7 @@
 // trim is only safe because nothing adds a class after load.
 
 import type { EditOperation, EditPlan } from './plan.js';
-import { planEdits } from './plan.js';
+import { isSafeImageSrc, planEdits } from './plan.js';
 import { parseEmphasis } from './text.js';
 import {
   EDIT_IMAGE_ATTRIBUTE,
@@ -161,6 +161,15 @@ function runOperation(root: Root, operation: EditOperation): Problem | null {
     }
 
     case 'image': {
+      // planEdits already refuses these; a plan can also be built by hand.
+      if (!isSafeImageSrc(operation.src)) {
+        return {
+          level: 'error',
+          path: `images.${operation.id}.src`,
+          message: 'src must be a path, or an http(s), blob: or data:image/ URL',
+        };
+      }
+
       const slots = queryAll(root, `[${EDIT_IMAGE_ATTRIBUTE}="${operation.id}"]`);
       const elements = slots
         .map((slot) => imageElement(slot))

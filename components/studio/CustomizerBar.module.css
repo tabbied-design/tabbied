@@ -251,6 +251,12 @@
   background-color: oklch(0 0 0 / 0.04);
 }
 
+.dlFormatNote {
+  margin: 10px 0 0;
+  font: 400 11.5px / 1.5 var(--s-sans);
+  color: oklch(0.52 0.01 260);
+}
+
 .dlFoot {
   margin: 14px 0 0;
   padding-top: 10px;
@@ -284,11 +290,8 @@
   background-color: oklch(0 0 0 / 0.08);
 }
 
-/* Each row leads with its icon (components/nav/MenuIcon.tsx). */
 .menuItem {
-  display: flex;
-  gap: 10px;
-  align-items: center;
+  display: block;
   width: 100%;
   padding: 9px 12px;
   font: 400 13px var(--s-sans);
@@ -313,15 +316,6 @@
 .menuItemOn:hover {
   font-weight: 600;
   color: #0e0e13;
-}
-
-.menuIcon {
-  flex: none;
-  opacity: 0.8;
-}
-
-.menuItemOn .menuIcon {
-  opacity: 1;
 }
 
 /* ---- The person ---------------------------------------------------------- */

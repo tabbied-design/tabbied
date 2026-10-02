@@ -11,11 +11,11 @@
 // applied to JSX; the React package is the template's own source.
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Menu } from '@base-ui-components/react/menu';
+import { Menu } from '@base-ui/react/menu';
 import { ChevronDown } from 'lucide-react';
 import { initials } from 'components/nav';
 import ImpersonationNotice from 'components/nav/ImpersonationNotice';
-import MenuIcon, { MENU_ICONS } from 'components/nav/MenuIcon';
+import { CUSTOMIZED_FORMAT_NOTE } from 'components/template/DownloadMenu';
 import { signOut, useSessionUser } from 'lib/authClient';
 import { stopImpersonating } from 'lib/impersonation';
 import styles from './CustomizerBar.module.css';
@@ -148,6 +148,7 @@ export default function CustomizerBar({
                       HTML &amp; CSS
                     </Menu.Item>
                   </div>
+                  <p className={styles.dlFormatNote}>{CUSTOMIZED_FORMAT_NOTE}</p>
                 </div>
                 <div className={styles.dlOriginal}>
                   <div className={styles.dlTitle}>Original {templateName}</div>
@@ -194,11 +195,9 @@ export default function CustomizerBar({
                   </div>
                   <Menu.Separator className={styles.menuRule} />
                   <Menu.Item className={styles.menuItem} render={<Link href="/account/" prefetch={false} />}>
-                    <MenuIcon icon={MENU_ICONS.account} className={styles.menuIcon} />
                     My account
                   </Menu.Item>
                   <Menu.Item className={styles.menuItem} render={<Link href="/patterns/" prefetch={false} />}>
-                    <MenuIcon icon={MENU_ICONS.patterns} className={styles.menuIcon} />
                     Patterns
                   </Menu.Item>
                   {/* The customizer is under Websites, so that row is drawn as the current one. */}
@@ -206,11 +205,9 @@ export default function CustomizerBar({
                     className={`${styles.menuItem} ${styles.menuItemOn}`}
                     render={<Link href="/templates/" prefetch={false} />}
                   >
-                    <MenuIcon icon={MENU_ICONS.websites} className={styles.menuIcon} />
                     Websites
                   </Menu.Item>
                   <Menu.Item className={styles.menuItem} render={<Link href="/account/settings/" prefetch={false} />}>
-                    <MenuIcon icon={MENU_ICONS.settings} className={styles.menuIcon} />
                     Settings
                   </Menu.Item>
                   <Menu.Separator className={styles.menuRule} />
@@ -226,10 +223,6 @@ export default function CustomizerBar({
                       router.push('/');
                     }}
                   >
-                    <MenuIcon
-                      icon={impersonating ? MENU_ICONS.stopImpersonating : MENU_ICONS.signOut}
-                      className={styles.menuIcon}
-                    />
                     {impersonating ? 'Stop impersonating' : 'Sign out'}
                   </Menu.Item>
                 </Menu.Popup>

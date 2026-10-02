@@ -152,8 +152,8 @@ export default function HomeHero({
 
             <p className={styles.lede}>
               Explore a growing library of {patternCount} customizable patterns
-              and {templateCount} free website templates, ready to edit,
-              download, and use.
+              and {templateCount} website templates, ready to edit, download,
+              and use.
             </p>
           </div>
         </div>
@@ -198,7 +198,7 @@ export default function HomeHero({
               {templateCount}
             </span>
             <span className={styles.statLabel}>
-              Free website templates
+              Website templates
               <span className={styles.statArrow} aria-hidden="true">
                 <ArrowRight size={15} strokeWidth={1.5} />
               </span>

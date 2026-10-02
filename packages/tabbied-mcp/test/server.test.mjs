@@ -98,6 +98,22 @@ test('a legacy client still gets its initialize handshake', async () => {
   assert.equal(body.result.instructions, INSTRUCTIONS);
 });
 
+test('neither era is told the tool list can change', async () => {
+  // The SDK advertises listChanged: true unless told otherwise, and nothing
+  // here ever sends the notification.
+  const fromLegacy = (
+    await legacy(1, 'initialize', {
+      protocolVersion: '2025-06-18',
+      capabilities: {},
+      clientInfo: { name: 'test', version: '0' },
+    })
+  ).body.result.capabilities;
+  const fromModern = (await modern(2, 'server/discover')).body.result.capabilities;
+
+  assert.equal(fromLegacy.tools.listChanged, false);
+  assert.equal(fromModern.tools.listChanged, false);
+});
+
 test('a modern client discovers the server without a handshake', async () => {
   const { status, body } = await modern(1, 'server/discover');
 
@@ -135,6 +151,26 @@ test('tool schemas survive registration with their catalog-derived enums', async
     new Set(search.inputSchema.properties.density.enum),
     new Set(catalog.designs.map((design) => design.density))
   );
+});
+
+test('tool annotations survive registration', async () => {
+  const { body } = await legacy(1, 'tools/list');
+
+  for (const tool of body.result.tools) {
+    assert.equal(tool.annotations?.readOnlyHint, true, tool.name);
+  }
+  const preview = body.result.tools.find((tool) => tool.name === 'preview_design');
+  assert.equal(preview.annotations.openWorldHint, true);
+});
+
+test('an empty slug is refused by the schema', async () => {
+  const { body } = await legacy(1, 'tools/call', {
+    name: 'get_design',
+    arguments: { slug: '' },
+  });
+
+  assert.equal(body.result.isError, true);
+  assert.doesNotMatch(body.result.content[0].text, /Closest slugs/);
 });
 
 test('tools/call reaches the handler and returns its content', async () => {

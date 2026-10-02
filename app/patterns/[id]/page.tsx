@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { ebGaramond, plexMono, plexSans } from 'lib/fonts';
 import { getAllPatternIds, getPattern } from 'lib/pattern';
-import { pageMetadata, previewImage } from 'lib/seo';
+import { pageMetadata, patternImage } from 'lib/seo';
 import EditPattern from 'components/edit-pattern-page/EditPattern';
+import EditPatternFallback from 'components/edit-pattern-page/EditPatternFallback';
 
 // Only the pattern ids known at build time are rendered; anything else 404s.
 export const dynamicParams = false;
@@ -22,13 +23,20 @@ export async function generateMetadata({
   const { id } = await params;
   const pattern = await getPattern(id);
 
+  // The design's own sentence, then what to do with it while that fits in a
+  // search result; a long sentence goes alone rather than cut short.
+  const action = 'Recolor it, reseed it and download it as a PNG or SVG, free.';
+  const description = !pattern.description
+    ? `Customize the ${pattern.name} pattern and download it as a PNG or SVG, free.`
+    : `${pattern.description} ${action}`.length <= 160
+      ? `${pattern.description} ${action}`
+      : pattern.description;
+
   return pageMetadata({
     title: `Customize ${pattern.name} - Tabbied`,
-    description: pattern.description
-      ? `${pattern.description} Recolor it, reseed it and download it as a PNG or SVG, free.`
-      : `Customize the ${pattern.name} pattern and download it as a PNG or SVG, free.`,
+    description,
     path: `/patterns/${id}/`,
-    image: previewImage(id, pattern.name),
+    image: patternImage(id, pattern.name),
   });
 }
 
@@ -44,7 +52,9 @@ export default async function PatternPage({
   // serif caption, the mono readouts, the Plex Sans copy) has to be applied
   // here. A missing one fails quietly: the var resolves to nothing.
   return (
-    <Suspense>
+    <Suspense
+      fallback={<EditPatternFallback name={pattern.name} description={pattern.description} />}
+    >
       <div
         className={`${ebGaramond.variable} ${plexMono.variable} ${plexSans.variable}`}
       >

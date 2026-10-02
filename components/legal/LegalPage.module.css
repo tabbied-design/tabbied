@@ -1,0 +1,91 @@
+/* One readable column of prose. The globals give links their grey and pink;
+   only spacing and the type scale are set here. */
+
+.main {
+  min-height: 50vh;
+  padding: 64px 24px 96px;
+}
+
+.doc {
+  max-width: 720px;
+  margin: 0 auto;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--gray-dark);
+}
+
+.doc h1 {
+  margin: 0;
+  font-size: 2.33rem;
+  line-height: 1.3;
+}
+
+.updated {
+  margin-top: 8px;
+  color: var(--gray-medium);
+}
+
+.doc h2 {
+  margin: 48px 0 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.doc h3 {
+  margin: 28px 0 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.doc p {
+  margin: 14px 0 0;
+}
+
+/* The globals reset lists to no markers; prose wants them back. */
+.doc ul {
+  margin: 14px 0 0;
+  padding-left: 1.4em;
+  list-style: disc;
+}
+
+.doc li + li {
+  margin-top: 6px;
+}
+
+.doc a {
+  text-decoration: underline;
+}
+
+.doc code {
+  font-size: 0.9em;
+  word-break: break-word;
+}
+
+.summary {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background-color: oklch(0.97 0.005 260);
+  border-radius: 12px;
+}
+
+.summary h2 {
+  margin: 0;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.summary ul {
+  margin-top: 10px;
+}
+
+@media (max-width: 767.98px) {
+  .main {
+    padding: 40px 16px 72px;
+  }
+
+  .doc h1 {
+    font-size: 1.9rem;
+  }
+}

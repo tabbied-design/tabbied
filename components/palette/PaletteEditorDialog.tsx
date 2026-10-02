@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Dialog } from '@base-ui-components/react/dialog';
+import { Dialog } from '@base-ui/react/dialog';
 import { Check, Plus, Shuffle, Trash2, X } from 'lucide-react';
 import ToggleSwitch from 'components/ToggleSwitch';
 import ColorSwatch from 'components/ColorSwatch';
 import useMediaQuery from 'lib/useMediaQuery';
+import { isValidPaletteColor } from 'lib/brandPalettes';
 import type { PaletteDraft } from './usePaletteEditor';
 import styles from './PaletteEditorDialog.module.css';
 
@@ -14,27 +15,38 @@ import styles from './PaletteEditorDialog.module.css';
 const DIALOG_MIN_COLORS = 3;
 const DIALOG_MAX_COLORS = 7;
 
+const HEX_ERROR_ID = 'palette-hex-error';
+
 // A hex text field with a fixed, non-editable "#" fused to its left edge. The
 // stored value keeps its leading "#", but the editable text is just the digits -
-// any "#" the user types or pastes is stripped back out.
+// any "#" the user types or pastes is stripped back out. A value that is not a
+// color is marked once the field is left, not while it is being typed.
 function HexField({
   value,
   disabled,
+  invalid,
   ariaLabel,
   onValueChange,
+  onLeave,
 }: {
   value: string;
   disabled?: boolean;
+  invalid: boolean;
   ariaLabel: string;
   onValueChange: (hex: string) => void;
+  onLeave: () => void;
 }) {
   const digits = value.replace(/#/g, '');
 
   return (
     <span
-      className={
-        disabled ? `${styles.hexField} ${styles.hexFieldInert}` : styles.hexField
-      }
+      className={[
+        styles.hexField,
+        disabled ? styles.hexFieldInert : '',
+        invalid ? styles.hexFieldInvalid : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <span className={styles.hexHash} aria-hidden="true">
         #
@@ -45,9 +57,12 @@ function HexField({
         value={digits}
         disabled={disabled}
         aria-label={ariaLabel}
+        aria-invalid={invalid || undefined}
+        aria-describedby={invalid ? HEX_ERROR_ID : undefined}
         autoCapitalize="none"
         autoCorrect="off"
         spellCheck={false}
+        onBlur={onLeave}
         onChange={(event) =>
           onValueChange(`#${event.target.value.replace(/#/g, '')}`)
         }
@@ -95,6 +110,27 @@ export default function PaletteEditorDialog({
   // On touch devices, auto-focusing the Name field pops the on-screen keyboard
   // over the dialog, so a coarse pointer gets no initial focus.
   const isCoarsePointer = useMediaQuery('(pointer: coarse)');
+
+  // Save waits until every color is one: saving refused it anyway, but only
+  // after the click, and an enabled button read as "this is fine". A field is
+  // marked, and the reason given, once it has been left, so half-typed digits
+  // are not called wrong.
+  const [leftFields, setLeftFields] = useState<ReadonlySet<number>>(new Set());
+  const leave = (index: number) =>
+    setLeftFields((prev) => (prev.has(index) ? prev : new Set(prev).add(index)));
+
+  useEffect(() => {
+    setLeftFields(new Set());
+  }, [draft?.id]);
+
+  const isInvalid = (index: number) =>
+    draft !== null && !isValidPaletteColor(draft.colors[index]);
+  const canSave = draft !== null && draft.colors.every(isValidPaletteColor);
+  const markedIndex = draft
+    ? draft.colors.findIndex(
+        (_, index) => leftFields.has(index) && isInvalid(index) && !(index === 0 && draft.transparent)
+      )
+    : -1;
 
   return (
     <Dialog.Root
@@ -172,8 +208,10 @@ export default function PaletteEditorDialog({
                   <HexField
                     value={draft.colors[0]}
                     disabled={draft.transparent}
+                    invalid={!draft.transparent && leftFields.has(0) && isInvalid(0)}
                     ariaLabel="Background hex value"
                     onValueChange={(hex) => setDraftColor(0, hex)}
+                    onLeave={() => leave(0)}
                   />
                   <label className={styles.bgTransparent}>
                     <ToggleSwitch
@@ -204,8 +242,10 @@ export default function PaletteEditorDialog({
                         />
                         <HexField
                           value={color}
+                          invalid={leftFields.has(index) && isInvalid(index)}
                           ariaLabel={`Color ${index} hex value`}
                           onValueChange={(hex) => setDraftColor(index, hex)}
+                          onLeave={() => leave(index)}
                         />
                         <button
                           type="button"
@@ -245,7 +285,14 @@ export default function PaletteEditorDialog({
                 )}
               </div>
 
-              {draftError && <p className={styles.dialogError}>{draftError}</p>}
+              {markedIndex !== -1 ? (
+                <p id={HEX_ERROR_ID} className={styles.dialogError} role="status">
+                  &quot;{draft.colors[markedIndex]}&quot; is not a hex color: use 3 or 6
+                  digits, 0-9 and a-f.
+                </p>
+              ) : (
+                draftError && <p className={styles.dialogError}>{draftError}</p>
+              )}
 
               <div className={styles.dialogActions}>
                 {draft.existing &&
@@ -282,6 +329,7 @@ export default function PaletteEditorDialog({
                 <button
                   type="button"
                   className={styles.saveButton}
+                  disabled={!canSave}
                   onClick={onSave}
                 >
                   <Check size={16} strokeWidth={2} /> Save palette

@@ -1,6 +1,6 @@
 'use client';
 
-import { Toast } from '@base-ui-components/react/toast';
+import { Toast } from '@base-ui/react/toast';
 import { X } from 'lucide-react';
 import { plexSans } from 'lib/fonts';
 import styles from './Toaster.module.css';

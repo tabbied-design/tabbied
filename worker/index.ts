@@ -17,7 +17,11 @@
 // entry point (one server per request, so no Durable Object); it comes from
 // the SDK rather than `agents/mcp/server`, which would pull partyserver,
 // esbuild and babel into the Worker.
-import { Hono } from 'hono';
+//
+// zod first: the SDK builds schemas as it loads, and in the bundle zod only
+// starts where something calls it (worker/zod.ts says why).
+import './zod';
+import { Hono, type Context, type Next } from 'hono';
 import { cors } from 'hono/cors';
 import { createMcpHandler } from '@modelcontextprotocol/server';
 import { buildAuth, configuredAdmins, configuredProviders } from './auth';
@@ -27,9 +31,12 @@ import journal from './migrations/meta/_journal.json';
 import { drizzle } from 'drizzle-orm/d1';
 import * as schema from './db/schema';
 import { requireUser } from './lib/session';
-import { forgetDownload, logDownload, parseDownloadName, takesCopy } from './lib/downloads';
+import { forgetDownload, isReactSource, logDownload, parseDownloadName, takesCopy } from './lib/downloads';
 import { mailProvider, teamRecipients } from './lib/mail';
 import { claimTemplate, limitMessage, mayTake, releaseTemplate, templateStatus } from './lib/templates';
+import { templateSlugOf, withLicenseNotice } from './lib/notice';
+import { isTemplateSite, withNoindex } from './lib/noindex';
+import { withSecurityHeaders } from './lib/securityHeaders';
 import media from './routes/media';
 import account from './routes/account';
 import admin from './routes/admin';
@@ -149,6 +156,36 @@ async function handleMcp(request: Request, env: Env): Promise<Response> {
 }
 
 const app = new Hono<{ Bindings: Env }>();
+
+// Every response the Worker gives, asset or not, carries the headers the
+// asset router adds from public/_headers (worker/lib/securityHeaders.ts).
+app.use('*', async (c, next) => {
+  await next();
+  c.res = withSecurityHeaders(c.res);
+});
+
+/**
+ * A page load in a browser (told by `Sec-Fetch-Mode`, or by an Accept that
+ * asks for HTML where that header is missing), as opposed to a fetch or an
+ * API client. The downloads and the MCP endpoint both answer the two apart.
+ */
+const isNavigation = (request: Request): boolean => {
+  const mode = request.headers.get('sec-fetch-mode');
+
+  if (mode) return mode === 'navigate';
+
+  return (request.headers.get('accept') ?? '').includes('text/html');
+};
+
+// A person who opens the endpoint in a browser is sent to the page about it
+// (/docs/mcp/) rather than shown the SDK's JSON-RPC 405. Only a navigation is:
+// an MCP client POSTs, or GETs asking for text/event-stream, and goes on to
+// the handler below as before.
+const mcpPage = (c: Context<{ Bindings: Env }>, next: Next) =>
+  isNavigation(c.req.raw) ? c.redirect('/docs/mcp/', 302) : next();
+
+app.get('/mcp', mcpPage);
+app.get('/mcp/', mcpPage);
 
 // Every method, because the SDK decides which ones it answers (its 405 is a
 // correct MCP reply, a 404 from this router would not be). Both spellings are
@@ -293,14 +330,6 @@ app.get('/health', (c) => c.text('ok'));
 // is, to sign in or to the account page; a fetch (the customizer building a
 // customized zip) gets JSON and a status it can put in a toast.
 
-const isNavigation = (request: Request): boolean => {
-  const mode = request.headers.get('sec-fetch-mode');
-
-  if (mode) return mode === 'navigate';
-
-  return (request.headers.get('accept') ?? '').includes('text/html');
-};
-
 /** Where to come back to after signing in: the page the link was on, if it was ours. */
 const backTo = (request: Request): string => {
   const referer = request.headers.get('referer');
@@ -315,6 +344,12 @@ const backTo = (request: Request): string => {
     return '/templates/';
   }
 };
+
+// The React package's unzipped folder answers as if it were not there: its
+// zip is the way that source leaves (isReactSource).
+app.get('/downloads/*', (c, next) =>
+  isReactSource(new URL(c.req.url).pathname) ? c.text('Not found', 404) : next()
+);
 
 app.get('/downloads/:file', async (c, next) => {
   const named = parseDownloadName(c.req.param('file'));
@@ -456,6 +491,28 @@ api.route('/admin', admin);
 api.all('*', (c) => c.json({ error: 'Not found' }, 404));
 
 app.route('/api', api);
+
+// ---- template pages ------------------------------------------------------
+// The live template pages carry the license notice, added on the way out so
+// that the export, and every download derived from it, never does
+// (worker/lib/notice.ts), and the bare sites a noindex, for the same reason
+// (worker/lib/noindex.ts). `/templates/*/` in run_worker_first sends them here.
+
+app.get('/templates/*', async (c, next) => {
+  const slug = templateSlugOf(new URL(c.req.url).pathname);
+
+  if (!slug) return next();
+
+  const response = await c.env.ASSETS.fetch(c.req.raw);
+
+  if (!response.ok || !(response.headers.get('content-type') ?? '').includes('text/html')) {
+    return response;
+  }
+
+  const noticed = withLicenseNotice(response, slug);
+
+  return isTemplateSite(new URL(c.req.url).pathname) ? withNoindex(noticed) : noticed;
+});
 
 // Anything else that reaches the Worker (the packaged pages under /downloads,
 // a miss under a routed prefix) is the binding's to answer.

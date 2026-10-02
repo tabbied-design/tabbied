@@ -96,14 +96,24 @@ trusted publisher fails to publish. Do this for each of `tabbied`,
 `tabbied-mcp` and `tabbied-templates`:
 
 1. Sign in at <https://www.npmjs.com> as a user with publish rights to the package.
-2. Go to the package page -> **Settings** ->
-   **Trusted Publisher** (a.k.a. "Publishing access").
+2. Go to the package page -> **Settings** -> **Trusted Publisher**.
 3. Add a **GitHub Actions** trusted publisher with:
+   - **Label:** anything; it is only shown to you (e.g. "GitHub release workflow")
    - **Organization or user:** `tabbied-design`
    - **Repository:** `tabbied`
    - **Workflow filename:** `release.yml`
    - **Environment:** leave blank (the workflow doesn't use a GitHub Environment)
-4. Save.
+   - **Allowed actions:** tick **Allow npm publish**, leave **Allow npm
+     dist-tag** unticked. `changeset publish` runs a plain `npm publish`;
+     without that box the workflow may only *stage* a version, which then
+     waits for a maintainer to approve it on npmjs.com (see npm's
+     [staged publishing](https://docs.npmjs.com/staged-publishing/)). The
+     workflow never runs `npm dist-tag`.
+4. Set up the connection. The provider and the required fields cannot be
+   edited afterwards, only deleted and created again.
+5. Under **Publishing access**, choose **Require two-factor authentication
+   and disallow bypass 2fa tokens**. The workflow publishes without a token,
+   and a person still can with 2FA; what this refuses is a leaked token.
 
 npm does not validate this when you save it, so a typo only shows up as a
 failed publish. **These entries name the GitHub owner** - moving the repo
@@ -121,15 +131,20 @@ until something has been published. A first automated publish therefore fails
 with a **404 on `PUT`** - which reads like a permissions problem and isn't
 (see [npm/cli#8544](https://github.com/npm/cli/issues/8544)).
 
-So the first version of a new package goes up by hand, once:
+So the first version of a new package goes up by hand, once, from a machine
+logged in to npm as an owner of the other packages:
 
 ```bash
+npm login                                  # opens npmjs.com to sign in
+npm whoami                                 # should be an owner listed by `npm owner ls tabbied`
 npm run build:packages                     # dist/ is gitignored; files: ["dist"]
 npm publish --workspace <name> --access public
+npm logout                                 # nothing after this needs a login
 ```
 
 Then add its trusted publisher as above, and every release after that is
-automated. The *Decide what to release* step prints a warning naming any
+automated. A hand-published first version carries no provenance; the next
+one, published by the workflow, does. The *Decide what to release* step prints a warning naming any
 publishable workspace that npm has never heard of, so this is visible in the
 run log rather than only in the failure.
 
@@ -158,8 +173,18 @@ run log rather than only in the failure.
   concurrently and a build there would race `tabbied`'s `rm -rf dist`.
 - **`tabbied-mcp` reports its own version** from a literal in `src/info.ts`
   (it's bundled into a Worker, which has no filesystem to read `package.json`
-  from). `changeset version` doesn't know about it, so bump it in the version
-  PR - `test/info.test.mjs` fails when the two drift.
+  from). `changeset version` doesn't know about it, so `npm run
+  version-packages` runs `packages/tabbied-mcp/scripts/sync-version.mjs`
+  straight after it, and the version commit carries both. Nothing to bump by
+  hand; `test/info.test.mjs` still fails if the two ever drift. CI on the
+  "Version Packages" PR waits for a maintainer's approval ("1 workflow
+  awaiting approval"), because the Actions bot opened it; it is safe to merge
+  without approving, since the Release workflow runs the package tests
+  before it publishes anything.
+- **A publish can take a few minutes to show.** `changeset publish` reports
+  success when the registry accepts the upload, and `npm view` (and the
+  package page) can go on showing the previous version for a couple of
+  minutes after that. Check again before treating it as lost.
 - **Workspace link:** the root app depends on each package as `"*"` so the local
   workspace copies stay linked across version bumps - don't pin them back to
   exact versions.

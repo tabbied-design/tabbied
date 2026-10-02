@@ -2,6 +2,7 @@
   "name": "Bloks",
   "slug": "bloks",
   "galleryOrder": 8,
+  "description": "Rounded blocks in pale tints of one color, each square with a corner or a side rounded off, laid edge to edge so neighbors run together into capsules and arches.",
   "palette": [
     "#3FFFB2",
     "#ECFFEC",

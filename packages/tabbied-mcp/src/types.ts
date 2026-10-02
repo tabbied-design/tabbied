@@ -1,5 +1,5 @@
 // The shapes this server reads and writes.
-import type { JsonSchemaType } from '@modelcontextprotocol/server';
+import type { JsonSchemaType, ToolAnnotations } from '@modelcontextprotocol/server';
 
 // The catalog types mirror what packages/tabbied/scripts/codegen.mjs emits into
 // catalog.json. They are structural rather than imported so the server can
@@ -54,6 +54,10 @@ export type Catalog = {
 export type TemplateCatalogEntry = {
   slug: string;
   name: string;
+  /** The gallery's category, e.g. "Food & drink". Absent from older indexes. */
+  category?: string;
+  /** One line on what the business is, e.g. "Wood-fire restaurant". */
+  topic?: string;
   href: string;
   spec: string;
   palette: string[];
@@ -109,6 +113,12 @@ export type ToolDefinition = {
    * rather than at the first `tools/list`.
    */
   inputSchema: JsonSchemaType;
+  /**
+   * Hints a client may show or act on (read-only, reaches the network, writes
+   * files). Hints, not guarantees: the spec tells clients not to trust them
+   * from an untrusted server, so nothing here relies on them being read.
+   */
+  annotations?: ToolAnnotations;
 };
 
 export type Tool = {

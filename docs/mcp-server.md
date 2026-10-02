@@ -4,13 +4,19 @@ Tabbied ships a [Model Context Protocol](https://modelcontextprotocol.io)
 server so an assistant can browse the design catalog, *look* at candidates, and
 render assets without the site or the package in its context.
 
+The page for people is [tabbied.com/docs/mcp](https://tabbied.com/docs/mcp/)
+(`app/docs/mcp/page.tsx`): client setup, the tools and example prompts. A
+browser that opens the endpoint itself is redirected there; an MCP client is
+not. Keep its client setup and tool list in step with this file and the
+package README.
+
 It exists in two forms that share one implementation:
 
 | | Remote | Local |
 | --- | --- | --- |
-| Where | `https://tabbied.com/mcp` | `npx -y tabbied-mcp` |
+| Where | `https://tabbied.com/mcp` | `npx -y -p tabbied-mcp -p playwright tabbied-mcp` |
 | Transport | Streamable HTTP | stdio |
-| Install | nothing | `tabbied-mcp` (+ Playwright for rendering) |
+| Install | nothing | Node 20+, and Playwright with its Chromium for rendering |
 | Tools | `search_designs`, `get_design`, `preview_design`, `get_docs`, `list_templates`, `get_template` | those six **plus `render_design`** |
 
 ## Adding it to a client
@@ -25,22 +31,41 @@ Remote - nothing to install:
 }
 ```
 
-Local, when you want to render actual files:
+Local, when you want to render actual files. `render_design` drives Chromium
+through Playwright, which neither package depends on, so npx installs it beside
+the server, and the browser is downloaded once with
+`npx playwright install chromium`:
 
 ```jsonc
 {
   "mcpServers": {
-    "tabbied": { "command": "npx", "args": ["-y", "tabbied-mcp"] }
+    "tabbied": {
+      "command": "npx",
+      "args": ["-y", "-p", "tabbied-mcp", "-p", "playwright", "tabbied-mcp"]
+    }
   }
 }
 ```
 
-Or, in Claude Code:
+Or, in Claude Code and Codex:
 
 ```bash
 claude mcp add --transport http tabbied https://tabbied.com/mcp
-claude mcp add tabbied -- npx -y tabbied-mcp
+claude mcp add tabbied -- npx -y -p tabbied-mcp -p playwright tabbied-mcp
+codex mcp add tabbied --url https://tabbied.com/mcp
+codex mcp add tabbied -- npx -y -p tabbied-mcp -p playwright tabbied-mcp
 ```
+
+Plain `npx -y tabbied-mcp` serves the other six tools, and `render_design`
+then answers with what to install.
+
+Codex keeps it in `~/.codex/config.toml` (`[mcp_servers.tabbied]` with `url`,
+or `command` and `args`), shared by the CLI, the IDE extension and the ChatGPT
+desktop app. Claude on the web and in the desktop app adds the URL as a custom
+connector (Customize, Connectors, Add custom connector, "No sign in"); a
+remote server in `claude_desktop_config.json` is not read. ChatGPT adds it
+under Plugins once Developer mode is on (Settings, Security and login), and
+reaches hosted servers only. The site's page has these as steps.
 
 ## The tools
 
@@ -60,12 +85,17 @@ toolset is built around a single flow: **narrow on metadata, then look.**
 
 - **`get_design`** returns the full record - palette, every option with its
   range and default, SVG-export support - plus slug-substituted React, core,
-  and CLI snippets, and a reminder that a pattern has no intrinsic size.
+  and CLI snippets, and a reminder that a pattern has no intrinsic size. The
+  React snippet is a component at the design's default aspect ratio, written
+  as CSS's `2 / 3` (the catalog's `2:3` id is not a CSS value), the same
+  shape as the editor's "Copy React component". The CLI command asks for a
+  `.png` when the design has no vector export.
 
 - **`preview_design`** returns the rendered preview image for up to six slugs
   as MCP image content. This is the step that makes a choice reliable; metadata
   narrows the field but these are pictures. The previews are the committed @2x
-  renders the gallery shows, so the agent and a human see the same image.
+  renders the gallery shows, so the agent and a human see the same image. A
+  bad slug beside good ones is a note; a call where none resolves is an error.
 
 - **`get_docs`** returns `llms-full.txt`, the complete API contract and recipes.
 
@@ -82,15 +112,39 @@ toolset is built around a single flow: **narrow on metadata, then look.**
   `data-edit*` attributes, so an id from a tool response is directly greppable
   in the files the agent then downloads. See `editable-templates.md`.
 
+  `list_templates` answers a page at a time (20 by default, up to 100, with
+  `offset`), one line per site: slug, name, gallery category and what the
+  business is. It filters by `category` (spelled as the gallery shows it or as
+  its URL does) and by `query` words, and every answer carries the match count,
+  how to ask for the next page, and the categories with their counts. `detail`
+  adds each site's palette, patterns and slot counts; the whole index returned
+  at once was 127 KB of text, most of it never read.
+
   Both work remotely - neither needs a browser. Only annotated sites appear;
   coverage is incremental, so the list grows as pages are annotated.
 
 - **`render_design`** (local only) renders any slug to SVG or PNG at any size,
-  seed, palette, and option set, either inline or to a path you name. It shells
-  out to the `tabbied` CLI rather than reimplementing anything: the only
-  faithful renderer for a css-doodle pattern is css-doodle in a real browser
-  (see `svg-export.md`). That is also why it cannot be remote - a Worker has no
-  browser.
+  seed, palette, and option set, either inline or to an absolute path you name.
+  It shells out to the `tabbied` CLI rather than reimplementing anything: the
+  only faithful renderer for a css-doodle pattern is css-doodle in a real
+  browser (see `svg-export.md`). That is also why it cannot be remote - a
+  Worker has no browser.
+
+  The CLI looks for Playwright from the working directory first, then from its
+  own install, which under npx is npx's cache: a bare `import()` sees only the
+  second, which is why a project's Playwright used to go unfound. Values reach
+  the CLI as `--flag=value`, so a seed starting with `--` stays a seed, and an
+  option value may not contain `;`, which would start an option of its own in
+  the CLI's `id: value; id: value`. The CLI checks colors (with the browser's
+  `CSS.supports`), option ranges and choices; its own `tabbied:` lines are what
+  comes back on a failure, without the rest of its stderr.
+
+Every tool carries annotations: the six catalog tools are `readOnlyHint`, the
+four that can reach tabbied.com `openWorldHint`, and `render_design` is
+neither read-only nor destructive (it writes the one file it was asked for).
+The server advertises `tools.listChanged: false`: the SDK would say `true`,
+but the list is fixed for each server built and nothing sends the
+notification.
 
 ## Protocol: MCP v2, and why there is no Durable Object here
 
@@ -174,7 +228,15 @@ The local server reads the catalog from the installed `tabbied` package, so it
 describes the version you are about to `npm install` - an agent told about a
 design that only exists on the site would write an import that does not
 resolve. It falls back to `https://tabbied.com/catalog.json` and says so on
-stderr.
+stderr. Every read it makes over the network gives up after 10 seconds, and a
+failure names the URL, so an offline machine gets "could not be reached" and
+where, rather than a bare "fetch failed".
+
+A template's category and topic in `/editable-catalog.json` come from
+`scripts/generate-editable.mjs`: the topic off `out/studio-index.json`, the
+category out of `lib/templateCategories.ts`'s table, as `check:thumbnails`
+reads its own. A catalog from before them still serves; the summary just
+leaves the two out.
 
 ## Working on it
 
@@ -199,11 +261,16 @@ curl -s -X POST http://127.0.0.1:8787/mcp -H 'Content-Type: application/json' \
 
 Adding a tool means adding it in `src/tools.ts` (if both transports can serve
 it) or in the host that can (`src/stdio.ts` for anything needing node or a
-browser). Two rules hold:
+browser), and listing it in the package README and on `/docs/mcp/`. Three
+rules hold:
 
 - Anything reachable from `src/index.ts` must stay free of node imports - that
-  entry point is what the Worker bundles.
+  entry point is what the Worker bundles. The Node half (the readers and
+  `render_design`) is published separately as `tabbied-mcp/node`
+  (`src/node/index.ts`).
 - Tool input schemas stay plain JSON Schema and are adapted by
   `fromJsonSchema` in `src/server.ts`. Not Zod: `search_designs`'s enums come
   from the catalog being served, so a static schema would drift from what is
   actually queryable.
+- A tool states its `annotations`, `openWorldHint` included: the spec's
+  defaults assume a tool may write and may reach anything.

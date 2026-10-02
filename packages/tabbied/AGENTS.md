@@ -14,11 +14,13 @@ this package:
   and a stable `preview` image URL.
 
 **If your harness speaks MCP, connect to the server instead of reading any of
-this**: `https://tabbied.com/mcp` (nothing to install) or `npx -y tabbied-mcp`
-(local, and adds a `render_design` tool). It wraps the same catalog in
-`search_designs` / `preview_design` / `get_design` / `get_docs`, and
-`preview_design` returns the actual images - which is the difference between
-choosing a design and guessing one.
+this**: `https://tabbied.com/mcp` (nothing to install) or
+`npx -y -p tabbied-mcp -p playwright tabbied-mcp` (local, and adds a
+`render_design` tool; run `npx playwright install chromium` once). It wraps the
+same catalog in `search_designs` / `preview_design` / `get_design` /
+`get_docs`, plus `list_templates` / `get_template` for the website templates,
+and `preview_design` returns the actual images - which is the difference
+between choosing a design and guessing one.
 
 Three things worth knowing before writing any code:
 
@@ -30,8 +32,10 @@ Three things worth knowing before writing any code:
    sizes to content it collapses to nothing. Pass `height` or `aspectRatio`
    when in doubt. This is the number-one integration mistake.
 3. **You can render without an app**: `npx tabbied render <slug> --out out.svg`
-   (or `.png`, or `--frames N` for a video-ready PNG sequence). `npx tabbied
-   list --tag dots` queries the catalog from the shell.
+   (or `.png`, or `--frames N` for a video-ready PNG sequence). It needs
+   Playwright where it runs (`npm i -D playwright && npx playwright install
+   chromium`), or run it as `npx -y -p tabbied -p playwright tabbied render
+   ...`. `npx tabbied list --tag dots` queries the catalog from the shell.
 
 The same docs are served at https://tabbied.com/llms.txt (index) and
 https://tabbied.com/llms-full.txt (full reference).
