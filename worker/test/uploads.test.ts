@@ -1,6 +1,6 @@
-import { SELF } from 'cloudflare:test';
+import { SELF, env } from 'cloudflare:test';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { ORIGIN, signIn } from './helpers';
+import { ORIGIN, json, signIn } from './helpers';
 
 // The smallest valid PNG: a 1x1 transparent pixel.
 const PNG = Uint8Array.from(
@@ -54,5 +54,37 @@ describe('uploads', () => {
     const gone = await SELF.fetch(`${ORIGIN}/api/uploads/${id}`, { method: 'DELETE', headers: { cookie, origin: ORIGIN } });
     expect(gone.status).toBe(200);
     expect((await SELF.fetch(`${ORIGIN}${src}`)).status).toBe(404);
+  });
+
+  it('go with the account when its owner deletes it', async () => {
+    const leaver = await signIn('leaver@example.com');
+    const { id: userId } = (await env.DB.prepare('SELECT id FROM user WHERE email = ?').bind('leaver@example.com').first<{ id: string }>())!;
+
+    const made = await post(leaver, new Blob([PNG], { type: 'image/png' }));
+    const upload = ((await made.json()) as { src: string }).src.replace(/^\/api\/media\//, '');
+
+    // A direction's image and a site's picture: the rows cascade, the bytes
+    // only go because they were looked up before the rows did.
+    await env.DB.prepare('INSERT INTO generation (id, user_id, description, result, source, model) VALUES (?, ?, ?, ?, ?, ?)')
+      .bind('gen-leaver', userId, 'A bakery', '{}', 'matcher', 'none')
+      .run();
+    await env.DB.prepare('INSERT INTO site (id, user_id, slug, title, spec_version, template_hash) VALUES (?, ?, ?, ?, ?, ?)')
+      .bind('site-leaver', userId, 'verdant', 'Bakery', 1, 'hash')
+      .run();
+    const pictures = [upload, 'gen/gen-leaver/hero.webp', 'gen/site/site-leaver/1/hero.webp'];
+    await env.MEDIA.put(pictures[1], new Uint8Array([1]));
+    await env.MEDIA.put(pictures[2], new Uint8Array([1]));
+    for (const key of pictures) expect(await env.MEDIA.get(key), key).not.toBeNull();
+
+    const deleted = await SELF.fetch(`${ORIGIN}/api/auth/delete-user`, {
+      method: 'POST',
+      headers: { ...json, cookie: leaver },
+      body: JSON.stringify({ password: 'correct horse battery staple' }),
+    });
+    expect(deleted.status, await deleted.clone().text()).toBe(200);
+
+    expect(await env.DB.prepare('SELECT id FROM user WHERE id = ?').bind(userId).first()).toBeNull();
+    expect(await env.DB.prepare('SELECT id FROM site WHERE id = ?').bind('site-leaver').first()).toBeNull();
+    for (const key of pictures) expect(await env.MEDIA.get(key), key).toBeNull();
   });
 });
