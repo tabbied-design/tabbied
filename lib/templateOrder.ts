@@ -135,7 +135,7 @@ export function orderTemplates<T extends Spreadable & { slug: string }>(items: r
  * ahead of the spread. Unlike an addition, changing it moves the cards after
  * it, which is the point: it is an editorial choice, not growth. The
  * spread's neighbor rules don't bind it (e2e/templates.spec.ts checks them
- * after the lead).
+ * after the lead). The homepage's template rails show these too.
  */
 export const GALLERY_LEAD: readonly string[] = [
   // 2026-10-02: picked for the top of the first page.
@@ -154,6 +154,15 @@ export const GALLERY_LEAD: readonly string[] = [
   'caldera-rail',
   'orbital-lounge',
   'konzerthaus-halden',
+  // 2026-10-02, later: eight more after them.
+  'fix-it-repair-cafe',
+  'four-frames-photobooth',
+  'sleepwell-clinic',
+  'second-life-vintage',
+  'big-yard-dog-daycare',
+  'casa-olivo',
+  'forge-strength',
+  'heron-point-golf',
 ];
 
 /**
@@ -199,7 +208,6 @@ const GALLERY_SPREAD: readonly string[] = [
   'lumen-portraits',
   'little-acorns',
   'cobalt-works',
-  'heron-point-golf',
   'kubus',
   'pinecone-camp',
   'purpurhaus',
@@ -254,7 +262,6 @@ const GALLERY_SPREAD: readonly string[] = [
   'blue-note-room',
   'grafit',
   'lakeshore-cabins',
-  'forge-strength',
   'satchel-and-strap',
   'sammlung-weiss',
   'trailhead-club',
@@ -333,7 +340,6 @@ const GALLERY_SPREAD: readonly string[] = [
   'birchwood-sauna',
   'panel-break-comics',
   'bright-pane-windows',
-  'casa-olivo',
   'tack-and-button',
   'willow-midwifery',
   'kettle-and-leaf',
@@ -364,7 +370,6 @@ const GALLERY_SPREAD: readonly string[] = [
   'ridgecap-roofing',
   'rind-and-curd',
   'byte-fix-repair',
-  'second-life-vintage',
   'fresh-coat-decorators',
   'beet-street-grocer',
   'posy-wedding-flowers',
@@ -374,7 +379,6 @@ const GALLERY_SPREAD: readonly string[] = [
   'blue-plate-diner',
   'tatami-dojo',
   'mainspring-repair',
-  'big-yard-dog-daycare',
   'chatterbox-speech',
   'velvet-cat-grooming',
   'post-oak-smokehouse',
@@ -401,7 +405,6 @@ const GALLERY_SPREAD: readonly string[] = [
   'geode-and-co',
   'rowan-street-allotments',
   'second-chance-shelter',
-  'fix-it-repair-cafe',
   'loop-club-coding',
   'lantern-puppet-theatre',
   'spore-and-soil',
@@ -413,14 +416,12 @@ const GALLERY_SPREAD: readonly string[] = [
   'orbit-roller-rink',
   'salt-and-vinegar-fish-bar',
   'branch-line-models',
-  'four-frames-photobooth',
   'hollis-piano',
   'eight-folds-dumplings',
   'alder-and-stone-funeral',
   'lumen-film-festival',
   'big-top-circus-school',
   'pip-and-sprout-seeds',
-  'sleepwell-clinic',
   'longmeadow-equine',
   'hollowmere-sculpture-park',
   'northside-fablab',
