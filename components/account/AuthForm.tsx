@@ -228,18 +228,28 @@ export default function AuthForm({ mode }: { mode: Mode }) {
           />
         </label>
 
-        <label className={styles.field}>
-          <span>Password</span>
-          <input
-            type="password"
-            autoComplete={mode === 'sign-up' ? 'new-password' : 'current-password'}
-            placeholder={'\u2022'.repeat(8)}
-            required
-            minLength={8}
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </label>
+        <div>
+          <label className={styles.field}>
+            <span>Password</span>
+            <input
+              type="password"
+              autoComplete={mode === 'sign-up' ? 'new-password' : 'current-password'}
+              placeholder={'\u2022'.repeat(8)}
+              required
+              minLength={8}
+              aria-describedby={mode === 'sign-up' ? 'password-rule' : undefined}
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </label>
+          {/* The rule the field enforces, said before it refuses; outside the
+              label, so it describes the field rather than naming it. */}
+          {mode === 'sign-up' ? (
+            <small id="password-rule" className={styles.hint}>
+              At least 8 characters.
+            </small>
+          ) : null}
+        </div>
       </div>
 
       {mode === 'sign-in' ? (
@@ -257,6 +267,22 @@ export default function AuthForm({ mode }: { mode: Mode }) {
       <button type="submit" className={styles.submit} disabled={pending}>
         {pending ? 'One moment...' : copy.submit}
       </button>
+
+      {/* An account is what a template's license is granted to (Terms,
+          section 7), so the terms are named where one is made. */}
+      {mode === 'sign-up' ? (
+        <p className={styles.legal}>
+          By creating an account you agree to the{' '}
+          <Link href="/terms-of-service/" prefetch={false}>
+            Terms of Service
+          </Link>
+          , including the Template License, and the{' '}
+          <Link href="/privacy-policy/" prefetch={false}>
+            Privacy Policy
+          </Link>
+          .
+        </p>
+      ) : null}
 
       <p className={styles.swap}>
         {copy.swapText}{' '}

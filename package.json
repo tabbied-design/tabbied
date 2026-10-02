@@ -7,10 +7,10 @@
     "packages/*"
   ],
   "scripts": {
-    "predev": "npm run build:packages && npm run llms && npm run build:images && npm run check:thumbnails && npm run check:previews",
+    "predev": "npm run build:packages && npm run llms && npm run build:images && npm run check:thumbnails && npm run check:previews && npm run og",
     "dev": "NEXT_PUBLIC_API_BASE=http://localhost:8787 next dev",
     "dev:api": "wrangler dev --port 8787",
-    "prebuild": "npm run build:packages && npm run llms && npm run build:images && npm run check:thumbnails && npm run check:previews",
+    "prebuild": "npm run build:packages && npm run llms && npm run build:images && npm run check:thumbnails && npm run check:previews && npm run og",
     "build": "next build && npm run editable && npm run templates -- --out-dir public/downloads && npm run preview:runtime && next build",
     "build:packages": "npm run build --workspace tabbied && npm run build --workspace tabbied-templates && npm run build --workspace tabbied-mcp",
     "deploy": "npm run build && npm run db:migrate:remote && wrangler deploy",
@@ -32,6 +32,7 @@
     "check:thumbnails": "node scripts/check-gallery-thumbnails.mjs",
     "previews": "node scripts/generate-previews.mjs",
     "check:previews": "node scripts/check-previews.mjs",
+    "og": "node scripts/build-og-images.mjs",
     "check:typography": "node scripts/check-typography.mjs",
     "check:pattern-cost": "node scripts/pattern-cost.mjs --budget",
     "start": "serve out -l 3000 --no-clipboard",

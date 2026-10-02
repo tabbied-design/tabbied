@@ -144,7 +144,15 @@ Three things that are explicit here and were implicit or automatic on Vercel:
   `public/` verbatim, so the file lands at `out/_headers` where wrangler reads
   it - and wrangler *consumes* it rather than serving it. `wrangler dev` prints
   `Parsed N valid header rules` on boot, which is the cheapest way to catch a
-  typo. Limits: 100 rules, 2,000 characters per line.
+  typo. Limits: 100 rules, 2,000 characters per line. **`_headers` never
+  reaches a response the Worker makes**, run_worker_first routes included, so
+  the security headers on its `/*` rule (HSTS, `frame-ancestors 'self'` and
+  `X-Frame-Options`, the referrer and permissions policies) are added again by
+  a middleware in `worker/index.ts` from `worker/lib/securityHeaders.ts`. The
+  two lists are kept in step by hand. The live template sites
+  (`/templates/<slug>/site/`) also get `noindex` there (`worker/lib/noindex.ts`):
+  they are fictional businesses with addresses and phone numbers, and a
+  `noindex` in the export would ride into every download.
 - **`run_worker_first: ["/mcp", "/mcp/*", "/health", "/api", "/api/*"]`.**
   `/mcp` is not a file, so it would reach the Worker anyway - but only after
   the asset router looked at it, and with `trailingSlash: true` the default
@@ -247,9 +255,21 @@ the tools; the SDK owns the wire.
 
 - `src/tools.ts` - the four catalog tools, with no runtime imports at all. The
   host injects what differs (preview bytes, docs text) through `ToolContext`.
+  `src/templates.ts` is the two template tools, the same way.
 - `src/server.ts` - registers those tools onto an `McpServer`. The seam.
 - `src/stdio.ts`, `src/node/` - the bin, the local catalog reader, and
-  `render_design`. Node only, never reached from the Worker.
+  `render_design`. Node only, never reached from the Worker. The readers are
+  exported as `tabbied-mcp/node` for a program that hosts the tools itself.
+
+`list_templates` answers a page at a time (`limit`, `offset`, a `category`,
+`detail` for the full entries): the whole index came to 127 KB, about 30k
+tokens, in one call. Its categories and topics are written into
+`/editable-catalog.json` by `scripts/generate-editable.mjs`, which reads the
+category table out of `lib/templateCategories.ts` and fails the build on a
+template it cannot place. `render_design` shells out to the `tabbied` CLI,
+which looks for Playwright from the working directory first and then beside
+itself; neither package depends on Playwright, so the bin is started as
+`npx -y -p tabbied-mcp -p playwright tabbied-mcp` to render.
 
 Both transports are the SDK's: the Worker wraps the factory in
 `createMcpHandler`, the bin hands it to `serveStdio`. So the remote endpoint
@@ -386,7 +406,23 @@ stylesheet a person should edit, so that ships and only the class names in the
 *HTML* are rewritten back to plain ones. And it doesn't hand-write the mount
 code: the placeholders already carry their config as `data-*` attributes
 (`TabbiedPattern` serializes it via `patternConfigToAttributes`), so one
-`hydratePatterns()` call revives the whole page.
+`hydratePatterns()` call revives the whole page. The bootstrap imports the
+designs from `tabbied@<version>/patterns?exports=<slugs>`, which has esm.sh
+tree-shake the catalog (about 450 KB) down to the page's own (a couple of KB);
+`lib/studioDownload.ts` rewrites that list for a customized download, so the
+two keep one shape.
+
+**A download never uses Typekit.** proxima-nova is Tabbied's Adobe Fonts
+kit, which the root layout links on every page of the site, template pages
+included, and which is licensed to tabbied.com alone. The packager strips the
+kit's `<link>`s with the rest of the site chrome, ships `base.css` with the
+face taken out of the global stacks (`templateBaseCss`), and refuses to zip a
+package that still says "typekit" or "proxima-nova" anywhere
+(`assertNoTabbiedFonts`; the face's name, since a caption may say
+"approximately"). A template sets its own faces from Google Fonts. The
+global sheet's stack did reach one template element, the shared
+`TemplateSite` button, which now inherits the page's face, so the live page and
+the download draw the same type.
 
 A site fails loudly rather than shipping broken: more than one CSS module on a
 page, or two hashed names collapsing onto one plain name. All 277 sites
@@ -789,6 +825,19 @@ That check also found a page bug the old shots had hidden: Solstice asked
 for `Karla:opsz,...`, an axis Karla does not have, and Google answers such
 a request with 200 and silently leaves the family out, so the live page had
 never set its body type in Karla at all.
+
+## Share cards - 1200x630, derived at build time
+
+A pattern page's share card is `public/og/patterns/<slug>.jpg`, the brand
+panel cut from `public/og.png` beside the design's preview; a template's is
+`public/og/templates/<slug>.jpg`, its screenshot full bleed with the lockup on
+a white plate (`lib/seo.ts`, `patternImage` and `templateImage`). They were
+the 960x960 WebP previews, which the large card crops to a strip, and a
+template's was its pattern rather than the website. `scripts/build-og-images.mjs`
+(`npm run og`, in prebuild and predev) writes them with sharp from committed
+files only, no browser and no fonts, so they are gitignored and the deploy
+build makes them: about 30 seconds from nothing, nothing at all when they are
+newer than their sources. A template with no shot uses its pattern's card.
 
 ## The template gallery - a mixed order, pages, and the URL
 
@@ -1503,7 +1552,10 @@ the template and shows the result.
   SHA-256 of the packaged `index.html` it was authored against; `GET
   /api/studio/sites/:id` re-hashes the served package and reports
   `templateChanged`, so a re-packaged template is announced on the page rather
-  than discovered as a missing headline. `revision` is append-only (`n`,
+  than discovered as a missing headline. A manual save re-pins both, since
+  the document it writes was just checked against the template as served,
+  and the notice says "What no longer fits is listed below" only when the
+  engine refused something, which is the list below it. `revision` is append-only (`n`,
   `edits`, `instruction`, `source`, `responseId`) - a conversational or manual
   edit writes n+1, which is what makes "go back" possible. The listing is
   session-scoped (`GET /api/studio/sites`, on the `(userId, updatedAt)` index)
