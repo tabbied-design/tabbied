@@ -10,18 +10,21 @@ export const metadata: Metadata = {
   description:
     'Tabbied lets you easily create timeless and beautifully generated patterns to use for wall art, websites, print materials and more.',
   manifest: '/site.webmanifest',
+  // All drawn from LogoMark by scripts/build-favicons.mjs; the colors here are
+  // its ink.
   icons: {
     icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
       { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
     ],
     apple: '/apple-touch-icon.png',
     other: [
-      { rel: 'mask-icon', url: '/safari-pinned-tab.svg', color: '#5bbad5' },
+      { rel: 'mask-icon', url: '/safari-pinned-tab.svg', color: '#0e0e13' },
     ],
   },
   other: {
-    'msapplication-TileColor': '#00a300',
+    'msapplication-TileColor': '#0e0e13',
   },
 };
 
