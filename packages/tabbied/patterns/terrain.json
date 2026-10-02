@@ -2,6 +2,7 @@
   "name": "Terrain",
   "slug": "terrain",
   "galleryOrder": 9,
+  "description": "A sparse field of small triangles, diamonds, dots and rounded squares in mixed sizes, set in columns between thin vertical rules.",
   "svgExportNote": "The drop shadows are exported as SVG filters. Browsers render them correctly, but some design tools (like Figma or Illustrator) import SVG filters imperfectly.",
   "galleryWhite": true,
   "palette": [

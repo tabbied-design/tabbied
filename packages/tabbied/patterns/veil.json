@@ -2,6 +2,7 @@
   "name": "Veil",
   "slug": "veil",
   "galleryOrder": 5,
+  "description": "Squares cut corner to corner into triangles in tints of one hue, the halves meeting their neighbors in zigzags and diamonds.",
   "palette": [
     "#9EFFD8",
     "#3E8BFF",

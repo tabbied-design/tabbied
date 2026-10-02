@@ -38,7 +38,10 @@ export type SvgExportOptions = {
 
 export type SvgExportResult = {
   svg: string;
-  /** CSS-px size of the snapshot (the viewBox; the file itself scales freely). */
+  /**
+   * CSS-px size of the snapshot: the root's `width`/`height` and its viewBox,
+   * so the file opens at this size and still scales freely.
+   */
   width: number;
   height: number;
   /** Non-fatal degradations, e.g. effects that design tools may not import. */
@@ -2222,6 +2225,11 @@ export function doodleToSvg(
     tag: 'svg',
     attrs: {
       xmlns: 'http://www.w3.org/2000/svg',
+      // An intrinsic size as well as the viewBox, so a design tool opens the
+      // file at the size the page drew it rather than at a default of its own.
+      // The viewBox still lets it scale; CSS on an inline copy overrides both.
+      width: fmtNum(viewWidth, ctx.precision),
+      height: fmtNum(viewHeight, ctx.precision),
       viewBox: `0 0 ${fmtNum(viewWidth, ctx.precision)} ${fmtNum(viewHeight, ctx.precision)}`,
       style: ctx.usesBlend ? 'isolation:isolate' : undefined,
     },

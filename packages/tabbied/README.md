@@ -16,6 +16,10 @@ npm install tabbied
 React is an **optional** peer dependency - you only need it for the `tabbied/react`
 entry point. The core works in any framework (or none).
 
+The package is ESM only. `import` works everywhere; `require()` works on
+Node 20.19+ and 22.12+ (which can `require` an ES module) and throws
+`ERR_REQUIRE_ESM` on older Node.
+
 ## Entry points
 
 | Import             | What it provides                                                                        |
@@ -23,6 +27,7 @@ entry point. The core works in any framework (or none).
 | `tabbied`          | The framework-agnostic core: `createPattern`, sizing/seed helpers, and the type definitions. |
 | `tabbied/react`    | The `TabbiedPattern` React component (and its handle/prop types).                       |
 | `tabbied/patterns` | The preset `PatternDefinition`s (import individually) plus the full `patterns` record.  |
+| `tabbied/svg-export` | The native SVG converter (`doodleToSvg`) on its own, for exporting a rendered `<css-doodle>` you mounted yourself. `exportSvg()` on a controller or handle loads it for you. |
 | `tabbied/catalog.json` | Every design as data - description, palette, options, SVG-export support. See [Finding a design](#finding-a-design). |
 
 ## Finding a design
@@ -289,8 +294,9 @@ all up with one call:
      style="width: 100%; height: 60vh"></div>
 
 <script type="module">
-  import { hydratePatterns } from 'https://esm.sh/tabbied';
-  import { patterns } from 'https://esm.sh/tabbied/patterns';
+  // Pin a version: a bare `tabbied` on esm.sh is whatever is latest.
+  import { hydratePatterns } from 'https://esm.sh/tabbied@0.7';
+  import { patterns } from 'https://esm.sh/tabbied@0.7/patterns';
 
   hydratePatterns({ patterns });
 </script>
@@ -345,13 +351,24 @@ npx tabbied list --good-for hero-background --density sparse
 npx tabbied info radius
 ```
 
-Rendering runs css-doodle in a headless browser via whatever Playwright the
-project already has (`playwright`, `playwright-core`, or `@playwright/test`) -
-install one of those if none is present, and pass `--browser <path>` (or set
+Rendering runs css-doodle in a headless browser through Playwright, which this
+package does not install. The CLI uses whichever of `playwright`,
+`playwright-core` or `@playwright/test` it finds, from the current directory
+first, then from its own install:
+
+```bash
+npm i -D playwright && npx playwright install chromium     # in a project
+npx -y -p tabbied -p playwright tabbied render radius --out hero.svg   # nothing installed
+```
+
+The second form needs the browser downloaded once too
+(`npx playwright install chromium`). Pass `--browser <path>` (or set
 `TABBIED_CHROMIUM`) to use a specific Chromium binary. `--out`'s extension
-(or `--format svg|png`) picks the format; frame sequences are PNG, cut deterministically between
+(or `--format svg|png`) picks the format, and an SVG is cut to `--size` in
+every fit, as the PNG is; frame sequences are PNG, cut deterministically between
 seeds (frames within a reseed window are identical, so encoders can
-deduplicate). Run `npx tabbied --help` for every flag.
+deduplicate). Every flag also takes `--flag=value`. Run `npx tabbied --help`
+for every flag.
 
 ## For AI agents
 

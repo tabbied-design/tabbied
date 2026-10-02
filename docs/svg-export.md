@@ -30,7 +30,9 @@ otherwise reach for `filter: blur()` or `box-shadow` and land in tier 2 (see
 `<css-doodle>`'s shadow DOM and maps computed styles onto **native SVG
 primitives** - rects, paths, gradients, clips, masks, filters. No
 `<foreignObject>`: exports open in design tools and scale to any resolution
-(`viewBox` only, no fixed size; transparency survives).
+(transparency survives). The root carries `width`/`height` equal to its
+`viewBox`, so a design tool opens the file at the size the page drew it; before
+0.7.1 it had the `viewBox` alone, and tools each picked a size of their own.
 
 Public surface:
 
