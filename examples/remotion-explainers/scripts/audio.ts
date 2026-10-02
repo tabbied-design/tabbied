@@ -22,6 +22,11 @@
 //   --video <path>     the render to mux onto (default: out/<film>.mp4)
 //   voices [search]    list the account's voices, or search the library
 //
+// A line that runs past its window is fitted in the mix: played faster with
+// its pitch kept (atempo), by up to MAX_TEMPO. Asking the API for a faster
+// `speed` was tried first and dropped: on eleven_v4 it shortened lines by
+// 0-4% for 5-15% asked, and every retry was charged again.
+//
 // Every request is cached by a hash of what was asked for, in
 // public/audio/<film>/manifest.json, so a rerun pays only for what changed.
 // ELEVENLABS_BASE_URL points it elsewhere (a region, or the stub in
@@ -57,10 +62,15 @@ const LEAD_IN = 10;
 const GAP = 6;
 /** The last line ends this many frames before the film does (the closing fade). */
 const TAIL = 20;
-/** For --dry-run only: a measured narrator's pace, to size lines before paying for them. */
-const WORDS_PER_SECOND = 2.5;
-/** Eleven v4 takes speeds from 0.7 to 1.2; a line that overruns is sped up, never past this. */
-const MAX_SPEED = 1.15;
+/**
+ * For --dry-run only, to size lines before paying for them: a pace and a
+ * pause at every sentence end or comma, fitted to the twelve credit card
+ * lines as Jarnathan read them (to within about half a second a line).
+ */
+const WORDS_PER_SECOND = 2.6;
+const BREAK_SECONDS = 0.25;
+/** A line longer than its window is played up to this much faster in the mix. */
+const MAX_TEMPO = 1.15;
 const OUTPUT_FORMAT = 'mp3_44100_128';
 
 type Spec = {
@@ -73,15 +83,18 @@ type Spec = {
     use_speaker_boost: boolean;
     speed: number;
   };
-  music: { model: string; prompt: string; gainDb: number; seed?: number };
+  music: { model: string; prompt: string; gainDb: number };
   lines: { scene: string; text: string }[];
 };
 
 type Cue = { scene: string; text: string; startFrame: number; windowFrames: number };
 
+/** A spoken line: `seconds` is the file, `speech` when the voice in it stops. */
+type Take = { file: string; hash: string; seconds: number; speech?: number; speed: number };
+
 type Manifest = {
   voiceId?: string;
-  lines: Record<string, { file: string; hash: string; seconds: number; speed: number }>;
+  lines: Record<string, Take>;
   music?: { file: string; hash: string; seconds: number };
 };
 
@@ -110,6 +123,7 @@ const hash = (value: unknown) => createHash('sha256').update(JSON.stringify([BAS
 const seconds = (frames: number) => frames / FPS;
 const words = (text: string) => text.replace(/\[[^\]]*\]/g, ' ').trim().split(/\s+/).filter(Boolean).length;
 const pauses = (text: string) => (text.match(/\[(long )?pause\]/g) ?? []).length;
+const breaks = (text: string) => (text.replace(/\[[^\]]*\]/g, ' ').match(/[.?!;:,](\s|$)/g) ?? []).length;
 
 async function apiKey(): Promise<string> {
   const candidates = [option('key-file'), path.join(root, 'ELEVENLABS_API_KEY.txt'), path.join(root, '../../ELEVENLABS_API_KEY.txt')];
@@ -197,6 +211,41 @@ async function duration(file: string): Promise<number> {
     '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', file,
   ]);
   return Number(stdout.trim());
+}
+
+/**
+ * When the voice in a take stops: its length less the silence at its end.
+ * A take carries a little silence after the last word, and the window only
+ * has to hold the words.
+ */
+async function speechEnd(file: string, length: number): Promise<number> {
+  const { stdout, stderr } = await ffmpeg([
+    '-hide_banner', '-nostats', '-i', file, '-af', 'silencedetect=noise=-45dB:duration=0.1', '-f', 'null', '-',
+  ]);
+  const log = `${stdout}${stderr}`;
+  const starts = [...log.matchAll(/silence_start: ([\d.]+)/g)].map((match) => Number(match[1]));
+  const ends = [...log.matchAll(/silence_end: ([\d.]+)/g)].map((match) => Number(match[1]));
+  const last = starts.at(-1);
+  // A silence that runs to the end of the file, whether or not it was closed.
+  const tail = last !== undefined && (starts.length > ends.length || ends.at(-1)! >= length - 0.1);
+  return tail && last > 0.5 ? last : length;
+}
+
+/** Fills in `speech` for a take measured before it was recorded. */
+async function withSpeech(dir: string, take: Take): Promise<Required<Take>> {
+  if (take.speech === undefined) take.speech = await speechEnd(path.join(dir, take.file), take.seconds);
+  return take as Required<Take>;
+}
+
+/** How much faster a take plays to end inside its window: 1 when it already does. */
+const tempoFor = (take: Required<Take>, window: number) => Math.min(MAX_TEMPO, Math.max(1, take.speech / window));
+
+/** A line's length against its window, and what the mix will do about it. */
+function describe(take: Required<Take>, window: number): string {
+  const said = `${take.speech.toFixed(2)}s of ${window.toFixed(2)}s`;
+  if (take.speech <= window) return said;
+  if (take.speech <= window * MAX_TEMPO) return `${said}, played at ${(take.speech / window).toFixed(2)}x in the mix`;
+  return `${said}, too long even at ${MAX_TEMPO}x`;
 }
 
 async function loadSpec(film: string): Promise<Spec> {
@@ -303,43 +352,60 @@ async function narrate(film: string, spec: Spec, cues: Cue[], key: string, dir: 
   await mkdir(path.join(dir, 'narration'), { recursive: true });
   const voiceId = await ensureVoice(key, spec.voice);
   manifest.voiceId = voiceId;
-  const overruns: string[] = [];
+  const save = () => writeFile(path.join(dir, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
+  const fitted: string[] = [];
+  const long: string[] = [];
 
   for (let i = 0; i < cues.length; i++) {
     const cue = cues[i];
     const file = `narration/${String(i + 1).padStart(2, '0')}-${cue.scene}.mp3`;
     const window = seconds(cue.windowFrames);
+    // The speed is in the key because takes made before the retries were
+    // dropped carry the one they were asked for, and stay valid.
     const ask = (speed: number) =>
       hash({ model: spec.model, voiceId, settings: { ...spec.voiceSettings, speed }, text: cue.text, context: [cues[i - 1]?.text, cues[i + 1]?.text] });
 
     const cached = manifest.lines[cue.scene];
+    let take: Required<Take>;
     if (!FORCE && cached && cached.file === file && cached.hash === ask(cached.speed) && (await exists(path.join(dir, file)))) {
-      console.log(`  ${cue.scene}: cached, ${cached.seconds.toFixed(2)}s of ${window.toFixed(2)}s`);
-      if (cached.seconds > window) overruns.push(cue.scene);
-      continue;
-    }
-
-    let speed = spec.voiceSettings.speed;
-    await writeFile(path.join(dir, file), await speak(key, voiceId, spec, cues, i, speed));
-    let length = await duration(path.join(dir, file));
-
-    // Too long for its scene: say it once more, faster, by as much as it overran.
-    if (length > window && speed < MAX_SPEED) {
-      speed = Math.min(MAX_SPEED, Math.ceil(speed * (length / window) * 1.03 * 100) / 100);
-      console.log(`  ${cue.scene}: ${length.toFixed(2)}s overruns ${window.toFixed(2)}s, again at speed ${speed}`);
+      const measured = cached.speech !== undefined;
+      take = await withSpeech(dir, cached);
+      if (!measured) await save();
+      console.log(`  ${cue.scene}: cached, ${describe(take, window)}`);
+    } else {
+      const speed = spec.voiceSettings.speed;
       await writeFile(path.join(dir, file), await speak(key, voiceId, spec, cues, i, speed));
-      length = await duration(path.join(dir, file));
+      const length = await duration(path.join(dir, file));
+      take = { file, hash: ask(speed), seconds: length, speech: await speechEnd(path.join(dir, file), length), speed };
+      manifest.lines[cue.scene] = take;
+      await save();
+      console.log(`  ${cue.scene}: ${describe(take, window)}`);
     }
 
-    manifest.lines[cue.scene] = { file, hash: ask(speed), seconds: length, speed };
-    await writeFile(path.join(dir, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
-    console.log(`  ${cue.scene}: ${length.toFixed(2)}s of ${window.toFixed(2)}s at speed ${speed}`);
-    if (length > window) overruns.push(cue.scene);
+    const over = take.speech - window;
+    if (over <= 0) continue;
+    const frames = `+${Math.ceil(over * FPS)} frames`;
+    if (take.speech <= window * MAX_TEMPO) {
+      fitted.push(`${cue.scene} (${frames})`);
+    } else {
+      // Even at the cap it ends late: into the pause before the next line
+      // (or the closing fade), or over the next line itself.
+      const spill = take.speech / MAX_TEMPO - window;
+      const room = seconds(i < cues.length - 1 ? GAP : TAIL);
+      const where = spill <= room ? `ends ${spill.toFixed(2)}s into the pause after it` : `runs ${(spill - room).toFixed(2)}s over what follows`;
+      long.push(`${cue.scene} (${frames}; ${where})`);
+    }
   }
 
-  if (overruns.length) {
+  if (fitted.length) {
+    console.log(
+      `  note: played faster to fit: ${fitted.join(', ')}. For the voice's own pace, lengthen those scenes ` +
+        `in src/${film}/timing.ts by the frames shown, then re-render.`
+    );
+  }
+  if (long.length) {
     console.warn(
-      `  note: ${overruns.join(', ')} still run past their window; shorten the line in ` +
+      `  note: too long even at ${MAX_TEMPO}x: ${long.join(', ')}. Shorten the line in ` +
         `scripts/narration/${film}.json or lengthen the scene in src/${film}/timing.ts (then re-render).`
     );
   }
@@ -353,7 +419,7 @@ async function compose(spec: Spec, filmSeconds: number, key: string, dir: string
     music_length_ms: lengthMs,
     model_id: spec.music.model,
     force_instrumental: true,
-    ...(spec.music.seed === undefined ? {} : { seed: spec.music.seed }),
+    // No seed: the API refuses one alongside a prompt.
   };
   const file = 'music.mp3';
   const ask = hash(body);
@@ -380,6 +446,9 @@ const DUCK = 0.65;
  * voice, the whole normalized to -16 LUFS, and the result muxed onto the
  * render with its video stream copied, not re-encoded.
  *
+ * A line whose words run past its window is played faster to end inside it
+ * (atempo keeps the pitch), by up to MAX_TEMPO.
+ *
  * The ducking is a volume curve, not a compressor listening to the voice:
  * every line's start and length are known, so the bed eases down a quarter
  * second before each one and back up half a second after it. It also keeps
@@ -397,14 +466,22 @@ async function mix(film: string, spec: Spec, cues: Cue[], filmSeconds: number, d
     );
   }
 
-  const lines = cues.map((cue) => manifest.lines[cue.scene]);
-  if (lines.some((line) => !line) || !manifest.music) throw new Error(`Narration or music missing for ${film}: run --narrate and --music.`);
+  if (cues.some((cue) => !manifest.lines[cue.scene]) || !manifest.music) {
+    throw new Error(`Narration or music missing for ${film}: run --narrate and --music.`);
+  }
+  const lines: Required<Take>[] = [];
+  for (const cue of cues) lines.push(await withSpeech(dir, manifest.lines[cue.scene]));
+  const tempos = cues.map((cue, i) => tempoFor(lines[i], seconds(cue.windowFrames)));
+  for (const [i, tempo] of tempos.entries()) {
+    if (tempo > 1) console.log(`  ${cues[i].scene}: played at ${tempo.toFixed(2)}x to fit its window`);
+  }
 
   const total = filmSeconds.toFixed(3);
   const format = 'aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo';
   const voices = cues.map((cue, i) => {
     const ms = Math.round(seconds(cue.startFrame) * 1000);
-    return `[${i + 2}:a]${format},adelay=${ms}:all=1[l${i}]`;
+    const fit = tempos[i] > 1 ? `atempo=${tempos[i].toFixed(4)},` : '';
+    return `[${i + 2}:a]${format},${fit}adelay=${ms}:all=1[l${i}]`;
   });
 
   // 1 while a line is speaking, easing in and out around it; the music's
@@ -412,7 +489,7 @@ async function mix(film: string, spec: Spec, cues: Cue[], filmSeconds: number, d
   const speaking = cues
     .map((cue, i) => {
       const from = seconds(cue.startFrame);
-      const to = from + lines[i]!.seconds;
+      const to = from + lines[i].speech / tempos[i];
       return `clip((t-${(from - 0.25).toFixed(3)})/0.25,0,1)*clip((${(to + 0.5).toFixed(3)}-t)/0.5,0,1)`;
     })
     .reduce((all, one) => `max(${all},${one})`);
@@ -430,7 +507,7 @@ async function mix(film: string, spec: Spec, cues: Cue[], filmSeconds: number, d
     '-hide_banner', '-loglevel', 'error', '-y',
     '-i', video,
     '-i', path.join(dir, manifest.music.file),
-    ...lines.flatMap((line) => ['-i', path.join(dir, line!.file)]),
+    ...lines.flatMap((line) => ['-i', path.join(dir, line.file)]),
     '-filter_complex', graph,
     '-map', '0:v', '-map', '[out]',
     '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000',
@@ -460,7 +537,7 @@ async function main() {
   const calls = !DRY_RUN && (STEPS.has('narrate') || STEPS.has('music'));
   if (!DRY_RUN) {
     await resolveTool('ffprobe');
-    if (STEPS.has('mix')) await resolveTool('ffmpeg');
+    await resolveTool('ffmpeg');
   }
   const key = calls ? await apiKey() : '';
 
@@ -475,9 +552,12 @@ async function main() {
       let characters = 0;
       for (const cue of cues) {
         characters += cue.text.length;
-        const estimate = words(cue.text) / WORDS_PER_SECOND / spec.voiceSettings.speed + pauses(cue.text) * 0.5;
+        const estimate =
+          (words(cue.text) / WORDS_PER_SECOND + breaks(cue.text) * BREAK_SECONDS) / spec.voiceSettings.speed +
+          pauses(cue.text) * 0.5;
         const window = seconds(cue.windowFrames);
-        const fits = estimate <= window ? 'ok' : 'LONG';
+        const fits =
+          estimate <= window ? 'ok' : estimate <= window * MAX_TEMPO ? `fits at ${(estimate / window).toFixed(2)}x` : 'LONG';
         console.log(
           `  ${cue.scene.padEnd(12)} at ${seconds(cue.startFrame).toFixed(2).padStart(6)}s  ` +
             `~${estimate.toFixed(1)}s of ${window.toFixed(1)}s  ${fits}`

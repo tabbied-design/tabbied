@@ -10,7 +10,6 @@
   },
   "music": {
     "model": "music_v2_5",
-    "seed": 150,
     "gainDb": -16,
     "prompt": "A modern, upbeat, minimal electronic underscore for a personal finance explainer video. Clean plucked synths, warm muted bass, a soft kick and crisp hi-hats, with a subtle glassy marimba motif. 96 BPM, steady and optimistic, mixed low and spacious so a narrator sits on top. A light lift in the final section, then a clean ending. No vocals."
   },

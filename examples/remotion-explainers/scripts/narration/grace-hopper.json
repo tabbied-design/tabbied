@@ -10,7 +10,6 @@
   },
   "music": {
     "model": "music_v2_5",
-    "seed": 1906,
     "gainDb": -15,
     "prompt": "An inspiring, curious instrumental underscore for a short documentary about a pioneering computer scientist. Warm felt piano and pizzicato strings over soft vintage synth arpeggios, with a light ticking, clock-like percussion pulse. 100 BPM, major key. Gentle and unobtrusive under a narrator, building a little toward a confident, uplifting resolve in the final seconds, then a clean ending. No vocals."
   },
