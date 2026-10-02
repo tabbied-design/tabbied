@@ -44,6 +44,11 @@ const Section = docsSection(SECTIONS);
 
 const claudeCodeRemote = `claude mcp add --transport http tabbied ${ENDPOINT}`;
 
+const codexRemote = `codex mcp add tabbied --url ${ENDPOINT}`;
+
+const codexRemoteConfig = `[mcp_servers.tabbied]
+url = "${ENDPOINT}"`;
+
 const cursorConfig = `{
   "mcpServers": {
     "tabbied": { "url": "${ENDPOINT}" }
@@ -57,6 +62,12 @@ const vscodeConfig = `{
 }`;
 
 const claudeCodeLocal = `claude mcp add tabbied -- npx -y tabbied-mcp`;
+
+const codexLocal = `codex mcp add tabbied -- npx -y tabbied-mcp`;
+
+const codexLocalConfig = `[mcp_servers.tabbied]
+command = "npx"
+args = ["-y", "tabbied-mcp"]`;
 
 const localConfig = `{
   "mcpServers": {
@@ -215,6 +226,31 @@ export default function McpDocsPage() {
                 </Section>
 
                 <Section id="connect" title="Connect a client">
+                  <p>
+                    The hosted server needs no account and no key: give your
+                    client the URL <Code>{ENDPOINT}</Code>.
+                  </p>
+
+                  <h3 className={styles.minihead}>Claude (web and desktop)</h3>
+                  <ol className={styles.steps}>
+                    <li>Open Customize, then Connectors.</li>
+                    <li>Select + Add, then Add custom connector.</li>
+                    <li>
+                      Name it Tabbied, enter <Code>{ENDPOINT}</Code> and select
+                      Continue.
+                    </li>
+                    <li>
+                      For sign-in, choose No sign in (the server needs none),
+                      then select Add.
+                    </li>
+                  </ol>
+                  <p>
+                    The connector then works in Claude on the web and in the
+                    desktop app. A Free plan can add one custom connector; on a
+                    Team or Enterprise plan, an owner adds it first, under
+                    Organization settings and Connectors.
+                  </p>
+
                   <h3 className={styles.minihead}>Claude Code</h3>
                   <CodeBlock
                     code={claudeCodeRemote}
@@ -223,10 +259,48 @@ export default function McpDocsPage() {
                     className={styles.codeStandalone}
                   />
 
-                  <h3 className={styles.minihead}>Claude (web and desktop)</h3>
+                  <h3 className={styles.minihead}>ChatGPT</h3>
+                  <ol className={styles.steps}>
+                    <li>In Settings, open Security and login, and turn on Developer mode.</li>
+                    <li>
+                      Open{' '}
+                      <a href="https://chatgpt.com/plugins" target="_blank" rel="noreferrer">
+                        Plugins
+                      </a>{' '}
+                      and select the + button.
+                    </li>
+                    <li>
+                      Name it Tabbied, choose a public endpoint as the
+                      connection, and enter <Code>{ENDPOINT}</Code>, with the{' '}
+                      <Code>/mcp</Code> at the end.
+                    </li>
+                    <li>Check the six tools ChatGPT finds, and finish.</li>
+                  </ol>
                   <p>
-                    Add a custom connector in Settings, under Connectors, with
-                    the URL <Code>{ENDPOINT}</Code>.
+                    Whether you can turn on Developer mode depends on your plan
+                    and, in a workspace, on its admins. ChatGPT reaches hosted
+                    servers only, so it gets every tool but{' '}
+                    <Code>render_design</Code>.
+                  </p>
+
+                  <h3 className={styles.minihead}>Codex</h3>
+                  <CodeBlock
+                    code={codexRemote}
+                    title="terminal"
+                    lang="sh"
+                    className={styles.codeStandalone}
+                  />
+                  <p>Or add it to Codex&apos;s configuration file yourself:</p>
+                  <CodeBlock
+                    code={codexRemoteConfig}
+                    title="~/.codex/config.toml"
+                    lang="toml"
+                    className={styles.codeStandalone}
+                  />
+                  <p>
+                    The Codex CLI, its IDE extension and the ChatGPT desktop
+                    app share this configuration, so adding it once covers all
+                    three.
                   </p>
 
                   <h3 className={styles.minihead}>Cursor</h3>
@@ -267,18 +341,44 @@ export default function McpDocsPage() {
                     Drawing a css-doodle pattern needs a real browser, which is
                     why the hosted server cannot offer it.
                   </p>
+                  <h3 className={styles.minihead}>Claude Code</h3>
                   <CodeBlock
                     code={claudeCodeLocal}
-                    title="Claude Code"
+                    title="terminal"
+                    lang="sh"
+                    className={styles.codeStandalone}
+                  />
+
+                  <h3 className={styles.minihead}>Codex</h3>
+                  <CodeBlock
+                    code={codexLocal}
+                    title="terminal"
                     lang="sh"
                     className={styles.codeStandalone}
                   />
                   <CodeBlock
+                    code={codexLocalConfig}
+                    title="~/.codex/config.toml"
+                    lang="toml"
+                    className={styles.codeStandalone}
+                  />
+
+                  <h3 className={styles.minihead}>Claude Desktop, Cursor and others</h3>
+                  <p>
+                    Clients that start local servers from a JSON file
+                    (Claude Desktop&apos;s <Code>claude_desktop_config.json</Code>,
+                    Cursor&apos;s <Code>mcp.json</Code>) take it in this shape:
+                  </p>
+                  <CodeBlock
                     code={localConfig}
-                    title="mcp.json"
+                    title="claude_desktop_config.json"
                     lang="json"
                     className={styles.codeStandalone}
                   />
+                  <p>
+                    ChatGPT connects to hosted servers only, so it cannot run
+                    the local one.
+                  </p>
                   <p>
                     For <Code>render_design</Code>, install Playwright beside it
                     (<Code>npm i -D playwright</Code>), or point{' '}

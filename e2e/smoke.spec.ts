@@ -835,6 +835,10 @@ test.describe('MCP docs page', () => {
     await expect(
       page.getByText('claude mcp add --transport http tabbied https://tabbied.com/mcp')
     ).toBeVisible();
+    await expect(page.getByText('codex mcp add tabbied --url https://tabbied.com/mcp')).toBeVisible();
+    for (const client of ['Claude (web and desktop)', 'ChatGPT', 'Codex']) {
+      await expect(page.getByRole('heading', { level: 3, name: client }).first()).toBeVisible();
+    }
     // Every tool the server registers has a row; render_design is the local one.
     for (const tool of [
       'search_designs',
@@ -858,6 +862,45 @@ test.describe('MCP docs page', () => {
       'href',
       '/docs/mcp/'
     );
+  });
+});
+
+test.describe('A link to the page already open', () => {
+  // Next's router does nothing for a click on a link to the current URL; these
+  // go back to the top instead (components/SamePageLink).
+  const scrollY = (page: import('@playwright/test').Page) =>
+    page.evaluate(() => Math.round(window.scrollY));
+
+  const scrollDown = async (page: import('@playwright/test').Page) => {
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await expect.poll(() => scrollY(page)).toBeGreaterThan(400);
+  };
+
+  test('goes back to the top, from the footers and the masthead', async ({ page }) => {
+    await page.goto('/docs/mcp/');
+    await scrollDown(page);
+    await page.locator('footer').getByRole('link', { name: 'MCP server' }).click();
+    await expect.poll(() => scrollY(page)).toBe(0);
+
+    // A #section the contents rail left in the address goes with it.
+    await page.goto('/docs/react/#api');
+    await scrollDown(page);
+    await page.locator('footer').getByRole('link', { name: 'Docs', exact: true }).click();
+    await expect.poll(() => scrollY(page)).toBe(0);
+    expect(new URL(page.url()).hash).toBe('');
+
+    // The legal pages' own footer.
+    await page.goto('/privacy-policy/');
+    await scrollDown(page);
+    await page.locator('footer').getByRole('link', { name: 'Privacy Policy' }).click();
+    await expect.poll(() => scrollY(page)).toBe(0);
+
+    // The library pins the masthead, so its own destination is on screen.
+    await page.goto('/patterns/');
+    await scrollDown(page);
+    await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Patterns' }).click();
+    await expect.poll(() => scrollY(page)).toBe(0);
+    expect(new URL(page.url()).pathname).toBe('/patterns/');
   });
 });
 

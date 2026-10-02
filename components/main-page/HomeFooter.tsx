@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import SamePageLink from 'components/SamePageLink';
 import styles from './HomeFooter.module.css';
 
 // The dark shell's footer, under the homepage, the template gallery and the
@@ -51,19 +51,19 @@ export default function HomeFooter() {
           <h2 className={styles.heading}>Product</h2>
           <ul className={styles.links}>
             <li>
-              <Link href="/patterns" prefetch={false}>
+              <SamePageLink href="/patterns" prefetch={false}>
                 Patterns
-              </Link>
+              </SamePageLink>
             </li>
             <li>
-              <Link href="/templates" prefetch={false}>
+              <SamePageLink href="/templates" prefetch={false}>
                 Websites
-              </Link>
+              </SamePageLink>
             </li>
             <li>
-              <Link href="/account" prefetch={false}>
+              <SamePageLink href="/account" prefetch={false}>
                 My account
-              </Link>
+              </SamePageLink>
             </li>
           </ul>
         </div>
@@ -72,14 +72,14 @@ export default function HomeFooter() {
           <h2 className={styles.heading}>Resources</h2>
           <ul className={styles.links}>
             <li>
-              <Link href="/docs/react" prefetch={false}>
+              <SamePageLink href="/docs/react" prefetch={false}>
                 Docs
-              </Link>
+              </SamePageLink>
             </li>
             <li>
-              <Link href="/docs/mcp" prefetch={false}>
+              <SamePageLink href="/docs/mcp" prefetch={false}>
                 MCP server
-              </Link>
+              </SamePageLink>
             </li>
             <li>
               <a href={GITHUB_URL} target="_blank" rel="noreferrer">
@@ -87,14 +87,14 @@ export default function HomeFooter() {
               </a>
             </li>
             <li>
-              <Link href="/privacy-policy" prefetch={false}>
+              <SamePageLink href="/privacy-policy" prefetch={false}>
                 Privacy Policy
-              </Link>
+              </SamePageLink>
             </li>
             <li>
-              <Link href="/terms-of-service" prefetch={false}>
+              <SamePageLink href="/terms-of-service" prefetch={false}>
                 Terms of Service
-              </Link>
+              </SamePageLink>
             </li>
           </ul>
         </div>

@@ -919,6 +919,15 @@ Four things worth not re-litigating:
   placeholder circle; state keeps it until the session answers. Only a
   browser with the hint gets the ghost, and a wrong hint costs one fetch.
 
+**A link to the page already open goes back to the top.** Next's router
+treats a click on a link to the current URL as a navigation already done and
+does nothing, which made the footer's "Docs" on the docs page look broken. The
+masthead's lockup and destinations and both footers use
+`components/SamePageLink`, which scrolls to the top instead (smoothly, unless
+reduced motion is on) and drops a `#section` the docs' contents rail left in
+the address; a modified click, a different query or a link with its own
+fragment is still Next's. `e2e/smoke.spec.ts` covers each kind.
+
 The stroke is authored at 17 units in a 391-unit viewBox, which is what keeps
 it hairline at the ~20px the navs draw it at. Scale the box, never the stroke.
 

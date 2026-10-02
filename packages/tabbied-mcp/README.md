@@ -7,11 +7,23 @@ or any other MCP client.
 
 ## Use it without installing anything
 
-The same server runs at `https://tabbied.com/mcp`:
+The same server runs at `https://tabbied.com/mcp`, with no account or key:
 
 ```bash
-claude mcp add --transport http tabbied https://tabbied.com/mcp
+claude mcp add --transport http tabbied https://tabbied.com/mcp   # Claude Code
+codex mcp add tabbied --url https://tabbied.com/mcp               # Codex
 ```
+
+- **Claude** (web and desktop): Customize, Connectors, + Add, Add custom
+  connector; enter the URL and choose "No sign in".
+- **ChatGPT**: turn on Developer mode (Settings, Security and login), then add
+  it under [Plugins](https://chatgpt.com/plugins) with the URL as a public
+  endpoint. ChatGPT reaches hosted servers only.
+- **Codex**: the command above, or `[mcp_servers.tabbied]` with
+  `url = "https://tabbied.com/mcp"` in `~/.codex/config.toml`, which the CLI,
+  the IDE extension and the ChatGPT desktop app share.
+- **Cursor** and other clients that read an `mcpServers` JSON file (VS Code's
+  `.vscode/mcp.json` uses `servers` with `"type": "http"` instead):
 
 ```jsonc
 {
@@ -24,8 +36,12 @@ claude mcp add --transport http tabbied https://tabbied.com/mcp
 ## Or run it locally, and render real files
 
 ```bash
-claude mcp add tabbied -- npx -y tabbied-mcp
+claude mcp add tabbied -- npx -y tabbied-mcp   # Claude Code
+codex mcp add tabbied -- npx -y tabbied-mcp    # Codex
 ```
+
+Claude Desktop (`claude_desktop_config.json`), Cursor and other clients that
+start local servers from JSON:
 
 ```jsonc
 {
