@@ -2,7 +2,9 @@ import { clockWipe } from '@remotion/transitions/clock-wipe';
 import { iris } from '@remotion/transitions/iris';
 import { slide } from '@remotion/transitions/slide';
 import { wipe } from '@remotion/transitions/wipe';
-import { Film, HEIGHT, WIDTH, filmDuration, type Scene } from '../components/Film';
+import { Film, HEIGHT, WIDTH, type Cast } from '../components/Film';
+import { timelineDuration } from '../timeline';
+import { TIMING, type SceneId } from './timing';
 import { CashBack } from './scenes/CashBack';
 import { Debit } from './scenes/Debit';
 import { Interest } from './scenes/Interest';
@@ -16,22 +18,23 @@ import { Verdict } from './scenes/Verdict';
 import { WhoPays } from './scenes/WhoPays';
 import { WhoProfits } from './scenes/WhoProfits';
 
-// Scene lengths in frames, and how each one hands over to the next.
-const SCENES: Scene[] = [
-  { Scene: Title, frames: 165 },
-  { Scene: Purchase, frames: 200, enter: wipe({ direction: 'from-right' }) },
-  { Scene: Split, frames: 300, enter: slide({ direction: 'from-bottom' }) },
-  { Scene: CashBack, frames: 220, enter: wipe({ direction: 'from-left' }) },
-  { Scene: Interest, frames: 280, enter: iris({ width: WIDTH, height: HEIGHT }) },
-  { Scene: WhoPays, frames: 260, enter: slide({ direction: 'from-right' }) },
-  { Scene: WhoProfits, frames: 340, enter: wipe({ direction: 'from-top' }) },
-  { Scene: Debit, frames: 330, enter: slide({ direction: 'from-left' }) },
-  { Scene: Phones, frames: 290, enter: clockWipe({ width: WIDTH, height: HEIGHT }) },
-  { Scene: PublicMoney, frames: 330, enter: iris({ width: WIDTH, height: HEIGHT }) },
-  { Scene: Verdict, frames: 300, enter: wipe({ direction: 'from-bottom' }) },
-  { Scene: Outro, frames: 210, enter: clockWipe({ width: WIDTH, height: HEIGHT }) },
-];
+// Who plays each scene, and how it takes over from the one before; the
+// order and the lengths are in timing.ts.
+const CAST: Cast<SceneId> = {
+  title: { Scene: Title },
+  purchase: { Scene: Purchase, enter: wipe({ direction: 'from-right' }) },
+  split: { Scene: Split, enter: slide({ direction: 'from-bottom' }) },
+  cashBack: { Scene: CashBack, enter: wipe({ direction: 'from-left' }) },
+  interest: { Scene: Interest, enter: iris({ width: WIDTH, height: HEIGHT }) },
+  whoPays: { Scene: WhoPays, enter: slide({ direction: 'from-right' }) },
+  whoProfits: { Scene: WhoProfits, enter: wipe({ direction: 'from-top' }) },
+  debit: { Scene: Debit, enter: slide({ direction: 'from-left' }) },
+  phones: { Scene: Phones, enter: clockWipe({ width: WIDTH, height: HEIGHT }) },
+  publicMoney: { Scene: PublicMoney, enter: iris({ width: WIDTH, height: HEIGHT }) },
+  verdict: { Scene: Verdict, enter: wipe({ direction: 'from-bottom' }) },
+  outro: { Scene: Outro, enter: clockWipe({ width: WIDTH, height: HEIGHT }) },
+};
 
-export const DURATION = filmDuration(SCENES);
+export const DURATION = timelineDuration(TIMING);
 
-export const CreditCards: React.FC = () => <Film scenes={SCENES} />;
+export const CreditCards: React.FC = () => <Film timing={TIMING} cast={CAST} />;

@@ -1,0 +1,29 @@
+{
+  "voice": { "id": "tnSpp4vdxKPjI9w0GnoV", "name": "Hope - upbeat and clear" },
+  "model": "eleven_v4",
+  "voiceSettings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.35,
+    "use_speaker_boost": true,
+    "speed": 1.0
+  },
+  "music": {
+    "model": "music_v2_5",
+    "seed": 1906,
+    "gainDb": -15,
+    "prompt": "An inspiring, curious instrumental underscore for a short documentary about a pioneering computer scientist. Warm felt piano and pizzicato strings over soft vintage synth arpeggios, with a light ticking, clock-like percussion pulse. 100 BPM, major key. Gentle and unobtrusive under a narrator, building a little toward a confident, uplifting resolve in the final seconds, then a clean ending. No vocals."
+  },
+  "lines": [
+    { "scene": "title", "text": "[warm] Meet Grace Hopper: the mathematician who taught computers to understand words." },
+    { "scene": "clocks", "text": "[playful] At seven, she took apart seven alarm clocks, just to see how they worked." },
+    { "scene": "markOne", "text": "In nineteen forty-four, the Navy sent Lieutenant Hopper to program the Harvard Mark One." },
+    { "scene": "bug", "text": "In nineteen forty-seven, her team found a moth in a relay. [amused] The first actual bug." },
+    { "scene": "compiler", "text": "In nineteen fifty-two she built A-zero, an early compiler: a program that writes programs." },
+    { "scene": "cobol", "text": "Her English-like language, Flow-Matic, shaped COBOL, which still runs banks today." },
+    { "scene": "nanosecond", "text": "[curious] To show a nanosecond, she handed out wires as long as light travels in one." },
+    { "scene": "admiral", "text": "She retired a rear admiral at seventy-nine. [pause] In twenty sixteen: the Presidential Medal of Freedom." },
+    { "scene": "quote", "text": "[thoughtful] Her warning: the most dangerous phrase in the language is, [pause] 'We've always done it this way.'" },
+    { "scene": "outro", "text": "[upbeat] Every frame of this film is code: Tabbied patterns, rendered with Remotion." }
+  ]
+}

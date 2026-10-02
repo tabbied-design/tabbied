@@ -8,12 +8,14 @@ number, so a film is code and renders the same way every time.
 
 | Composition | Film | Length | Designs | Palettes | Pictures |
 | --- | --- | --- | --- | --- | --- |
-| `GraceHopper` | Grace Hopper, from the alarm clocks to COBOL | 51.4 s (1,541 frames) | 25 | 21 | 8 |
-| `CreditCards` | Who pays for 1.5% cash back, and who keeps the profit | 101.6 s (3,049 frames) | 31 | 23 | 13 |
+| `GraceHopper` | Grace Hopper, from the alarm clocks to COBOL | 59.4 s (1,781 frames) | 25 | 21 | 8 |
+| `CreditCards` | Who pays for 1.5% cash back, and who keeps the profit | 108.3 s (3,249 frames) | 31 | 23 | 13 |
 
 Both are 1920x1080 at 30 fps. Every palette is taken from the Tabbied palette
 library, and every picture was generated with `gpt-image-2.5-flare` at
-`quality: "low"` on a transparent background.
+`quality: "low"` on a transparent background. Narration and music come from
+ElevenLabs (Eleven v4 and Eleven Music) and are laid on afterwards; see
+[Sound](#sound).
 
 ## Running them
 
@@ -44,17 +46,22 @@ A single frame, for checking a layout:
 ```
 src/
   components/   shared by both films: Pattern, Tinted, Type, Film, Montage
-  grace-hopper/ Film.tsx, palettes.ts, scenes/
-  credit-cards/ Film.tsx, palettes.ts, scenes/
+  grace-hopper/ Film.tsx, timing.ts, palettes.ts, scenes/
+  credit-cards/ Film.tsx, timing.ts, palettes.ts, scenes/
+  timeline.ts   frames per second, the transition length, scene starts
   motion.ts     the reduced-motion answer (below)
 scripts/
-  generate-images.mjs, prompts/<film>.json
+  generate-images.mjs, prompts/<film>.json         the pictures
+  audio.ts, narration/<film>.json                   the sound
+  elevenlabs-stub.ts                                the API, for testing
 public/images/<film>/<id>.webp
+public/audio/<film>/                                narration, music, manifest
 ```
 
-`Film` strings a list of `{ Scene, frames, enter }` together with Remotion
-transitions; `Montage` is the closing wall of patterns and code both films end
-on. The chip in the corner of each scene prints the props of the pattern
+A film's `timing.ts` is the order and length of its scenes and nothing else,
+so the audio script reads the same clock without loading React. `Film` plays
+the scenes at those lengths with the transitions each `Film.tsx` names;
+`Montage` is the closing wall of patterns and code both films end on. The chip in the corner of each scene prints the props of the pattern
 behind it, seed included, as it changes.
 
 ## Grace Hopper
@@ -139,6 +146,64 @@ same portrait opens the Grace Hopper film in Toucan blues and closes it in
 Letterpress reds). The script refuses a "cut-out" with no transparent pixels,
 keeps the raw PNGs in `generated/<film>/` (gitignored) so promoting again
 costs nothing, and takes `--only <id>` and `--force` to redo one.
+
+## Sound
+
+`scripts/audio.ts` makes each film's soundtrack with the ElevenLabs API and
+lays it onto the render:
+
+```bash
+npm run render:grace-hopper          # the picture first: the mix copies its video stream
+npm run audio -- grace-hopper        # narrate, compose, mix
+npm run audio -- all --dry-run       # the plan and the character count, no calls
+```
+
+It reads the key from `ELEVENLABS_API_KEY.txt` in this folder (or at the repo
+root, or `--key-file <path>`, or `ELEVENLABS_API_KEY`). The file is
+gitignored in both places. The three steps can run alone (`--narrate`,
+`--music`, `--mix`):
+
+1. **Narration.** One line per scene from `scripts/narration/<film>.json`,
+   spoken by `eleven_v4` through `POST /v1/text-to-speech/{voice_id}`, with the
+   neighboring lines sent as `previous_text`/`next_text` so the delivery runs
+   on from scene to scene. The lines use v4's inline audio tags (`[warm]`,
+   `[curious]`, `[pause]`), one per clause, and spell their numbers out so the
+   voice reads them as written. The Grace Hopper film is read by **Hope -
+   upbeat and clear** (`tnSpp4vdxKPjI9w0GnoV`) and the credit card film by
+   **Jarnathan - Confident and Versatile** (`c6SfcYrb2t09NHXiT80T`). Both are
+   Voice Library voices; the script adds one to the account
+   (`POST /v1/voices/add/...`) the first time it is missing.
+2. **Music.** One instrumental bed a second longer than the film, from
+   `POST /v1/music` on `music_v2_5` with `force_instrumental`, prompted from
+   the same file.
+3. **Mix.** ffmpeg places each line at its scene's start plus 10 frames,
+   ducks the music under the voice with a sidechain compressor, fades it in
+   and out, normalizes the whole to -16 LUFS and muxes it onto
+   `out/<film>.mp4` as `out/<film>-narrated.mp4`, copying the video stream
+   rather than encoding it again. It refuses a render whose length no longer
+   matches `timing.ts`.
+
+Each line has a window: from its start to 6 frames before the next line
+starts. The scenes were lengthened to fit their lines at a measured 2.5 words
+a second (the Grace Hopper film stays under a minute), and `--dry-run` checks
+that estimate. A line that comes back longer than its window is asked for
+once more at a faster `speed`, by as much as it overran and never past 1.15;
+one still too long is named at the end, with the two files that fix it.
+
+Every request is cached in `public/audio/<film>/manifest.json` by a hash of
+what was asked (and of the API host), so a rerun pays only for lines that
+changed; `--force` asks again. To try the whole pipeline without a key or
+credits, run the stub, which answers the same routes with tones of the
+right length:
+
+```bash
+npm run audio:stub &
+ELEVENLABS_BASE_URL=http://localhost:8789 ELEVENLABS_API_KEY=stub npm run audio -- all
+```
+
+`npm run audio -- voices` lists the account's voices, and
+`npm run audio -- voices Hope` searches the Voice Library. Check that the
+account's plan includes the Music API before the first `--music`.
 
 ## Notes
 

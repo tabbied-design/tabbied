@@ -2,3 +2,6 @@ node_modules/
 out/
 # Raw API output; the promoted WebPs in public/images are what is committed.
 generated/
+
+# The ElevenLabs key (scripts/audio.ts reads it). Never commit it.
+ELEVENLABS_API_KEY.txt

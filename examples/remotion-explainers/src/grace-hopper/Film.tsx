@@ -2,7 +2,9 @@ import { clockWipe } from '@remotion/transitions/clock-wipe';
 import { iris } from '@remotion/transitions/iris';
 import { slide } from '@remotion/transitions/slide';
 import { wipe } from '@remotion/transitions/wipe';
-import { Film, HEIGHT, WIDTH, filmDuration, type Scene } from '../components/Film';
+import { Film, HEIGHT, WIDTH, type Cast } from '../components/Film';
+import { timelineDuration } from '../timeline';
+import { TIMING, type SceneId } from './timing';
 import { Admiral } from './scenes/Admiral';
 import { Bug } from './scenes/Bug';
 import { Clocks } from './scenes/Clocks';
@@ -14,20 +16,21 @@ import { Outro } from './scenes/Outro';
 import { Quote } from './scenes/Quote';
 import { Title } from './scenes/Title';
 
-// Scene lengths in frames, and how each one hands over to the next.
-const SCENES: Scene[] = [
-  { Scene: Title, frames: 150 },
-  { Scene: Clocks, frames: 170, enter: clockWipe({ width: WIDTH, height: HEIGHT }) },
-  { Scene: MarkOne, frames: 170, enter: wipe({ direction: 'from-right' }) },
-  { Scene: Bug, frames: 170, enter: slide({ direction: 'from-bottom' }) },
-  { Scene: Compiler, frames: 165, enter: wipe({ direction: 'from-left' }) },
-  { Scene: Cobol, frames: 170, enter: slide({ direction: 'from-right' }) },
-  { Scene: Nanosecond, frames: 165, enter: iris({ width: WIDTH, height: HEIGHT }) },
-  { Scene: Admiral, frames: 165, enter: wipe({ direction: 'from-top' }) },
-  { Scene: Quote, frames: 170, enter: slide({ direction: 'from-left' }) },
-  { Scene: Outro, frames: 190, enter: clockWipe({ width: WIDTH, height: HEIGHT }) },
-];
+// Who plays each scene, and how it takes over from the one before; the
+// order and the lengths are in timing.ts.
+const CAST: Cast<SceneId> = {
+  title: { Scene: Title },
+  clocks: { Scene: Clocks, enter: clockWipe({ width: WIDTH, height: HEIGHT }) },
+  markOne: { Scene: MarkOne, enter: wipe({ direction: 'from-right' }) },
+  bug: { Scene: Bug, enter: slide({ direction: 'from-bottom' }) },
+  compiler: { Scene: Compiler, enter: wipe({ direction: 'from-left' }) },
+  cobol: { Scene: Cobol, enter: slide({ direction: 'from-right' }) },
+  nanosecond: { Scene: Nanosecond, enter: iris({ width: WIDTH, height: HEIGHT }) },
+  admiral: { Scene: Admiral, enter: wipe({ direction: 'from-top' }) },
+  quote: { Scene: Quote, enter: slide({ direction: 'from-left' }) },
+  outro: { Scene: Outro, enter: clockWipe({ width: WIDTH, height: HEIGHT }) },
+};
 
-export const DURATION = filmDuration(SCENES);
+export const DURATION = timelineDuration(TIMING);
 
-export const GraceHopper: React.FC = () => <Film scenes={SCENES} />;
+export const GraceHopper: React.FC = () => <Film timing={TIMING} cast={CAST} />;
