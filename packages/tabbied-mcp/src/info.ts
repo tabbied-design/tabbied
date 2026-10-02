@@ -4,7 +4,7 @@
 // bundled into a Cloudflare Worker, which has no filesystem. test/info.test.mjs
 // pins it to package.json so the two can't drift.
 export const SERVER_NAME = 'tabbied';
-export const VERSION = '0.2.1';
+export const VERSION = '0.2.2';
 
 /**
  * Shown to the model as a preamble. It carries what no tool description can,
