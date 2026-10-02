@@ -402,7 +402,9 @@ test.describe('the /templates gallery', () => {
     // The order mixes the batches the templates were made in. A seed's
     // prefix names the batch (art-, min-, dir-, ...; the first five have
     // none), and past the hand-picked lead no two neighbors on a page share
-    // one (lib/templateOrder.ts).
+    // one (lib/templateOrder.ts). The lead's last card and the spread's first
+    // are not compared: the spread was laid out without the lead, so that
+    // pair is whatever the lead happens to end on.
     const registry = fs.readFileSync(path.join(REPO_ROOT, 'lib', 'templateSites.ts'), 'utf-8');
     const batchOf = new Map(
       [...registry.matchAll(/slug: '([^']+)'.*?seed: '([a-z]+)-/g)].map((m) => [m[1], m[2]] as const)
@@ -426,7 +428,7 @@ test.describe('the /templates gallery', () => {
     const batches = firstPage.map((slug) => batchOf.get(slug) ?? 'first');
     expect(new Set(batches).size).toBeGreaterThanOrEqual(4);
     batches.forEach((batch, i) => {
-      if (i < lead.length) return;
+      if (i <= lead.length) return;
       expect(batch, `${firstPage[i - 1]} then ${firstPage[i]}`).not.toBe(batches[i - 1]);
     });
   });

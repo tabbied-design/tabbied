@@ -1,6 +1,9 @@
+import type { CSSProperties } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { TEMPLATE_SITES } from 'components/template/templateData';
 import { NEW_TEMPLATE_SITES } from 'lib/templateSites';
+import { GALLERY_LEAD } from 'lib/templateOrder';
 import { templateShot } from 'lib/templateShots';
 import styles from './HomeTemplates.module.css';
 
@@ -8,12 +11,28 @@ import styles from './HomeTemplates.module.css';
 // timers: the movement is a CSS animation over a list that is rendered twice, so
 // this stays a server component and the whole strip is in the static HTML.
 
-/** Every fifth site, which spreads the sample across the collection's families. */
-const SHOWCASE = NEW_TEMPLATE_SITES.filter((_, i) => i % 5 === 0).slice(0, 10);
+type Site = { slug: string; name: string; topic: string; patternSlug: string };
 
-const ROWS = [SHOWCASE.slice(0, 5), SHOWCASE.slice(5, 10)];
+const SITES = new Map<string, Site>(
+  [
+    ...TEMPLATE_SITES.map((x) => ({ slug: x.slug, name: x.brand, topic: x.topic, patternSlug: x.pattern })),
+    ...NEW_TEMPLATE_SITES.map((x) => ({ slug: x.slug, name: x.name, topic: x.topic, patternSlug: x.patternSlug })),
+  ].map((site) => [site.slug, site])
+);
 
-type Site = (typeof SHOWCASE)[number];
+/**
+ * The gallery's hand-picked lead (lib/templateOrder.ts), so the homepage shows
+ * the sites the gallery opens with. A slug no template has fails the export,
+ * as it does for the gallery.
+ */
+const SHOWCASE = GALLERY_LEAD.map((slug) => {
+  const site = SITES.get(slug);
+  if (!site) throw new Error(`HomeTemplates: GALLERY_LEAD names ${slug}, which no template has`);
+  return site;
+});
+
+/** Dealt alternately, so both rows open on the first picks. */
+const ROWS = [0, 1].map((row) => SHOWCASE.filter((_, i) => i % 2 === row));
 
 /**
  * One card. The second copy of each row is the marquee's seam, not a second
@@ -95,7 +114,12 @@ export default function HomeTemplates({
           <div key={i} className={styles.rail}>
             {/* The list is rendered twice and the track travels exactly half its
                 width, so the loop has no seam to hide. */}
-            <div className={styles.track} data-direction={i === 1 ? 'right' : 'left'}>
+            <div
+              className={styles.track}
+              data-direction={i === 1 ? 'right' : 'left'}
+              // The duration scales with the row, so the speed does not.
+              style={{ '--cards': row.length } as CSSProperties}
+            >
               {[0, 1].map((copy) =>
                 row.map((site) => (
                   <Card key={`${copy}-${site.slug}`} site={site} clone={copy === 1} />

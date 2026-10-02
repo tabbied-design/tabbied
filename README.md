@@ -1,31 +1,113 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/1064036/102738324-5c79f900-430f-11eb-8403-c4c8aa786dc9.png" alt="Tabbied Logo" width="80" />
+  <a href="https://tabbied.com"><img src="public/android-chrome-256x256.png" alt="Tabbied" width="88" height="88"></a>
 </p>
+
 <h1 align="center">Tabbied</h1>
+
 <p align="center">
-  <a href="https://deepscan.io/dashboard#view=project&tid=10181&pid=14972&bid=290677"><img src="https://deepscan.io/api/teams/10181/projects/14972/branches/290677/badge/grade.svg" alt="DeepScan grade"></a>
-  <a href="https://www.codacy.com/gh/tabbied-design/tabbied/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=tabbied-design/tabbied&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/40c0ce7aab95429aa5660d0db16fe353"/></a>
+  <strong>Free patterns and websites, yours to shape.</strong><br>
+  Pick a pattern, give it your colors and download it.<br>
+  Or start from a website template that is built around one.
 </p>
 
-**Note:** The Tabbied project is undergoing modernization and redesign. The API may change over the next few months.
+<p align="center">
+  <a href="https://tabbied.com"><strong>Try it at tabbied.com</strong></a>
+  &nbsp;|&nbsp;
+  <a href="https://tabbied.com/patterns/">Patterns</a>
+  &nbsp;|&nbsp;
+  <a href="https://tabbied.com/templates/">Website templates</a>
+  &nbsp;|&nbsp;
+  <a href="https://tabbied.com/docs/react/">React component</a>
+</p>
 
-Tabbied lets you easily create timeless and beautifully generated patterns or pattern to use for wall art, websites, print materials and more. Under the hood, Tabbied uses <a href="https://css-doodle.com/">&lt;css-doodle /&gt;</a> to generate the patterns.
+<p align="center">
+  <a href="https://tabbied.com"><img src="docs/readme/home.webp" alt="The Tabbied homepage: free patterns and websites, yours to shape. 338 patterns, 277 website templates, 1 pattern engine." width="900"></a>
+</p>
 
-Try it at **[tabbied.com](https://tabbied.com)**.
+## What is Tabbied?
 
-![tabbied_patterns_screenshot](https://user-images.githubusercontent.com/1064036/102739688-6e5d9b00-4313-11eb-88b9-c3ddb11c04b3.jpg)
+Tabbied is a free set of tools for getting past the blank canvas. It has
+**338 generative patterns**, **437 color palettes** and **277 website
+templates**, and you can change every one of them to suit you: the colors,
+how busy the pattern is, and the arrangement of the shapes themselves.
 
-## What's in this repo
+People use them for wall art, phone wallpapers, slides, posters, packaging,
+book covers, and the website for their bakery. You don't need design skills,
+and you don't need an account to start.
 
-Tabbied is an [npm workspaces](https://docs.npmjs.com/cli/using-npm/workspaces) monorepo with three parts:
+## A pattern for everything
 
-- **The website** (repo root) - the [Next.js](https://nextjs.org/) app behind [tabbied.com](https://tabbied.com), where you browse, customize, reseed, and export the designs. It ships as a static export served by [Cloudflare Workers](https://developers.cloudflare.com/workers/static-assets/).
-- **The [`tabbied`](./packages/tabbied) package** - the generative engine as a published, framework-agnostic library with an optional React component. The site renders every design through this package, so it doubles as the package's integration test.
-- **The [`tabbied-mcp`](./packages/tabbied-mcp) package** - an [MCP](https://modelcontextprotocol.io) server over the design catalog. The same code serves the site's `/mcp` endpoint and a local `tabbied-mcp` bin.
+![A wall of all 338 Tabbied patterns, in every style from bold geometric shapes to fine textures](docs/readme/patterns.webp)
 
-## Using the `tabbied` package
+Every Tabbied pattern is a small program rather than a picture, drawn fresh in
+your browser. Press Shuffle and you get an arrangement nobody has seen before.
+Browse them all in the [pattern library](https://tabbied.com/patterns/).
 
-Render any of the generative designs in your own app:
+## Make it yours in seconds
+
+![The pattern editor: choosing palettes, shuffling the layout, switching to a square and making the grid finer](docs/readme/editor.gif)
+
+1. **Pick your colors.** Choose one of 437 ready-made palettes, or click any
+   swatch and mix your own.
+2. **Play with it.** Shuffle the layout, choose a shape from tall to wide, and
+   slide the density from a few bold shapes to a fine texture. Everything
+   updates as you go.
+3. **Download it for free.** Save a 3000px PNG for print, or a vector SVG you
+   can scale as big as you like (most designs support it).
+
+You can even put a photo of your own behind the pattern. It stays on your
+computer and comes along in both downloads.
+
+## Same pattern, any palette
+
+![One pattern shown in six different palettes: Bauhaus, Neon, Candy, Forest, Ocean and Sunset](docs/readme/palettes.webp)
+
+Colors change everything. Choose a palette in the pattern library and every
+card re-colors with it, so you can browse in the colors you already have in
+mind.
+
+## 277 website templates
+
+![Twelve Tabbied website templates: a plant shop, an arcade bar, hot air balloon rides, a swimwear label, a dog groomer, a new-music ensemble, a music school, a mountain lodge, a scenic railway, a listening bar, a massage clinic and a concert hall](docs/readme/templates.webp)
+
+Need a website instead of a picture? Every template is a complete one-page
+site for a real kind of business: a plant shop, an arcade bar, a balloon ride
+company, a music school, a dog groomer, a dentist, a bakery and lots more.
+Each one is built around a Tabbied pattern and themed with a single palette,
+which is why no two look alike.
+[Browse them all](https://tabbied.com/templates/).
+
+### Whole sites, not just a header
+
+![Five templates shown top to bottom: a music school, an arcade bar, balloon flights, a dog groomer and a plant shop](docs/readme/pages.webp)
+
+Each template has the sections a small business actually needs, from
+services and prices to opening hours and a way to get in touch, with copy you
+can read and replace.
+
+### Ready for phones
+
+![Five templates on phone screens](docs/readme/phones.webp)
+
+Every template works on a small screen, with its menu tucked behind a tidy
+button.
+
+### Make a template yours
+
+- **Re-color it.** Choose any of the 437 palettes and the whole site follows:
+  backgrounds, text, patterns and, on many templates, the illustrations too.
+- **Swap the patterns.** One click draws a fresh pattern for every patterned
+  area on the page.
+- **Download it.** Get plain HTML that opens straight from a folder, or a
+  React project ready to run.
+
+Templates are free with an account. During the beta each account can choose
+five (and ask for more if you need them), and once a template is yours you can
+customize and download it as often as you like.
+
+## For developers
+
+The patterns are also an open source library. Drop one into your own app:
 
 ```bash
 npm install tabbied
@@ -35,131 +117,44 @@ npm install tabbied
 import { TabbiedPattern } from 'tabbied/react';
 import { radius } from 'tabbied/patterns';
 
-export function Example() {
-  return (
-    <TabbiedPattern pattern={radius} fit="cover" style={{ width: '100%', height: 320 }} />
-  );
+export function Banner() {
+  return <TabbiedPattern pattern={radius} fit="cover" style={{ width: '100%', height: 320 }} />;
 }
 ```
 
-Presets are imported individually, so your bundle only includes the designs you actually use. See the **[package README](./packages/tabbied/README.md)** for the full API, the framework-agnostic core, and exporting to PNG.
+The [React docs](https://tabbied.com/docs/react/) and the
+[package README](./packages/tabbied/README.md) cover the rest, including a
+version without React.
 
-### Using Tabbied with an AI coding assistant
-
-The hard part for an assistant isn't the API - it's picking one of the 338
-designs, since the slugs (`cleat`, `gnomonwedge`, `karst`) say nothing about
-what they draw.
-
-**The best answer is the MCP server**, because it lets the assistant *look* at
-the designs before choosing rather than guessing from a name. Nothing to
-install:
+Working with an AI assistant? Tabbied has an [MCP server](./docs/mcp-server.md),
+so tools like Claude Code can search the patterns and look at them before
+choosing one:
 
 ```bash
 claude mcp add --transport http tabbied https://tabbied.com/mcp
 ```
 
-It exposes `search_designs` (filter by motif, mood, density, intended use),
-`preview_design` (the rendered image for up to six candidates), `get_design`,
-and `get_docs`. Running it locally with `npx -y tabbied-mcp` adds
-`render_design`, which writes real SVG and PNG files. See
-[`docs/mcp-server.md`](./docs/mcp-server.md) and the
-[package README](./packages/tabbied-mcp/README.md).
+Want to run the site yourself or contribute? Setup, tests and deployment are
+in [docs/development.md](./docs/development.md).
 
-For assistants without MCP, the same catalog is three static files:
+## Who made this
 
-| File | For |
-| --- | --- |
-| [`/llms.txt`](https://tabbied.com/llms.txt) | The [llms.txt](https://llmstxt.org/) index - a short pointer to everything below. |
-| [`/llms-full.txt`](https://tabbied.com/llms-full.txt) | The full API contract and a one-line entry for all 338 designs (~62 KB). |
-| [`/catalog.json`](https://tabbied.com/catalog.json) | Structured per-design data: palette, options and accepted values, default fit, SVG-export support. Also shipped in the package as `tabbied/catalog.json`. |
+Tabbied is designed by [Syung Hong](https://www.syunghong.com/) and built by
+[Ye Joo Park](https://park.is). We would love to hear what you make with it:
+write to [hello@tabbied.com](mailto:hello@tabbied.com) or
+[open an issue](https://github.com/tabbied-design/tabbied/issues).
 
-All three are generated at build time from the same `patterns/*.json` the
-package is built from ([`scripts/generate-llms.mjs`](./scripts/generate-llms.mjs)),
-so they can't drift from what's published - and the MCP server reads those same
-files rather than a copy of its own.
-
-## Developing locally
-
-To develop locally, clone the repository, run `npm install`, and start the dev server with `npm run dev`:
-
-```bash
-# Clone repository
-git clone https://github.com/tabbied-design/tabbied.git
-
-# CD into tabbied
-cd tabbied
-
-# Install dependencies
-npm install
-
-# Run development server (builds the workspace package first, then starts Next.js)
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-The designs live as JSON in [`packages/tabbied/patterns/`](./packages/tabbied/patterns) - the package's codegen turns them into a typed module that both the site and the published package consume, so adding a new design is just a new JSON file.
-
-## Testing
-
-End-to-end smoke tests run with [Playwright](https://playwright.dev/) against a
-production build:
-
-```bash
-# Install the browser once
-npx playwright install chromium
-
-# Build and run the e2e tests
-npm run build
-npm run test:e2e
-```
-
-Unit tests for the two packages run under `node --test`:
-
-```bash
-npm test --workspace tabbied
-npm test --workspace tabbied-mcp
-```
-
-## Deploying
-
-The site is a static export hosted on
-[Cloudflare Workers static assets](https://developers.cloudflare.com/workers/static-assets/),
-configured in [`wrangler.jsonc`](./wrangler.jsonc). Everything in `out/` is
-served straight off Cloudflare's network; [`worker/index.ts`](./worker/index.ts)
-runs only for `/mcp` and `/health`.
-
-```bash
-# Run the real Worker over a build, including the MCP endpoint
-npm run build
-npm run preview
-
-# Build and ship
-npm run deploy
-```
-
-On Workers Builds, set the build command to `npm run build` and leave the
-deploy command as `npx wrangler deploy`. Response headers live in
-[`public/_headers`](./public/_headers) - a static export has no server to
-attach them to, so `headers()` in `next.config.mjs` would be inert.
+Every pattern is drawn by [css-doodle](https://css-doodle.com/), made by
+[Yuan Chuan](https://yuanchuan.dev/). Thank you!
 
 ## License
 
-Tabbied is not open source as a whole. The three packages under
-[`packages/`](./packages) are MIT licensed: `tabbied` (including its pattern
-designs), `tabbied-mcp` and `tabbied-templates`. Everything else in this
-repository, including the website templates and their pictures, is
-proprietary; see [LICENSE](./LICENSE). A website template may be used only
-by a Tabbied account that has chosen it, under the
+The `tabbied` pattern library (its patterns included), the MCP server and
+`tabbied-templates` are open source under the MIT License: see the LICENSE
+file in each of their folders under [`packages/`](./packages).
+
+Everything else here, the website templates and their pictures above all, is
+proprietary: see [LICENSE](./LICENSE). A template is yours to use once you
+choose it with a Tabbied account, under the
 [Template License](https://tabbied.com/terms-of-service/#template-license).
-Reading a template's source here, or its preview on tabbied.com, is not a
-license to use it.
-
-## Built by
-
-Designed by <a href="https://www.syunghong.com/">Syung Hong</a>, developed by <a href="https://park.is">Ye Joo Park</a>.
-
-
-## Thanks to
-
-Thanks to <a href="https://yuanchuan.dev/">Yuan Chaun</a>, the developer of <a href="https://css-doodle.com/">&lt;css-doodle /&gt;</a>.
+Reading its source here, or its preview on the site, doesn't license it.
