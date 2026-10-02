@@ -126,9 +126,9 @@ The [React docs](https://tabbied.com/docs/react/) and the
 [package README](./packages/tabbied/README.md) cover the rest, including a
 version without React.
 
-Working with an AI assistant? Tabbied has an [MCP server](./docs/mcp-server.md),
-so tools like Claude Code can search the patterns and look at them before
-choosing one:
+Working with an AI assistant? Tabbied has an
+[MCP server](https://tabbied.com/docs/mcp/), so tools like Claude Code can
+search the patterns and look at them before choosing one:
 
 ```bash
 claude mcp add --transport http tabbied https://tabbied.com/mcp

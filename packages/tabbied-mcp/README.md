@@ -7,11 +7,23 @@ or any other MCP client.
 
 ## Use it without installing anything
 
-The same server runs at `https://tabbied.com/mcp`:
+The same server runs at `https://tabbied.com/mcp`, with no account or key:
 
 ```bash
-claude mcp add --transport http tabbied https://tabbied.com/mcp
+claude mcp add --transport http tabbied https://tabbied.com/mcp   # Claude Code
+codex mcp add tabbied --url https://tabbied.com/mcp               # Codex
 ```
+
+- **Claude** (web and desktop): Customize, Connectors, + Add, Add custom
+  connector; enter the URL and choose "No sign in".
+- **ChatGPT**: turn on Developer mode (Settings, Security and login), then add
+  it under [Plugins](https://chatgpt.com/plugins) with the URL as a public
+  endpoint. ChatGPT reaches hosted servers only.
+- **Codex**: the command above, or `[mcp_servers.tabbied]` with
+  `url = "https://tabbied.com/mcp"` in `~/.codex/config.toml`, which the CLI,
+  the IDE extension and the ChatGPT desktop app share.
+- **Cursor** and other clients that read an `mcpServers` JSON file (VS Code's
+  `.vscode/mcp.json` uses `servers` with `"type": "http"` instead):
 
 ```jsonc
 {
@@ -24,8 +36,12 @@ claude mcp add --transport http tabbied https://tabbied.com/mcp
 ## Or run it locally, and render real files
 
 ```bash
-claude mcp add tabbied -- npx -y tabbied-mcp
+claude mcp add tabbied -- npx -y tabbied-mcp   # Claude Code
+codex mcp add tabbied -- npx -y tabbied-mcp    # Codex
 ```
+
+Claude Desktop (`claude_desktop_config.json`), Cursor and other clients that
+start local servers from JSON:
 
 ```jsonc
 {
@@ -48,11 +64,20 @@ binary.
 | `get_design` | The full record for one slug, plus ready-to-paste snippets. |
 | `preview_design` | The rendered preview image for up to six designs, so the model can *look*. |
 | `get_docs` | The complete API reference (`llms-full.txt`). |
+| `list_templates` | The Tabbied website templates, with each one's palette, patterns and editable slots. |
+| `get_template` | One template's editable-section spec, its download links, and how to edit each format. |
 | `render_design` | SVG or PNG at any size, seed, palette, and option set. **Local only.** |
 
 Slugs are opaque - `cleat`, `karst`, `radius` - so the intended flow is
 `search_designs` to narrow, `preview_design` to look, then `get_design` for the
 options. Choosing off tags alone is the main way this goes wrong.
+
+The website templates are licensed per Tabbied account, not with this package:
+downloading one needs an account that has chosen it, under the
+[Template License](https://tabbied.com/terms-of-service/#template-license).
+
+Setup for each client, the tools and example prompts are also on
+[tabbied.com/docs/mcp](https://tabbied.com/docs/mcp/).
 
 ## Programmatic use
 

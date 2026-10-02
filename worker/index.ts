@@ -21,7 +21,7 @@
 // zod first: the SDK builds schemas as it loads, and in the bundle zod only
 // starts where something calls it (worker/zod.ts says why).
 import './zod';
-import { Hono } from 'hono';
+import { Hono, type Context, type Next } from 'hono';
 import { cors } from 'hono/cors';
 import { createMcpHandler } from '@modelcontextprotocol/server';
 import { buildAuth, configuredAdmins, configuredProviders } from './auth';
@@ -154,6 +154,29 @@ async function handleMcp(request: Request, env: Env): Promise<Response> {
 }
 
 const app = new Hono<{ Bindings: Env }>();
+
+/**
+ * A page load in a browser (told by `Sec-Fetch-Mode`, or by an Accept that
+ * asks for HTML where that header is missing), as opposed to a fetch or an
+ * API client. The downloads and the MCP endpoint both answer the two apart.
+ */
+const isNavigation = (request: Request): boolean => {
+  const mode = request.headers.get('sec-fetch-mode');
+
+  if (mode) return mode === 'navigate';
+
+  return (request.headers.get('accept') ?? '').includes('text/html');
+};
+
+// A person who opens the endpoint in a browser is sent to the page about it
+// (/docs/mcp/) rather than shown the SDK's JSON-RPC 405. Only a navigation is:
+// an MCP client POSTs, or GETs asking for text/event-stream, and goes on to
+// the handler below as before.
+const mcpPage = (c: Context<{ Bindings: Env }>, next: Next) =>
+  isNavigation(c.req.raw) ? c.redirect('/docs/mcp/', 302) : next();
+
+app.get('/mcp', mcpPage);
+app.get('/mcp/', mcpPage);
 
 // Every method, because the SDK decides which ones it answers (its 405 is a
 // correct MCP reply, a 404 from this router would not be). Both spellings are
@@ -297,14 +320,6 @@ app.get('/health', (c) => c.text('ok'));
 // A navigation (a click on a download link) is redirected where the answer
 // is, to sign in or to the account page; a fetch (the customizer building a
 // customized zip) gets JSON and a status it can put in a toast.
-
-const isNavigation = (request: Request): boolean => {
-  const mode = request.headers.get('sec-fetch-mode');
-
-  if (mode) return mode === 'navigate';
-
-  return (request.headers.get('accept') ?? '').includes('text/html');
-};
 
 /** Where to come back to after signing in: the page the link was on, if it was ours. */
 const backTo = (request: Request): string => {

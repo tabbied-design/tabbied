@@ -20,6 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'patterns',
     'templates',
     'docs/react',
+    'docs/mcp',
     'privacy-policy',
     'terms-of-service',
     ...patternIds.map((slug) => `patterns/${slug}`),

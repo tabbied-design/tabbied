@@ -4,6 +4,12 @@ Tabbied ships a [Model Context Protocol](https://modelcontextprotocol.io)
 server so an assistant can browse the design catalog, *look* at candidates, and
 render assets without the site or the package in its context.
 
+The page for people is [tabbied.com/docs/mcp](https://tabbied.com/docs/mcp/)
+(`app/docs/mcp/page.tsx`): client setup, the tools and example prompts. A
+browser that opens the endpoint itself is redirected there; an MCP client is
+not. Keep its client setup and tool list in step with this file and the
+package README.
+
 It exists in two forms that share one implementation:
 
 | | Remote | Local |
@@ -35,12 +41,22 @@ Local, when you want to render actual files:
 }
 ```
 
-Or, in Claude Code:
+Or, in Claude Code and Codex:
 
 ```bash
 claude mcp add --transport http tabbied https://tabbied.com/mcp
 claude mcp add tabbied -- npx -y tabbied-mcp
+codex mcp add tabbied --url https://tabbied.com/mcp
+codex mcp add tabbied -- npx -y tabbied-mcp
 ```
+
+Codex keeps it in `~/.codex/config.toml` (`[mcp_servers.tabbied]` with `url`,
+or `command` and `args`), shared by the CLI, the IDE extension and the ChatGPT
+desktop app. Claude on the web and in the desktop app adds the URL as a custom
+connector (Customize, Connectors, Add custom connector, "No sign in"); a
+remote server in `claude_desktop_config.json` is not read. ChatGPT adds it
+under Plugins once Developer mode is on (Settings, Security and login), and
+reaches hosted servers only. The site's page has these as steps.
 
 ## The tools
 

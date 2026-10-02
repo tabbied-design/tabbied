@@ -39,7 +39,7 @@ Designs are referred to by slug and imported individually - \`import { radius } 
 
 ## Docs
 
-- [MCP server](${SITE}/mcp): if you speak the Model Context Protocol, connect to this endpoint instead of reading files - it is the only route that lets you *look* at a design before choosing it. Tools: \`search_designs\`, \`preview_design\`, \`get_design\`, \`get_docs\`, \`list_templates\`, \`get_template\`. Run \`npx -y tabbied-mcp\` locally to also get \`render_design\`.
+- [MCP server](${SITE}/docs/mcp/): if you speak the Model Context Protocol, connect to ${SITE}/mcp instead of reading files - it is the only route that lets you *look* at a design before choosing it. Tools: \`search_designs\`, \`preview_design\`, \`get_design\`, \`get_docs\`, \`list_templates\`, \`get_template\`. Run \`npx -y tabbied-mcp\` locally to also get \`render_design\`.
 - [llms-full.txt](${SITE}/llms-full.txt): the complete API contract, integration recipes, and a one-line entry for every design. Start here - it is designed to be enough on its own.
 - [catalog.json](${SITE}/catalog.json): every design with its description, tags, palette, options, preview URL, and SVG-export support. Use it to look up one design in detail. Also shipped in the package at \`tabbied/catalog.json\`.
 - [React component reference](${SITE}/docs/react/): props, sizing, and live examples.

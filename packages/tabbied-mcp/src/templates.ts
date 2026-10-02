@@ -60,7 +60,8 @@ const USAGE = {
     'To apply changes programmatically, write an edits document ' +
     '({specVersion, slug, edits}) and run it through applyEdits() from the ' +
     '`tabbied-templates` npm package, which validates it against this spec ' +
-    'first. Full reference: https://tabbied.com/docs/editable-templates.',
+    'first. Full reference: ' +
+    'https://github.com/tabbied-design/tabbied/blob/main/docs/editable-templates.md',
 };
 
 /**
