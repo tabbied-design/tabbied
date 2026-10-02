@@ -36,14 +36,38 @@ export const testEmailSql = sql`lower(${user.email}) like ${`%@${TEST_EMAIL_DOMA
 const BATCH = 50;
 
 /**
+ * Where accounts' pictures live in R2: their uploads, their directions'
+ * images and their sites' pictures. Read it before the rows are deleted:
+ * once they cascade, nothing names the generations and sites. At most
+ * BATCH ids at a time.
+ */
+export async function mediaPrefixes(env: Env, ids: string[]): Promise<string[]> {
+  const db = drizzle(env.DB, { schema });
+  const [sites, generations] = await Promise.all([
+    db.select({ id: site.id }).from(site).where(inArray(site.userId, ids)),
+    db.select({ id: generation.id }).from(generation).where(inArray(generation.userId, ids)),
+  ]);
+
+  return [
+    ...ids.map((id) => `up/${id}/`),
+    ...generations.map((row) => `gen/${row.id}/`),
+    ...sites.map((row) => `gen/site/${row.id}/`),
+  ];
+}
+
+export async function deleteMedia(env: Env, prefixes: string[]): Promise<void> {
+  await Promise.all(prefixes.map((prefix) => deletePrefix(env.MEDIA, prefix)));
+}
+
+/**
  * Remove accounts and everything hanging off them. D1 cascades the rows
  * (sessions, sign-in accounts, sites and their revisions, generations,
  * uploads, chosen templates, requests, the usage ledger, the download log);
- * R2 does not, so the pictures go by prefix afterwards: the person's uploads,
- * their directions' images and their sites' pictures. The owners are read
- * before the rows are deleted, since afterwards nothing names them. Rows
- * first, bytes second, as a single upload's removal does: a failure between
- * the two leaves bytes nothing points at, never rows pointing at nothing.
+ * R2 does not, so the pictures go by prefix afterwards (`mediaPrefixes`).
+ * Rows first, bytes second, as a single upload's removal does: a failure
+ * between the two leaves bytes nothing points at, never rows pointing at
+ * nothing. Someone deleting their own account goes the same way, through
+ * better-auth's delete hooks (auth.ts).
  *
  * Who may be removed is the caller's decision; this is only the mechanism.
  * Returns how many accounts were actually there to remove.
@@ -54,21 +78,11 @@ export async function removeUsers(env: Env, ids: string[]): Promise<number> {
 
   for (let start = 0; start < ids.length; start += BATCH) {
     const batch = ids.slice(start, start + BATCH);
-    const [sites, generations] = await Promise.all([
-      db.select({ id: site.id }).from(site).where(inArray(site.userId, batch)),
-      db.select({ id: generation.id }).from(generation).where(inArray(generation.userId, batch)),
-    ]);
+    const prefixes = await mediaPrefixes(env, batch);
     const gone = await db.delete(user).where(inArray(user.id, batch)).returning({ id: user.id });
 
     removed += gone.length;
-
-    const prefixes = [
-      ...gone.map((row) => `up/${row.id}/`),
-      ...generations.map((row) => `gen/${row.id}/`),
-      ...sites.map((row) => `gen/site/${row.id}/`),
-    ];
-
-    await Promise.all(prefixes.map((prefix) => deletePrefix(env.MEDIA, prefix)));
+    await deleteMedia(env, prefixes);
   }
 
   return removed;
