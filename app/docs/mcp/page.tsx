@@ -154,8 +154,6 @@ const PROMPTS = [
 
 export default function McpDocsPage() {
   return (
-    // The same shell as /docs/react: the homepage's tokens, the masthead in
-    // its light tone, a white article, and the dark footer.
     <div className={`${home.home} ${plexMono.variable} ${plexSans.variable} ${styles.page}`}>
       <div className={`${home.columnRule} ${home.columnRuleLeft}`} aria-hidden="true" />
       <div className={`${home.columnRule} ${home.columnRuleRight}`} aria-hidden="true" />

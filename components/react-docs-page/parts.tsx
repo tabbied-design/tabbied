@@ -5,7 +5,6 @@ import { sectionIndex, type DocsSection } from './sections';
 // The pieces the docs pages (/docs/react, /docs/mcp) write their articles
 // from, so the two read as one set of documentation. Server components.
 
-/** Inline code, set in the mono. */
 export function Code({ children }: { children: ReactNode }) {
   return <code className={styles.inlineCode}>{children}</code>;
 }

@@ -281,9 +281,6 @@ function FitDemo({
   );
 }
 
-// A docs section: its index (its position in the contents rail), an anchored,
-// hover-linkable heading, and the body.
-
 // The component's props. Description cells are markup; the rest are strings
 // the table sets in the mono. A row with no default draws a dimmed dash.
 type PropRow = {
