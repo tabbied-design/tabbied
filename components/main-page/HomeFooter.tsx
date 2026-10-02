@@ -71,27 +71,17 @@ export default function HomeFooter() {
         <div>
           <h2 className={styles.heading}>Contact</h2>
           <p className={styles.contact}>
-            <a href={`${GITHUB_URL}issues`} target="_blank" rel="noreferrer">
-              Questions and requests
-            </a>
+            <a href="mailto:hello@tabbied.com">hello@tabbied.com</a>
+          </p>
+          <p className={styles.contact}>
+            Built by <a href="https://www.syunghong.com/">Sy</a> &amp;{' '}
+            <a href="https://www.behance.net/yejoopark">Park</a>
           </p>
         </div>
       </div>
 
       <div className={styles.bottom}>
-        {/* The credit is a byline, not a way to get in touch, so it sits
-            with the copyright rather than under Contact. */}
-        <span>
-          &copy; {new Date().getFullYear()} Tabbied. Built by{' '}
-          <a href="https://www.syunghong.com/" className={styles.thanks}>
-            Sy
-          </a>{' '}
-          &amp;{' '}
-          <a href="https://www.behance.net/yejoopark" className={styles.thanks}>
-            Park
-          </a>
-          .
-        </span>
+        <span>&copy; {new Date().getFullYear()} Tabbied</span>
         <span>
           Special thanks to{' '}
           <a
