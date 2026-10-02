@@ -1,8 +1,9 @@
 // Server identity and the instructions clients hand to the model.
 //
 // VERSION is a literal rather than a package.json read because this module is
-// bundled into a Cloudflare Worker, which has no filesystem. test/info.test.mjs
-// pins it to package.json so the two can't drift.
+// bundled into a Cloudflare Worker, which has no filesystem. The release's
+// `version-packages` step rewrites it from package.json
+// (scripts/sync-version.mjs), and test/info.test.mjs pins the two together.
 export const SERVER_NAME = 'tabbied';
 export const VERSION = '0.2.2';
 
