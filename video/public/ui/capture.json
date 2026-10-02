@@ -1,0 +1,28 @@
+{
+  "editor": {
+    "width": 1800,
+    "height": 1125,
+    "clicks": [
+      {
+        "name": "Sunset",
+        "x": 1505.625,
+        "y": 461.25
+      },
+      {
+        "name": "Bauhaus",
+        "x": 1505.625,
+        "y": 556.25
+      },
+      {
+        "name": "Neon",
+        "x": 1515,
+        "y": 651.25
+      }
+    ]
+  },
+  "site": {
+    "slug": "orbital-lounge",
+    "width": 1800,
+    "height": 5250
+  }
+}

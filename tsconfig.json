@@ -41,6 +41,7 @@
     "packages",
     "out",
     "public/downloads",
-    "worker"
+    "worker",
+    "video"
   ]
 }
