@@ -17,6 +17,10 @@
 // entry point (one server per request, so no Durable Object); it comes from
 // the SDK rather than `agents/mcp/server`, which would pull partyserver,
 // esbuild and babel into the Worker.
+//
+// zod first: the SDK builds schemas as it loads, and in the bundle zod only
+// starts where something calls it (worker/zod.ts says why).
+import './zod';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { createMcpHandler } from '@modelcontextprotocol/server';
