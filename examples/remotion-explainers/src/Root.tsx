@@ -3,6 +3,7 @@ import { FPS, HEIGHT, WIDTH } from './components/Film';
 import { CreditCards, DURATION as CREDIT_CARDS } from './credit-cards/Film';
 import './fonts';
 import { GraceHopper, DURATION as GRACE_HOPPER } from './grace-hopper/Film';
+import { Marmots, DURATION as MARMOTS } from './marmots/Film';
 
 export const Root: React.FC = () => (
   <>
@@ -18,6 +19,14 @@ export const Root: React.FC = () => (
       id="CreditCards"
       component={CreditCards}
       durationInFrames={CREDIT_CARDS}
+      fps={FPS}
+      width={WIDTH}
+      height={HEIGHT}
+    />
+    <Composition
+      id="Marmots"
+      component={Marmots}
+      durationInFrames={MARMOTS}
       fps={FPS}
       width={WIDTH}
       height={HEIGHT}

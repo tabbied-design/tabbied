@@ -6,7 +6,7 @@
 // "transparent"`, which gpt-image-2.5-flare honors with a real alpha channel)
 // at `quality: "low"`. They are drawn in black and white on purpose: the
 // video tints each one with the palette of the scene it sits in (see
-// src/components/Duotone.tsx), so one file serves every palette.
+// src/components/Tinted.tsx), so one file serves every palette.
 //
 // Usage:
 //   OPENAI_API_KEY=sk-... node scripts/generate-images.mjs <film> [--only id,id] [--force]
@@ -67,19 +67,34 @@ async function generate(image) {
 // A cut-out with no transparent pixels is what a silently ignored
 // `background` parameter looks like, and it would draw as a white box over
 // the pattern. Refuse it rather than promote it.
-async function transparentShare(png) {
+//
+// The opposite failure is a subject drawn see-through: the model sometimes
+// paints soft fur as half-transparent, and the pattern then shows through the
+// animal. A clean cut-out keeps partial alpha to its edges (a few percent of
+// the pixels); the first marmot pup had 39%, and rewording the prompt ("fur
+// drawn in solid black ink ... with a firm outline") brought it to 2%.
+async function alphaShares(png) {
   const { data, info } = await sharp(png).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   let clear = 0;
+  let partial = 0;
   for (let i = info.channels - 1; i < data.length; i += info.channels) {
     if (data[i] < 8) clear++;
+    else if (data[i] < 235) partial++;
   }
-  return clear / (info.width * info.height);
+  const pixels = info.width * info.height;
+  return { clear: clear / pixels, partial: partial / pixels };
 }
 
 async function promote(image, png) {
-  const share = await transparentShare(png);
+  const { clear: share, partial } = await alphaShares(png);
   if (share < 0.05) {
     throw new Error(`${image.id}: only ${(share * 100).toFixed(1)}% transparent; not a cut-out`);
+  }
+  if (partial > 0.2) {
+    console.warn(
+      `${image.id}: note: ${(partial * 100).toFixed(0)}% of its pixels are half-transparent, so the ` +
+        `subject may be see-through; look at it over a pattern, and if so reword the prompt and --force it`
+    );
   }
 
   const out = path.join(outDir, `${image.id}.webp`);

@@ -2,12 +2,13 @@
   "name": "remotion-explainers",
   "version": "1.0.0",
   "private": true,
-  "description": "Explainer films drawn with Tabbied patterns and rendered with Remotion: Grace Hopper, and the economics of credit cards.",
+  "description": "Explainer films drawn with Tabbied patterns and rendered with Remotion: Grace Hopper, the economics of credit cards, and marmots.",
   "type": "module",
   "scripts": {
     "studio": "remotion studio",
     "render:grace-hopper": "remotion render GraceHopper out/grace-hopper.mp4",
     "render:credit-cards": "remotion render CreditCards out/credit-cards.mp4",
+    "render:marmots": "remotion render Marmots out/marmots.mp4",
     "still": "remotion still",
     "images": "node scripts/generate-images.mjs",
     "typecheck": "tsc --noEmit && tsc --noEmit -p scripts",
@@ -24,6 +25,7 @@
     "tabbied": "^0.7.0"
   },
   "devDependencies": {
+    "@fontsource/fredoka": "^5.3.0",
     "@fontsource/ibm-plex-mono": "^5.3.0",
     "@fontsource/instrument-serif": "^5.3.0",
     "@fontsource/space-grotesk": "^5.3.0",

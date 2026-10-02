@@ -9,7 +9,8 @@
 // voice being in the account, the music length) and answers with real MP3s
 // made by ffmpeg: a tone for every line, as long as a narrator would take to
 // say it at the requested speed, and a quiet chord for the music. Every
-// library voice starts outside the account, so the add-from-library path runs.
+// library voice starts outside the account, so the add-from-library path runs;
+// the default voices (George, for the marmot film) are in every account.
 // STUB_PACE (words per second, default 2.7) makes lines overrun on purpose,
 // and STUB_REJECT_CONTEXT=1 refuses previous_text and next_text.
 import { execFile } from 'node:child_process';
@@ -27,7 +28,9 @@ const LIBRARY = [
   { voice_id: 'tnSpp4vdxKPjI9w0GnoV', public_owner_id: 'owner-hope', name: 'Hope - upbeat and clear' },
   { voice_id: 'c6SfcYrb2t09NHXiT80T', public_owner_id: 'owner-jarnathan', name: 'Jarnathan - Confident and Versatile' },
 ];
-const account = new Set<string>();
+// Voices every account has from the start, as ElevenLabs' default voices are.
+const PREMADE = [{ voice_id: 'JBFqnCBsd6RMkjVDRZzb', name: 'George - Warm, Captivating Storyteller' }];
+const account = new Set<string>(PREMADE.map((voice) => voice.voice_id));
 
 const body = async (request: IncomingMessage) => {
   let text = '';
@@ -63,7 +66,7 @@ const server = createServer(async (request, response) => {
     }
 
     if (request.method === 'GET' && url.pathname === '/v1/voices') {
-      return send(200, { voices: LIBRARY.filter((voice) => account.has(voice.voice_id)) });
+      return send(200, { voices: [...PREMADE, ...LIBRARY].filter((voice) => account.has(voice.voice_id)) });
     }
 
     if (request.method === 'GET' && url.pathname === '/v1/shared-voices') {

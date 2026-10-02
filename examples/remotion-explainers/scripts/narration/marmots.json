@@ -1,0 +1,30 @@
+{
+  "voice": { "id": "JBFqnCBsd6RMkjVDRZzb", "name": "George - Warm, Captivating Storyteller" },
+  "model": "eleven_v4",
+  "voiceSettings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4,
+    "use_speaker_boost": true,
+    "speed": 1.0
+  },
+  "music": {
+    "model": "music_v2_5",
+    "seed": 427,
+    "gainDb": -15,
+    "prompt": "A whimsical, gentle acoustic underscore for a cute nature documentary about marmots in the mountains. Plucked acoustic guitar and pizzicato strings, a little glockenspiel, soft flute and clarinet, light hand percussion. 92 BPM, playful and warm, like a sunny alpine meadow, unobtrusive under a narrator. A softer, sleepier passage in the middle, then a bright, cheerful finish and a clean ending. No vocals."
+  },
+  "lines": [
+    { "scene": "title", "text": "[warm] Meet the marmot: a squirrel, believe it or not, and the heaviest kind there is." },
+    { "scene": "range", "text": "Fifteen species live across the mountains and meadows of Europe, Asia and North America." },
+    { "scene": "whistle", "text": "A lookout stands tall and whistles. One whistle can mean an eagle; a string of them, a fox." },
+    { "scene": "greeting", "text": "Families share a burrow, and greet each other nose to nose. [softly] Yes, it's as cute as it sounds." },
+    { "scene": "feast", "text": "All summer long they eat grasses, herbs and flowers, fattening up for winter." },
+    { "scene": "sleep", "text": "Then they hibernate, for up to nine months, their hearts slowing to about five beats a minute." },
+    { "scene": "huddle", "text": "They sleep in a family pile, and bigger huddles are more likely to make it to spring." },
+    { "scene": "groundhog", "text": "The groundhog is a marmot too. Every February second, Punxsutawney Phil forecasts the spring." },
+    { "scene": "whistler", "text": "Their whistles even named a ski town: Whistler, in British Columbia, after the hoary marmot." },
+    { "scene": "comeback", "text": "In two thousand three, fewer than thirty Vancouver Island marmots were left in the wild. [pause] Now there are more than four hundred." },
+    { "scene": "outro", "text": "[upbeat] Every frame of this film is code: Tabbied patterns, rendered with Remotion." }
+  ]
+}

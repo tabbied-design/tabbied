@@ -16,7 +16,7 @@ the site's `/mcp` endpoint and a `tabbied-mcp` stdio bin), and
 spec and its apply engine - see below).
 
 `examples/` holds standalone projects that consume `tabbied` from npm, as an
-outside app would (`examples/remotion-explainers`, two Remotion films, is the
+outside app would (`examples/remotion-explainers`, three Remotion films, is the
 first). They are not workspaces and the root tsconfig excludes them, so the
 site's install, typecheck and deploy never see their dependencies; each has
 its own lockfile and README.

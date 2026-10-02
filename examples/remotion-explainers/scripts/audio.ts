@@ -3,7 +3,8 @@
 //
 //   npx tsx scripts/audio.ts <film|all> [--narrate] [--music] [--mix] [options]
 //
-// <film> is grace-hopper or credit-cards. With no step named, all three run:
+// <film> is grace-hopper, credit-cards or marmots. With no step named, all
+// three run:
 //
 //   --narrate   one Eleven v4 line per scene (scripts/narration/<film>.json),
 //               written to public/audio/<film>/narration/
@@ -24,8 +25,11 @@
 // Every request is cached by a hash of what was asked for, in
 // public/audio/<film>/manifest.json, so a rerun pays only for what changed.
 // ELEVENLABS_BASE_URL points it elsewhere (a region, or the stub in
-// scripts/elevenlabs-stub.ts that the tests run against). FFMPEG and FFPROBE
-// name the binaries when they are not on PATH.
+// scripts/elevenlabs-stub.ts that the tests run against).
+//
+// ffmpeg and ffprobe come from FFMPEG and FFPROBE when they are set, else from
+// PATH, else from Remotion, which ships both with its renderer (they are what
+// `npx remotion ffmpeg` runs), so a project that can render can also mix.
 import { execFile } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { access, mkdir, readFile, writeFile } from 'node:fs/promises';
@@ -34,6 +38,7 @@ import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { TIMING as CREDIT_CARDS } from '../src/credit-cards/timing';
 import { TIMING as GRACE_HOPPER } from '../src/grace-hopper/timing';
+import { TIMING as MARMOTS } from '../src/marmots/timing';
 import { FPS, sceneStarts, timelineDuration, type Timing } from '../src/timeline';
 
 const run = promisify(execFile);
@@ -43,6 +48,7 @@ const root = path.resolve(here, '..');
 const FILMS: Record<string, Timing> = {
   'grace-hopper': GRACE_HOPPER,
   'credit-cards': CREDIT_CARDS,
+  marmots: MARMOTS,
 };
 
 /** A line starts this many frames into its scene, once the transition in is mostly done. */
@@ -93,8 +99,6 @@ const DRY_RUN = flag('dry-run');
 const FORCE = flag('force');
 const named = ['narrate', 'music', 'mix'].filter(flag);
 const STEPS = new Set(named.length ? named : ['narrate', 'music', 'mix']);
-const FFMPEG = process.env.FFMPEG ?? 'ffmpeg';
-const FFPROBE = process.env.FFPROBE ?? 'ffprobe';
 const BASE = (process.env.ELEVENLABS_BASE_URL ?? 'https://api.elevenlabs.io').replace(/\/$/, '');
 
 // ---------------------------------------------------------------- helpers
@@ -144,8 +148,54 @@ async function api(key: string, route: string, init: { method?: string; json?: u
   }
 }
 
+// ---------------------------------------------------------------- ffmpeg
+
+type Tool = { name: string; command: string; prefix: string[] };
+const tools: Partial<Record<'ffmpeg' | 'ffprobe', Tool>> = {};
+
+/**
+ * Finds ffmpeg or ffprobe: the environment variable, then PATH, then the copy
+ * Remotion bundles (run through its CLI, which sets up the libraries it
+ * needs). Called before any API request, so a missing tool costs nothing.
+ */
+async function resolveTool(name: 'ffmpeg' | 'ffprobe'): Promise<Tool> {
+  if (tools[name]) return tools[name];
+  const variable = name.toUpperCase();
+  const candidates: Tool[] = [
+    ...(process.env[variable] ? [{ name: process.env[variable]!, command: process.env[variable]!, prefix: [] }] : []),
+    { name, command: name, prefix: [] },
+    {
+      name: `Remotion's ${name}`,
+      command: process.execPath,
+      prefix: [path.join(root, 'node_modules', '@remotion', 'cli', 'remotion-cli.js'), name],
+    },
+  ];
+  for (const tool of candidates) {
+    try {
+      await run(tool.command, [...tool.prefix, '-version']);
+      if (tool.prefix.length) console.log(`  (no ${name} on PATH; using ${tool.name})`);
+      return (tools[name] = tool);
+    } catch {
+      // Not there; try the next.
+    }
+  }
+  throw new Error(
+    `No ${name} found. Install ffmpeg (brew install ffmpeg, or conda install -c conda-forge ffmpeg), ` +
+      `set ${variable} to its path, or run npm install in this folder so Remotion's own copy is there.`
+  );
+}
+
+const ffmpeg = async (args: string[]) => {
+  const tool = await resolveTool('ffmpeg');
+  return run(tool.command, [...tool.prefix, ...args], { maxBuffer: 16 * 1024 * 1024 });
+};
+
 async function duration(file: string): Promise<number> {
-  const { stdout } = await run(FFPROBE, ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', file]);
+  const tool = await resolveTool('ffprobe');
+  const { stdout } = await run(tool.command, [
+    ...tool.prefix,
+    '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', file,
+  ]);
   return Number(stdout.trim());
 }
 
@@ -322,10 +372,19 @@ async function compose(spec: Spec, filmSeconds: number, key: string, dir: string
   console.log(`  music: ${manifest.music.seconds.toFixed(2)}s`);
 }
 
+/** How much of the music is taken away under the voice: 0.65 is about -9 dB. */
+const DUCK = 0.65;
+
 /**
  * The lines at their cue times over the music, the music ducked under the
- * voice by a sidechain compressor, the whole normalized to -16 LUFS, and the
- * result muxed onto the render with its video stream copied, not re-encoded.
+ * voice, the whole normalized to -16 LUFS, and the result muxed onto the
+ * render with its video stream copied, not re-encoded.
+ *
+ * The ducking is a volume curve, not a compressor listening to the voice:
+ * every line's start and length are known, so the bed eases down a quarter
+ * second before each one and back up half a second after it. It also keeps
+ * the graph to filters Remotion's own ffmpeg has (it leaves out
+ * sidechaincompress, asplit and afade).
  */
 async function mix(film: string, spec: Spec, cues: Cue[], filmSeconds: number, dir: string, manifest: Manifest) {
   const video = option('video') ?? path.join(root, 'out', `${film}.mp4`);
@@ -342,38 +401,42 @@ async function mix(film: string, spec: Spec, cues: Cue[], filmSeconds: number, d
   if (lines.some((line) => !line) || !manifest.music) throw new Error(`Narration or music missing for ${film}: run --narrate and --music.`);
 
   const total = filmSeconds.toFixed(3);
-  const fadeOut = Math.max(0, filmSeconds - 3).toFixed(3);
   const format = 'aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo';
   const voices = cues.map((cue, i) => {
     const ms = Math.round(seconds(cue.startFrame) * 1000);
     return `[${i + 2}:a]${format},adelay=${ms}:all=1[l${i}]`;
   });
+
+  // 1 while a line is speaking, easing in and out around it; the music's
+  // gain is 1 - DUCK times that, inside a 1.5 s fade in and a 3 s fade out.
+  const speaking = cues
+    .map((cue, i) => {
+      const from = seconds(cue.startFrame);
+      const to = from + lines[i]!.seconds;
+      return `clip((t-${(from - 0.25).toFixed(3)})/0.25,0,1)*clip((${(to + 0.5).toFixed(3)}-t)/0.5,0,1)`;
+    })
+    .reduce((all, one) => `max(${all},${one})`);
+  const gain = `(1-${DUCK}*${speaking})*clip(t/1.5,0,1)*clip((${total}-t)/3,0,1)`;
+
   const graph = [
     ...voices,
-    `${cues.map((_, i) => `[l${i}]`).join('')}amix=inputs=${cues.length}:normalize=0:duration=longest,apad=whole_dur=${total},atrim=0:${total},asplit=2[voice][key]`,
-    `[1:a]${format},atrim=0:${total},apad=whole_dur=${total},volume=${spec.music.gainDb}dB,` +
-      `afade=t=in:st=0:d=1.5,afade=t=out:st=${fadeOut}:d=3[bed]`,
-    // The bed dips under the voice and comes back up between lines.
-    `[bed][key]sidechaincompress=threshold=0.02:ratio=6:attack=20:release=400[ducked]`,
-    `[voice][ducked]amix=inputs=2:normalize=0:duration=first,loudnorm=I=-16:TP=-1.5:LRA=11,atrim=0:${total}[out]`,
+    `${cues.map((_, i) => `[l${i}]`).join('')}amix=inputs=${cues.length}:normalize=0:duration=longest,apad=whole_dur=${total},atrim=0:${total}[voice]`,
+    `[1:a]${format},atrim=0:${total},apad=whole_dur=${total},volume=${spec.music.gainDb}dB,volume='${gain}':eval=frame[bed]`,
+    `[voice][bed]amix=inputs=2:normalize=0:duration=first,loudnorm=I=-16:TP=-1.5:LRA=11,atrim=0:${total}[out]`,
   ].join(';');
 
   const output = path.join(root, 'out', `${film}-narrated.mp4`);
-  await run(
-    FFMPEG,
-    [
-      '-hide_banner', '-loglevel', 'error', '-y',
-      '-i', video,
-      '-i', path.join(dir, manifest.music.file),
-      ...lines.flatMap((line) => ['-i', path.join(dir, line!.file)]),
-      '-filter_complex', graph,
-      '-map', '0:v', '-map', '[out]',
-      '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000',
-      '-movflags', '+faststart', '-shortest',
-      output,
-    ],
-    { maxBuffer: 16 * 1024 * 1024 }
-  );
+  await ffmpeg([
+    '-hide_banner', '-loglevel', 'error', '-y',
+    '-i', video,
+    '-i', path.join(dir, manifest.music.file),
+    ...lines.flatMap((line) => ['-i', path.join(dir, line!.file)]),
+    '-filter_complex', graph,
+    '-map', '0:v', '-map', '[out]',
+    '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000',
+    '-movflags', '+faststart', '-shortest',
+    output,
+  ]);
   console.log(`  mix: ${path.relative(root, output)} (${(await duration(output)).toFixed(2)}s)`);
 }
 
@@ -391,8 +454,14 @@ async function main() {
     process.exit(1);
   }
 
-  // Only the steps that call the API need the key; a mix is all local.
+  // Only the steps that call the API need the key; a mix is all local. Every
+  // step measures what it makes, so the tools are found first: a missing one
+  // stops the run before anything is paid for.
   const calls = !DRY_RUN && (STEPS.has('narrate') || STEPS.has('music'));
+  if (!DRY_RUN) {
+    await resolveTool('ffprobe');
+    if (STEPS.has('mix')) await resolveTool('ffmpeg');
+  }
   const key = calls ? await apiKey() : '';
 
   for (const film of films) {
