@@ -13,10 +13,13 @@ import { propertiesForPalette, resolvePaletteRoles } from './palette.js';
 import type { PaletteProperties } from './palette.js';
 import type {
   EditsDocument,
+  PaletteDerivation,
+  PatternEdit,
   PatternOptionSpec,
   PatternSlot,
   Problem,
   Slot,
+  SlotKind,
   TemplateSpec,
   TextFormat,
 } from './spec.js';
@@ -79,8 +82,69 @@ const warning = (path: string, message: string): Problem => ({
   message,
 });
 
+// Both documents arrive as parsed JSON (a fetched spec, a saved revision, a
+// model's answer), so the checks below read them as `unknown` first: a check
+// that throws on the thing it was asked to check is no check.
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+
+const oneOf = <T>(values: readonly T[], value: unknown): value is T =>
+  (values as readonly unknown[]).includes(value);
+
+const SLOT_KINDS: readonly SlotKind[] = ['text', 'image', 'pattern'];
+const TEXT_FORMATS: readonly TextFormat[] = ['plain', 'emphasis'];
+const DERIVATIONS: readonly PaletteDerivation[] = [
+  'direct',
+  'templateSite',
+  'vars',
+];
+
+/** "a text slot", "an image slot". */
+const slotPhrase = (kind: unknown): string => {
+  const name = String(kind);
+
+  return `${/^[aeiou]/i.test(name) ? 'an' : 'a'} ${name} slot`;
+};
+
 const findSlot = (spec: TemplateSpec, id: string): Slot | undefined =>
-  spec.slots.find((slot) => slot.id === id);
+  spec.slots.find((slot) => slot?.id === id);
+
+const entriesOf = (value: unknown): [string, unknown][] =>
+  isRecord(value) ? Object.entries(value) : [];
+
+const isOptionValue = (value: unknown): value is string | number | boolean =>
+  typeof value === 'string' ||
+  typeof value === 'boolean' ||
+  (typeof value === 'number' && Number.isFinite(value));
+
+/**
+ * Whether a string may be written as an image's `src`.
+ *
+ * A path or a relative URL has no scheme and is always fine, as are http(s),
+ * `blob:` (a local preview) and an inline picture (`data:image/...`). Any
+ * other scheme is refused: `javascript:` and its relatives are a script path
+ * into the page the document is applied to, and `data:text/html` is not a
+ * picture. A browser drops tabs and newlines anywhere in a URL, and leading
+ * spaces and control characters, before it reads the scheme, so they are
+ * dropped here first or `java\tscript:` would pass.
+ */
+export function isSafeImageSrc(src: unknown): src is string {
+  if (typeof src !== 'string') return false;
+
+  const value = src.replace(/[\t\n\r]/g, '').replace(/^[\x00-\x20]+/, '');
+
+  if (value === '') return false;
+
+  const scheme = /^([a-z][a-z0-9+.-]*):/i.exec(value);
+
+  if (!scheme) return true;
+
+  const name = scheme[1].toLowerCase();
+
+  if (name === 'http' || name === 'https' || name === 'blob') return true;
+
+  return name === 'data' && /^data:image\//i.test(value);
+}
 
 const serializePalette = (colors: readonly string[]): string =>
   colors.join(', ');
@@ -171,6 +235,10 @@ function checkPalette(path: string, colors: unknown): Problem[] {
  * emitted for an edit that validated: a document with one bad slot id still
  * applies the rest, which is what makes a partially-stale saved project (or a
  * partially-wrong LLM response) recoverable rather than a wall.
+ *
+ * The document is checked as untrusted JSON and any shape of it comes back as
+ * problems, never as a throw. The spec is trusted once `validateSpec` has
+ * passed it, which the build gate does for every published one.
  */
 export function planEdits(
   spec: TemplateSpec,
@@ -180,6 +248,23 @@ export function planEdits(
   const problems: Problem[] = [];
   const operations: EditOperation[] = [];
   const designs = designSet(options.designs);
+
+  if (
+    !isRecord(spec) ||
+    !isRecord(spec.site) ||
+    !isRecord(spec.palette) ||
+    !Array.isArray(spec.slots)
+  ) {
+    problems.push(
+      error('(spec)', 'not a template spec (check it with validateSpec)')
+    );
+    return { operations, problems };
+  }
+
+  if (!isRecord(document)) {
+    problems.push(error('(document)', 'an edits document must be an object'));
+    return { operations, problems };
+  }
 
   if (document.specVersion !== spec.specVersion) {
     problems.push(
@@ -203,6 +288,17 @@ export function planEdits(
 
   const edits = document.edits ?? {};
 
+  if (!isRecord(edits)) {
+    problems.push(error('edits', 'edits must be an object'));
+    return { operations, problems };
+  }
+
+  for (const key of ['text', 'images', 'patterns'] as const) {
+    if (edits[key] != null && !isRecord(edits[key])) {
+      problems.push(error(key, `${key} must be an object keyed by slot id`));
+    }
+  }
+
   // ---- palette ------------------------------------------------------------
   // Resolved first because pattern fields re-color from it, and an explicit
   // per-field palette in the same document has to win over that.
@@ -223,7 +319,7 @@ export function planEdits(
   }
 
   // ---- text ---------------------------------------------------------------
-  for (const [id, value] of Object.entries(edits.text ?? {})) {
+  for (const [id, value] of entriesOf(edits.text)) {
     const path = `text.${id}`;
     const slot = findSlot(spec, id);
 
@@ -233,7 +329,7 @@ export function planEdits(
     }
 
     if (slot.kind !== 'text') {
-      problems.push(error(path, `slot "${id}" is a ${slot.kind} slot`));
+      problems.push(error(path, `slot "${id}" is ${slotPhrase(slot.kind)}`));
       continue;
     }
 
@@ -270,7 +366,7 @@ export function planEdits(
   }
 
   // ---- images -------------------------------------------------------------
-  for (const [id, edit] of Object.entries(edits.images ?? {})) {
+  for (const [id, edit] of entriesOf(edits.images)) {
     const path = `images.${id}`;
     const slot = findSlot(spec, id);
 
@@ -280,12 +376,28 @@ export function planEdits(
     }
 
     if (slot.kind !== 'image') {
-      problems.push(error(path, `slot "${id}" is a ${slot.kind} slot`));
+      problems.push(error(path, `slot "${id}" is ${slotPhrase(slot.kind)}`));
       continue;
     }
 
-    if (!edit || typeof edit.src !== 'string' || edit.src.trim() === '') {
+    if (!isRecord(edit) || typeof edit.src !== 'string' || edit.src.trim() === '') {
       problems.push(error(path, 'an image edit needs a src'));
+      continue;
+    }
+
+    // Not echoed back: a refused src may be a megabyte of data: URI.
+    if (!isSafeImageSrc(edit.src)) {
+      problems.push(
+        error(
+          `${path}.src`,
+          'src must be a path, or an http(s), blob: or data:image/ URL'
+        )
+      );
+      continue;
+    }
+
+    if (edit.alt != null && typeof edit.alt !== 'string') {
+      problems.push(error(`${path}.alt`, 'alt must be a string'));
       continue;
     }
 
@@ -293,18 +405,19 @@ export function planEdits(
       type: 'image',
       id,
       src: edit.src,
-      alt: edit.alt ?? slot.alt,
+      alt: typeof edit.alt === 'string' ? edit.alt : slot.alt,
     });
   }
 
   // ---- patterns -----------------------------------------------------------
   // Every pattern slot that re-colors from the brand palette needs an
   // operation when the palette moved, even if the document never mentions it.
-  const patternIds = new Set<string>(Object.keys(edits.patterns ?? {}));
+  const patternEdits = isRecord(edits.patterns) ? edits.patterns : {};
+  const patternIds = new Set<string>(Object.keys(patternEdits));
 
   if (paletteColors) {
     for (const slot of spec.slots) {
-      if (slot.kind === 'pattern' && slot.paletteRoles) patternIds.add(slot.id);
+      if (slot?.kind === 'pattern' && slot.paletteRoles) patternIds.add(slot.id);
     }
   }
 
@@ -318,11 +431,18 @@ export function planEdits(
     }
 
     if (slot.kind !== 'pattern') {
-      problems.push(error(path, `slot "${id}" is a ${slot.kind} slot`));
+      problems.push(error(path, `slot "${id}" is ${slotPhrase(slot.kind)}`));
       continue;
     }
 
-    const edit = edits.patterns?.[id] ?? {};
+    const raw: unknown = patternEdits[id] ?? {};
+
+    if (!isRecord(raw)) {
+      problems.push(error(path, 'a pattern edit must be an object'));
+      continue;
+    }
+
+    const edit = raw as PatternEdit;
     const attributes: Record<string, string | null> = {};
     const swapped = typeof edit.slug === 'string' && edit.slug !== slot.config.slug;
 
@@ -359,9 +479,20 @@ export function planEdits(
     }
 
     if (edit.options != null) {
-      const optionProblems: Problem[] = [];
+      const optionProblems: Problem[] = !isRecord(edit.options)
+        ? [error(`${path}.options`, 'options must be an object of option ids to values')]
+        : Object.entries(edit.options).flatMap(([optionId, value]) =>
+            isOptionValue(value)
+              ? []
+              : [
+                  error(
+                    `${path}.options.${optionId}`,
+                    'an option value must be a string, a number or a boolean'
+                  ),
+                ]
+          );
 
-      if (swapped) {
+      if (optionProblems.length === 0 && swapped) {
         // The slot's option metadata describes the design being replaced, so
         // there is nothing to check the new values against. Say so.
         problems.push(
@@ -370,7 +501,7 @@ export function planEdits(
             'options were not validated: the design was swapped, so this spec has no ranges for them'
           )
         );
-      } else {
+      } else if (optionProblems.length === 0) {
         for (const [optionId, value] of Object.entries(edit.options)) {
           const option = slot.options?.find(
             (candidate) => candidate.id === optionId
@@ -392,7 +523,17 @@ export function planEdits(
       problems.push(...optionProblems);
 
       if (optionProblems.length === 0) {
-        attributes['data-options'] = serializeOptions(edit.options);
+        // `data-options` is the field's whole set, so an edit to one option
+        // is written over the others the page already has: written alone, it
+        // would drop the grid along with everything else not named. A swap is
+        // the exception, since the old design's options mean nothing to the
+        // new one.
+        attributes['data-options'] = serializeOptions(
+          swapped ? edit.options : { ...slot.config.options, ...edit.options }
+        );
+      } else if (swapped) {
+        // Refused values are dropped, but the old design's set still goes.
+        attributes['data-options'] = null;
       }
     } else if (swapped) {
       // Option ids belong to the design that declared them; carrying the old
@@ -431,46 +572,168 @@ export function validateEdits(
  * Runs in the build gate (`npm run editable`). Two slots sharing an id, or an
  * empty one, produce a spec that looks fine and an editor whose controls do
  * nothing.
+ *
+ * Any JSON comes back as problems, never as a throw, and a spec with no errors
+ * is one `planEdits` can read without throwing either.
  */
 export function validateSpec(spec: TemplateSpec): Problem[] {
   const problems: Problem[] = [];
+  const candidate: unknown = spec;
 
-  if (spec.specVersion !== SPEC_VERSION) {
+  if (!isRecord(candidate)) {
+    return [error('(spec)', 'a spec must be an object')];
+  }
+
+  if (typeof candidate.specVersion !== 'number') {
+    problems.push(error('specVersion', 'specVersion must be a number'));
+  } else if (candidate.specVersion !== SPEC_VERSION) {
     problems.push(
       warning(
         'specVersion',
-        `spec is version ${spec.specVersion}, this build speaks ${SPEC_VERSION}`
+        `spec is version ${candidate.specVersion}, this build speaks ${SPEC_VERSION}`
       )
     );
   }
 
-  const seen = new Set<string>();
+  const site = candidate.site;
 
-  for (const slot of spec.slots) {
-    if (seen.has(slot.id)) {
-      problems.push(error(slot.id, `duplicate slot id "${slot.id}"`));
+  if (!isRecord(site)) {
+    problems.push(error('site', 'a spec needs a site: { slug, name }'));
+  } else {
+    if (typeof site.slug !== 'string' || site.slug.trim() === '') {
+      problems.push(error('site.slug', 'the site needs a slug'));
     }
 
-    seen.add(slot.id);
-
-    if (slot.id.trim() === '') {
-      problems.push(error('(unnamed)', 'a slot has an empty id'));
+    if (typeof site.name !== 'string') {
+      problems.push(error('site.name', 'the site name must be a string'));
     }
   }
 
-  problems.push(...checkPalette('palette', spec.palette.colors));
+  const palette = candidate.palette;
+  let paletteLength: number | null = null;
 
-  for (const slot of spec.slots) {
-    if (slot.kind !== 'pattern' || !slot.paletteRoles) continue;
+  if (!isRecord(palette)) {
+    problems.push(error('palette', 'a spec needs a palette: { colors, derivation }'));
+  } else {
+    problems.push(...checkPalette('palette', palette.colors));
+
+    if (Array.isArray(palette.colors)) paletteLength = palette.colors.length;
+
+    if (!oneOf(DERIVATIONS, palette.derivation)) {
+      problems.push(
+        error(
+          'palette.derivation',
+          `derivation must be one of: ${DERIVATIONS.join(', ')}`
+        )
+      );
+    }
+  }
+
+  if (!Array.isArray(candidate.slots)) {
+    problems.push(error('slots', 'slots must be an array'));
+    return problems;
+  }
+
+  const seen = new Set<string>();
+
+  for (const [index, slot] of candidate.slots.entries()) {
+    if (!isRecord(slot)) {
+      problems.push(error(`slots[${index}]`, 'a slot must be an object'));
+      continue;
+    }
+
+    if (typeof slot.id !== 'string' || slot.id.trim() === '') {
+      problems.push(error(`slots[${index}]`, 'a slot has an empty id'));
+      continue;
+    }
+
+    const id = slot.id;
+
+    if (seen.has(id)) {
+      problems.push(error(id, `duplicate slot id "${id}"`));
+    }
+
+    seen.add(id);
+
+    if (!oneOf(SLOT_KINDS, slot.kind)) {
+      problems.push(
+        error(
+          `${id}.kind`,
+          `kind ${JSON.stringify(slot.kind) ?? 'undefined'} is not one of: ${SLOT_KINDS.join(', ')}`
+        )
+      );
+      continue;
+    }
+
+    if (slot.kind === 'text') {
+      if (typeof slot.value !== 'string') {
+        problems.push(error(`${id}.value`, 'a text slot needs a string value'));
+      }
+
+      if (!oneOf(TEXT_FORMATS, slot.format)) {
+        problems.push(
+          error(`${id}.format`, `format must be one of: ${TEXT_FORMATS.join(', ')}`)
+        );
+      }
+
+      continue;
+    }
+
+    if (slot.kind === 'image') {
+      if (typeof slot.src !== 'string') {
+        problems.push(error(`${id}.src`, 'an image slot needs a string src'));
+      }
+
+      continue;
+    }
+
+    const config = slot.config;
+
+    if (
+      !isRecord(config) ||
+      typeof config.slug !== 'string' ||
+      config.slug.trim() === ''
+    ) {
+      problems.push(error(`${id}.config.slug`, 'a pattern slot needs a design slug'));
+    }
+
+    // Merged under an option edit, so it has to be a set of values.
+    if (isRecord(config) && config.options != null && !isRecord(config.options)) {
+      problems.push(error(`${id}.config.options`, 'config options must be an object'));
+    }
+
+    if (
+      slot.options != null &&
+      (!Array.isArray(slot.options) ||
+        !slot.options.every(
+          (option) => isRecord(option) && typeof option.id === 'string'
+        ))
+    ) {
+      problems.push(error(`${id}.options`, 'options must be an array of { id, type, ... }'));
+    }
+
+    if (slot.paletteRoles == null) continue;
+
+    if (!Array.isArray(slot.paletteRoles)) {
+      problems.push(error(`${id}.paletteRoles`, 'paletteRoles must be an array'));
+      continue;
+    }
 
     for (const [index, role] of slot.paletteRoles.entries()) {
-      if (typeof role !== 'number') continue;
+      const path = `${id}.paletteRoles[${index}]`;
 
-      if (!Number.isInteger(role) || role < 0) {
+      // A string is a literal (`transparent`) and never moves.
+      if (typeof role === 'string') continue;
+
+      if (typeof role !== 'number' || !Number.isInteger(role) || role < 0) {
+        problems.push(error(path, `role ${String(role)} is not a palette index`));
+      } else if (paletteLength != null && role >= paletteLength) {
+        // resolvePaletteRoles wraps an index past the end, so a re-color
+        // would give the field a color the annotation never meant.
         problems.push(
           error(
-            `${slot.id}.paletteRoles[${index}]`,
-            `role ${role} is not a palette index`
+            path,
+            `role ${role} is past the end of the palette (${paletteLength} colors)`
           )
         );
       }

@@ -24,20 +24,23 @@ export type PaletteVerdict = {
 };
 
 /**
- * Lowercase, and expand `#abc` to `#aabbcc`, so rule one's string comparison
- * sees `#fff` and `#ffffff` as one color and everything downstream gets the
- * six-digit form.
+ * Lowercase, expand `#abc` to `#aabbcc` (and `#abcd` to `#aabbccdd`), and drop
+ * an opaque alpha, so rule one's string comparison sees `#fff`, `#ffff`,
+ * `#ffffff` and `#ffffffff` as one color and everything downstream gets the
+ * six-digit form wherever there is one.
  */
 function normalize(hex: string): string {
   const value = hex.trim().toLowerCase();
+  const long =
+    value.length === 4 || value.length === 5
+      ? `#${value
+          .slice(1)
+          .split('')
+          .map((char) => char + char)
+          .join('')}`
+      : value;
 
-  return value.length === 4
-    ? `#${value
-        .slice(1)
-        .split('')
-        .map((char) => char + char)
-        .join('')}`
-    : value;
+  return long.length === 9 && long.endsWith('ff') ? long.slice(0, 7) : long;
 }
 
 /**

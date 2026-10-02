@@ -13,6 +13,7 @@ import {
   mix,
   onColor,
   toRgb,
+  isHexColor,
 } from '../dist/index.js';
 
 test('toRgb reads every hex form isHexColor admits, alpha dropped', () => {
@@ -22,6 +23,17 @@ test('toRgb reads every hex form isHexColor admits, alpha dropped', () => {
   // The alpha byte must not shift into the channels (that gives 0, 0, 128).
   assert.deepEqual(toRgb('#ff000080'), [255, 0, 0]);
   assert.equal(luminance('#ffffff80'), luminance('#ffffff'));
+
+  // And the two agree on which forms those are: `#rgba` was readable here
+  // and refused by isHexColor, so a palette passed one check and failed the
+  // next.
+  for (const hex of ['#f00', '#f008', '#ff0000', '#ff000080']) {
+    assert.equal(isHexColor(hex), true, hex);
+  }
+
+  for (const bad of ['#ff', '#ff000', '#ff00000', '#ff0000800', 'ff0000', '#ggg', 'red', 3]) {
+    assert.equal(isHexColor(bad), false, String(bad));
+  }
 });
 
 test('direct derivation writes only the brand roles', () => {

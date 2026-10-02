@@ -18,6 +18,10 @@ browser, in Node with any DOM implementation, and in a Cloudflare Worker.
 npm install tabbied-templates
 ```
 
+The package is ESM only. `import` it; `require('tabbied-templates')` fails on
+Node 18, and works on Node 20.19+ and 22.12+ only through their `require()` of
+ES modules.
+
 ## Apply an edit
 
 ```ts
@@ -44,18 +48,44 @@ from a model is recoverable. Errors are errors: an out-of-range value is
 reported, never quietly clamped.
 
 The engine writes only text, attributes and inline custom properties; it never
-adds a class. Text is written as text nodes, never as HTML. Pattern fields
-read their `data-*` attributes when `hydratePatterns()` from
+adds a class. Text is written as text nodes, never as HTML, and an image `src`
+must be a path, a relative URL, or an `http(s)`, `blob:` or `data:image/` URL:
+`javascript:` and every other scheme is refused. Pattern fields read their
+`data-*` attributes when `hydratePatterns()` from
 [`tabbied`](https://www.npmjs.com/package/tabbied) mounts them, so apply an
 edit before the patterns mount, or mount them again after.
+
+## Pattern fields
+
+```ts
+const edits = {
+  patterns: {
+    'hero.field': { options: { frequency: 0.5 }, seed: 'fern-2' },
+    'coda.field': { slug: 'blossom' },
+  },
+};
+```
+
+A field's `options` are merged over the ones it already has, so naming one
+option leaves the others (the grid, above all) as the page set them. A `slug`
+swaps the design: the old design's options go with it, and any `options` in
+the same edit are the new design's whole set, written without range checks
+(the spec only knows the old design's ranges) and with a warning to say so. A field that follows
+the brand palette re-colors with it; an explicit `palette` on the field wins.
 
 ## Plan first, apply later
 
 `planEdits(spec, document)` is the pure half: it validates the document,
 resolves the palette and the option ranges, and returns
 `{ operations, problems }` without touching a DOM, so it can run on a server
-before anything is shown. `applyPlan(root, plan)` executes a plan.
-`validateEdits` and `validateSpec` check the two documents on their own.
+before anything is shown. Pass `{ designs }` (the catalog's slugs) as a third
+argument to refuse a swap to a design that does not exist, which would
+otherwise draw a blank field. `applyPlan(root, plan)` executes a plan.
+
+`validateEdits(spec, document)` and `validateSpec(spec)` check the two
+documents on their own. Both take any parsed JSON, `null` and arrays
+included, and answer with problems rather than throwing, so a model's answer
+can be checked before anything trusts its shape.
 
 The full reference, including the slot types and how a re-color reaches the
 pattern fields, is
