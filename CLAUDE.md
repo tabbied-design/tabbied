@@ -127,8 +127,19 @@ stay so.** Declaring `routes` changes their defaults: with routes and no
 URLs left unset follow it. That is how the first production deploy with the
 Custom Domains took PR previews down, and the next PR's Cloudflare comment
 simply had no Preview URL column. Only `wrangler deploy` applies either
-setting; a PR build's `wrangler versions upload` never does, so a change
-here reaches previews once it is deployed from main.
+setting; a PR build's `wrangler preview` never does, so a change here
+reaches previews once it is deployed from main.
+
+**PR previews bind production, through the `previews` block.** Workers
+Builds runs `npx wrangler preview` for a PR, and a Preview inherits nothing
+from the top level of `wrangler.jsonc`. Since wrangler 4.133 the command
+fails in CI when the block is missing ("missing a `previews` block"), which
+is how #105's preview builds failed while GitHub CI was green. The block
+repeats production's D1 (by its real id: a preview is never provisioned),
+R2 bucket and vars, so previews read and write live data, as they did
+before the block existed. Keep the two in step. Secrets come from the
+Previews Base config (`wrangler preview base-config secret put`), not from
+the production Worker.
 
 **Redirects live in `public/_redirects`**, beside `_headers` and read the
 same way. The template sites moved from `/template/<slug>/` to
