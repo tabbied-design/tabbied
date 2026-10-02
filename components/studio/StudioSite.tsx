@@ -512,7 +512,12 @@ export default function StudioSite({
       {site.templateChanged ? (
         <p className={styles.notice} role="status">
           The {site.templateName} template has been updated since this site was
-          made. Anything that no longer fits is listed below.
+          made.{' '}
+          {/* The list is PreviewNotices', just below, and it only exists when
+              the engine refused part of the document. */}
+          {ready.problems.some((problem) => problem.level === 'error' || problem.path === 'runtime')
+            ? 'What no longer fits is listed below.'
+            : 'Everything you changed still applies to it.'}
         </p>
       ) : null}
       <PreviewNotices problems={ready.problems} />

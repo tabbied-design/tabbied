@@ -371,6 +371,13 @@
   text-transform: uppercase;
 }
 
+.menuNote {
+  margin: 0;
+  padding: 2px 12px 8px;
+  font: 400 12px / 1.45 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  color: oklch(0.5 0.01 260);
+}
+
 .menuItem {
   display: block;
   padding: 9px 12px;

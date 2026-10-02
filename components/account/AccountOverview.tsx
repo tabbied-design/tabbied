@@ -104,6 +104,7 @@ const MENU: DownloadMenuClasses = {
   menuLabel: styles.menuLabel,
   menuItem: styles.menuItem,
   menuRule: styles.menuRule,
+  menuNote: styles.menuNote,
 };
 
 /** One chosen template: its name and kind, when it was customized and added, and what to do with it. */
@@ -530,7 +531,11 @@ export default function AccountOverview({ index }: { index: TemplateIndexEntry[]
       title="Your templates"
       back={false}
       badge="Free beta"
-      lede={`Choose ${FREE_TEMPLATES} website templates for free during beta. Once you choose one, you can change its colors and patterns and download it as often as you like.`}
+      // The allowance this account has, the number the ring and the table
+      // count against, not the five every account starts with: a granted
+      // request raises it. No number until the templates are read, rather
+      // than a five that turns into a seven.
+      lede={`Choose ${mine ? `${total} ` : ''}website templates for free during beta. Once you choose one, you can change its colors and patterns and download it as often as you like.`}
     >
       {activated && /^\d+$/.test(activated) && dismissed !== activated ? (
         <div className={styles.added} role="status">

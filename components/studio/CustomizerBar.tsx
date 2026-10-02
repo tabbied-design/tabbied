@@ -15,6 +15,7 @@ import { Menu } from '@base-ui/react/menu';
 import { ChevronDown } from 'lucide-react';
 import { initials } from 'components/nav';
 import ImpersonationNotice from 'components/nav/ImpersonationNotice';
+import { CUSTOMIZED_FORMAT_NOTE } from 'components/template/DownloadMenu';
 import { signOut, useSessionUser } from 'lib/authClient';
 import { stopImpersonating } from 'lib/impersonation';
 import styles from './CustomizerBar.module.css';
@@ -147,6 +148,7 @@ export default function CustomizerBar({
                       HTML &amp; CSS
                     </Menu.Item>
                   </div>
+                  <p className={styles.dlFormatNote}>{CUSTOMIZED_FORMAT_NOTE}</p>
                 </div>
                 <div className={styles.dlOriginal}>
                   <div className={styles.dlTitle}>Original {templateName}</div>

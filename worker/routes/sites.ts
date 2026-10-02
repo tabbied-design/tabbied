@@ -1050,6 +1050,16 @@ sites.post('/:id/revisions', async (c) => {
     responseId: null,
   });
 
+  // The document was just checked against the template as it is now, so the
+  // site is pinned to this version of it: "updated since this site was made"
+  // is news about a document nobody has saved since, and once one is saved
+  // over the new template there is nothing left to announce.
+  const templateHash = await hashPackagedHtml(c.env, c.req.raw, row.site.slug);
+  await db
+    .update(site)
+    .set({ templateHash, specVersion: spec.specVersion })
+    .where(eq(site.id, row.site.id));
+
   return c.json({ revision: written.n });
 });
 

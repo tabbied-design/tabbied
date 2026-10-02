@@ -54,6 +54,7 @@ const MENU: DownloadMenuClasses = {
   menuLabel: s.menuLabel,
   menuItem: s.menuItem,
   menuRule: s.menuRule,
+  menuNote: s.menuNote,
 };
 
 /**
@@ -173,7 +174,13 @@ function Card({ c, templates, guard, here }: { c: TemplateCard; templates: MyTem
             // (scripts/generate-template-shots.mjs).
             <>
               {/* eslint-disable-next-line @next/next/no-img-element -- a committed file under public/ */}
-              <img className={s.shot} src={c.shot} alt="" loading="lazy" decoding="async" />
+              <img
+                className={s.shot}
+                src={c.shot}
+                alt={`Screenshot of the ${c.name} website template`}
+                loading="lazy"
+                decoding="async"
+              />
               <span className={s.accent} aria-hidden="true">
                 <LazyPattern pattern={c.art} palette={c.colors} seed={c.seed} />
               </span>
