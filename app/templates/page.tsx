@@ -36,7 +36,8 @@ const ART: Record<string, PatternDefinition> = {
 export default function TemplatesGallery() {
   // One list, in the gallery's committed order (lib/templateOrder.ts) rather
   // than the order the batches were made in, numbered straight through as
-  // shown. The order only grows at the end, so a page keeps its cards.
+  // shown. After its hand-picked lead the order only grows at the end, so a
+  // page keeps its cards.
   const sites = [
     ...TEMPLATE_SITES.map((x, i) => ({
       slug: x.slug,

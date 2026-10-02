@@ -743,6 +743,14 @@ re-litigating:
   first published; the fifty small-business sites were appended after them
   (2026-09-26), spread among themselves, and the fifty picture-led sites
   (2026-09-27, `pic-`) after those.
+- **The first cards are picked by hand.** `GALLERY_ORDER` is `GALLERY_LEAD`,
+  fifteen templates chosen for the top of the first page (2026-10-02), then
+  `GALLERY_SPREAD`, the spread above less those fifteen, which is the part
+  that stays append-only. Editing the lead moves every card after it, so it
+  is an editorial decision, not a side effect of adding templates. The lead
+  is shown in the order given and may put two of a batch side by side; the
+  neighbor rule (and `e2e/templates.spec.ts`) applies from the card after
+  it. A slug in both lists fails the export.
 - **The URL is read after mount, not with `useSearchParams`**, the same as
   the pattern library's `?page=`: `useSearchParams` in a static export
   renders the whole route on the client. The first paint is All, page 1,
