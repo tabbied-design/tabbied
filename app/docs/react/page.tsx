@@ -18,7 +18,7 @@ import styles from 'components/react-docs-page/ReactDocs.module.css';
 import { pageMetadata } from 'lib/seo';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Documentation - Tabbied',
+  title: 'React component - Tabbied',
   description:
     'Documentation for the tabbied npm package: render, resize, recolor, reseed, and export Tabbied generative patterns in React or vanilla JavaScript.',
   path: '/docs/react/',
@@ -359,7 +359,9 @@ const PROPS: PropRow[] = [
     type: 'number | string',
     description: (
       <>
-        CSS <Code>aspect-ratio</Code>: derives the height from the width.
+        CSS <Code>aspect-ratio</Code>: derives the height from the width.{' '}
+        <Code>&quot;3 / 2&quot;</Code>, <Code>1.5</Code> and the editor&apos;s{' '}
+        <Code>&quot;3:2&quot;</Code> all work.
       </>
     ),
   },
@@ -432,6 +434,17 @@ const PROPS: PropRow[] = [
       <>
         <Code>true</Code> renders an aria-hidden image; <Code>false</Code>{' '}
         exposes <Code>role=&quot;img&quot;</Code> with <Code>ariaLabel</Code>.
+      </>
+    ),
+  },
+  {
+    name: 'ariaLabel',
+    type: 'string',
+    defaultValue: 'pattern name',
+    description: (
+      <>
+        The accessible name when <Code>decorative={'{false}'}</Code>; ignored
+        otherwise.
       </>
     ),
   },

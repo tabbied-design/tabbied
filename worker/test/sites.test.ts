@@ -455,6 +455,14 @@ describe('making a site', () => {
     };
     const textSlot = spec.slots.find((slot) => slot.kind === 'text')!;
 
+    // As if the template had been re-packaged since the site was made.
+    const changed = async () =>
+      ((await SELF.fetch(`${ORIGIN}/api/studio/sites/${id}`).then((r) => r.json())) as {
+        templateChanged: boolean;
+      }).templateChanged;
+    await env.DB.prepare("UPDATE site SET template_hash = 'stale' WHERE id = ?").bind(id).run();
+    expect(await changed()).toBe(true);
+
     const saved = await SELF.fetch(`${ORIGIN}/api/studio/sites/${id}/revisions`, {
       method: 'POST',
       headers: { ...json, cookie },
@@ -467,6 +475,8 @@ describe('making a site', () => {
     });
     expect(saved.status, await saved.clone().text()).toBe(200);
     expect(((await saved.json()) as { revision: number }).revision).toBe(2);
+    // Saved over the template as it is now, so it is pinned to it again.
+    expect(await changed()).toBe(false);
 
     const rejected = await SELF.fetch(`${ORIGIN}/api/studio/sites/${id}/revisions`, {
       method: 'POST',

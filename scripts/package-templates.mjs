@@ -134,7 +134,56 @@ const stripSiteChrome = (html) =>
     .replace(/<link[^>]*rel="manifest"[^>]*>/g, '')
     .replace(/<link[^>]*rel="(icon|apple-touch-icon|mask-icon)"[^>]*>/g, '')
     .replace(/<meta[^>]*name="msapplication-TileColor"[^>]*>/g, '')
-    .replace(/<meta[^>]*name="theme-color"[^>]*>/g, '');
+    .replace(/<meta[^>]*name="theme-color"[^>]*>/g, '')
+    .replace(/<link[^>]*href="https:\/\/use\.typekit\.net[^"]*"[^>]*>/g, '');
+
+// ---- Tabbied's own fonts -------------------------------------------------
+
+// proxima-nova comes from Tabbied's Adobe Fonts kit, which the root layout
+// links on every page of the site, template pages included. The kit is
+// licensed to tabbied.com: a download must never load it or name the face,
+// on the licensee's domain it would fail or bill Tabbied's kit. So the link
+// goes with the site chrome above, the face leaves the global sheet here, and
+// `assertNoTabbiedFonts` refuses a package that still mentions either. A
+// template sets its own faces from Google Fonts; the one place the global
+// sheet's stack reached a template page (a TemplateSite button) inherits the
+// page's face instead, so the download draws what the live page does.
+// The face's name, not the word (a caption says "approximately").
+const TABBIED_FONTS = /typekit|proxima[-\s]nova/i;
+
+const templateBaseCss = () => {
+  const css = fsSync
+    .readFileSync(globalsCss, 'utf-8')
+    .replace(/^\/\* proxima-nova is linked[\s\S]*?\*\/\s*/, '')
+    .replace(/'proxima-nova',\s*/g, '');
+
+  if (TABBIED_FONTS.test(css)) {
+    throw new Error(
+      'styles/globals.css names a Tabbied font this packager does not know how to ' +
+        'take out; templates must not ship it.'
+    );
+  }
+
+  return css;
+};
+
+const TEXT_FILE = /\.(html|css|tsx?|jsx?|json|md)$/;
+
+async function assertNoTabbiedFonts(dir, slug) {
+  for (const entry of await fs.readdir(dir, { withFileTypes: true, recursive: true })) {
+    if (!entry.isFile() || !TEXT_FILE.test(entry.name)) continue;
+
+    const file = path.join(entry.parentPath, entry.name);
+    const match = TABBIED_FONTS.exec(await fs.readFile(file, 'utf-8'));
+
+    if (match) {
+      throw new Error(
+        `${slug}: ${path.relative(dir, file)} mentions "${match[0]}". Downloads must ` +
+          'never load Typekit or proxima-nova (Tabbied\'s Adobe Fonts kit).'
+      );
+    }
+  }
+}
 
 // Traces of the renderer that mean nothing without it: Suspense boundary
 // markers (matched exactly, so comments the page's author wrote survive),
@@ -579,7 +628,22 @@ function collectLocalImports(sources) {
   return needed;
 }
 
-const REACT_README = (slug, name, version) => `# ${name} - React template
+// A README's file tree, its notes lined up two spaces past the longest path
+// (a slug can be any length, so a fixed pad misaligns the long ones).
+const fileTree = (rows) => {
+  const width = Math.max(...rows.map(([file]) => file.length)) + 2;
+  return rows.map(([file, note]) => `${file.padEnd(width)}${note}`).join('\n');
+};
+
+const IMAGES_NOTE = 'the pictures this page uses';
+const NO_IMAGES_NOTE = 'empty: this page uses no pictures; add your own here';
+
+const IMAGES_SECTION = `## Images
+
+The pictures are AI-generated and ship with this template.
+`;
+
+const REACT_README = (slug, name, version, imageCount) => `# ${name} - React template
 
 The same page as the HTML download, as a Vite + React app.
 
@@ -589,10 +653,12 @@ npm run dev
 \`\`\`
 
 \`\`\`
-src/App.tsx              the page - edit this
-src/${slug}.module.css${' '.repeat(Math.max(0, 12 - slug.length))} its stylesheet, a CSS module
-src/main.tsx             mounts App
-public/images/           the photography this page uses
+${fileTree([
+  ['src/App.tsx', 'the page - edit this'],
+  [`src/${slug}.module.css`, 'its stylesheet, a CSS module'],
+  ['src/main.tsx', 'mounts App'],
+  ['public/images/', imageCount ? IMAGES_NOTE : NO_IMAGES_NOTE],
+])}
 \`\`\`
 
 ## The patterns
@@ -608,11 +674,7 @@ Blocks of pattern are \`<TabbiedPattern>\` elements from
 Swap \`pattern\` for any of the ${DESIGN_COUNT} designs (see https://tabbied.com), change
 \`palette\` to recolor, or set \`seed\` to pin one arrangement.
 
-## Images
-
-The photography is AI-generated and ships with this template.
-
-## License
+${imageCount ? `${IMAGES_SECTION}\n` : ''}## License
 
 This template is licensed to the Tabbied account that chose it: see
 LICENSE.md. The tabbied package is MIT licensed; the template is not.
@@ -682,8 +744,7 @@ then, in line with this license, may stay in use.
 - The pattern library, [tabbied](https://www.npmjs.com/package/tabbied), is
   open source under the MIT License, which governs it. Any other npm package
   this template installs comes under its own license.
-- The webfonts load from Google Fonts and Adobe Fonts, under those services'
-  terms.
+- The webfonts load from Google Fonts, under its terms.
 - The pictures are AI-generated, and are licensed only as part of this
   template.
 
@@ -827,7 +888,7 @@ async function packageReactSite(slug, outDir, version, name, images, artwork) {
     );
   }
 
-  await fs.copyFile(globalsCss, path.join(srcDir, 'base.css'));
+  await fs.writeFile(path.join(srcDir, 'base.css'), templateBaseCss());
 
   // Images keep their site sub-paths (`sites/...`, `template/...`), unlike the
   // HTML package: the source asks for them by their authored URL (ImageCard
@@ -923,9 +984,10 @@ async function packageReactSite(slug, outDir, version, name, images, artwork) {
 
   await fs.writeFile(
     path.join(siteDir, 'README.md'),
-    REACT_README(slug, name, version)
+    REACT_README(slug, name, version, images.length)
   );
   await writeLicenseFiles(siteDir, slug, name);
+  await assertNoTabbiedFonts(siteDir, slug);
 
   return zipDirectory(outDir, `${slug}-react`, `${slug}-react.zip`);
 }
@@ -945,16 +1007,18 @@ pictures carry their file inline as a data URI, so the page works opened
 straight from disk.
 `;
 
-const README = (slug, name, version, slugs, hasArtwork = false) => `# ${name}
+const README = (slug, name, version, slugs, imageCount, hasArtwork = false) => `# ${name}
 
 A Tabbied template, packaged as a plain HTML template. No build step, no
 framework - open \`index.html\` in a browser and it runs.
 
 \`\`\`
-index.html            the page
-styles/base.css       global reset
-styles/${slug}.css${' '.repeat(Math.max(0, 14 - slug.length))}this page's stylesheet - edit this one
-images/               the photography this page uses
+${fileTree([
+  ['index.html', 'the page'],
+  ['styles/base.css', 'global reset'],
+  [`styles/${slug}.css`, "this page's stylesheet - edit this one"],
+  ['images/', imageCount ? IMAGES_NOTE : NO_IMAGES_NOTE],
+])}
 \`\`\`
 
 ## The patterns are live, not images
@@ -977,13 +1041,9 @@ it and the patterns disappear.
 
 ## Fonts
 
-The page links its webfonts from Google Fonts and Adobe Fonts. Self-host them
-if you'd rather not depend on a CDN.
-
-## Images
-
-The photography is AI-generated and ships with this template.
-${hasArtwork ? ARTWORK_README : ''}
+The page links its webfonts from Google Fonts. Self-host them if you'd rather
+not depend on a CDN.
+${imageCount ? `\n${IMAGES_SECTION}` : ''}${hasArtwork ? ARTWORK_README : ''}
 ## License
 
 This template is licensed to the Tabbied account that chose it: see
@@ -991,6 +1051,10 @@ LICENSE.md. The patterns come from [tabbied](https://tabbied.com)
 (tabbied@${version}), which is MIT licensed; the template is not.
 `;
 
+// `?exports=` has esm.sh tree-shake the patterns entry down to the designs
+// the page mounts: the whole catalog is about 450 KB, two designs about 2 KB.
+// lib/studioDownload.ts rewrites this list for a customized download, so the
+// two must keep the same shape.
 const bootstrapScript = (version, slugs) => `
     <!-- Brings the [data-pattern] blocks above to life. Pinned to a version so
          the template keeps rendering the way it looked when you downloaded it. -->
@@ -998,7 +1062,7 @@ const bootstrapScript = (version, slugs) => `
       import { hydratePatterns } from 'https://esm.sh/tabbied@${version}';
       import { ${slugs.join(
         ', '
-      )} } from 'https://esm.sh/tabbied@${version}/patterns';
+      )} } from 'https://esm.sh/tabbied@${version}/patterns?exports=${slugs.join(',')}';
 
       hydratePatterns({ patterns: { ${slugs.join(', ')} } });
     </script>
@@ -1075,7 +1139,7 @@ async function packageSite(slug, outDir, version) {
   await fs.mkdir(path.join(siteDir, 'images'), { recursive: true });
 
   await fs.writeFile(path.join(siteDir, 'index.html'), html);
-  await fs.copyFile(globalsCss, path.join(siteDir, 'styles', 'base.css'));
+  await fs.writeFile(path.join(siteDir, 'styles', 'base.css'), templateBaseCss());
 
   const stylesheet = await resolveStylesheet(slug, moduleName);
   let siteCss = prepareStylesheet(stylesheet.css, slug, usedClasses);
@@ -1097,9 +1161,10 @@ async function packageSite(slug, outDir, version) {
 
   await fs.writeFile(
     path.join(siteDir, 'README.md'),
-    README(slug, name, version, slugs, html.includes('data-artwork='))
+    README(slug, name, version, slugs, images.used.length, html.includes('data-artwork='))
   );
   await writeLicenseFiles(siteDir, slug, name);
+  await assertNoTabbiedFonts(siteDir, slug);
 
   const size = await zipDirectory(outDir, slug, `${slug}-html.zip`);
 

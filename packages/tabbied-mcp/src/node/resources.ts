@@ -19,6 +19,35 @@ const require = createRequire(import.meta.url);
 
 const SITE = 'https://tabbied.com';
 
+// Every read here is a small static file. Without a limit, a network that
+// swallows packets would hold a tool call (or the server's startup) open for
+// as long as the client is willing to wait.
+const FETCH_TIMEOUT_MS = 10_000;
+
+/**
+ * GET a URL, failing with a message that names it. Node's own failure is a
+ * bare "fetch failed" (the reason is in `cause`), which tells an agent nothing
+ * about what was unreachable.
+ */
+async function get(url: string): Promise<Response> {
+  let response: Response;
+  try {
+    response = await fetch(url, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
+  } catch (error) {
+    const reason =
+      error instanceof Error && error.name === 'TimeoutError'
+        ? `no answer within ${FETCH_TIMEOUT_MS / 1000}s`
+        : error instanceof Error
+          ? [error.message, (error.cause as Error | undefined)?.message]
+              .filter(Boolean)
+              .join(': ')
+          : String(error);
+    throw new Error(`${url} could not be reached (${reason})`);
+  }
+  if (!response.ok) throw new Error(`${url} returned ${response.status}`);
+  return response;
+}
+
 /** Root of the installed `tabbied` package, or null when it isn't resolvable. */
 export function tabbiedRoot(): string | null {
   try {
@@ -48,14 +77,14 @@ export async function loadCatalog(): Promise<Catalog> {
     }
   }
 
-  const response = await fetch(`${SITE}/catalog.json`);
-  if (!response.ok) {
+  try {
+    return (await (await get(`${SITE}/catalog.json`)).json()) as Catalog;
+  } catch (error) {
     throw new Error(
-      `no local catalog and ${SITE}/catalog.json returned ${response.status}. ` +
+      `no local catalog, and ${error instanceof Error ? error.message : String(error)}. ` +
         'Install the `tabbied` package (npm i tabbied) or restore network access.'
     );
   }
-  return (await response.json()) as Catalog;
 }
 
 /**
@@ -65,10 +94,7 @@ export async function loadCatalog(): Promise<Catalog> {
 export async function fetchPreview(
   design: CatalogDesign
 ): Promise<{ data: string; mimeType: string }> {
-  const response = await fetch(design.preview);
-  if (!response.ok) {
-    throw new Error(`${design.preview} returned ${response.status}`);
-  }
+  const response = await get(design.preview);
   const buffer = Buffer.from(await response.arrayBuffer());
   return {
     data: buffer.toString('base64'),
@@ -90,11 +116,7 @@ export async function fetchDocs(): Promise<string> {
     }
   }
 
-  const response = await fetch(`${SITE}/llms-full.txt`);
-  if (!response.ok) {
-    throw new Error(`${SITE}/llms-full.txt returned ${response.status}`);
-  }
-  return await response.text();
+  return await (await get(`${SITE}/llms-full.txt`)).text();
 }
 
 /**
@@ -103,21 +125,9 @@ export async function fetchDocs(): Promise<string> {
  * (docs/editable-templates.md), and the `tabbied` package does not contain them.
  */
 export async function fetchTemplateCatalog(): Promise<TemplateCatalog> {
-  const response = await fetch(`${SITE}/editable-catalog.json`);
-
-  if (!response.ok) {
-    throw new Error(`${SITE}/editable-catalog.json returned ${response.status}`);
-  }
-
-  return (await response.json()) as TemplateCatalog;
+  return (await (await get(`${SITE}/editable-catalog.json`)).json()) as TemplateCatalog;
 }
 
 export async function fetchTemplate(slug: string): Promise<TemplateSpec> {
-  const response = await fetch(`${SITE}/editable/${slug}.json`);
-
-  if (!response.ok) {
-    throw new Error(`${SITE}/editable/${slug}.json returned ${response.status}`);
-  }
-
-  return (await response.json()) as TemplateSpec;
+  return (await (await get(`${SITE}/editable/${encodeURIComponent(slug)}.json`)).json()) as TemplateSpec;
 }

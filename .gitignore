@@ -23,6 +23,10 @@ node_modules/
 # from). Written by `npm run templates`, which the build runs between its two
 # `next build` passes so the second one exports them.
 /public/downloads/
+
+# share cards (1200x630), derived from the committed previews and template
+# shots by `npm run og`, which prebuild runs.
+/public/og/
 next-env.d.ts
 *.tsbuildinfo
 

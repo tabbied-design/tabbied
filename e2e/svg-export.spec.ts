@@ -304,6 +304,60 @@ test.describe('native SVG export', () => {
     const content = fs.readFileSync(await download.path(), 'utf8');
     expect(content).toContain('xmlns="http://www.w3.org/2000/svg"');
     expect(content).not.toContain('foreignObject');
+
+    // An intrinsic size equal to the viewBox, so a design tool opens the file
+    // at the plate's size rather than guessing one.
+    const root = /<svg\b[^>]*>/.exec(content)?.[0] ?? '';
+    const size = /\bwidth="([\d.]+)"[^>]*\bheight="([\d.]+)"/.exec(root);
+    const viewBox = /viewBox="0 0 ([\d.]+) ([\d.]+)"/.exec(root);
+    expect(size, root).not.toBeNull();
+    expect([size![1], size![2]]).toEqual([viewBox![1], viewBox![2]]);
+  });
+
+  test('a downloaded PNG is 3000px on its long edge', async ({ page }) => {
+    // The site says "Export a 3000px PNG". The capture is taken at a whole
+    // scale (3645px tall for this plate before) and cut to the promise.
+    const pngSize = (file: string) => {
+      const bytes = fs.readFileSync(file);
+      return [bytes.readUInt32BE(16), bytes.readUInt32BE(20)];
+    };
+
+    for (const [ratio, expected] of [
+      ['2:3', [2000, 3000]],
+      ['1:1', [3000, 3000]],
+    ] as const) {
+      await page.goto(`/patterns/radius/?seed=e2e01&aspectRatio=${ratio}`);
+      await page.waitForFunction(
+        () => Boolean(document.querySelector('div[data-pattern="radius"] css-doodle')?.shadowRoot?.querySelector('cssd-grid')),
+        undefined,
+        { timeout: 30000 }
+      );
+      await page.getByRole('button', { name: 'Export' }).click();
+      const downloadPromise = page.waitForEvent('download');
+      await page.getByRole('menuitem', { name: 'Download PNG' }).click();
+      const download = await downloadPromise;
+      expect(download.suggestedFilename()).toBe('radius.png');
+      const [width, height] = pngSize(await download.path());
+      // Rounding the plate's short edge may land a pixel either way.
+      expect(Math.max(width, height)).toBe(3000);
+      expect(Math.abs(width - expected[0])).toBeLessThanOrEqual(1);
+      expect(Math.abs(height - expected[1])).toBeLessThanOrEqual(1);
+    }
+  });
+
+  test('the copied React component draws at the plate\'s ratio', async ({ page, context }) => {
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await page.goto('/patterns/radius/?seed=0000&aspectRatio=2:3');
+    await page.getByRole('button', { name: 'Export' }).click();
+    await page.getByRole('menuitem', { name: 'Copy React component' }).click();
+    await expect(page.getByText('React component copied')).toBeVisible();
+
+    const snippet = await page.evaluate(() => navigator.clipboard.readText());
+    // A paste-ready component, bounded by the ratio rather than by a parent
+    // height it is unlikely to have; never the "2:3" id, which is not CSS.
+    expect(snippet).toContain('export function RadiusPattern() {');
+    expect(snippet).toContain('aspectRatio="2 / 3"');
+    expect(snippet).not.toContain('"2:3"');
   });
 
   test('limited exports warn and confirm before downloading', async ({ page }) => {

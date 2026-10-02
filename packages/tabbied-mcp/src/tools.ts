@@ -79,9 +79,49 @@ function findDesign(catalog: Catalog, slug: unknown): CatalogDesign | null {
   return catalog.designs.find((design) => design.slug === slug) ?? null;
 }
 
+const ASPECT_RATIO_DEFAULT = '2:3';
+
+/**
+ * The React snippet: a component at the design's own aspect ratio. The ratio
+ * is the catalog's id (`2:3`) written as CSS's `2 / 3`, which is what the
+ * prop takes - the id itself is not valid CSS and would size nothing. Same
+ * shape as the editor's "Copy React component", so the two agree.
+ */
+function reactSnippet(design: CatalogDesign): string {
+  const ratio = design.defaultAspectRatio ?? ASPECT_RATIO_DEFAULT;
+  const [width, height] = /^(\d+):(\d+)$/.exec(ratio)?.slice(1) ?? ['2', '3'];
+  const component = `${design.slug.charAt(0).toUpperCase()}${design.slug.slice(1)}Pattern`;
+
+  return [
+    `import { TabbiedPattern } from 'tabbied/react';`,
+    `import { ${design.slug} } from 'tabbied/patterns';`,
+    ``,
+    `// As wide as its parent, at the ${width}:${height} ratio it was designed at.`,
+    `// Add maxWidth to bound it, or swap aspectRatio for a fixed height.`,
+    `export function ${component}() {`,
+    `  return (`,
+    `    <TabbiedPattern`,
+    `      pattern={${design.slug}}`,
+    `      aspectRatio="${width} / ${height}"`,
+    `    />`,
+    `  );`,
+    `}`,
+  ].join('\n');
+}
+
+/** What the CLI command in `usage.cli` needs where it runs. */
+const CLI_SETUP =
+  'Rendering needs Playwright, found from the current directory first: ' +
+  '`npm i -D playwright && npx playwright install chromium`. With nothing ' +
+  'installed, run `npx -y -p tabbied -p playwright tabbied render ...` ' +
+  'instead (and `npx playwright install chromium` once).';
+
 /** Near misses for an unknown slug: a shared three-letter prefix, or a name match. */
 function suggestSlugs(catalog: Catalog, slug: string): string[] {
-  const needle = slug.toLowerCase();
+  const needle = slug.trim().toLowerCase();
+  // An empty needle is a prefix of every slug, so it would "suggest" the first
+  // eight in the catalog.
+  if (!needle) return [];
   return catalog.designs
     .filter(
       (design) =>
@@ -157,6 +197,7 @@ function searchTool(catalog: Catalog): Tool {
       },
       additionalProperties: false,
     },
+    annotations: { readOnlyHint: true, openWorldHint: false },
   };
 
   return {
@@ -286,12 +327,14 @@ function getDesignTool(catalog: Catalog): Tool {
       properties: {
         slug: {
           type: 'string',
+          minLength: 1,
           description: 'The design slug, e.g. "radius". Slugs are not guessable.',
         },
       },
       required: ['slug'],
       additionalProperties: false,
     },
+    annotations: { readOnlyHint: true, openWorldHint: false },
   };
 
   return {
@@ -312,6 +355,9 @@ function getDesignTool(catalog: Catalog): Tool {
       const snippet = (template: string) =>
         template.replaceAll('<slug>', design.slug);
 
+      // A design that cannot be vectorized gets a command that works.
+      const extension = design.svgExport.supported ? 'svg' : 'png';
+
       return {
         content: [
           json({
@@ -319,10 +365,11 @@ function getDesignTool(catalog: Catalog): Tool {
             usage: {
               install: catalog.usage.install,
               import: snippet(catalog.usage.import),
-              react: snippet(catalog.usage.react),
+              react: reactSnippet(design),
               core: snippet(catalog.usage.core),
               fit: catalog.usage.fit,
-              cli: `npx tabbied render ${design.slug} --out ${design.slug}.svg`,
+              cli: `npx tabbied render ${design.slug} --out ${design.slug}.${extension}`,
+              cliSetup: CLI_SETUP,
             },
             // The number-one integration mistake, repeated here because an
             // agent that called get_design may never read llms-full.txt.
@@ -362,7 +409,7 @@ function previewTool(context: ToolContext): Tool | null {
       properties: {
         slugs: {
           type: 'array',
-          items: { type: 'string' },
+          items: { type: 'string', minLength: 1 },
           minItems: 1,
           maxItems: PREVIEW_MAX_SLUGS,
           description: 'Design slugs to look at, e.g. ["radius", "cleat"].',
@@ -371,6 +418,7 @@ function previewTool(context: ToolContext): Tool | null {
       required: ['slugs'],
       additionalProperties: false,
     },
+    annotations: { readOnlyHint: true, openWorldHint: true },
   };
 
   return {
@@ -384,6 +432,7 @@ function previewTool(context: ToolContext): Tool | null {
       const requested = slugs.slice(0, PREVIEW_MAX_SLUGS);
       const content: ToolContent[] = [];
       let spent = 0;
+      let found = 0;
 
       for (const [index, slug] of requested.entries()) {
         const design = findDesign(catalog, slug);
@@ -393,6 +442,7 @@ function previewTool(context: ToolContext): Tool | null {
           );
           continue;
         }
+        found += 1;
 
         if (spent > PREVIEW_BYTE_BUDGET) {
           content.push(
@@ -425,7 +475,9 @@ function previewTool(context: ToolContext): Tool | null {
         }
       }
 
-      return { content };
+      // One bad slug among good ones is a note beside the images; a call in
+      // which nothing resolved has failed, and says so.
+      return found > 0 ? { content } : { content, isError: true };
     },
   };
 }
@@ -446,6 +498,7 @@ function docsTool(context: ToolContext): Tool | null {
         'integration recipes, and the share-link URL scheme. Fetch this once ' +
         'before writing integration code; the per-design tools do not repeat it.',
       inputSchema: { type: 'object', additionalProperties: false },
+      annotations: { readOnlyHint: true, openWorldHint: true },
     },
     async run() {
       try {

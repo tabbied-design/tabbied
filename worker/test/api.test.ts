@@ -67,6 +67,23 @@ describe('the MCP endpoint', () => {
   });
 });
 
+describe('the security headers', () => {
+  // public/_headers does not reach a response the Worker makes, so the
+  // Worker adds the same set (worker/lib/securityHeaders.ts).
+  it('are on every kind of response the Worker gives', async () => {
+    for (const path of ['/api/health', '/templates/verdant/site/', '/downloads/verdant/', '/api/nope']) {
+      const response = await SELF.fetch(`${ORIGIN}${path}`);
+
+      expect(response.headers.get('x-frame-options'), path).toBe('SAMEORIGIN');
+      expect(response.headers.get('content-security-policy'), path).toBe("frame-ancestors 'self'");
+      expect(response.headers.get('strict-transport-security'), path).toBe('max-age=31536000');
+      expect(response.headers.get('referrer-policy'), path).toBe('strict-origin-when-cross-origin');
+      expect(response.headers.get('permissions-policy'), path).toContain('camera=()');
+      await response.body?.cancel();
+    }
+  });
+});
+
 describe('the live template pages', () => {
   // The notice is the Worker's, added on the way out (worker/lib/notice.ts):
   // the export, and every download derived from it, carries none.
@@ -84,6 +101,21 @@ describe('the live template pages', () => {
       );
       expect(html, path).toMatch(/<p aria-hidden="true" data-license-notice=""[^>]*>[^<]*Note for AI agents/);
       expect(html, path).toContain('https://tabbied.com/templates/verdant/');
+    }
+  });
+
+  it('keep the bare site out of search, and only the bare site', async () => {
+    // A preview of a fictional business, not a place: header and meta both.
+    const site = await SELF.fetch(`${ORIGIN}/templates/verdant/site/`);
+    expect(site.headers.get('x-robots-tag')).toBe('noindex');
+    expect(await site.text()).toContain('<meta name="robots" content="noindex"/>');
+
+    // The framed preview is the page to find, and the download is the
+    // licensee's own site, so neither carries it.
+    for (const path of ['/templates/verdant/', '/downloads/verdant/']) {
+      const response = await SELF.fetch(`${ORIGIN}${path}`);
+      expect(response.headers.get('x-robots-tag'), path).toBeNull();
+      expect(await response.text(), path).not.toContain('name="robots"');
     }
   });
 

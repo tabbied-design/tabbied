@@ -225,7 +225,7 @@ export default function PrivacyPolicyPage() {
           <strong>Adobe Fonts and Google Fonts</strong> serve the typefaces on
           our pages and template previews, so your browser requests fonts
           from them and they receive your IP address and browser details.
-          Downloaded templates load fonts the same way. The footer on some
+          Downloaded templates load their fonts from Google Fonts only. The footer on some
           pages shows a badge image served by Product Hunt.
         </li>
       </ul>

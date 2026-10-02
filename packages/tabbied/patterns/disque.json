@@ -2,6 +2,7 @@
   "name": "Disque",
   "slug": "disque",
   "galleryOrder": 7,
+  "description": "Discs and half discs over a bright grid, with blocks of fine stripes between them, like a stack of record sleeves.",
   "palette": [
     "#3EECFF",
     "#232529",

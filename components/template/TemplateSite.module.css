@@ -144,6 +144,9 @@
   padding: 15px 30px;
   border-radius: 10px;
   text-decoration: none;
+  /* The page's own face. A <button> otherwise takes the global sheet's
+     `button` rule, which names Tabbied's fonts, not this site's. */
+  font-family: inherit;
   font-weight: 600;
   font-size: 15px;
   cursor: pointer;

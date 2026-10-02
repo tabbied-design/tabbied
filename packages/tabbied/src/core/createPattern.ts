@@ -229,6 +229,31 @@ type ResolvedConfig = {
   coverRender: CoverRender;
 };
 
+// Development builds only. Bundlers replace `process.env.NODE_ENV` with a
+// literal; unbundled (an esm.sh import in a downloaded template) `process`
+// does not exist, the read throws, and that counts as production.
+const isDevelopment = (() => {
+  try {
+    return process.env.NODE_ENV !== 'production';
+  } catch {
+    return false;
+  }
+})();
+
+// The integration mistake the README calls the most common: a pattern fills
+// its parent by default, and `height: 100%` in a parent that sizes to its
+// content resolves to 0, so a measured fit waits for a size that never comes,
+// silently. Said once per pattern, at the first measurement.
+const warnEmptyBox = (width: number, height: number) => {
+  console.warn(
+    `[tabbied] This pattern's box measured ${width}x${height}px, so nothing is drawn ` +
+      'until it has a size. A pattern fills its parent by default, and a height of ' +
+      '100% needs a parent with a definite height: give the pattern a `height` or an ' +
+      '`aspectRatio` (https://tabbied.com/docs/react/). A hidden or collapsed ' +
+      'container is fine: the pattern draws when it is shown.'
+  );
+};
+
 export function createPattern(
   host: HTMLElement,
   initialConfig: PatternConfig
@@ -262,6 +287,7 @@ export function createPattern(
   let hostStyleBackup: { position: string; overflow: string } | null = null;
 
   let hostSize: { width: number; height: number } | null = null;
+  let warnedEmpty = false;
   // What the live element currently shows, for update()-vs-recreate diffing.
   // renderBox is the canvas size a cover render was drawn at - the
   // scaling transform must track what's in the DOM, not the latest measure.
@@ -686,6 +712,11 @@ export function createPattern(
 
     const previous = hostSize;
     hostSize = { width, height };
+
+    if (previous === null && !warnedEmpty && (width === 0 || height === 0) && isDevelopment) {
+      warnedEmpty = true;
+      warnEmptyBox(width, height);
+    }
 
     const resolved = resolve();
 

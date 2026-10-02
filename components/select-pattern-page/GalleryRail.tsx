@@ -50,10 +50,23 @@ export default function GalleryRail({
   onEditLibrary: (palette: LibraryPalette) => void;
   onDelete: (id: string) => void;
 }) {
-  const merged = useMemo(
+  // The chosen palette stays at the top of the list while a search hides it,
+  // so there is always a row that shows what the grid is wearing.
+  const found = useMemo(
     () => mergePalettes(palettes, library, search),
     [palettes, library, search]
   );
+  const merged = useMemo(() => {
+    if (!search.trim() || found.some((entry) => entry.palette.id === selectedId)) {
+      return found;
+    }
+
+    const chosen = mergePalettes(palettes, library).find(
+      (entry) => entry.palette.id === selectedId
+    );
+
+    return chosen ? [chosen, ...found] : found;
+  }, [found, palettes, library, search, selectedId]);
 
   const { shown, listRef, onScroll, reset } = usePaletteReveal(merged, PAGE);
   const randomActive = selectedId === RANDOM_PALETTE_ID;
@@ -135,7 +148,7 @@ export default function GalleryRail({
           );
         })}
 
-        {merged.length === 0 && (
+        {found.length === 0 && (
           <p className={styles.empty}>No palettes match your search.</p>
         )}
       </div>

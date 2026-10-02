@@ -35,6 +35,8 @@ import { forgetDownload, isReactSource, logDownload, parseDownloadName, takesCop
 import { mailProvider, teamRecipients } from './lib/mail';
 import { claimTemplate, limitMessage, mayTake, releaseTemplate, templateStatus } from './lib/templates';
 import { templateSlugOf, withLicenseNotice } from './lib/notice';
+import { isTemplateSite, withNoindex } from './lib/noindex';
+import { withSecurityHeaders } from './lib/securityHeaders';
 import media from './routes/media';
 import account from './routes/account';
 import admin from './routes/admin';
@@ -154,6 +156,13 @@ async function handleMcp(request: Request, env: Env): Promise<Response> {
 }
 
 const app = new Hono<{ Bindings: Env }>();
+
+// Every response the Worker gives, asset or not, carries the headers the
+// asset router adds from public/_headers (worker/lib/securityHeaders.ts).
+app.use('*', async (c, next) => {
+  await next();
+  c.res = withSecurityHeaders(c.res);
+});
 
 /**
  * A page load in a browser (told by `Sec-Fetch-Mode`, or by an Accept that
@@ -486,7 +495,8 @@ app.route('/api', api);
 // ---- template pages ------------------------------------------------------
 // The live template pages carry the license notice, added on the way out so
 // that the export, and every download derived from it, never does
-// (worker/lib/notice.ts). `/templates/*/` in run_worker_first sends them here.
+// (worker/lib/notice.ts), and the bare sites a noindex, for the same reason
+// (worker/lib/noindex.ts). `/templates/*/` in run_worker_first sends them here.
 
 app.get('/templates/*', async (c, next) => {
   const slug = templateSlugOf(new URL(c.req.url).pathname);
@@ -499,7 +509,9 @@ app.get('/templates/*', async (c, next) => {
     return response;
   }
 
-  return withLicenseNotice(response, slug);
+  const noticed = withLicenseNotice(response, slug);
+
+  return isTemplateSite(new URL(c.req.url).pathname) ? withNoindex(noticed) : noticed;
 });
 
 // Anything else that reaches the Worker (the packaged pages under /downloads,

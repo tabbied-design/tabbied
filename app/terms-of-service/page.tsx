@@ -298,9 +298,9 @@ export default function TermsOfServicePage() {
       </p>
       <p>
         The images in our templates are AI-generated. Downloaded templates may
-        load fonts from Google Fonts and Adobe Fonts and the Tabbied pattern
-        library from esm.sh. Your use of those resources is subject to their
-        providers&apos; terms; you can host the fonts yourself instead.
+        load fonts from Google Fonts and the Tabbied pattern library from
+        esm.sh. Your use of those resources is subject to their providers&apos;
+        terms; you can host the fonts yourself instead.
       </p>
       <h3>Open-source software and our source code</h3>
       <p>

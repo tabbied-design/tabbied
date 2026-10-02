@@ -2,6 +2,7 @@
   "name": "Radius",
   "slug": "radius",
   "galleryOrder": 1,
+  "description": "Quarter circles, half circles and whole discs, one to a cell and turned every way, packed edge to edge so their curves join into arches and petals.",
   "galleryWhite": true,
   "palette": [
     "#3E8BFF",

@@ -2,6 +2,7 @@
   "name": "Trigram",
   "slug": "trigram",
   "galleryOrder": 10,
+  "description": "Sets of three short parallel strokes, one set to a cell, standing upright, lying flat or leaning, like tally marks.",
   "galleryWhite": true,
   "palette": [
     "#275AA6",

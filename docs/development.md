@@ -62,8 +62,11 @@ claude mcp add --transport http tabbied https://tabbied.com/mcp
 
 It exposes `search_designs` (filter by motif, mood, density, intended use),
 `preview_design` (the rendered image for up to six candidates), `get_design`,
-and `get_docs`. Running it locally with `npx -y tabbied-mcp` adds
-`render_design`, which writes real SVG and PNG files. See
+`get_docs`, and `list_templates` and `get_template` for the website
+templates. Running it locally adds `render_design`, which writes real SVG and
+PNG files; it needs Playwright beside the server, so start it as
+`npx -y -p tabbied-mcp -p playwright tabbied-mcp` (and run
+`npx playwright install chromium` once). See
 [`mcp-server.md`](./mcp-server.md) and the
 [package README](../packages/tabbied-mcp/README.md).
 

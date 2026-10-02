@@ -5,6 +5,7 @@ import {
   densityFromGrid,
   densityToCellPx,
   deriveGridForBox,
+  resolveBoxStyle,
   snapCellToBox,
   snapSpanToTracks,
 } from '../dist/core/sizing.js';
@@ -189,4 +190,25 @@ test('maxCells caps a derived grid at the design\'s own count', () => {
   const capped = deriveGridForBox(418, 646, 36, { maxCells: 28 });
   assert.ok(capped.cols * capped.rows <= 28 && capped.cols * capped.rows >= 20);
   assert.deepEqual(deriveGridForBox(418, 646, 180, { maxCells: 28 }), deriveGridForBox(418, 646, 180));
+});
+
+test('resolveBoxStyle writes an aspect ratio CSS can read', async (t) => {
+  await t.test('takes the editor\'s W:H form as W / H', () => {
+    assert.equal(resolveBoxStyle({ aspectRatio: '2:3' }).aspectRatio, '2 / 3');
+    assert.equal(resolveBoxStyle({ aspectRatio: ' 16 : 9 ' }).aspectRatio, '16 / 9');
+    assert.equal(resolveBoxStyle({ aspectRatio: '1.5:1' }).aspectRatio, '1.5 / 1');
+  });
+
+  await t.test('passes CSS forms and numbers through', () => {
+    assert.equal(resolveBoxStyle({ aspectRatio: '3 / 2' }).aspectRatio, '3 / 2');
+    assert.equal(resolveBoxStyle({ aspectRatio: 1.5 }).aspectRatio, '1.5');
+    assert.equal(resolveBoxStyle({ aspectRatio: 'auto' }).aspectRatio, 'auto');
+  });
+
+  await t.test('a ratio derives the height rather than pinning it', () => {
+    assert.deepEqual(resolveBoxStyle({ aspectRatio: '2:3' }), {
+      width: '100%',
+      aspectRatio: '2 / 3',
+    });
+  });
 });

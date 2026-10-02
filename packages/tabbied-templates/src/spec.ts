@@ -232,18 +232,29 @@ export type TemplateSpec = {
 // ---- edits ----------------------------------------------------------------
 
 export type ImageEdit = {
+  /**
+   * A path, a relative URL, or an http(s), `blob:` or `data:image/` URL. Any
+   * other scheme (`javascript:` above all) is refused.
+   */
   src: string;
   alt?: string;
 };
 
 export type PatternEdit = {
-  /** Swap the design itself. The new slug's options replace the old ones. */
+  /**
+   * Swap the design itself. The old design's options are removed with it, and
+   * `options` here, if any, are the new design's whole set.
+   */
   slug?: string;
   /**
    * Literal palette override. Normally left unset: a pattern slot with
    * `paletteRoles` re-colors from the brand palette automatically.
    */
   palette?: string[];
+  /**
+   * Option values by id. Without a swap they are merged over the field's
+   * current options (`config.options`), so naming one leaves the rest alone.
+   */
   options?: Record<string, string | number | boolean>;
   seed?: string;
 };

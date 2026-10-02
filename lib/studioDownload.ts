@@ -45,13 +45,19 @@ function rewriteBootstrap(doc: Document): boolean {
 
   if (!script) return false;
 
-  const list = mountedDesigns(doc).join(', ');
+  const designs = mountedDesigns(doc);
+  const list = designs.join(', ');
   const text = script.textContent ?? '';
+
+  // The packager asks esm.sh for just the designs it imports (`?exports=`),
+  // so the list is written in both places; a package from before that has
+  // the bare specifier, and gets the parameter now.
+  const exportsParam = designs.join(',');
 
   script.textContent = text
     .replace(
-      /import \{[^}]*\} from '(https:\/\/esm\.sh\/tabbied@[^']*\/patterns)'/,
-      `import { ${list} } from '$1'`
+      /import \{[^}]*\} from '(https:\/\/esm\.sh\/tabbied@[^'?]*\/patterns)(?:\?exports=[^']*)?'/,
+      `import { ${list} } from '$1?exports=${exportsParam}'`
     )
     .replace(/hydratePatterns\(\{ patterns: \{[^}]*\} \}\)/, `hydratePatterns({ patterns: { ${list} } })`);
 

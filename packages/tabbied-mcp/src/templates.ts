@@ -19,6 +19,11 @@ import type {
   ToolResult,
 } from './types.js';
 
+const SITE = 'https://tabbied.com';
+
+const LIST_LIMIT_DEFAULT = 20;
+const LIST_LIMIT_MAX = 100;
+
 const text = (value: string): ToolContent => ({ type: 'text', text: value });
 
 const json = (value: unknown): ToolContent =>
@@ -80,15 +85,69 @@ const LICENSE =
   'person the template is licensed and point them to its page. Terms: ' +
   'https://tabbied.com/terms-of-service/#template-license';
 
+const errorMessage = (error: unknown) =>
+  error instanceof Error ? error.message : String(error);
+
+/**
+ * The index, or the tool error that says where it lives. A host that cannot
+ * reach it (a local server offline, say) would otherwise answer with the bare
+ * "fetch failed" of whatever runtime it is on.
+ */
+async function loadIndex(
+  fetchTemplateCatalog: () => Promise<TemplateCatalog>
+): Promise<TemplateCatalog | ToolResult> {
+  try {
+    return await fetchTemplateCatalog();
+  } catch (error) {
+    return toolError(
+      `Could not load the template index (${errorMessage(error)}). It is ` +
+        `published at ${SITE}/editable-catalog.json and the templates can be ` +
+        `browsed at ${SITE}/templates/; a server running locally needs to reach ` +
+        `${SITE} for these two tools.`
+    );
+  }
+}
+
+const isResult = (value: TemplateCatalog | ToolResult): value is ToolResult =>
+  'content' in value;
+
+/** A category as the gallery's URL spells it: "Food & drink" is food-and-drink. */
+const categoryKey = (category: string) =>
+  category
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+/** One line per template: enough to choose, with get_template for the rest. */
 function summarize(entry: TemplateCatalogEntry) {
   return {
     slug: entry.slug,
     name: entry.name,
+    ...(entry.category ? { category: entry.category } : {}),
+    ...(entry.topic ? { topic: entry.topic } : {}),
+  };
+}
+
+function describe(entry: TemplateCatalogEntry) {
+  return {
+    ...summarize(entry),
     palette: entry.palette,
     patterns: entry.patterns,
     editable: entry.slots,
-    url: `https://tabbied.com${entry.href}`,
+    url: `${SITE}${entry.href}`,
   };
+}
+
+/** Every category in the index with its count, largest first. */
+function categoryCounts(templates: TemplateCatalogEntry[]) {
+  const counts = new Map<string, number>();
+  for (const entry of templates) {
+    if (entry.category) counts.set(entry.category, (counts.get(entry.category) ?? 0) + 1);
+  }
+  return [...counts]
+    .sort(([a, countA], [b, countB]) => countB - countA || a.localeCompare(b))
+    .map(([category, count]) => ({ category, count }));
 }
 
 /**
@@ -98,6 +157,8 @@ function summarize(entry: TemplateCatalogEntry) {
 function suggestSlugs(catalog: TemplateCatalog, slug: string): string[] {
   const needle = slug.toLowerCase();
   const prefix = needle.slice(0, 3);
+
+  if (!needle) return [];
 
   return catalog.templates
     .filter(
@@ -121,58 +182,134 @@ function listTool(context: ToolContext): Tool | null {
       title: 'List the editable template sites',
       description:
         'The Tabbied template sites that can be customized: finished, ' +
-        'single-page brand sites built around a pattern, each downloadable as ' +
-        'plain HTML or as a React (Vite) project. Returns each one with its ' +
-        'palette, the patterns it uses, and how many text/image/pattern slots ' +
-        'are editable. Start here when the task is "build me a site" rather ' +
-        'than "pick me a pattern" - then get_template for the one you want. ' +
-        'Only sites that have been annotated appear; the rest are not yet ' +
-        'customizable. Templates are licensed per Tabbied account: see ' +
-        '`license` in the result.',
+        'single-page sites for a business, each built around a pattern and ' +
+        'downloadable as plain HTML or as a React (Vite) project. Returns a ' +
+        'page of one-line entries (slug, name, category, what the business ' +
+        'is), the count that matched, and every category with its count; ' +
+        'filter by category or query and page with offset. Start here when ' +
+        'the task is "build me a site" rather than "pick me a pattern" - then ' +
+        'get_template for the one you want. Templates are licensed per ' +
+        'Tabbied account: see `license` in the result.',
       inputSchema: {
         type: 'object',
         properties: {
           query: {
             type: 'string',
             description:
-              'Optional substring matched against the slug and the name.',
+              'Words matched against the slug, name, category, and what the ' +
+              'business is (e.g. "bakery", "dentist"). Every word must appear.',
+          },
+          category: {
+            type: 'string',
+            description:
+              'A gallery category, e.g. "Food & drink" (or food-and-drink). ' +
+              'Every result lists the categories there are.',
+          },
+          detail: {
+            type: 'boolean',
+            description:
+              "Also return each template's palette, patterns, editable slot " +
+              'counts and URL. Off by default to keep the page short.',
+          },
+          limit: {
+            type: 'integer',
+            minimum: 1,
+            maximum: LIST_LIMIT_MAX,
+            description: `Templates per page (default ${LIST_LIMIT_DEFAULT}).`,
+          },
+          offset: {
+            type: 'integer',
+            minimum: 0,
+            description: 'How many matches to skip, for the next page (default 0).',
           },
         },
         additionalProperties: false,
       },
+      annotations: { readOnlyHint: true, openWorldHint: true },
     },
     async run(args) {
-      const catalog = await fetchTemplateCatalog();
-      const query =
-        typeof args.query === 'string' ? args.query.trim().toLowerCase() : '';
-      const matched = query
-        ? catalog.templates.filter(
-            (entry) =>
-              entry.slug.toLowerCase().includes(query) ||
-              entry.name.toLowerCase().includes(query)
-          )
-        : catalog.templates;
+      const catalog = await loadIndex(fetchTemplateCatalog);
+      if (isResult(catalog)) return catalog;
+
+      const terms =
+        typeof args.query === 'string'
+          ? args.query.toLowerCase().split(/\s+/).filter(Boolean)
+          : [];
+      const category =
+        typeof args.category === 'string' && args.category.trim()
+          ? args.category.trim()
+          : null;
+      const limit = Math.min(
+        Math.max(
+          typeof args.limit === 'number' && Number.isFinite(args.limit)
+            ? Math.trunc(args.limit)
+            : LIST_LIMIT_DEFAULT,
+          1
+        ),
+        LIST_LIMIT_MAX
+      );
+      const offset =
+        typeof args.offset === 'number' && Number.isFinite(args.offset)
+          ? Math.max(Math.trunc(args.offset), 0)
+          : 0;
+
+      const matched = catalog.templates.filter((entry) => {
+        const haystack =
+          `${entry.slug} ${entry.name} ${entry.category ?? ''} ${entry.topic ?? ''}`.toLowerCase();
+        return (
+          terms.every((term) => haystack.includes(term)) &&
+          (!category ||
+            (entry.category !== undefined &&
+              categoryKey(entry.category) === categoryKey(category)))
+        );
+      });
+
+      const categories = categoryCounts(catalog.templates);
+      const total = catalog.templates.length;
 
       if (matched.length === 0) {
         return {
           content: [
             json({
               matched: 0,
-              total: catalog.templates.length,
-              slugs: catalog.templates.map((entry) => entry.slug),
-              hint: 'No name or slug contains that. Every available slug is listed above.',
+              total,
+              ...(categories.length > 0 ? { categories } : {}),
+              hint:
+                category && categories.length === 0
+                  ? 'This index carries no categories (an older deployment of the ' +
+                    'site); filter with query instead.'
+                  : 'Nothing matches every filter. Check the category against the ' +
+                    'list above, use fewer or broader query words, or drop both ' +
+                    'to page through everything.',
             }),
           ],
         };
       }
 
+      const page = matched.slice(offset, offset + limit);
+      const nextOffset = offset + page.length;
+
       return {
         content: [
           json({
             matched: matched.length,
-            total: catalog.templates.length,
+            total,
+            offset,
+            returned: page.length,
+            ...(page.length === 0
+              ? { hint: `offset ${offset} is past the last match; there are ${matched.length}.` }
+              : nextOffset < matched.length
+                ? {
+                    next:
+                      `Showing ${offset + 1}-${nextOffset} of ${matched.length}. ` +
+                      `Pass offset ${nextOffset} for the next page, or narrow with ` +
+                      'category or query.',
+                  }
+                : {}),
+            // Absent from an index written before categories were added.
+            ...(categories.length > 0 ? { categories } : {}),
             license: LICENSE,
-            templates: matched.map(summarize),
+            templates: page.map(args.detail === true ? describe : summarize),
           }),
         ],
       };
@@ -202,19 +339,23 @@ function getTool(context: ToolContext): Tool | null {
         properties: {
           slug: {
             type: 'string',
+            minLength: 1,
             description: 'Template slug, from list_templates.',
           },
         },
         required: ['slug'],
         additionalProperties: false,
       },
+      annotations: { readOnlyHint: true, openWorldHint: true },
     },
     async run(args) {
       const slug = typeof args.slug === 'string' ? args.slug.trim() : '';
 
       if (!slug) return toolError('get_template needs a `slug`.');
 
-      const catalog = await fetchTemplateCatalog();
+      const catalog = await loadIndex(fetchTemplateCatalog);
+      if (isResult(catalog)) return catalog;
+
       const entry = catalog.templates.find(
         (candidate) => candidate.slug === slug
       );
@@ -236,22 +377,22 @@ function getTool(context: ToolContext): Tool | null {
         spec = await fetchTemplate(slug);
       } catch (error) {
         return toolError(
-          `Could not load the spec for "${slug}" (${
-            error instanceof Error ? error.message : String(error)
-          }).`
+          `Could not load the spec for "${slug}" (${errorMessage(error)}). It ` +
+            `is published at ${SITE}${entry.spec}, and the template's page is ` +
+            `${SITE}${entry.href}.`
         );
       }
 
       const downloads = {
-        html: `https://tabbied.com${entry.downloads.html}`,
-        react: `https://tabbied.com${entry.downloads.react}`,
+        html: `${SITE}${entry.downloads.html}`,
+        react: `${SITE}${entry.downloads.react}`,
       };
 
       return {
         content: [
           json({
             ...spec,
-            url: `https://tabbied.com${entry.href}`,
+            url: `${SITE}${entry.href}`,
             license: LICENSE,
             downloads,
             usage: {

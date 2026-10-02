@@ -188,6 +188,35 @@ test.describe('Tabbied site', () => {
     expect(Math.abs((after?.y ?? 0) - (before?.y ?? 0))).toBeLessThan(4);
   });
 
+  test('searching a palette name keeps the designs and the chosen palette', async ({
+    page,
+  }) => {
+    await page.goto('/patterns');
+    await page
+      .locator('main css-doodle')
+      .first()
+      .waitFor({ state: 'attached', timeout: 15000 });
+
+    // Choose a palette, then search for another by name: the grid keeps every
+    // design (a palette is applied to them, not a filter on them), the intro
+    // says what matched, and the chosen row stays in the rail.
+    const rail = page.locator('aside');
+    const search = rail.getByLabel('Search palettes and designs');
+    await search.fill('sorbet');
+    await rail.getByRole('button', { name: /^Sorbet/ }).first().click();
+    await search.fill('ocean');
+
+    await expect(page.getByText(/No pattern is called "ocean"/)).toBeVisible();
+    await expect(page.getByText('No designs match your search.')).toHaveCount(0);
+    await expect(page.locator('main css-doodle').first()).toBeAttached();
+    await expect(rail.getByRole('button', { name: /^Sorbet/ }).first()).toBeVisible();
+    await expect(rail.getByRole('button', { name: /^Ocean/ }).first()).toBeVisible();
+
+    // A word that names nothing still empties the grid and says so.
+    await search.fill('zzzz');
+    await expect(page.getByText('No designs match your search.')).toBeVisible();
+  });
+
   test('the palette rail shows a scrollable, infinite palette list', async ({
     page,
   }) => {
@@ -722,6 +751,25 @@ test.describe('Template preview and customize', () => {
     await expect(dialog.getByRole('button', { name: 'Use template & download' })).toBeVisible();
   });
 
+  test('signing up names the terms and the password rule', async ({ page }) => {
+    await page.goto('/sign-up/');
+
+    // The account is what a template's license is granted to.
+    await expect(page.getByRole('link', { name: 'Terms of Service' })).toHaveAttribute(
+      'href',
+      '/terms-of-service/'
+    );
+    await expect(page.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute(
+      'href',
+      '/privacy-policy/'
+    );
+    await expect(page.getByLabel('Password')).toHaveAccessibleDescription('At least 8 characters.');
+
+    // Signing in makes no account, so it says neither.
+    await page.goto('/sign-in/');
+    await expect(page.getByRole('link', { name: 'Terms of Service' })).toHaveCount(0);
+  });
+
   test('customizing while signed out goes to sign-in with the way back', async ({ page }) => {
     // No Worker behind the export: the session read fails and reads as
     // signed out, which is the case a fresh visitor is in.
@@ -824,6 +872,39 @@ test.describe('Share cards and canonical URLs', () => {
     // The template page is what the downloads are made from: tabbied.com's
     // card and canonical would ride into every site built on it.
     expect(await head(page, '/templates/verdant/site/')).toMatchObject({ canonical: null, image: null, card: null });
+  });
+
+  test('patterns and templates share a 1200x630 card of their own', async ({ page, request }) => {
+    expect(await head(page, '/patterns/')).toMatchObject({
+      canonical: 'https://tabbied.com/patterns/',
+      image: 'https://tabbied.com/og.png',
+      card: 'summary_large_image',
+    });
+    expect(await head(page, '/patterns/radius/')).toMatchObject({
+      image: 'https://tabbied.com/og/patterns/radius.jpg',
+      card: 'summary_large_image',
+    });
+    // The website itself, not the pattern under it.
+    expect(await head(page, '/templates/verdant/')).toMatchObject({
+      image: 'https://tabbied.com/og/templates/verdant.jpg',
+    });
+
+    for (const path of ['/og/patterns/radius.jpg', '/og/templates/verdant.jpg']) {
+      const response = await request.get(path);
+      expect(response.status(), path).toBe(200);
+      const bytes = await response.body();
+      // JPEG SOF0 carries height then width; find the frame header.
+      const sof = bytes.indexOf(Buffer.from([0xff, 0xc0]));
+      expect([bytes.readUInt16BE(sof + 7), bytes.readUInt16BE(sof + 5)], path).toEqual([1200, 630]);
+    }
+  });
+
+  test('a pattern page has its heading in the server HTML', async ({ request }) => {
+    // The editor renders in the browser only; the export carries the name
+    // and the description for whatever reads the page without running it.
+    const html = await (await request.get('/patterns/radius/')).text();
+    expect(html).toMatch(/<h1[^>]*>Radius<\/h1>/);
+    expect(html).toMatch(/<p[^>]*>Quarter circles, half circles and whole discs/);
   });
 });
 

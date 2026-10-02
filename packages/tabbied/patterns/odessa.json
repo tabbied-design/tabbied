@@ -2,6 +2,7 @@
   "name": "Odessa",
   "slug": "odessa",
   "galleryOrder": 3,
+  "description": "Capsules and dots stacked down narrow columns, so each column reads as a run of rounded tubes in changing colors.",
   "galleryWhite": true,
   "palette": [
     "#1B4075",
