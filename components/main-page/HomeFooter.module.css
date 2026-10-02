@@ -52,13 +52,11 @@
   list-style: none;
 }
 
-.links a,
-.contact a {
+.links a {
   color: oklch(0.88 0.01 260);
 }
 
-.links a:hover,
-.contact a:hover {
+.links a:hover {
   color: var(--h-fg);
 }
 
@@ -66,6 +64,23 @@
   margin: 0;
   font: 400 14px / 1.9 var(--h-sans);
   color: oklch(0.88 0.01 260);
+}
+
+/* The contact links sit inside a sentence ("Built by Sy & Park"), so unlike
+   the lists above they need a mark of their own: a faint underline that goes
+   solid on hover, the docs article's link on the dark ground. */
+.contact a {
+  color: oklch(0.88 0.01 260);
+  text-decoration: underline;
+  text-decoration-color: oklch(1 0 0 / 0.3);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 150ms ease, text-decoration-color 150ms ease;
+}
+
+.contact a:hover {
+  color: var(--h-fg);
+  text-decoration-color: currentColor;
 }
 
 .bottom {
@@ -103,5 +118,11 @@
     flex-direction: column;
     gap: 8px;
     align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact a {
+    transition: none;
   }
 }

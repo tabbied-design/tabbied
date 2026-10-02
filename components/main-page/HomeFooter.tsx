@@ -100,8 +100,22 @@ export default function HomeFooter() {
             <a href="mailto:hello@tabbied.com">hello@tabbied.com</a>
           </p>
           <p className={styles.contact}>
-            Built by <a href="https://www.syunghong.com/">Sy</a> &amp;{' '}
-            <a href="https://www.behance.net/yejoopark">Park</a>
+            Built by{' '}
+            <a
+              href="https://www.syunghong.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Sy
+            </a>{' '}
+            &amp;{' '}
+            <a
+              href="https://www.behance.net/yejoopark"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Park
+            </a>
           </p>
         </div>
       </div>
