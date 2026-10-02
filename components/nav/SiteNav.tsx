@@ -111,7 +111,7 @@ export default function SiteNav({
       key={href}
       className={styles.menuItem}
       render={
-        <Link
+        <SamePageLink
           href={href}
           prefetch={false}
           aria-current={href === menuCurrent ? 'page' : undefined}

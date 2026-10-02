@@ -922,7 +922,8 @@ Four things worth not re-litigating:
 **A link to the page already open goes back to the top.** Next's router
 treats a click on a link to the current URL as a navigation already done and
 does nothing, which made the footer's "Docs" on the docs page look broken. The
-masthead's lockup and destinations and both footers use
+masthead's lockup, its destinations, its menu's items (the only way to the
+destinations below 768px) and both footers use
 `components/SamePageLink`, which scrolls to the top instead (smoothly, unless
 reduced motion is on) and drops a `#section` the docs' contents rail left in
 the address; a modified click, a different query or a link with its own
