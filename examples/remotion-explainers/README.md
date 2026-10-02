@@ -1,6 +1,6 @@
 # Explainer films, drawn with Tabbied
 
-Two short explainers drawn with [Tabbied](https://tabbied.com) patterns and
+Three short explainers drawn with [Tabbied](https://tabbied.com) patterns and
 rendered with [Remotion](https://www.remotion.dev). They exist to show what
 Tabbied does in a video pipeline: every pattern on screen is a
 `<TabbiedPattern>` whose seed, palette and density are functions of the frame
@@ -10,8 +10,9 @@ number, so a film is code and renders the same way every time.
 | --- | --- | --- | --- | --- | --- |
 | `GraceHopper` | Grace Hopper, from the alarm clocks to COBOL | 59.4 s (1,781 frames) | 25 | 21 | 8 |
 | `CreditCards` | Who pays for 1.5% cash back, and who keeps the profit | 108.3 s (3,249 frames) | 31 | 23 | 13 |
+| `Marmots` | The marmot: lookouts, hibernation, a groundhog and a comeback | 76.5 s (2,295 frames) | 26 | 22 | 11 |
 
-Both are 1920x1080 at 30 fps. Every palette is taken from the Tabbied palette
+All three are 1920x1080 at 30 fps. Every palette is taken from the Tabbied palette
 library, and every picture was generated with `gpt-image-2.5-flare` at
 `quality: "low"` on a transparent background. Narration and music come from
 ElevenLabs (Eleven v4 and Eleven Music) and are laid on afterwards; see
@@ -26,9 +27,10 @@ npm, the same way any app would.
 ```bash
 cd examples/remotion-explainers
 npm install
-npm run studio                 # scrub through either film in Remotion Studio
+npm run studio                 # scrub through any of the films in Remotion Studio
 npm run render:grace-hopper    # writes out/grace-hopper.mp4
 npm run render:credit-cards    # writes out/credit-cards.mp4
+npm run render:marmots         # writes out/marmots.mp4
 ```
 
 Remotion downloads its own headless Chrome on first use. Where that download
@@ -45,9 +47,10 @@ A single frame, for checking a layout:
 
 ```
 src/
-  components/   shared by both films: Pattern, Tinted, Type, Film, Montage
+  components/   shared by the films: Pattern, Tinted, Type, Film, Montage
   grace-hopper/ Film.tsx, timing.ts, palettes.ts, scenes/
   credit-cards/ Film.tsx, timing.ts, palettes.ts, scenes/
+  marmots/      Film.tsx, timing.ts, palettes.ts, shapes.ts, scenes/
   timeline.ts   frames per second, the transition length, scene starts
   motion.ts     the reduced-motion answer (below)
 scripts/
@@ -61,8 +64,9 @@ public/audio/<film>/                                narration, music, manifest
 A film's `timing.ts` is the order and length of its scenes and nothing else,
 so the audio script reads the same clock without loading React. `Film` plays
 the scenes at those lengths with the transitions each `Film.tsx` names;
-`Montage` is the closing wall of patterns and code both films end on. The chip in the corner of each scene prints the props of the pattern
-behind it, seed included, as it changes.
+`Montage` is the closing wall of patterns and code every film ends on. The
+chip in the corner of each scene prints the props of the pattern behind it,
+seed included, as it changes.
 
 ## Grace Hopper
 
@@ -108,6 +112,40 @@ credit cards), Visa's fiscal year results, the Boston Fed's research on who
 pays for card rewards, Executive Order 14178 (no federal CBDC) and the GENIUS
 Act (stablecoins), both 2025.
 
+## Marmots
+
+The marmot is a squirrel, and the heaviest kind there is. The film is the
+softest of the three: Fredoka for type, warm palettes, and pictures that move
+like animals (a lookout rising onto its boulder, two marmots hopping in to
+touch noses, a groundhog popping out of its burrow, a pup riding a bar chart
+up).
+
+| Scene | What it says | Design | Palette | Pictures |
+| --- | --- | --- | --- | --- |
+| Title | Meet the marmot, the heaviest squirrel | `lobe` (also inside the letters of MARMOTS) | Marmot | sentinel |
+| Where they live | 15 species, Europe, Asia and North America | `bight`, in an arched window | Highland | peak |
+| The lookout | One whistle for an eagle, a string of them for a fox | `concentricrings` | Sky | whistling marmot |
+| Family life | A shared burrow, greetings nose to nose | `roundpair`, also filling a cuteness meter | Peachy | greeting |
+| Summer | Grasses, herbs and flowers, fattening up | `petalcut`, also filling the winter-fat meter | Meadow | marmot with a flower, falling flowers |
+| Hibernation | Up to nine months, about 5 heartbeats a minute | `sparkle` | Small Hours | asleep |
+| The huddle | Bigger huddles are likelier to reach spring | `wovenkhaki`, as a blanket and as bars | Cocoa | family pile |
+| Groundhog Day | The groundhog (*Marmota monax*) is a marmot | `pebble` | Sundog | groundhog |
+| Whistler | The ski town named for the hoary marmot | `jibboom` | Blizzard | gondola, whistling marmot |
+| The comeback | Vancouver Island marmots: under 30 in 2003, 427 in 2025 | `roundstep`, as bars | Fern | pup |
+| Montage | 16 designs, each cycling 12 palettes | `horizonbands`, `curl`, ... | Taiga, Fjord, Apricot, ... | - |
+
+The huddle chart is a schematic and says so on screen: it shows the
+direction of the finding (larger hibernating groups of Alpine marmots
+survive the winter better), not its numbers. Sources for the rest:
+Wikipedia's Marmot and Alpine marmot articles (15 species, the heaviest
+squirrels, hibernation of up to nine months at about 5 heartbeats a minute,
+greetings nose to nose), a study of Alpine marmot alarm calls (a single
+whistle mostly for a threat from the air, repeated whistles for one on the
+ground), accounts of how Whistler was named for the hoary marmot's call, and
+the Marmot Recovery Foundation (marmots.org) for Vancouver Island marmots:
+fewer than 30 in the wild in 2003, and 427 going into the winter of 2025, in
+35 colonies.
+
 ## How a pattern is made safe to film
 
 A Tabbied pattern is a live `<css-doodle>` element, made for a web page. Three
@@ -144,7 +182,9 @@ each pixel's lightness along two or three colors of the scene's palette with
 an SVG filter, leaving the alpha alone, so one file serves every palette (the
 same portrait opens the Grace Hopper film in Toucan blues and closes it in
 Letterpress reds). The script refuses a "cut-out" with no transparent pixels,
-keeps the raw PNGs in `generated/<film>/` (gitignored) so promoting again
+warns about one whose subject is see-through (the first marmot pup was 39%
+half-transparent pixels, and the pattern showed through its fur), keeps the
+raw PNGs in `generated/<film>/` (gitignored) so promoting again
 costs nothing, and takes `--only <id>` and `--force` to redo one.
 
 ## Sound
@@ -160,8 +200,15 @@ npm run audio -- all --dry-run       # the plan and the character count, no call
 
 It reads the key from `ELEVENLABS_API_KEY.txt` in this folder (or at the repo
 root, or `--key-file <path>`, or `ELEVENLABS_API_KEY`). The file is
-gitignored in both places. The three steps can run alone (`--narrate`,
-`--music`, `--mix`):
+gitignored in both places.
+
+It also needs ffmpeg and ffprobe, and finds them without an install: the
+`FFMPEG` and `FFPROBE` variables when they are set, else the ones on `PATH`,
+else the copies Remotion ships with its renderer (what `npx remotion ffmpeg`
+runs), which `npm install` here has already fetched. It looks for them before
+it calls the API, so a missing one stops the run before anything is paid for.
+
+The three steps can run alone (`--narrate`, `--music`, `--mix`):
 
 1. **Narration.** One line per scene from `scripts/narration/<film>.json`,
    spoken by `eleven_v4` through `POST /v1/text-to-speech/{voice_id}`, with the
@@ -169,16 +216,21 @@ gitignored in both places. The three steps can run alone (`--narrate`,
    on from scene to scene. The lines use v4's inline audio tags (`[warm]`,
    `[curious]`, `[pause]`), one per clause, and spell their numbers out so the
    voice reads them as written. The Grace Hopper film is read by **Hope -
-   upbeat and clear** (`tnSpp4vdxKPjI9w0GnoV`) and the credit card film by
-   **Jarnathan - Confident and Versatile** (`c6SfcYrb2t09NHXiT80T`). Both are
-   Voice Library voices; the script adds one to the account
-   (`POST /v1/voices/add/...`) the first time it is missing.
+   upbeat and clear** (`tnSpp4vdxKPjI9w0GnoV`), the credit card film by
+   **Jarnathan - Confident and Versatile** (`c6SfcYrb2t09NHXiT80T`) and the
+   marmot film by **George - Warm, Captivating Storyteller**
+   (`JBFqnCBsd6RMkjVDRZzb`). George is one of ElevenLabs' default voices and
+   is in every account; the other two are Voice Library voices, and the
+   script adds one to the account (`POST /v1/voices/add/...`) the first time
+   it is missing.
 2. **Music.** One instrumental bed a second longer than the film, from
    `POST /v1/music` on `music_v2_5` with `force_instrumental`, prompted from
    the same file.
 3. **Mix.** ffmpeg places each line at its scene's start plus 10 frames,
-   ducks the music under the voice with a sidechain compressor, fades it in
-   and out, normalizes the whole to -16 LUFS and muxes it onto
+   ducks the music about 9 dB under each line (a volume curve drawn from the
+   lines' known starts and lengths, easing down a quarter second before each
+   and back up half a second after), fades it in and out, normalizes the
+   whole to -16 LUFS and muxes it onto
    `out/<film>.mp4` as `out/<film>-narrated.mp4`, copying the video stream
    rather than encoding it again. It refuses a render whose length no longer
    matches `timing.ts`.
@@ -194,7 +246,8 @@ Every request is cached in `public/audio/<film>/manifest.json` by a hash of
 what was asked (and of the API host), so a rerun pays only for lines that
 changed; `--force` asks again. To try the whole pipeline without a key or
 credits, run the stub, which answers the same routes with tones of the
-right length:
+right length (it makes them with ffmpeg's `lavfi` sources, which Remotion's
+copy leaves out, so the stub alone needs an ffmpeg on `PATH`):
 
 ```bash
 npm run audio:stub &
@@ -207,8 +260,8 @@ account's plan includes the Music API before the first `--music`.
 
 ## Notes
 
-- Fonts (Space Grotesk, IBM Plex Mono, Instrument Serif) are bundled from
-  `@fontsource`, so a render needs no network.
+- Fonts (Space Grotesk, IBM Plex Mono, Instrument Serif, Fredoka) are bundled
+  from `@fontsource`, so a render needs no network.
 - Remotion is free for individuals and small companies; larger companies need
   a [company license](https://www.remotion.dev/license).
 - The portrait of Grace Hopper is an illustration generated from a

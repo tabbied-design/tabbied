@@ -7,13 +7,19 @@ import grotesk700 from '@fontsource/space-grotesk/files/space-grotesk-latin-700-
 import mono400 from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2';
 import mono600 from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-normal.woff2';
 import serifItalic from '@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2';
+import rounded500 from '@fontsource/fredoka/files/fredoka-latin-500-normal.woff2';
+import rounded700 from '@fontsource/fredoka/files/fredoka-latin-700-normal.woff2';
 
 export const DISPLAY = '"Space Grotesk", sans-serif';
 export const MONO = '"IBM Plex Mono", monospace';
 export const SERIF = '"Instrument Serif", serif';
+// The marmot film's face: rounded, for a softer subject.
+export const ROUNDED = '"Fredoka", sans-serif';
 
 loadFont({ family: 'Space Grotesk', url: grotesk500, weight: '500' });
 loadFont({ family: 'Space Grotesk', url: grotesk700, weight: '700' });
 loadFont({ family: 'IBM Plex Mono', url: mono400, weight: '400' });
 loadFont({ family: 'IBM Plex Mono', url: mono600, weight: '600' });
 loadFont({ family: 'Instrument Serif', url: serifItalic, weight: '400', style: 'italic' });
+loadFont({ family: 'Fredoka', url: rounded500, weight: '500' });
+loadFont({ family: 'Fredoka', url: rounded700, weight: '700' });

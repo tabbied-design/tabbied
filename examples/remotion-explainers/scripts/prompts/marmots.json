@@ -1,0 +1,62 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "quality": "low",
+  "style": "A bold black-and-white screen-print illustration with a warm, gentle character: solid black ink, bright white highlights and a coarse halftone for the mid-tones, soft rounded shapes, crisp edges, high contrast, no color at all. The subject alone, centered, nothing else in frame, no ground and no shadow under it. No text, letters, numbers, or logos.",
+  "images": [
+    {
+      "id": "sentinel",
+      "size": "1024x1536",
+      "subject": "A plump, fluffy alpine marmot standing upright on its hind legs, front paws held together against its round belly, small round ears, bright curious eyes, full body, facing three-quarters toward the viewer."
+    },
+    {
+      "id": "whistle",
+      "size": "1024x1024",
+      "subject": "A plump marmot sitting upright on top of a rounded boulder, head tilted up, mouth open mid-whistle, front paws tucked against its chest, full body."
+    },
+    {
+      "id": "greeting",
+      "size": "1536x1024",
+      "subject": "Two plump marmots on all fours facing each other and touching noses in a gentle greeting, full bodies seen from the side, tails relaxed."
+    },
+    {
+      "id": "snack",
+      "size": "1024x1024",
+      "subject": "A plump marmot sitting up on its haunches holding a single wildflower in both front paws and nibbling it, cheeks round and full, full body."
+    },
+    {
+      "id": "asleep",
+      "size": "1536x1024",
+      "subject": "A marmot curled up fast asleep in a tight round ball, eyes closed, nose tucked in, its bushy tail wrapped around its body."
+    },
+    {
+      "id": "huddle",
+      "size": "1536x1024",
+      "subject": "A family of four marmots curled up asleep together in one tight, cozy pile, heads resting on each other, eyes closed."
+    },
+    {
+      "id": "groundhog",
+      "size": "1024x1024",
+      "subject": "A groundhog popping its head and shoulders out of a round burrow hole in a small mound of earth, looking around with surprise."
+    },
+    {
+      "id": "pup",
+      "size": "1024x1024",
+      "subject": "A small, round marmot pup sitting and looking up with big eyes, oversized front paws resting on its tummy, full body, its fur drawn in solid black ink and white highlights with a firm outline."
+    },
+    {
+      "id": "peak",
+      "size": "1536x1024",
+      "subject": "A jagged alpine mountain peak with snow on its summit and ridges, a few small pine trees at its foot."
+    },
+    {
+      "id": "gondola",
+      "size": "1024x1024",
+      "subject": "A vintage ski gondola cabin with round windows hanging from a short length of steel cable by its arm."
+    },
+    {
+      "id": "flowers",
+      "size": "1024x1024",
+      "subject": "A small loose bunch of alpine wildflowers: two edelweiss, a bell-shaped gentian and a clover head, stems crossed."
+    }
+  ]
+}
