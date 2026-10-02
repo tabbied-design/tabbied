@@ -198,7 +198,7 @@ export default function HomeHero({
               {templateCount}
             </span>
             <span className={styles.statLabel}>
-              Free website templates
+              Website templates
               <span className={styles.statArrow} aria-hidden="true">
                 <ArrowRight size={15} strokeWidth={1.5} />
               </span>
