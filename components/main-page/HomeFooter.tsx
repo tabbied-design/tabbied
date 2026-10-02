@@ -9,6 +9,12 @@ import styles from './HomeFooter.module.css';
 
 const GITHUB_URL = 'https://github.com/tabbied-design/tabbied/';
 
+// Product Hunt's embed for the Tabbied 2.0 launch, as Product Hunt issued it.
+const PRODUCT_HUNT_URL =
+  'https://www.producthunt.com/products/tabbied?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-tabbied-2-0-pattern-website-generator';
+const PRODUCT_HUNT_BADGE =
+  'https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1267187&theme=dark&t=1790910639393';
+
 export default function HomeFooter() {
   return (
     <footer className={styles.footer}>
@@ -19,6 +25,26 @@ export default function HomeFooter() {
             Generative patterns and website templates, drawn live in your
             browser.
           </p>
+          {/* A lazy <img> with its size set, as components/Footer does: the
+              request to Product Hunt waits until the footer is near, never
+              holds up the page's load event, and the row doesn't move when
+              it arrives. */}
+          <a
+            href={PRODUCT_HUNT_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.badge}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={PRODUCT_HUNT_BADGE}
+              alt="Tabbied 2.0: Pattern & Website Generator - Free patterns and website templates, yours to shape. | Product Hunt"
+              width={250}
+              height={54}
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
         </div>
 
         <div>
@@ -71,27 +97,17 @@ export default function HomeFooter() {
         <div>
           <h2 className={styles.heading}>Contact</h2>
           <p className={styles.contact}>
-            <a href={`${GITHUB_URL}issues`} target="_blank" rel="noreferrer">
-              Questions and requests
-            </a>
+            <a href="mailto:hello@tabbied.com">hello@tabbied.com</a>
+          </p>
+          <p className={styles.contact}>
+            Built by <a href="https://www.syunghong.com/">Sy</a> &amp;{' '}
+            <a href="https://www.behance.net/yejoopark">Park</a>
           </p>
         </div>
       </div>
 
       <div className={styles.bottom}>
-        {/* The credit is a byline, not a way to get in touch, so it sits
-            with the copyright rather than under Contact. */}
-        <span>
-          &copy; {new Date().getFullYear()} Tabbied. Built by{' '}
-          <a href="https://www.syunghong.com/" className={styles.thanks}>
-            Sy
-          </a>{' '}
-          &amp;{' '}
-          <a href="https://www.behance.net/yejoopark" className={styles.thanks}>
-            Park
-          </a>
-          .
-        </span>
+        <span>&copy; {new Date().getFullYear()} Tabbied</span>
         <span>
           Special thanks to{' '}
           <a

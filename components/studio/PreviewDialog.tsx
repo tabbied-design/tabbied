@@ -6,7 +6,7 @@
 // through React and ignores an attribute written from outside. The card's
 // link still points at the full page; this is what a plain click gets.
 import { useEffect, useState } from 'react';
-import { Dialog } from '@base-ui-components/react/dialog';
+import { Dialog } from '@base-ui/react/dialog';
 import { directionToEdits, type Problem, type TemplateSpec } from 'tabbied-templates';
 import type { DirectionCopy } from 'lib/studioDocument';
 import { buildPreviewDocument, packagedTemplateUrl, templateSpecUrl } from 'lib/studioPreview';

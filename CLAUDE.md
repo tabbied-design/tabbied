@@ -130,6 +130,30 @@ simply had no Preview URL column. Only `wrangler deploy` applies either
 setting; a PR build's `wrangler versions upload` never does, so a change
 here reaches previews once it is deployed from main.
 
+**PR previews run on production's bindings.** Workers Builds runs
+`npx wrangler versions upload` for a PR, and a version shares the Worker's
+D1, R2, vars and secrets, so a preview reads and writes live data. The
+`previews` block in `wrangler.jsonc` is for `wrangler preview` (Worker
+Previews, Cloudflare's default preview command for new projects), which
+`versions upload` ignores: it repeats production's D1 (by its real id),
+R2 bucket and vars so that switching commands keeps previews on production.
+A Preview inherits nothing from the top level, wrangler 4.133+ refuses to
+run `wrangler preview` in CI without the block, and Preview secrets come
+from the Previews Base config, not the production Worker. Keep the block in
+step with the top level.
+
+**The Worker must start in workerd, which the worker tests don't prove.**
+They bundle with Vite; `wrangler versions upload` and `wrangler deploy`
+bundle with esbuild, and Cloudflare rejects an upload whose Worker throws
+while loading (code 10021). That is how zod 4.6 broke #105's preview builds
+while GitHub CI was green: better-auth 1.7.7 loads two adapters with a
+dynamic `import()`, so esbuild put zod behind a lazy initializer, and the
+MCP SDK built schemas before anything called it ("ZodLazy is not a
+constructor"). `worker/zod.ts`, imported first by `worker/index.ts`, starts
+zod before anything else loads. After a dependency change, `npx wrangler
+dev` (which bundles the same way) and a request to `/api/health` or `/mcp`
+is the check.
+
 **Redirects live in `public/_redirects`**, beside `_headers` and read the
 same way. The template sites moved from `/template/<slug>/` to
 `/templates/<slug>/site/` (one noun, one tree: the framed preview is
@@ -732,6 +756,14 @@ re-litigating:
   first published; the fifty small-business sites were appended after them
   (2026-09-26), spread among themselves, and the fifty picture-led sites
   (2026-09-27, `pic-`) after those.
+- **The first cards are picked by hand.** `GALLERY_ORDER` is `GALLERY_LEAD`,
+  fifteen templates chosen for the top of the first page (2026-10-02), then
+  `GALLERY_SPREAD`, the spread above less those fifteen, which is the part
+  that stays append-only. Editing the lead moves every card after it, so it
+  is an editorial decision, not a side effect of adding templates. The lead
+  is shown in the order given and may put two of a batch side by side; the
+  neighbor rule (and `e2e/templates.spec.ts`) applies from the card after
+  it. A slug in both lists fails the export.
 - **The URL is read after mount, not with `useSearchParams`**, the same as
   the pattern library's `?page=`: `useSearchParams` in a static export
   renders the whole route on the client. The first paint is All, page 1,
@@ -757,11 +789,14 @@ step is exactly the work this component removes.
 **The favicons and app icons are pictures of it**, written by
 `node scripts/build-favicons.mjs`, which reads the paths, box and stroke out
 of `LogoMark.tsx` (and stops if it cannot): run it after the mark changes,
-the same way the email lockup is captured from `Logo`. The mark is paper on
-the dark shell's ink in every one. Two optical sizes: the authored stroke is
-a 0.4px line at 16px, so the tab icons (16-48px, and `favicon.svg`, which a
-browser draws at the same size) take a heavier one, while the app icons from
-180px up keep the drawing's own weight.
+the same way the email lockup is captured from `Logo`. The tab icons
+(16-48px and `favicon.svg`) are the mark in ink on a transparent ground,
+which is what was asked for and which a dark tab strip all but hides; the
+app icons (iOS, Android, the Windows tile) stay paper on an ink tile,
+because iOS fills a transparent touch icon with black. Two optical sizes:
+the authored stroke is a 0.4px line at 16px, so the tab icons take a
+heavier one, while the app icons from 180px up keep the drawing's own
+weight.
 
 ## The masthead - one bar, two tones
 
@@ -1081,8 +1116,11 @@ Things worth not re-litigating:
 - **`worker/db/schema.ts` is the source of truth and `worker/migrations` is
   emitted from it** (`npm run db:generate`). better-auth's four tables are
   transcribed from its own `getAuthTables()` output rather than guessed - run
-  it after an upgrade, because a field added upstream is a migration here
-  (that is how `account.issuer` was caught).
+  it after an upgrade, because a field added or dropped upstream is a
+  migration here. `account.issuer` was both: 1.7.0 required it, and 1.7.3
+  stopped writing it, so the NOT NULL column failed every sign-up until
+  migration 0010 dropped it. better-auth checks the schema at startup since
+  1.7.3 and logs "Drizzle schema mismatch" when the two disagree.
 - **`buildAuth` is a factory**, for the same reason `buildServer` is on the
   MCP side: an isolate is shared across requests, so capturing bindings in a
   module-scope singleton works locally and breaks under concurrency.

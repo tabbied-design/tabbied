@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Dialog } from '@base-ui-components/react/dialog';
+import { Dialog } from '@base-ui/react/dialog';
 import { Check, Plus, Shuffle, Trash2, X } from 'lucide-react';
 import ToggleSwitch from 'components/ToggleSwitch';
 import ColorSwatch from 'components/ColorSwatch';

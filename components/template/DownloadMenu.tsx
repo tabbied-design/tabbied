@@ -5,7 +5,7 @@
 // original in both formats (links to the Worker's gated route). Each place
 // draws the menu in its own module, since a portaled popup carries its own
 // tokens, so the classes come from the caller.
-import { Menu } from '@base-ui-components/react/menu';
+import { Menu } from '@base-ui/react/menu';
 import { ChevronDown, Download } from 'lucide-react';
 import { toaster } from 'components/Toaster';
 import type { ChosenTemplate } from 'lib/myTemplates';

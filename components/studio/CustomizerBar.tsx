@@ -11,7 +11,7 @@
 // applied to JSX; the React package is the template's own source.
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Menu } from '@base-ui-components/react/menu';
+import { Menu } from '@base-ui/react/menu';
 import { ChevronDown } from 'lucide-react';
 import { initials } from 'components/nav';
 import ImpersonationNotice from 'components/nav/ImpersonationNotice';

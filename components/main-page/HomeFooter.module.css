@@ -21,6 +21,15 @@
   color: var(--h-fg);
 }
 
+.badge {
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.badge img {
+  display: block;
+}
+
 .blurb {
   margin: 0;
   font: 400 14px / 1.7 var(--h-sans);

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Dialog } from '@base-ui-components/react/dialog';
+import { Dialog } from '@base-ui/react/dialog';
 import { ApiError, apiFetch } from 'lib/apiFetch';
 import { plexMono, plexSans } from 'lib/fonts';
 import { useAdminData } from './useAdminData';

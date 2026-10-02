@@ -7,7 +7,7 @@
 // better committed together, and the canvas answering at once is the point of
 // previewing. The list is the catalog the shuffle draws from.
 import { useEffect, useMemo, useState } from 'react';
-import { Dialog } from '@base-ui-components/react/dialog';
+import { Dialog } from '@base-ui/react/dialog';
 import { Search, X } from 'lucide-react';
 import type { DesignChoice } from 'lib/designCatalog';
 import styles from './DesignDialog.module.css';

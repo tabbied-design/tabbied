@@ -45,43 +45,43 @@
     "release": "changeset publish"
   },
   "dependencies": {
-    "@base-ui-components/react": "^1.0.0-rc.0",
-    "@modelcontextprotocol/server": "^2.0.0",
-    "better-auth": "^1.7.2",
+    "@base-ui/react": "^1.8.0",
+    "@modelcontextprotocol/server": "^2.2.0",
+    "better-auth": "^1.7.7",
     "css-doodle": "^0.51.0",
-    "drizzle-orm": "^0.45.2",
-    "hono": "^4.10.3",
-    "lucide-react": "^1.29.0",
-    "next": "^16.3.0",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
+    "drizzle-orm": "^0.45.3",
+    "hono": "^4.13.12",
+    "lucide-react": "^1.49.0",
+    "next": "^16.3.8",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "tabbied": "*",
     "tabbied-mcp": "*",
     "tabbied-templates": "*",
-    "zod": "^4.4.3"
+    "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@babel/parser": "^8.0.4",
+    "@babel/parser": "^8.0.6",
     "@changesets/changelog-github": "^0.7.0",
     "@changesets/cli": "^2.31.1",
     "@cloudflare/vitest-pool-workers": "^0.22.0",
-    "@cloudflare/workers-types": "^5.20260801.1",
-    "@playwright/test": "^1.62.1",
-    "@types/node": "^26.1.2",
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
-    "drizzle-kit": "^0.31.10",
+    "@cloudflare/workers-types": "^5.20261001.1",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.6.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "drizzle-kit": "^0.31.11",
     "esbuild": "0.28.1",
     "fflate": "^0.8.3",
     "imagetracerjs": "^1.2.6",
     "serve": "^14.2.6",
-    "sharp": "^0.35.3",
+    "sharp": "^0.35.5",
     "typescript": "^7.0.2",
     "vitest": "^4.1.11",
-    "wrangler": "^4.42.0"
+    "wrangler": "^4.145.0"
   },
   "overrides": {
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4"
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0"
   }
 }

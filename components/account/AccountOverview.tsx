@@ -12,7 +12,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Palette } from 'lucide-react';
-import { Dialog } from '@base-ui-components/react/dialog';
+import { Dialog } from '@base-ui/react/dialog';
 import Toaster, { toaster } from 'components/Toaster';
 import { ApiError, apiFetch } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';

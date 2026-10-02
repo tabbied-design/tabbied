@@ -3,7 +3,7 @@
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react';
-import { Menu } from '@base-ui-components/react/menu';
+import { Menu } from '@base-ui/react/menu';
 import {
   ArrowDownToLine,
   ChevronDown,

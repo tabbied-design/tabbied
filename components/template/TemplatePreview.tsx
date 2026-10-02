@@ -10,8 +10,8 @@
 // asks for a sign-in, with the customizer as the way back.
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Menu } from '@base-ui-components/react/menu';
-import { Popover } from '@base-ui-components/react/popover';
+import { Menu } from '@base-ui/react/menu';
+import { Popover } from '@base-ui/react/popover';
 import { ArrowUpRight, ChevronDown } from 'lucide-react';
 import LogoMark from 'components/logo/LogoMark';
 import { initials } from 'components/nav';

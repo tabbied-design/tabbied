@@ -11,7 +11,7 @@
 // this dialog, by opening a zip's URL, is held to the same allowance.
 import { useCallback, useState, type ReactNode } from 'react';
 import Link from 'next/link';
-import { Dialog } from '@base-ui-components/react/dialog';
+import { Dialog } from '@base-ui/react/dialog';
 import { toaster } from 'components/Toaster';
 import { ApiError } from 'lib/apiFetch';
 import {

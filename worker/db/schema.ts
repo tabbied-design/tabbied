@@ -64,8 +64,9 @@ export const account = sqliteTable(
   'account',
   {
     id: text('id').primaryKey(),
-    // Required since better-auth 1.7; a social account's token issuer.
-    issuer: text('issuer').notNull(),
+    // No `issuer`: better-auth 1.7.0-1.7.2 required one and 1.7.3 dropped it
+    // again, identifying accounts by (providerId, accountId) as 1.6 did. A
+    // NOT NULL column it never writes fails every sign-up (migration 0010).
     accountId: text('account_id').notNull(),
     providerId: text('provider_id').notNull(),
     userId: text('user_id')

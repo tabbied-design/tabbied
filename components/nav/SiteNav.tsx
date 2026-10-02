@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu } from '@base-ui-components/react/menu';
+import { Menu } from '@base-ui/react/menu';
 import { Logo } from 'components/logo';
 import { plexMono } from 'lib/fonts';
 import { useSyncExternalStore } from 'react';

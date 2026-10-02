@@ -118,5 +118,42 @@
   // Commit and Branch Preview URLs on workers.dev. Only a production deploy
   // applies these two, so a change here reaches previews after it is on main.
   "workers_dev": false,
-  "preview_urls": true
+  "preview_urls": true,
+
+  // For `wrangler preview` (Worker Previews), Cloudflare's default preview
+  // command for new Workers Builds projects. This project's PR builds run
+  // `wrangler versions upload`, which ignores the block: a version shares the
+  // Worker's own bindings and secrets. It is here so that switching commands
+  // keeps previews where they are today, on production: the same database,
+  // bucket and vars, so a preview reads and writes live data. Previews
+  // inherit nothing from the top level, and since wrangler 4.133 the command
+  // fails in CI without this block. A var or binding changed above has to
+  // change here too.
+  //
+  // The D1 binding needs its real id (a preview is never provisioned, so a
+  // name alone does not resolve). Secrets are not read from here or from the
+  // production Worker: Previews take them from the Previews Base config
+  // (`wrangler preview base-config secret put <NAME>`).
+  "previews": {
+    "d1_databases": [
+      {
+        "binding": "DB",
+        "database_name": "tabbied",
+        "database_id": "fa1fde52-8bcf-439e-9517-735f3927bb4a"
+      }
+    ],
+    "r2_buckets": [
+      {
+        "binding": "MEDIA",
+        "bucket_name": "tabbied-media"
+      }
+    ],
+    "vars": {
+      "PUBLIC_ORIGIN": "https://tabbied.com",
+      "AI_BASE_URL": "https://api.openai.com/v1",
+      "AI_MODEL": "gpt-5.6-luna",
+      "AI_REASONING_EFFORT": "low",
+      "AI_IMAGE_MODEL": "gpt-image-2.5-flare"
+    }
+  }
 }
