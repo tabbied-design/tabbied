@@ -48,11 +48,20 @@ binary.
 | `get_design` | The full record for one slug, plus ready-to-paste snippets. |
 | `preview_design` | The rendered preview image for up to six designs, so the model can *look*. |
 | `get_docs` | The complete API reference (`llms-full.txt`). |
+| `list_templates` | The Tabbied website templates, with each one's palette, patterns and editable slots. |
+| `get_template` | One template's editable-section spec, its download links, and how to edit each format. |
 | `render_design` | SVG or PNG at any size, seed, palette, and option set. **Local only.** |
 
 Slugs are opaque - `cleat`, `karst`, `radius` - so the intended flow is
 `search_designs` to narrow, `preview_design` to look, then `get_design` for the
 options. Choosing off tags alone is the main way this goes wrong.
+
+The website templates are licensed per Tabbied account, not with this package:
+downloading one needs an account that has chosen it, under the
+[Template License](https://tabbied.com/terms-of-service/#template-license).
+
+Setup for each client, the tools and example prompts are also on
+[tabbied.com/docs/mcp](https://tabbied.com/docs/mcp/).
 
 ## Programmatic use
 

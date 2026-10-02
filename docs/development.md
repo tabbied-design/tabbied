@@ -137,8 +137,10 @@ The site is a static export hosted on
 [Cloudflare Workers static assets](https://developers.cloudflare.com/workers/static-assets/),
 configured in [`wrangler.jsonc`](../wrangler.jsonc). Everything in `out/` is
 served straight off Cloudflare's network; [`worker/index.ts`](../worker/index.ts)
-runs only for the paths `run_worker_first` names (`/mcp`, `/health`, `/api`
-and the template downloads).
+runs only for the paths `run_worker_first` names: `/mcp`, `/health`, `/api`,
+the template downloads (it gates the zips, and refuses the React package's
+unzipped source), and the live template pages (it adds their license
+notice).
 
 ```bash
 # Run the real Worker over a build, including the MCP endpoint

@@ -9,6 +9,7 @@ const LANG_LABEL = {
   tsx: 'tsx',
   ts: 'typescript',
   sh: 'shell',
+  json: 'json',
 } as const;
 
 type CodeLang = keyof typeof LANG_LABEL;

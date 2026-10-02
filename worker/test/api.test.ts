@@ -25,6 +25,48 @@ describe('the platform tier', () => {
   });
 });
 
+describe('the MCP endpoint', () => {
+  it('sends a browser to the page about it', async () => {
+    for (const path of ['/mcp', '/mcp/']) {
+      const navigation = await SELF.fetch(`${ORIGIN}${path}`, {
+        headers: { 'sec-fetch-mode': 'navigate', accept: 'text/html' },
+        redirect: 'manual',
+      });
+
+      expect(navigation.status, path).toBe(302);
+      expect(navigation.headers.get('location'), path).toBe('/docs/mcp/');
+    }
+  });
+
+  it('still answers MCP clients', async () => {
+    // A stream request is the SDK's to answer (a 405 from the stateless
+    // server), never a redirect.
+    const stream = await SELF.fetch(`${ORIGIN}/mcp`, {
+      headers: { accept: 'text/event-stream' },
+      redirect: 'manual',
+    });
+    expect(stream.status).not.toBe(302);
+
+    const initialize = await SELF.fetch(`${ORIGIN}/mcp`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'initialize',
+        params: {
+          protocolVersion: '2025-06-18',
+          capabilities: {},
+          clientInfo: { name: 'test', version: '0' },
+        },
+      }),
+    });
+
+    expect(initialize.status).toBe(200);
+    expect(await initialize.text()).toContain('"serverInfo"');
+  });
+});
+
 describe('the live template pages', () => {
   // The notice is the Worker's, added on the way out (worker/lib/notice.ts):
   // the export, and every download derived from it, carries none.

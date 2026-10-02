@@ -77,6 +77,11 @@ export default function HomeFooter() {
               </Link>
             </li>
             <li>
+              <Link href="/docs/mcp" prefetch={false}>
+                MCP server
+              </Link>
+            </li>
+            <li>
               <a href={GITHUB_URL} target="_blank" rel="noreferrer">
                 GitHub
               </a>

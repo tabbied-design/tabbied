@@ -827,6 +827,40 @@ test.describe('Share cards and canonical URLs', () => {
   });
 });
 
+test.describe('MCP docs page', () => {
+  test('says how to connect, and the footer and the React docs lead to it', async ({ page }) => {
+    await page.goto('/docs/mcp');
+
+    await expect(page.getByRole('heading', { level: 1, name: 'The MCP server' })).toBeVisible();
+    await expect(
+      page.getByText('claude mcp add --transport http tabbied https://tabbied.com/mcp')
+    ).toBeVisible();
+    // Every tool the server registers has a row; render_design is the local one.
+    for (const tool of [
+      'search_designs',
+      'preview_design',
+      'get_design',
+      'get_docs',
+      'list_templates',
+      'get_template',
+      'render_design',
+    ]) {
+      await expect(page.getByRole('cell', { name: tool, exact: true })).toBeVisible();
+    }
+
+    await expect(page.locator('footer').getByRole('link', { name: 'MCP server' })).toHaveAttribute(
+      'href',
+      '/docs/mcp/'
+    );
+
+    await page.goto('/docs/react');
+    await expect(page.getByRole('link', { name: 'Tabbied MCP server' })).toHaveAttribute(
+      'href',
+      '/docs/mcp/'
+    );
+  });
+});
+
 test.describe('React component docs page', () => {
   test('documents the component with live examples', async ({ page }) => {
     await page.goto('/docs/react');

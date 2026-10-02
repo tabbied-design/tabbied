@@ -4,6 +4,12 @@ Tabbied ships a [Model Context Protocol](https://modelcontextprotocol.io)
 server so an assistant can browse the design catalog, *look* at candidates, and
 render assets without the site or the package in its context.
 
+The page for people is [tabbied.com/docs/mcp](https://tabbied.com/docs/mcp/)
+(`app/docs/mcp/page.tsx`): client setup, the tools and example prompts. A
+browser that opens the endpoint itself is redirected there; an MCP client is
+not. Keep its client setup and tool list in step with this file and the
+package README.
+
 It exists in two forms that share one implementation:
 
 | | Remote | Local |

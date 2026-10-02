@@ -11,10 +11,8 @@ import CodeBlock from 'components/react-docs-page/CodeBlock';
 import Example from 'components/react-docs-page/Example';
 import ReseedExportDemo from 'components/react-docs-page/ReseedExportDemo';
 import DocsNav from 'components/react-docs-page/DocsNav';
-import {
-  sectionIndex,
-  type DocsSection,
-} from 'components/react-docs-page/sections';
+import { Callout, Code, docsSection } from 'components/react-docs-page/parts';
+import type { DocsSection } from 'components/react-docs-page/sections';
 import home from 'components/main-page/home.module.css';
 import styles from 'components/react-docs-page/ReactDocs.module.css';
 import { pageMetadata } from 'lib/seo';
@@ -44,6 +42,8 @@ const SECTIONS: DocsSection[] = [
   { id: 'vanilla', label: 'Vanilla JavaScript' },
   { id: 'api', label: 'API reference' },
 ];
+
+const Section = docsSection(SECTIONS);
 
 const installCode = `npm install tabbied`;
 
@@ -246,20 +246,6 @@ const FIT_DEMOS = [
   },
 ] as const;
 
-function Code({ children }: { children: ReactNode }) {
-  return <code className={styles.inlineCode}>{children}</code>;
-}
-
-// An aside beside the prose, labelled so it reads as one.
-function Callout({ children }: { children: ReactNode }) {
-  return (
-    <aside className={styles.callout}>
-      <span className={styles.calloutLabel}>Note</span>
-      {children}
-    </aside>
-  );
-}
-
 // One fit mode, drawn into both box shapes. Density 0.25 (90px cells) keeps
 // the cells big enough to read as shapes, and to show whether they stay square.
 function FitDemo({
@@ -297,32 +283,6 @@ function FitDemo({
 
 // A docs section: its index (its position in the contents rail), an anchored,
 // hover-linkable heading, and the body.
-function Section({
-  id,
-  title,
-  children,
-}: {
-  id: string;
-  title: string;
-  children: ReactNode;
-}) {
-  const index = SECTIONS.findIndex((section) => section.id === id) + 1;
-
-  return (
-    <section id={id} className={styles.section}>
-      <span className={styles.sectionIndex} aria-hidden="true">
-        {sectionIndex(index)}
-      </span>
-      <h2 className={styles.subhead}>
-        {title}
-        <a className={styles.anchor} href={`#${id}`} aria-label={`Link to ${title}`}>
-          #
-        </a>
-      </h2>
-      {children}
-    </section>
-  );
-}
 
 // The component's props. Description cells are markup; the rest are strings
 // the table sets in the mono. A row with no default draws a dimmed dash.
@@ -612,6 +572,11 @@ export default function ReactDocsPage() {
                     and options always draw the same design, at any size.
                     That makes patterns safe to use as reproducible brand
                     assets - a seed is a design you can keep.
+                  </p>
+                  <p>
+                    Working with an AI assistant? The{' '}
+                    <a href="/docs/mcp/">Tabbied MCP server</a> lets it search
+                    the designs and look at them before it writes the code.
                   </p>
                 </Section>
 

@@ -281,6 +281,16 @@ Four things worth not re-litigating:
 default: it is what keeps 2025-era clients working, and every shipping client
 still opens with `initialize`. Dropping it to `'reject'` would strand them.
 
+**The page for people is `/docs/mcp/`**, a sibling of `/docs/react` built
+from the same parts (`components/react-docs-page/parts.tsx`: `Code`,
+`Callout`, and `docsSection(SECTIONS)`, which numbers a page's sections from
+its own array). A browser that opens `/mcp` is redirected there, told apart
+by `isNavigation` (the same test the downloads use); an MCP client POSTs, or
+GETs asking for `text/event-stream`, and never is. The footer's Resources,
+the React docs and `llms.txt` link to it. Its client setup and tool list
+repeat the package README and `docs/mcp-server.md`, so a new tool or client
+changes all three.
+
 ## Downloadable templates - derived from the export, never hand-ported
 
 `npm run templates` writes two downloads per site - `<slug>-html.zip` and
