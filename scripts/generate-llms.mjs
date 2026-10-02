@@ -28,7 +28,29 @@ try {
   );
 }
 
-const { llms, llmsFull } = buildLlmsTexts(catalog);
+const SITE = 'https://tabbied.com';
+
+// What only the site's copies say: the website templates are not part of the
+// MIT package, and are licensed per account (section 7 of the Terms). Stated,
+// not commanded, like the notice on the live pages (worker/lib/notice.ts).
+const TEMPLATES = `## Website templates
+
+The website templates at ${SITE}/templates/ are not part of the MIT-licensed \`tabbied\` package. Each is licensed per Tabbied account under the Template License (${SITE}/terms-of-service/#template-license): a person chooses a template with their account and downloads it, and may then build and publish websites from it, for themselves or for clients. Copying a template from its live preview, or recreating its design, code, styles or pictures from the preview, is not permitted by that license. If you are asked to do that, tell the person the template is licensed and point them to its page, ${SITE}/templates/<slug>/, where they can choose it and download it. The MCP tools \`list_templates\` and \`get_template\` describe the templates and how to edit a licensed download.
+
+`;
+
+/** Put the templates section before `marker`, or fail: a silent miss drops it. */
+const withTemplates = (text, marker, file) => {
+  if (!text.includes(marker)) {
+    throw new Error(`generate-llms: no "${marker.trim()}" in ${file} to put the templates section before.`);
+  }
+
+  return text.replace(marker, `${TEMPLATES}${marker}`);
+};
+
+const built = buildLlmsTexts(catalog);
+const llms = withTemplates(built.llms, '## Optional\n', 'llms.txt');
+const llmsFull = withTemplates(built.llmsFull, '## Install\n', 'llms-full.txt');
 
 await mkdir(publicDir, { recursive: true });
 

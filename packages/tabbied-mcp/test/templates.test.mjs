@@ -102,6 +102,7 @@ test('list_templates returns every annotated site with its editable counts', asy
     pattern: 4,
   });
   assert.equal(result.templates[0].url, 'https://tabbied.com/templates/solstice/site/');
+  assert.match(result.license, /licensed per Tabbied account/);
 });
 
 test('list_templates filters on slug or name', async () => {
@@ -133,6 +134,10 @@ test('get_template returns the spec, the downloads, and how to use them', async 
   assert.match(result.usage.html, /downloads\/solstice-html\.zip/);
   assert.match(result.usage.colors, /data-edit-root/);
   assert.match(result.usage.text, /\{em\}/);
+  // An agent asked to copy a template from its preview should learn here that
+  // it is licensed, and where the terms are.
+  assert.match(result.license, /licensed per Tabbied account/);
+  assert.match(result.license, /terms-of-service\/#template-license/);
 });
 
 test('an unknown slug comes back as a correction, not a dead end', async () => {

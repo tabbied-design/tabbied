@@ -9,7 +9,16 @@ the pattern library open:
 4. Which licenses, for the open packages and for the templates?
 
 Nothing here has been changed in the repository; this is the plan and the
-reasons for it. The licensing section is a recommendation, not legal advice,
+reasons for it.
+
+**Outcome, the same day:** the repository stays one public monorepo, and the
+templates are protected by their license rather than by hiding the source,
+since a live preview can be copied whatever the repository's visibility. The
+root LICENSE is now proprietary with the three packages carved out as MIT,
+the Terms of Service carry a fuller Template License (section 7), every
+download ships it as `LICENSE.md` with an `AGENTS.md`, and the live template
+pages, `llms.txt` and the MCP template tools carry a notice for AI agents. The
+split, the mirror and the CI cost analysis below were not needed. The licensing section is a recommendation, not legal advice,
 and one point in it (templates already published under the root MIT license)
 is worth a lawyer's half hour.
 

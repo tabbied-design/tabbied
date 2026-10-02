@@ -24,7 +24,12 @@
     // act that chooses the template (worker/lib/templates.ts), which the edge
     // would otherwise serve to anyone. The Worker hands everything else under
     // the folder back to the binding.
-    "run_worker_first": ["/mcp", "/mcp/*", "/health", "/api", "/api/*", "/downloads/*"]
+    //
+    // /templates/*/ is the live template pages (the framed preview and the
+    // page it frames), which the Worker serves with the template license
+    // notice added (worker/lib/notice.ts). It names pages only: their RSC
+    // payloads and everything else under /templates stay asset-first.
+    "run_worker_first": ["/mcp", "/mcp/*", "/health", "/api", "/api/*", "/downloads/*", "/templates/*/"]
   },
 
   "observability": {

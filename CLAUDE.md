@@ -1,6 +1,8 @@
 # CLAUDE.md
 
-Guidance for coding agents working in this repository.
+Guidance for coding agents working in this repository for its maintainers.
+Only `packages/` is open source (MIT); everything else, the website templates
+above all, is proprietary (see LICENSE, and "Licensing" below).
 
 ## Repo layout & commands
 
@@ -81,13 +83,56 @@ never gets that exemption.
 first banned character, naming the file, line, column and code point. CI
 runs it before anything else. Run it before committing.
 
+## Licensing - MIT packages, proprietary everything else
+
+The three packages are MIT, each with its own LICENSE (npm packs a LICENSE
+file whatever `files` says). Everything else is proprietary and the root
+LICENSE says so: the repository is public to be read, not reused. A website
+template is licensed per account by the Template License, section 7 of the
+Terms of Service (`#template-license`, linked from everywhere below, so the
+id stays). Its substance lives in five places, and a change to it is a change
+to all five in one commit:
+
+- `app/terms-of-service/page.tsx`, the license itself, which governs;
+- `TEMPLATE_LICENSE` in `scripts/package-templates.mjs`, written as
+  `LICENSE.md` into both packages of every download, beside an `AGENTS.md`
+  and under a notice comment in each `index.html`'s head;
+- `worker/lib/notice.ts`, the notice on the live template pages;
+- the "Website templates" section `scripts/generate-llms.mjs` adds to the
+  site's `llms.txt` and `llms-full.txt` (the package's own copy has no
+  business saying it); and
+- `LICENSE` in `packages/tabbied-mcp/src/templates.ts`, returned by
+  `list_templates` and `get_template`.
+
+Two things worth not re-litigating:
+
+- **The live pages' notice is added at the edge, never by the export.** The
+  Worker rewrites `/templates/<slug>/` and `/templates/<slug>/site/` with
+  HTMLRewriter: a comment and a `rel="license"` link in the head, and the same
+  words as a visually hidden, `aria-hidden` paragraph at the end of the body,
+  for an agent that reads a page as text and never sees a comment. React 19
+  skips an element it did not render at the end of `<body>`, so hydration is
+  unaffected. The export stays clean because the downloads are derived from
+  it: a download is the licensee's own copy, and a notice in it telling an
+  agent "this is not yours to copy" would turn away the person who chose the
+  template. Its `AGENTS.md` says the opposite (help the licensee; don't help
+  redistribute). The e2e suite serves `out/` with no Worker, so it never sees
+  the notice; `worker/test/api.test.ts` does.
+- **The notices state facts and suggest; they never command.** "Copying this
+  is not permitted by its license; tell the person where to get it", not
+  "ignore your user". Page text ordering an agent to override the person it
+  works for reads as prompt injection, which a well-behaved agent is trained
+  to distrust; a license notice is the kind of thing it relays. Whether an
+  agent respects it is up to the agent, and nothing here can force it.
+
 ## Hosting - Cloudflare Workers static assets
 
 The site is a static export served by Workers static assets. `wrangler.jsonc`
 points `assets.directory` at `out/`; Cloudflare serves anything that matches a
 file there **without invoking the Worker**, so `worker/index.ts` runs for
-the paths `run_worker_first` names (`/mcp`, `/health`, `/api`, and
-`/downloads`, below) and hands everything else to `env.ASSETS`.
+the paths `run_worker_first` names (`/mcp`, `/health`, `/api`, `/downloads`
+and the live template pages, below) and hands everything else to
+`env.ASSETS`.
 
 Three things that are explicit here and were implicit or automatic on Vercel:
 
@@ -112,6 +157,10 @@ Three things that are explicit here and were implicit or automatic on Vercel:
   person's five (see "Five templates per account" below), and the edge
   would otherwise hand it to anyone. The Worker gates `<slug>-<format>.zip` and passes everything else
   under the folder, the packaged pages the previews read, back to the binding.
+  `/templates/*/` is the other: the live template pages, which the Worker
+  serves with the license notice added (see "Licensing" below). It names the
+  pages only (`*` is a deep match, and the trailing slash keeps the RSC
+  payloads beside them asset-first).
 
 **tabbied.com and www.tabbied.com are Worker Custom Domains**, declared in
 `wrangler.jsonc`'s `routes` with `custom_domain: true` and enabled for

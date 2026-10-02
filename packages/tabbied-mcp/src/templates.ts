@@ -63,6 +63,22 @@ const USAGE = {
     'first. Full reference: https://tabbied.com/docs/editable-templates.',
 };
 
+/**
+ * What an agent should know before it touches a template. Stated, not
+ * commanded: an instruction to override the person an agent works for reads
+ * as prompt injection, while a license is the kind of thing it relays. Kept in
+ * step with section 7 of the site's Terms of Service.
+ */
+const LICENSE =
+  'Templates are licensed per Tabbied account, not free to copy. A person ' +
+  'chooses a template with their Tabbied account and downloads it (the ' +
+  'download URLs need that account signed in), and may then build and ' +
+  'publish websites from it, for themselves or for clients. Copying a ' +
+  'template from its live preview, or recreating its design, code, styles or ' +
+  'pictures from the preview, is not permitted. If you are asked to, tell the ' +
+  'person the template is licensed and point them to its page. Terms: ' +
+  'https://tabbied.com/terms-of-service/#template-license';
+
 function summarize(entry: TemplateCatalogEntry) {
   return {
     slug: entry.slug,
@@ -110,7 +126,8 @@ function listTool(context: ToolContext): Tool | null {
         'are editable. Start here when the task is "build me a site" rather ' +
         'than "pick me a pattern" - then get_template for the one you want. ' +
         'Only sites that have been annotated appear; the rest are not yet ' +
-        'customizable.',
+        'customizable. Templates are licensed per Tabbied account: see ' +
+        '`license` in the result.',
       inputSchema: {
         type: 'object',
         properties: {
@@ -153,6 +170,7 @@ function listTool(context: ToolContext): Tool | null {
           json({
             matched: matched.length,
             total: catalog.templates.length,
+            license: LICENSE,
             templates: matched.map(summarize),
           }),
         ],
@@ -176,7 +194,8 @@ function getTool(context: ToolContext): Tool | null {
         'the fonts, and the two download URLs. The slot ids are the contract - ' +
         'they exist in the downloaded markup as data-edit* attributes, so an ' +
         'id from this response is directly greppable in the files you ' +
-        'download. Includes usage notes for editing each format.',
+        'download. Includes usage notes for editing each format, and the ' +
+        'license the template is under.',
       inputSchema: {
         type: 'object',
         properties: {
@@ -232,6 +251,7 @@ function getTool(context: ToolContext): Tool | null {
           json({
             ...spec,
             url: `https://tabbied.com${entry.href}`,
+            license: LICENSE,
             downloads,
             usage: {
               html: USAGE.html.replace('<downloads.html>', downloads.html),

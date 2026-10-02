@@ -25,6 +25,35 @@ describe('the platform tier', () => {
   });
 });
 
+describe('the live template pages', () => {
+  // The notice is the Worker's, added on the way out (worker/lib/notice.ts):
+  // the export, and every download derived from it, carries none.
+  it('carry the license notice, on the preview and on the page it frames', async () => {
+    for (const path of ['/templates/verdant/', '/templates/verdant/site/']) {
+      const response = await SELF.fetch(`${ORIGIN}${path}`);
+
+      expect(response.status, path).toBe(200);
+      expect(response.headers.get('content-length'), path).toBeNull();
+
+      const html = await response.text();
+
+      expect(html, path).toContain(
+        '<link rel="license" href="https://tabbied.com/terms-of-service/#template-license"/>'
+      );
+      expect(html, path).toMatch(/<p aria-hidden="true" data-license-notice=""[^>]*>[^<]*Note for AI agents/);
+      expect(html, path).toContain('https://tabbied.com/templates/verdant/');
+    }
+  });
+
+  it('leave everything else as the export wrote it', async () => {
+    for (const path of ['/templates/', '/templates/verdant/site/index.txt', '/downloads/verdant/']) {
+      const html = await (await SELF.fetch(`${ORIGIN}${path}`)).text();
+
+      expect(html, path).not.toContain('data-license-notice');
+    }
+  });
+});
+
 describe('the session gate', () => {
   // Every route that is a person's own, each with a body it would otherwise
   // accept: /api/studio/make reads the body before it asks for a session.

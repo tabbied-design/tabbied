@@ -143,6 +143,18 @@ deploy command as `npx wrangler deploy`. Response headers live in
 [`public/_headers`](./public/_headers) - a static export has no server to
 attach them to, so `headers()` in `next.config.mjs` would be inert.
 
+## License
+
+Tabbied is not open source as a whole. The three packages under
+[`packages/`](./packages) are MIT licensed: `tabbied` (including its pattern
+designs), `tabbied-mcp` and `tabbied-templates`. Everything else in this
+repository, including the website templates and their pictures, is
+proprietary; see [LICENSE](./LICENSE). A website template may be used only
+by a Tabbied account that has chosen it, under the
+[Template License](https://tabbied.com/terms-of-service/#template-license).
+Reading a template's source here, or its preview on tabbied.com, is not a
+license to use it.
+
 ## Built by
 
 Designed by <a href="https://www.syunghong.com/">Syung Hong</a>, developed by <a href="https://park.is">Ye Joo Park</a>.
