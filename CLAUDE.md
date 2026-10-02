@@ -789,11 +789,14 @@ step is exactly the work this component removes.
 **The favicons and app icons are pictures of it**, written by
 `node scripts/build-favicons.mjs`, which reads the paths, box and stroke out
 of `LogoMark.tsx` (and stops if it cannot): run it after the mark changes,
-the same way the email lockup is captured from `Logo`. The mark is paper on
-the dark shell's ink in every one. Two optical sizes: the authored stroke is
-a 0.4px line at 16px, so the tab icons (16-48px, and `favicon.svg`, which a
-browser draws at the same size) take a heavier one, while the app icons from
-180px up keep the drawing's own weight.
+the same way the email lockup is captured from `Logo`. The tab icons
+(16-48px and `favicon.svg`) are the mark in ink on a transparent ground,
+which is what was asked for and which a dark tab strip all but hides; the
+app icons (iOS, Android, the Windows tile) stay paper on an ink tile,
+because iOS fills a transparent touch icon with black. Two optical sizes:
+the authored stroke is a 0.4px line at 16px, so the tab icons take a
+heavier one, while the app icons from 180px up keep the drawing's own
+weight.
 
 ## The masthead - one bar, two tones
 

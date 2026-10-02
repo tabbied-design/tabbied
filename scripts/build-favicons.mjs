@@ -8,13 +8,18 @@
 // The paths, box and stroke are read out of LogoMark.tsx rather than copied
 // here; the script stops if it cannot find them.
 //
-// Every icon is the mark in paper on the dark shell's ink, the homepage's own
-// pair, which reads on light and dark tab strips alike. Two optical sizes:
-// LogoMark's 17-unit stroke is a 0.4px line at 16px and vanishes, so the
-// icons a tab draws (16-48px, and the SVG a browser scales to the same size)
-// take a heavier stroke; the app icons, 180px and up, keep the authored one.
-// The tab icons are rounded tiles; the iOS and Windows tiles are full-bleed
-// squares, because those platforms cut their own shape.
+// The favicons a browser tab draws (16-48px, and the SVG it scales to the
+// same size) are the mark in ink on a transparent ground, filling the icon.
+// That disappears on a dark tab strip; it is the look asked for. The app
+// icons stay paper on an ink tile: iOS fills a transparent touch icon with
+// black, which would swallow a black mark, and the Windows tile and the
+// manifest's splash use the ink as their ground.
+//
+// Two optical sizes: LogoMark's 17-unit stroke is a 0.4px line at 16px and
+// vanishes, so the tab icons take a heavier stroke; the app icons, 180px
+// and up, keep the authored one. The Android icons are rounded tiles; the
+// iOS and Windows tiles are full-bleed squares, because those platforms cut
+// their own shape.
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -67,7 +72,7 @@ function iconSvg({ stroke, fill, radius = 0, ground = INK, ink = PAPER }) {
   );
 }
 
-const TAB = { stroke: TAB_STROKE, fill: 0.74, radius: 0.22 };
+const TAB = { stroke: TAB_STROKE, fill: 0.92, ground: null, ink: INK };
 const APP = { stroke: mark.stroke, fill: 0.62, radius: 0.22 };
 const BLEED = { stroke: mark.stroke, fill: 0.62, radius: 0 };
 
