@@ -76,12 +76,14 @@
   width: max-content;
 }
 
+/* Per card, so a longer row travels at the same speed: --cards is set on the
+   track. These are the speeds the five-card rows ran at (110s and 130s). */
 .track[data-direction='left'] {
-  animation: marqueeLeft 110s linear infinite;
+  animation: marqueeLeft calc(var(--cards, 5) * 22s) linear infinite;
 }
 
 .track[data-direction='right'] {
-  animation: marqueeRight 130s linear infinite;
+  animation: marqueeRight calc(var(--cards, 5) * 26s) linear infinite;
 }
 
 /* Pausing on hover makes the cards clickable rather than a moving target;
