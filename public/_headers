@@ -49,6 +49,8 @@
 # Favicons and the web manifest, same reasoning.
 /favicon.ico
   Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+/favicon.svg
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
 /favicon-16x16.png
   Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
 /favicon-32x32.png

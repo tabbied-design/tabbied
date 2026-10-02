@@ -765,6 +765,15 @@ outlined cells that preceded it existed in three hand-copied variants (a
 css-doodle, a CSS grid, and a grid with one cell omitted), and keeping them in
 step is exactly the work this component removes.
 
+**The favicons and app icons are pictures of it**, written by
+`node scripts/build-favicons.mjs`, which reads the paths, box and stroke out
+of `LogoMark.tsx` (and stops if it cannot): run it after the mark changes,
+the same way the email lockup is captured from `Logo`. The mark is paper on
+the dark shell's ink in every one. Two optical sizes: the authored stroke is
+a 0.4px line at 16px, so the tab icons (16-48px, and `favicon.svg`, which a
+browser draws at the same size) take a heavier one, while the app icons from
+180px up keep the drawing's own weight.
+
 ## The masthead - one bar, two tones
 
 `components/nav/SiteNav` is the site's masthead: the lockup on the left (the
