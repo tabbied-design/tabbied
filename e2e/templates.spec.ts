@@ -142,6 +142,20 @@ for (const fixture of FIXTURES) {
     expect(html).not.toMatch(/<!--\/?\$[!?]?-->/);
     expect(html).not.toContain('data-precedence');
 
+    // Tabbied's Adobe Fonts kit is licensed to tabbied.com: a download never
+    // loads it or names its face, in either package.
+    const base = fs.readFileSync(path.join(TEMPLATE_DIR, 'styles', 'base.css'), 'utf-8');
+    const reactBase = fs.readFileSync(
+      path.join(dirFor(`${fixture.slug}-react`), 'src', 'base.css'),
+      'utf-8'
+    );
+    for (const text of [html, base, reactBase]) expect(text).not.toMatch(/typekit|proxima[-\s]nova/i);
+
+    // esm.sh is asked for the page's own designs, not the whole catalog.
+    const imported = /import \{ ([^}]+) \} from 'https:\/\/esm\.sh\/tabbied@[^/']+\/patterns\?exports=([a-z0-9,]+)'/.exec(html);
+    expect(imported, 'the bootstrap imports a tree-shaken patterns entry').not.toBeNull();
+    expect(imported![2].split(',')).toEqual(imported![1].split(', '));
+
     // Assets are relative, so the folder works opened from disk.
     expect(html).not.toMatch(/(?:src|href)="\/images\//);
     if (fixture.hero) expect(html).toContain(`./images/${fixture.hero}`);
