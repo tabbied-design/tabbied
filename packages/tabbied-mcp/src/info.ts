@@ -5,7 +5,7 @@
 // `version-packages` step rewrites it from package.json
 // (scripts/sync-version.mjs), and test/info.test.mjs pins the two together.
 export const SERVER_NAME = 'tabbied';
-export const VERSION = '0.2.2';
+export const VERSION = '0.2.3';
 
 /**
  * Shown to the model as a preamble. It carries what no tool description can,

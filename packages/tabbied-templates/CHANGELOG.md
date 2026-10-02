@@ -1,5 +1,11 @@
 # tabbied-templates
 
+## 0.2.1
+
+### Patch Changes
+
+- [#111](https://github.com/tabbied-design/tabbied/pull/111) [`9f4bc1c`](https://github.com/tabbied-design/tabbied/commit/9f4bc1cdb9af52368bee451657ff2f18f885d5d6) Thanks [@subwaymatch](https://github.com/subwaymatch)! - Ship the MIT license text in the package. `list_templates` and `get_template` now also return the license the Tabbied website templates are under: licensed per account, not to be copied from their previews.
+
 ## 0.2.0
 
 ### Minor Changes
