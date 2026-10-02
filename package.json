@@ -42,7 +42,7 @@
     "images:import": "node scripts/images/import-batch.mjs",
     "images:index": "node scripts/images/index-images.mjs",
     "changeset": "changeset",
-    "version-packages": "changeset version",
+    "version-packages": "changeset version && npm run sync-version --workspace tabbied-mcp",
     "release": "changeset publish"
   },
   "dependencies": {

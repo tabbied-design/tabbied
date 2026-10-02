@@ -158,8 +158,13 @@ run log rather than only in the failure.
   concurrently and a build there would race `tabbied`'s `rm -rf dist`.
 - **`tabbied-mcp` reports its own version** from a literal in `src/info.ts`
   (it's bundled into a Worker, which has no filesystem to read `package.json`
-  from). `changeset version` doesn't know about it, so bump it in the version
-  PR - `test/info.test.mjs` fails when the two drift.
+  from). `changeset version` doesn't know about it, so `npm run
+  version-packages` runs `packages/tabbied-mcp/scripts/sync-version.mjs`
+  straight after it, and the version commit carries both. Nothing to bump by
+  hand; `test/info.test.mjs` still fails if the two ever drift. GitHub runs
+  no CI on the "Version Packages" PR (the bot opens it with `GITHUB_TOKEN`),
+  so the Release workflow's own test step is the first place a drift would
+  show.
 - **Workspace link:** the root app depends on each package as `"*"` so the local
   workspace copies stay linked across version bumps - don't pin them back to
   exact versions.
