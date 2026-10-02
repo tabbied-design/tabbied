@@ -78,7 +78,13 @@ const localConfig = `{
 const programmaticCode = `import { createMcpHandler } from '@modelcontextprotocol/server';
 import { buildServer, catalogTools } from 'tabbied-mcp';
 
-const tools = catalogTools({ catalog, fetchPreview, fetchDocs });
+const tools = catalogTools({
+  catalog,
+  fetchPreview,
+  fetchDocs,
+  fetchTemplateCatalog,
+  fetchTemplate,
+});
 
 export default {
   // The factory, not a built server: one server per request.
@@ -462,8 +468,16 @@ export default function McpDocsPage() {
                     className={styles.codeStandalone}
                   />
                   <p>
-                    This is how the hosted server at <Code>{ENDPOINT}</Code> is
-                    built. The{' '}
+                    Only <Code>catalog</Code> is required. Each fetcher adds
+                    tools, and one left out drops them:{' '}
+                    <Code>fetchPreview</Code> gives <Code>preview_design</Code>,{' '}
+                    <Code>fetchDocs</Code> gives <Code>get_docs</Code>,{' '}
+                    <Code>fetchTemplateCatalog</Code> gives{' '}
+                    <Code>list_templates</Code>, and with{' '}
+                    <Code>fetchTemplate</Code> as well,{' '}
+                    <Code>get_template</Code>. With all five, as here, it serves
+                    the same six tools as the hosted server at{' '}
+                    <Code>{ENDPOINT}</Code>, which is built this way. The{' '}
                     <a href={NPM_URL} target="_blank" rel="noreferrer">
                       package README
                     </a>{' '}

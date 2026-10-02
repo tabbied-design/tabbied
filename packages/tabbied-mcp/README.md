@@ -89,7 +89,13 @@ be embedded in a Worker or any Web-standard server. It exposes the tools and an
 import { createMcpHandler } from '@modelcontextprotocol/server';
 import { buildServer, catalogTools } from 'tabbied-mcp';
 
-const tools = catalogTools({ catalog, fetchPreview, fetchDocs });
+const tools = catalogTools({
+  catalog,
+  fetchPreview,
+  fetchDocs,
+  fetchTemplateCatalog,
+  fetchTemplate,
+});
 
 export default {
   fetch: createMcpHandler(() => buildServer(tools)).fetch,
@@ -98,6 +104,12 @@ export default {
 
 Pass the *factory*, not a built server: MCP v2 is stateless and the handler
 constructs one server per request.
+
+Only `catalog` is required. Each fetcher adds tools, and one left out drops
+them: `fetchPreview` gives `preview_design`, `fetchDocs` gives `get_docs`,
+`fetchTemplateCatalog` gives `list_templates`, and with `fetchTemplate` as
+well, `get_template`. With all five, as above, it serves the same six tools as
+the hosted server at `https://tabbied.com/mcp`.
 
 Built on [`@modelcontextprotocol/server`](https://www.npmjs.com/package/@modelcontextprotocol/server)
 v2, so it speaks the stateless `2026-07-28` revision and still serves 2025-era
