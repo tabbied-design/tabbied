@@ -134,6 +134,29 @@ describe('template downloads', () => {
     expect(page.status).toBe(200);
     expect(await page.text()).toContain('<html');
   });
+
+  it("never serves the React package's unzipped source, signed in or not", async () => {
+    // The zip is the one way it leaves; the folder it was made from is in the
+    // deploy but must not answer, or the claim above is a formality.
+    const cookie = await signIn('react-source@example.com');
+    const paths = [
+      '/downloads/verdant-react',
+      '/downloads/verdant-react/',
+      '/downloads/verdant-react/src/App.tsx',
+      '/downloads/verdant-react/package.json',
+      '/downloads/verdant-react/LICENSE.md',
+    ];
+
+    for (const path of paths) {
+      for (const headers of [asNavigation(), asFetch(cookie)]) {
+        const response = await SELF.fetch(`${ORIGIN}${path}`, { headers });
+        expect(response.status, path).toBe(404);
+      }
+    }
+
+    // and nothing was chosen on the way
+    expect((await mine(cookie)).used).toBe(0);
+  });
 });
 
 describe('choosing templates', () => {

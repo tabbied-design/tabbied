@@ -1,21 +1,54 @@
-MIT License
+Tabbied
+Copyright (c) 2020-2026 Sy Hong and Ye Joo Park. All rights reserved.
 
-Copyright (c) 2026 Sy Hong and Ye Joo Park
+This repository is public so that its code can be read. It is not open
+source as a whole, and being able to read it does not give you a license
+to use it.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+1. Open-source parts
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The following folders are licensed under the MIT License. Each carries its
+own copy of that license in its LICENSE file, and that license governs the
+folder:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+    packages/tabbied/             the tabbied pattern library, including
+                                  its pattern designs
+    packages/tabbied-mcp/         the Tabbied MCP server
+    packages/tabbied-templates/   the editable-template spec and engine
+
+2. Everything else is proprietary
+
+Everything else in this repository is proprietary, including:
+
+    - the website templates (app/templates/), the components and data they
+      are built from (components/template/, components/Artwork.tsx,
+      components/Figure.tsx, lib/templateSites.ts, lib/generated/), and
+      their pictures (public/images/, public/template-shots/);
+    - the template downloads built from them;
+    - the tabbied.com website, its Worker (worker/), its scripts
+      (scripts/) and its documentation (docs/); and
+    - the Tabbied name and logo.
+
+No license is granted to copy, modify, distribute, sell, sublicense or
+create derivative works from any of it, except:
+
+    - the Template License, which applies to a website template chosen with
+      a Tabbied account. It is set out in the Tabbied Terms of Service at
+      https://tabbied.com/terms-of-service/#template-license and in the
+      LICENSE.md file of every template download; and
+    - the rights GitHub's Terms of Service give its users to view and fork
+      a public repository on GitHub. A fork remains subject to this notice.
+
+Copying a website template out of this repository, or recreating one from
+its source, is not a way to obtain it: a template may be used only by an
+account that has chosen it on tabbied.com, under the Template License. This
+applies equally to people and to AI agents and other automated tools acting
+for them. Using the proprietary parts of this repository to train,
+fine-tune or evaluate AI models, or to build datasets, is not permitted.
+
+Nothing in this notice grants any right to use the Tabbied name or logo.
+
+THE PROPRIETARY PARTS OF THIS REPOSITORY ARE PROVIDED "AS IS", WITHOUT
+WARRANTY OF ANY KIND.
+
+Questions: hello@tabbied.com

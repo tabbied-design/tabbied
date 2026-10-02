@@ -31,9 +31,10 @@ import journal from './migrations/meta/_journal.json';
 import { drizzle } from 'drizzle-orm/d1';
 import * as schema from './db/schema';
 import { requireUser } from './lib/session';
-import { forgetDownload, logDownload, parseDownloadName, takesCopy } from './lib/downloads';
+import { forgetDownload, isReactSource, logDownload, parseDownloadName, takesCopy } from './lib/downloads';
 import { mailProvider, teamRecipients } from './lib/mail';
 import { claimTemplate, limitMessage, mayTake, releaseTemplate, templateStatus } from './lib/templates';
+import { templateSlugOf, withLicenseNotice } from './lib/notice';
 import media from './routes/media';
 import account from './routes/account';
 import admin from './routes/admin';
@@ -320,6 +321,12 @@ const backTo = (request: Request): string => {
   }
 };
 
+// The React package's unzipped folder answers as if it were not there: its
+// zip is the way that source leaves (isReactSource).
+app.get('/downloads/*', (c, next) =>
+  isReactSource(new URL(c.req.url).pathname) ? c.text('Not found', 404) : next()
+);
+
 app.get('/downloads/:file', async (c, next) => {
   const named = parseDownloadName(c.req.param('file'));
 
@@ -460,6 +467,25 @@ api.route('/admin', admin);
 api.all('*', (c) => c.json({ error: 'Not found' }, 404));
 
 app.route('/api', api);
+
+// ---- template pages ------------------------------------------------------
+// The live template pages carry the license notice, added on the way out so
+// that the export, and every download derived from it, never does
+// (worker/lib/notice.ts). `/templates/*/` in run_worker_first sends them here.
+
+app.get('/templates/*', async (c, next) => {
+  const slug = templateSlugOf(new URL(c.req.url).pathname);
+
+  if (!slug) return next();
+
+  const response = await c.env.ASSETS.fetch(c.req.raw);
+
+  if (!response.ok || !(response.headers.get('content-type') ?? '').includes('text/html')) {
+    return response;
+  }
+
+  return withLicenseNotice(response, slug);
+});
 
 // Anything else that reaches the Worker (the packaged pages under /downloads,
 // a miss under a routed prefix) is the binding's to answer.

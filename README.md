@@ -149,4 +149,12 @@ Every pattern is drawn by [css-doodle](https://css-doodle.com/), made by
 
 ## License
 
-[MIT](./LICENSE)
+The `tabbied` pattern library (its patterns included), the MCP server and
+`tabbied-templates` are open source under the MIT License: see the LICENSE
+file in each of their folders under [`packages/`](./packages).
+
+Everything else here, the website templates and their pictures above all, is
+proprietary: see [LICENSE](./LICENSE). A template is yours to use once you
+choose it with a Tabbied account, under the
+[Template License](https://tabbied.com/terms-of-service/#template-license).
+Reading its source here, or its preview on the site, doesn't license it.
