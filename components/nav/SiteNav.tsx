@@ -111,7 +111,7 @@ export default function SiteNav({
       key={href}
       className={styles.menuItem}
       render={
-        <Link
+        <SamePageLink
           href={href}
           prefetch={false}
           aria-current={href === menuCurrent ? 'page' : undefined}
@@ -135,9 +135,6 @@ export default function SiteNav({
       <script dangerouslySetInnerHTML={{ __html: HINT_SCRIPT }} />
       <ImpersonationNotice />
 
-      {/* The lockup and the destinations are often the page already open
-          (the logo on the homepage, "Patterns" in the library), where a plain
-          Link does nothing; these go back to the top instead. */}
       <SamePageLink href="/" className={styles.logo} aria-label="Tabbied home" prefetch={false}>
         {/* A hair larger on the dark ground, which eats a little of the
             hairline stroke. */}

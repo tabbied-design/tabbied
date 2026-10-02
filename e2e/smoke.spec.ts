@@ -902,6 +902,18 @@ test.describe('A link to the page already open', () => {
     await expect.poll(() => scrollY(page)).toBe(0);
     expect(new URL(page.url()).pathname).toBe('/patterns/');
   });
+
+  test('goes back to the top from the phone menu', async ({ page }) => {
+    // Below 768px the destinations are in the menu and nowhere else.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/patterns/');
+    await scrollDown(page);
+    await page.getByRole('button', { name: 'Menu' }).click();
+    await page.getByRole('menuitem', { name: 'Patterns', exact: true }).click();
+    await expect.poll(() => scrollY(page)).toBe(0);
+    await expect(page.getByRole('menu')).toBeHidden();
+    expect(new URL(page.url()).pathname).toBe('/patterns/');
+  });
 });
 
 test.describe('React component docs page', () => {
