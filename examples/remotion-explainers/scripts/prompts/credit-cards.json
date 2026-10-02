@@ -1,0 +1,72 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "quality": "low",
+  "style": "A bold black-and-white screen-print illustration: solid black ink, bright white highlights and a coarse halftone for the mid-tones, crisp edges, high contrast, no color at all. The subject alone, centered, nothing else in frame, no floor and no shadow under it. No text, letters, numbers, or logos.",
+  "images": [
+    {
+      "id": "card",
+      "size": "1536x1024",
+      "subject": "A plain credit card floating at a slight three-quarter angle, its face blank except for a metallic contact chip, rounded corners, a thin glossy edge."
+    },
+    {
+      "id": "grocery-bag",
+      "size": "1024x1536",
+      "subject": "A paper grocery bag standing upright and full of groceries: a baguette, a bunch of leafy greens, a few apples and a glass bottle of milk poking out of the top."
+    },
+    {
+      "id": "receipt",
+      "size": "1024x1536",
+      "subject": "A long paper till receipt curling at both ends, printed with rows of short horizontal dashes in place of any writing, a torn zigzag edge at the bottom."
+    },
+    {
+      "id": "bank",
+      "size": "1536x1024",
+      "subject": "The front of a grand classical bank building: a triangular pediment over six tall fluted columns, wide stone steps and heavy double doors, seen straight on."
+    },
+    {
+      "id": "toll-booth",
+      "size": "1536x1024",
+      "subject": "A highway toll booth: a small booth with a canopy roof and a striped barrier arm lowered across the lane, seen from a three-quarter angle."
+    },
+    {
+      "id": "terminal",
+      "size": "1024x1024",
+      "subject": "A countertop card payment terminal with a keypad of round buttons, a small blank screen, and a card slot at the top, seen from a three-quarter angle."
+    },
+    {
+      "id": "coins",
+      "size": "1024x1024",
+      "subject": "A tall stack of plain coins with ridged edges and two more coins falling onto the top of it."
+    },
+    {
+      "id": "hourglass",
+      "size": "1024x1536",
+      "subject": "An hourglass in a turned wooden frame with small coins instead of sand trickling from the top bulb and piling up in the bottom bulb."
+    },
+    {
+      "id": "price-tag",
+      "size": "1024x1024",
+      "subject": "A blank cardboard price tag with a round reinforced hole and a loop of string through it, turned slightly."
+    },
+    {
+      "id": "piggy-bank",
+      "size": "1024x1024",
+      "subject": "A glossy ceramic piggy bank standing in profile with a coin slot on its back and one coin dropping into the slot."
+    },
+    {
+      "id": "phone",
+      "size": "1024x1536",
+      "subject": "A hand holding a modern smartphone upright, the phone's screen blank and glowing white, the fingers wrapped around its edges."
+    },
+    {
+      "id": "scissors-card",
+      "size": "1536x1024",
+      "subject": "A pair of scissors cutting a plain blank credit card in half, the two halves just separating with a clean cut between them."
+    },
+    {
+      "id": "digital-coin",
+      "size": "1024x1024",
+      "subject": "A large coin seen almost face-on with a slightly visible ridged edge, its face engraved with a circuit-board pattern of traces and round pads instead of a portrait."
+    }
+  ]
+}

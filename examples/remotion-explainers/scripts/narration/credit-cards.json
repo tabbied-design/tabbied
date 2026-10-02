@@ -1,0 +1,31 @@
+{
+  "voice": { "id": "c6SfcYrb2t09NHXiT80T", "name": "Jarnathan - Confident and Versatile" },
+  "model": "eleven_v4",
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "use_speaker_boost": true,
+    "speed": 1.0
+  },
+  "music": {
+    "model": "music_v2_5",
+    "seed": 150,
+    "gainDb": -16,
+    "prompt": "A modern, upbeat, minimal electronic underscore for a personal finance explainer video. Clean plucked synths, warm muted bass, a soft kick and crisp hi-hats, with a subtle glassy marimba motif. 96 BPM, steady and optimistic, mixed low and spacious so a narrator sits on top. A light lift in the final section, then a clean ending. No vocals."
+  },
+  "lines": [
+    { "scene": "title", "text": "[curious] One and a half percent back, on everything. [pause] So who pays for that?" },
+    { "scene": "purchase", "text": "Say you spend a hundred dollars. The store keeps about ninety-seven sixty. The rest is the swipe fee." },
+    { "scene": "split", "text": "About two dollars goes to the bank that issued your card. Fourteen cents to Visa or Mastercard. And about a quarter to the store's payment processor." },
+    { "scene": "cashBack", "text": "Your bank pays you a dollar fifty of its two dollars. That leaves about fifty cents, before its costs." },
+    { "scene": "interest", "text": "[serious] The real money is interest. Nearly half of cardholders carry a balance at times, at around twenty-two percent a year." },
+    { "scene": "whoPays", "text": "So who funds your rewards? Every shopper, through prices that include card fees, and everyone who carries a balance." },
+    { "scene": "whoProfits", "text": "The bank that issues your card earns the most, and carries the risk. Visa and Mastercard take a small toll on every swipe. Amex and Discover do both." },
+    { "scene": "debit", "text": "A debit card lends you nothing. And U.S. law caps big banks' debit fees at about twenty-seven cents on a hundred-dollar purchase, so debit rarely pays rewards." },
+    { "scene": "phones", "text": "Phone wallets swap the plastic for a token. But the payment still runs on the same networks, with the same fees." },
+    { "scene": "publicMoney", "text": "The bigger threat is cheap public payment rails, like Brazil's Pix and India's UPI, and maybe a digital euro. They skip the card networks entirely." },
+    { "scene": "verdict", "text": "So, will credit cards survive? Probably. People still borrow, and chase rewards. But cheaper rails squeeze swipe fees, and swipe fees pay your cash back." },
+    { "scene": "outro", "text": "[upbeat] Every frame of this film is code: Tabbied patterns, rendered with Remotion." }
+  ]
+}

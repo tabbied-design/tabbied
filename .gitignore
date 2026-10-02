@@ -93,3 +93,6 @@ playwright.local.config.ts
 
 # Worker secrets for local dev (wrangler reads this; never commit it).
 .dev.vars
+
+# The ElevenLabs key examples/remotion-explainers/scripts/audio.ts can read from here.
+/ELEVENLABS_API_KEY.txt
