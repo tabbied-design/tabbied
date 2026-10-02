@@ -61,25 +61,39 @@ const vscodeConfig = `{
   }
 }`;
 
-const claudeCodeLocal = `claude mcp add tabbied -- npx -y tabbied-mcp`;
+// The local server renders through Playwright, which it does not install, so
+// every way of starting it puts Playwright beside it.
+const installBrowser = `npx playwright install chromium`;
 
-const codexLocal = `codex mcp add tabbied -- npx -y tabbied-mcp`;
+const claudeCodeLocal = `claude mcp add tabbied -- npx -y -p tabbied-mcp -p playwright tabbied-mcp`;
+
+const codexLocal = `codex mcp add tabbied -- npx -y -p tabbied-mcp -p playwright tabbied-mcp`;
 
 const codexLocalConfig = `[mcp_servers.tabbied]
 command = "npx"
-args = ["-y", "tabbied-mcp"]`;
+args = ["-y", "-p", "tabbied-mcp", "-p", "playwright", "tabbied-mcp"]`;
 
 const localConfig = `{
   "mcpServers": {
-    "tabbied": { "command": "npx", "args": ["-y", "tabbied-mcp"] }
+    "tabbied": {
+      "command": "npx",
+      "args": ["-y", "-p", "tabbied-mcp", "-p", "playwright", "tabbied-mcp"]
+    }
   }
 }`;
 
 const programmaticCode = `import { createMcpHandler } from '@modelcontextprotocol/server';
 import { buildServer, catalogTools } from 'tabbied-mcp';
+import {
+  fetchDocs,
+  fetchPreview,
+  fetchTemplate,
+  fetchTemplateCatalog,
+  loadCatalog,
+} from 'tabbied-mcp/node';
 
 const tools = catalogTools({
-  catalog,
+  catalog: await loadCatalog(),
   fetchPreview,
   fetchDocs,
   fetchTemplateCatalog,
@@ -132,7 +146,12 @@ const TOOLS: ToolRow[] = [
   {
     name: 'list_templates',
     where: 'Both',
-    description: <>The website templates, with each one&apos;s palette, patterns and editable parts.</>,
+    description: (
+      <>
+        The website templates, a page at a time, by category or by the kind of
+        business.
+      </>
+    ),
   },
   {
     name: 'get_template',
@@ -221,7 +240,7 @@ export default function McpDocsPage() {
                     <div className={styles.entry}>
                       <code className={styles.entryName}>npx -y tabbied-mcp</code>
                       <p>
-                        On your own machine, with Node 18 or later. Adds{' '}
+                        On your own machine, with Node 20 or later. Adds{' '}
                         <Code>render_design</Code>, which writes SVG and PNG
                         files.
                       </p>
@@ -345,6 +364,18 @@ export default function McpDocsPage() {
                     Drawing a css-doodle pattern needs a real browser, which is
                     why the hosted server cannot offer it.
                   </p>
+                  <p>
+                    The server draws with Chromium through Playwright, which it
+                    does not install, so each command below starts it with
+                    Playwright beside it. Download the browser once, with Node
+                    20 or later:
+                  </p>
+                  <CodeBlock
+                    code={installBrowser}
+                    title="terminal"
+                    lang="sh"
+                    className={styles.codeStandalone}
+                  />
                   <h3 className={styles.minihead}>Claude Code</h3>
                   <CodeBlock
                     code={claudeCodeLocal}
@@ -384,10 +415,12 @@ export default function McpDocsPage() {
                     the local one.
                   </p>
                   <p>
-                    For <Code>render_design</Code>, install Playwright beside it
-                    (<Code>npm i -D playwright</Code>), or point{' '}
-                    <Code>TABBIED_CHROMIUM</Code> at a Chromium binary. The
-                    other six tools need neither.
+                    A Playwright installed in the project the server starts in
+                    is found too, and <Code>TABBIED_CHROMIUM</Code> points it
+                    at a Chromium binary of your own. Started as plain{' '}
+                    <Code>npx -y tabbied-mcp</Code>, it serves the other six
+                    tools, which need neither, and <Code>render_design</Code>{' '}
+                    says what to install.
                   </p>
                 </Section>
 
@@ -455,11 +488,13 @@ export default function McpDocsPage() {
 
                 <Section id="programmatic" title="Programmatic use">
                   <p>
-                    The <Code>tabbied-mcp</Code> package&apos;s main entry point
-                    has no Node imports, so the same tools can be served from a
-                    Cloudflare Worker or any Web-standard server. It exports the
-                    tools and a server factory; the transport comes from the
-                    MCP SDK:
+                    The <Code>tabbied-mcp</Code> package is ESM only. Its main
+                    entry point has no Node imports, so the same tools can be
+                    served from a Cloudflare Worker or any Web-standard server.
+                    It exports the tools and a server factory; the transport
+                    comes from the MCP SDK. On Node,{' '}
+                    <Code>tabbied-mcp/node</Code> has the readers the local
+                    server itself uses:
                   </p>
                   <CodeBlock
                     code={programmaticCode}
@@ -477,7 +512,9 @@ export default function McpDocsPage() {
                     <Code>fetchTemplate</Code> as well,{' '}
                     <Code>get_template</Code>. With all five, as here, it serves
                     the same six tools as the hosted server at{' '}
-                    <Code>{ENDPOINT}</Code>, which is built this way. The{' '}
+                    <Code>{ENDPOINT}</Code>. A Worker cannot read the disk, so
+                    it passes fetchers of its own, as the hosted server does
+                    with its static files. The{' '}
                     <a href={NPM_URL} target="_blank" rel="noreferrer">
                       package README
                     </a>{' '}

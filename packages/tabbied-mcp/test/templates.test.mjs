@@ -22,6 +22,8 @@ const templateCatalog = {
     {
       slug: 'solstice',
       name: 'Solstice',
+      category: 'Wellness & sport',
+      topic: 'Yoga & wellness retreat',
       href: '/templates/solstice/site/',
       spec: '/editable/solstice.json',
       palette: ['#2b1d3a', '#ff6b6b'],
@@ -35,6 +37,8 @@ const templateCatalog = {
     {
       slug: 'verdant',
       name: 'Verdant',
+      category: 'Shop',
+      topic: 'Indoor plant shop',
       href: '/templates/verdant/site/',
       spec: '/editable/verdant.json',
       palette: ['#f4faf0', '#2d6a4f'],
@@ -87,36 +91,97 @@ const toolset = createToolset(catalogTools(context));
 const parse = (result) => JSON.parse(result.content[0].text);
 const call = (name, args = {}) => toolset.call(name, args);
 
-test('list_templates returns every annotated site with its editable counts', async () => {
+test('list_templates returns one line per site, and the categories there are', async () => {
   const result = parse(await call('list_templates'));
 
   assert.equal(result.matched, 2);
   assert.equal(result.total, 2);
-  assert.deepEqual(
-    result.templates.map((entry) => entry.slug),
-    ['solstice', 'verdant']
-  );
+  // The compact form: enough to choose by, with get_template for the rest.
+  assert.deepEqual(result.templates[0], {
+    slug: 'solstice',
+    name: 'Solstice',
+    category: 'Wellness & sport',
+    topic: 'Yoga & wellness retreat',
+  });
+  assert.deepEqual(result.categories, [
+    { category: 'Shop', count: 1 },
+    { category: 'Wellness & sport', count: 1 },
+  ]);
+  assert.match(result.license, /licensed per Tabbied account/);
+});
+
+test('list_templates gives the palette, patterns and slot counts on request', async () => {
+  const result = parse(await call('list_templates', { detail: true }));
+
   assert.deepEqual(result.templates[0].editable, {
     text: 106,
     image: 9,
     pattern: 4,
   });
+  assert.deepEqual(result.templates[0].patterns, ['lobe', 'blossom']);
   assert.equal(result.templates[0].url, 'https://tabbied.com/templates/solstice/site/');
-  assert.match(result.license, /licensed per Tabbied account/);
 });
 
-test('list_templates filters on slug or name', async () => {
+test('list_templates filters on slug, name and what the business is', async () => {
   const byName = parse(await call('list_templates', { query: 'Verd' }));
-
   assert.equal(byName.matched, 1);
   assert.equal(byName.templates[0].slug, 'verdant');
+
+  const byTopic = parse(await call('list_templates', { query: 'yoga retreat' }));
+  assert.deepEqual(byTopic.templates.map((entry) => entry.slug), ['solstice']);
 });
 
-test('a query that matches nothing lists what there is instead of an empty set', async () => {
+test('list_templates filters on a category however it is spelled', async () => {
+  for (const category of ['Wellness & sport', 'wellness-and-sport', 'WELLNESS AND SPORT']) {
+    const result = parse(await call('list_templates', { category }));
+    assert.deepEqual(result.templates.map((entry) => entry.slug), ['solstice'], category);
+  }
+});
+
+test('list_templates pages, and says how to ask for the next page', async () => {
+  const first = parse(await call('list_templates', { limit: 1 }));
+  assert.equal(first.matched, 2);
+  assert.equal(first.returned, 1);
+  assert.deepEqual(first.templates.map((entry) => entry.slug), ['solstice']);
+  assert.match(first.next, /offset 1/);
+
+  const second = parse(await call('list_templates', { limit: 1, offset: 1 }));
+  assert.deepEqual(second.templates.map((entry) => entry.slug), ['verdant']);
+  assert.equal(second.next, undefined, 'the last page has no next');
+
+  const past = parse(await call('list_templates', { offset: 5 }));
+  assert.equal(past.returned, 0);
+  assert.match(past.hint, /past the last match/);
+});
+
+test('a query that matches nothing names the categories instead of an empty set', async () => {
   const result = parse(await call('list_templates', { query: 'zzz' }));
 
   assert.equal(result.matched, 0);
-  assert.deepEqual(result.slugs, ['solstice', 'verdant']);
+  assert.equal(result.categories.length, 2);
+  assert.match(result.hint, /category|query/);
+});
+
+test('an unreachable index is a tool error that says where it lives', async () => {
+  const offline = createToolset(
+    catalogTools({
+      catalog,
+      fetchTemplateCatalog: async () => {
+        throw new Error('fetch failed');
+      },
+      fetchTemplate: async () => specs.solstice,
+    })
+  );
+
+  for (const [name, args] of [
+    ['list_templates', {}],
+    ['get_template', { slug: 'solstice' }],
+  ]) {
+    const result = await offline.call(name, args);
+    assert.equal(result.isError, true, name);
+    assert.match(result.content[0].text, /fetch failed/, name);
+    assert.match(result.content[0].text, /https:\/\/tabbied\.com\/editable-catalog\.json/, name);
+  }
 });
 
 test('get_template returns the spec, the downloads, and how to use them', async () => {
@@ -154,6 +219,7 @@ test('a slug the index knows but whose spec cannot be read is a tool error', asy
 
   assert.equal(result.isError, true);
   assert.match(result.content[0].text, /Could not load the spec for "verdant"/);
+  assert.match(result.content[0].text, /https:\/\/tabbied\.com\/editable\/verdant\.json/);
   assert.ok(requested.includes('verdant'));
 });
 

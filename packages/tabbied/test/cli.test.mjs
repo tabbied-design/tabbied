@@ -1,14 +1,17 @@
 // Guards the parts of the CLI that run without a browser: the catalog
-// commands (list/info/help) and render's argument checks. Rendering itself is
-// exercised by hand and by consumers; these tests pin the query surface
-// agents script against.
+// commands (list/info/help) and render's argument checks; these pin the query
+// surface agents script against. The few that render need Chromium, and run
+// only where one can be launched (TABBIED_CHROMIUM, or a Playwright browser
+// already installed), which leaves them out of CI's package job.
 //
 // Run with `npm test --workspace tabbied`, after `npm run build` has
 // produced dist/cli.js and catalog.json.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -78,4 +81,79 @@ test('render rejects a --format it cannot write, and an --out it cannot read', (
 
   fails(['render', 'radius', '--out', 'hero.gif', '--format', 'gif'], /--format must be svg \| png/);
   fails(['render', 'radius', '--out', 'hero'], /--out needs a \.svg or \.png extension/);
+});
+
+const fails = (args, message) =>
+  assert.throws(
+    () => execFileSync(process.execPath, [cli, ...args], { encoding: 'utf-8', stdio: 'pipe' }),
+    (error) => error.status === 1 && message.test(error.stderr),
+    args.join(' ')
+  );
+
+test('every flag also takes --flag=value, which is how a value can start with --', () => {
+  const spaced = run('list', '--tag', 'dots', '--density', 'dense');
+  assert.equal(run('list', '--tag=dots', '--density=dense'), spaced);
+
+  // Parsed as a seed rather than a missing value, so the check that fails is
+  // the next one along.
+  fails(['render', 'radius', '--seed=--browser', '--out=hero'], /--out needs a \.svg or \.png extension/);
+  fails(['render', 'radius', '--seed', '--browser', '--out', 'hero.png'], /--seed needs a value/);
+});
+
+test('list names the valid values when a filter is not one of them', () => {
+  fails(['list', '--tag', 'unknown'], /unknown --tag "unknown"[\s\S]*dots/);
+  fails(['list', '--density', 'medium-ish'], /unknown --density[\s\S]*sparse/);
+});
+
+test('render rejects sizes, scales, frame counts and option values out of range', () => {
+  fails(['render', 'radius', '--out', 'x.png', '--size', '0x10'], /--size must be WxH/);
+  fails(['render', 'radius', '--out', 'x.png', '--scale', '0'], /--scale must be/);
+  fails(['render', 'radius', '--out', 'x/', '--frames', '-1'], /--frames must be/);
+  fails(['render', 'radius', '--out', 'x.png', '--palette', ' , '], /--palette needs at least one/);
+  fails(['render', 'radius', '--out', 'x.png', '--options', 'frequency: 9'], /between 0\.2 and 1/);
+  fails(['render', 'radius', '--out', 'x.png', '--options', 'grid: huge'], /must be one of/);
+});
+
+// ---- with a browser --------------------------------------------------------
+
+function browserAvailable() {
+  if (process.env.TABBIED_CHROMIUM) return true;
+  try {
+    const { chromium } = createRequire(import.meta.url)('playwright-core');
+    return existsSync(chromium.executablePath());
+  } catch {
+    return false;
+  }
+}
+
+const withBrowser = { skip: !browserAvailable() && 'no Chromium to launch' };
+
+test('an SVG is cut to the size asked for, in every fit', withBrowser, () => {
+  const dir = mkdtempSync(path.join(os.tmpdir(), 'tabbied-cli-test-'));
+  try {
+    // A grid canvas is oversized to whole tracks, and a cover render is drawn
+    // at its own resolution; the file must still be the stage, as the PNG is.
+    for (const fit of ['grid', 'cover', 'fixed']) {
+      const out = path.join(dir, `${fit}.svg`);
+      run('render', 'radius', '--seed', 'k9Pz', '--size', '320x180', '--fit', fit, '--out', out);
+      const root = /<svg\b[^>]*>/.exec(readFileSync(out, 'utf-8'))[0];
+      assert.match(root, /viewBox="0 0 320 180"/, `${fit}: ${root}`);
+    }
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('a palette entry that is not a CSS color fails before anything is written', withBrowser, () => {
+  const dir = mkdtempSync(path.join(os.tmpdir(), 'tabbied-cli-test-'));
+  try {
+    const out = path.join(dir, 'x.png');
+    fails(
+      ['render', 'radius', '--palette', 'notacolor,rgb(0, 0, 0)', '--out', out],
+      /"notacolor" is not a CSS color/
+    );
+    assert.equal(existsSync(out), false);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });

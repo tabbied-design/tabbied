@@ -19,7 +19,7 @@ import type { AddressInfo } from 'node:net';
 import { createRequire } from 'node:module';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { patterns, isPatternSlug } from './patterns.generated.js';
 import { splitTopLevel } from './core/splitTopLevel.js';
@@ -65,11 +65,20 @@ Render options:
   --reseed-every <n>    Frames between reseeds in a sequence (default 30).
   --browser <path>      Chromium executable (or set TABBIED_CHROMIUM).
 
+Every flag also takes the form --flag=value, for a value that starts with --.
+
+Rendering needs Playwright, looked up from the current directory first:
+  npm i -D playwright && npx playwright install chromium
+or, with nothing installed:
+  npx -y -p tabbied -p playwright tabbied render <slug> --out <file>
+
 The catalog behind list/info also ships as tabbied/catalog.json, and the full
 agent-facing reference is https://tabbied.com/llms-full.txt.`;
 
+// Continuation lines are indented, so a caller reading stderr (render_design
+// in tabbied-mcp) can tell the whole message from whatever else is there.
 function fail(message: string): never {
-  console.error(`tabbied: ${message}`);
+  console.error(`tabbied: ${message.replace(/\n/g, '\n  ')}`);
   process.exit(1);
 }
 
@@ -101,6 +110,21 @@ function runList(flags: Map<string, string>): void {
   const goodFor = flags.get('good-for');
   const query = flags.get('query')?.toLowerCase();
 
+  // The filters are a closed vocabulary, so a value outside it is a typo, not
+  // an empty result: name the values that exist instead of printing 0/N.
+  const vocabulary: [string, string | undefined, string[]][] = [
+    ['tag', tag, designs.flatMap((design) => design.tags)],
+    ['mood', mood, designs.flatMap((design) => design.mood)],
+    ['density', density, designs.map((design) => design.density)],
+    ['good-for', goodFor, designs.flatMap((design) => design.goodFor)],
+  ];
+  for (const [flag, value, values] of vocabulary) {
+    const known = [...new Set(values)].sort();
+    if (value !== undefined && !known.includes(value)) {
+      fail(`unknown --${flag} "${value}". Valid values:\n${known.join(', ')}`);
+    }
+  }
+
   const matches = designs.filter(
     (design) =>
       (!tag || design.tags.includes(tag)) &&
@@ -108,7 +132,7 @@ function runList(flags: Map<string, string>): void {
       (!density || design.density === density) &&
       (!goodFor || design.goodFor.includes(goodFor)) &&
       (!query ||
-        `${design.name} ${design.description ?? ''}`
+        `${design.slug} ${design.name} ${design.description ?? ''}`
           .toLowerCase()
           .includes(query))
   );
@@ -131,14 +155,24 @@ function runInfo(slug: string): void {
 
 // ---- argument parsing ------------------------------------------------------
 
+// `--name value` or `--name=value`. The second form is the only way to pass a
+// value that itself starts with `--` (a seed of "--browser", say), which the
+// first would read as a missing value followed by another flag.
 function parseFlags(argv: string[]): Map<string, string> {
   const flags = new Map<string, string>();
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (!arg.startsWith('--')) fail(`unexpected argument "${arg}"`);
+    const equals = arg.indexOf('=');
+    if (equals !== -1) {
+      flags.set(arg.slice(2, equals), arg.slice(equals + 1));
+      continue;
+    }
     const name = arg.slice(2);
     const next = argv[i + 1];
-    if (next === undefined || next.startsWith('--')) fail(`--${name} needs a value`);
+    if (next === undefined || next.startsWith('--')) {
+      fail(`--${name} needs a value (write --${name}=<value> for one starting with --)`);
+    }
     flags.set(name, next);
     i += 1;
   }
@@ -146,7 +180,8 @@ function parseFlags(argv: string[]): Map<string, string> {
 }
 
 // Option values are typed by the definition (a numeric-looking select choice
-// stays a string), mirroring the data-* attribute contract in hydrate.ts.
+// stays a string), mirroring the data-* attribute contract in hydrate.ts, and
+// held to the ranges and choices the definition declares.
 function parseOptions(
   definition: PatternDefinition,
   raw: string
@@ -169,14 +204,35 @@ function parseOptions(
     if (option.type === 'Slider') {
       const numeric = Number(value);
       if (value === '' || !Number.isFinite(numeric)) fail(`option "${id}" needs a number`);
+      if (
+        (option.min !== undefined && numeric < option.min) ||
+        (option.max !== undefined && numeric > option.max)
+      ) {
+        fail(`option "${id}" must be between ${option.min} and ${option.max}, got ${numeric}`);
+      }
       values[id] = numeric;
     } else if (option.type === 'ToggleSwitch') {
+      if (!['true', 'false', ''].includes(value)) fail(`option "${id}" must be true or false`);
       values[id] = value === 'true' || value === '';
     } else {
+      // The grid is the one choice that is a shape rather than a name: the
+      // grid and cover fits derive their own, and `fixed` draws any CxR.
+      const isGrid = id === 'grid' && /^\d+x\d+$/.test(value);
+      if (option.options && !option.options.includes(value) && !isGrid) {
+        fail(`option "${id}" must be one of ${option.options.join(', ')}, got "${value}"`);
+      }
       values[id] = value;
     }
   }
   return values;
+}
+
+// Whether each entry is a CSS color is the browser's call (see
+// invalidColors), made once the page is up; this only catches an empty list.
+function parsePalette(raw: string): string[] {
+  const colors = splitTopLevel(raw, ',');
+  if (colors.length === 0) fail('--palette needs at least one CSS color');
+  return colors;
 }
 
 function parseRenderArgs(argv: string[]): RenderArgs {
@@ -191,12 +247,22 @@ function parseRenderArgs(argv: string[]): RenderArgs {
 
   const size = flags.get('size') ?? '960x960';
   const sizeMatch = /^(\d+)x(\d+)$/.exec(size);
-  if (!sizeMatch) fail(`--size must be WxH in px, got "${size}"`);
+  if (!sizeMatch || Number(sizeMatch[1]) < 1 || Number(sizeMatch[2]) < 1) {
+    fail(`--size must be WxH in whole px, at least 1x1, got "${size}"`);
+  }
 
   const fit = flags.get('fit') ?? 'grid';
   if (!['grid', 'cover', 'fixed'].includes(fit)) fail(`--fit must be grid | cover | fixed`);
 
+  const scale = Number(flags.get('scale') ?? 2);
+  if (!(scale > 0 && scale <= 8)) fail(`--scale must be a number above 0 and at most 8`);
+
   const frames = Number(flags.get('frames') ?? 0);
+  if (!Number.isInteger(frames) || frames < 0) fail(`--frames must be a whole number`);
+  const reseedEvery = Number(flags.get('reseed-every') ?? 30);
+  if (!Number.isInteger(reseedEvery) || reseedEvery < 1) {
+    fail(`--reseed-every must be a whole number of frames, at least 1`);
+  }
   const extension = path.extname(out).toLowerCase();
   let format = flags.get('format') as 'svg' | 'png' | undefined;
   if (format && format !== 'svg' && format !== 'png') fail(`--format must be svg | png`);
@@ -214,7 +280,7 @@ function parseRenderArgs(argv: string[]): RenderArgs {
     seed: flags.get('seed') ?? Math.random().toString(36).slice(2, 6),
     // Split at paren depth zero: the help promises comma-separated CSS
     // colors, and `rgb(0, 0, 0)` is one of them, not three fragments.
-    palette: flags.has('palette') ? splitTopLevel(flags.get('palette')!, ',') : null,
+    palette: flags.has('palette') ? parsePalette(flags.get('palette')!) : null,
     options: flags.has('options')
       ? parseOptions(definition, flags.get('options')!)
       : {},
@@ -222,9 +288,9 @@ function parseRenderArgs(argv: string[]): RenderArgs {
     height: Number(sizeMatch![2]),
     fit: fit as RenderArgs['fit'],
     format,
-    scale: Number(flags.get('scale') ?? 2),
+    scale,
     frames,
-    reseedEvery: Number(flags.get('reseed-every') ?? 30),
+    reseedEvery,
     browser: flags.get('browser') ?? process.env.TABBIED_CHROMIUM ?? null,
   };
 }
@@ -254,25 +320,88 @@ const PAGE = `<!doctype html><meta charset="utf-8">
     window.__controller = createPattern(stage, { ...config, pattern: definition, onReady: ready });
   });
   window.__redraw = (seed) => { window.__controller.redraw(seed); };
-  window.__exportSvg = async () => {
-    const { svg, warnings } = await window.__controller.exportSvg();
-    return { svg, warnings };
+  window.__invalidColors = (colors) => colors.filter((color) => !CSS.supports('color', color));
+  // The file is cut to the stage, so it shows what the PNG of the same
+  // arguments shows. A grid canvas is oversized to whole tracks and the host
+  // clips it, which exportSvg's clip undoes. A cover render is drawn at its
+  // own resolution and scaled into the host, so its export is in render px:
+  // the host's transform is put back around it, then cut to the stage.
+  window.__exportSvg = async (width, height) => {
+    const controller = window.__controller;
+    const { a: scale, e: x, f: y } = new DOMMatrixReadOnly(
+      getComputedStyle(controller.element).transform
+    );
+    if (scale === 1 && x === 0 && y === 0) {
+      const { svg, warnings } = await controller.exportSvg({ clip: { width, height } });
+      return { svg, warnings };
+    }
+    const { svg, warnings } = await controller.exportSvg();
+    const open = /^<svg\\b[^>]*>/.exec(svg)[0];
+    const body = svg.slice(open.length, svg.lastIndexOf('</svg>'));
+    const attributes = open.slice(4, -1).replace(/\\s(?:viewBox|width|height)="[^"]*"/g, '');
+    const matrix = [scale, 0, 0, scale, x, y].map((n) => +n.toFixed(6)).join(' ');
+    return {
+      svg:
+        '<svg' + attributes + ' width="' + width + '" height="' + height +
+        '" viewBox="0 0 ' + width + ' ' + height + '">' +
+        '<clipPath id="tabbied-stage"><rect width="' + width + '" height="' + height + '"/></clipPath>' +
+        '<g clip-path="url(#tabbied-stage)"><g transform="matrix(' + matrix + ')">' + body + '</g></g></svg>',
+      warnings,
+    };
   };
 </script>`;
 
+// Playwright is never a dependency of this package (it would put a browser
+// download in every install), so it is looked up where the caller has it.
+// The caller's project comes first: under `npx tabbied`, this file sits in
+// npx's cache, and a bare import() resolves from here, so a Playwright the
+// project installed was never found. Then this package's own location, which
+// is what finds one installed beside it (`npx -p tabbied -p playwright`, or
+// tabbied-mcp's render_design under `npx -p tabbied-mcp -p playwright`).
+const PLAYWRIGHT_PACKAGES = ['playwright', 'playwright-core', '@playwright/test'];
+
 async function loadChromium(): Promise<{ chromium: any }> {
-  for (const name of ['playwright', 'playwright-core', '@playwright/test']) {
-    try {
-      return await import(name);
-    } catch {
-      // try the next one
+  const bases = [path.join(process.cwd(), 'noop.js'), fileURLToPath(import.meta.url)];
+  for (const base of bases) {
+    for (const name of PLAYWRIGHT_PACKAGES) {
+      let resolved: string;
+      try {
+        resolved = createRequire(base).resolve(name);
+      } catch {
+        continue; // not installed from here; try the next one
+      }
+      // require.resolve picks the CommonJS entry, whose exports may only be
+      // reachable through `default` once imported as ESM.
+      const loaded = await import(pathToFileURL(resolved).href);
+      const chromium = loaded.chromium ?? loaded.default?.chromium;
+      if (chromium) return { chromium };
     }
   }
   fail(
-    'rendering needs a headless browser via Playwright. Install one of\n' +
-      '  npm i -D playwright   (or playwright-core / @playwright/test)\n' +
-      'and, if it has no bundled browser, point --browser (or TABBIED_CHROMIUM) at a Chromium binary.'
+    `rendering needs Playwright, and none was found from ${process.cwd()} or beside tabbied.\n` +
+      'In a project, install it there:\n' +
+      '  npm i -D playwright && npx playwright install chromium\n' +
+      'Or run the CLI with Playwright beside it, nothing installed:\n' +
+      '  npx -y -p tabbied -p playwright tabbied render <slug> --out <file>\n' +
+      'For the tabbied-mcp server, start it as:\n' +
+      '  npx -y -p tabbied-mcp -p playwright tabbied-mcp\n' +
+      'Playwright then needs a browser once: npx playwright install chromium\n' +
+      '(or point --browser or TABBIED_CHROMIUM at a Chromium binary).'
   );
+}
+
+async function launchChromium(chromium: any, executablePath: string | null): Promise<any> {
+  try {
+    return await chromium.launch(executablePath ? { executablePath } : {});
+  } catch (error) {
+    // Playwright's own message is a boxed banner; its first line says enough.
+    const reason = (error instanceof Error ? error.message : String(error)).split('\n')[0];
+    fail(
+      `could not start Chromium (${reason}).\n` +
+        'Install the browser Playwright expects: npx playwright install chromium\n' +
+        'or point --browser (or TABBIED_CHROMIUM) at a Chromium binary.'
+    );
+  }
 }
 
 async function runRender(args: RenderArgs): Promise<void> {
@@ -317,9 +446,7 @@ async function runRender(args: RenderArgs): Promise<void> {
   const { port } = server.address() as AddressInfo;
 
   const { chromium } = await loadChromium();
-  const browser = await chromium.launch(
-    args.browser ? { executablePath: args.browser } : {}
-  );
+  const browser = await launchChromium(chromium, args.browser);
 
   try {
     const context = await browser.newContext({
@@ -334,6 +461,23 @@ async function runRender(args: RenderArgs): Promise<void> {
       console.error(`  pageerror: ${error.message.split('\n')[0]}`)
     );
     await page.goto(`http://127.0.0.1:${port}/`);
+
+    // An entry the browser cannot parse as a color is dropped by CSS without
+    // a word, and the render comes out blank, so it is refused here instead.
+    // Thrown rather than failed, so the browser still closes.
+    if (args.palette) {
+      const invalid: string[] = await page.evaluate(
+        (colors: string[]) => (window as any).__invalidColors(colors),
+        args.palette
+      );
+      if (invalid.length > 0) {
+        throw new Error(
+          `--palette: ${invalid.map((color) => `"${color}"`).join(', ')} ` +
+            `${invalid.length === 1 ? 'is not a CSS color' : 'are not CSS colors'} ` +
+            '(use hex, rgb(), hsl(), oklch() or a color name)'
+        );
+      }
+    }
 
     const config = {
       seed: args.seed,
@@ -368,7 +512,7 @@ async function runRender(args: RenderArgs): Promise<void> {
           .screenshot({ path: path.join(args.out, name) });
       }
       console.log(
-        `rendered ${args.frames} frames of ${args.slug} into ${args.out}/ ` +
+        `rendered ${args.frames} frames of ${args.slug} into ${args.out.replace(/[\\/]+$/, '')}/ ` +
           `(reseed every ${args.reseedEvery})`
       );
     } else if (args.format === 'png') {
@@ -378,8 +522,9 @@ async function runRender(args: RenderArgs): Promise<void> {
         `rendered ${args.slug} -> ${args.out} (${args.width}x${args.height} @${args.scale}x, seed ${args.seed})`
       );
     } else {
-      const { svg, warnings } = await page.evaluate(() =>
-        (window as any).__exportSvg()
+      const { svg, warnings } = await page.evaluate(
+        ([width, height]: [number, number]) => (window as any).__exportSvg(width, height),
+        [args.width, args.height] as [number, number]
       );
       mkdirSync(path.dirname(path.resolve(args.out)), { recursive: true });
       writeFileSync(args.out, svg);

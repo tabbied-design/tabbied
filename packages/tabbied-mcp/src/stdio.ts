@@ -6,6 +6,8 @@
 //
 // Configure it in an MCP client as:
 //   { "command": "npx", "args": ["-y", "tabbied-mcp"] }
+// or, for render_design, with Playwright installed beside it:
+//   { "command": "npx", "args": ["-y", "-p", "tabbied-mcp", "-p", "playwright", "tabbied-mcp"] }
 import { serveStdio } from '@modelcontextprotocol/server/stdio';
 
 import { buildServer } from './server.js';

@@ -85,6 +85,10 @@ test('every tool definition is a valid MCP tool', () => {
     assert.match(tool.name, /^[A-Za-z0-9_.-]{1,128}$/, `${tool.name}: bad name`);
     assert.ok(tool.description.length > 40, `${tool.name}: thin description`);
     assert.equal(tool.inputSchema.type, 'object');
+    // Every catalog tool only reads, and says so; whether it reaches the
+    // network is stated either way, since the spec's default is "it does".
+    assert.equal(tool.annotations?.readOnlyHint, true, `${tool.name}: readOnlyHint`);
+    assert.equal(typeof tool.annotations?.openWorldHint, 'boolean', `${tool.name}: openWorldHint`);
     for (const required of tool.inputSchema.required ?? []) {
       assert.ok(
         tool.inputSchema.properties?.[required],
@@ -159,12 +163,44 @@ test('get_design returns the record plus slug-substituted usage', async () => {
   assert.match(design.sizing, /no intrinsic size/);
 });
 
+test("get_design's React snippet sizes the pattern by its own ratio, in CSS's syntax", async () => {
+  const square = catalog.designs.find((design) => design.defaultAspectRatio === '1:1');
+  const plain = catalog.designs.find((design) => !design.defaultAspectRatio);
+
+  for (const [entry, ratio] of [
+    [square, '1 / 1'],
+    [plain, '2 / 3'],
+  ]) {
+    if (!entry) continue;
+    const { react } = parse(await call('get_design', { slug: entry.slug })).usage;
+    assert.ok(react.includes(`aspectRatio="${ratio}"`), `${entry.slug}: ${react}`);
+    assert.ok(react.includes(`pattern={${entry.slug}}`));
+    assert.match(react, /export function [A-Z]\w*Pattern\(\)/);
+    // "2:3" is the catalog's id for the ratio, not a CSS value.
+    assert.doesNotMatch(react, /aspectRatio="\d+:\d+"/);
+    assert.doesNotMatch(react, /height=\{/);
+  }
+});
+
 test('get_design warns when a design has no vector export', async () => {
   const unsupported = catalog.designs.find((design) => !design.svgExport.supported);
   assert.ok(unsupported, 'catalog should still contain an svgExport: false design');
 
   const design = parse(await call('get_design', { slug: unsupported.slug }));
   assert.match(design.svgExportWarning, /cannot be exported/);
+  // The CLI command it hands out must be one that runs.
+  assert.ok(design.usage.cli.endsWith(`--out ${unsupported.slug}.png`), design.usage.cli);
+
+  const supported = catalog.designs.find((entry) => entry.svgExport.supported);
+  const vector = parse(await call('get_design', { slug: supported.slug }));
+  assert.ok(vector.usage.cli.endsWith(`--out ${supported.slug}.svg`), vector.usage.cli);
+  assert.match(vector.usage.cliSetup, /npx playwright install chromium/);
+});
+
+test('an empty slug suggests nothing rather than the first designs in the catalog', async () => {
+  const result = await call('get_design', { slug: '' });
+  assert.equal(result.isError, true);
+  assert.doesNotMatch(result.content[0].text, /Closest slugs/);
 });
 
 test('preview_design returns an image per slug and labels each one', async () => {
@@ -187,6 +223,14 @@ test('preview_design reports a bad slug without dropping the good ones', async (
 
   assert.equal(result.content.filter((block) => block.type === 'image').length, 1);
   assert.ok(result.content.some((block) => block.text?.includes('no such design')));
+  assert.ok(!result.isError, 'one good slug is a successful call');
+});
+
+test('preview_design fails when no slug resolves', async () => {
+  const result = await call('preview_design', { slugs: ['nope', 'alsonope'] });
+
+  assert.equal(result.isError, true);
+  assert.equal(result.content.filter((block) => block.type === 'image').length, 0);
 });
 
 test('a failing preview degrades to the published URL', async () => {
