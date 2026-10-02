@@ -225,7 +225,7 @@ The three steps can run alone (`--narrate`, `--music`, `--mix`):
    it is missing.
 2. **Music.** One instrumental bed a second longer than the film, from
    `POST /v1/music` on `music_v2_5` with `force_instrumental`, prompted from
-   the same file.
+   the same file. There is no seed: the API refuses one sent with a prompt.
 3. **Mix.** ffmpeg places each line at its scene's start plus 10 frames,
    ducks the music about 9 dB under each line (a volume curve drawn from the
    lines' known starts and lengths, easing down a quarter second before each
@@ -236,11 +236,22 @@ The three steps can run alone (`--narrate`, `--music`, `--mix`):
    matches `timing.ts`.
 
 Each line has a window: from its start to 6 frames before the next line
-starts. The scenes were lengthened to fit their lines at a measured 2.5 words
-a second (the Grace Hopper film stays under a minute), and `--dry-run` checks
-that estimate. A line that comes back longer than its window is asked for
-once more at a faster `speed`, by as much as it overran and never past 1.15;
-one still too long is named at the end, with the two files that fix it.
+starts. What has to fit is the words, so each take is measured to where its
+voice stops (`silencedetect`, leaving out the silence after the last word).
+A line whose words run past its window is played faster in the mix to end
+inside it, with its pitch kept (`atempo`), by up to 1.15x; the narration step
+names every line it fits that way, with the frames its scene would need to
+keep the voice's own pace, and names any line too long even at 1.15x.
+
+Asking the API for a faster `speed` instead was tried and dropped: on
+`eleven_v4`, asking for 5% to 15% faster shortened Jarnathan's lines by 0% to
+4%, and each retry was charged again. Takes recorded by those retries stay
+cached.
+
+`--dry-run` estimates each take before anything is paid for, at 2.6 words a
+second plus a quarter second for every sentence end or comma, fitted to
+Jarnathan's twelve credit card lines. It estimates the whole take, silences
+included, so it errs long.
 
 Every request is cached in `public/audio/<film>/manifest.json` by a hash of
 what was asked (and of the API host), so a rerun pays only for lines that

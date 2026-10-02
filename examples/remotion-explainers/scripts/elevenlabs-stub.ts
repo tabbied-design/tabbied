@@ -8,11 +8,13 @@
 // It checks each request the way the API would refuse it (model ids, the
 // voice being in the account, the music length) and answers with real MP3s
 // made by ffmpeg: a tone for every line, as long as a narrator would take to
-// say it at the requested speed, and a quiet chord for the music. Every
+// say it at the requested speed, with a little silence before and after the
+// way a real take has, and a quiet chord for the music. Every
 // library voice starts outside the account, so the add-from-library path runs;
 // the default voices (George, for the marmot film) are in every account.
-// STUB_PACE (words per second, default 2.7) makes lines overrun on purpose,
-// and STUB_REJECT_CONTEXT=1 refuses previous_text and next_text.
+// STUB_PACE (words per second, default 2.6, a measured narrator's) set lower
+// makes lines overrun on purpose, and STUB_REJECT_CONTEXT=1 refuses
+// previous_text and next_text.
 import { execFile } from 'node:child_process';
 import { createServer, type IncomingMessage } from 'node:http';
 import { promisify } from 'node:util';
@@ -20,7 +22,10 @@ import { promisify } from 'node:util';
 const run = promisify(execFile);
 const FFMPEG = process.env.FFMPEG ?? 'ffmpeg';
 const PORT = Number(process.env.PORT ?? 8789);
-const WORDS_PER_SECOND = Number(process.env.STUB_PACE ?? 2.7);
+const WORDS_PER_SECOND = Number(process.env.STUB_PACE ?? 2.6);
+// The silence a take carries before its first word and after its last.
+const LEAD_SILENCE = 0.12;
+const TAIL_SILENCE = 0.45;
 const REJECT_CONTEXT = process.env.STUB_REJECT_CONTEXT === '1';
 const TTS_MODELS = ['eleven_v4', 'eleven_v4_turbo'];
 const MUSIC_MODELS = ['music_v1', 'music_v2', 'music_v2_5'];
@@ -95,14 +100,19 @@ const server = createServer(async (request, response) => {
       const words = json.text.replace(/\[[^\]]*\]/g, ' ').trim().split(/\s+/).length;
       const pauses = (json.text.match(/\[(long )?pause\]/g) ?? []).length;
       const seconds = (words / WORDS_PER_SECOND) / speed + pauses * 0.5;
-      // A voice-like tone: 180 Hz with a syllable-rate tremolo.
-      return send(200, await mp3('sine=frequency=180:sample_rate=44100,tremolo=f=4:d=0.8', seconds), 'audio/mpeg');
+      // A voice-like tone: 180 Hz with a syllable-rate tremolo, between silences.
+      const voice = `sine=frequency=180:sample_rate=44100,tremolo=f=4:d=0.8,atrim=0:${seconds.toFixed(3)},adelay=${LEAD_SILENCE * 1000}:all=1,apad`;
+      return send(200, await mp3(voice, LEAD_SILENCE + seconds + TAIL_SILENCE), 'audio/mpeg');
     }
 
     if (request.method === 'POST' && url.pathname === '/v1/music') {
       const json = await body(request);
       if (!MUSIC_MODELS.includes(json.model_id)) return send(422, { detail: `unknown model_id ${json.model_id}` });
       if (json.prompt && json.composition_plan) return send(422, { detail: 'prompt and composition_plan are exclusive' });
+      // The real API's answer to a seed sent with a prompt.
+      if (json.prompt && json.seed !== undefined) {
+        return send(422, { detail: { type: 'unprocessable_entity', message: '`seed` cannot be used with `prompt`.' } });
+      }
       const ms = json.music_length_ms;
       if (!(ms >= 3000 && ms <= 600000)) return send(422, { detail: 'music_length_ms must be 3000-600000' });
       // A soft A minor chord, with a slow swell so ducking is audible.

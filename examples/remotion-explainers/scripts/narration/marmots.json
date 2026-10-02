@@ -10,7 +10,6 @@
   },
   "music": {
     "model": "music_v2_5",
-    "seed": 427,
     "gainDb": -15,
     "prompt": "A whimsical, gentle acoustic underscore for a cute nature documentary about marmots in the mountains. Plucked acoustic guitar and pizzicato strings, a little glockenspiel, soft flute and clarinet, light hand percussion. 92 BPM, playful and warm, like a sunny alpine meadow, unobtrusive under a narrator. A softer, sleepier passage in the middle, then a bright, cheerful finish and a clean ending. No vocals."
   },
