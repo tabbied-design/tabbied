@@ -9,11 +9,6 @@ import styles from './HomeFooter.module.css';
 
 const GITHUB_URL = 'https://github.com/tabbied-design/tabbied/';
 
-// Product Hunt's embed for the Tabbied 2.0 launch, as Product Hunt issued it.
-const PRODUCT_HUNT_URL =
-  'https://www.producthunt.com/products/tabbied?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-tabbied-2-0-pattern-website-generator';
-const PRODUCT_HUNT_BADGE =
-  'https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1267187&theme=dark&t=1790910639393';
 
 export default function HomeFooter() {
   return (
@@ -25,26 +20,6 @@ export default function HomeFooter() {
             Generative patterns and website templates, drawn live in your
             browser.
           </p>
-          {/* A lazy <img> with its size set, as components/Footer does: the
-              request to Product Hunt waits until the footer is near, never
-              holds up the page's load event, and the row doesn't move when
-              it arrives. */}
-          <a
-            href={PRODUCT_HUNT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.badge}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={PRODUCT_HUNT_BADGE}
-              alt="Tabbied 2.0: Pattern & Website Generator - Free patterns and website templates, yours to shape. | Product Hunt"
-              width={250}
-              height={54}
-              loading="lazy"
-              decoding="async"
-            />
-          </a>
         </div>
 
         <div>
