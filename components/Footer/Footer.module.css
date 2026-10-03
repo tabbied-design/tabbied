@@ -29,22 +29,6 @@
   margin-top: 0.5rem;
 }
 
-/* Product Hunt badge: natural size 238x49, capped to its column on narrow
-   screens. */
-.productHuntBadge {
-  display: inline-block;
-  width: 238px;
-  max-width: 100%;
-  aspect-ratio: 238 / 49;
-  margin-top: 1.5rem;
-  line-height: 0;
-}
-
-.productHuntBadge img {
-  width: 100%;
-  height: auto;
-}
-
 @media (max-width: 991.98px) {
   .footerSection {
     padding: 1rem 0 2.5rem 0;
