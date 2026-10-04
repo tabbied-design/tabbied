@@ -1012,17 +1012,18 @@ test.describe('React component docs page', () => {
   });
 });
 
-test.describe('Svelte and Vue docs pages', () => {
+test.describe('Svelte, Vue and web component docs pages', () => {
   for (const { path, title, sample } of [
     { path: '/docs/svelte', title: 'Svelte and SvelteKit', sample: 'use:tabbied={props}' },
     { path: '/docs/vue', title: 'Vue and Nuxt', sample: "from 'tabbied/vue'" },
+    { path: '/docs/web-component', title: 'Web component', sample: '<tabbied-pattern' },
   ]) {
     test(`${path} documents its entry point and is linked from the footer`, async ({ page }) => {
       await page.goto(path);
       await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible();
       await expect(page.getByText(sample).first()).toBeVisible();
 
-      const label = title.split(' ')[0];
+      const label = title === 'Web component' ? title : title.split(' ')[0];
       await expect(page.locator('footer').getByRole('link', { name: label, exact: true })).toHaveAttribute(
         'href',
         new RegExp(`^${path}/?$`)
@@ -1030,9 +1031,10 @@ test.describe('Svelte and Vue docs pages', () => {
     });
   }
 
-  test('the React docs lead to both', async ({ page }) => {
+  test('the React docs lead to each', async ({ page }) => {
     await page.goto('/docs/react');
     await expect(page.getByRole('link', { name: 'Svelte action' })).toHaveAttribute('href', '/docs/svelte/');
     await expect(page.getByRole('link', { name: 'Vue component' })).toHaveAttribute('href', '/docs/vue/');
+    await expect(page.getByRole('link', { name: 'web component', exact: true })).toHaveAttribute('href', '/docs/web-component/');
   });
 });

@@ -62,6 +62,11 @@ export default function HomeFooter() {
               </SamePageLink>
             </li>
             <li>
+              <SamePageLink href="/docs/web-component" prefetch={false}>
+                Web component
+              </SamePageLink>
+            </li>
+            <li>
               <SamePageLink href="/docs/mcp" prefetch={false}>
                 MCP server
               </SamePageLink>

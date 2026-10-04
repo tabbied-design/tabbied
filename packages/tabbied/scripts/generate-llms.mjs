@@ -34,7 +34,7 @@ export function buildLlmsTexts(catalog) {
 
   const llms = `# Tabbied
 
-> Generative patterns as data: ${count} preset designs powered by css-doodle, shipped as the \`tabbied\` npm package (v${version}) - a framework-agnostic core plus a React component, a Vue component and a Svelte action. Render any design at any size, reseed it, and export to PNG or true vector SVG.
+> Generative patterns as data: ${count} preset designs powered by css-doodle, shipped as the \`tabbied\` npm package (v${version}) - a framework-agnostic core plus a \`<tabbied-pattern>\` web component, React and Vue components, and a Svelte action. Render any design at any size, reseed it, and export to PNG or true vector SVG.
 
 Install with \`npm install tabbied\`. React and Vue are optional peer dependencies, needed only for \`tabbied/react\` and \`tabbied/vue\`; \`tabbied/svelte\` needs neither.
 
@@ -47,6 +47,7 @@ Designs are referred to by slug and imported individually - \`import { radius } 
 - [catalog.json](${SITE}/catalog.json): every design with its description, tags, palette, options, preview URL, and SVG-export support. Use it to look up one design in detail. Also shipped in the package at \`tabbied/catalog.json\`.
 - [React component reference](${SITE}/docs/react/): props, sizing, and live examples.
 - [Svelte and SvelteKit](${SITE}/docs/svelte/) and [Vue and Nuxt](${SITE}/docs/vue/): the same props through \`tabbied/svelte\` and \`tabbied/vue\`.
+- [Web component](${SITE}/docs/web-component/): \`<tabbied-pattern>\` for plain HTML and any framework, from one script tag.
 - [Package README](${REPO}/blob/main/packages/tabbied/README.md): entry points, the core API, and SVG export.
 - [SVG export notes](${REPO}/blob/main/docs/svg-export.md): what the vector exporter supports and where it degrades.
 
@@ -82,6 +83,8 @@ framework. The core runs in any framework, or none. Node >=18.
 | \`tabbied/react\` | The \`TabbiedPattern\` component and its handle/prop types. |
 | \`tabbied/svelte\` | The \`tabbied\` action, \`tabbiedAttributes\` for the server render, \`patternController\`. |
 | \`tabbied/vue\` | The \`TabbiedPattern\` Vue component. |
+| \`tabbied/element\` | The \`<tabbied-pattern>\` custom element, \`definePatterns\`, \`setPatternsBase\`. CDN file: \`dist/element/tabbied-element.js\`. |
+| \`tabbied/patterns/<slug>\` | One design as a default export, no imports. |
 | \`tabbied/patterns\` | The presets. Import individually; the \`patterns\` record holds all ${count}. |
 | \`tabbied/svg-export\` | \`doodleToSvg\`, the vector converter, for use on a doodle you manage. |
 | \`tabbied/catalog.json\` | This catalog as data. |
@@ -172,6 +175,28 @@ export function Example() {
 The handle (\`TabbiedPatternHandle\`) exposes \`redraw(seed?)\`,
 \`exportImage(options?)\`, \`exportSvg(options?)\`, and \`element\` - the raw
 \`<css-doodle>\` node.
+
+## Web component
+
+\`\`\`html
+<tabbied-pattern pattern="radius" seed="k9Pz" palette="#0B1020, #3E8BFF"
+  style="display: block; aspect-ratio: 3 / 2; background: #0B1020"></tabbied-pattern>
+<script type="module" src="https://cdn.jsdelivr.net/npm/tabbied@${minor}/dist/element/tabbied-element.js"></script>
+\`\`\`
+
+Attributes are the hydratePatterns() names without \`data-\`: \`pattern\` (slug,
+required), \`seed\`, \`palette\`, \`options\`, \`fit\`, \`density\`, \`cell-size\`,
+\`width\`, \`height\`, \`cover-render\`, \`redraw-interval\`, \`paused\`. The CDN file
+fetches only the named designs from \`dist/patterns/<slug>.js\` beside it. The
+element is \`display: inline\` until it upgrades, so always write
+\`display: block\` plus a size and the ground color in its inline \`style\` -
+an inline element ignores \`aspect-ratio\` and the pattern draws nothing. In a
+bundled app import \`tabbied/element\` and call
+\`definePatterns({ radius })\` (from \`tabbied/patterns\`) before use, or set
+\`el.pattern = radius\`; a bundler cannot follow a slug in markup. Vue needs
+\`isCustomElement\` for the tag, Angular \`CUSTOM_ELEMENTS_SCHEMA\`; React <19
+cannot pass objects to it (use \`tabbied/react\`). Methods: \`redraw\`,
+\`exportImage\`, \`exportSvg\`, \`refresh\`; events \`ready\` and \`error\`.
 
 ## Svelte and SvelteKit
 

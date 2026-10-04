@@ -8,7 +8,7 @@ above all, is proprietary (see LICENSE, and "Licensing" below).
 
 Tabbied: generative patterns built on css-doodle. npm workspaces - the
 Next.js site at the root consumes the `tabbied` package in
-`packages/tabbied/` (framework-free core + React, Vue and Svelte wrappers + 338 pattern
+`packages/tabbied/` (framework-free core + a web component, React, Vue and Svelte wrappers + 338 pattern
 presets as JSON in `packages/tabbied/patterns/`, embedded by codegen), the
 `tabbied-mcp` package in `packages/tabbied-mcp/` (the MCP server, shared by
 the site's `/mcp` endpoint and a `tabbied-mcp` stdio bin), and
@@ -1907,6 +1907,41 @@ of which repeats its README section. Four things worth not re-litigating:
   with both when this landed; there is no example project for either in
   `examples/` until the entries are published, since examples consume
   `tabbied` from npm.
+
+## The web component - <tabbied-pattern>
+
+`tabbied/element` (`src/element/index.ts`) is the fourth wrapper and the
+catch-all: a custom element over the same controller, whose attributes are
+`hydratePatterns()`'s names without `data-`, read by the same parser
+(`src/core/attributes.ts`). Page: `/docs/web-component`. Four things worth
+not re-litigating:
+
+- **The box is the page's inline style, not a server render.** Until it is
+  defined the element is an unknown inline tag, and its `style` applies, so
+  `display: block`, a size and the ground color written there give the
+  right box before any script and through any framework's SSR. Declarative
+  Shadow DOM would add nothing: the pattern itself needs a browser.
+- **A slug loads one file, from beside the module.** Codegen writes every
+  design as `src/patterns/<slug>.ts` too (gitignored), compiled to
+  `dist/patterns/<slug>.js`, a default export with no imports, so a CDN that
+  serves files as published can serve it. The element finds the folder by
+  string arithmetic on `import.meta.url`, never `new URL('...',
+  import.meta.url)`: Vite, webpack and Turbopack treat that shape as a file
+  to bundle, Turbopack even through a variable, and the site's build failed
+  on it ("Can't resolve '../patterns/'").
+- **A bundled app registers what it uses** (`definePatterns`, or the
+  `pattern` property): a bundler cannot follow a slug in markup, and the
+  dynamic import is marked ignored so none of them tries. A Vite and a
+  webpack build against the tarball each shipped the one registered design.
+- **`dist/element/tabbied-element.js` is a second build, by esbuild**
+  (`scripts/bundle-element.mjs`, the last step of the package build), with
+  css-doodle inside and the SVG converter split out. It must stay in
+  `dist/element/` beside tsc's `index.js`, so `../patterns/` means the same
+  folder from either. `e2e/element.spec.ts` serves `dist/` under a made-up
+  CDN origin to prove exactly that layout, and `/package-test`'s
+  `ElementProbe` is the bundled path. The editor's "Copy HTML embed" still
+  writes the `hydratePatterns` snippet, because it must work against the
+  published version; it moves to the element once that is on npm.
 
 ## Grid snapping - invariant (full reference: docs/grid-snapping.md)
 

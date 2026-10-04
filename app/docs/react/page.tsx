@@ -604,8 +604,9 @@ export default function ReactDocsPage() {
                   <p>
                     Not on React? The same patterns come as a{' '}
                     <a href="/docs/svelte/">Svelte action</a>, a{' '}
-                    <a href="/docs/vue/">Vue component</a>, and{' '}
-                    <a href="#html">plain HTML</a>.
+                    <a href="/docs/vue/">Vue component</a>, a{' '}
+                    <a href="/docs/web-component/">web component</a> for any
+                    page, and <a href="#html">plain HTML</a>.
                   </p>
                   <p>
                     Working with an AI assistant? The{' '}

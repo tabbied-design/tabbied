@@ -1,7 +1,7 @@
 # tabbied
 
-Generative patterns as data: a framework-agnostic core plus a React component,
-a Vue component and a Svelte action, powered by [css-doodle](https://css-doodle.com/). Render any of Tabbied's
+Generative patterns as data: a framework-agnostic core, a `<tabbied-pattern>`
+web component, a React and a Vue component and a Svelte action, powered by [css-doodle](https://css-doodle.com/). Render any of Tabbied's
 preset designs (or your own definition) at any size, reseed them, and export
 them to PNG.
 
@@ -29,6 +29,8 @@ Node 20.19+ and 22.12+ (which can `require` an ES module) and throws
 | `tabbied/react`    | The `TabbiedPattern` React component (and its handle/prop types).                       |
 | `tabbied/svelte`   | The `tabbied` Svelte action, `tabbiedAttributes()` for the server render, and `patternController()`. |
 | `tabbied/vue`      | The `TabbiedPattern` Vue 3 component.                                                   |
+| `tabbied/element`  | The `<tabbied-pattern>` custom element, `definePatterns()` and `setPatternsBase()`. `dist/element/tabbied-element.js` is the same element as one self-contained file for a CDN. |
+| `tabbied/patterns/<slug>` | One design as a default export, with no imports: what the element loads by slug. |
 | `tabbied/patterns` | The preset `PatternDefinition`s (import individually) plus the full `patterns` record.  |
 | `tabbied/svg-export` | The native SVG converter (`doodleToSvg`) on its own, for exporting a rendered `<css-doodle>` you mounted yourself. `exportSvg()` on a controller or handle loads it for you. |
 | `tabbied/catalog.json` | Every design as data - description, palette, options, SVG-export support. See [Finding a design](#finding-a-design). |
@@ -218,6 +220,48 @@ nothing is ever scaled by a different factor horizontally than vertically.
 
 Every design supports all three, so `fit` is a plain choice - omit it and you
 get `grid`.
+
+## Web component
+
+```html
+<tabbied-pattern
+  pattern="radius"
+  seed="k9Pz"
+  palette="#0B1020, #3E8BFF, #3FFFB2"
+  style="display: block; aspect-ratio: 3 / 2; background: #0B1020"
+></tabbied-pattern>
+
+<script type="module" src="https://cdn.jsdelivr.net/npm/tabbied@0.8/dist/element/tabbied-element.js"></script>
+```
+
+`<tabbied-pattern>` takes the React props as attributes, under the names
+`hydratePatterns()` reads without the `data-` prefix: `pattern`, `seed`,
+`palette`, `options`, `fit`, `density`, `cell-size`, `width`, `height`,
+`cover-render`, `redraw-interval`, `paused`. Changing one redraws in place;
+removing the element tears it down, and moving it does not.
+
+- **One script, only the designs used.** `tabbied-element.js` has css-doodle
+  bundled in. Each design is also published on its own as
+  `dist/patterns/<slug>.js`, with no imports, and the element fetches only
+  the ones the page names, from beside itself. Copy `dist/element/` and
+  `dist/patterns/` side by side to self-host, or point `setPatternsBase()`
+  at the designs.
+- **The box comes from inline style.** Before the script runs the element is
+  an unknown tag, and its `style` already applies: write `display: block`,
+  the size and the ground color there, and nothing shifts when the pattern
+  mounts, on a server-rendered page too.
+- **In a bundled app,** import `tabbied/element` and register what it uses,
+  so the bundler ships just those: `definePatterns({ radius })` with
+  `radius` from `tabbied/patterns`. Or set the `pattern` property to the
+  definition. Importing it on a server is safe.
+- **Frameworks:** React 19, Svelte, Solid and Angular set properties on it
+  (`palette` takes an array, `options` an object). Vue needs
+  `compilerOptions.isCustomElement` to match the tag, and Angular
+  `CUSTOM_ELEMENTS_SCHEMA`.
+- **Scripting:** `redraw(seed?)`, `exportImage()`, `exportSvg()`,
+  `refresh()` and `controller`; a `ready` event after the first render, and
+  `error` (reason in `detail`) for a design that cannot be loaded. It is
+  `aria-hidden` unless it carries an `aria-label`, which makes it an image.
 
 ## Svelte and SvelteKit
 
