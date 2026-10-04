@@ -554,7 +554,7 @@ test.describe('Tabbied site (mobile viewport)', () => {
     // that replaces the rail.
     await exportBtn.click();
     await expect(
-      page.getByRole('menuitem', { name: 'Copy React component' })
+      page.getByRole('menuitem', { name: 'React component' })
     ).toBeVisible();
     await page.keyboard.press('Escape');
     await expect(page.getByRole('menu')).toHaveCount(0);
@@ -1035,12 +1035,33 @@ test.describe('The Developers section', () => {
       expect((await page.request.get(href)).status()).toBe(200);
     }
 
-    for (const label of ['Overview', 'React', 'Vue', 'Svelte', 'Web component', 'Plain HTML', 'MCP server', 'GitHub']) {
+    for (const label of ['Overview', 'Concepts', 'React', 'Vue', 'Svelte', 'Web component', 'Plain HTML', 'MCP server', 'GitHub']) {
       await expect(footer.getByRole('link', { name: label, exact: true })).toBeVisible();
     }
     // The legal pages moved to the bottom bar, still linked.
     await expect(footer.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', /\/privacy-policy/);
     await expect(footer.getByRole('link', { name: 'Terms of Service' })).toHaveAttribute('href', /\/terms-of-service/);
+  });
+
+  test('Concepts is linked from every setup page, and names each setting per setup', async ({ page }) => {
+    await page.goto('/docs/concepts');
+    await expect(page.getByRole('heading', { level: 1, name: 'Concepts' })).toBeVisible();
+    // The table: one column per spelling, and a row's names differ by it.
+    const table = page.locator('#names table');
+    await expect(table.locator('thead th')).toHaveText(['Setting', 'React, Svelte', 'Vue', 'Web component']);
+    await expect(table.locator('tr', { hasText: 'Cell size' })).toHaveText(/cellSize\s*:cell-size\s*cell-size/);
+    // It fits the article: nothing to scroll sideways at a desktop width.
+    const scroller = page.locator('#names table').locator('xpath=..');
+    expect(await scroller.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
+
+    // The setup pages send readers here, not to the React reference.
+    for (const path of ['/docs', '/docs/vue', '/docs/svelte']) {
+      await page.goto(path);
+      await expect(page.locator('article').getByRole('link', { name: 'Concepts', exact: true }).first()).toHaveAttribute(
+        'href',
+        '/docs/concepts/'
+      );
+    }
   });
 
   test('plain HTML has its own page now', async ({ page }) => {

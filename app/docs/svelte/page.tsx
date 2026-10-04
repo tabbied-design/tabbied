@@ -203,7 +203,8 @@ export default function SvelteDocsPage() {
           <Code>redrawInterval</Code>, <Code>paused</Code>,{' '}
           <Code>decorative</Code>, <Code>ariaLabel</Code> and{' '}
           <Code>onReady</Code>, plus <Code>style</Code> as a string. The{' '}
-          <a href="/docs/react/#api">React reference</a> describes each one.
+          <a href="/docs/concepts/">Concepts</a> page says what each one
+          does, with every setup&apos;s name for it side by side.
         </p>
       </Section>
     </DocsShell>

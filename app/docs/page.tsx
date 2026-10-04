@@ -120,7 +120,8 @@ export default function DevelopersPage() {
         <>
           All {PATTERN_COUNT} patterns are one npm package, and every way of
           using them takes the same settings: a design, a seed, a palette and
-          its options. Pick the setup that matches your project.
+          its options. Pick the setup that matches your project; the{' '}
+          <a href="/docs/concepts/">Concepts</a> page covers what they share.
         </>
       }
       chips={[`tabbied v${PACKAGE_VERSION}`, 'MIT license']}
@@ -154,31 +155,13 @@ export default function DevelopersPage() {
 
       <Section id="shared" title="In every setup">
         <p>
-          These work the same way whichever setup you pick, and the React
-          docs show them with live examples:
+          Designs, sizing and fit modes, colors, options, seeds and export,
+          motion and accessibility work the same way whichever setup you
+          pick. The <a href="/docs/concepts/">Concepts</a> page explains each
+          one once and gives its name in every setup, and the{' '}
+          <a href="/docs/react/#fit-modes">React docs</a> show them as live
+          examples.
         </p>
-        <ul className={styles.list}>
-          <li>
-            <a href="/docs/react/#presets">Importing presets</a>: only the
-            designs you import are bundled.
-          </li>
-          <li>
-            <a href="/docs/react/#fit-modes">Sizing and fit modes</a>: a
-            pattern fills the box you give it, without distortion.
-          </li>
-          <li>
-            <a href="/docs/react/#palettes">Colors and palettes</a>, and{' '}
-            <a href="/docs/react/#options">options</a>.
-          </li>
-          <li>
-            <a href="/docs/react/#seeds">Seeds, redraw and export</a>, to PNG
-            and true vector SVG.
-          </li>
-          <li>
-            <a href="/docs/react/#accessibility">Accessibility</a> and reduced
-            motion, which every setup respects.
-          </li>
-        </ul>
       </Section>
     </DocsShell>
   );

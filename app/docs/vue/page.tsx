@@ -156,8 +156,9 @@ export default function VueDocsPage() {
           <Code>paused</Code>, <Code>decorative</Code> and{' '}
           <Code>aria-label</Code>. <Code>onReady</Code> is the{' '}
           <Code>ready</Code> event. The{' '}
-          <a href="/docs/react/#api">React reference</a> describes each one,
-          and <Code>TabbiedPatternExposed</Code> types the template ref.
+          <a href="/docs/concepts/">Concepts</a> page says what each one
+          does, and <Code>TabbiedPatternExposed</Code> types the template
+          ref.
         </p>
       </Section>
     </DocsShell>

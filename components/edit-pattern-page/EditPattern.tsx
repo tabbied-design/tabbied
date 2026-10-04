@@ -56,6 +56,7 @@ import {
   type BrandPalette,
 } from 'lib/brandPalettes';
 import { revealPressed } from 'components/palette/revealPressed';
+import { availableSnippets, buildSnippet, type SnippetKind } from 'lib/patternSnippets';
 import styles from './EditPattern.module.css';
 
 // The density a design opens at when its authored grid says nothing usable
@@ -189,7 +190,7 @@ export default function EditPattern({
   packageVersion,
 }: {
   pattern: Pattern;
-  /** The tabbied version the HTML embed pins its esm.sh imports to. */
+  /** The tabbied version: what the copied snippets pin, and which are offered. */
   packageVersion: string;
 }) {
   const defaultAspectRatio = pattern.defaultAspectRatio ?? DEFAULT_ASPECT_RATIO;
@@ -940,99 +941,36 @@ export default function EditPattern({
     }
   };
 
-  // The grid stays out of both snippets: under the default fit the package
-  // derives it from the box, and `density` is what carries the cell size
-  // the plate showed.
-  const snippetOptionEntries = () =>
-    pattern.options.flatMap((option, index) =>
-      option.id === GRID_OPTION_ID ? [] : [[option.id, optionValues[index]] as const]
-    );
+  // The code the Export menu copies, built from the plate's state by
+  // lib/patternSnippets. The grid stays out of every snippet: under the
+  // default fit the package derives it from the box, and `density` is what
+  // carries the cell size the plate showed. The plate's ratio goes in as
+  // CSS's own `W / H`, so a snippet draws in a parent with no height.
+  const snippets = availableSnippets(packageVersion);
 
-  const copyReactComponent = async () => {
-    const activePalette = palette.slice(0, colorCount);
-    const paletteLiteral = activePalette.map((color) => `'${color}'`).join(', ');
-    const optionEntries = snippetOptionEntries();
-    const optionsLiteral = optionEntries
-      .map(([id, value]) =>
-        typeof value === 'string' ? `${id}: '${value}'` : `${id}: ${value}`
-      )
-      .join(', ');
+  const copySnippet = async (kind: SnippetKind) => {
+    const spec = snippets.find((candidate) => candidate.kind === kind);
 
-    // The plate's ratio goes in as CSS's own `W / H`: the box fills its
-    // parent's width and takes its height from the ratio, so the snippet
-    // draws in a parent with no height of its own, which is most of them.
-    const [ratioW, ratioH] = ASPECT_RATIOS[aspectRatio];
-    const componentName = `${pattern.slug.charAt(0).toUpperCase()}${pattern.slug.slice(1)}Pattern`;
+    if (!spec) return;
 
-    const lines = [
-      `import { TabbiedPattern } from 'tabbied/react';`,
-      `import { ${pattern.slug} } from 'tabbied/patterns';`,
-      ``,
-      `// As wide as its parent, at the ${aspectRatio} ratio it was designed at.`,
-      `// Add maxWidth to bound it, or swap aspectRatio for a fixed height.`,
-      `export function ${componentName}() {`,
-      `  return (`,
-      `    <TabbiedPattern`,
-      `      pattern={${pattern.slug}}`,
-      `      seed="${seed}"`,
-      `      aspectRatio="${ratioW} / ${ratioH}"`,
-      ...(hasGrid ? [`      density={${density}}`] : []),
-      `      palette={[${paletteLiteral}]}`,
-      ...(optionEntries.length ? [`      options={{ ${optionsLiteral} }}`] : []),
-      `    />`,
-      `  );`,
-      `}`,
-    ];
+    const code = buildSnippet(kind, {
+      slug: pattern.slug,
+      seed,
+      palette: palette.slice(0, colorCount),
+      options: pattern.options.flatMap((option, index) =>
+        option.id === GRID_OPTION_ID ? [] : [[option.id, optionValues[index]] as const]
+      ),
+      ratio: ASPECT_RATIOS[aspectRatio],
+      ratioLabel: aspectRatio,
+      density: hasGrid ? density : null,
+      version: packageVersion,
+    });
 
     try {
-      await navigator.clipboard.writeText(lines.join('\n'));
-      toaster.add({ title: 'React component copied' });
+      await navigator.clipboard.writeText(code);
+      toaster.add({ title: spec.copied });
     } catch {
-      toaster.add({ title: 'Could not copy the component' });
-    }
-  };
-
-  // The same pattern for a page with no build step: the placeholder carries
-  // its config as the data-* attributes hydratePatterns() reads, and the
-  // script loads the package from esm.sh. `?exports=` trims the patterns
-  // entry to this one design (the whole catalog is about 450 KB), and the
-  // version is pinned, as the HTML template downloads pin it, so the embed
-  // keeps drawing what the editor showed.
-  const copyHtmlEmbed = async () => {
-    const attribute = (value: string) =>
-      value.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
-    const activePalette = palette.slice(0, colorCount);
-    const optionsValue = snippetOptionEntries()
-      .map(([id, value]) => `${id}: ${value}`)
-      .join('; ');
-    const [ratioW, ratioH] = ASPECT_RATIOS[aspectRatio];
-    const { slug } = pattern;
-    const base = `https://esm.sh/tabbied@${packageVersion}`;
-
-    const lines = [
-      `<!-- As wide as its parent, at the ${aspectRatio} ratio it was designed at.`,
-      `     Add max-width to bound it, or swap aspect-ratio for a fixed height. -->`,
-      `<div data-pattern="${slug}"`,
-      `     data-seed="${attribute(seed)}"`,
-      ...(hasGrid ? [`     data-density="${density}"`] : []),
-      `     data-palette="${attribute(activePalette.join(', '))}"`,
-      ...(optionsValue ? [`     data-options="${attribute(optionsValue)}"`] : []),
-      `     style="width: 100%; aspect-ratio: ${ratioW} / ${ratioH}"></div>`,
-      ``,
-      `<!-- Once per page, after the patterns. For several designs, list each one. -->`,
-      `<script type="module">`,
-      `  import { hydratePatterns } from '${base}';`,
-      `  import { ${slug} } from '${base}/patterns?exports=${slug}';`,
-      ``,
-      `  hydratePatterns({ patterns: { ${slug} } });`,
-      `</script>`,
-    ];
-
-    try {
-      await navigator.clipboard.writeText(lines.join('\n'));
-      toaster.add({ title: 'HTML embed copied' });
-    } catch {
-      toaster.add({ title: 'Could not copy the embed' });
+      toaster.add({ title: 'Could not copy the code' });
     }
   };
 
@@ -1249,8 +1187,8 @@ export default function EditPattern({
         svgExportDisabled={!svgExportEnabled}
         svgExportWarning={svgExportEnabled && svgExportNotes.length > 0}
         onCopyLink={copyShareLink}
-        onCopyReactComponent={copyReactComponent}
-        onCopyHtmlEmbed={copyHtmlEmbed}
+        snippets={snippets}
+        onCopySnippet={copySnippet}
         hasBackgroundImage={backgroundImage !== null}
         mobile={isMobile}
       />

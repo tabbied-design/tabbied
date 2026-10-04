@@ -899,3 +899,21 @@
     transition: none;
   }
 }
+
+/* The Concepts page's names table: six columns of identifiers, so tighter
+   cells, and a name never broken at its hyphen (`cell-\nsize` reads as two
+   names). On a narrow screen it scrolls inside .tableScroll as any table. */
+.namesTable th,
+.namesTable td {
+  padding: 10px 12px;
+}
+
+.namesTable thead th {
+  padding: 10px 12px;
+  letter-spacing: 0.08em;
+}
+
+.namesTable td code {
+  white-space: nowrap;
+  font-size: 12px;
+}

@@ -37,6 +37,7 @@
     "check:pattern-cost": "node scripts/pattern-cost.mjs --budget",
     "start": "serve out -l 3000 --no-clipboard",
     "test:e2e": "playwright test",
+    "test:lib": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test lib/*.test.mjs",
     "images:extract": "node scripts/images/extract-prompts.mjs",
     "images:build": "node scripts/images/build-batch.mjs",
     "images:submit": "node scripts/images/submit-batch.mjs",

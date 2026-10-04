@@ -46,6 +46,7 @@ Designs are referred to by slug and imported individually - \`import { radius } 
 - [llms-full.txt](${SITE}/llms-full.txt): the complete API contract, integration recipes, and a one-line entry for every design. Start here - it is designed to be enough on its own.
 - [catalog.json](${SITE}/catalog.json): every design with its description, tags, palette, options, preview URL, and SVG-export support. Use it to look up one design in detail. Also shipped in the package at \`tabbied/catalog.json\`.
 - [Developers](${SITE}/docs/): every setup on one page - React, Vue, Svelte, the web component, plain HTML, MCP and the CLI.
+- [Concepts](${SITE}/docs/concepts/): what each setting does, and its name in React, Vue, Svelte, the web component and plain HTML.
 - [React component reference](${SITE}/docs/react/): props, sizing, and live examples.
 - [Plain HTML](${SITE}/docs/html/): \`data-*\` attributes and one \`hydratePatterns()\` script, no build step.
 - [Svelte and SvelteKit](${SITE}/docs/svelte/) and [Vue and Nuxt](${SITE}/docs/vue/): the same props through \`tabbied/svelte\` and \`tabbied/vue\`.
