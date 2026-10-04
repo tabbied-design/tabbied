@@ -9,6 +9,8 @@ const LANG_LABEL = {
   tsx: 'tsx',
   ts: 'typescript',
   html: 'html',
+  svelte: 'svelte',
+  vue: 'vue',
   sh: 'shell',
   json: 'json',
   toml: 'toml',

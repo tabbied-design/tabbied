@@ -602,6 +602,12 @@ export default function ReactDocsPage() {
                     assets - a seed is a design you can keep.
                   </p>
                   <p>
+                    Not on React? The same patterns come as a{' '}
+                    <a href="/docs/svelte/">Svelte action</a>, a{' '}
+                    <a href="/docs/vue/">Vue component</a>, and{' '}
+                    <a href="#html">plain HTML</a>.
+                  </p>
+                  <p>
                     Working with an AI assistant? The{' '}
                     <a href="/docs/mcp/">Tabbied MCP server</a> lets it search
                     the designs and look at them before it writes the code.

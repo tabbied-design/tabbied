@@ -1,7 +1,7 @@
 # tabbied
 
 Generative patterns as data: a framework-agnostic core plus a React component,
-powered by [css-doodle](https://css-doodle.com/). Render any of Tabbied's
+a Vue component and a Svelte action, powered by [css-doodle](https://css-doodle.com/). Render any of Tabbied's
 preset designs (or your own definition) at any size, reseed them, and export
 them to PNG.
 
@@ -13,8 +13,9 @@ Try the designs at [tabbied.com](https://tabbied.com).
 npm install tabbied
 ```
 
-React is an **optional** peer dependency - you only need it for the `tabbied/react`
-entry point. The core works in any framework (or none).
+React and Vue are **optional** peer dependencies - you only need them for the
+`tabbied/react` and `tabbied/vue` entry points. `tabbied/svelte` imports no
+framework at all, and the core works in any framework (or none).
 
 The package is ESM only. `import` works everywhere; `require()` works on
 Node 20.19+ and 22.12+ (which can `require` an ES module) and throws
@@ -26,6 +27,8 @@ Node 20.19+ and 22.12+ (which can `require` an ES module) and throws
 | ------------------ | -------------------------------------------------------------------------------------- |
 | `tabbied`          | The framework-agnostic core: `createPattern`, sizing/seed helpers, and the type definitions. |
 | `tabbied/react`    | The `TabbiedPattern` React component (and its handle/prop types).                       |
+| `tabbied/svelte`   | The `tabbied` Svelte action, `tabbiedAttributes()` for the server render, and `patternController()`. |
+| `tabbied/vue`      | The `TabbiedPattern` Vue 3 component.                                                   |
 | `tabbied/patterns` | The preset `PatternDefinition`s (import individually) plus the full `patterns` record.  |
 | `tabbied/svg-export` | The native SVG converter (`doodleToSvg`) on its own, for exporting a rendered `<css-doodle>` you mounted yourself. `exportSvg()` on a controller or handle loads it for you. |
 | `tabbied/catalog.json` | Every design as data - description, palette, options, SVG-export support. See [Finding a design](#finding-a-design). |
@@ -215,6 +218,62 @@ nothing is ever scaled by a different factor horizontally than vertically.
 
 Every design supports all three, so `fit` is a plain choice - omit it and you
 get `grid`.
+
+## Svelte and SvelteKit
+
+```svelte
+<script>
+  import { tabbied, tabbiedAttributes, patternController } from 'tabbied/svelte';
+  import { radius } from 'tabbied/patterns';
+
+  const props = { pattern: radius, seed: 'k9Pz', aspectRatio: '3 / 2' };
+  let host = $state();
+</script>
+
+<div bind:this={host} {...tabbiedAttributes(props)} use:tabbied={props}></div>
+<button onclick={() => patternController(host)?.redraw()}>Redraw</button>
+```
+
+Pass the same props to both parts; they are the React component's props
+(below), plus `style` as a string. The action mounts the pattern, forwards
+prop changes to it and destroys it with the element.
+
+An action runs only in the browser, so on its own it would leave a SvelteKit
+server render with an empty, unsized `<div>` and the page would shift when the
+pattern mounted. `tabbiedAttributes()` is pure and runs on the server: it
+gives the element its box, the pattern's background color, the `data-*`
+config and the accessibility attributes, and the action then mounts into it.
+Put inline style in the props as `style` rather than in a `style` attribute
+beside the spread: Svelte keeps whichever comes last, and the spread carries
+the clipping the pattern needs.
+
+`patternController(element)` returns the controller (`redraw()`,
+`exportImage()`, `exportSvg()`), or `null` before the action runs. Nothing in
+`tabbied/svelte` imports Svelte, so it works the same in Svelte 4 and 5.
+
+## Vue and Nuxt
+
+```vue
+<script setup>
+import { ref } from 'vue';
+import { TabbiedPattern } from 'tabbied/vue';
+import { radius } from 'tabbied/patterns';
+
+const pattern = ref(null);
+</script>
+
+<template>
+  <TabbiedPattern ref="pattern" :pattern="radius" seed="k9Pz" aspect-ratio="3 / 2" />
+  <button @click="pattern?.redraw()">Redraw</button>
+</template>
+```
+
+The props are the React component's, in kebab case in a template; `onReady`
+is the `ready` event, and a template ref exposes `redraw()`, `exportImage()`,
+`exportSvg()` and `element`. A server render, Nuxt's included, is the sized
+placeholder, and the pattern mounts into it in the browser: no
+`<ClientOnly>`, no layout shift. A `class` or `style` on the component lands
+on its element. Vue 3.3 or later.
 
 ## Core (framework-agnostic)
 

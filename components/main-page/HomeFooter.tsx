@@ -52,6 +52,16 @@ export default function HomeFooter() {
               </SamePageLink>
             </li>
             <li>
+              <SamePageLink href="/docs/svelte" prefetch={false}>
+                Svelte
+              </SamePageLink>
+            </li>
+            <li>
+              <SamePageLink href="/docs/vue" prefetch={false}>
+                Vue
+              </SamePageLink>
+            </li>
+            <li>
               <SamePageLink href="/docs/mcp" prefetch={false}>
                 MCP server
               </SamePageLink>

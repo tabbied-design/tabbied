@@ -21,6 +21,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'templates',
     'docs/react',
     'docs/mcp',
+    'docs/svelte',
+    'docs/vue',
     'privacy-policy',
     'terms-of-service',
     ...patternIds.map((slug) => `patterns/${slug}`),

@@ -8,7 +8,7 @@ above all, is proprietary (see LICENSE, and "Licensing" below).
 
 Tabbied: generative patterns built on css-doodle. npm workspaces - the
 Next.js site at the root consumes the `tabbied` package in
-`packages/tabbied/` (framework-free core + React wrapper + 338 pattern
+`packages/tabbied/` (framework-free core + React, Vue and Svelte wrappers + 338 pattern
 presets as JSON in `packages/tabbied/patterns/`, embedded by codegen), the
 `tabbied-mcp` package in `packages/tabbied-mcp/` (the MCP server, shared by
 the site's `/mcp` endpoint and a `tabbied-mcp` stdio bin), and
@@ -1871,6 +1871,42 @@ The package also ships a `tabbied` bin (`src/cli.ts`): `render` (SVG/PNG,
 `--frames` for deterministic PNG sequences) and `list`/`info` over the
 catalog. It acquires a browser from whichever Playwright is installed -
 never add a hard Playwright dependency to the package.
+
+## The framework wrappers - React, Vue, Svelte
+
+`tabbied/react`, `tabbied/vue` and `tabbied/svelte` are each a lifecycle over
+the same controller: `createPattern` on mount, `update` on a changed prop,
+`destroy` on unmount, and a server-rendered placeholder (the box, the ground
+color, the `data-*` config) so a page does not shift when the pattern
+mounts. Vue and Svelte share `src/shared/placeholder.ts`; React takes only
+`sameConfig` from it. Pages: `/docs/react`, `/docs/vue`, `/docs/svelte`, each
+of which repeats its README section. Four things worth not re-litigating:
+
+- **The Vue component is a render function in plain TS and the Svelte entry
+  is an action, so `tsc` builds both.** No `.vue` or `.svelte` file ships and
+  no framework compiler runs in the package build. Svelte is not even a peer
+  dependency: an action is a function returning `{ update, destroy }`, which
+  Svelte 4 and 5 call alike. Vue is an optional peer, as React is.
+- **A Svelte action never runs on the server**, which is why
+  `tabbiedAttributes()` exists. It is the SvelteKit half: spread on the
+  element the action is on, it is the placeholder React draws. Without it a
+  server render ships an unsized, empty `<div>`.
+- **The placeholder carries `position: relative; overflow: hidden`** under
+  the measured fits, which React's does not. The controller sets those two
+  on the host when it mounts; Svelte writes a spread `style` attribute whole
+  on every change, which would take them away and let the oversized grid
+  canvas spill out of its box. React's placeholder is left without them
+  because the 277 packaged templates are derived from its markup.
+- **The browser half is tested from the site, not from a framework app.**
+  `app/package-test/WrappersProbe.tsx` calls the action the way Svelte does
+  (attributes written whole, then `update`) and mounts the Vue component with
+  `createApp`; `e2e/wrappers.spec.ts` drives both, and
+  `packages/tabbied/test/wrappers.test.mjs` pins the server half, Vue's
+  `renderToString` included. Vue is a root devDependency for that page only.
+  A real SvelteKit 3 and Nuxt app built against the packed tarball agreed
+  with both when this landed; there is no example project for either in
+  `examples/` until the entries are published, since examples consume
+  `tabbied` from npm.
 
 ## Grid snapping - invariant (full reference: docs/grid-snapping.md)
 

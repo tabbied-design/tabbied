@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { TabbiedPattern } from 'tabbied/react';
 import { radius } from 'tabbied/patterns';
 import { HydrateProbe } from './HydrateProbe';
+import { WrappersProbe } from './WrappersProbe';
 
 export const metadata: Metadata = {
   title: 'tabbied package test',
@@ -89,6 +90,12 @@ export default function PackageTestPage() {
       <section id="hydrate">
         <h2>hydratePatterns()</h2>
         <HydrateProbe />
+      </section>
+
+      {/* tabbied/svelte and tabbied/vue, mounted, updated and destroyed. */}
+      <section id="wrappers">
+        <h2>tabbied/svelte and tabbied/vue</h2>
+        <WrappersProbe />
       </section>
     </main>
   );

@@ -25,6 +25,7 @@ import {
   type OptionValue,
   type SvgExportResult,
 } from '../core/index.js';
+import { sameConfig } from '../shared/placeholder.js';
 
 export type TabbiedPatternHandle = {
   /** Re-randomize (or set) the seed, animating designs with CSS transitions. */
@@ -105,39 +106,6 @@ export type TabbiedPatternProps = PatternBoxSize & {
   /** Called once the first pattern render has been committed. */
   onReady?: () => void;
 };
-
-/** The same list, entry for entry. */
-const sameList = (a: readonly unknown[] | undefined, b: readonly unknown[] | undefined) =>
-  a === b || (a !== undefined && b !== undefined && a.length === b.length && a.every((v, i) => v === b[i]));
-
-/** The same record, key for key. */
-const sameRecord = (a: Record<string, unknown> | undefined, b: Record<string, unknown> | undefined) => {
-  if (a === b) return true;
-  if (!a || !b) return false;
-  const keys = Object.keys(a);
-  return keys.length === Object.keys(b).length && keys.every((key) => a[key] === b[key]);
-};
-
-/** Whether two configs would build the same pattern; callbacks are not compared. */
-function sameConfig(a: PatternConfig, b: PatternConfig): boolean {
-  return (
-    a.pattern === b.pattern &&
-    a.seed === b.seed &&
-    a.fit === b.fit &&
-    a.cellSize === b.cellSize &&
-    a.density === b.density &&
-    a.width === b.width &&
-    a.height === b.height &&
-    a.redrawInterval === b.redrawInterval &&
-    a.paused === b.paused &&
-    sameList(a.palette, b.palette) &&
-    sameRecord(a.options as Record<string, unknown> | undefined, b.options as Record<string, unknown> | undefined) &&
-    sameRecord(
-      a.coverRender as unknown as Record<string, unknown> | undefined,
-      b.coverRender as unknown as Record<string, unknown> | undefined
-    )
-  );
-}
 
 /**
  * Renders a Tabbied pattern into a normal, CSS-sizeable box (like an <img>).
