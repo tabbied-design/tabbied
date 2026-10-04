@@ -20,7 +20,7 @@ import { pageMetadata } from 'lib/seo';
 export const metadata: Metadata = pageMetadata({
   title: 'React component - Tabbied',
   description:
-    'Documentation for the tabbied npm package: render, resize, recolor, reseed, and export Tabbied generative patterns in React or vanilla JavaScript.',
+    'Documentation for the tabbied npm package: render, resize, recolor, reseed, and export Tabbied generative patterns in React, vanilla JavaScript or plain HTML.',
   path: '/docs/react/',
 });
 
@@ -40,6 +40,7 @@ const SECTIONS: DocsSection[] = [
   { id: 'accessibility', label: 'Accessibility' },
   { id: 'ssr', label: 'Server rendering' },
   { id: 'vanilla', label: 'Vanilla JavaScript' },
+  { id: 'html', label: 'Plain HTML' },
   { id: 'api', label: 'API reference' },
 ];
 
@@ -201,6 +202,23 @@ const controller = createPattern(document.querySelector('#stage'), {
 
 // later, when the pattern is removed:
 controller.destroy();`;
+
+// The same shape the editor's "Copy HTML embed" writes, and the HTML
+// template downloads ship: data-* attributes, then one esm.sh script.
+const htmlCode = `<div data-pattern="radius"
+     data-seed="k9Pz"
+     data-palette="#3E8BFF, #3B3F45, #3FFFB2"
+     data-density="0.5"
+     data-options="frequency: 0.8"
+     style="width: 100%; aspect-ratio: 3 / 2"></div>
+
+<!-- Once per page, after the patterns. -->
+<script type="module">
+  import { hydratePatterns } from 'https://esm.sh/tabbied@${PACKAGE_VERSION}';
+  import { radius } from 'https://esm.sh/tabbied@${PACKAGE_VERSION}/patterns?exports=radius';
+
+  hydratePatterns({ patterns: { radius } });
+</script>`;
 
 const definitionCode = `import type { PatternDefinition } from 'tabbied';
 
@@ -1006,6 +1024,46 @@ export default function ReactDocsPage() {
                     lang="ts"
                     className={styles.codeStandalone}
                   />
+                </Section>
+
+                <Section id="html" title="Plain HTML">
+                  <p>
+                    A page with no build step and no React can use the
+                    patterns too. Describe each one in the markup with{' '}
+                    <Code>data-*</Code> attributes, then load the package from
+                    esm.sh in one module script: <Code>hydratePatterns()</Code>{' '}
+                    finds every <Code>[data-pattern]</Code> element and mounts
+                    it. Any pattern page in the gallery writes this for you
+                    under Export, Copy HTML embed, with the seed, colors and
+                    options you chose.
+                  </p>
+                  <CodeBlock
+                    code={htmlCode}
+                    lang="html"
+                    className={styles.codeStandalone}
+                  />
+                  <p>
+                    The attributes mirror the props: <Code>data-seed</Code>,{' '}
+                    <Code>data-palette</Code> (comma separated, background
+                    first), <Code>data-options</Code> (<Code>id: value</Code>{' '}
+                    pairs separated by <Code>;</Code>),{' '}
+                    <Code>data-density</Code>, <Code>data-fit</Code> and{' '}
+                    <Code>data-redraw-interval</Code>. Only{' '}
+                    <Code>data-pattern</Code> is required, and an attribute
+                    that does not parse falls back to the design&apos;s own
+                    default. Give the element a size, as with the component:
+                    a height or an <Code>aspect-ratio</Code>.
+                  </p>
+                  <p>
+                    <Code>?exports=</Code> trims the patterns entry to the
+                    designs named, a couple of KB instead of the whole
+                    catalog; for several patterns on one page, list every slug
+                    in both the import and the URL. Pin the version, as here:
+                    a bare <Code>tabbied</Code> on esm.sh is whatever is
+                    latest. <Code>hydratePatterns()</Code> mounts what is on
+                    the page when it runs and skips what it already mounted,
+                    so call it again after adding patterns later.
+                  </p>
                 </Section>
 
                 <Section id="api" title="API reference">

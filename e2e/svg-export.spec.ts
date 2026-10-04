@@ -360,6 +360,44 @@ test.describe('native SVG export', () => {
     expect(snippet).not.toContain('"2:3"');
   });
 
+  test('the copied HTML embed carries the plate as data attributes', async ({ page, context }) => {
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await page.goto('/patterns/radius/?seed=0000&aspectRatio=2:3');
+    await page.getByRole('button', { name: 'Export' }).click();
+    await page.getByRole('menuitem', { name: 'Copy HTML embed' }).click();
+    await expect(page.getByText('HTML embed copied')).toBeVisible();
+
+    const snippet = await page.evaluate(() => navigator.clipboard.readText());
+    const version = JSON.parse(
+      fs.readFileSync(path.join(PACKAGE_DIR, 'package.json'), 'utf8')
+    ).version;
+
+    // The markup hydratePatterns() reads, at the plate's ratio, with the
+    // grid left to the box as in the React snippet.
+    expect(snippet).toContain('<div data-pattern="radius"');
+    expect(snippet).toContain('data-seed="0000"');
+    expect(snippet).toContain('aspect-ratio: 2 / 3');
+    expect(snippet).toMatch(/data-density="[\d.]+"/);
+    expect(snippet).toContain('data-options="frequency: ');
+    expect(snippet).not.toContain('grid:');
+    // One pinned, tree-shaken import per entry.
+    expect(snippet).toContain(`from 'https://esm.sh/tabbied@${version}';`);
+    expect(snippet).toContain(
+      `import { radius } from 'https://esm.sh/tabbied@${version}/patterns?exports=radius';`
+    );
+    expect(snippet).toContain('hydratePatterns({ patterns: { radius } });');
+
+    // The attributes parse the way the package reads them.
+    const parsed = await page.evaluate((html) => {
+      const holder = document.createElement('div');
+      holder.innerHTML = html;
+      const el = holder.querySelector('[data-pattern]') as HTMLElement;
+      return { palette: el.dataset.palette, style: el.getAttribute('style') };
+    }, snippet);
+    expect(parsed.palette?.split(',').length).toBeGreaterThan(1);
+    expect(parsed.style).toBe('width: 100%; aspect-ratio: 2 / 3');
+  });
+
   test('limited exports warn and confirm before downloading', async ({ page }) => {
     // neon's glow exports as SVG filters: warning icon on the menu item and
     // a confirmation dialog that can cancel or proceed.

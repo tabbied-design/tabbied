@@ -8,6 +8,7 @@ import { tokenize, type Token, type TokenKind } from './highlight';
 const LANG_LABEL = {
   tsx: 'tsx',
   ts: 'typescript',
+  html: 'html',
   sh: 'shell',
   json: 'json',
   toml: 'toml',

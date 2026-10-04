@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
+import pkg from 'tabbied/package.json';
 import { ebGaramond, plexMono, plexSans } from 'lib/fonts';
 import { getAllPatternIds, getPattern } from 'lib/pattern';
 import { pageMetadata, patternImage } from 'lib/seo';
@@ -58,7 +59,7 @@ export default async function PatternPage({
       <div
         className={`${ebGaramond.variable} ${plexMono.variable} ${plexSans.variable}`}
       >
-        <EditPattern pattern={pattern} />
+        <EditPattern pattern={pattern} packageVersion={pkg.version} />
       </div>
     </Suspense>
   );

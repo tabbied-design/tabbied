@@ -8,6 +8,7 @@ import {
   ArrowDownToLine,
   ChevronDown,
   ChevronLeft,
+  Code,
   FileCode,
   ImageDown,
   Info,
@@ -36,6 +37,8 @@ type EditPatternHeaderProps = {
   onCopyLink: () => void | Promise<void>;
   /** Copy a ready-to-paste <TabbiedPattern> snippet to the clipboard. */
   onCopyReactComponent: () => void | Promise<void>;
+  /** Copy a no-build-step HTML snippet (markup plus an esm.sh script). */
+  onCopyHtmlEmbed: () => void | Promise<void>;
   /**
    * A picture is set behind the pattern. The menu then says which exports
    * carry it: it is an object URL local to this tab, so the link and the
@@ -55,6 +58,7 @@ export default function EditPatternHeader({
   svgExportWarning,
   onCopyLink,
   onCopyReactComponent,
+  onCopyHtmlEmbed,
   hasBackgroundImage,
   mobile,
 }: EditPatternHeaderProps) {
@@ -141,12 +145,18 @@ export default function EditPatternHeader({
             >
               <CodeXml size={15} /> Copy React component
             </Menu.Item>
+            <Menu.Item
+              className={styles.menuItem}
+              onClick={() => void onCopyHtmlEmbed()}
+            >
+              <Code size={15} /> Copy HTML embed
+            </Menu.Item>
             {hasBackgroundImage && (
               <p className={styles.menuNote}>
                 <Info size={15} aria-hidden="true" />
                 <span>
                   The PNG and the SVG carry your background image. The link and
-                  the React component do not - it stays on this device.
+                  the code snippets do not - it stays on this device.
                 </span>
               </p>
             )}
