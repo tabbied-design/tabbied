@@ -36,6 +36,7 @@ next-env.d.ts
 # tabbied package build output (dist + codegen artifacts)
 /packages/tabbied/dist/
 /packages/tabbied/src/patterns.generated.ts
+/packages/tabbied/src/patterns/
 /packages/tabbied/catalog.json
 
 # tabbied-mcp build output

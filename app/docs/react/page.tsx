@@ -20,7 +20,7 @@ import { pageMetadata } from 'lib/seo';
 export const metadata: Metadata = pageMetadata({
   title: 'React component - Tabbied',
   description:
-    'Documentation for the tabbied npm package: render, resize, recolor, reseed, and export Tabbied generative patterns in React or vanilla JavaScript.',
+    'Documentation for the tabbied npm package: render, resize, recolor, reseed, and export Tabbied generative patterns in React, vanilla JavaScript or plain HTML.',
   path: '/docs/react/',
 });
 
@@ -582,6 +582,13 @@ export default function ReactDocsPage() {
                     and options always draw the same design, at any size.
                     That makes patterns safe to use as reproducible brand
                     assets - a seed is a design you can keep.
+                  </p>
+                  <p>
+                    Not on React? The same patterns come as a{' '}
+                    <a href="/docs/svelte/">Svelte action</a>, a{' '}
+                    <a href="/docs/vue/">Vue component</a>, a{' '}
+                    <a href="/docs/web-component/">web component</a> for any
+                    page, and <a href="/docs/html/">plain HTML</a>.
                   </p>
                   <p>
                     Working with an AI assistant? The{' '}

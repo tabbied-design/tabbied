@@ -34,9 +34,9 @@ export function buildLlmsTexts(catalog) {
 
   const llms = `# Tabbied
 
-> Generative patterns as data: ${count} preset designs powered by css-doodle, shipped as the \`tabbied\` npm package (v${version}) - a framework-agnostic core plus an optional React component. Render any design at any size, reseed it, and export to PNG or true vector SVG.
+> Generative patterns as data: ${count} preset designs powered by css-doodle, shipped as the \`tabbied\` npm package (v${version}) - a framework-agnostic core plus a \`<tabbied-pattern>\` web component, React and Vue components, and a Svelte action. Render any design at any size, reseed it, and export to PNG or true vector SVG.
 
-Install with \`npm install tabbied\`. React is an optional peer dependency, needed only for the \`tabbied/react\` entry point.
+Install with \`npm install tabbied\`. React and Vue are optional peer dependencies, needed only for \`tabbied/react\` and \`tabbied/vue\`; \`tabbied/svelte\` needs neither.
 
 Designs are referred to by slug and imported individually - \`import { radius } from 'tabbied/patterns'\` - so a bundler ships only what you use. Slugs are lowercase alphanumeric and are not guessable from a description: read the catalog below to choose one. Every design has a stable preview image at ${SITE}/previews/<slug>.webp - look before you pick.
 
@@ -45,7 +45,11 @@ Designs are referred to by slug and imported individually - \`import { radius } 
 - [MCP server](${SITE}/docs/mcp/): if you speak the Model Context Protocol, connect to ${SITE}/mcp instead of reading files - it is the only route that lets you *look* at a design before choosing it. Tools: \`search_designs\`, \`preview_design\`, \`get_design\`, \`get_docs\`, \`list_templates\`, \`get_template\`. Run \`npx -y -p tabbied-mcp -p playwright tabbied-mcp\` locally (after \`npx playwright install chromium\`) to also get \`render_design\`.
 - [llms-full.txt](${SITE}/llms-full.txt): the complete API contract, integration recipes, and a one-line entry for every design. Start here - it is designed to be enough on its own.
 - [catalog.json](${SITE}/catalog.json): every design with its description, tags, palette, options, preview URL, and SVG-export support. Use it to look up one design in detail. Also shipped in the package at \`tabbied/catalog.json\`.
+- [Developers](${SITE}/docs/): every setup on one page - React, Vue, Svelte, the web component, plain HTML, MCP and the CLI.
 - [React component reference](${SITE}/docs/react/): props, sizing, and live examples.
+- [Plain HTML](${SITE}/docs/html/): \`data-*\` attributes and one \`hydratePatterns()\` script, no build step.
+- [Svelte and SvelteKit](${SITE}/docs/svelte/) and [Vue and Nuxt](${SITE}/docs/vue/): the same props through \`tabbied/svelte\` and \`tabbied/vue\`.
+- [Web component](${SITE}/docs/web-component/): \`<tabbied-pattern>\` for plain HTML and any framework, from one script tag.
 - [Package README](${REPO}/blob/main/packages/tabbied/README.md): entry points, the core API, and SVG export.
 - [SVG export notes](${REPO}/blob/main/docs/svg-export.md): what the vector exporter supports and where it degrades.
 
@@ -69,8 +73,9 @@ Designs are referred to by slug and imported individually - \`import { radius } 
 npm install tabbied
 \`\`\`
 
-React is an **optional** peer dependency (>=18 <20), needed only for
-\`tabbied/react\`. The core runs in any framework, or none. Node >=18.
+React (>=18 <20) and Vue (>=3.3) are **optional** peer dependencies, needed
+only for \`tabbied/react\` and \`tabbied/vue\`; \`tabbied/svelte\` imports no
+framework. The core runs in any framework, or none. Node >=18.
 
 ## Entry points
 
@@ -78,6 +83,10 @@ React is an **optional** peer dependency (>=18 <20), needed only for
 | --- | --- |
 | \`tabbied\` | Framework-agnostic core: \`createPattern\`, sizing/seed helpers, types. |
 | \`tabbied/react\` | The \`TabbiedPattern\` component and its handle/prop types. |
+| \`tabbied/svelte\` | The \`tabbied\` action, \`tabbiedAttributes\` for the server render, \`patternController\`. |
+| \`tabbied/vue\` | The \`TabbiedPattern\` Vue component. |
+| \`tabbied/element\` | The \`<tabbied-pattern>\` custom element, \`definePatterns\`, \`setPatternsBase\`. CDN file: \`dist/element/tabbied-element.js\`. |
+| \`tabbied/patterns/<slug>\` | One design as a default export, no imports. |
 | \`tabbied/patterns\` | The presets. Import individually; the \`patterns\` record holds all ${count}. |
 | \`tabbied/svg-export\` | \`doodleToSvg\`, the vector converter, for use on a doodle you manage. |
 | \`tabbied/catalog.json\` | This catalog as data. |
@@ -168,6 +177,75 @@ export function Example() {
 The handle (\`TabbiedPatternHandle\`) exposes \`redraw(seed?)\`,
 \`exportImage(options?)\`, \`exportSvg(options?)\`, and \`element\` - the raw
 \`<css-doodle>\` node.
+
+## Web component
+
+\`\`\`html
+<tabbied-pattern pattern="radius" seed="k9Pz" palette="#0B1020, #3E8BFF"
+  style="display: block; aspect-ratio: 3 / 2; background: #0B1020"></tabbied-pattern>
+<script type="module" src="https://cdn.jsdelivr.net/npm/tabbied@${minor}/dist/element/tabbied-element.js"></script>
+\`\`\`
+
+Attributes are the hydratePatterns() names without \`data-\`: \`pattern\` (slug,
+required), \`seed\`, \`palette\`, \`options\`, \`fit\`, \`density\`, \`cell-size\`,
+\`width\`, \`height\`, \`cover-render\`, \`redraw-interval\`, \`paused\`. The CDN file
+fetches only the named designs from \`dist/patterns/<slug>.js\` beside it. The
+element is \`display: inline\` until it upgrades, so always write
+\`display: block\` plus a size and the ground color in its inline \`style\` -
+an inline element ignores \`aspect-ratio\` and the pattern draws nothing. In a
+bundled app import \`tabbied/element\` and call
+\`definePatterns({ radius })\` (from \`tabbied/patterns\`) before use, or set
+\`el.pattern = radius\`; a bundler cannot follow a slug in markup. Vue needs
+\`isCustomElement\` for the tag, Angular \`CUSTOM_ELEMENTS_SCHEMA\`; React <19
+cannot pass objects to it (use \`tabbied/react\`). Methods: \`redraw\`,
+\`exportImage\`, \`exportSvg\`, \`refresh\`; events \`ready\` and \`error\`.
+
+## Svelte and SvelteKit
+
+\`\`\`svelte
+<script>
+  import { tabbied, tabbiedAttributes, patternController } from 'tabbied/svelte';
+  import { radius } from 'tabbied/patterns';
+
+  const props = { pattern: radius, seed: 'k9Pz', aspectRatio: '3 / 2' };
+  let host;
+</script>
+
+<div bind:this={host} {...tabbiedAttributes(props)} use:tabbied={props}></div>
+<button onclick={() => patternController(host)?.redraw()}>Redraw</button>
+\`\`\`
+
+Pass the same props object to both. \`tabbiedAttributes()\` is pure and runs in a
+SvelteKit server render (the box at its final size, the ground color, the
+data-* config, aria); the action mounts into that element in the browser and
+forwards prop changes. Omit the spread and a server render ships an unsized
+empty div that shifts the page. Props are the React props, plus \`style\` as a
+string - put inline style there, not in a \`style\` attribute beside the
+spread, which would replace the clipping the pattern needs.
+\`patternController(element)\` returns the controller (\`redraw\`,
+\`exportImage\`, \`exportSvg\`) or null. No Svelte dependency; Svelte 4 and 5.
+
+## Vue and Nuxt
+
+\`\`\`vue
+<script setup>
+import { ref } from 'vue';
+import { TabbiedPattern } from 'tabbied/vue';
+import { radius } from 'tabbied/patterns';
+
+const pattern = ref(null);
+</script>
+
+<template>
+  <TabbiedPattern ref="pattern" :pattern="radius" seed="k9Pz" aspect-ratio="3 / 2" />
+  <button @click="pattern?.redraw()">Redraw</button>
+</template>
+\`\`\`
+
+The React props in kebab case; \`onReady\` is the \`ready\` event. The template
+ref exposes \`redraw\`, \`exportImage\`, \`exportSvg\` and \`element\`. Server
+renders (Nuxt included) emit the sized placeholder; no \`<ClientOnly>\` needed.
+Vue >=3.3 is an optional peer dependency.
 
 ## Sizing
 

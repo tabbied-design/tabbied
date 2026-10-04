@@ -184,7 +184,14 @@ const saveBlob = (blob: Blob, name: string) => {
   setTimeout(() => URL.revokeObjectURL(url), 10_000);
 };
 
-export default function EditPattern({ pattern }: { pattern: Pattern }) {
+export default function EditPattern({
+  pattern,
+  packageVersion,
+}: {
+  pattern: Pattern;
+  /** The tabbied version the HTML embed pins its esm.sh imports to. */
+  packageVersion: string;
+}) {
   const defaultAspectRatio = pattern.defaultAspectRatio ?? DEFAULT_ASPECT_RATIO;
 
   const paletteDefaults = pattern.palette ?? [];
@@ -933,15 +940,18 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     }
   };
 
+  // The grid stays out of both snippets: under the default fit the package
+  // derives it from the box, and `density` is what carries the cell size
+  // the plate showed.
+  const snippetOptionEntries = () =>
+    pattern.options.flatMap((option, index) =>
+      option.id === GRID_OPTION_ID ? [] : [[option.id, optionValues[index]] as const]
+    );
+
   const copyReactComponent = async () => {
     const activePalette = palette.slice(0, colorCount);
     const paletteLiteral = activePalette.map((color) => `'${color}'`).join(', ');
-    // The grid stays out of the snippet: under the default fit the package
-    // derives it from the box, and `density` is what carries the cell size
-    // the plate showed.
-    const optionEntries = pattern.options.flatMap((option, index) =>
-      option.id === GRID_OPTION_ID ? [] : [[option.id, optionValues[index]] as const]
-    );
+    const optionEntries = snippetOptionEntries();
     const optionsLiteral = optionEntries
       .map(([id, value]) =>
         typeof value === 'string' ? `${id}: '${value}'` : `${id}: ${value}`
@@ -979,6 +989,50 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
       toaster.add({ title: 'React component copied' });
     } catch {
       toaster.add({ title: 'Could not copy the component' });
+    }
+  };
+
+  // The same pattern for a page with no build step: the placeholder carries
+  // its config as the data-* attributes hydratePatterns() reads, and the
+  // script loads the package from esm.sh. `?exports=` trims the patterns
+  // entry to this one design (the whole catalog is about 450 KB), and the
+  // version is pinned, as the HTML template downloads pin it, so the embed
+  // keeps drawing what the editor showed.
+  const copyHtmlEmbed = async () => {
+    const attribute = (value: string) =>
+      value.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+    const activePalette = palette.slice(0, colorCount);
+    const optionsValue = snippetOptionEntries()
+      .map(([id, value]) => `${id}: ${value}`)
+      .join('; ');
+    const [ratioW, ratioH] = ASPECT_RATIOS[aspectRatio];
+    const { slug } = pattern;
+    const base = `https://esm.sh/tabbied@${packageVersion}`;
+
+    const lines = [
+      `<!-- As wide as its parent, at the ${aspectRatio} ratio it was designed at.`,
+      `     Add max-width to bound it, or swap aspect-ratio for a fixed height. -->`,
+      `<div data-pattern="${slug}"`,
+      `     data-seed="${attribute(seed)}"`,
+      ...(hasGrid ? [`     data-density="${density}"`] : []),
+      `     data-palette="${attribute(activePalette.join(', '))}"`,
+      ...(optionsValue ? [`     data-options="${attribute(optionsValue)}"`] : []),
+      `     style="width: 100%; aspect-ratio: ${ratioW} / ${ratioH}"></div>`,
+      ``,
+      `<!-- Once per page, after the patterns. For several designs, list each one. -->`,
+      `<script type="module">`,
+      `  import { hydratePatterns } from '${base}';`,
+      `  import { ${slug} } from '${base}/patterns?exports=${slug}';`,
+      ``,
+      `  hydratePatterns({ patterns: { ${slug} } });`,
+      `</script>`,
+    ];
+
+    try {
+      await navigator.clipboard.writeText(lines.join('\n'));
+      toaster.add({ title: 'HTML embed copied' });
+    } catch {
+      toaster.add({ title: 'Could not copy the embed' });
     }
   };
 
@@ -1196,6 +1250,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
         svgExportWarning={svgExportEnabled && svgExportNotes.length > 0}
         onCopyLink={copyShareLink}
         onCopyReactComponent={copyReactComponent}
+        onCopyHtmlEmbed={copyHtmlEmbed}
         hasBackgroundImage={backgroundImage !== null}
         mobile={isMobile}
       />

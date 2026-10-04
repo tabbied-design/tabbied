@@ -8,7 +8,7 @@ above all, is proprietary (see LICENSE, and "Licensing" below).
 
 Tabbied: generative patterns built on css-doodle. npm workspaces - the
 Next.js site at the root consumes the `tabbied` package in
-`packages/tabbied/` (framework-free core + React wrapper + 338 pattern
+`packages/tabbied/` (framework-free core + a web component, React, Vue and Svelte wrappers + 338 pattern
 presets as JSON in `packages/tabbied/patterns/`, embedded by codegen), the
 `tabbied-mcp` package in `packages/tabbied-mcp/` (the MCP server, shared by
 the site's `/mcp` endpoint and a `tabbied-mcp` stdio bin), and
@@ -923,7 +923,7 @@ weight.
 ## The masthead - one bar, two tones
 
 `components/nav/SiteNav` is the site's masthead: the lockup on the left (the
-way home, so there is no Home link), Patterns / Websites / React Component in
+way home, so there is no Home link), Patterns / Websites / Developers in
 the middle, and on the right either "Sign in" or
 the person as a pill - the initials in a circle beside two rules - opening a
 menu (email, My account, Settings, and Admin for a person whose row says
@@ -957,8 +957,12 @@ Four things worth not re-litigating:
   flag stays a page's own choice.
 - **GitHub is in the footer, not the bar.** The 2026 artboards put three
   destinations and the account up top and everything else in `HomeFooter`;
-  the React docs joined the bar later as its last destination (and stay in
-  the footer too). The bar used to carry a different set of links on every
+  the docs joined the bar later as its last destination, first as "React
+  Component" and now as "Developers", the `/docs` landing page, which lights
+  for every page under it. The footer's Developers column lists each docs
+  page (`DEVELOPER_LINKS` in `HomeFooter`) beside GitHub, and the legal
+  pages moved to its bottom bar; a new docs page joins that list and the
+  landing page's cards. The bar used to carry a different set of links on every
   page, which is what one component ends. Studio is in neither now: the
   generation flow is held back from the first launch (see below), and the
   footer's Product list is the artboard's own - Patterns, Websites, My
@@ -1871,6 +1875,77 @@ The package also ships a `tabbied` bin (`src/cli.ts`): `render` (SVG/PNG,
 `--frames` for deterministic PNG sequences) and `list`/`info` over the
 catalog. It acquires a browser from whichever Playwright is installed -
 never add a hard Playwright dependency to the package.
+
+## The framework wrappers - React, Vue, Svelte
+
+`tabbied/react`, `tabbied/vue` and `tabbied/svelte` are each a lifecycle over
+the same controller: `createPattern` on mount, `update` on a changed prop,
+`destroy` on unmount, and a server-rendered placeholder (the box, the ground
+color, the `data-*` config) so a page does not shift when the pattern
+mounts. Vue and Svelte share `src/shared/placeholder.ts`; React takes only
+`sameConfig` from it. Pages: `/docs/react`, `/docs/vue`, `/docs/svelte`, each
+of which repeats its README section. Four things worth not re-litigating:
+
+- **The Vue component is a render function in plain TS and the Svelte entry
+  is an action, so `tsc` builds both.** No `.vue` or `.svelte` file ships and
+  no framework compiler runs in the package build. Svelte is not even a peer
+  dependency: an action is a function returning `{ update, destroy }`, which
+  Svelte 4 and 5 call alike. Vue is an optional peer, as React is.
+- **A Svelte action never runs on the server**, which is why
+  `tabbiedAttributes()` exists. It is the SvelteKit half: spread on the
+  element the action is on, it is the placeholder React draws. Without it a
+  server render ships an unsized, empty `<div>`.
+- **The placeholder carries `position: relative; overflow: hidden`** under
+  the measured fits, which React's does not. The controller sets those two
+  on the host when it mounts; Svelte writes a spread `style` attribute whole
+  on every change, which would take them away and let the oversized grid
+  canvas spill out of its box. React's placeholder is left without them
+  because the 277 packaged templates are derived from its markup.
+- **The browser half is tested from the site, not from a framework app.**
+  `app/package-test/WrappersProbe.tsx` calls the action the way Svelte does
+  (attributes written whole, then `update`) and mounts the Vue component with
+  `createApp`; `e2e/wrappers.spec.ts` drives both, and
+  `packages/tabbied/test/wrappers.test.mjs` pins the server half, Vue's
+  `renderToString` included. Vue is a root devDependency for that page only.
+  A real SvelteKit 3 and Nuxt app built against the packed tarball agreed
+  with both when this landed; there is no example project for either in
+  `examples/` until the entries are published, since examples consume
+  `tabbied` from npm.
+
+## The web component - <tabbied-pattern>
+
+`tabbied/element` (`src/element/index.ts`) is the fourth wrapper and the
+catch-all: a custom element over the same controller, whose attributes are
+`hydratePatterns()`'s names without `data-`, read by the same parser
+(`src/core/attributes.ts`). Page: `/docs/web-component`. Four things worth
+not re-litigating:
+
+- **The box is the page's inline style, not a server render.** Until it is
+  defined the element is an unknown inline tag, and its `style` applies, so
+  `display: block`, a size and the ground color written there give the
+  right box before any script and through any framework's SSR. Declarative
+  Shadow DOM would add nothing: the pattern itself needs a browser.
+- **A slug loads one file, from beside the module.** Codegen writes every
+  design as `src/patterns/<slug>.ts` too (gitignored), compiled to
+  `dist/patterns/<slug>.js`, a default export with no imports, so a CDN that
+  serves files as published can serve it. The element finds the folder by
+  string arithmetic on `import.meta.url`, never `new URL('...',
+  import.meta.url)`: Vite, webpack and Turbopack treat that shape as a file
+  to bundle, Turbopack even through a variable, and the site's build failed
+  on it ("Can't resolve '../patterns/'").
+- **A bundled app registers what it uses** (`definePatterns`, or the
+  `pattern` property): a bundler cannot follow a slug in markup, and the
+  dynamic import is marked ignored so none of them tries. A Vite and a
+  webpack build against the tarball each shipped the one registered design.
+- **`dist/element/tabbied-element.js` is a second build, by esbuild**
+  (`scripts/bundle-element.mjs`, the last step of the package build), with
+  css-doodle inside and the SVG converter split out. It must stay in
+  `dist/element/` beside tsc's `index.js`, so `../patterns/` means the same
+  folder from either. `e2e/element.spec.ts` serves `dist/` under a made-up
+  CDN origin to prove exactly that layout, and `/package-test`'s
+  `ElementProbe` is the bundled path. The editor's "Copy HTML embed" still
+  writes the `hydratePatterns` snippet, because it must work against the
+  published version; it moves to the element once that is on npm.
 
 ## Grid snapping - invariant (full reference: docs/grid-snapping.md)
 

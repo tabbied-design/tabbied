@@ -2,7 +2,8 @@ import type { ReactNode } from 'react';
 import styles from './ReactDocs.module.css';
 import { sectionIndex, type DocsSection } from './sections';
 
-// The pieces the docs pages (/docs/react, /docs/mcp) write their articles
+// The pieces the docs pages (/docs/react, /docs/mcp,
+// /docs/svelte, /docs/vue, /docs/web-component) write their articles
 // from, so the two read as one set of documentation. Server components.
 
 export function Code({ children }: { children: ReactNode }) {

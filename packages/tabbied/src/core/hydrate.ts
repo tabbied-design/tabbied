@@ -21,15 +21,9 @@
 // in the markup without decoding anything.
 import { createPattern } from './createPattern.js';
 import type { PatternConfig, PatternController } from './createPattern.js';
-import { FIT_MODES } from './sizing.js';
 import type { CoverRender } from './sizing.js';
-import { splitTopLevel } from './splitTopLevel.js';
-import type {
-  PatternDefinition,
-  PatternOption,
-  FitMode,
-  OptionValue,
-} from './types.js';
+import { readPatternConfig } from './attributes.js';
+import type { PatternDefinition } from './types.js';
 
 /** The data-* attribute an element must carry to be hydrated. */
 export const PATTERN_ATTRIBUTE = 'data-pattern';
@@ -79,14 +73,6 @@ const hydrated = new WeakMap<Element, PatternController>();
 
 const coverRenderToString = (render: CoverRender): string =>
   `${render.width}x${render.height}`;
-
-const parseCoverRender = (value: string): CoverRender | undefined => {
-  const match = /^(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)$/.exec(value.trim());
-
-  if (!match) return undefined;
-
-  return { width: Number(match[1]), height: Number(match[2]) };
-};
 
 /**
  * A PatternConfig as data-* attributes, for a server render (or a template
@@ -140,68 +126,6 @@ export function patternConfigToAttributes(
 
 // ---- parsing -------------------------------------------------------------
 
-const numberAttribute = (
-  element: HTMLElement,
-  name: string
-): number | undefined => {
-  const raw = element.getAttribute(`data-${name}`);
-
-  if (raw == null || raw.trim() === '') return undefined;
-
-  const value = Number(raw);
-
-  return Number.isFinite(value) ? value : undefined;
-};
-
-// Option values are typed by the definition rather than guessed from the
-// string, so a ButtonSelectGroup whose choices happen to look numeric (or
-// boolean) still comes back as the string css-doodle substitutes.
-const coerceOptionValue = (
-  option: PatternOption,
-  raw: string
-): OptionValue | undefined => {
-  if (option.type === 'ToggleSwitch') {
-    if (raw === 'true' || raw === '') return true;
-    if (raw === 'false') return false;
-    return undefined;
-  }
-
-  if (option.type === 'Slider') {
-    // Number('') is 0, which would substitute a value the option never
-    // offered; a bare `frequency:` entry should fall back to the default.
-    if (raw === '') return undefined;
-    const value = Number(raw);
-    return Number.isFinite(value) ? value : undefined;
-  }
-
-  return raw;
-};
-
-const parseOptions = (
-  definition: PatternDefinition,
-  raw: string
-): Record<string, OptionValue> => {
-  const values: Record<string, OptionValue> = {};
-
-  for (const entry of splitTopLevel(raw, ';')) {
-    const separator = entry.indexOf(':');
-    const id = (separator === -1 ? entry : entry.slice(0, separator)).trim();
-    const rest = separator === -1 ? '' : entry.slice(separator + 1).trim();
-    const option = definition.options.find((candidate) => candidate.id === id);
-
-    if (!option) continue;
-
-    const value = coerceOptionValue(option, rest);
-
-    if (value !== undefined) values[id] = value;
-  }
-
-  return values;
-};
-
-const isFitMode = (value: string): value is FitMode =>
-  (FIT_MODES as readonly string[]).includes(value);
-
 /**
  * Read a PatternConfig off an element's data-* attributes. The inverse of
  * patternConfigToAttributes.
@@ -226,53 +150,10 @@ export function patternConfigFromElement(
 
   if (!definition) return null;
 
-  const config: PatternConfig = { pattern: definition };
-
-  const seed = element.getAttribute('data-seed');
-  if (seed) config.seed = seed;
-
-  const fit = element.getAttribute('data-fit')?.trim();
-  if (fit && isFitMode(fit)) config.fit = fit;
-
-  const palette = element.getAttribute('data-palette');
-  if (palette) {
-    const colors = splitTopLevel(palette, ',');
-    if (colors.length > 0) config.palette = colors;
-  }
-
-  const options = element.getAttribute('data-options');
-  if (options) {
-    const values = parseOptions(definition, options);
-    if (Object.keys(values).length > 0) config.options = values;
-  }
-
-  const cellSize = numberAttribute(element, 'cell-size');
-  if (cellSize != null) config.cellSize = cellSize;
-
-  const density = numberAttribute(element, 'density');
-  if (density != null) config.density = density;
-
-  const width = numberAttribute(element, 'width');
-  if (width != null) config.width = width;
-
-  const height = numberAttribute(element, 'height');
-  if (height != null) config.height = height;
-
-  const coverRender = element.getAttribute('data-cover-render');
-  if (coverRender) {
-    const parsed = parseCoverRender(coverRender);
-    if (parsed) config.coverRender = parsed;
-  }
-
-  const redrawInterval = numberAttribute(element, 'redraw-interval');
-  if (redrawInterval != null) config.redrawInterval = redrawInterval;
-
-  // Valueless attributes are the HTML idiom for a boolean flag, so
-  // `data-paused` and `data-paused="true"` both mean paused.
-  const paused = element.getAttribute('data-paused');
-  if (paused != null && paused !== 'false') config.paused = true;
-
-  return config;
+  return readPatternConfig(
+    (name) => element.getAttribute(`data-${name}`),
+    definition
+  );
 }
 
 /**

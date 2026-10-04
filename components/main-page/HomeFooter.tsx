@@ -2,12 +2,25 @@ import SamePageLink from 'components/SamePageLink';
 import styles from './HomeFooter.module.css';
 
 // The dark shell's footer, under the homepage, the template gallery and the
-// docs; the legal pages and the 404 keep components/Footer. Docs and GitHub
-// live here rather than in the masthead, which is for the three destinations.
+// docs; the legal pages and the 404 keep components/Footer. The masthead
+// leads to the docs' landing page; every docs page and GitHub are listed
+// here, and the legal pages sit in the bottom bar beside the copyright.
 // Studio is left out while the generation flow is held back (see CLAUDE.md,
 // "Studio"); the artboard's "Colophon" is a page nobody has written.
 
 const GITHUB_URL = 'https://github.com/tabbied-design/tabbied/';
+
+// The docs, one link per setup, in the order the /docs landing page lists
+// them. A new docs page joins this list and the landing page's cards.
+const DEVELOPER_LINKS = [
+  ['/docs', 'Overview'],
+  ['/docs/react', 'React'],
+  ['/docs/vue', 'Vue'],
+  ['/docs/svelte', 'Svelte'],
+  ['/docs/web-component', 'Web component'],
+  ['/docs/html', 'Plain HTML'],
+  ['/docs/mcp', 'MCP server'],
+] as const;
 
 
 export default function HomeFooter() {
@@ -44,32 +57,19 @@ export default function HomeFooter() {
         </div>
 
         <div>
-          <h2 className={styles.heading}>Resources</h2>
+          <h2 className={styles.heading}>Developers</h2>
           <ul className={styles.links}>
-            <li>
-              <SamePageLink href="/docs/react" prefetch={false}>
-                Docs
-              </SamePageLink>
-            </li>
-            <li>
-              <SamePageLink href="/docs/mcp" prefetch={false}>
-                MCP server
-              </SamePageLink>
-            </li>
+            {DEVELOPER_LINKS.map(([href, label]) => (
+              <li key={href}>
+                <SamePageLink href={href} prefetch={false}>
+                  {label}
+                </SamePageLink>
+              </li>
+            ))}
             <li>
               <a href={GITHUB_URL} target="_blank" rel="noreferrer">
                 GitHub
               </a>
-            </li>
-            <li>
-              <SamePageLink href="/privacy-policy" prefetch={false}>
-                Privacy Policy
-              </SamePageLink>
-            </li>
-            <li>
-              <SamePageLink href="/terms-of-service" prefetch={false}>
-                Terms of Service
-              </SamePageLink>
             </li>
           </ul>
         </div>
@@ -101,7 +101,15 @@ export default function HomeFooter() {
       </div>
 
       <div className={styles.bottom}>
-        <span>&copy; {new Date().getFullYear()} Tabbied</span>
+        <span className={styles.legal}>
+          <span>&copy; {new Date().getFullYear()} Tabbied</span>
+          <SamePageLink href="/privacy-policy" prefetch={false}>
+            Privacy Policy
+          </SamePageLink>
+          <SamePageLink href="/terms-of-service" prefetch={false}>
+            Terms of Service
+          </SamePageLink>
+        </span>
         <span>
           Special thanks to{' '}
           <a

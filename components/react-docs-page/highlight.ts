@@ -82,6 +82,13 @@ export function tokenize(code: string): Token[] {
       continue;
     }
 
+    // HTML samples: `<!-- ... -->` is a comment, not a tag opening.
+    if (code.startsWith('<!--', i)) {
+      const close = code.indexOf('-->', i + 4);
+      emit('comment', close === -1 ? code.length : close + 3);
+      continue;
+    }
+
     if (ch === '<') {
       const match = TAG.exec(code.slice(i));
 

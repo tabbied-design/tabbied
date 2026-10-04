@@ -42,6 +42,11 @@ export default function Footer() {
                 </SamePageLink>
               </li>
               <li>
+                <SamePageLink href="/docs" prefetch={false}>
+                  Developers
+                </SamePageLink>
+              </li>
+              <li>
                 <a href="https://github.com/tabbied-design/tabbied/">
                   GitHub
                 </a>

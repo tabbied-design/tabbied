@@ -866,3 +866,36 @@
     transition: none;
   }
 }
+
+/* The /docs landing page's setup cards: an .entry that is a link as a whole.
+   `.article a` underlines and colors the article's links; a card is a block,
+   so it takes neither, and says it is a link by its border on hover. */
+.article a.setupCard {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.article a.setupCard:hover,
+.article a.setupCard:focus-visible {
+  border-color: var(--h-teal);
+  background-color: var(--h-paper-well);
+}
+
+.setupCard .entryName {
+  font-weight: 600;
+}
+
+.setupMeta {
+  display: block;
+  margin-top: 12px;
+  font: 400 12px var(--h-mono);
+  color: oklch(0.45 0.01 260);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .article a.setupCard {
+    transition: none;
+  }
+}

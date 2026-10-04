@@ -1,7 +1,7 @@
 {
   "name": "tabbied",
   "version": "0.7.0",
-  "description": "Tabbied generative patterns: a framework-agnostic core plus a React component, powered by css-doodle.",
+  "description": "Tabbied generative patterns: a framework-agnostic core, a <tabbied-pattern> web component, React and Vue components and a Svelte action, powered by css-doodle.",
   "type": "module",
   "license": "MIT",
   "author": "Sy Hong and Ye Joo Park",
@@ -18,7 +18,13 @@
     "art",
     "pattern",
     "svg",
-    "react"
+    "react",
+    "svelte",
+    "sveltekit",
+    "vue",
+    "nuxt",
+    "web-component",
+    "custom-element"
   ],
   "exports": {
     ".": {
@@ -31,10 +37,30 @@
       "import": "./dist/react/index.js",
       "default": "./dist/react/index.js"
     },
+    "./svelte": {
+      "types": "./dist/svelte/index.d.ts",
+      "import": "./dist/svelte/index.js",
+      "default": "./dist/svelte/index.js"
+    },
+    "./vue": {
+      "types": "./dist/vue/index.d.ts",
+      "import": "./dist/vue/index.js",
+      "default": "./dist/vue/index.js"
+    },
+    "./element": {
+      "types": "./dist/element/index.d.ts",
+      "import": "./dist/element/index.js",
+      "default": "./dist/element/index.js"
+    },
     "./patterns": {
       "types": "./dist/patterns.generated.d.ts",
       "import": "./dist/patterns.generated.js",
       "default": "./dist/patterns.generated.js"
+    },
+    "./patterns/*": {
+      "types": "./dist/patterns/*.d.ts",
+      "import": "./dist/patterns/*.js",
+      "default": "./dist/patterns/*.js"
     },
     "./svg-export": {
       "types": "./dist/core/svgExport.d.ts",
@@ -51,16 +77,18 @@
   },
   "files": [
     "dist",
+    "!dist/patterns/*.map",
     "catalog.json",
     "llms.txt",
     "AGENTS.md"
   ],
   "sideEffects": [
-    "./dist/**/register.js"
+    "./dist/**/register.js",
+    "./dist/element/*.js"
   ],
   "scripts": {
     "codegen": "node scripts/codegen.mjs",
-    "build": "node scripts/codegen.mjs && node scripts/generate-llms.mjs && node -e \"fs.rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.json",
+    "build": "node scripts/codegen.mjs && node scripts/generate-llms.mjs && node -e \"fs.rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.json && node scripts/bundle-element.mjs",
     "test": "node --test",
     "dev": "node scripts/codegen.mjs && tsc -p tsconfig.json --watch",
     "typecheck": "node scripts/codegen.mjs && tsc -p tsconfig.json --noEmit",
@@ -70,17 +98,23 @@
     "css-doodle": "^0.51.0"
   },
   "peerDependencies": {
-    "react": ">=18 <20"
+    "react": ">=18 <20",
+    "vue": ">=3.3 <4"
   },
   "peerDependenciesMeta": {
     "react": {
+      "optional": true
+    },
+    "vue": {
       "optional": true
     }
   },
   "devDependencies": {
     "@types/node": "^26.6.3",
     "@types/react": "^19.3.0",
-    "typescript": "^7.0.2"
+    "esbuild": "0.28.1",
+    "typescript": "^7.0.2",
+    "vue": "^3.5.43"
   },
   "engines": {
     "node": ">=18"
