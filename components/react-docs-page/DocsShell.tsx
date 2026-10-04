@@ -11,10 +11,10 @@ const NPM_URL = 'https://www.npmjs.com/package/tabbied';
 const PACKAGE_URL = 'https://github.com/tabbied-design/tabbied/tree/main/packages/tabbied';
 
 /**
- * The frame of a docs page for one of the tabbied package's entry points
- * (/docs/svelte, /docs/vue, /docs/web-component): the light section of the
- * homepage shell, the masthead, the heading block with its version chips,
- * the contents rail beside the article, and the dark footer. The same parts
+ * The frame of a docs page (/docs, /docs/svelte, /docs/vue,
+ * /docs/web-component, /docs/html): the light section of the homepage
+ * shell, the masthead, the heading block with its version chips, the
+ * contents rail beside the article, and the dark footer. The same parts
  * /docs/react and /docs/mcp draw inline.
  */
 export default function DocsShell({

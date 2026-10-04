@@ -923,7 +923,7 @@ weight.
 ## The masthead - one bar, two tones
 
 `components/nav/SiteNav` is the site's masthead: the lockup on the left (the
-way home, so there is no Home link), Patterns / Websites / React Component in
+way home, so there is no Home link), Patterns / Websites / Developers in
 the middle, and on the right either "Sign in" or
 the person as a pill - the initials in a circle beside two rules - opening a
 menu (email, My account, Settings, and Admin for a person whose row says
@@ -957,8 +957,12 @@ Four things worth not re-litigating:
   flag stays a page's own choice.
 - **GitHub is in the footer, not the bar.** The 2026 artboards put three
   destinations and the account up top and everything else in `HomeFooter`;
-  the React docs joined the bar later as its last destination (and stay in
-  the footer too). The bar used to carry a different set of links on every
+  the docs joined the bar later as its last destination, first as "React
+  Component" and now as "Developers", the `/docs` landing page, which lights
+  for every page under it. The footer's Developers column lists each docs
+  page (`DEVELOPER_LINKS` in `HomeFooter`) beside GitHub, and the legal
+  pages moved to its bottom bar; a new docs page joins that list and the
+  landing page's cards. The bar used to carry a different set of links on every
   page, which is what one component ends. Studio is in neither now: the
   generation flow is held back from the first launch (see below), and the
   footer's Product list is the artboard's own - Patterns, Websites, My

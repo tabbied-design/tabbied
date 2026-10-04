@@ -17,7 +17,7 @@ import styles from './SiteNav.module.css';
 // dark shell (`dark`, the homepage and the template gallery). See CLAUDE.md,
 // "The masthead - one bar, two tones".
 //
-// Patterns / Websites / React Component in the middle; the lockup is the way
+// Patterns / Websites / Developers in the middle; the lockup is the way
 // home. Signed out, "Sign in" on the right; signed in, the person's initials
 // opening the account menu, which is where My account lives. Below 768px the
 // destinations fold into that menu (signed out, into one behind a hamburger).
@@ -40,7 +40,7 @@ type NavTone = 'dark' | 'light';
 const DESTINATIONS = [
   ['/patterns', 'Patterns'],
   ['/templates', 'Websites'],
-  ['/docs/react', 'React Component'],
+  ['/docs', 'Developers'],
 ] as const;
 
 /** Two letters for the circle: first and last name, or the start of the email. */

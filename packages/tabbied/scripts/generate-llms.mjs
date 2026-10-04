@@ -45,7 +45,9 @@ Designs are referred to by slug and imported individually - \`import { radius } 
 - [MCP server](${SITE}/docs/mcp/): if you speak the Model Context Protocol, connect to ${SITE}/mcp instead of reading files - it is the only route that lets you *look* at a design before choosing it. Tools: \`search_designs\`, \`preview_design\`, \`get_design\`, \`get_docs\`, \`list_templates\`, \`get_template\`. Run \`npx -y -p tabbied-mcp -p playwright tabbied-mcp\` locally (after \`npx playwright install chromium\`) to also get \`render_design\`.
 - [llms-full.txt](${SITE}/llms-full.txt): the complete API contract, integration recipes, and a one-line entry for every design. Start here - it is designed to be enough on its own.
 - [catalog.json](${SITE}/catalog.json): every design with its description, tags, palette, options, preview URL, and SVG-export support. Use it to look up one design in detail. Also shipped in the package at \`tabbied/catalog.json\`.
+- [Developers](${SITE}/docs/): every setup on one page - React, Vue, Svelte, the web component, plain HTML, MCP and the CLI.
 - [React component reference](${SITE}/docs/react/): props, sizing, and live examples.
+- [Plain HTML](${SITE}/docs/html/): \`data-*\` attributes and one \`hydratePatterns()\` script, no build step.
 - [Svelte and SvelteKit](${SITE}/docs/svelte/) and [Vue and Nuxt](${SITE}/docs/vue/): the same props through \`tabbied/svelte\` and \`tabbied/vue\`.
 - [Web component](${SITE}/docs/web-component/): \`<tabbied-pattern>\` for plain HTML and any framework, from one script tag.
 - [Package README](${REPO}/blob/main/packages/tabbied/README.md): entry points, the core API, and SVG export.

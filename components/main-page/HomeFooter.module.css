@@ -99,6 +99,24 @@
   text-decoration: underline;
 }
 
+/* The copyright and the two legal pages, in one run along the bottom bar. */
+.legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+
+.legal a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.legal a:hover,
+.legal a:focus-visible {
+  color: var(--h-fg);
+  text-decoration: underline;
+}
+
 @media (max-width: 767.98px) {
   .grid {
     grid-template-columns: 1fr;

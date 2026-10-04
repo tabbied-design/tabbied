@@ -613,9 +613,9 @@ test.describe('Tabbied site (mobile viewport)', () => {
     const menu = page.getByRole('menu');
     await expect(menu.getByRole('menuitem', { name: 'Home' })).toHaveCount(0);
     await expect(menu.getByRole('menuitem', { name: 'Patterns' })).toBeVisible();
-    await expect(menu.getByRole('menuitem', { name: 'React Component' })).toHaveAttribute(
+    await expect(menu.getByRole('menuitem', { name: 'Developers' })).toHaveAttribute(
       'href',
-      /\/docs\/react/
+      /\/docs\/?$/
     );
     await expect(menu.getByRole('menuitem', { name: 'Sign in' })).toHaveAttribute(
       'href',
@@ -788,13 +788,13 @@ test.describe('Shared site header', () => {
   }) => {
     await page.goto('/templates');
 
-    // Patterns / Websites / React Component in the middle, Sign in on the
+    // Patterns / Websites / Developers in the middle, Sign in on the
     // right. The lockup is the way home, and GitHub is in the footer.
     const nav = page.getByRole('navigation', { name: 'Main' });
     await expect(nav.getByRole('link')).toHaveCount(3);
     await expect(page.getByRole('link', { name: 'Tabbied home' })).toHaveAttribute('href', '/');
     await expect(nav.getByRole('link', { name: 'Patterns' })).toBeVisible();
-    await expect(nav.getByRole('link', { name: 'React Component' })).toBeVisible();
+    await expect(nav.getByRole('link', { name: 'Developers' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Tabbied on GitHub' })).toHaveCount(0);
 
@@ -811,14 +811,16 @@ test.describe('Shared site header', () => {
       'page'
     );
 
-    // The content pages draw the same bar in ink; the docs page is the last
-    // destination and marks itself.
-    await page.goto('/docs/react');
-    await expect(nav.getByRole('link', { name: 'Patterns' })).toBeVisible();
-    await expect(nav.getByRole('link', { name: 'React Component' })).toHaveAttribute(
-      'aria-current',
-      'page'
-    );
+    // The content pages draw the same bar in ink; Developers is the last
+    // destination and marks itself on the landing page and every page under it.
+    for (const path of ['/docs', '/docs/react', '/docs/web-component']) {
+      await page.goto(path);
+      await expect(nav.getByRole('link', { name: 'Patterns' })).toBeVisible();
+      await expect(nav.getByRole('link', { name: 'Developers' })).toHaveAttribute(
+        'aria-current',
+        'page'
+      );
+    }
 
     // A page with no matching destination highlights nothing.
     await page.goto('/privacy-policy');
@@ -966,7 +968,7 @@ test.describe('A link to the page already open', () => {
     // A #section the contents rail left in the address goes with it.
     await page.goto('/docs/react/#api');
     await scrollDown(page);
-    await page.locator('footer').getByRole('link', { name: 'Docs', exact: true }).click();
+    await page.locator('footer').getByRole('link', { name: 'React', exact: true }).click();
     await expect.poll(() => scrollY(page)).toBe(0);
     expect(new URL(page.url()).hash).toBe('');
 
@@ -1012,6 +1014,44 @@ test.describe('React component docs page', () => {
   });
 });
 
+test.describe('The Developers section', () => {
+  test('the landing page leads to every setup, and the footer lists them', async ({ page }) => {
+    await page.goto('/docs');
+    await expect(page.getByRole('heading', { level: 1, name: 'Developers' })).toBeVisible();
+
+    // The site's footer, not the small one at the end of the article.
+    const footer = page.getByRole('contentinfo');
+    for (const [name, href] of [
+      ['React', '/docs/react/'],
+      ['Vue and Nuxt', '/docs/vue/'],
+      ['Svelte and SvelteKit', '/docs/svelte/'],
+      ['Web component', '/docs/web-component/'],
+      ['Plain HTML', '/docs/html/'],
+      ['MCP server', '/docs/mcp/'],
+    ]) {
+      // Each card is a link to its page, and every such page answers.
+      const card = page.locator('article a').filter({ has: page.getByText(name, { exact: true }) });
+      await expect(card).toHaveAttribute('href', href);
+      expect((await page.request.get(href)).status()).toBe(200);
+    }
+
+    for (const label of ['Overview', 'React', 'Vue', 'Svelte', 'Web component', 'Plain HTML', 'MCP server', 'GitHub']) {
+      await expect(footer.getByRole('link', { name: label, exact: true })).toBeVisible();
+    }
+    // The legal pages moved to the bottom bar, still linked.
+    await expect(footer.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', /\/privacy-policy/);
+    await expect(footer.getByRole('link', { name: 'Terms of Service' })).toHaveAttribute('href', /\/terms-of-service/);
+  });
+
+  test('plain HTML has its own page now', async ({ page }) => {
+    await page.goto('/docs/html');
+    await expect(page.getByRole('heading', { level: 1, name: 'Plain HTML' })).toBeVisible();
+    await expect(page.getByText('hydratePatterns({ patterns: { radius } });')).toBeVisible();
+    await page.goto('/docs/react');
+    await expect(page.locator('#html')).toHaveCount(0);
+  });
+});
+
 test.describe('Svelte, Vue and web component docs pages', () => {
   for (const { path, title, sample } of [
     { path: '/docs/svelte', title: 'Svelte and SvelteKit', sample: 'use:tabbied={props}' },
@@ -1036,5 +1076,6 @@ test.describe('Svelte, Vue and web component docs pages', () => {
     await expect(page.getByRole('link', { name: 'Svelte action' })).toHaveAttribute('href', '/docs/svelte/');
     await expect(page.getByRole('link', { name: 'Vue component' })).toHaveAttribute('href', '/docs/vue/');
     await expect(page.getByRole('link', { name: 'web component', exact: true })).toHaveAttribute('href', '/docs/web-component/');
+    await expect(page.getByRole('link', { name: 'plain HTML', exact: true })).toHaveAttribute('href', '/docs/html/');
   });
 });
