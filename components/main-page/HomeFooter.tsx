@@ -14,6 +14,7 @@ const GITHUB_URL = 'https://github.com/tabbied-design/tabbied/';
 // them. A new docs page joins this list and the landing page's cards.
 const DEVELOPER_LINKS = [
   ['/docs', 'Overview'],
+  ['/docs/concepts', 'Concepts'],
   ['/docs/react', 'React'],
   ['/docs/vue', 'Vue'],
   ['/docs/svelte', 'Svelte'],

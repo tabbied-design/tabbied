@@ -7,6 +7,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
+import { availableSnippets } from '../lib/patternSnippets';
 
 const PACKAGE_DIR = path.join(__dirname, '..', 'packages', 'tabbied');
 
@@ -349,7 +350,7 @@ test.describe('native SVG export', () => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
     await page.goto('/patterns/radius/?seed=0000&aspectRatio=2:3');
     await page.getByRole('button', { name: 'Export' }).click();
-    await page.getByRole('menuitem', { name: 'Copy React component' }).click();
+    await page.getByRole('menuitem', { name: 'React component' }).click();
     await expect(page.getByText('React component copied')).toBeVisible();
 
     const snippet = await page.evaluate(() => navigator.clipboard.readText());
@@ -360,11 +361,25 @@ test.describe('native SVG export', () => {
     expect(snippet).not.toContain('"2:3"');
   });
 
+  test('Copy code offers the snippets this package version backs', async ({ page }) => {
+    const version = JSON.parse(
+      fs.readFileSync(path.join(PACKAGE_DIR, 'package.json'), 'utf8')
+    ).version;
+    // The rule itself is unit-tested in lib/patternSnippets.test.mjs; this
+    // is that the menu follows it, at whatever version is checked out.
+    const expected = availableSnippets(version).map((spec) => spec.label);
+
+    await page.goto('/patterns/radius/?seed=0000');
+    await page.getByRole('button', { name: 'Export' }).click();
+    const group = page.getByRole('group', { name: 'Copy code' });
+    await expect(group.getByRole('menuitem')).toHaveText(expected);
+  });
+
   test('the copied HTML embed carries the plate as data attributes', async ({ page, context }) => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
     await page.goto('/patterns/radius/?seed=0000&aspectRatio=2:3');
     await page.getByRole('button', { name: 'Export' }).click();
-    await page.getByRole('menuitem', { name: 'Copy HTML embed' }).click();
+    await page.getByRole('menuitem', { name: 'HTML embed' }).click();
     await expect(page.getByText('HTML embed copied')).toBeVisible();
 
     const snippet = await page.evaluate(() => navigator.clipboard.readText());

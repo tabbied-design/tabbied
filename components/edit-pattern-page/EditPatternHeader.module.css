@@ -228,6 +228,23 @@
 
 /* The background-image footnote. Below a rule rather than in the list, because
    it is a note about the items above it and must not read as a fifth one. */
+/* "Copy code" and the snippets under it, set off from the items above. */
+.menuGroup {
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px solid rgba(35, 37, 41, 0.08);
+}
+
+.menuGroupLabel {
+  padding: 6px 10px 4px;
+  font-family: var(--font-sans-serif);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(14, 14, 19, 0.5);
+}
+
 .menuNote {
   display: flex;
   gap: 9px;

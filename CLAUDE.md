@@ -1943,9 +1943,22 @@ not re-litigating:
   `dist/element/` beside tsc's `index.js`, so `../patterns/` means the same
   folder from either. `e2e/element.spec.ts` serves `dist/` under a made-up
   CDN origin to prove exactly that layout, and `/package-test`'s
-  `ElementProbe` is the bundled path. The editor's "Copy HTML embed" still
-  writes the `hydratePatterns` snippet, because it must work against the
-  published version; it moves to the element once that is on npm.
+  `ElementProbe` is the bundled path.
+
+**The editor's Copy code offers a snippet per setup, gated on the release.**
+The Export menu's "Copy code" group (React component, Vue component,
+Svelte action, Web component, HTML embed) is built by
+`lib/patternSnippets.ts`, one builder per setup from the plate's state.
+Each snippet names the release that first shipped its entry point
+(`since`), and the menu offers only those the package version in the repo
+has reached: a snippet importing what npm does not have yet fails for
+whoever pastes it. That needs no follow-up at release time, because the
+release workflow bumps the version in the same merge that publishes. The
+builders import nothing, so `npm run test:lib` runs their tests under
+Node's own TypeScript support; `e2e/svg-export.spec.ts` checks the menu
+against `availableSnippets` at the checked-out version, so it holds on both
+sides of a release. A group, not a submenu: a hover submenu beside the
+popup is poor on touch and in the phone layout's narrow dropdown.
 
 ## Grid snapping - invariant (full reference: docs/grid-snapping.md)
 

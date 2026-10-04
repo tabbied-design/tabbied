@@ -8,7 +8,7 @@ import styles from 'components/react-docs-page/ReactDocs.module.css';
 import { pageMetadata } from 'lib/seo';
 
 // The no-build path: data-* attributes and one hydratePatterns() call, the
-// shape the editor's "Copy HTML embed" writes and the HTML template
+// shape the editor's Copy code > HTML embed writes and the HTML template
 // downloads ship. It was a section of /docs/react until the docs grew a
 // page per setup.
 
@@ -63,8 +63,9 @@ export default function HtmlDocsPage() {
           One module script loads the package from esm.sh, and{' '}
           <Code>hydratePatterns()</Code> finds every{' '}
           <Code>[data-pattern]</Code> element and mounts it. Any pattern page
-          in the gallery writes this for you: open Export and choose Copy
-          HTML embed, with the seed, colors and options you picked.
+          in the gallery writes this for you: open Export and, under Copy
+          code, choose HTML embed, with the seed, colors and options you
+          picked.
         </p>
         <Callout>
           <p>

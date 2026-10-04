@@ -88,7 +88,7 @@ toolset is built around a single flow: **narrow on metadata, then look.**
   and CLI snippets, and a reminder that a pattern has no intrinsic size. The
   React snippet is a component at the design's default aspect ratio, written
   as CSS's `2 / 3` (the catalog's `2:3` id is not a CSS value), the same
-  shape as the editor's "Copy React component". The CLI command asks for a
+  shape as the React snippet under the editor's Copy code. The CLI command asks for a
   `.png` when the design has no vector export.
 
 - **`preview_design`** returns the rendered preview image for up to six slugs

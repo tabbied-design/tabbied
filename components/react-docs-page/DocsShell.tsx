@@ -77,10 +77,9 @@ export default function DocsShell({
                     >
                       GitHub
                     </a>
-                    . The props, fit modes, palettes and options are the same
-                    in every entry point; the{' '}
-                    <a href="/docs/react/">React docs</a> cover them with live
-                    examples.
+                    . The settings are the same in every setup; the{' '}
+                    <a href="/docs/concepts/">Concepts</a> page says what each
+                    one does.
                   </p>
                 </footer>
               </article>

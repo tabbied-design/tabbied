@@ -8,7 +8,6 @@ import {
   ArrowDownToLine,
   ChevronDown,
   ChevronLeft,
-  Code,
   FileCode,
   ImageDown,
   Info,
@@ -21,6 +20,7 @@ import {
   armGalleryScrollRestore,
   consumeGalleryNavigation,
 } from 'lib/galleryScroll';
+import type { SnippetKind } from 'lib/patternSnippets';
 import styles from './EditPatternHeader.module.css';
 
 type EditPatternHeaderProps = {
@@ -35,10 +35,10 @@ type EditPatternHeaderProps = {
   svgExportWarning: boolean;
   /** Copy the current (fully-encoded) URL to the clipboard. */
   onCopyLink: () => void | Promise<void>;
-  /** Copy a ready-to-paste <TabbiedPattern> snippet to the clipboard. */
-  onCopyReactComponent: () => void | Promise<void>;
-  /** Copy a no-build-step HTML snippet (markup plus an esm.sh script). */
-  onCopyHtmlEmbed: () => void | Promise<void>;
+  /** The code snippets this version of the package can back, in menu order. */
+  snippets: ReadonlyArray<{ kind: SnippetKind; label: string }>;
+  /** Copy one of them, ready to paste, to the clipboard. */
+  onCopySnippet: (kind: SnippetKind) => void | Promise<void>;
   /**
    * A picture is set behind the pattern. The menu then says which exports
    * carry it: it is an object URL local to this tab, so the link and the
@@ -57,8 +57,8 @@ export default function EditPatternHeader({
   svgExportDisabled,
   svgExportWarning,
   onCopyLink,
-  onCopyReactComponent,
-  onCopyHtmlEmbed,
+  snippets,
+  onCopySnippet,
   hasBackgroundImage,
   mobile,
 }: EditPatternHeaderProps) {
@@ -139,18 +139,21 @@ export default function EditPatternHeader({
             >
               <LinkIcon size={15} /> Copy shareable link
             </Menu.Item>
-            <Menu.Item
-              className={styles.menuItem}
-              onClick={() => void onCopyReactComponent()}
-            >
-              <CodeXml size={15} /> Copy React component
-            </Menu.Item>
-            <Menu.Item
-              className={styles.menuItem}
-              onClick={() => void onCopyHtmlEmbed()}
-            >
-              <Code size={15} /> Copy HTML embed
-            </Menu.Item>
+            {/* One group, not a submenu: a submenu opens on hover beside the
+                popup, which a touch screen and the phone layout's narrow
+                dropdown both handle badly. */}
+            <Menu.Group className={styles.menuGroup}>
+              <Menu.GroupLabel className={styles.menuGroupLabel}>Copy code</Menu.GroupLabel>
+              {snippets.map(({ kind, label }) => (
+                <Menu.Item
+                  key={kind}
+                  className={styles.menuItem}
+                  onClick={() => void onCopySnippet(kind)}
+                >
+                  <CodeXml size={15} /> {label}
+                </Menu.Item>
+              ))}
+            </Menu.Group>
             {hasBackgroundImage && (
               <p className={styles.menuNote}>
                 <Info size={15} aria-hidden="true" />

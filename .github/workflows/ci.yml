@@ -40,6 +40,10 @@ jobs:
       # eras see the same toolset (see docs/mcp-server.md).
       - name: Test tabbied-mcp
         run: npm test --workspace tabbied-mcp
+      # The site's own pure modules (lib/*.test.mjs): the editor's copied
+      # snippets, run as TypeScript by Node itself.
+      - name: Test site libraries
+        run: npm run test:lib
 
   worker:
     name: Worker typecheck
