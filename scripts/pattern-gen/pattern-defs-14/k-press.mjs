@@ -779,8 +779,9 @@ add(
 // the host), so the stream is continuous from cell to cell and reshapes on a
 // reseed. A cell works out the three thicknesses once at five points across
 // it (--ua .. --we, to a tenth of a percent) and the top edge from them
-// (--ta .. --te); the edges below are left to CSS calc(), and the three
-// outlines (--k1 .. --k3) read those, so no sine is worked out twice.
+// (--ta .. --te); every other vertex is left to CSS calc() over those, so no
+// sine is worked out twice. The clips are written unprefixed only, to keep
+// the per-cell CSS small.
 const SG_N = 4; // segments across a cell
 const SG_AT = 'abcde';
 const SG_AMP = [13, 11, 12];
@@ -797,26 +798,26 @@ const sgThick = (j, i) => {
   const X = `(@x - 1 + ${i / SG_N})`;
   return `$(round(${SG_AMP[j] * 10}*(1.05+0.6*sin(${X} * ${SG_W[0][j]} + p${j} + @y * ${SG_Y[0][j]})+0.35*sin(${X} * ${SG_W[1][j]} + p${j} * 1.7 + @y * ${SG_Y[1][j]})))/10)`;
 };
+const SG_XS = SG_AT.split('').map((a, i) => [a, `${(i * 100) / SG_N}%`]);
 const SG_VARS = [
   ...[0, 1, 2].map((j) => SG_AT.split('').map((a, i) => `--${'uvw'[j]}${a}: ${sgThick(j, i)};`).join(' ')),
   SG_AT.split('').map((a) => `--t${a}: ${q(`50-(u${a}+v${a}+w${a})/2`)}%;`).join(' '),
-  SG_AT.split('').map((a) => `--m${a}: calc(@var(--t${a}) + @var(--u${a}) * 1%); --n${a}: calc(@var(--m${a}) + @var(--v${a}) * 1%);`).join(' '),
+  // the stream's top edge left to right, and its bottom edge right to left
+  `--up: ${SG_XS.map(([a, x]) => `${x} @var(--t${a})`).join(', ')};`,
+  `--dn: ${[...SG_XS].reverse().map(([a, x]) => `${x} calc(100% - @var(--t${a}))`).join(', ')};`,
 ].join(' ');
-const sgEdge = (k, a) => [`@var(--t${a})`, `@var(--m${a})`, `@var(--n${a})`, `calc(100% - @var(--t${a}))`][k];
-/** The region from the stream's top edge down to boundary k (1-3). */
-const sgDown = (k) => {
-  const xs = SG_AT.split('').map((a, i) => [a, `${(i * 100) / SG_N}%`]);
-  const upper = xs.map(([a, x]) => `${x} ${sgEdge(0, a)}`);
-  const lower = [...xs].reverse().map(([a, x]) => `${x} ${sgEdge(k, a)}`);
-  return `polygon(${[...upper, ...lower].join(', ')})`;
-};
+// the whole stream; the top band, down to the first boundary; the bottom
+// band, up to the second (the middle band is the stream showing between)
+const SG_ALL = 'polygon(@var(--up), @var(--dn))';
+const SG_TOPBAND = `polygon(@var(--up), ${[...SG_XS].reverse().map(([a, x]) => `${x} calc(@var(--t${a}) + @var(--u${a}) * 1%)`).join(', ')})`;
+const SG_BOTBAND = `polygon(${SG_XS.map(([a, x]) => `${x} calc(100% - @var(--t${a}) - @var(--w${a}) * 1%)`).join(', ')}, @var(--dn))`;
 
 add(
   'Streamgraph',
   'Rows of streamgraphs: three colored layers stacked about a midline, swelling and thinning in smooth waves as they flow across the sheet.',
   (c) => ({
     host: SG_HOST,
-    rule: `${F} { ${SG_VARS} --k1: ${sgDown(1)}; --k2: ${sgDown(2)}; --k3: ${sgDown(3)}; background: @p(var(--color3)); ${cp('@var(--k3)')} ${B(`inset: 0; background: @p(var(--color2)); ${cp('@var(--k2)')}`)} ${A(`inset: 0; background: @p(var(--color1)); ${cp('@var(--k1)')}`)} }${TR}`,
+    rule: `${F} { ${SG_VARS} background: @p(var(--color2)); clip-path: ${SG_ALL}; ${B(`inset: 0; background: @p(var(--color1)); clip-path: ${SG_TOPBAND};`)} ${A(`inset: 0; background: @p(var(--color3)); clip-path: ${SG_BOTBAND};`)} }${TR}`,
   }),
   {
     pal: 27,

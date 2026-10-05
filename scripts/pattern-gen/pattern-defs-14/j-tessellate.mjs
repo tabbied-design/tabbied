@@ -693,9 +693,11 @@ add(
 // tiling, and at full length pairs of oblongs in a basketweave; each cell
 // uses its own length, so the pieces still meet wherever the sweep is.
 const CM = (() => {
-  // Every number here is a $() over the cell's own variables (ix, iy, the
-  // sheet size, the sweep), so its text is the same in every cell and
-  // css-doodle parses it once for the whole sheet.
+  // The sweep is worked out by css-doodle, once per cell and rounded; the
+  // pentagons' corners, which are straight sums of it, are left to the
+  // browser as calc() over those variables, so css-doodle only pastes text.
+  // A selector block per parity (and per outer column and row) writes the
+  // one polygon each cell needs.
   const sweep = (dx, dy) => `$(round(max(0.02, min(0.98, 1.15 * ((ix - ${0.5 - dx}) / mx + (iy - ${0.5 - dy}) / my) / 2 - 0.05)) * 10000) / 10000)`;
   // the pentagon across the right edge, own bar length `a`, neighbor's `b`
   const right = (q, a, b) => {
@@ -707,40 +709,25 @@ const CM = (() => {
   const swap = (pts) => pts.map(([u, v]) => [v, u]);
   const shiftBy = (pts, du, dv) => pts.map(([u, v]) => [ladd(u, lin(du)), ladd(v, lin(dv))]);
   const k = 0.9;
-  // cell units to percent of the three-cell box
-  const box = (e) => lscale(ladd(e, lin(1)), 100 / 3);
-  const bare = (e) => {
-    const parts = Object.entries(e.terms).filter(([, v]) => r2(v) !== 0);
-    return `${r2(e.c)}${parts.map(([n, v]) => `${v < 0 ? ' - ' : ' + '}${Math.abs(r2(v))} * ${n}`).join('')}`;
+  // cell units to percent of the three-cell box, as a CSS calc() over the sweep variables
+  const css = (e) => {
+    const m = lscale(ladd(e, lin(1)), 100 / 3);
+    const parts = Object.entries(m.terms).filter(([, v]) => r2(v) !== 0);
+    if (!parts.length) return `${r2(m.c)}%`;
+    return `calc(${r2(m.c)}%${parts.map(([n, v]) => ` ${v < 0 ? '-' : '+'} ${Math.abs(r2(v))}% * @var(--${n})`).join('')})`;
   };
-  /** One coordinate for both parities: the q = 0 figure plus q times the change to the q = 1 one. */
-  const coord = (e0, e1) => {
-    const d = ladd(box(e1), lscale(box(e0), -1));
-    const hasD = r2(d.c) !== 0 || Object.values(d.terms).some((v) => r2(v) !== 0);
-    return `$(round((${bare(box(e0))}${hasD ? ` + q * (${bare(d)})` : ''}) * 100) / 100)%`;
-  };
-  /** Declarations for a figure's points, --<name>x0.., and the polygon text reading them back. */
-  const points = (name, fig0, fig1) => {
-    const a0 = lshrink(fig0, k);
-    const a1 = lshrink(fig1, k);
-    const decl = a0.map((p, i) => `--${name}x${i}: ${coord(p[0], a1[i][0])}; --${name}y${i}: ${coord(p[1], a1[i][1])};`).join(' ');
-    const pts = a0.map((_, i) => `@var(--${name}x${i}) @var(--${name}y${i})`);
-    return { decl, pts };
-  };
-  const loop = (pts) => [...pts, pts[0]];
-  const rMain = points('r', right(0, 'ca', 'cr'), right(1, 'ca', 'cr'));
-  const rExtra = points('re', shiftBy(right(1, 'cl', 'ca'), -1, 0), shiftBy(right(0, 'cl', 'ca'), -1, 0));
-  const bMain = points('b', swap(right(1, 'ca', 'cd')), swap(right(0, 'ca', 'cd')));
-  const bExtra = points('be', shiftBy(swap(right(0, 'cu', 'ca')), 0, -1), shiftBy(swap(right(1, 'cu', 'ca')), 0, -1));
+  const pts = (fig) => lshrink(fig, k).map(([u, v]) => `${css(u)} ${css(v)}`);
+  const loop = (list) => [...list, list[0]];
+  const poly = (...figs) => `polygon(${(figs.length > 1 ? figs.flatMap((f) => loop(pts(f))) : pts(figs[0])).join(', ')})`;
+  const rightPoly = (q, extra) => (extra ? poly(right(q, 'ca', 'cr'), shiftBy(right(1 - q, 'cl', 'ca'), -1, 0)) : poly(right(q, 'ca', 'cr')));
+  const bottomPoly = (q, extra) => (extra ? poly(swap(right(1 - q, 'ca', 'cd')), shiftBy(swap(right(q, 'cu', 'ca')), 0, -1)) : poly(swap(right(1 - q, 'ca', 'cd'))));
   const vars = [
-    `${POS} --q: $(0 + (ix + iy) % 2);`,
-    `--ca: ${sweep(0, 0)}; --cr: ${sweep(1, 0)}; --cl: ${sweep(-1, 0)}; --cd: ${sweep(0, 1)}; --cu: ${sweep(0, -1)};`,
-    rMain.decl,
-    bMain.decl,
-    `--rp: polygon(${rMain.pts.join(', ')}); --bp: polygon(${bMain.pts.join(', ')});`,
-    // the first column and row also draw the pentagons across their outer edges
-    `@x(1) { ${rExtra.decl} --rp: polygon(${[...loop(rMain.pts), ...loop(rExtra.pts)].join(', ')}); }`,
-    `@y(1) { ${bExtra.decl} --bp: polygon(${[...loop(bMain.pts), ...loop(bExtra.pts)].join(', ')}); }`,
+    POS,
+    `--ca: ${sweep(0, 0)}; --cr: ${sweep(1, 0)}; --cd: ${sweep(0, 1)};`,
+    '@x(1) { --cl: ' + sweep(-1, 0) + '; } @y(1) { --cu: ' + sweep(0, -1) + '; }',
+    ...[0, 1].map((q) => `@match((x + y) % 2 == ${q}) { --rp: ${rightPoly(q, false)}; --bp: ${bottomPoly(q, false)}; }`),
+    ...[0, 1].map((q) => `@match(x == 1 && (x + y) % 2 == ${q}) { --rp: ${rightPoly(q, true)}; }`),
+    ...[0, 1].map((q) => `@match(y == 1 && (x + y) % 2 == ${q}) { --bp: ${bottomPoly(q, true)}; }`),
   ].join(' ');
   return { vars };
 })();
