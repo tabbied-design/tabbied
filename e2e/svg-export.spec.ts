@@ -70,6 +70,8 @@ const REPRESENTATIVE = [
   'contourlines',
   'concentricrings',
   'patternsampler',
+  'jetstream',
+  'tartan',
 ];
 
 // Differing pixels tolerated (after anti-aliasing forgiveness). A few

@@ -240,9 +240,11 @@ and it changed no behavior: same MCP handler, same statelessness, same
 JSON 404); auth, generations, media, and the AI gateway land with the bindings
 they need. See `agent-outputs/20260827-studio-ai-plan.md`.
 
-The export is comfortably inside the platform limits - roughly 13,100 files
-against a 20,000 free-plan ceiling, largest file 3.0 MB against 25 MiB - but
-both are counted per Worker *version*. Don't treat that file count as stable:
+The export is inside the platform limits - roughly 17,000 files against a
+20,000 free-plan ceiling, largest file 3.0 MB against 25 MiB - but both are
+counted per Worker *version*, and the headroom is now about 3,000 files.
+Every pattern costs seven: its page and four RSC payloads, its preview and its
+share card, so batch 14's 300 designs added about 2,100. Don't treat that file count as stable:
 most of it is per-route RSC payloads, and a Next minor can move it a lot (16.3
 cut ~1,400 files off 16.2's output without changing a page). What is stable is
 `public/downloads/`, a flat 6,450 files for 277 sites (the artwork ones ship
@@ -307,7 +309,7 @@ Four things worth not re-litigating:
 - **The Worker reads the catalog through `env.ASSETS`, not from its bundle.**
   The tools then describe exactly the bytes that deployment serves: a design
   added in the same commit cannot be missing from the catalog an agent queries,
-  and 384 KB of JSON stays out of the Worker.
+  and 830 KB of JSON stays out of the Worker.
 
 `legacy: 'stateless'` is spelled out at the call site even though it is the
 default: it is what keeps 2025-era clients working, and every shipping client
@@ -1428,7 +1430,7 @@ below. The matcher was not replaced by it.)
 - **`lib/studioMatch.ts` is pure and isomorphic; `lib/studioDirections.ts` is
   server-only.** The index - 277 entries of names, palettes and vocabulary - is
   built at build time and passed to the client as plain data. Importing the
-  catalog (384 KB) or the template data into the browser to match against it is
+  catalog (830 KB) or the template data into the browser to match against it is
   the thing this split exists to prevent.
 - **Everyday words are mapped onto the closed catalog vocabulary**
   (`packages/tabbied/scripts/catalog-vocabulary.mjs`), and moods are scored by
@@ -1532,7 +1534,7 @@ the template and shows the result.
   package imports `tabbied` from esm.sh, pinned, which is right for a stranger
   who unzipped it years later and wrong for this site drawing its own preview.
   `scripts/build-preview-runtime.mjs` bundles `hydratePatterns` plus the whole
-  catalog (338 designs, 108 KB gzipped, cached across previews) into
+  catalog (638 designs, 319 KB gzipped, cached across previews) into
   `public/studio/preview-runtime.js`, and the shell rewrites that one script
   tag. Serving `tabbied/dist` raw instead does not
   work: `register.js` does a bare `import 'css-doodle'` that no browser
@@ -2194,6 +2196,12 @@ written side by side. Things the batch learned, all silent when wrong:
   `generate-previews.mjs` passes just under 1 instead: the gate rolls the
   same values, so only a design that dropped a cell draws differently, from
   that cell on. The editor still drops about one cell in a thousand.
+- **The whole catalog is now four times heavier in the browser.** The
+  gallery imports every design (`patterns.generated.js`: 63 KB gzipped before
+  the batch, 276 KB after), which it needs. The docs pages import a handful
+  by name and still receive the shared chunk holding all of them, so they
+  grew by the same amount; a per-design import (`tabbied/patterns/<slug>`) is
+  the likely way to ship them only what they draw.
 - The converter limits the families met and worked around are listed in
   docs/svg-export.md ("Batch 14's workarounds").
 
