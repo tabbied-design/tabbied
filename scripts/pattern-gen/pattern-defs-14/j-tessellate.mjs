@@ -78,6 +78,18 @@ const sheetInk = (c, from = 1, to = c - 1) => `@pd(@p(${inks(c, from, to)}))`;
  */
 const SHIFT = '--gate: @r(1);';
 
+/**
+ * The cell's place as plain variables, for $() expressions. css-doodle
+ * caches a parsed expression by its text, so an expression written over these
+ * (rather than over @x, which is pasted in as a number) is parsed once for
+ * the whole sheet instead of once per cell. A variable is read back by
+ * re-parsing its text, so values meant to be read again are rounded short.
+ * One more trap: $() treats four reads in a row of the same text as a
+ * reference cycle and reads the fourth as 0, so no expression here reads
+ * more than three equal values back to back.
+ */
+const POS = '--ix: @x; --iy: @y; --mx: @X; --my: @Y;';
+
 /** The cell's checkerboard parity, 0 or 1, as a css-doodle expression. */
 const Q = '((@x + @y) % 2)';
 /** 1 in the first column (or row), 0 elsewhere. */
@@ -684,7 +696,7 @@ const CM = (() => {
   // Every number here is a $() over the cell's own variables (ix, iy, the
   // sheet size, the sweep), so its text is the same in every cell and
   // css-doodle parses it once for the whole sheet.
-  const sweep = (dx, dy) => `$(max(0.02, min(0.98, 1.15 * ((ix - ${0.5 - dx}) / mx + (iy - ${0.5 - dy}) / my) / 2 - 0.05)))`;
+  const sweep = (dx, dy) => `$(round(max(0.02, min(0.98, 1.15 * ((ix - ${0.5 - dx}) / mx + (iy - ${0.5 - dy}) / my) / 2 - 0.05)) * 10000) / 10000)`;
   // the pentagon across the right edge, own bar length `a`, neighbor's `b`
   const right = (q, a, b) => {
     const h = (n, sign) => L(0.5, n, sign * 0.5);
@@ -721,7 +733,7 @@ const CM = (() => {
   const bMain = points('b', swap(right(1, 'ca', 'cd')), swap(right(0, 'ca', 'cd')));
   const bExtra = points('be', shiftBy(swap(right(0, 'cu', 'ca')), 0, -1), shiftBy(swap(right(1, 'cu', 'ca')), 0, -1));
   const vars = [
-    '--ix: @x; --iy: @y; --mx: @X; --my: @Y; --q: $(0 + (ix + iy) % 2);',
+    `${POS} --q: $(0 + (ix + iy) % 2);`,
     `--ca: ${sweep(0, 0)}; --cr: ${sweep(1, 0)}; --cl: ${sweep(-1, 0)}; --cd: ${sweep(0, 1)}; --cu: ${sweep(0, -1)};`,
     rMain.decl,
     bMain.decl,
@@ -988,26 +1000,27 @@ add(
 // smooth noise field, the halves a step apart so the facets show.
 const LP = (() => {
   const J = 0.56;
-  // A corner's place, each in one $() so css-doodle builds its variable
-  // context once per coordinate: the hash of the corner, the nudge it gives,
+  // A corner's place, each in one $() over the cell's variables (so the text
+  // is the same in every cell): the hash of the corner, the nudge it gives,
   // and the result in percent of the doubled box the facets are drawn in.
   // Corners on the sheet's edge only slide along it. The polygons read the
   // stored percentages back with @var(), which the browser resolves.
   const fr = (i, j, a, b, k) => `(sin(${i} * ${a} + ${j} * ${b} + s * ${k}) * 43758.5453 - floor(sin(${i} * ${a} + ${j} * ${b} + s * ${k}) * 43758.5453))`;
-  const at = (name, axis, base, i, j, hash, edge) =>
+  const at = (name, axis, base, hash, edge) =>
     `--${name}${axis}: $(round((${base} + (${J} * ${hash} - ${J / 2}) * ${edge} + 0.5) * 5000) / 100)%;`;
   const corner = (name, i, j, u, v) =>
-    `${at(name, 'x', u, i, j, fr(i, j, 12.9898, 78.233, 1), `min(1, ${i}) * min(1, @X - ${i})`)} ${at(name, 'y', v, i, j, fr(i, j, 39.3467, 11.1351, 1.3), `min(1, ${j}) * min(1, @Y - ${j})`)}`;
+    `${at(name, 'x', u, fr(i, j, 12.9898, 78.233, 1), `min(1, ${i}) * min(1, mx - ${i})`)} ${at(name, 'y', v, fr(i, j, 39.3467, 11.1351, 1.3), `min(1, ${j}) * min(1, my - ${j})`)}`;
   const vars = [
-    corner('a', '(@x - 1)', '(@y - 1)', 0, 0),
-    corner('b', '@x', '(@y - 1)', 1, 0),
-    corner('c', '@x', '@y', 1, 1),
-    corner('d', '(@x - 1)', '@y', 0, 1),
+    POS,
+    corner('a', '(ix - 1)', '(iy - 1)', 0, 0),
+    corner('b', 'ix', '(iy - 1)', 1, 0),
+    corner('c', 'ix', 'iy', 1, 1),
+    corner('d', '(ix - 1)', 'iy', 0, 1),
   ].join(' ');
   const P = (n) => `@var(--${n}x) @var(--${n}y)`;
   const quad = `polygon(${P('a')}, ${P('b')}, ${P('c')}, ${P('d')})`;
   // split along a-c, or along b-d
-  const tri = `polygon(${P('a')}, ${P('b')}, @p(${P('c')}, ${P('d')}))`;
+  const tri = `--tri: polygon(${P('a')}, ${P('b')}, @p(${P('c')}, ${P('d')}));`;
   return { vars, quad, tri };
 })();
 add(
@@ -1018,7 +1031,7 @@ add(
     const band = `@p(@var(--color$(1 + min(4, max(0, floor((n + @r(-0.13, 0.13)) * 5))))))`;
     return {
       rule: `${SEED} ${LP.vars} --n: ${noise(-0.6, 1.6, 1.1)}; ${F} { ${B(`left: -50%; top: -50%; width: 200%; height: 200%; background: ${band}; ${cp(LP.quad)}`)} ${A(
-        `left: -50%; top: -50%; width: 200%; height: 200%; background: ${band}; ${cp(LP.tri)}`
+        `left: -50%; top: -50%; width: 200%; height: 200%; background: ${band}; ${LP.tri} ${cp('@var(--tri)')}`
       )} }${TR}`,
     };
   },

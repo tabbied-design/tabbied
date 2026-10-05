@@ -902,13 +902,13 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
   // cell is a crooked quadrilateral; each is split corner to corner along a
   // random diagonal and both halves pulled in a little, leaving the cracks.
   //
-  // css-doodle evaluates only the hashes, one per corner coordinate,
-  // fract(sin(12.9898 i + 78.233 j + k) * 437.5453), read off one sum per
-  // cell. The rest is plain CSS calc() over those properties, which the
-  // browser resolves: each corner in percent of the pseudo-element's box
-  // (1.6 cells wide, from 0.3 cells out), the corner opposite the split, and
-  // each triangle's middle. A corner on the sheet's border only slides along
-  // it, set by the edge selectors.
+  // css-doodle evaluates only each corner's place, in percent of the
+  // pseudo-element's box (1.6 cells wide, from 0.3 cells out), moved by a
+  // hash of the corner, fract(sin(12.9898 i + 78.233 j + k) * 437.5453), read
+  // off one sum per cell. The corner opposite the split and each triangle's
+  // middle are plain CSS calc() over those properties, which the browser
+  // resolves. A corner on the sheet's border only slides along it, set by
+  // the edge selectors. The transform goes unprefixed to keep the CSS small.
   const V = (name) => `@var(--${name})`;
   const decl = ['--s: @p(0, 1);', '--u: @calc(@x * 12.9898 + @y * 78.233);'];
   const corners = [
@@ -921,8 +921,8 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
   for (const [n, di, dj, ox, oy] of corners) {
     for (const [axis, k, o] of [['x', 1.7, ox], ['y', 9.1, oy]]) {
       const shift = +(di * 12.9898 + dj * 78.233 + k).toFixed(4);
-      decl.push(`--h${n}${axis}: @calc((sin($(u) + ${shift}) * 437.5453 % 1 + 1) % 1);`);
-      decl.push(`--${n}${axis}: calc((${2.5 + 62.5 * o} + 32.5 * ${V(`h${n}${axis}`)}) * 1%);`);
+      // fract(v) for |v| < 1000, in one modulo.
+      decl.push(`--${n}${axis}: @calc(${2.5 + 62.5 * o} + 32.5 * ((sin($(u) + ${shift}) * 437.5453 + 1000) % 1))%;`);
     }
   }
   for (const axis of ['x', 'y']) {
@@ -935,7 +935,7 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
     '@x(1) { --ax: 18.75%; --dx: 18.75%; } @y(1) { --ay: 18.75%; --by: 18.75%; } @match(x == X) { --bx: 81.25%; --cx: 81.25%; } @match(y == Y) { --cy: 81.25%; --dy: 81.25%; }';
   const vars = `${decl.join(' ')} ${edges}`;
   const tri = (pts, o) =>
-    `${cp(`polygon(${pts.map((p) => `${V(`${p}x`)} ${V(`${p}y`)}`).join(', ')})`)} ${tfo(`${V(`${o}x`)} ${V(`${o}y`)}`)} ${tf('scale(0.9)')}`;
+    `${cp(`polygon(${pts.map((p) => `${V(`${p}x`)} ${V(`${p}y`)}`).join(', ')})`)} transform-origin: ${V(`${o}x`)} ${V(`${o}y`)}; transform: scale(0.9);`;
   const t1 = tri(['a', 'b', 'm'], 'o');
   const t2 = tri(['n', 'c', 'd'], 'q');
   const box = 'inset: -30%;';

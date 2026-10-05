@@ -479,21 +479,27 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
   const hex = P(shrink([[50, 0], [100, hexTop], [100, 100 - hexTop], [50, 100], [0, 100 - hexTop], [0, hexTop]], 0.95));
   // Offset rows: even rows (y even, 1-based) are pushed right by half a
   // cell. Each cell works out its axial coordinates (q, r) and its class g
-  // once, then the offset (dq, dr) from a petal to its flower's center (zero
-  // off the flowers), and from the center's lattice coordinates the flower's
-  // number 0-3, which picks one of four sheet-wide inks. (A sum of bare
-  // comparisons, (g == 1) + (g == 4), comes out wrong inside $(), so each
-  // test is a match() that yields the number itself.)
+  // once, then the offset from a petal to its flower's center, stored plus 2
+  // (u, v) since an @match result may not be a bare 0, and from the center
+  // (cq, cr) the flower's number 0-3, 2a + 3b for its lattice coordinates
+  // a = (4cq + cr) / 13, b = (3cr - cq) / 13, which picks one of four
+  // sheet-wide inks. css-doodle's calc reads a variable as text and takes
+  // four equal readings in a row for a loop (and returns 0), so every $()
+  // here reads each variable once.
+  const isG = (k) => `$(g) == ${k}`;
   const cell = [
     '--q: @calc(@x - 1 - floor((@y - 1) / 2));',
     '--r: @calc(@y - 1);',
     '--g: $(((q - 3 * r) % 13 + 13) % 13);',
-    '--dq: $(match(g == 1, 1, 0) + match(g == 4, 1, 0) + match(g == 12, -1, 0) + match(g == 9, -1, 0));',
-    '--dr: $(match(g == 10, 1, 0) + match(g == 9, 1, 0) + match(g == 3, -1, 0) + match(g == 4, -1, 0));',
-    '--n: $((((4 * (q - dq) + r - dr) / 13 * 2 + (3 * (r - dr) - q + dq) / 13 * 3) % 4 + 4) % 4);',
+    `--u: @match(${isG(1)}, 3, ${isG(4)}, 3, ${isG(12)}, 1, ${isG(9)}, 1, 2);`,
+    `--v: @match(${isG(10)}, 3, ${isG(9)}, 3, ${isG(3)}, 1, ${isG(4)}, 1, 2);`,
+    '--p: $(abs(u - 2) + abs(v - 2));',
+    '--cq: $(q - u + 2);',
+    '--cr: $(r - v + 2);',
+    '--n: $(((5 * cq + 11 * cr) / 13 % 4 + 4) % 4);',
   ].join(' ');
   const fill =
-    '@match($(g) == 0, var(--color1), $(dq * dq + dr * dr) == 0, var(--color2), $(n) == 0, @var(--k0), $(n) == 1, @var(--k1), $(n) == 2, @var(--k2), @var(--k3))';
+    '@match($(g) == 0, var(--color1), $(p) == 0, var(--color2), $(n) == 0, @var(--k0), $(n) == 1, @var(--k1), $(n) == 2, @var(--k2), @var(--k3))';
   add(
     'Flower Garden',
     'Grandmother\'s flower garden: hexagon patches pieced into seven-patch flowers, each a ring of one fabric round a yellow center, set apart by a cream path.',
