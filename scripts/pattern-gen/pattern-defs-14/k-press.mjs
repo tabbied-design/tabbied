@@ -207,7 +207,7 @@ add(
   'A press proof of registration targets: crosshair rings with a quartered disc at the center alternating with spoked star targets, each in a process ink.',
   (c) => ({
     host: `--tgt: ${TARGET}; --star: ${STAR}; --quad: ${QUAD};`,
-    rule: `${F} { --k: @calc((@x + @y) % 2); background: ${ink(c)}; border-radius: @match((x + y) % 2 == 1, 50%, 0%); ${msk('@match((x + y) % 2 == 1, @var(--star), @var(--tgt))')} ${tf('rotate(@match((x + y) % 2 == 1, @r(0deg, 30deg), @p(0deg, 90deg)))')} ${B(`inset: @match((x + y) % 2 == 1, 43%, 33%); border-radius: 50%; background: ${ink(c)}; ${msk('@match((x + y) % 2 == 1, none, @var(--quad))')}`)} }${TR}`,
+    rule: `${F} { background: ${ink(c)}; border-radius: @match((x + y) % 2 == 1, 50%, 0%); ${msk('@match((x + y) % 2 == 1, @var(--star), @var(--tgt))')} ${tf('rotate(@match((x + y) % 2 == 1, @r(0deg, 30deg), @p(0deg, 90deg)))')} ${B(`inset: @match((x + y) % 2 == 1, 43%, 33%); border-radius: 50%; background: ${ink(c)}; ${msk('@match((x + y) % 2 == 1, none, @var(--quad))')}`)} }${TR}`,
   }),
   {
     palette: ['#F5F2EA', '#00A0D6', '#E5007E', '#F2C200', '#1B1B1B'],
