@@ -146,14 +146,13 @@ add(
 // down-left or none, its tens digit the column offset plus one and its units
 // the row offset), and the line to it (lx, ly).
 const STAR_VARS = [
-  '--cx: @x; --cy: @y;',
-  '--sx: $(round(5000 + 2700 * sin(1.9 * cx + 2.7 * cy + 0.3)) / 10000);',
-  '--sy: $(round(5000 + 2700 * sin(2.3 * cx - 1.7 * cy + 1.9)) / 10000);',
+  '--sx: $(round(5000 + 2700 * sin(1.9 * @x + 2.7 * @y + 0.3)) / 10000);',
+  '--sy: $(round(5000 + 2700 * sin(2.3 * @x - 1.7 * @y + 1.9)) / 10000);',
   '--o: @p(20, 11, 21, 1, 10);',
   '--ox: $(floor(o / 10) - 1);',
   '--oy: $(o % 10);',
-  '--lx: $(round(10000 * (ox + 0.5 + 0.27 * sin(1.9 * (cx + ox) + 2.7 * (cy + oy) + 0.3) - sx)) / 10000);',
-  '--ly: $(round(10000 * (oy + 0.5 + 0.27 * sin(2.3 * (cx + ox) - 1.7 * (cy + oy) + 1.9) - sy)) / 10000);',
+  '--lx: $(round(10000 * (ox + 0.5 + 0.27 * sin(1.9 * (@x + ox) + 2.7 * (@y + oy) + 0.3) - sx)) / 10000);',
+  '--ly: $(round(10000 * (oy + 0.5 + 0.27 * sin(2.3 * (@x + ox) - 1.7 * (@y + oy) + 1.9) - sy)) / 10000);',
 ].join(' ');
 
 add(

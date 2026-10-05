@@ -329,11 +329,11 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
   const f6 = (v) => Math.round(v * 1e6) / 1e6;
   const edge = Array.from({ length: n + 1 }, (_, i) => {
     const t = (2 * i) / n - 1;
-    return `${n2((100 * i) / n)}% $(round(3066.667 + 866.667 * sin(a + ${f6(k1 * t)}) + 333.333 * sin(b + ${f6(k2 * t)})) / 100)%`;
+    return `${n2((100 * i) / n)}% $(round(2100 + 1300 * sin(a + ${f6(k1 * t)}) + 500 * sin(b + ${f6(k2 * t)})) / 100)%`;
   }).join(', ');
   const tone = '1 + floor(min(0.999, (@y - 1) / @Y) * 5)';
   // The shadow is the same outline lifted by a twentieth of a cell.
-  const box = (top) => `left: -100%; width: 200%; top: ${top}%; height: 300%;`;
+  const box = (top) => `left: -100%; width: 200%; top: ${top}%; height: 200%;`;
   add(
     'Paper Sea',
     'A sea cut from layers of paper, one wave-edged sheet per row from pale at the top to deep at the bottom, each laid over the one behind with a thin shadow along its edge.',
@@ -343,8 +343,8 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
         --t: @calc(${tone});
         --w: @match($(t) == 1, var(--color1), $(t) == 2, var(--color2), $(t) == 3, var(--color3), $(t) == 4, var(--color4), var(--color5));
         --e: polygon(${edge}, 100% 100%, 0% 100%);
-        ${B(`${box(-55)} background: var(--color5); opacity: 0.3;`)}
-        ${A(`${box(-50)} background: ${paint('w')};`)}
+        ${B(`${box(-5)} background: var(--color5); opacity: 0.3; ${clipBy('e')}`)}
+        ${A(`${box(0)} background: ${paint('w')}; ${clipBy('e')}`)}
       }${TR}`,
     }),
     {
