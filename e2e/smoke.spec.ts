@@ -1108,7 +1108,8 @@ test.describe('The Developers section', () => {
   test('plain HTML has its own page now', async ({ page }) => {
     await page.goto('/docs/html');
     await expect(page.getByRole('heading', { level: 1, name: 'Plain HTML' })).toBeVisible();
-    await expect(page.getByText('hydratePatterns({ patterns: { radius } });')).toBeVisible();
+    // The recipes repeat the line, so the page's first use is the one checked.
+    await expect(page.getByText('hydratePatterns({ patterns: { radius } });').first()).toBeVisible();
     await page.goto('/docs/react');
     await expect(page.locator('#html')).toHaveCount(0);
   });
