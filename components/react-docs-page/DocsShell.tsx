@@ -23,6 +23,7 @@ export default function DocsShell({
   chips,
   sections,
   children,
+  banner,
   linkConcepts = true,
 }: {
   title: string;
@@ -30,6 +31,8 @@ export default function DocsShell({
   chips: string[];
   sections: DocsSection[];
   children: ReactNode;
+  /** A full-width piece between the heading block and the article (the Developers page's pattern). */
+  banner?: ReactNode;
   /** The footer's pointer to /docs/concepts/, which that page itself leaves out. */
   linkConcepts?: boolean;
 }) {
@@ -65,6 +68,8 @@ export default function DocsShell({
                 </div>
               </div>
             </header>
+
+            {banner}
 
             <div className={styles.docs}>
               <DocsNav sections={sections} />

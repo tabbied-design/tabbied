@@ -14,6 +14,9 @@ import DocsNav from 'components/react-docs-page/DocsNav';
 import { Callout, Code, docsSection } from 'components/react-docs-page/parts';
 import type { DocsSection } from 'components/react-docs-page/sections';
 import home from 'components/main-page/home.module.css';
+import SizingExamples, { Prose } from 'components/react-docs-page/SizingExamples';
+import RecipeExamples from 'components/react-docs-page/RecipeExamples';
+import { REACT_RECIPES } from 'components/react-docs-page/examples/recipes/react';
 import styles from 'components/react-docs-page/ReactDocs.module.css';
 import { pageMetadata } from 'lib/seo';
 
@@ -33,6 +36,7 @@ const SECTIONS: DocsSection[] = [
   { id: 'quick-start', label: 'Quick start' },
   { id: 'presets', label: 'Importing presets' },
   { id: 'fit-modes', label: 'Sizing & fit modes' },
+  { id: 'sizing', label: 'Sizing, case by case' },
   { id: 'palettes', label: 'Colors & palettes' },
   { id: 'options', label: 'Options' },
   { id: 'seeds', label: 'Seeds, redraw & export' },
@@ -40,6 +44,9 @@ const SECTIONS: DocsSection[] = [
   { id: 'accessibility', label: 'Accessibility' },
   { id: 'ssr', label: 'Server rendering' },
   { id: 'vanilla', label: 'Vanilla JavaScript' },
+  { id: 'recipes-layout', label: 'Recipes: layout' },
+  { id: 'recipes-state', label: 'Recipes: interaction' },
+  { id: 'recipes-integration', label: 'Recipes: in an app' },
   { id: 'api', label: 'API reference' },
 ];
 
@@ -742,6 +749,13 @@ export default function ReactDocsPage() {
                   </Example>
                 </Section>
 
+                <Section id="sizing" title="Sizing, case by case">
+                  <p>
+                    <Prose text={'Each case below was measured in a browser, in an 800px-wide parent: the drawing is the box the pattern gets, to scale, and the code is all it takes. Every case uses `radius`; any design behaves the same.'} />
+                  </p>
+                  <SizingExamples setup="react" />
+                </Section>
+
                 <Section id="palettes" title="Colors & palettes">
                   <p>
                     Pass <Code>palette</Code> to recolor a design - the
@@ -971,6 +985,27 @@ export default function ReactDocsPage() {
                     with <Code>resolveBoxStyle()</Code> for sizing the host
                     and <Code>hydratePatterns()</Code> for markup.
                   </p>
+                </Section>
+
+                <Section id="recipes-layout" title="Recipes: layout">
+                  <p>
+                    <Prose text={'Whole components, imports included, ready to paste. Swap the design for any slug in the gallery.'} />
+                  </p>
+                  <RecipeExamples recipes={REACT_RECIPES} group="layout" />
+                </Section>
+
+                <Section id="recipes-state" title="Recipes: interaction">
+                  <p>
+                    <Prose text={'Patterns that answer to state: colors, seeds, designs, options, motion and export.'} />
+                  </p>
+                  <RecipeExamples recipes={REACT_RECIPES} group="state" />
+                </Section>
+
+                <Section id="recipes-integration" title="Recipes: in an app">
+                  <p>
+                    <Prose text={'Where the pattern meets the rest of an app.'} />
+                  </p>
+                  <RecipeExamples recipes={REACT_RECIPES} group="integration" />
                 </Section>
 
                 <Section id="api" title="API reference">

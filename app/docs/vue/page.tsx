@@ -4,6 +4,9 @@ import CodeBlock from 'components/react-docs-page/CodeBlock';
 import DocsShell from 'components/react-docs-page/DocsShell';
 import { Code, docsSection } from 'components/react-docs-page/parts';
 import type { DocsSection } from 'components/react-docs-page/sections';
+import SizingExamples, { Prose } from 'components/react-docs-page/SizingExamples';
+import RecipeExamples from 'components/react-docs-page/RecipeExamples';
+import { VUE_RECIPES } from 'components/react-docs-page/examples/recipes/vue';
 import styles from 'components/react-docs-page/ReactDocs.module.css';
 import { pageMetadata } from 'lib/seo';
 
@@ -24,6 +27,10 @@ const SECTIONS: DocsSection[] = [
   { id: 'nuxt', label: 'Nuxt' },
   { id: 'updates', label: 'Changing props' },
   { id: 'template-ref', label: 'Redraw & export' },
+  { id: 'sizing', label: 'Sizing, case by case' },
+  { id: 'recipes-layout', label: 'Recipes: layout' },
+  { id: 'recipes-state', label: 'Recipes: interaction' },
+  { id: 'recipes-integration', label: 'Recipes: Vue and Nuxt' },
   { id: 'api', label: 'API reference' },
 ];
 
@@ -142,6 +149,34 @@ export default function VueDocsPage() {
           fires once the first render is drawn.
         </p>
         <CodeBlock code={templateRefCode} title="App.vue" lang="vue" className={styles.codeStandalone} />
+      </Section>
+
+      <Section id="sizing" title="Sizing, case by case">
+        <p>
+          <Prose text={'Each case below was measured in a browser, in an 800px-wide parent: the drawing is the box the pattern gets, to scale, and the code is all it takes. Every case uses `radius`; any design behaves the same.'} />
+        </p>
+        <SizingExamples setup="vue" />
+      </Section>
+
+      <Section id="recipes-layout" title="Recipes: layout">
+        <p>
+          <Prose text={'Whole files, imports included, ready to paste. Swap the design for any slug in the gallery.'} />
+        </p>
+        <RecipeExamples recipes={VUE_RECIPES} group="layout" />
+      </Section>
+
+      <Section id="recipes-state" title="Recipes: interaction">
+        <p>
+          <Prose text={'Patterns that answer to state: colors, seeds, designs, options, motion and export.'} />
+        </p>
+        <RecipeExamples recipes={VUE_RECIPES} group="state" />
+      </Section>
+
+      <Section id="recipes-integration" title="Recipes: Vue and Nuxt">
+        <p>
+          <Prose text={'Where the pattern meets the rest of an app.'} />
+        </p>
+        <RecipeExamples recipes={VUE_RECIPES} group="integration" />
       </Section>
 
       <Section id="api" title="API reference">

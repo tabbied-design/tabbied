@@ -339,8 +339,14 @@
 .entryName {
   display: block;
   margin-bottom: 10px;
-  font: 500 13px var(--h-mono);
+  font: 600 15px var(--h-sans);
   color: var(--h-ink);
+}
+
+/* A command or a URL as a card's name (the MCP page's two servers) stays in
+   the mono it is typed in. */
+code.entryName {
+  font: 500 13px var(--h-mono);
 }
 
 .entry p {
@@ -883,8 +889,31 @@
   background-color: var(--h-paper-well);
 }
 
-.setupCard .entryName {
-  font-weight: 600;
+/* The setup's own mark, in a well above its name; teal with the card's
+   border on hover. */
+.setupIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 16px;
+  color: var(--h-ink);
+  background-color: var(--h-paper-well);
+  border: 1px solid var(--h-paper-rule);
+  border-radius: 12px;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.setupIcon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.article a.setupCard:hover .setupIcon,
+.article a.setupCard:focus-visible .setupIcon {
+  color: var(--h-teal);
+  border-color: var(--h-teal);
 }
 
 .setupMeta {
@@ -895,7 +924,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .article a.setupCard {
+  .article a.setupCard,
+  .setupIcon {
     transition: none;
   }
 }
@@ -916,4 +946,160 @@
 .namesTable td code {
   white-space: nowrap;
   font-size: 12px;
+}
+
+/* ---- The Developers page's decoration ---- */
+
+/* Under the heading block, the column's full width: the homepage's dark
+   ground and palettes, drawn by the package itself (PatternBand). */
+.docsBanner {
+  padding-top: 40px;
+}
+
+.docsBannerArt {
+  height: 200px;
+  border-radius: 18px;
+}
+
+/* The band that closes a section, before the next one's rule. */
+.docsBand {
+  height: 88px;
+  margin-top: 40px;
+  border-radius: 14px;
+}
+
+/* Six tiles, one design and one palette each. */
+.docsMosaic {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.docsTile {
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+}
+
+/* The design and palette a piece is drawn in, on a dark plate in its corner
+   so it reads over any of them. */
+.artCaption {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 1;
+  padding: 4px 8px;
+  font: 400 11px var(--h-mono);
+  color: var(--h-fg);
+  letter-spacing: 0.04em;
+  background: oklch(0.17 0.012 285 / 0.82);
+  border-radius: 6px;
+}
+
+@media (max-width: 767.98px) {
+  .docsBanner {
+    padding-top: 28px;
+  }
+
+  .docsBannerArt {
+    height: 140px;
+  }
+
+  .docsBand {
+    height: 64px;
+  }
+
+  .docsMosaic {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---- Sizing examples (SizingExamples) ---- */
+
+.sizeCase {
+  margin-top: 40px;
+}
+
+/* The case and the box it draws, to scale, side by side; the code that
+   makes it runs the full width under them, so a line of it reads without
+   scrolling. */
+.sizeExample {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: start;
+}
+
+.sizeExample .minihead {
+  margin-top: 0;
+}
+
+.sizeExample .sizeResult {
+  margin-top: 4px;
+}
+
+.sizeResult {
+  margin: 0;
+  padding: 8px;
+  background-color: var(--h-paper-well);
+  border: 1px solid var(--h-paper-rule);
+  border-radius: 12px;
+}
+
+/* The 800px parent, drawn 320px wide: a dashed outline the box sits in. */
+.sizeParent {
+  position: relative;
+  max-width: 100%;
+  outline: 1px dashed oklch(0 0 0 / 0.3);
+  outline-offset: 0;
+}
+
+/* The pattern's box, shaded with a design's own preview. */
+.sizeBox {
+  max-width: 100%;
+  background: #3b3f45 url('/previews/radius.webp') center / 160px;
+  border-radius: 2px;
+}
+
+/* Nothing drawn: the 0px box as a red rule across the parent. */
+.sizeEmpty {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  left: 8px;
+  border-top: 2px dashed oklch(0.58 0.2 25);
+}
+
+.sizeCaption {
+  margin-top: 8px;
+  font: 400 12px var(--h-mono);
+  color: var(--h-ink);
+}
+
+.sizeCaption span {
+  color: oklch(0.5 0.01 260);
+}
+
+.sizeCode {
+  margin: 16px 0 0;
+}
+
+@media (max-width: 1023.98px) {
+  .sizeExample {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .sizeExample .sizeResult {
+    margin-top: 0;
+  }
+}
+
+/* One recipe: its heading, a sentence, the file. */
+.recipe {
+  margin-top: 40px;
+}
+
+.recipe:first-of-type {
+  margin-top: 24px;
 }

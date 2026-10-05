@@ -4,6 +4,9 @@ import CodeBlock from 'components/react-docs-page/CodeBlock';
 import DocsShell from 'components/react-docs-page/DocsShell';
 import { Callout, Code, docsSection } from 'components/react-docs-page/parts';
 import type { DocsSection } from 'components/react-docs-page/sections';
+import SizingExamples, { Prose } from 'components/react-docs-page/SizingExamples';
+import RecipeExamples from 'components/react-docs-page/RecipeExamples';
+import { ELEMENT_RECIPES } from 'components/react-docs-page/examples/recipes/element';
 import styles from 'components/react-docs-page/ReactDocs.module.css';
 import { pageMetadata } from 'lib/seo';
 
@@ -24,6 +27,9 @@ const SECTIONS: DocsSection[] = [
   { id: 'bundler', label: 'In a bundled app' },
   { id: 'frameworks', label: 'Frameworks' },
   { id: 'scripting', label: 'Scripting it' },
+  { id: 'recipes-layout', label: 'Recipes: layout' },
+  { id: 'recipes-state', label: 'Recipes: interaction' },
+  { id: 'recipes-integration', label: 'Recipes: hosting and bundling' },
   { id: 'api', label: 'API reference' },
 ];
 
@@ -131,6 +137,10 @@ export default function WebComponentDocsPage() {
             <Code>aspect-ratio</Code>: the pattern has nothing to fill.
           </p>
         </Callout>
+        <p>
+          <Prose text={'Each case below was measured in a browser, in an 800px-wide parent: the drawing is the box the pattern gets, to scale, and the code is all it takes. Every case uses `radius`; any design behaves the same.'} />
+        </p>
+        <SizingExamples setup="element" />
       </Section>
 
       <Section id="bundler" title="In a bundled app">
@@ -189,6 +199,27 @@ export default function WebComponentDocsPage() {
           reason in <Code>event.detail</Code>. Moving the element within the
           page keeps its pattern; only taking it out of the page ends it.
         </p>
+      </Section>
+
+      <Section id="recipes-layout" title="Recipes: layout">
+        <p>
+          <Prose text={'Whole files, imports included, ready to paste. Swap the design for any slug in the gallery.'} />
+        </p>
+        <RecipeExamples recipes={ELEMENT_RECIPES} group="layout" />
+      </Section>
+
+      <Section id="recipes-state" title="Recipes: interaction">
+        <p>
+          <Prose text={'Patterns that answer to state: colors, seeds, designs, options, motion and export.'} />
+        </p>
+        <RecipeExamples recipes={ELEMENT_RECIPES} group="state" />
+      </Section>
+
+      <Section id="recipes-integration" title="Recipes: hosting and bundling">
+        <p>
+          <Prose text={'Where the pattern meets the rest of an app.'} />
+        </p>
+        <RecipeExamples recipes={ELEMENT_RECIPES} group="integration" />
       </Section>
 
       <Section id="api" title="API reference">

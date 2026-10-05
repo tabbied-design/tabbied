@@ -1983,6 +1983,38 @@ against `availableSnippets` at the checked-out version, so it holds on both
 sides of a release. A group, not a submenu: a hover submenu beside the
 popup is poor on touch and in the phone layout's narrow dropdown.
 
+## The setup pages' examples - data, measured, and run
+
+Every setup page under `/docs` (React, Vue, Svelte, plain JavaScript, the web
+component, plain HTML) ends in two generated parts, both read from
+`components/react-docs-page/examples/`:
+
+- **Sizing, case by case** (`sizing.ts`): 18 cases, each the box a pattern
+  gets for one combination (a width and a height, a ratio with both set, a
+  parent with no height, a min-height, a flex row, a fixed canvas ...), with
+  the box drawn to scale and the code in every setup's spelling. Two
+  families, because the box comes from two places: the four with box props
+  share `resolveBoxStyle()`, and the element and the HTML div are plain
+  blocks (full width, 0px tall until something gives them a height), so a
+  case can have a different answer in each. Every result was measured in
+  Chromium, never reasoned out: `fill` taking the width is what makes "a
+  height and a ratio" 800 by 300 and not 600 by 300.
+- **Recipes** (`recipes/<setup>.ts`): 15 to 19 per page in three groups
+  (layout, state, integration), each a whole file.
+
+The code is generated or written as data, never in JSX, so one list feeds
+six pages. Two gates keep it true. `lib/docsExamples.test.mjs` (in `npm run
+test:lib`) type-checks the React code against the built package, compiles the
+Vue code with Vue's compiler, and parses the rest; Svelte has no compiler in
+the repo, so a change to its examples is compiled by hand with Svelte 5.
+`e2e/docs-examples.spec.ts` renders every sizing case in the three setups
+whose code is the whole page and asserts the box each draws, and runs every
+HTML and web component recipe as written, with esm.sh and jsdelivr answered
+from `dist/`, pressing each control. Change a package default and the
+spec names the cases whose documented box moved. The sizing code is broken
+at 80 columns, Prettier's width, because it is shown full width under the
+diagram; a one-line tag of 120 characters scrolled off the column.
+
 ## Grid snapping - invariant (full reference: docs/grid-snapping.md)
 
 css-doodle lays its grid out as `repeat(n, 1fr)`, so a container that isn't

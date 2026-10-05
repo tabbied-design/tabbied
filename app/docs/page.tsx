@@ -1,10 +1,16 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { chamfer, cleat, epicentre, merlon, mixtape, ortho, prisma, radius, truchetrings, wander } from 'tabbied/patterns';
+import type { PatternDefinition } from 'tabbied';
+import type { PaletteName } from 'components/main-page/homeMotion';
 import { MCP_VERSION, PACKAGE_VERSION, PATTERN_COUNT } from 'lib/siteCounts';
 import CodeBlock from 'components/react-docs-page/CodeBlock';
 import DocsShell from 'components/react-docs-page/DocsShell';
 import { Code, docsSection } from 'components/react-docs-page/parts';
 import type { DocsSection } from 'components/react-docs-page/sections';
+import SetupIconMark, { type SetupIcon } from 'components/react-docs-page/SetupIcon';
+import PatternBand from 'components/react-docs-page/PatternBand';
+import { homePalette } from 'components/react-docs-page/homePalettes';
 import styles from 'components/react-docs-page/ReactDocs.module.css';
 import { pageMetadata } from 'lib/seo';
 
@@ -31,41 +37,47 @@ const Section = docsSection(SECTIONS);
 
 const README_URL = 'https://github.com/tabbied-design/tabbied/tree/main/packages/tabbied#readme';
 
-type Card = { href: string; name: string; children: ReactNode; meta: string };
+type Card = { href: string; name: string; icon: SetupIcon; children: ReactNode; meta: string };
 
 const SETUPS: Card[] = [
   {
     href: '/docs/react/',
+    icon: 'react',
     name: 'React',
     children: <>The TabbiedPattern component, with live examples of every prop.</>,
     meta: 'tabbied/react',
   },
   {
     href: '/docs/vue/',
+    icon: 'vue',
     name: 'Vue and Nuxt',
     children: <>The same component for Vue 3, drawn at its final size on the server.</>,
     meta: 'tabbied/vue',
   },
   {
     href: '/docs/svelte/',
+    icon: 'svelte',
     name: 'Svelte and SvelteKit',
     children: <>An action, plus the attributes a SvelteKit server render needs.</>,
     meta: 'tabbied/svelte',
   },
   {
     href: '/docs/web-component/',
+    icon: 'element',
     name: 'Web component',
     children: <>One tag for any page or framework, loading only the designs it names.</>,
     meta: '<tabbied-pattern>',
   },
   {
     href: '/docs/html/',
+    icon: 'html',
     name: 'Plain HTML',
     children: <>Markup with data attributes and one script, with no build step.</>,
     meta: 'hydratePatterns()',
   },
   {
     href: '/docs/javascript/',
+    icon: 'javascript',
     name: 'JavaScript',
     children: <>The framework-free controller every setup is built on.</>,
     meta: 'createPattern()',
@@ -75,6 +87,7 @@ const SETUPS: Card[] = [
 const ASSISTANTS: Card[] = [
   {
     href: '/docs/mcp/',
+    icon: 'mcp',
     name: 'MCP server',
     children: (
       <>Lets an assistant search the designs, look at them, and write the code for the one it picks.</>
@@ -83,12 +96,14 @@ const ASSISTANTS: Card[] = [
   },
   {
     href: '/llms-full.txt',
+    icon: 'llms',
     name: 'llms-full.txt',
     children: <>The whole API and every design as one text file, for an assistant without MCP.</>,
     meta: '/llms.txt for the index',
   },
   {
     href: '/catalog.json',
+    icon: 'catalog',
     name: 'catalog.json',
     children: <>Every design as data: tags, moods, palette, options and a preview image.</>,
     meta: 'also tabbied/catalog.json',
@@ -98,11 +113,56 @@ const ASSISTANTS: Card[] = [
 const cliCode = `npx tabbied list --good-for hero-background --density sparse
 npx tabbied render radius --seed k9Pz --size 1600x900 --out hero.svg`;
 
+// The page's decoration, every piece of it Tabbied: a banner under the
+// heading, a band closing each section, and a mosaic in the last, each a
+// different design in one of the homepage's four palettes, so the page is
+// drawn by the package it documents. Decorative only (aria-hidden), built as
+// each nears the viewport.
+type Art = { pattern: PatternDefinition; palette: PaletteName; seed: string; density?: number };
+
+const BANNER: Art = { pattern: radius, palette: 'Mint', seed: 'developers', density: 0.3 };
+
+const BANDS: Record<'setup' | 'assistants' | 'cli', Art> = {
+  setup: { pattern: prisma, palette: 'Ocean', seed: 'setups', density: 0.45 },
+  assistants: { pattern: truchetrings, palette: 'Lilac', seed: 'assistants', density: 0.35 },
+  cli: { pattern: epicentre, palette: 'Sunset', seed: 'cli', density: 0.4 },
+};
+
+const MOSAIC: Art[] = [
+  { pattern: mixtape, palette: 'Mint', seed: 'mosaic-1', density: 0.35 },
+  { pattern: chamfer, palette: 'Sunset', seed: 'mosaic-2', density: 0.35 },
+  { pattern: wander, palette: 'Ocean', seed: 'mosaic-3', density: 0.3 },
+  { pattern: merlon, palette: 'Lilac', seed: 'mosaic-4', density: 0.35 },
+  { pattern: ortho, palette: 'Mint', seed: 'mosaic-5', density: 0.4 },
+  { pattern: cleat, palette: 'Ocean', seed: 'mosaic-6', density: 0.3 },
+];
+
+function ArtPiece({ art, className, caption }: { art: Art; className: string; caption?: boolean }) {
+  return (
+    <PatternBand
+      pattern={art.pattern}
+      palette={homePalette(art.palette, art.pattern)}
+      seed={art.seed}
+      density={art.density}
+      className={className}
+    >
+      {caption ? (
+        <span className={styles.artCaption}>
+          {art.pattern.slug} / {art.palette}
+        </span>
+      ) : null}
+    </PatternBand>
+  );
+}
+
 function Cards({ cards }: { cards: Card[] }) {
   return (
     <div className={styles.entries}>
       {cards.map((card) => (
         <a key={card.href} href={card.href} className={`${styles.entry} ${styles.setupCard}`}>
+          <span className={styles.setupIcon}>
+            <SetupIconMark icon={card.icon} />
+          </span>
           <span className={styles.entryName}>{card.name}</span>
           <p>{card.children}</p>
           <span className={styles.setupMeta}>{card.meta}</span>
@@ -126,9 +186,17 @@ export default function DevelopersPage() {
       }
       chips={[`tabbied v${PACKAGE_VERSION}`, 'MIT license']}
       sections={SECTIONS}
+      banner={
+        <div className={styles.docsBanner} aria-hidden="true">
+          <ArtPiece art={BANNER} className={styles.docsBannerArt} caption />
+        </div>
+      }
     >
       <Section id="setup" title="Choose your setup">
         <Cards cards={SETUPS} />
+        <div aria-hidden="true">
+          <ArtPiece art={BANDS.setup} className={styles.docsBand} />
+        </div>
       </Section>
 
       <Section id="assistants" title="AI assistants">
@@ -138,6 +206,9 @@ export default function DevelopersPage() {
           chooses one.
         </p>
         <Cards cards={ASSISTANTS} />
+        <div aria-hidden="true">
+          <ArtPiece art={BANDS.assistants} className={styles.docsBand} />
+        </div>
       </Section>
 
       <Section id="cli" title="Command line">
@@ -151,6 +222,9 @@ export default function DevelopersPage() {
           has the setup and every flag.
         </p>
         <CodeBlock code={cliCode} title="terminal" lang="sh" className={styles.codeStandalone} />
+        <div aria-hidden="true">
+          <ArtPiece art={BANDS.cli} className={styles.docsBand} />
+        </div>
       </Section>
 
       <Section id="shared" title="In every setup">
@@ -162,6 +236,16 @@ export default function DevelopersPage() {
           <a href="/docs/react/#fit-modes">React docs</a> show them as live
           examples.
         </p>
+        <p>
+          Everything drawn on this page is the package at work: six designs
+          below, each in one of the homepage&apos;s palettes, from one
+          component and four props.
+        </p>
+        <div className={styles.docsMosaic} aria-hidden="true">
+          {MOSAIC.map((art) => (
+            <ArtPiece key={art.seed} art={art} className={styles.docsTile} caption />
+          ))}
+        </div>
       </Section>
     </DocsShell>
   );
