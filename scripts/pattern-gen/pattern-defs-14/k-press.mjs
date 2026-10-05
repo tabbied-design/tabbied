@@ -791,26 +791,41 @@ const SG_Y = [
   [1.7, 2.3, 2.9],
   [0.8, 1.9, 1.3],
 ];
-// the two sine phases of band j at the cell's left edge (--fj, --gj), then
-// its thickness at each sample, stepping the phases a quarter cell at a time
+// Band j's two sine phases at the cell's left edge (--fj, --gj): the phase
+// rolled once per drawing, plus the cell's column and row. Its thickness at
+// each sample (--ua .. --we, to a tenth of a percent) then steps the phases a
+// quarter cell at a time.
 const SG_VARS = [
-  ...[0, 1, 2].map((j) => `--f${j}: $((@x - 1) * ${SG_W[0][j]} + p${j} + @y * ${SG_Y[0][j]}); --g${j}: $((@x - 1) * ${SG_W[1][j]} + p${j} * 1.7 + @y * ${SG_Y[1][j]});`),
+  ...[0, 1, 2].map(
+    (j) =>
+      `--f${j}: @calc((@x - 1) * ${SG_W[0][j]} + @once(@r(0, 6.283)) + @y * ${SG_Y[0][j]}); --g${j}: @calc((@x - 1) * ${SG_W[1][j]} + @once(@r(0, 6.283)) + @y * ${SG_Y[1][j]});`
+  ),
   ...[0, 1, 2].map((j) =>
     SG_AT.split('')
-      .map((a, i) => `--${'uvw'[j]}${a}: $(${SG_AMP[j]} * (1.05 + 0.6 * sin(f${j} + ${+((SG_W[0][j] * i) / SG_N).toFixed(4)}) + 0.35 * sin(g${j} + ${+((SG_W[1][j] * i) / SG_N).toFixed(4)})));`)
+      .map((a, i) => {
+        const d0 = +((SG_W[0][j] * i) / SG_N).toFixed(4);
+        const d1 = +((SG_W[1][j] * i) / SG_N).toFixed(4);
+        return `--${'uvw'[j]}${a}: $(round(${SG_AMP[j] * 10}*(1.05+0.6*sin(f${j}+${d0})+0.35*sin(g${j}+${d1})))/10);`;
+      })
       .join(' ')
   ),
 ].join(' ');
-/** Boundary k (0 the top edge, 3 the bottom) at sample a. */
-const sgEdge = (k, a) => {
-  const h = ['u', 'v', 'w'].map((n) => n + a);
-  return `50 - (${h.join(' + ')}) / 2${h.slice(0, k).map((n) => ` + ${n}`).join('')}`;
-};
+// The outlines are left to the browser: the top edge at each sample (--ta ..
+// --te) is a CSS calc() over the three thicknesses, and every vertex below it
+// adds thicknesses to that, so css-doodle works out only the fifteen sines.
+const SG_TOP = SG_AT.split('').map((a) => `--t${a}: calc(50% - (@var(--u${a}) + @var(--v${a}) + @var(--w${a})) * 0.5%);`).join(' ');
+const sgLower = (k, a) =>
+  [
+    `@var(--t${a})`,
+    `calc(@var(--t${a}) + @var(--u${a}) * 1%)`,
+    `calc(@var(--t${a}) + (@var(--u${a}) + @var(--v${a})) * 1%)`,
+    `calc(100% - @var(--t${a}))`,
+  ][k];
 /** The region from the stream's top edge down to boundary k (1-3). */
 const sgDown = (k) => {
-  const xs = SG_AT.split('').map((a, i) => [a, ((i * 100) / SG_N).toFixed(1)]);
-  const upper = xs.map(([a, x]) => `${x}% ${q(sgEdge(0, a))}%`);
-  const lower = [...xs].reverse().map(([a, x]) => `${x}% ${q(sgEdge(k, a))}%`);
+  const xs = SG_AT.split('').map((a, i) => [a, `${(i * 100) / SG_N}%`]);
+  const upper = xs.map(([a, x]) => `${x} ${sgLower(0, a)}`);
+  const lower = [...xs].reverse().map(([a, x]) => `${x} ${sgLower(k, a)}`);
   return `polygon(${[...upper, ...lower].join(', ')})`;
 };
 
@@ -818,7 +833,7 @@ add(
   'Streamgraph',
   'Rows of streamgraphs: three colored layers stacked about a midline, swelling and thinning in smooth waves as they flow across the sheet.',
   (c) => ({
-    rule: `--p0: @once(@r(0, 6.283)); --p1: @once(@r(0, 6.283)); --p2: @once(@r(0, 6.283)); ${F} { ${SG_VARS} --k1: ${sgDown(1)}; --k2: ${sgDown(2)}; --k3: ${sgDown(3)}; background: @p(var(--color3)); ${cp('@var(--k3)')} ${B(`inset: 0; background: @p(var(--color2)); ${cp('@var(--k2)')}`)} ${A(`inset: 0; background: @p(var(--color1)); ${cp('@var(--k1)')}`)} }${TR}`,
+    rule: `${F} { ${SG_VARS} ${SG_TOP} --k1: ${sgDown(1)}; --k2: ${sgDown(2)}; --k3: ${sgDown(3)}; background: @p(var(--color3)); ${cp('@var(--k3)')} ${B(`inset: 0; background: @p(var(--color2)); ${cp('@var(--k2)')}`)} ${A(`inset: 0; background: @p(var(--color1)); ${cp('@var(--k1)')}`)} }${TR}`,
   }),
   {
     pal: 27,

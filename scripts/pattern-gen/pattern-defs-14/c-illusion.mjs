@@ -189,15 +189,17 @@ add(
   () => {
     // Per cell, once: the warped coordinate at both edges (ax, bx), the
     // two-column repeat (lx) and the phase the cell starts at (kx), the same
-    // down the rows, and from those the stripes' stops, which the masks read
-    // with @var.
+    // down the rows, and from those the stripes' stops. The four stripe
+    // layers are kept on the cell, so the prefixed and plain masks of both
+    // pseudos read them with @var instead of each writing them out.
     const W = (t, n) => `(1.2 * ${n} * ${warp(t, -0.72)})`;
     const axis = (v, edge0, edge1, n) =>
       `--a${v}: ${once(W(edge0, n), 4)}; --b${v}: ${once(W(edge1, n), 4)}; --l${v}: ${once(`200 / (b${v} - a${v})`)}; --k${v}: ${once(`a${v} / 2 - floor(a${v} / 2)`, 4)}; ${warpStops(`s${v}`, `l${v}`, `k${v}`)}`;
-    const vars = `${axis('x', '(@x - 1) / @X', '@x / @X', '@X')} ${axis('y', '(@y - 1) / @Y', '@y / @Y', '@Y')}`;
+    const layers = `--gx: ${warpV('90deg', 'sx')}; --hx: ${warpV('90deg', 'sx', true)}; --gy: ${warpV('180deg', 'sy')}; --hy: ${warpV('180deg', 'sy', true)};`;
+    const vars = `${axis('x', '(@x - 1) / @X', '@x / @X', '@X')} ${axis('y', '(@y - 1) / @Y', '@y / @Y', '@Y')} ${layers}`;
     return {
-      rule: `${vars} ${F} { ${B(`inset: 0; background: ${pick(1, 1, 2)}; ${mskI(warpV('90deg', 'sx'), warpV('180deg', 'sy', true))}`)} ${A(
-        `inset: 0; background: @lp(); ${mskI(warpV('90deg', 'sx', true), warpV('180deg', 'sy'))}`
+      rule: `${vars} ${F} { ${B(`inset: 0; background: ${pick(1, 1, 2)}; ${mskI('@var(--gx)', '@var(--hy)')}`)} ${A(
+        `inset: 0; background: @lp(); ${mskI('@var(--hx)', '@var(--gy)')}`
       )} }${TR}`,
     };
   },
@@ -229,9 +231,11 @@ add(
       ]
         .map(([x, y]) => pt(x, y))
         .join(', ')})`;
-    const vars = `--cx: $(50 - 100 * @dx); --cy: $(50 - 100 * @dy); ${band(0.5, 'da', 'ha', 'ia', 'oa')} ${band(1.5, 'db', 'hb', 'ib', 'ob')}`;
+    // The two rings are kept on the cell, so the prefixed and plain clip of
+    // each pseudo read one polygon with @var instead of each working it out.
+    const vars = `--cx: $(50 - 100 * @dx); --cy: $(50 - 100 * @dy); ${band(0.5, 'da', 'ha', 'ia', 'oa')} ${band(1.5, 'db', 'hb', 'ib', 'ob')} --ra: ${ring('ia', 'oa')}; --rb: ${ring('ib', 'ob')};`;
     return {
-      rule: `--a: ${ink(c)}; ${vars} ${F} { ${B(`inset: 0; background: @var(--a); ${cp(ring('ia', 'oa'))}`)} ${A(`inset: 0; background: ${ink(c)}; ${cp(ring('ib', 'ob'))}`)} }${TR}`,
+      rule: `--a: ${ink(c)}; ${vars} ${F} { ${B(`inset: 0; background: @var(--a); ${cp('@var(--ra)')}`)} ${A(`inset: 0; background: ${ink(c)}; ${cp('@var(--rb)')}`)} }${TR}`,
     };
   },
   { pal: 13, inks: 3, grid: '6x9', tg: '8x8', meta: { tags: ['diamonds', 'concentric', 'stripes'], mood: ['bold', 'festive'], density: 'dense', goodFor: ['poster', 'og-image'] } }
@@ -505,11 +509,16 @@ add(
     const vars = `--wa: ${w('@y - 1')}; --wb: ${w('@y')}; --ea: ${once('wa - (wb - wa) * 0.02')}; --eb: ${once('wb + (wb - wa) * 0.02')}; --tc: ${once('max(0, min(100, 100 * wa / (wa - wb + 0.0001)))')};`;
     // The edges run on 2% past the cell so the clip never lands on the
     // cell's own edge, where the browser would leave a seam between rows.
-    const bow = cp('polygon($(50 - ea)% -2%, $(50 + ea)% -2%, $(50 + eb)% 102%, $(50 - eb)% 102%)');
+    const bow = 'polygon($(50 - ea)% -2%, $(50 + ea)% -2%, $(50 + eb)% 102%, $(50 - eb)% 102%)';
     const face = (cmp) =>
       `linear-gradient(180deg, @match($(wa) ${cmp} 0, #000, transparent) 0 $(tc)%, @match($(wb) ${cmp} 0, #000, transparent) $(tc)% 100%)`;
+    // The bow and the two faces are kept on the cell and read with @var, so
+    // the prefixed and plain clip and mask share one evaluation.
+    const shapes = `--bow: ${bow}; --fa: ${face('>')}; --fb: ${face('<')};`;
     return {
-      rule: `--a: ${pick(1, 2)}; ${vars} ${F} { ${B(`inset: 0; background: @var(--a); ${bow} ${msk(face('>'))}`)} ${A(`inset: 0; background: ${pick(3, 4)}; ${bow} ${msk(face('<'))}`)} }${TR}`,
+      rule: `--a: ${pick(1, 2)}; ${vars} ${shapes} ${F} { ${B(`inset: 0; background: @var(--a); ${cp('@var(--bow)')} ${msk('@var(--fa)')}`)} ${A(
+        `inset: 0; background: ${pick(3, 4)}; ${cp('@var(--bow)')} ${msk('@var(--fb)')}`
+      )} }${TR}`,
     };
   },
   { palette: ['#FBF6EC', '#E4572E', '#F3A712', '#29335C', '#2E86AB'], grid: '8x12', tg: '8x8', meta: { tags: ['curves', 'stripes', 'diamonds'], mood: ['playful'], density: 'medium', goodFor: ['poster', 'packaging'] } }

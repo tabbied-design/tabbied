@@ -477,23 +477,21 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
   const hexTop = (s / H) * 100;
   const shrink = (pts, k) => pts.map(([x, y]) => [50 + (x - 50) * k, 50 + (y - 50) * k]);
   const hex = P(shrink([[50, 0], [100, hexTop], [100, 100 - hexTop], [50, 100], [0, 100 - hexTop], [0, hexTop]], 0.95));
-  // offset rows: even rows (y even, 1-based) are pushed right by half a cell
-  const q = '(x - 1 - floor((y - 1) / 2))';
-  const r = '(y - 1)';
-  const g = `((((${q}) - 3 * ${r}) % 13 + 13) % 13)`;
-  // petal class -> offset of the flower center
-  const petals = { 1: [1, 0], 12: [-1, 0], 10: [0, 1], 3: [0, -1], 4: [1, -1], 9: [-1, 1] };
-  const centerQ = (dq) => `(${q} - ${dq})`;
-  const centerR = (dr) => `(${r} - ${dr})`;
-  // lattice coordinates of a center: a = (4cq + cr) / 13, b = (3cr - cq) / 13
-  const flowerId = (dq, dr) =>
-    `((((4 * ${centerQ(dq)} + ${centerR(dr)}) / 13) * 2 + ((3 * ${centerR(dr)} - ${centerQ(dq)}) / 13) * 3) % 4 + 4) % 4`;
-  const flowerInk = (dq, dr) =>
-    `@match(${flowerId(dq, dr)} == 0, @var(--k0), ${flowerId(dq, dr)} == 1, @var(--k1), ${flowerId(dq, dr)} == 2, @var(--k2), @var(--k3))`;
-  const petalCases = Object.entries(petals)
-    .map(([cls, [dq, dr]]) => `${g} == ${cls}, ${flowerInk(dq, dr)}`)
-    .join(', ');
-  const fill = `@match(${g} == 0, var(--color1), ${petalCases}, var(--color2))`;
+  // Offset rows: even rows (y even, 1-based) are pushed right by half a
+  // cell. Each cell works out its axial coordinates (q, r) and its class g
+  // once, then the offset (dq, dr) from a petal to its flower's center (zero
+  // off the flowers), and from the center's lattice coordinates the flower's
+  // number 0-3, which picks one of four sheet-wide inks.
+  const cell = [
+    '--q: @calc(@x - 1 - floor((@y - 1) / 2));',
+    '--r: @calc(@y - 1);',
+    '--g: $(((q - 3 * r) % 13 + 13) % 13);',
+    '--dq: $((g == 1) + (g == 4) - (g == 12) - (g == 9));',
+    '--dr: $((g == 10) + (g == 9) - (g == 3) - (g == 4));',
+    '--n: $((((4 * (q - dq) + r - dr) / 13 * 2 + (3 * (r - dr) - q + dq) / 13 * 3) % 4 + 4) % 4);',
+  ].join(' ');
+  const fill =
+    '@match($(g) == 0, var(--color1), $(dq * dq + dr * dr) == 0, var(--color2), $(n) == 0, @var(--k0), $(n) == 1, @var(--k1), $(n) == 2, @var(--k2), @var(--k3))';
   add(
     'Flower Garden',
     'Grandmother\'s flower garden: hexagon patches pieced into seven-patch flowers, each a ring of one fabric round a yellow center, set apart by a cream path.',
@@ -501,7 +499,7 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
       host: `--hex: ${hex};`,
       rule: `--k0: ${constant(c, 3, 4)}; --k1: ${constant(c, 4, 5)}; --k2: ${constant(c, 5, 6)}; --k3: ${constant(c, 3, 6)};
         @y(even) { --sh: 50%; } @y(odd) { --sh: 0%; }
-        ${F} { --f: ${fill};
+        ${F} { ${cell} --f: ${fill};
         ${B(`left: @var(--sh); top: -${n2(s * 50)}%; width: 100%; height: ${n2(H * 100)}%; background: @p(@var(--f)); ${clipBy('hex')}`)}
         ${A(`left: calc(@var(--sh) - 100%); top: -${n2(s * 50)}%; width: @match(x == 1, 100%, 0%); height: ${n2(H * 100)}%; background: @p(@var(--f)); ${clipBy('hex')}`)}
       }${TR}`,
