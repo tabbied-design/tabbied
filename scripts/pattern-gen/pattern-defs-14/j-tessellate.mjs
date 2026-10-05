@@ -994,15 +994,15 @@ const LP = (() => {
   // the doubled box the facets are drawn in. Corners on the sheet's edge only
   // slide along it. The polygons read the stored values back with @var(),
   // which the browser resolves.
-  const AX = [12.9898, 78.233];
-  const AY = [39.3467, 11.1351];
-  const off = (co, di, dj) => r2(-(co[0] * di + co[1] * dj) * 10000) / 10000;
-  const base = (co, k) => `ix * ${co[0]} + iy * ${co[1]} + s${k === 1 ? '' : ` * ${k}`}`;
+  const AX = [12.99, 78.23];
+  const AY = [39.35, 11.14];
+  const off = (co, di, dj) => r2(-(co[0] * di + co[1] * dj));
+  const base = (co, k) => `ix*${co[0]} + iy*${co[1]} + s${k === 1 ? '' : `*${k}`}`;
   // in units of 1/5000 of the box, so the whole sum is one short line
   const at = (b0, hv, co, di, dj) => {
     const o = off(co, di, dj);
     const arg = o ? `${hv} ${o < 0 ? '-' : '+'} ${Math.abs(o)}` : hv;
-    return `$(round(${(b0 + 0.5) * 5000 - (J / 2) * 5000} + ${J * 5000} * (abs(sin(${arg})) * 43758.5453 % 1)) / 100)%`;
+    return `$(round(${r2((b0 + 0.5) * 5000 - (J / 2) * 5000)} + ${r2(J * 5000)}*(abs(sin(${arg}))*43758.5 % 1))/100)%`;
   };
   // a corner as one variable holding both coordinates; `fix` pins either to the sheet's edge
   const corner = (name, di, dj, u, v, fix = {}) =>
@@ -1306,16 +1306,15 @@ add(
 // level draws hills inside the land.
 const AUTO = (() => {
   // the field at a grid corner, computed once per corner and shared by both levels
-  // the field at a grid corner, a sum of three sines across the sheet
-  const field = (i, j) => `(sin(${i} * 1.13 + ${j} * 0.47 + s) + sin(${j} * 1.05 - ${i} * 0.41 + 1.7 * s) + 0.7 * sin((${i} - ${j}) * 0.83 + 2.3 * s))`;
-  const bit = (i, j, t) => `max(0, min(1, floor(${field(i, j)} - ${t} + 1)))`;
-  /**
-   * The level's four corners as one number, 8 a + 4 b + 2 c + d, in one $()
-   * over the cell's variables, so its text is the same in every cell and
-   * css-doodle parses it once.
-   */
-  const code = (p, t) =>
-    `--${p}k: $(8 * ${bit('(ix - 1)', '(iy - 1)', t)} + 4 * ${bit('ix', '(iy - 1)', t)} + 2 * ${bit('ix', 'iy', t)} + ${bit('(ix - 1)', 'iy', t)});`;
+  // The field at a grid corner, a sum of three sines across the sheet: one
+  // $() per corner, its text the same in every cell (css-doodle parses it
+  // once), rounded so the two levels read it back quickly.
+  const field = (i, j) =>
+    `$(round((sin(${i} * 1.13 + ${j} * 0.47 + s) + sin(${j} * 1.05 - ${i} * 0.41 + 1.7 * s) + 0.7 * sin((${i} - ${j}) * 0.83 + 2.3 * s)) * 10000) / 10000)`;
+  const fields = `${POS} --fa: ${field('(ix - 1)', '(iy - 1)')}; --fb: ${field('ix', '(iy - 1)')}; --fc: ${field('ix', 'iy')}; --fd: ${field('(ix - 1)', 'iy')};`;
+  const bit = (f, t) => `max(0, min(1, floor(${f} - ${t} + 1)))`;
+  /** The level's four corners as one number, 8 a + 4 b + 2 c + d. */
+  const code = (p, t) => `--${p}k: $(8 * ${bit('fa', t)} + 4 * ${bit('fb', t)} + 2 * ${bit('fc', t)} + ${bit('fd', t)});`;
   const shapes = [
     cornerDisc('50%', '0 0'),
     cornerDisc('50%', '100% 0'),
@@ -1337,7 +1336,7 @@ const AUTO = (() => {
     const list = shapes.filter((_, i) => on[i]);
     return hostList(`am${k}`, list.length ? list : [EMPTY]);
   }).join(' ');
-  return { vars: `${POS} ${code('l', 0.15)} ${code('h', 1.05)}`, host };
+  return { vars: `${fields} ${code('l', 0.15)} ${code('h', 1.05)}`, host };
 })();
 add(
   'Autotile',
