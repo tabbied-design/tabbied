@@ -965,15 +965,19 @@ Four things worth not re-litigating:
   destinations and the account up top and everything else in `HomeFooter`;
   the docs joined the bar later as its last destination, first as "React
   Component" and now as "Developers", the `/docs` landing page, which lights
-  for every page under it. The footer's Developers column lists each docs
-  page (`DEVELOPER_LINKS` in `HomeFooter`) beside GitHub, in two columns
-  read down so it is no longer than the Product list, and the legal pages
-  moved to its bottom bar; a new docs page joins that list and the landing
-  page's cards. The bar used to carry a different set of links on every
-  page, which is what one component ends. Studio is in neither now: the
-  generation flow is held back from the first launch (see below), and the
-  footer's Product list is the artboard's own - Patterns, Websites, My
-  account.
+  for every page under it. The footer has four columns on a desktop: the
+  name with the contact lines under it, Product, and "For Developers" over
+  the last two, which lists each docs page (`DEVELOPER_LINKS` in
+  `HomeFooter`) read down two of the footer's own tracks (a subgrid), so it
+  is no longer than the Product list; a new docs page joins that list and
+  the landing page's cards. GitHub is a mark at the left of the bottom bar,
+  before the copyright and the legal pages. The Octocat is
+  `components/GitHubMark`, one copy for the footer, the docs pages' GitHub
+  links and the sign-in button. The bar used to carry a different set of
+  links on every page, which is what one component ends. Studio is in
+  neither now: the generation flow is held back from the first launch (see
+  below), and the footer's Product list is the artboard's own - Patterns,
+  Websites, My account.
 - **It renders the signed-out chrome until a session says otherwise, unless
   this browser was signed in last time.** The export cannot know who is
   looking, and most visitors are nobody; a ghost in the right-hand slot for
@@ -2037,22 +2041,34 @@ Every case and every recipe is a card of its own, its code inside it: with
 the code between two diagrams and nothing around them, it read as belonging
 to either.
 
+**The Concepts page has examples too, in every setup behind one switch**
+(`examples/concepts.ts`, drawn by `ConceptExample` and `SetupTabs`). One
+short file per section, written six times, and a row of setups over it;
+picking one switches every example on the page and is remembered in
+localStorage, read after hydration (the export draws React), and the page is
+scrolled by however much the examples above the switch grew, so the switch
+stays under the pointer. They show what the concepts prose names and the
+guide samples leave out (two designs and what is bundled, `density`,
+`cellSize`, `coverRender`, a two-color palette, a kept seed and both exports,
+pausing the timer), and the gates below hold them as they hold the guide.
+
 The code is written as data, never in JSX, so one list feeds six pages, and
-three gates keep it true. `lib/docsExamples.test.mjs` (in `npm run
-test:lib`) type-checks the React code against the built package, compiles
-the Vue code with Vue's compiler, parses the rest, checks the guide's
-palettes against `lib/paletteLibrary.ts`, and holds every preview to the code
-of every recipe it stands for (designs, seeds, colors, sizes): it caught
-three `controls` recipes whose pattern started at a frequency their slider
-did not show. Svelte has no compiler in the repo, so a change to its
-examples is compiled by hand with Svelte 5. `e2e/docs-examples.spec.ts`
-renders every sizing case in the three setups whose code is the whole page
-and asserts the box each draws, and runs every HTML and web component recipe
-and guide sample as written, with esm.sh and jsdelivr answered from `dist/`,
-pressing each control. Change a package default and the spec names the
-cases whose documented box moved. The sizing code is broken at 80 columns,
-Prettier's width, because it is shown full width; a one-line tag of 120
-characters scrolled off the column.
+three gates keep it true, the Concepts page's examples included.
+`lib/docsExamples.test.mjs` (in `npm run test:lib`) type-checks the React
+code against the built package, compiles the Vue code with Vue's compiler,
+parses the rest, checks the guide's palettes against `lib/paletteLibrary.ts`,
+and holds every preview to the code of every recipe it stands for (designs,
+seeds, colors, sizes): it caught three `controls` recipes whose pattern
+started at a frequency their slider did not show. Svelte has no compiler in
+the repo, so a change to its examples is compiled by hand with Svelte 5.
+`e2e/docs-examples.spec.ts` renders every sizing case in the three setups
+whose code is the whole page and asserts the box each draws, and runs every
+HTML and web component recipe, guide sample and concept example as written,
+with esm.sh and jsdelivr answered from `dist/`, pressing each control.
+Change a package default and the spec names the cases whose documented box
+moved. The sizing code is broken at 80 columns, Prettier's width, because it
+is shown full width; a one-line tag of 120 characters scrolled off the
+column.
 
 ## Grid snapping - invariant (full reference: docs/grid-snapping.md)
 

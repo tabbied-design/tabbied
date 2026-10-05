@@ -7,6 +7,7 @@ import { ELEMENT_RECIPES } from '../components/react-docs-page/examples/recipes/
 import { HTML_RECIPES } from '../components/react-docs-page/examples/recipes/html';
 import type { Recipe } from '../components/react-docs-page/examples/recipes/types';
 import { GUIDE } from '../components/react-docs-page/examples/guide';
+import { CONCEPT_EXAMPLES } from '../components/react-docs-page/examples/concepts';
 
 // The docs pages' examples, run in a browser against the built package.
 //
@@ -16,9 +17,11 @@ import { GUIDE } from '../components/react-docs-page/examples/guide';
 //   window and measured against the box its page says it draws. React, Vue
 //   and Svelte resolve the same box props as the JavaScript form
 //   (resolveBoxStyle), and lib/docsExamples.test.mjs compiles their code.
-// - Recipes and guide samples: every HTML and web component recipe, and the
-//   sample under every shared live demo (examples/guide.ts), as written, with
-//   esm.sh and jsdelivr answered from packages/tabbied/dist. Each pattern must
+// - Recipes, guide samples and concept examples: every HTML and web
+//   component recipe, the sample under every shared live demo
+//   (examples/guide.ts) and the Concepts page's examples
+//   (examples/concepts.ts), as written, with esm.sh and jsdelivr answered
+//   from packages/tabbied/dist. Each pattern must
 //   mount, and pressing every control must not throw.
 //
 // Nothing here touches the site: the pages are served under a made-up origin,
@@ -233,11 +236,20 @@ test.describe('recipes run as written', () => {
         [setup, { id: `guide-${part}`, group: 'layout', title: part, says: '', ...sample } as Recipe] as const
     );
 
+  // And so is a Concepts page example.
+  const concepts = (setup: 'html' | 'element') =>
+    Object.entries(CONCEPT_EXAMPLES).map(
+      ([id, samples]) =>
+        [setup, { id: `concept-${id}`, group: 'layout', title: id, says: '', ...samples[setup] } as Recipe] as const
+    );
+
   const recipes = [
     ...HTML_RECIPES.map((recipe) => ['html', recipe] as const),
     ...ELEMENT_RECIPES.map((recipe) => ['element', recipe] as const),
     ...guide('html'),
     ...guide('element'),
+    ...concepts('html'),
+    ...concepts('element'),
   ];
 
   for (const [setup, recipe] of recipes) {

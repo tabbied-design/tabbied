@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { plexMono, plexSans } from 'lib/fonts';
 import SiteNav from 'components/nav';
 import HomeFooter from 'components/main-page/HomeFooter';
+import GitHubMark from 'components/GitHubMark';
 import DocsNav from './DocsNav';
 import type { DocsSection } from './sections';
 import home from 'components/main-page/home.module.css';
@@ -70,6 +71,7 @@ export default function DocsShell({
                     npm
                   </a>
                   <a className={styles.chipLink} href={PACKAGE_URL} target="_blank" rel="noreferrer">
+                    <GitHubMark size={14} />
                     GitHub
                   </a>
                 </div>
@@ -92,6 +94,7 @@ export default function DocsShell({
                       target="_blank"
                       rel="noreferrer"
                     >
+                      <GitHubMark size={14} className={styles.inlineMark} />
                       GitHub
                     </a>
                     .

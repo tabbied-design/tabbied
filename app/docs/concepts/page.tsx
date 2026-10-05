@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { PACKAGE_VERSION, PATTERN_COUNT } from 'lib/siteCounts';
 import DocsShell from 'components/react-docs-page/DocsShell';
+import ConceptExample from 'components/react-docs-page/ConceptExample';
 import { Callout, Code, docsSection } from 'components/react-docs-page/parts';
 import type { DocsSection } from 'components/react-docs-page/sections';
 import styles from 'components/react-docs-page/ReactDocs.module.css';
@@ -8,9 +9,10 @@ import { pageMetadata } from 'lib/seo';
 
 // What every setup shares, said once and without a framework: the setup
 // pages (React, Vue, Svelte, the web component, plain HTML) link here for
-// what a setting means, and keep only how their own setup spells it. The
-// table at the end is that spelling, side by side. /docs/react keeps its
-// live examples of each idea.
+// what a setting means, and keep only how their own setup spells it. Each
+// section carries an example written in every setup, behind a switch that
+// remembers the reader's (examples/concepts.ts), and the table at the end
+// is the spelling side by side. The setup pages keep the live demos.
 
 export const metadata: Metadata = pageMetadata({
   title: 'Concepts - Tabbied',
@@ -71,8 +73,9 @@ export default function ConceptsPage() {
       lede={
         <>
           Every setup draws the same {PATTERN_COUNT} designs from the same
-          settings. This page says what each setting does. Each setup&apos;s
-          own page shows how to write it there.
+          settings. This page says what each setting does, with an example
+          in whichever setup you use. Each setup&apos;s own page has the
+          rest.
         </>
       }
       chips={[`tabbied v${PACKAGE_VERSION}`, 'Every setup']}
@@ -94,6 +97,7 @@ export default function ConceptsPage() {
           design by its slug, and plain HTML names the designs it needs in
           its one script.
         </p>
+        <ConceptExample id="designs" />
       </Section>
 
       <Section id="sizing" title="Sizing & fit modes">
@@ -125,6 +129,7 @@ export default function ConceptsPage() {
             (360 by 540 unless set), as the Tabbied editor does.
           </li>
         </ul>
+        <ConceptExample id="sizing" />
         <p>
           Every design supports all three. See them side by side in the{' '}
           <a href="/docs/react/#sizing">live examples</a>.
@@ -140,6 +145,7 @@ export default function ConceptsPage() {
           your colors in turn, so two colors redraw the whole design in those
           two. Leave the palette out to get the design&apos;s own colors.
         </p>
+        <ConceptExample id="colors" />
         <Callout>
           <p>
             The <a href="/patterns/">gallery</a> previews every design in a
@@ -161,6 +167,7 @@ export default function ConceptsPage() {
           design&apos;s <Code>grid</Code> option is worked out from the box,
           so setting it only suggests a density.
         </p>
+        <ConceptExample id="options" />
       </Section>
 
       <Section id="seeds" title="Seeds & export">
@@ -178,6 +185,7 @@ export default function ConceptsPage() {
           scales to any size. A few designs use gradient sweeps SVG cannot
           describe, and those offer PNG only.
         </p>
+        <ConceptExample id="seeds" />
       </Section>
 
       <Section id="motion" title="Motion">
@@ -194,6 +202,7 @@ export default function ConceptsPage() {
           their own hold still. The preference is watched, so changing it
           with the page open takes effect at once.
         </p>
+        <ConceptExample id="motion" />
       </Section>
 
       <Section id="accessibility" title="Accessibility">
@@ -204,6 +213,7 @@ export default function ConceptsPage() {
           HTML the markup is yours, so write the attributes on the element
           yourself.
         </p>
+        <ConceptExample id="accessibility" />
       </Section>
 
       <Section id="names" title="Names in each setup">

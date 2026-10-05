@@ -4,6 +4,7 @@ import { plexMono, plexSans } from 'lib/fonts';
 import { MCP_VERSION, PATTERN_COUNT, TEMPLATE_COUNT } from 'lib/siteCounts';
 import SiteNav from 'components/nav';
 import HomeFooter from 'components/main-page/HomeFooter';
+import GitHubMark from 'components/GitHubMark';
 import CodeBlock from 'components/react-docs-page/CodeBlock';
 import DocsNav from 'components/react-docs-page/DocsNav';
 import { Callout, Code, docsSection } from 'components/react-docs-page/parts';
@@ -264,6 +265,7 @@ export default function McpDocsPage() {
                     npm
                   </a>
                   <a className={styles.chipLink} href={PACKAGE_URL} target="_blank" rel="noreferrer">
+                    <GitHubMark size={14} />
                     GitHub
                   </a>
                 </div>
@@ -599,6 +601,7 @@ export default function McpDocsPage() {
                   <p>
                     Found a problem or missing something? Open an issue on{' '}
                     <a href={`${GITHUB_URL}issues`} target="_blank" rel="noreferrer">
+                      <GitHubMark size={14} className={styles.inlineMark} />
                       GitHub
                     </a>
                     . The MCP server is MIT-licensed, like the{' '}
