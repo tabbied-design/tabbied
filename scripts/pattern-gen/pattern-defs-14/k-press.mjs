@@ -775,11 +775,12 @@ add(
 
 // -- K24 Streamgraph --------------------------------------------------------------
 // Three layers stacked about each row's midline, their thicknesses running on
-// sine waves of the sheet column whose phases are rolled once per drawing, so
-// the stream is continuous from cell to cell and reshapes on a reseed. Each
-// cell samples the three thicknesses once at five points across it (--ua to
-// --we), builds its three outlines from those once (--k1 to --k3), and every
-// clip reads them back, so no sine is worked out twice.
+// sine waves of the sheet column whose phases are rolled once per drawing (on
+// the host), so the stream is continuous from cell to cell and reshapes on a
+// reseed. A cell works out the three thicknesses once at five points across
+// it (--ua .. --we, to a tenth of a percent) and the top edge from them
+// (--ta .. --te); the edges below are left to CSS calc(), and the three
+// outlines (--k1 .. --k3) read those, so no sine is worked out twice.
 const SG_N = 4; // segments across a cell
 const SG_AT = 'abcde';
 const SG_AMP = [13, 11, 12];
@@ -791,41 +792,22 @@ const SG_Y = [
   [1.7, 2.3, 2.9],
   [0.8, 1.9, 1.3],
 ];
-// Band j's two sine phases at the cell's left edge (--fj, --gj): the phase
-// rolled once per drawing, plus the cell's column and row. Its thickness at
-// each sample (--ua .. --we, to a tenth of a percent) then steps the phases a
-// quarter cell at a time.
+const SG_HOST = [0, 1, 2].map((j) => `--p${j}: @r(0, 6.283);`).join(' ');
+const sgThick = (j, i) => {
+  const X = `(@x - 1 + ${i / SG_N})`;
+  return `$(round(${SG_AMP[j] * 10}*(1.05+0.6*sin(${X} * ${SG_W[0][j]} + p${j} + @y * ${SG_Y[0][j]})+0.35*sin(${X} * ${SG_W[1][j]} + p${j} * 1.7 + @y * ${SG_Y[1][j]})))/10)`;
+};
 const SG_VARS = [
-  ...[0, 1, 2].map(
-    (j) =>
-      `--f${j}: @calc((@x - 1) * ${SG_W[0][j]} + @once(@r(0, 6.283)) + @y * ${SG_Y[0][j]}); --g${j}: @calc((@x - 1) * ${SG_W[1][j]} + @once(@r(0, 6.283)) + @y * ${SG_Y[1][j]});`
-  ),
-  ...[0, 1, 2].map((j) =>
-    SG_AT.split('')
-      .map((a, i) => {
-        const d0 = +((SG_W[0][j] * i) / SG_N).toFixed(4);
-        const d1 = +((SG_W[1][j] * i) / SG_N).toFixed(4);
-        return `--${'uvw'[j]}${a}: $(round(${SG_AMP[j] * 10}*(1.05+0.6*sin(f${j}+${d0})+0.35*sin(g${j}+${d1})))/10);`;
-      })
-      .join(' ')
-  ),
+  ...[0, 1, 2].map((j) => SG_AT.split('').map((a, i) => `--${'uvw'[j]}${a}: ${sgThick(j, i)};`).join(' ')),
+  SG_AT.split('').map((a) => `--t${a}: ${q(`50-(u${a}+v${a}+w${a})/2`)}%;`).join(' '),
+  SG_AT.split('').map((a) => `--m${a}: calc(@var(--t${a}) + @var(--u${a}) * 1%); --n${a}: calc(@var(--m${a}) + @var(--v${a}) * 1%);`).join(' '),
 ].join(' ');
-// The outlines are left to the browser: the top edge at each sample (--ta ..
-// --te) is a CSS calc() over the three thicknesses, and every vertex below it
-// adds thicknesses to that, so css-doodle works out only the fifteen sines.
-const SG_TOP = SG_AT.split('').map((a) => `--t${a}: calc(50% - (@var(--u${a}) + @var(--v${a}) + @var(--w${a})) * 0.5%);`).join(' ');
-const sgLower = (k, a) =>
-  [
-    `@var(--t${a})`,
-    `calc(@var(--t${a}) + @var(--u${a}) * 1%)`,
-    `calc(@var(--t${a}) + (@var(--u${a}) + @var(--v${a})) * 1%)`,
-    `calc(100% - @var(--t${a}))`,
-  ][k];
+const sgEdge = (k, a) => [`@var(--t${a})`, `@var(--m${a})`, `@var(--n${a})`, `calc(100% - @var(--t${a}))`][k];
 /** The region from the stream's top edge down to boundary k (1-3). */
 const sgDown = (k) => {
   const xs = SG_AT.split('').map((a, i) => [a, `${(i * 100) / SG_N}%`]);
-  const upper = xs.map(([a, x]) => `${x} ${sgLower(0, a)}`);
-  const lower = [...xs].reverse().map(([a, x]) => `${x} ${sgLower(k, a)}`);
+  const upper = xs.map(([a, x]) => `${x} ${sgEdge(0, a)}`);
+  const lower = [...xs].reverse().map(([a, x]) => `${x} ${sgEdge(k, a)}`);
   return `polygon(${[...upper, ...lower].join(', ')})`;
 };
 
@@ -833,7 +815,8 @@ add(
   'Streamgraph',
   'Rows of streamgraphs: three colored layers stacked about a midline, swelling and thinning in smooth waves as they flow across the sheet.',
   (c) => ({
-    rule: `${F} { ${SG_VARS} ${SG_TOP} --k1: ${sgDown(1)}; --k2: ${sgDown(2)}; --k3: ${sgDown(3)}; background: @p(var(--color3)); ${cp('@var(--k3)')} ${B(`inset: 0; background: @p(var(--color2)); ${cp('@var(--k2)')}`)} ${A(`inset: 0; background: @p(var(--color1)); ${cp('@var(--k1)')}`)} }${TR}`,
+    host: SG_HOST,
+    rule: `${F} { ${SG_VARS} --k1: ${sgDown(1)}; --k2: ${sgDown(2)}; --k3: ${sgDown(3)}; background: @p(var(--color3)); ${cp('@var(--k3)')} ${B(`inset: 0; background: @p(var(--color2)); ${cp('@var(--k2)')}`)} ${A(`inset: 0; background: @p(var(--color1)); ${cp('@var(--k1)')}`)} }${TR}`,
   }),
   {
     pal: 27,
