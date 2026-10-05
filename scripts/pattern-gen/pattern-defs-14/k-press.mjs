@@ -18,6 +18,74 @@ const inkAt = (expr, n, s = 1) => {
   return `@match(${parts.join(', ')})`;
 };
 
+
+/**
+ * A polyline (or closed curve) drawn as a band `w` wide, returned as one
+ * polygon: the left offset forward, then the right offset back. Joins are
+ * mitered, and beveled on the outside of a turn too sharp to miter. A closed
+ * band crosses itself where the curve does; every stretch of band winds the
+ * same way, so the crossings fill under the default nonzero rule.
+ */
+const stroke = (pts, w, closed = false) => {
+  const n = pts.length;
+  const h = w / 2;
+  const seg = (i) => {
+    const [x0, y0] = pts[i];
+    const [x1, y1] = pts[(i + 1) % n];
+    const len = Math.hypot(x1 - x0, y1 - y0) || 1;
+    return [(y0 - y1) / len, (x1 - x0) / len]; // left normal, y down
+  };
+  const left = [];
+  const right = [];
+  for (let i = 0; i < n; i++) {
+    const p = pts[i];
+    const hasPrev = closed || i > 0;
+    const hasNext = closed || i < n - 1;
+    const nPrev = hasPrev ? seg((i - 1 + n) % n) : null;
+    const nNext = hasNext ? seg(i) : null;
+    if (!nPrev || !nNext) {
+      const m = nPrev || nNext;
+      left.push([p[0] + m[0] * h, p[1] + m[1] * h]);
+      right.push([p[0] - m[0] * h, p[1] - m[1] * h]);
+      continue;
+    }
+    let mx = nPrev[0] + nNext[0];
+    let my = nPrev[1] + nNext[1];
+    const ml = Math.hypot(mx, my) || 1;
+    mx /= ml;
+    my /= ml;
+    const cos = mx * nPrev[0] + my * nPrev[1];
+    const len = h / Math.max(cos, 0.05);
+    // which side is the outside of the turn: the left when it turns right
+    const turn = nPrev[0] * nNext[1] - nPrev[1] * nNext[0];
+    if (len > h * 2.2) {
+      const outerLeft = turn < 0;
+      const miter = (sgn) => [p[0] + sgn * mx * len, p[1] + sgn * my * len];
+      const bevel = (sgn) => [
+        [p[0] + sgn * nPrev[0] * h, p[1] + sgn * nPrev[1] * h],
+        [p[0] + sgn * nNext[0] * h, p[1] + sgn * nNext[1] * h],
+      ];
+      if (outerLeft) {
+        left.push(...bevel(1));
+        right.push(miter(-1));
+      } else {
+        left.push(miter(1));
+        right.push(...bevel(-1).reverse());
+      }
+    } else {
+      left.push([p[0] + mx * len, p[1] + my * len]);
+      right.push([p[0] - mx * len, p[1] - my * len]);
+    }
+  }
+  if (closed) return [...left, left[0], right[0], ...right.slice(1).reverse(), right[0]];
+  return [...left, ...right.reverse()];
+};
+/** Points of a closed parametric curve, t over [0, turns * 2pi). */
+const curve = (fn, n, turns = 1) =>
+  Array.from({ length: n }, (_, i) => fn((i / n) * Math.PI * 2 * turns));
+/** A pseudo-random 0-1 per block of cells, rolled afresh with the seed. */
+const blockHash = (bx, by) => `(abs(sin(${bx} * 12.9898 + ${by} * 78.233 + s) * 43758.5453) % 1)`;
+
 // -- K1 Ordered Dither ----------------------------------------------------------
 // The 4x4 Bayer matrix: a level L (1-16) lights the pixels whose threshold is
 // below L. Each level is a fixed mask, so the seventeen of them are set once
@@ -357,6 +425,197 @@ add(
     grid: '6x9',
     tg: '6x6',
     meta: { tags: ['circles', 'radial', 'rings'], mood: ['technical', 'playful'], density: 'medium', goodFor: ['poster', 'og-image', 'packaging'] },
+  }
+);
+
+
+// -- K13 Equalizer -------------------------------------------------------------
+// One meter to a cell: a column of dim segments, lit from the bottom to a level
+// that follows a smooth spectrum across the row, green, then amber, then red.
+const EQ_SEG = 'repeating-linear-gradient(180deg, transparent 0 1.6%, #000 1.6% 10.9%, transparent 10.9% 12.5%)';
+
+add(
+  'Equalizer',
+  'A wall of graphic equalizer meters, each a column of square segments lit green, then amber, then red to a level that rises and falls across the spectrum.',
+  (c) => ({
+    rule: `${F} { --n: @calc(${noise(-3, 12, 1.5)} + @r(-1.2, 1.2)); ${B(`left: 19%; right: 19%; top: 0; bottom: 0; background: @p(var(--color4)); ${msk(EQ_SEG)}`)} ${A(`left: 19%; right: 19%; top: 0; bottom: 0; background: linear-gradient(0deg, var(--color1) 0 50%, var(--color2) 50% 75%, var(--color3) 75%); ${msk(EQ_SEG)} ${cp('inset($(12.5 * (8 - max(1, min(8, round(n)))))% 0% 0% 0%)')}`)} }${TR}`,
+  }),
+  {
+    palette: ['#0F1218', '#3DDC97', '#F5D547', '#FF5E57', '#283140'],
+    grid: '10x6',
+    tg: '6x6',
+    meta: { tags: ['squares', 'blocks', 'grid'], mood: ['technical', 'retro', 'bold'], density: 'dense', goodFor: ['poster', 'og-image', 'hero-background'] },
+  }
+);
+
+// -- K14 Cardiograph -----------------------------------------------------------
+// Heartbeats traced on ECG paper. The trace runs a fifth of a cell past both
+// sides along the baseline, so a beat shifted a little still meets its
+// neighbors; the grid is the paper's own small and large squares.
+const BEATS = [
+  [[-20, 60], [8, 60], [12, 57], [16, 55], [20, 57], [24, 60], [32, 60], [35, 64], [39, 20], [43, 72], [46, 60], [54, 60], [59, 56], [65, 52], [71, 56], [76, 60], [120, 60]],
+  [[-20, 60], [8, 60], [12, 56], [16, 54], [20, 56], [24, 60], [33, 60], [36, 66], [40, 8], [44, 80], [47, 60], [55, 60], [60, 55], [66, 50], [72, 55], [77, 60], [120, 60]],
+  [[-20, 60], [10, 60], [14, 57], [18, 55], [22, 57], [26, 60], [34, 60], [37, 64], [41, 26], [45, 70], [48, 60], [56, 60], [61, 64], [67, 67], [73, 64], [78, 60], [120, 60]],
+  [[-20, 60], [16, 60], [24, 36], [33, 84], [42, 52], [50, 60], [62, 60], [68, 54], [74, 52], [80, 56], [86, 60], [120, 60]],
+];
+const beatPoly = (pts) =>
+  P(stroke(pts, 2.6).map(([x, y]) => [((x + 20) / 140) * 100, y]));
+const ECG_GRID = [
+  'repeating-linear-gradient(90deg, #000 0 1.2%, transparent 1.2% 20%)',
+  'repeating-linear-gradient(180deg, #000 0 1.2%, transparent 1.2% 20%)',
+  'linear-gradient(90deg, #000 0 2.6%, transparent 2.6%)',
+  'linear-gradient(180deg, #000 0 2.6%, transparent 2.6%)',
+].join(', ');
+
+add(
+  'Cardiograph',
+  'Heartbeat traces on pink ECG paper, row after row of sharp spikes and soft bumps running over a grid of small and large squares.',
+  (c) => ({
+    host: BEATS.map((b, i) => `--b${i}: ${beatPoly(b)};`).join(' ') + ` --grid: ${ECG_GRID};`,
+    rule: `${F} { ${B(`inset: 0; background: @p(var(--color2)); opacity: 0.55; ${msk('@var(--grid)')}`)} ${A(`left: -20%; width: 140%; top: 0; height: 100%; background: @p(var(--color1)); ${cp('@p(@var(--b0), @var(--b0), @var(--b1), @var(--b2), @var(--b3))')} ${tf('translateX(@r(-4%, 4%))')}`)} }${TR}`,
+  }),
+  {
+    palette: ['#FBEFEA', '#1E1B24', '#E0827A'],
+    grid: '5x8',
+    tg: '5x5',
+    meta: { tags: ['lines', 'zigzags', 'grid'], mood: ['technical', 'calm'], density: 'medium', goodFor: ['section-divider', 'hero-background', 'card-texture'] },
+  }
+);
+
+// -- K15 Manometer -------------------------------------------------------------
+const TICKS = (() => {
+  const s = [];
+  for (let k = 0; k <= 10; k++) {
+    const a = 27 * k;
+    s.push(`#000 ${a}deg ${a + 3}deg`, `transparent ${a + 3}deg ${a + 27}deg`);
+  }
+  return `conic-gradient(from 223.5deg, ${s.slice(0, -1).join(', ')}, transparent 273deg 360deg)`;
+})();
+const NEEDLE = P([
+  ...curve((t) => [50 + 6 * Math.sin(t + Math.PI * 0.62), 50 - 6 * Math.cos(t + Math.PI * 0.62)], 18).slice(0, 14),
+  [51.4, 50],
+  [50, 15],
+  [48.6, 50],
+]);
+
+add(
+  'Manometer',
+  'A panel of pressure gauges: cream dials ringed in grey with a green band and a red band, ticked round three quarters, each needle swung to its own reading.',
+  (c) => ({
+    host: `--ticks: ${TICKS};`,
+    rule: `${F} { ${cp('circle(46% at 50% 50%)')} background: radial-gradient(circle closest-side, @p(var(--color1)) 76%, transparent 76%), conic-gradient(from 225deg, var(--color5) 0 120deg, var(--color2) 120deg 200deg, var(--color3) 200deg 270deg, var(--color2) 270deg); ${B(`inset: 0; background: var(--color4); ${mskI('@var(--ticks)', 'radial-gradient(circle closest-side, transparent 58%, #000 58% 70%, transparent 70%)')}`)} ${A(`inset: 0; background: @p(var(--color4), var(--color3)); ${cp(NEEDLE)} ${tf(`rotate(@calc(-128 + 256 * max(0, min(1, ${noise(-0.4, 1.4, 1.3)}))) deg)`)}`)} }${TR}`,
+  }),
+  {
+    palette: ['#22313A', '#ECE6D6', '#7D8E95', '#D9572B', '#1D2326', '#5E9C76'],
+    grid: '5x7',
+    tg: '5x5',
+    meta: { tags: ['circles', 'radial', 'rings', 'lines'], mood: ['technical', 'retro'], density: 'medium', goodFor: ['poster', 'og-image', 'packaging'] },
+  }
+);
+
+// -- K16 Radar Sweep -----------------------------------------------------------
+const SWEEP = 'conic-gradient(transparent 0 270deg, #00000026 270deg 300deg, #00000059 300deg 324deg, #0000009e 324deg 344deg, #000 344deg 360deg)';
+const SCOPE = [
+  'repeating-radial-gradient(circle closest-side, #000 0 1.8%, transparent 1.8% 23%)',
+  'linear-gradient(90deg, transparent 49.2%, #000 49.2% 50.8%, transparent 50.8%)',
+  'linear-gradient(180deg, transparent 49.2%, #000 49.2% 50.8%, transparent 50.8%)',
+].join(', ');
+
+add(
+  'Radar Sweep',
+  'Green radar scopes with range rings and crosshairs, each beam sweeping outward from the middle of the sheet and trailing its fading wake, with amber blips.',
+  (c) => ({
+    host: `--sweep: ${SWEEP}; --scope: ${SCOPE};`,
+    rule: `${F} { ${cp('circle(46% at 50% 50%)')} background: radial-gradient(3.6% 3.6% at @r(22%, 78%) @r(22%, 78%), var(--color4) 100%, transparent 100%), radial-gradient(2.6% 2.6% at @r(22%, 78%) @r(22%, 78%), var(--color4) 100%, transparent 100%), @p(var(--color1)); ${B(`inset: 0; background: var(--color2); ${msk('@var(--scope)')}`)} ${A(`inset: 0; background: @p(var(--color3)); ${msk('@var(--sweep)')} ${tf(`rotate(@calc(atan2(@dx, 0 - @dy) * 57.2958 + ${noise(-50, 50, 1.2)})deg)`)}`)} }${TR}`,
+  }),
+  {
+    palette: ['#050D09', '#10301F', '#2C7A51', '#6CF5AE', '#F2B84B'],
+    grid: '5x7',
+    tg: '5x5',
+    meta: { tags: ['circles', 'radial', 'rings', 'crosses'], mood: ['technical', 'bold'], density: 'medium', goodFor: ['poster', 'og-image', 'hero-background'] },
+  }
+);
+
+// -- K17 Lissajous -------------------------------------------------------------
+const LISSA = [
+  [1, 2, Math.PI / 4],
+  [3, 2, Math.PI / 2],
+  [3, 4, Math.PI / 4],
+  [5, 4, Math.PI / 2],
+  [1, 1, Math.PI / 3],
+].map(([a, b, d]) =>
+  P(stroke(curve((t) => [50 + 46 * Math.sin(a * t + d), 50 + 46 * Math.sin(b * t)], 300), 2.4, true))
+);
+
+add(
+  'Lissajous',
+  'Oscilloscope screens in a grid, each tracing a glowing Lissajous figure of loops and crossings over a faint graticule.',
+  (c) => ({
+    host: LISSA.map((l, i) => `--l${i}: ${l};`).join(' '),
+    rule: `${F} { background: @p(var(--color1)); ${cp('inset(5% round 12%)')} ${B(`inset: 5%; background: var(--color2); ${msk('repeating-linear-gradient(90deg, #000 0 1.2%, transparent 1.2% 12.5%) 6.25% 0', 'repeating-linear-gradient(180deg, #000 0 1.2%, transparent 1.2% 12.5%) 0 6.25%')}`)} ${A(`inset: 15%; background: @p(var(--color3), var(--color3), var(--color4)); ${cp(`@p(${LISSA.map((_, i) => `@var(--l${i})`).join(', ')})`)} ${tf('rotate(@p(0deg, 90deg))')}`)} }${TR}`,
+  }),
+  {
+    palette: ['#0A1416', '#13292A', '#21453F', '#62F0C2', '#F4B860'],
+    grid: '5x7',
+    tg: '5x5',
+    meta: { tags: ['curves', 'lines', 'grid', 'squares'], mood: ['technical', 'retro'], density: 'medium', goodFor: ['poster', 'og-image', 'card-texture'] },
+  }
+);
+
+// -- K18 Candlestick -------------------------------------------------------------
+const candle = (k) =>
+  `polygon(46% $(c${k} - h${k} - u${k})%, 54% $(c${k} - h${k} - u${k})%, 54% $(c${k} - h${k})%, 84% $(c${k} - h${k})%, 84% $(c${k} + h${k})%, 54% $(c${k} + h${k})%, 54% $(c${k} + h${k} + d${k})%, 46% $(c${k} + h${k} + d${k})%, 46% $(c${k} + h${k})%, 16% $(c${k} + h${k})%, 16% $(c${k} - h${k})%, 46% $(c${k} - h${k})%)`;
+const candleVars = (k) =>
+  `--c${k}: $(max(28, min(72, m)) + @r(-10, 10)); --h${k}: @r(3, 12); --u${k}: @r(2, 12); --d${k}: @r(2, 12);`;
+
+add(
+  'Candlestick',
+  'Rows of candlestick charts on a dark screen: teal and red bodies with thin wicks above and below, drifting up and down with a smooth trend.',
+  (c) => ({
+    rule: `${F} { --m: ${noise(-10, 110, 1.6)}; ${candleVars(1)} ${candleVars(2)} background: repeating-linear-gradient(180deg, transparent 0 24%, var(--color3) 24% 25%); ${B(`left: 8%; width: 38%; top: 0; bottom: 0; background: @p(var(--color1), var(--color2)); ${cp(candle(1))}`)} ${A(`left: 54%; width: 38%; top: 0; bottom: 0; background: @p(var(--color1), var(--color2)); ${cp(candle(2))}`)} }${TR}`,
+  }),
+  {
+    palette: ['#0E1621', '#2BC4A0', '#F2545B', '#26384A'],
+    grid: '8x10',
+    tg: '8x8',
+    meta: { tags: ['lines', 'blocks', 'stripes'], mood: ['technical', 'bold'], density: 'medium', goodFor: ['hero-background', 'poster', 'og-image'] },
+  }
+);
+
+// -- K19 Imposition --------------------------------------------------------------
+const CROP = (() => {
+  const L = [];
+  const t = 1.4; // line weight
+  for (const x of [17, 83]) {
+    for (const y of [17, 83]) {
+      const ox = x < 50 ? [2, 13] : [87, 98];
+      const oy = y < 50 ? [2, 13] : [87, 98];
+      L.push(`linear-gradient(#000, #000) ${pct((ox[0] / (100 - 11)) * 100)} ${pct(((y - t / 2) / (100 - t)) * 100)} / 11% ${t}% no-repeat`);
+      L.push(`linear-gradient(#000, #000) ${pct(((x - t / 2) / (100 - t)) * 100)} ${pct((oy[0] / (100 - 11)) * 100)} / ${t}% 11% no-repeat`);
+    }
+  }
+  return L.join(', ');
+})();
+const CARDS = [
+  'linear-gradient(#000, #000)',
+  'radial-gradient(circle at 74% 30%, transparent 17%, #000 17%)',
+  'linear-gradient(180deg, #000 0 56%, transparent 56% 70%, #000 70%)',
+  'linear-gradient(90deg, #000 0 38%, transparent 38%), radial-gradient(circle at 72% 50%, #000 22%, transparent 22%)',
+  'linear-gradient(135deg, #000 0 50%, transparent 50%)',
+];
+
+add(
+  'Imposition',
+  'A press sheet of printed cards before trimming: bold modernist cards in four inks, each with crop marks at its corners in the gutters.',
+  (c) => ({
+    host: `--crop: ${CROP}; ${CARDS.map((m, i) => `--m${i}: ${m};`).join(' ')}`,
+    rule: `${F} { ${B(`inset: 0; background: @p(var(--color1)); ${msk('@var(--crop)')}`)} ${A(`inset: 17%; background: ${ink(c, 2)}; ${msk(`@p(${CARDS.map((_, i) => `@var(--m${i})`).join(', ')})`)} ${tf('rotate(@p(0deg, 90deg, 180deg, 270deg))')}`)} }${TR}`,
+  }),
+  {
+    pal: 4,
+    grid: '5x7',
+    tg: '5x5',
+    meta: { tags: ['squares', 'circles', 'lines', 'grid'], mood: ['technical', 'bold'], density: 'medium', goodFor: ['poster', 'packaging', 'card-texture'] },
   }
 );
 

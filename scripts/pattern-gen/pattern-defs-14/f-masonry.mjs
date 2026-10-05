@@ -628,38 +628,32 @@ add(
 // line in a V. A plank is a cell tall and slants half a cell down, so it runs
 // into the cell below; each side draws its own plank and the one running in
 // from above, and the twin lands exactly on the plank the cell above drew.
-// The side is a box turned 45deg, so the joint between the two planks is an
-// axis-aligned band in its mask and the miter cuts are its clip-path.
+// Both planks are one clip-path (joined by a zero-width seam), so every
+// joint is a clipped edge rather than a mask band.
 const HONGRIE = (() => {
   const jm = 1.4;
   const g = 1.8;
-  const S = 224;
-  const left = [
-    [jm, jm - 100 + g],
-    [50 - jm, 50 - jm - 100 + g],
-    [50 - jm, 50 - jm + 100 - g],
-    [jm, jm + 100 - g],
+  const plank = (dy) => [
+    [jm, jm + g + dy],
+    [50 - jm, 50 - jm + g + dy],
+    [50 - jm, 50 - jm + 100 - g + dy],
+    [jm, jm + 100 - g + dy],
   ];
-  const right = left.map(([x, y]) => [100 - x, y]);
-  const hw = (g / SQ2 / S) * 100;
-  const joint = `linear-gradient(180deg, #000 ${pc(50 - hw)}, transparent ${pc(50 - hw)} ${pc(50 + hw)}, #000 ${pc(50 + hw)})`;
-  return {
-    lBox: turnedBox(25, 25, S, 45),
-    rBox: turnedBox(75, 25, S, -45),
-    lClip: polyOf(localPts(left, 25, 25, S, 45)),
-    rClip: polyOf(localPts(right, 75, 25, S, -45)),
-    joint,
-  };
+  // the element spans the cell and the row above it: y from -100 to 100
+  const inBox = (pts) => pts.map(([x, y]) => [x, (y + 100) / 2]);
+  const left = [plank(0), plank(-100)].map(inBox);
+  const right = left.map((sh) => sh.map(([x, y]) => [100 - x, y]).reverse());
+  return { box: box(0, -100, 100, 200), left: joined(left), right: joined(right) };
 })();
 
 add(
   'Hongrie',
   'Point de Hongrie parquet: planks mitered into stacked chevrons, every plank its own shade of oak, honey and walnut.',
   (c) => ({
-    host: `--hl: ${HONGRIE.lClip}; --hr: ${HONGRIE.rClip}; --hj: ${HONGRIE.joint};`,
+    host: `--hl: ${HONGRIE.left}; --hr: ${HONGRIE.right};`,
     rule: `${F} {
-      ${B(`${HONGRIE.lBox} background: ${ink(c)}; ${cp('@var(--hl)')} ${msk('@var(--hj)')}`)}
-      ${A(`${HONGRIE.rBox} background: ${ink(c)}; ${cp('@var(--hr)')} ${msk('@var(--hj)')}`)}
+      ${B(`${HONGRIE.box} background: ${ink(c)}; ${cp('@var(--hl)')}`)}
+      ${A(`${HONGRIE.box} background: ${ink(c)}; ${cp('@var(--hr)')}`)}
     }${TR}`,
   }),
   {

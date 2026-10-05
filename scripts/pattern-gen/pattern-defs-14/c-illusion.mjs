@@ -671,7 +671,7 @@ add(
     const sx = K('2 * (@dx >= 0) - 1');
     const sy = K('2 * (@dy >= 0) - 1');
     return {
-      rule: `${F} { transform: scale(${sx}, ${sy}); ${B(`inset: 0; border-radius: 100% 0 0 0; background: ${pick(1, 2)}; transform: rotate(${K(`90 * floor(${h1} * 4)`)}deg);`)} ${A(
+      rule: `--a: ${pick(1, 2)}; ${F} { transform: scale(${sx}, ${sy}); ${B(`inset: 0; border-radius: 100% 0 0 0; background: @var(--a); transform: rotate(${K(`90 * floor(${h1} * 4)`)}deg);`)} ${A(
         `inset: 25%; border-radius: ${K(`50 * (${h2} > 0.5)`)}%; background: ${pick(3, 4)}; transform: rotate(${K(`45 * floor(${h2} * 4)`)}deg);`
       )} }${TR}`,
     };

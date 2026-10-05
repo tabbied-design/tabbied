@@ -731,14 +731,14 @@ const LINZER = (() => {
     const t = (i / 40) * TAU;
     const x = 16 * Math.sin(t) ** 3;
     const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-    return [50 + x * 0.78, 48 + y * 0.78];
+    return [50 + x * 0.95, 48.5 + y * 0.95];
   });
-  const star = Array.from({ length: 10 }, (_, i) => at(i % 2 ? 6.5 : 15, (i / 10) * TAU - Math.PI / 2, 50, 51.5));
+  const star = Array.from({ length: 10 }, (_, i) => at(i % 2 ? 8 : 18, (i / 10) * TAU - Math.PI / 2, 50, 51.5));
   const flower = Array.from({ length: 60 }, (_, i) => {
     const t = (i / 60) * TAU;
-    return at(9 + 4.5 * Math.cos(6 * t), t);
+    return at(11.5 + 5 * Math.cos(6 * t), t);
   });
-  const ring = circlePts(50, 50, 11.5, 32);
+  const ring = circlePts(50, 50, 14, 36);
   return [heart, star, flower, ring].map((h) => polyOf(compound([edge], [h])));
 })();
 
@@ -749,7 +749,7 @@ add(
     host: LINZER.map((v, i) => `--lz${i}: ${v};`).join(' '),
     rule: `${F} {
       transform: translate(@r(-5%, 5%), @r(-5%, 5%)) rotate(@r(-20deg, 20deg)) scale(.92);
-      ${B(`left: 28%; top: 28%; width: 44%; height: 44%; border-radius: 50%; background: ${inkOf(3, 4, 5)};`)}
+      ${B(`left: 25%; top: 25%; width: 50%; height: 50%; border-radius: 50%; background: ${inkOf(3, 4, 5)};`)}
       ${A(`inset: 0; background: ${inkOf(1, 2)}; ${clip('@p(@var(--lz0), @var(--lz1), @var(--lz2), @var(--lz3))')}`)}
     }${TR}`,
   }),
@@ -788,7 +788,7 @@ add(
     host: `--cone: ${CONE.cone}; --scoop: ${CONE.scoop};
       --waffle: repeating-linear-gradient(0deg, #000 0 8%, #00000052 8% 10%), repeating-linear-gradient(90deg, #000 0 8%, #00000052 8% 10%);`,
     rule: `${F} {
-      transform: translate(@r(-5%, 5%), @r(-3%, 3%)) rotate(@r(-14deg, 14deg)) scale(.95);
+      transform: translate(@r(-5%, 5%), @r(-3%, 3%)) rotate(@r(-14deg, 14deg)) scale(1.06);
       background: radial-gradient(circle at 50% 17%, var(--color6) 0 6.5%, transparent 6.5%);
       ${B(`inset: 0; background: ${inkOf(1, 2)}; ${clip('@var(--cone)')} transform: rotate(45deg);
         -webkit-mask: @var(--waffle); mask: @var(--waffle); -webkit-mask-composite: source-in; mask-composite: intersect;`)}
@@ -884,45 +884,44 @@ add(
   }
 );
 
-// Emmental: every cell cut on the diagonal into two wedges of cheese, each
-// bored with holes whose places and sizes are rolled per wedge, so a hole
-// that meets an edge leaves a bite in it.
+// Emmental: a wedge of cheese drawn in three faces. The cell is clipped to
+// the whole wedge; its own background paints only the rind face at the
+// back, so the holes rolled into the front face (their places and sizes
+// differ wedge to wedge) go right through to the ground. Every other
+// column faces the other way.
 const WEDGE = (() => {
-  const g = 1.6;
-  const d = g * Math.SQRT2;
-  const a = [[g, g], [100 - g - d, g], [g, 100 - g - d]];
-  const b = [[100 - g, 100 - g], [g + d, 100 - g], [100 - g, g + d]];
-  return { a: polyOf(roundCorners(a, [3, 2, 2], 4)), b: polyOf(roundCorners(b, [3, 2, 2], 4)) };
+  const [A, Bp, C] = [[6, 90], [76, 90], [76, 28]];
+  const off = [16, -12];
+  const sh = ([x, y]) => [x + off[0], y + off[1]];
+  return {
+    all: polyOf(roundCorners([A, Bp, sh(Bp), sh(C), sh(A)], 1.5, 3)),
+    front: polyOf([A, Bp, C]),
+    top: polyOf([A, C, sh(C), sh(A)]),
+  };
 })();
-const cheeseHoles = () =>
-  Array.from(
-    { length: 4 },
-    () => 'radial-gradient(circle at @r(4%, 70%) @r(4%, 70%), transparent @r(5%, 12%), #000 0)'
-  ).join(', ');
-const cheeseHolesB = () =>
-  Array.from(
-    { length: 4 },
-    () => 'radial-gradient(circle at @r(30%, 96%) @r(30%, 96%), transparent @r(5%, 12%), #000 0)'
-  ).join(', ');
+const cheeseHoles = Array.from(
+  { length: 5 },
+  () => 'radial-gradient(circle at @r(12%, 76%) @r(50%, 92%), transparent @r(3.5%, 8.5%), #000 0)'
+).join(', ');
 
 add(
   'Emmental',
-  'Wedges of cheese, two to a square and turned every way, each bored with round holes of every size that bite into its edges.',
+  'Wedges of cheese in rows, facing left and right in turn: a pale top, a wax rind at the back and a front face bored with holes of every size.',
   () => ({
-    host: `--wa: ${WEDGE.a}; --wb: ${WEDGE.b};`,
-    rule: `${F} {
-      transform: rotate(@p(0deg, 90deg, 180deg, 270deg));
-      ${B(`inset: 0; background: ${inkOf(1, 2, 3)}; ${clip('@var(--wa)')} ${maskI(cheeseHoles())}`)}
-      ${A(`inset: 0; background: ${inkOf(1, 2, 3)}; ${clip('@var(--wb)')} ${maskI(cheeseHolesB())}`)}
+    host: `--wedge: ${WEDGE.all}; --front: ${WEDGE.front}; --top: ${WEDGE.top};`,
+    rule: `--z: @r(1); @x(even) { transform: scaleX(-1); } ${F} {
+      ${clip('@var(--wedge)')} background: linear-gradient(90deg, transparent 76%, ${inkOf(4, 5)} 76%);
+      ${B(`inset: 0; background: ${inkOf(1, 2)}; ${clip('@var(--front)')} ${maskI(cheeseHoles)}`)}
+      ${A(`inset: 0; background: var(--color3); ${clip('@var(--top)')}`)}
     }${TR}`,
   }),
   {
-    palette: ['#3D5A80', '#F7D35E', '#F4A940', '#FBE7A1'],
+    palette: ['#3D5A80', '#F7D35E', '#F2B33D', '#FCEBB0', '#D94032', '#EE8434'],
     grid: '6x9',
     freq: 1,
     tg: '5x5',
     tf: 1,
-    meta: { tags: ['triangles', 'circles', 'diagonals'], mood: ['playful', 'bold'], density: 'dense', goodFor: ['packaging', 'poster', 'wallpaper'] },
+    meta: { tags: ['triangles', 'circles', 'blocks'], mood: ['playful', 'bold'], density: 'medium', goodFor: ['packaging', 'poster', 'wallpaper'] },
   }
 );
 
@@ -1002,7 +1001,7 @@ add(
   () => ({
     host: `--pod: ${POD.pod}; --peas: ${POD.peas};`,
     rule: `${F} {
-      transform: rotate(@rn(-100, 100, .6)deg) rotate(@r(-10deg, 10deg)) scale(@r(.95, 1.12)); z-index: @ri(1, 9);
+      --a: @rn(-160, 160, .8); transform: rotate($deg(a)) rotate(@r(-12deg, 12deg)) scale(@r(.95, 1.12)); z-index: @ri(1, 9);
       ${B(`inset: 0; background: ${inkOf(1, 2)}; ${clip('@var(--pod)')}`)}
       ${A(`inset: 0; background: ${inkOf(3, 4)}; ${maskV('@var(--peas)')}`)}
     }${TR}`,
@@ -1021,13 +1020,13 @@ add(
 // olives. The pimentos are the cell's own background, under the pick and
 // the olives, so the pick runs through them and only their caps show.
 const OLIVE = (() => {
-  const xs = [32, 53, 74];
-  const olives = xs.map((x) => ellipsePts(x, 50, 9.6, 7.4, 32));
-  const pick = [strokePts([[9, 50], [95, 50]], 1.15, 4), circlePts(9, 50, 4.4, 20)];
+  const xs = [34, 57, 80];
+  const olives = xs.map((x) => ellipsePts(x, 50, 11.4, 9, 36));
+  const pick = [strokePts([[7, 50], [97, 50]], 1.3, 4), circlePts(7, 50, 5, 20)];
   const pim = xs
     .map((x) => {
-      const cx = x - 9;
-      const r = pct((3.4 / Math.hypot(Math.max(cx, 100 - cx), 50)) * 100);
+      const cx = x - 10.6;
+      const r = pct((4 / Math.hypot(Math.max(cx, 100 - cx), 50)) * 100);
       return `radial-gradient(circle at ${cx}% 50%, @var(--pim) 0 ${r}, transparent ${r})`;
     })
     .join(', ');
@@ -1041,7 +1040,7 @@ add(
     host: `--olives: ${OLIVE.olives}; --pick: ${OLIVE.pick};`,
     rule: `${F} {
       --pim: ${inkOf(4, 5)};
-      transform: translate(@r(-6%, 6%), @r(-6%, 6%)) rotate(@r(0deg, 360deg)) scale(@r(.95, 1.1)); z-index: @ri(1, 9);
+      transform: translate(@r(-6%, 6%), @r(-6%, 6%)) rotate(@r(0deg, 360deg)) scale(@r(1, 1.15)); z-index: @ri(1, 9);
       background: ${OLIVE.pim};
       ${B(`inset: 0; background: ${inkOf(3, 6)}; ${clip('@var(--pick)')}`)}
       ${A(`inset: 0; background: ${inkOf(1, 2)}; ${clip('@var(--olives)')}`)}
@@ -1173,7 +1172,7 @@ add(
       --k: @p(0, 1, 2, 3);
       ${B(`inset: 0; background: @match($(k) < 2, ${inkOf(1, 2)}, ${inkOf(3, 4)});
         ${clip('@match($(k) == 0, @var(--hearts), $(k) == 1, @var(--diamonds), $(k) == 2, @var(--clubs), @var(--spades))')}
-        transform: rotate(@match(y % 2 == 0, 180deg, 0deg)) scale(.86);`)}
+        transform: rotate(@match(y % 2 == 0, 180deg, 0deg)) scale(1.04);`)}
       ${A(`left: -10%; top: -10%; width: 20%; height: 20%; background: ${inkOf(5)}; ${clip('polygon(50% 8%, 82% 50%, 50% 92%, 18% 50%)')}`)}
     }${TR}`,
   }),
@@ -1191,14 +1190,14 @@ add(
 // a glint of light, rolled together at every size.
 const VANES = (() => {
   const blades = [];
-  for (let k = 0; k < 3; k++) {
-    const t0 = (k / 3) * TAU;
+  for (let k = 0; k < 4; k++) {
+    const t0 = (k / 4) * TAU;
     const side = (s) =>
-      Array.from({ length: 15 }, (_, i) => {
-        const u = i / 14;
-        const r = 2 + 34 * u;
-        const w = 0.42 * Math.sin(Math.PI * u) ** 0.9 * (1 - 0.35 * u);
-        return at(r, t0 + 1.3 * u + s * w);
+      Array.from({ length: 17 }, (_, i) => {
+        const u = i / 16;
+        const r = 1 + 37 * u;
+        const w = 0.2 * Math.sin(Math.PI * u) ** 0.8;
+        return at(r, t0 + 1.7 * u + s * w);
       });
     blades.push([...side(-1), ...side(1).reverse()]);
   }
@@ -1207,18 +1206,18 @@ const VANES = (() => {
 
 add(
   'Marbles',
-  'Glass marbles rolled together at every size, each a colored sphere with a twisted three-vaned cat\'s eye inside and a bright glint of light.',
+  'Glass marbles rolled together at every size, each a colored sphere with a twisted four-vaned cat\'s eye inside and a bright glint of light.',
   () => ({
     host: `--vanes: ${VANES};`,
     rule: `${F} {
       transform: translate(@r(-14%, 14%), @r(-14%, 14%)) rotate(@r(0deg, 360deg)) scale(@r(.55, 1)); z-index: @ri(1, 9);
-      border-radius: 50%; background: ${inkOf(1, 2, 5)};
-      ${B(`inset: 0; background: ${inkOf(3, 4)}; ${clip('@var(--vanes)')}`)}
-      ${A(`left: 24%; top: 18%; width: 22%; height: 14%; border-radius: 50%; background: var(--color3); opacity: .9; transform: rotate(-35deg);`)}
+      border-radius: 50%; background: ${inkOf(1, 3, 4)};
+      ${B(`inset: 0; background: ${inkOf(2, 5)}; ${clip('@var(--vanes)')}`)}
+      ${A(`left: 22%; top: 17%; width: 24%; height: 13%; border-radius: 50%; background: var(--color5); opacity: .92; transform: rotate(-38deg);`)}
     }${TR}`,
   }),
   {
-    pal: 41,
+    palette: ['#13293D', '#E84855', '#F9DC5C', '#3185FC', '#2EC4B6', '#F5F1E3'],
     grid: '6x9',
     freq: 1,
     tg: '5x5',
