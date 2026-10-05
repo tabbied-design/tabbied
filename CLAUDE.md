@@ -2170,7 +2170,11 @@ written side by side. Things the batch learned, all silent when wrong:
   is evaluated by css-doodle in JavaScript, cell by cell, so a polygon whose
   every vertex repeats the same sine sum took two seconds to reshuffle
   (Streamgraph). `--h: $(...)` once and `$(h)` at each vertex brought it, and
-  a dozen others, from 400-2000 ms to 100-250 ms. Two traps inside `$()`: a
+  a dozen others, from 400-2000 ms to 100-250 ms. css-doodle also caches a
+  parsed expression by its text, and `@x` is pasted in as a number, so an
+  expression over `@x` is parsed afresh in every cell; declare `--ix: @x`
+  once and write the expression over `$(ix)`, and its text is the same in
+  every cell and parses once. Two traps inside `$()`: a
   comparison like `(k == 0)` evaluates to 0 in a custom property, and four
   variable reads in a row that expand to the same text are taken for a loop
   and give 0. Read each variable once and decode picks arithmetically.

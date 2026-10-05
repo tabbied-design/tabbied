@@ -291,12 +291,6 @@ const lstr = (a) => {
   if (!parts.length) return `${r2(a.c)}`;
   return rc(`${r2(a.c)}${parts.map(([n, v]) => `${v < 0 ? ' - ' : ' + '}${Math.abs(r2(v))} * ${n.split('*').map((m) => `$(${m})`).join(' * ')}`).join('')}`);
 };
-/** Multiply a linear expression by the per-cell number `flag`. */
-const lflag = (a, flag) => {
-  const terms = { [flag]: a.c };
-  for (const [k, v] of Object.entries(a.terms)) terms[`${flag}*${k}`] = v;
-  return lin(0, terms);
-};
 /** A point from two linear coordinates, written into a box `span` cells wide. */
 const lpt = ([u, v], span) => {
   const o = (span - 1) / 2;
@@ -1022,9 +1016,7 @@ const LP = (() => {
     // split along a-c, or along b-d
     '--quad: polygon(@var(--pa), @var(--pb), @var(--pc), @var(--pd)); --tri: polygon(@var(--pa), @var(--pb), @p(@var(--pc), @var(--pd)));',
   ].join(' ');
-  const quad = '@var(--quad)';
-  const tri = '';
-  return { vars, quad, tri };
+  return { vars, quad: '@var(--quad)' };
 })();
 add(
   'Low Poly',

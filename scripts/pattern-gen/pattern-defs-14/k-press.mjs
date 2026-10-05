@@ -775,9 +775,8 @@ add(
 
 // -- K24 Streamgraph --------------------------------------------------------------
 // Three layers stacked about each row's midline, their thicknesses running on
-// sine waves of the sheet column whose phases are rolled once per drawing (on
-// the host), so the stream is continuous from cell to cell and reshapes on a
-// reseed. A cell works out the three thicknesses once at four points across
+// sine waves of the sheet column whose phases are rolled once per drawing,
+// so the stream is continuous from cell to cell and reshapes on a reseed. A cell works out the three thicknesses once at four points across
 // it (--ua .. --wd) and the top edge from them (--ta .. --td); every other
 // vertex is left to CSS calc() over those, so no sine is worked out twice,
 // and the expressions are kept short, since css-doodle's cost is mostly in
@@ -796,7 +795,8 @@ const SG_Y = [
   [1.7, 2.3, 2.9],
   [0.8, 1.9, 1.3],
 ];
-const SG_HOST = [0, 1, 2].map((j) => `--p${j}: @r(0, 6.283);`).join(' ');
+// the phases, rolled once per drawing and read by every cell
+const SG_PHASES = [0, 1, 2].map((j) => `--p${j}: @once(@r(0, 6.283));`).join(' ');
 const n4 = (v) => +v.toFixed(4);
 // Each band's two sine phases at the cell's right edge (--fj, --gj), from the
 // cell's column and row (--X, --Y, so every expression is the same text in
@@ -828,8 +828,7 @@ add(
   'Streamgraph',
   'Rows of streamgraphs: three colored layers stacked about a midline, swelling and thinning in smooth waves as they flow across the sheet.',
   (c) => ({
-    host: SG_HOST,
-    rule: `${F} { ${SG_VARS} background: @p(var(--color2)); clip-path: ${SG_ALL}; ${B(`inset: 0; background: @p(var(--color1)); clip-path: ${SG_TOPBAND};`)} ${A(`inset: 0; background: @p(var(--color3)); clip-path: ${SG_BOTBAND};`)} }${TR}`,
+    rule: `${SG_PHASES} ${F} { ${SG_VARS} background: @p(var(--color2)); clip-path: ${SG_ALL}; ${B(`inset: 0; background: @p(var(--color1)); clip-path: ${SG_TOPBAND};`)} ${A(`inset: 0; background: @p(var(--color3)); clip-path: ${SG_BOTBAND};`)} }${TR}`,
   }),
   {
     pal: 27,
