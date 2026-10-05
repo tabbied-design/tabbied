@@ -494,8 +494,12 @@ code.entryName {
   border-radius: 14px;
 }
 
+/* The ink is a hex, as in the recipes' wells, not the article's oklch():
+   a pattern inherits it as currentColor, and the SVG converter cannot read
+   the lab() Chromium reports for that, so exportSvg() threw in here. */
 .preview {
   padding: 20px;
+  color: var(--h-ink);
   background-color: var(--h-paper-well);
 }
 
@@ -1008,6 +1012,33 @@ code.entryName {
   }
 }
 
+/* The Concepts page's sizing result: the four ways to size one design, two
+   to a row (three left the fixed canvas alone on a row of its own), each in
+   the box its code gives it. One to a row on a phone. */
+.conceptSizing {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 16px;
+  align-items: start;
+}
+
+@media (max-width: 559.98px) {
+  .conceptSizing {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* A fixed canvas drawn at half its size: the frame is half the canvas, and
+   the canvas inside it is scaled from its top left corner to fill it. */
+.halfScale {
+  margin: 0 auto;
+}
+
+.halfScale > * {
+  transform: scale(0.5);
+  transform-origin: 0 0;
+}
+
 /* ---- The Developers page (DocsShell layout="wide") ---- */
 
 /* No rule under the heading block when a banner follows it: the banner is
@@ -1257,6 +1288,14 @@ code.entryName {
   margin: 24px 0 0;
 }
 
+/* A few cases' boxes side by side, for a sample that sizes a box those
+   ways; one to a row where two do not fit. */
+.sizeResults {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 32px;
+}
+
 /* A recipe's result, live, above its file: a well with a label, so the
    result reads as the code's output and not as part of the page. */
 .recipePreview {
@@ -1335,6 +1374,21 @@ code.entryName {
 .demoBtn:disabled {
   cursor: default;
   opacity: 0.5;
+}
+
+/* A button labelled with the call it runs, `redraw()`, as the code beside
+   it writes it. */
+.demoBtnCode {
+  height: 36px;
+  padding: 0 16px;
+  font: 400 13px var(--h-mono);
+}
+
+/* A toggle that is on: filled, like a chosen setup tab. */
+.demoBtn[aria-pressed='true'] {
+  color: var(--h-paper);
+  background-color: var(--h-ink);
+  border-color: var(--h-ink);
 }
 
 /* The hero recipe: a section the copy sizes, the pattern behind it. */

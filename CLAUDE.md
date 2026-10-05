@@ -2041,9 +2041,27 @@ Every case and every recipe is a card of its own, its code inside it: with
 the code between two diagrams and nothing around them, it read as belonging
 to either.
 
+**A sample that draws something gets a live result beside it.** The samples
+a setup page writes itself (an update, the controller's methods, `onReady`,
+`hydratePatterns`, a server render, a custom definition) sit in an `Example`
+over a demo from `PageDemos.tsx`, with a button per line of the sample,
+labelled as the sample writes the call; the page keeps the sample's values
+(a palette, an interval) in constants that the code string and the demo both
+read. An install command, an import list or a config file has nothing to
+draw and stays a bare code block. The previews share `live.tsx` (a pattern
+mounted as it nears the viewport, the buttons and rows) with the recipes.
+Every preview frame sets its text color as a hex (`.preview`,
+`.previewBody`): a pattern inherits it as `currentColor`, and the article's
+`oklch()` reaches the SVG converter as a `lab()` it cannot read, so
+`exportSvg()` threw inside the frame.
+
 **The Concepts page has examples too, in every setup behind one switch**
-(`examples/concepts.ts`, drawn by `ConceptExample` and `SetupTabs`). One
-short file per section, written six times, and a row of setups over it;
+(`examples/concepts.ts`, drawn by `ConceptExample` and `SetupTabs`), each
+with its result drawn live above the switch (`ConceptPreview`, from
+`CONCEPT_PREVIEWS`: one per concept, since every setup's file of a concept
+draws the same thing, passed in by the server so the samples never ship as
+data). One short file per section, written six times, and a row of setups
+over it;
 picking one switches every example on the page and is remembered in
 localStorage, read after hydration (the export draws React), and the page is
 scrolled by however much the examples above the switch grew, so the switch
@@ -2058,8 +2076,10 @@ three gates keep it true, the Concepts page's examples included.
 code against the built package, compiles the Vue code with Vue's compiler,
 parses the rest, checks the guide's palettes against `lib/paletteLibrary.ts`,
 and holds every preview to the code of every recipe it stands for (designs,
-seeds, colors, sizes): it caught three `controls` recipes whose pattern
-started at a frequency their slider did not show. Svelte has no compiler in
+seeds, colors, sizes), and every Concepts preview to all six of its files,
+counting the patterns where a setup writes one tag each: it caught three
+`controls` recipes whose pattern started at a frequency their slider did
+not show. Svelte has no compiler in
 the repo, so a change to its examples is compiled by hand with Svelte 5.
 `e2e/docs-examples.spec.ts` renders every sizing case in the three setups
 whose code is the whole page and asserts the box each draws, and runs every
