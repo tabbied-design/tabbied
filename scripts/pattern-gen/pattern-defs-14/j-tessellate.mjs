@@ -1309,12 +1309,13 @@ const AUTO = (() => {
   // The field at a grid corner, a sum of three sines across the sheet: one
   // $() per corner, its text the same in every cell (css-doodle parses it
   // once), rounded so the two levels read it back quickly.
-  const field = (i, j) =>
-    `$(round((sin(${i} * 1.13 + ${j} * 0.47 + s) + sin(${j} * 1.05 - ${i} * 0.41 + 1.7 * s) + 0.7 * sin((${i} - ${j}) * 0.83 + 2.3 * s)) * 10000) / 10000)`;
-  const fields = `${POS} --fa: ${field('(ix - 1)', '(iy - 1)')}; --fb: ${field('ix', '(iy - 1)')}; --fc: ${field('ix', 'iy')}; --fd: ${field('(ix - 1)', 'iy')};`;
-  const bit = (f, t) => `max(0, min(1, floor(${f} - ${t} + 1)))`;
-  /** The level's four corners as one number, 8 a + 4 b + 2 c + d. */
-  const code = (p, t) => `--${p}k: $(8 * ${bit('fa', t)} + 4 * ${bit('fb', t)} + 2 * ${bit('fc', t)} + ${bit('fd', t)});`;
+  // the corner (ix + di, iy + dj): each sine's argument is the cell's own plus a fixed offset
+  const add = (e, o) => (r2(o) === 0 ? e : `${e} ${o < 0 ? '-' : '+'} ${Math.abs(r2(o))}`);
+  const field = (di, dj) =>
+    `$(round((sin(${add('ix*1.13 + iy*0.47 + s', 1.13 * di + 0.47 * dj)}) + sin(${add('iy*1.05 - ix*0.41 + 1.7*s', 1.05 * dj - 0.41 * di)}) + 0.7*sin(${add('(ix - iy)*0.83 + 2.3*s', 0.83 * (di - dj))}))*10000)/10000)`;
+  const fields = `${POS} --fa: ${field(-1, -1)}; --fb: ${field(0, -1)}; --fc: ${field(0, 0)}; --fd: ${field(-1, 0)};`;
+  /** The level's four corners as one number, 8 a + 4 b + 2 c + d (a comparison reads as 1 or 0). */
+  const code = (p, t) => `--${p}k: $(8*(fa >= ${t}) + 4*(fb >= ${t}) + 2*(fc >= ${t}) + (fd >= ${t}));`;
   const shapes = [
     cornerDisc('50%', '0 0'),
     cornerDisc('50%', '100% 0'),
