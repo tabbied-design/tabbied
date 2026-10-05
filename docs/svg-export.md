@@ -15,6 +15,13 @@ warning, or on a pixel diff above a budget deliberately tighter than the
 shipped one. Both are thin callers of `scripts/pattern-gen/svg-sweep.mjs`, and
 both batches share the authoring lints in `scripts/pattern-gen/pattern-lints.mjs`.
 
+Batch 14 (gallery orders 4000-4999, 300 designs) holds the same line with
+`validate-svg-batch14.mjs`, and while a family is authored
+`check-batch14.mjs` runs the sweep straight from its definitions. Its designs
+are drawn from subjects (cloth, tiles, quilts, charts, the sky) rather than one
+primitive, so they met more of the converter's edges than any batch before;
+what they worked around is listed under "Batch 14's workarounds" below.
+
 Batch 12 is where the *smooth* gradient gets used: 19 of its 32 designs are
 built on linear and radial ramps - fades, a corner glow, halftones and ruled
 fields thinned across a cell, and a fade posterized into flat alpha levels.
@@ -145,7 +152,7 @@ design that needs a conditional effect can use it. It is currently unexercised
 by any pattern, which is why `e2e/svg-export.spec.ts` no longer has a case for
 it: there is no fixture to point one at.
 
-### 4. Full support - everything else (297)
+### 4. Full support - everything else (597)
 
 Solid fills, border-radius shapes, per-side borders, clip-paths,
 linear/radial/repeating gradients (incl. `calc(% ± px)` ramps and
@@ -205,8 +212,9 @@ on `PatternOption`), so package consumers can implement the same UX.
 - **A batch generator owns a bounded range of gallery orders**, and deletes
   anything in its range it no longer defines. The bound is the important half:
   batch 10 once claimed every order above 1100 and so deleted the whole of
-  batch 11. Batch 11 owns 1200-1399, batch 12 owns 1400-1999, and a batch 13
-  starts at 2000 and bounds itself the same way.
+  batch 11. Batch 11 owns 1200-1399, batch 12 owns 1400-1999, batch 13 owns
+  2000-2999, the hand-authored September drop sits at 3000-3042, and batch 14
+  owns 4000-4999.
 - `scripts/pattern-gen/generate-patterns.mjs` (batches 1-3) is historical and
   refuses to run: its definitions would recreate 105 retired designs and
   overwrite `tetro`. For those patterns the JSON is authoritative - edit it
@@ -280,6 +288,46 @@ outside the batch the script names).
 The sweep script needs `npm run build --workspace tabbied` first (it injects
 `dist/core/svgExport.js`) and a running dev server; failure artifacts
 (`out.svg`, `mine.png`, `ref.png`) land in a temp dir it prints.
+
+## Batch 14's workarounds
+
+Found while authoring batch 14, each measured by the sweep, and each worked
+around in the designs rather than fixed in the converter. A converter change
+that lifts one of these can drop the workaround; until then, a new design
+should not reach for the construction on the left.
+
+- **A conic gradient tiled smaller than its box** (a `background-size` or
+  `mask-size` under 100%) exports wrong: 7% to 40% of pixels. Draw the blocks
+  untiled, or as stripes intersected.
+- **A conic gradient's last stop needs both positions** (`... 270deg
+  360deg`); with one, the converter drops it.
+- **Fine conic rays fail parity.** The converter widens a thin sector by a
+  hair so abutting sectors leave no seam, which past about 16 rays is visible
+  (0.9-1.5%). Two same-colored wedges side by side still export with a
+  hairline between them; draw every other wedge over the disc's own color.
+- **A radial stop above 100% is clamped** in SVG. Size the gradient so every
+  stop stays at or under 100%.
+- **`repeat-x` / `repeat-y` on a mask layer is ignored**; tile both ways and
+  intersect.
+- **`z-index` between neighboring cells is not honored**, so a design that
+  stacks one cell's shape over the next looks right and fails parity. Cut a
+  real gap where one strand passes under another, or keep the stacking
+  inside one cell.
+- **A parent's clip-path or mask also clips its pseudo-elements**, and the
+  nested clip costs parity; give each piece its own shape.
+
+And three things the *screen* does that SVG does not, which read as
+converter failures and are not:
+
+- **A hard-stop linear gradient on a diagonal is aliased** by Chrome (about
+  1%). Draw the diagonal with a clip-path polygon, or rotate an element whose
+  own gradient is axis-aligned.
+- **A clip-path edge lying on the cell's own edge leaves a 1px seam**, and
+  so do two boxes that merely butt. Run the polygon a few percent past the
+  cell, or scale the cell by about 1.01 so it covers the joint.
+- **A background sized smaller than its box is pixel-snapped** on screen
+  (Barn Raising measured 10% that way); lay the bands across the whole box
+  with hard stops instead.
 
 ## Converter subtleties (hard-won; don't regress these)
 

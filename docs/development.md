@@ -48,7 +48,7 @@ the full API, the framework-agnostic core, and exporting to PNG and SVG.
 
 ## Using Tabbied with an AI coding assistant
 
-The hard part for an assistant is not the API but picking one of the 338
+The hard part for an assistant is not the API but picking one of the 638
 designs, since the slugs (`cleat`, `gnomonwedge`, `karst`) say nothing about
 what they draw.
 

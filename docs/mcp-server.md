@@ -69,7 +69,7 @@ reaches hosted servers only. The site's page has these as steps.
 
 ## The tools
 
-Slugs are opaque (`cleat`, `karst`, `radius`) and there are 338 of them, so the
+Slugs are opaque (`cleat`, `karst`, `radius`) and there are 638 of them, so the
 toolset is built around a single flow: **narrow on metadata, then look.**
 
 - **`search_designs`** filters on a closed vocabulary - `tags` (visible

@@ -1,4 +1,55 @@
 // J. Tessellate - tilings and tile games: truchet sets, Cairo and rhombille tilings, Wang tiles.
+//
+// The mathematician's side of the repeat: tiles that join across the cell
+// edges, so the sheet reads as one surface rather than a grid of stamps.
+//
+//   truchet sets and paths
+//     Duotone Truchet  Smith tiles filled two-tone, the regions colored by the parity of their corners
+//     Neon Truchet     Smith arcs as glowing tubes
+//     Racetrack        Smith arcs as roads with lane lines
+//     Hex Truchet      three arcs per hexagon on offset rows
+//     Knotwork         a diagonal plait, over and under, broken into knots
+//     Pixel Maze       the ten print maze as pixel staircases
+//     Pipework         Wang tiles of pipe with rounded bends
+//     Boogie Woogie    a Wang network of lines and blocks
+//   tilings
+//     Cairo            the Cairo pentagonal tiling
+//     Cairo Morph      diamonds to Cairo pentagons to basketweave across the sheet
+//     Snub Square      tipped squares and equilateral triangles
+//     Pythagorean      two sizes of square on a 3-4-5 lattice
+//     Windmill         squares and dominoes in pinwheels, read off (x + 3y) mod 5
+//     Interlock        one S-sided tile by translation, rippling
+//     Pyramid Relief   the triangular lattice raised into lit pyramids
+//     Low Poly         a jittered triangulated mesh
+//     Fibonacci Grid   rectangles cut long and short by the Fibonacci word
+//     Apollonian       three generations of an Apollonian packing
+//     Baravelle        square spirals from nested turned squares
+//   tile games and rules
+//     Jigsaw           puzzle pieces whose knobs are cut by a hash of each edge
+//     Edge Match       an Eternity II style edge-matching puzzle
+//     Autotile         corner-matched game-map tiles (marching squares)
+//     Pentomino        a six by ten pentomino packing, repeated
+//     Euler Square     a Graeco-Latin square of shapes and inks
+//     Knight Tour      a closed knight's tour, move by move
+//
+// Three ways of making neighbors agree recur:
+//
+//   * Position. The cell's checkerboard parity (Q below) or the first column
+//     and row (FIRST_X, FIRST_Y) switch a shape, and a polygon whose points
+//     move with such flags is written as one @calc() per coordinate (flagPoly).
+//   * A hash of an edge's or a corner's place in the sheet, plus a number
+//     rolled once per sheet (SEED, which @pd() caches). Both cells sharing an
+//     edge compute the same hash, so Wang tiles, jigsaw knobs and mesh corners
+//     always match, and a reseed recuts the whole sheet.
+//   * A tile bigger than its cell, drawn whole by one cell in a box two or
+//     three cells wide. The sheet's first column and row also draw the pieces
+//     that would have come from outside it, through a second outline in the
+//     same polygon that otherwise collapses to a point (slit).
+//
+// The SVG converter paints cell after cell and honors z-index only inside a
+// cell, so nothing here leans on a later cell's background staying under an
+// earlier cell's overflow; rounded tiles are boxes with border-radius, since
+// the converter reads only the first radius of inset(... round ...).
 import { section, F, TR, cp, msk, mskI, B, A, ink, noise } from './shared.mjs';
 
 const { add, all } = section('J. Tessellate');
@@ -17,6 +68,15 @@ const inks = (c, from = 1, to = c - 1) => {
 };
 /** One ink for the whole sheet, chosen again on every reseed. */
 const sheetInk = (c, from = 1, to = c - 1) => `@pd(@p(${inks(c, from, to)}))`;
+
+/**
+ * A roll spent ahead of the rule. At full frequency the package's gate is
+ * @random(0.999), so about one cell in a thousand is dropped, which shows in
+ * a design that joins across cells. Css-doodle deals every roll from one
+ * seeded sequence, so one more roll per cell moves the dropped cell; the
+ * designs that lost a cell in their catalog preview carry it.
+ */
+const SHIFT = '--gate: @r(1);';
 
 /** The cell's checkerboard parity, 0 or 1, as a css-doodle expression. */
 const Q = '((@x + @y) % 2)';
@@ -231,7 +291,7 @@ add(
   'Smith truchet tiles filled in two tones, so the quarter arcs close into round blobs and winding channels that run unbroken across the sheet.',
   (c) => ({
     host: `${hostList('dd', [cornerDisc('50%', '0 0'), cornerDisc('50%', '100% 100%')])} ${hostList('db', [cornerBore('50%', '0 0'), cornerBore('50%', '100% 100%')])}`,
-    rule: `--k: @p(0, 1); ${F} { ${tf(`rotate(@calc(90 * ((@x + @y + $(k)) % 2))deg)`)} ${B(
+    rule: `${SHIFT} --k: @p(0, 1); ${F} { ${tf(`rotate(@calc(90 * ((@x + @y + $(k)) % 2))deg)`)} ${B(
       `inset: 0; background: ${sheetInk(c)}; ${msk('@var(--dd)')} opacity: @calc(1 - $(k));`
     )} ${A(`inset: 0; background: @lp(); ${mskI('@var(--db)')} opacity: $(k);`)} }${TR}`,
   }),
@@ -308,7 +368,7 @@ add(
     const tile = `${msk('@var(--hm)')} ${cp('@var(--hc)')} ${tf('rotate(@p(0deg, 180deg))')}`;
     return {
       host: `${hostList('hm', HEX.rings)} --hc: ${HEX.clip};`,
-      rule: `${F} { ${tf('translateX(@calc(50 - 50 * (@y % 2))%)')} ${B(`${spanBox(1.5)} background: ${ink(c)}; ${tile}`)} ${A(
+      rule: `${SHIFT} ${F} { ${tf('translateX(@calc(50 - 50 * (@y % 2))%)')} ${B(`${spanBox(1.5)} background: ${ink(c)}; ${tile}`)} ${A(
         `left: -125%; top: -25%; width: 150%; height: 150%; background: ${ink(c)}; opacity: @calc(max(0, 2 - @x) * (1 - @y % 2)); ${tile}`
       )} }${TR}`,
     };
@@ -421,7 +481,7 @@ add(
   'The ten print maze in chunky pixels: stepped diagonal strokes, one per cell, leaning either way and joining at the corners into a blocky labyrinth.',
   () => ({
     host: `--px: ${polyIn(1, PIX)};`,
-    rule: `${F} { ${tf('rotate(@p(0deg, 90deg))')} background: @p(var(--color1), var(--color1), var(--color2)); ${cp('@var(--px)')} }${TR}`,
+    rule: `${SHIFT} ${F} { ${tf('rotate(@p(0deg, 90deg))')} background: @p(var(--color1), var(--color1), var(--color2)); ${cp('@var(--px)')} }${TR}`,
   }),
   {
     palette: ['#2E2A6B', '#8C82E6', '#B9B2F5'],
@@ -486,7 +546,7 @@ add(
     const G = (xe, ye) => open(xe, ye, 39.3467, 11.1351, 1.7);
     return {
       host: `${PIPE.host('po', 17)} ${PIPE.host('pi', 4)}`,
-      rule: `${SEED} --pr: ${H('@x', '@y')}; --pl: ${H('(@x - 1)', '@y')}; --pb: ${G('@x', '@y')}; --pt: ${G('@x', '(@y - 1)')}; --pipe: ${sheetInk(c, 1, 2)}; ${F} { ${B(`inset: 0; background: @p(@var(--pipe)); ${msk(...PIPE.layers('po'))}`)} ${A(
+      rule: `${SHIFT} ${SEED} --pr: ${H('@x', '@y')}; --pl: ${H('(@x - 1)', '@y')}; --pb: ${G('@x', '@y')}; --pt: ${G('@x', '(@y - 1)')}; --pipe: ${sheetInk(c, 1, 2)}; ${F} { ${B(`inset: 0; background: @p(@var(--pipe)); ${msk(...PIPE.layers('po'))}`)} ${A(
         `inset: 0; background: @p(var(--color3), var(--color4)); ${msk(...PIPE.layers('pi'))}`
       )} }${TR}`,
     };
@@ -521,7 +581,7 @@ add(
     const down = rect(`50 - ${h}`, `50 + ${h}`, `50 - ${h} - 100 * $(vt)`, `50 + ${h} + 100 * $(vb)`);
     const lines = `polygon(${[...across, across[0], ...down, down[0]].join(', ')})`;
     return {
-      rule: `${SEED} --hr: @calc(0 + ${H('@x', '@y')}); --hl: @calc(${FIRST_X} * ${H('(@x - 1)', '@y')}); --vb: @calc(0 + ${G('@x', '@y')}); --vt: @calc(${FIRST_Y} * ${G('@x', '(@y - 1)')}); ${F} { ${B(
+      rule: `${SHIFT} ${SEED} --hr: @calc(0 + ${H('@x', '@y')}); --hl: @calc(${FIRST_X} * ${H('(@x - 1)', '@y')}); --vb: @calc(0 + ${G('@x', '@y')}); --vt: @calc(${FIRST_Y} * ${G('@x', '(@y - 1)')}); ${F} { ${B(
         `${spanBox(3)} background: @p(var(--color1)); ${cp(lines)}`
       )} ${A(`left: ${50 - h}%; top: ${50 - h}%; width: ${BW}%; height: ${BW}%; background: @p(var(--color2), var(--color3), var(--color4), var(--color1), var(--color1));`)} }${TR}`,
     };
@@ -589,7 +649,7 @@ add(
         inSpan(3)
       );
     return {
-      rule: `${F} { ${B(`${spanBox(3)} background: ${ink(c)}; ${cp(right(FIRST_X))}`)} ${A(`${spanBox(3)} background: ${ink(c)}; ${cp(bottom(FIRST_Y))}`)} }${TR}`,
+      rule: `${SHIFT} ${F} { ${B(`${spanBox(3)} background: ${ink(c)}; ${cp(right(FIRST_X))}`)} ${A(`${spanBox(3)} background: ${ink(c)}; ${cp(bottom(FIRST_Y))}`)} }${TR}`,
     };
   },
   {
@@ -636,7 +696,7 @@ add(
   'Cairo Morph',
   'A tiling that changes as it crosses the sheet: diamonds in one corner open into Cairo pentagons and then flatten into a basketweave of oblongs in the opposite corner.',
   (c) => ({
-    rule: `${CM.vars} ${F} { ${B(`${spanBox(3)} background: ${ink(c)}; ${cp(CM.right)}`)} ${A(`${spanBox(3)} background: ${ink(c)}; ${cp(CM.bottom)}`)} }${TR}`,
+    rule: `${SHIFT} ${CM.vars} ${F} { ${B(`${spanBox(3)} background: ${ink(c)}; ${cp(CM.right)}`)} ${A(`${spanBox(3)} background: ${ink(c)}; ${cp(CM.bottom)}`)} }${TR}`,
   }),
   {
     pal: 34,
@@ -714,7 +774,7 @@ add(
       inSpan(3)
     );
     return {
-      rule: `${F} { ${B(`${spanBox(3)} background: @p(var(--color1), var(--color2)); ${cp(square)}`)} ${A(`${spanBox(3)} background: @p(var(--color3), var(--color4), var(--color5)); ${cp(tris)}`)} }${TR}`,
+      rule: `${SHIFT} ${F} { ${B(`${spanBox(3)} background: @p(var(--color1), var(--color2)); ${cp(square)}`)} ${A(`${spanBox(3)} background: @p(var(--color3), var(--color4), var(--color5)); ${cp(tris)}`)} }${TR}`,
     };
   },
   {
@@ -755,7 +815,7 @@ add(
       inSpan(3)
     );
     return {
-      rule: `${F} { ${B(`${spanBox(3)} background: @p(var(--color1), var(--color5)); ${cp(small)}`)} ${A(`${spanBox(3)} background: @p(var(--color2), var(--color3), var(--color4)); ${cp(big)}`)} }${TR}`,
+      rule: `${SHIFT} ${F} { ${B(`${spanBox(3)} background: @p(var(--color1), var(--color5)); ${cp(small)}`)} ${A(`${spanBox(3)} background: @p(var(--color2), var(--color3), var(--color4)); ${cp(big)}`)} }${TR}`,
     };
   },
   {
@@ -828,7 +888,7 @@ add(
   'Interlock',
   'One tile repeated by translation, its sides bent into S curves that deepen and flatten across the sheet, so the checkered tiles hook into each other like a puzzle.',
   () => ({
-    rule: `${SEED} ${IL.amps} ${F} { ${B(`${spanBox(1.5)} background: @match((x + y) % 2 == 0, @p(var(--color1), var(--color2)), @p(var(--color3), var(--color4))); ${cp(IL.clip)} ${tf('scale(0.96)')}`)} }${TR}`,
+    rule: `${SHIFT} ${SEED} ${IL.amps} ${F} { ${B(`${spanBox(1.5)} background: @match((x + y) % 2 == 0, @p(var(--color1), var(--color2)), @p(var(--color3), var(--color4))); ${cp(IL.clip)} ${tf('scale(0.96)')}`)} }${TR}`,
   }),
   {
     pal: 28,
@@ -1002,7 +1062,7 @@ add(
     ].join(' ');
     return {
       host,
-      rule: `${F} { ${B(`${APO.big} background: @p(var(--color1), var(--color2), var(--color3));`)} ${A(
+      rule: `${SHIFT} ${F} { ${B(`${APO.big} background: @p(var(--color1), var(--color2), var(--color3));`)} ${A(
         `${spanBox(1.6)} background: @p(var(--color4), var(--color5)); ${msk('@match(x == 1, @match(y == 1, @var(--ap11), @var(--ap10)), @match(y == 1, @var(--ap01), @var(--ap00)))')}`
       )} }${TR}`,
     };
@@ -1039,7 +1099,7 @@ add(
   'Baravelle spirals: squares nested at half the size and turned, their corner triangles shaded in turn so four arms wind inward, each square whirling one way or the other.',
   (c) => ({
     host: `--ba: ${BAR.a}; --bb: ${BAR.b};`,
-    rule: `${F} { ${tf('rotate(@p(0deg, 90deg)) scaleX(@p(1, -1))')} ${B(`inset: 0; background: ${ink(c)}; ${cp('@var(--ba)')}`)} ${A(`inset: 0; background: ${ink(c)}; ${cp('@var(--bb)')}`)} }${TR}`,
+    rule: `${SHIFT} ${F} { ${tf('rotate(@p(0deg, 90deg)) scaleX(@p(1, -1))')} ${B(`inset: 0; background: ${ink(c)}; ${cp('@var(--ba)')}`)} ${A(`inset: 0; background: ${ink(c)}; ${cp('@var(--bb)')}`)} }${TR}`,
   }),
   {
     pal: 4,
@@ -1217,7 +1277,7 @@ add(
   'A game map drawn with corner-matched tiles: rounded islands of land in open water, with hills rising inside them, the coastlines running smoothly from tile to tile.',
   () => ({
     host: AUTO.host,
-    rule: `${SEED} ${AUTO.corners('l', 0.15)} ${AUTO.corners('h', 1.05)} ${F} { ${B(`inset: 0; background: @p(var(--color1)); ${msk(...AUTO.layers('l'))}`)} ${A(`inset: 0; background: @p(var(--color2)); ${msk(...AUTO.layers('h'))}`)} }${TR}`,
+    rule: `${SHIFT} ${SEED} ${AUTO.corners('l', 0.15)} ${AUTO.corners('h', 1.05)} ${F} { ${B(`inset: 0; background: @p(var(--color1)); ${msk(...AUTO.layers('l'))}`)} ${A(`inset: 0; background: @p(var(--color2)); ${msk(...AUTO.layers('h'))}`)} }${TR}`,
   }),
   {
     palette: ['#7FC8D8', '#EAD9A6', '#6E9B57'],
@@ -1316,7 +1376,7 @@ add(
   'Circles, squares, triangles, diamonds and crosses in five inks, arranged as a Graeco-Latin square so every shape meets every color once in each five by five block.',
   () => ({
     host: EULER.host,
-    rule: `--a: @pd(@ri(0, 4)); --b: @pd(@ri(0, 4)); --sh: @calc(0 + (@x + @y + $(a)) % 5); --ik: @calc(0 + (@x + 2 * @y + $(b)) % 5); ${F} { background: @match(${[0, 1, 2, 3]
+    rule: `${SHIFT} --a: @pd(@ri(0, 4)); --b: @pd(@ri(0, 4)); --sh: @calc(0 + (@x + @y + $(a)) % 5); --ik: @calc(0 + (@x + 2 * @y + $(b)) % 5); ${F} { background: @match(${[0, 1, 2, 3]
       .map((i) => `$(ik) == ${i}, @p(var(--color${i + 1}))`)
       .join(', ')}, @p(var(--color5))); ${cp(pickVar('$(sh)', EULER.names))} }${TR}`,
   }),
@@ -1331,8 +1391,11 @@ add(
 // Knight Tour: a closed knight's tour of the chessboard, repeated board to
 // board. A cell looks up its square's place in the tour and draws the move
 // to the next square as a bar leaving its middle; the tour is colored in
-// four quarters, so its progress shows. A reseed moves the window over the
-// board and rotates where the coloring starts.
+// four quarters, so its progress shows. The board is marked by the square's
+// color, a dot on light and a block on dark (a painted board would hide the
+// strokes the converter draws from earlier cells), so every stroke joins a
+// dot to a block, as a knight's move always changes color. A reseed moves
+// the window over the board and rotates where the coloring starts.
 const KT = (() => {
   const board = [[1, 4, 63, 28, 17, 6, 55, 52], [62, 29, 2, 5, 56, 53, 18, 7], [3, 0, 57, 60, 27, 16, 51, 54], [30, 61, 26, 15, 48, 59, 8, 19], [25, 14, 47, 58, 41, 20, 45, 50], [34, 31, 36, 23, 46, 49, 40, 9], [13, 24, 33, 42, 11, 38, 21, 44], [32, 35, 12, 37, 22, 43, 10, 39]];
   const dir = [[1, 1, 7, 6, 1, 1, 6, 6], [2, 7, 6, 2, 6, 1, 0, 7], [3, 4, 0, 6, 4, 4, 3, 4], [0, 4, 2, 2, 0, 5, 0, 6], [2, 2, 2, 2, 7, 0, 6, 4], [0, 7, 0, 6, 5, 2, 5, 7], [3, 4, 5, 1, 6, 1, 6, 4], [2, 3, 5, 2, 4, 2, 5, 4]];
@@ -1345,16 +1408,16 @@ const KT = (() => {
 })();
 add(
   'Knight Tour',
-  "A knight's tour: every square of a chessboard joined to the next by a knight's move, a dot on each square and the long strokes crossing into a web colored in four stages of the tour.",
+  "A knight's tour: every square of a chessboard joined to the next by a knight's move, a dot on each light square and a block on each dark one, the strokes crossing into a web in four colors.",
   () => {
     const w = 7;
     const band = `@match(${[0, 1, 2]
       .map((i) => `floor((($(ks) + $(co)) % 64) / 16) == ${i}, @p(var(--color${i + 1}))`)
       .join(', ')}, @p(var(--color4)))`;
     return {
-      rule: `--ox: @pd(@ri(0, 7)); --oy: @pd(@ri(0, 7)); --co: @pd(@ri(0, 63)); --kq: @calc(0 + (@x - 1 + $(ox)) % 8 + 8 * ((@y - 1 + $(oy)) % 8)); --kv: ${KT.look}; --ks: @calc(floor($(kv) / 8)); --kd: @calc(0 + $(kv) % 8); ${F} { ${B(
+      rule: `${SHIFT} --ox: @pd(@ri(0, 7)); --oy: @pd(@ri(0, 7)); --co: @pd(@ri(0, 63)); --kq: @calc(0 + (@x - 1 + $(ox)) % 8 + 8 * ((@y - 1 + $(oy)) % 8)); --kv: ${KT.look}; --ks: @calc(floor($(kv) / 8)); --kd: @calc(0 + $(kv) % 8); ${F} { ${B(
         `left: 50%; top: ${50 - w / 2}%; width: 223.61%; height: ${w}%; border-radius: 99px; background: ${band}; -webkit-transform-origin: 0 50%; transform-origin: 0 50%; ${tf(`rotate(${KT.angle})`)}`
-      )} ${A(`left: 37%; top: 37%; width: 26%; height: 26%; border-radius: 50%; background: ${band};`)} }${TR}`,
+      )} ${A(`--dk: @calc(0 + (@x + @y + $(ox) + $(oy)) % 2); left: @match($(dk) == 1, 33%, 38%); top: @match($(dk) == 1, 33%, 38%); width: @match($(dk) == 1, 34%, 24%); height: @match($(dk) == 1, 34%, 24%); border-radius: @match($(dk) == 1, 24%, 50%); background: ${band};`)} }${TR}`,
     };
   },
   {

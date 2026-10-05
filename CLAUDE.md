@@ -8,7 +8,7 @@ above all, is proprietary (see LICENSE, and "Licensing" below).
 
 Tabbied: generative patterns built on css-doodle. npm workspaces - the
 Next.js site at the root consumes the `tabbied` package in
-`packages/tabbied/` (framework-free core + a web component, React, Vue and Svelte wrappers + 338 pattern
+`packages/tabbied/` (framework-free core + a web component, React, Vue and Svelte wrappers + 638 pattern
 presets as JSON in `packages/tabbied/patterns/`, embedded by codegen), the
 `tabbied-mcp` package in `packages/tabbied-mcp/` (the MCP server, shared by
 the site's `/mcp` endpoint and a `tabbied-mcp` stdio bin), and
@@ -1420,7 +1420,7 @@ The rest of this section describes the flow as built, for when it comes back.
 
 `/studio` takes a description of a business and `/studio/results` answers with
 three template sites. Studio answers with what the repo actually has: 277
-finished template sites, each on one of the 338 patterns and one of the 437
+finished template sites, each on one of the 638 patterns and one of the 437
 palettes, each with a real page and a real zip. (The AI tier this was designed
 against - `agent-outputs/20260827-studio-ai-plan.md` - has since landed; see
 below. The matcher was not replaced by it.)
@@ -1679,7 +1679,7 @@ whatever text Studio wrote, so putting them back is a UI change.
   otherwise, which once made a third of the losses look like the fit's.
 - **The preview runtime carries the whole catalog.** It used to bundle the
   231 designs the packaged templates mount, which was right while a preview
-  could only re-color a field; a shuffle can swap to any of the 338, and a
+  could only re-color a field; a shuffle can swap to any of the 638, and a
   design missing from the bundle hydrates to nothing with a console warning.
 - **The download is rebuilt where the changes are.** The customizer's
   Download menu fetches the packaged `<slug>-html.zip`, applies the document
@@ -2142,6 +2142,49 @@ things keep a design under it:
   rings where the design offers 12 to 28. The cap is the largest count the
   grid option offers; the eight such designs carry one.
 
+## Batch 14 - 300 designs that know where they sit
+
+Gallery orders 4000-4999: twelve families of 25 (Loom, Wagara, Illusion,
+Drift, Grove, Masonry, Atomic, Orbit, Pantry, Tessellate, Press,
+Papercraft), each drawn from a subject rather than one primitive. They hold
+batches 11-13's promise (native SVG with no caveat) and add what those never
+used: css-doodle's 2D noise (`@rn`, so neighboring cells get neighboring
+values: flow fields, contour maps, clouds) and the cell's place in the sheet
+(`@x`/`@X`, `@dx`/`@dy`, the distance from the middle), which is how a tartan
+keeps a stripe's color down a column and an orrery centers on the sheet.
+`scripts/pattern-gen/pattern-defs-14/` holds one file per family, and the
+catalog metadata lives in each definition, so `generate-batch14.mjs` never
+writes a design without its tags. `check-batch14.mjs <letter>` renders one
+family straight from its definitions (render gate, preview sheets, SVG parity,
+cost, `FREQ=0.4` to see the slider thin it), which is what let twelve be
+written side by side. Things the batch learned, all silent when wrong:
+
+- **`z-index` takes an integer.** `@r(1, 9)` rolls a fraction and the
+  declaration is dropped; `@ri(1, 9)`.
+- **`@var(--x)` is written out as `var(--x)`**, so it paints but cannot be
+  read inside `@calc` or `@match`. `$(x)` reads a per-cell `--x: @r(...)` (or
+  `@rn`) back as a number when the CSS is generated, so one roll can drive
+  several properties; `$deg(x)` adds the unit. `rotate(@calc(...) deg)` with a
+  space is invalid, and so is a bare `0` as an `@match` result.
+- **Noise is bell-shaped**: `@rn(0, 1)` lands in 0.27-0.73 nine times in ten.
+  Draw from a wider range and clamp to reach the ends.
+- **`@pd(@m(@X, @p(...)))` deals one pick per column**, which is how a stripe
+  holds one ink down the sheet; a sheet-wide pick rolled once is the first
+  draw, so two seeds can agree on it and a design whose only reseed change is
+  that one value fails the render gate's "reseed changed nothing".
+- **Some designs paint their ground outside the frequency gate** (a quilt's
+  muslin and sashing, bunting's string): the slider thins the figures and
+  leaves the cloth. Everything else sits inside the one gate.
+- **A preview is drawn with a full frequency's gate fully open.** The
+  package turns `@random(1)` into `@random(0.999)`, and with the preview's
+  fixed seed the dropped cell was the same one in every design rolling the
+  same number of values per cell: 11 of one family's 25 previews had a hole.
+  `generate-previews.mjs` passes just under 1 instead: the gate rolls the
+  same values, so only a design that dropped a cell draws differently, from
+  that cell on. The editor still drops about one cell in a thousand.
+- The converter limits the families met and worked around are listed in
+  docs/svg-export.md ("Batch 14's workarounds").
+
 ## Importing a pattern authored outside this repo
 
 The September 2026 drop was 60 hand-authored designs from a standalone
@@ -2206,7 +2249,7 @@ is mostly mechanical, and four things are not:
 
 A pattern moves three ways, and `prefers-reduced-motion` has to stop all of
 them. The `redrawInterval` timer is the obvious one. The second is that
-**all 338 designs declare a ~400ms `transition`** - the thing that makes a
+**all 638 designs declare a ~400ms `transition`** - the thing that makes a
 redraw morph rather than cut - and it fires on any re-render, including ones
 nobody asked for: `grid` and `cover` re-derive their cell grid on resize, so
 turning a phone would otherwise animate every cell on the page. The third
@@ -2247,7 +2290,7 @@ rendered patterns to true vector SVG. Rules that must not regress:
   (9 designs) documents limitations - filter-based effects or ≤1px
   deviations. The option-level form still works but no design uses it: the
   Shadow toggle that was its only user was removed rather than left as an
-  export trap. Everything else (297) is clean.
+  export trap. Everything else (597) is clean.
   See docs/svg-export.md for the complete lists and reasons.
 - **The tier is measured, not read off the source.** Ten of the drop's
   designs throw; eighteen more export a plausible SVG that is not what the

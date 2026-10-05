@@ -21,8 +21,9 @@
 // left out at full frequency, and the fixed seed makes that the same cell in
 // every design that rolls the same number of values per cell: a hole in a
 // brick wall or a tartan, in the image the catalog and the share cards show.
-// Just under 1 rolls exactly as 0.999 does, so the drawing is the same but for
-// that missing cell (and whatever it shifted after it).
+// Just under 1 rolls the gate's values exactly as 0.999 does, so a design that
+// dropped no cell draws the same; one that did draws that cell, and the cells
+// after it re-roll, since a skipped cell never rolled its own picks.
 const FULL_GATE = 0.9999999;
 const openFullGate = (definition) => ({
   ...definition,
