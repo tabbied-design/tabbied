@@ -1002,7 +1002,7 @@ const LP = (() => {
   const at = (base, hv, co, di, dj) => {
     const o = off(co, di, dj);
     const arg = o ? `${hv} ${o < 0 ? '-' : '+'} ${Math.abs(o)}` : hv;
-    return `$(round(${(base + 0.5) * 5000 - (J / 2) * 5000} + ${J * 5000} * ((sin(${arg}) * 43758.5453 % 1 + 1) % 1)) / 100)%`;
+    return `$(round(${(base + 0.5) * 5000 - (J / 2) * 5000} + ${J * 5000} * (abs(sin(${arg})) * 43758.5453 % 1)) / 100)%`;
   };
   // a corner as one variable holding both coordinates; `fix` pins either to the sheet's edge
   const corner = (name, di, dj, u, v, fix = {}) =>
