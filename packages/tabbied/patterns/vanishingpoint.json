@@ -1,0 +1,63 @@
+{
+  "name": "Vanishing Point",
+  "slug": "vanishingpoint",
+  "galleryOrder": 4055,
+  "description": "Square towers seen from straight above, their tops leaning out from the middle of the sheet and their walls lit from one side.",
+  "tags": [
+    "squares",
+    "blocks",
+    "grid"
+  ],
+  "mood": [
+    "bold",
+    "retro"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "poster",
+    "packaging"
+  ],
+  "palette": [
+    "#EDE6D6",
+    "#E3B04B",
+    "#7A3B2E",
+    "#2B6F77",
+    "#1F3A5F",
+    "#C8553D"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "4x6",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { background: @p(var(--color3), var(--color4), var(--color5)); :before { content: ''; position: absolute; inset: 0; background: var(--color1); -webkit-clip-path: polygon(@calc(round((0 + 0.06 * (0 - (50 - 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2)))))) * 100) / 100)% @calc(round((0 + 0.06 * (0 - (50 - 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2)))))) * 100) / 100)%, @calc(round((100 + 0.06 * (100 - (50 + 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2)))))) * 100) / 100)% @calc(round((0 + 0.06 * (0 - (50 - 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2)))))) * 100) / 100)%, @calc(round(((50 + 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2))))) * 100) / 100)% @calc(round(((50 - 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2))))) * 100) / 100)%, @calc(round(((50 - 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2))))) * 100) / 100)% @calc(round(((50 - 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2))))) * 100) / 100)%, @calc(round(((50 - 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2))))) * 100) / 100)% @calc(round(((50 + 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2))))) * 100) / 100)%, @calc(round((0 + 0.06 * (0 - (50 - 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2)))))) * 100) / 100)% @calc(round((100 + 0.06 * (100 - (50 + 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2)))))) * 100) / 100)%); clip-path: polygon(@calc(round((0 + 0.06 * (0 - (50 - 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2)))))) * 100) / 100)% @calc(round((0 + 0.06 * (0 - (50 - 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2)))))) * 100) / 100)%, @calc(round((100 + 0.06 * (100 - (50 + 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2)))))) * 100) / 100)% @calc(round((0 + 0.06 * (0 - (50 - 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2)))))) * 100) / 100)%, @calc(round(((50 + 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2))))) * 100) / 100)% @calc(round(((50 - 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2))))) * 100) / 100)%, @calc(round(((50 - 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2))))) * 100) / 100)% @calc(round(((50 - 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2))))) * 100) / 100)%, @calc(round(((50 - 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2))))) * 100) / 100)% @calc(round(((50 + 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2))))) * 100) / 100)%, @calc(round((0 + 0.06 * (0 - (50 - 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2)))))) * 100) / 100)% @calc(round((100 + 0.06 * (100 - (50 + 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2)))))) * 100) / 100)%); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background: var(--color2); -webkit-clip-path: polygon(@calc(round((100 + 0.06 * (100 - (50 + 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2)))))) * 100) / 100)% @calc(round((100 + 0.06 * (100 - (50 + 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2)))))) * 100) / 100)%, @calc(round((0 + 0.06 * (0 - (50 - 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2)))))) * 100) / 100)% @calc(round((100 + 0.06 * (100 - (50 + 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2)))))) * 100) / 100)%, @calc(round(((50 - 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2))))) * 100) / 100)% @calc(round(((50 + 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2))))) * 100) / 100)%, @calc(round(((50 + 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2))))) * 100) / 100)% @calc(round(((50 + 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2))))) * 100) / 100)%, @calc(round(((50 + 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2))))) * 100) / 100)% @calc(round(((50 - 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2))))) * 100) / 100)%, @calc(round((100 + 0.06 * (100 - (50 + 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2)))))) * 100) / 100)% @calc(round((0 + 0.06 * (0 - (50 - 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2)))))) * 100) / 100)%); clip-path: polygon(@calc(round((100 + 0.06 * (100 - (50 + 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2)))))) * 100) / 100)% @calc(round((100 + 0.06 * (100 - (50 + 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2)))))) * 100) / 100)%, @calc(round((0 + 0.06 * (0 - (50 - 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2)))))) * 100) / 100)% @calc(round((100 + 0.06 * (100 - (50 + 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2)))))) * 100) / 100)%, @calc(round(((50 - 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2))))) * 100) / 100)% @calc(round(((50 + 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2))))) * 100) / 100)%, @calc(round(((50 + 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2))))) * 100) / 100)% @calc(round(((50 + 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2))))) * 100) / 100)%, @calc(round(((50 + 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2))))) * 100) / 100)% @calc(round(((50 - 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2))))) * 100) / 100)%, @calc(round((100 + 0.06 * (100 - (50 + 21 + max(-26, min(26, 24 * @dx / (min(@X, @Y) / 2)))))) * 100) / 100)% @calc(round((0 + 0.06 * (0 - (50 - 21 + max(-26, min(26, 24 * @dy / (min(@X, @Y) / 2)))))) * 100) / 100)%); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

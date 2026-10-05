@@ -1,0 +1,64 @@
+{
+  "name": "Whirlpool",
+  "slug": "whirlpool",
+  "galleryOrder": 4181,
+  "galleryWhite": true,
+  "description": "Two-armed spiral galaxies, each tipped and turned by its place in the sheet, around a soft bright core.",
+  "tags": [
+    "spirals",
+    "curves",
+    "radial"
+  ],
+  "mood": [
+    "organic",
+    "calm"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "wallpaper",
+    "poster"
+  ],
+  "palette": [
+    "#120C24",
+    "#FFF4D6",
+    "#B9A4F2",
+    "#7FC8E8",
+    "#F2A7C3",
+    "#F6D186"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { :before { content: ''; position: absolute; inset: 3%; background: @p(var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-clip-path: @var(--g); clip-path: @var(--g); transform: rotate(@rn(0, 360)deg) scale(@rn(0.6, 1.1), @rn(0.6, 1.1)); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 30%; border-radius: 50%; background: var(--color1); mask: radial-gradient(closest-side, #000 22%, transparent 100%); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --g: @shape(split: 240; x: (0.08 + 0.9 * (((t - floor(t / (PI / 2)) * PI / 2) / (PI / 2)) + (floor(t / (PI / 2)) % 2) * (1 - 2 * ((t - floor(t / (PI / 2)) * PI / 2) / (PI / 2)))) + (1 - 2 * (floor(t / (PI / 2)) % 2)) * (0.15 * (1 - (((t - floor(t / (PI / 2)) * PI / 2) / (PI / 2)) + (floor(t / (PI / 2)) % 2) * (1 - 2 * ((t - floor(t / (PI / 2)) * PI / 2) / (PI / 2))))) + 0.02)) * cos((PI * floor(floor(t / (PI / 2)) / 2) + (((t - floor(t / (PI / 2)) * PI / 2) / (PI / 2)) + (floor(t / (PI / 2)) % 2) * (1 - 2 * ((t - floor(t / (PI / 2)) * PI / 2) / (PI / 2)))) * 4.6)); y: (0.08 + 0.9 * (((t - floor(t / (PI / 2)) * PI / 2) / (PI / 2)) + (floor(t / (PI / 2)) % 2) * (1 - 2 * ((t - floor(t / (PI / 2)) * PI / 2) / (PI / 2)))) + (1 - 2 * (floor(t / (PI / 2)) % 2)) * (0.15 * (1 - (((t - floor(t / (PI / 2)) * PI / 2) / (PI / 2)) + (floor(t / (PI / 2)) % 2) * (1 - 2 * ((t - floor(t / (PI / 2)) * PI / 2) / (PI / 2))))) + 0.02)) * sin((PI * floor(floor(t / (PI / 2)) / 2) + (((t - floor(t / (PI / 2)) * PI / 2) / (PI / 2)) + (floor(t / (PI / 2)) % 2) * (1 - 2 * ((t - floor(t / (PI / 2)) * PI / 2) / (PI / 2)))) * 4.6))); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

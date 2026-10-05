@@ -320,21 +320,31 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
   // draws its own stretch and the one to its left, so a cell the frequency
   // gate leaves out is covered by its neighbor. The wave's two phases are
   // drawn once per sheet, so a reseed rolls the swell along.
-  const wave = (t, dy) =>
-    `@calc(round(100 * (50 + 42 - ${dy} + 26 * sin(6.2832 * (@x - 1 + ${t}) / 4.6 + 1.9 * @y + $(ph)) + 10 * sin(6.2832 * (@x - 1 + ${t}) / 2.2 - 1.3 * @y + $(pk))) / 3) / 100)%`;
+  // The two sines' phases are worked out once per cell (--a, --b), each of
+  // the thirteen sample heights is then one short expression, and the
+  // outline is built once on the cell (--e) for both layers to read.
   const n = 12;
-  const edge = (dy) =>
-    Array.from({ length: n + 1 }, (_, i) => `${n2((100 * i) / n)}% ${wave(n2((2 * i) / n - 1), dy)}`).join(', ');
+  const k1 = 6.2832 / 4.6;
+  const k2 = 6.2832 / 2.2;
+  const f6 = (v) => Math.round(v * 1e6) / 1e6;
+  const edge = Array.from({ length: n + 1 }, (_, i) => {
+    const t = (2 * i) / n - 1;
+    return `${n2((100 * i) / n)}% $(round(3066.667 + 866.667 * sin(a + ${f6(k1 * t)}) + 333.333 * sin(b + ${f6(k2 * t)})) / 100)%`;
+  }).join(', ');
   const tone = '1 + floor(min(0.999, (@y - 1) / @Y) * 5)';
-  const box = 'left: -100%; width: 200%; top: -50%; height: 300%;';
+  // The shadow is the same outline lifted by a twentieth of a cell.
+  const box = (top) => `left: -100%; width: 200%; top: ${top}%; height: 300%;`;
   add(
     'Paper Sea',
     'A sea cut from layers of paper, one wave-edged sheet per row from pale at the top to deep at the bottom, each laid over the one behind with a thin shadow along its edge.',
     (c) => ({
       rule: `--ph: @pd(@p(0, 0.8, 1.6, 2.4, 3.2, 4, 4.8, 5.6)); --pk: @pd(@p(0, 0.8, 1.6, 2.4, 3.2, 4, 4.8, 5.6)); ${F} {
-        --w: @match(${tone} == 1, var(--color1), ${tone} == 2, var(--color2), ${tone} == 3, var(--color3), ${tone} == 4, var(--color4), var(--color5));
-        ${B(`${box} background: var(--color5); opacity: 0.3; ${cp(`polygon(${edge(5)}, 100% 100%, 0% 100%)`)}`)}
-        ${A(`${box} background: ${paint('w')}; ${cp(`polygon(${edge(0)}, 100% 100%, 0% 100%)`)}`)}
+        --a: @calc(${f6(k1)} * (@x - 1) + 1.9 * @y + $(ph)); --b: @calc(${f6(k2)} * (@x - 1) - 1.3 * @y + $(pk));
+        --t: @calc(${tone});
+        --w: @match($(t) == 1, var(--color1), $(t) == 2, var(--color2), $(t) == 3, var(--color3), $(t) == 4, var(--color4), var(--color5));
+        --e: polygon(${edge}, 100% 100%, 0% 100%);
+        ${B(`${box(-55)} background: var(--color5); opacity: 0.3;`)}
+        ${A(`${box(-50)} background: ${paint('w')};`)}
       }${TR}`,
     }),
     {

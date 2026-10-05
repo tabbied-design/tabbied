@@ -1,0 +1,60 @@
+{
+  "name": "Cafe Wall",
+  "slug": "cafewall",
+  "galleryOrder": 4061,
+  "description": "Rows of dark tiles divided by thin mortar lines, each row stepped half a tile along, so the level courses seem to wedge apart.",
+  "tags": [
+    "blocks",
+    "lines",
+    "checkerboard"
+  ],
+  "mood": [
+    "technical"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "wallpaper",
+    "textile"
+  ],
+  "palette": [
+    "#F3F0E8",
+    "#9C9A92",
+    "#1E1E24",
+    "#2A3550"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 4,
+    "default": 4
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "8x12",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { :before { content: ''; position: absolute; inset: 0; background: @p(var(--color2), var(--color2), var(--color3)); -webkit-mask: linear-gradient(90deg, #000 0 @calc(round((max(0, (25 * (2 - abs(((@y - 1) % 4) - 2))) - 50)) * 100) / 100)%, transparent @calc(round((max(0, (25 * (2 - abs(((@y - 1) % 4) - 2))) - 50)) * 100) / 100)% @calc(round(((25 * (2 - abs(((@y - 1) % 4) - 2)))) * 100) / 100)%, #000 @calc(round(((25 * (2 - abs(((@y - 1) % 4) - 2)))) * 100) / 100)% @calc(round((min(100, (25 * (2 - abs(((@y - 1) % 4) - 2))) + 50)) * 100) / 100)%, transparent @calc(round((min(100, (25 * (2 - abs(((@y - 1) % 4) - 2))) + 50)) * 100) / 100)% 100%), linear-gradient(180deg, transparent 0 6%, #000 6%); mask: linear-gradient(90deg, #000 0 @calc(round((max(0, (25 * (2 - abs(((@y - 1) % 4) - 2))) - 50)) * 100) / 100)%, transparent @calc(round((max(0, (25 * (2 - abs(((@y - 1) % 4) - 2))) - 50)) * 100) / 100)% @calc(round(((25 * (2 - abs(((@y - 1) % 4) - 2)))) * 100) / 100)%, #000 @calc(round(((25 * (2 - abs(((@y - 1) % 4) - 2)))) * 100) / 100)% @calc(round((min(100, (25 * (2 - abs(((@y - 1) % 4) - 2))) + 50)) * 100) / 100)%, transparent @calc(round((min(100, (25 * (2 - abs(((@y - 1) % 4) - 2))) + 50)) * 100) / 100)% 100%), linear-gradient(180deg, transparent 0 6%, #000 6%); -webkit-mask-composite: source-in; mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background: var(--color1); -webkit-mask: linear-gradient(180deg, #000 0 6%, transparent 6%); mask: linear-gradient(180deg, #000 0 6%, transparent 6%); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "name": "Two Stones",
+  "slug": "twostones",
+  "galleryOrder": 4051,
+  "galleryWhite": true,
+  "description": "Two sets of ripples spreading from two points, crossed so figure and ground trade places wherever they meet.",
+  "tags": [
+    "rings",
+    "concentric",
+    "diamonds"
+  ],
+  "mood": [
+    "bold"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "poster",
+    "og-image"
+  ],
+  "palette": [
+    "#0A2239",
+    "#53A2BE",
+    "#1D84B5",
+    "#E8F1F2"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 4,
+    "default": 4
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { :before { content: ''; position: absolute; inset: 0; background: @p(var(--color1), var(--color2), var(--color3)); -webkit-mask: repeating-radial-gradient(ellipse @calc(round(((min(@X, @Y) / 2) * 100) * 100) / 100)% @calc(round(((min(@X, @Y) / 2) * 100) * 100) / 100)% at @calc(round(((100 * (0.3 * @X - @x + 1))) * 100) / 100)% @calc(round(((100 * (0.5 * @Y - @y + 1))) * 100) / 100)%, #000 0 6%, transparent 6% 12%), repeating-radial-gradient(ellipse @calc(round(((min(@X, @Y) / 2) * 100) * 100) / 100)% @calc(round(((min(@X, @Y) / 2) * 100) * 100) / 100)% at @calc(round(((100 * (0.7 * @X - @x + 1))) * 100) / 100)% @calc(round(((100 * (0.5 * @Y - @y + 1))) * 100) / 100)%, transparent 0 6%, #000 6% 12%); mask: repeating-radial-gradient(ellipse @calc(round(((min(@X, @Y) / 2) * 100) * 100) / 100)% @calc(round(((min(@X, @Y) / 2) * 100) * 100) / 100)% at @calc(round(((100 * (0.3 * @X - @x + 1))) * 100) / 100)% @calc(round(((100 * (0.5 * @Y - @y + 1))) * 100) / 100)%, #000 0 6%, transparent 6% 12%), repeating-radial-gradient(ellipse @calc(round(((min(@X, @Y) / 2) * 100) * 100) / 100)% @calc(round(((min(@X, @Y) / 2) * 100) * 100) / 100)% at @calc(round(((100 * (0.7 * @X - @x + 1))) * 100) / 100)% @calc(round(((100 * (0.5 * @Y - @y + 1))) * 100) / 100)%, transparent 0 6%, #000 6% 12%); -webkit-mask-composite: source-in; mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background: @lp(); -webkit-mask: repeating-radial-gradient(ellipse @calc(round(((min(@X, @Y) / 2) * 100) * 100) / 100)% @calc(round(((min(@X, @Y) / 2) * 100) * 100) / 100)% at @calc(round(((100 * (0.3 * @X - @x + 1))) * 100) / 100)% @calc(round(((100 * (0.5 * @Y - @y + 1))) * 100) / 100)%, transparent 0 6%, #000 6% 12%), repeating-radial-gradient(ellipse @calc(round(((min(@X, @Y) / 2) * 100) * 100) / 100)% @calc(round(((min(@X, @Y) / 2) * 100) * 100) / 100)% at @calc(round(((100 * (0.7 * @X - @x + 1))) * 100) / 100)% @calc(round(((100 * (0.5 * @Y - @y + 1))) * 100) / 100)%, #000 0 6%, transparent 6% 12%); mask: repeating-radial-gradient(ellipse @calc(round(((min(@X, @Y) / 2) * 100) * 100) / 100)% @calc(round(((min(@X, @Y) / 2) * 100) * 100) / 100)% at @calc(round(((100 * (0.3 * @X - @x + 1))) * 100) / 100)% @calc(round(((100 * (0.5 * @Y - @y + 1))) * 100) / 100)%, transparent 0 6%, #000 6% 12%), repeating-radial-gradient(ellipse @calc(round(((min(@X, @Y) / 2) * 100) * 100) / 100)% @calc(round(((min(@X, @Y) / 2) * 100) * 100) / 100)% at @calc(round(((100 * (0.7 * @X - @x + 1))) * 100) / 100)% @calc(round(((100 * (0.5 * @Y - @y + 1))) * 100) / 100)%, #000 0 6%, transparent 6% 12%); -webkit-mask-composite: source-in; mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

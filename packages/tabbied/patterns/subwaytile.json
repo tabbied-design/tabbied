@@ -1,0 +1,66 @@
+{
+  "name": "Subway Tile",
+  "slug": "subwaytile",
+  "galleryOrder": 4127,
+  "description": "Glazed subway tiles in running bond, bottle greens and ivories with a gloss along each top edge and a shade along each foot.",
+  "tags": [
+    "blocks",
+    "stripes",
+    "gradients",
+    "grid"
+  ],
+  "mood": [
+    "calm",
+    "retro"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "wallpaper",
+    "card-texture",
+    "textile"
+  ],
+  "palette": [
+    "#D6D0C4",
+    "#2B4A42",
+    "#3E7B6B",
+    "#5E9C86",
+    "#E9E1CC",
+    "#A8CBBB",
+    "#FBF8F0"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 7,
+    "default": 7
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "5x10",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { :before { content: ''; position: absolute; left: 2%; top: 2%; width: 96%; height: 46%; background: linear-gradient(180deg, var(--color6) 0, transparent 34% 70%, var(--color1) 100%), @p(var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: -48%; top: 52%; width: 196%; height: 46%; background: linear-gradient(180deg, var(--color6) 0, transparent 34% 70%, var(--color1) 100%), @p(var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-mask: @var(--sj); mask: @var(--sj); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --sj: linear-gradient(90deg, #000 48.98%, transparent 48.98% 51.02%, #000 51.02%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

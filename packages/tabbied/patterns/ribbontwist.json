@@ -1,0 +1,61 @@
+{
+  "name": "Ribbon Twist",
+  "slug": "ribbontwist",
+  "galleryOrder": 4067,
+  "description": "Upright ribbons twisting about their own length down the sheet, flashing a warm face and a cool back as they turn.",
+  "tags": [
+    "curves",
+    "stripes",
+    "diamonds"
+  ],
+  "mood": [
+    "playful"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "poster",
+    "packaging"
+  ],
+  "palette": [
+    "#FBF6EC",
+    "#E4572E",
+    "#F3A712",
+    "#29335C",
+    "#2E86AB"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "8x12",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --a: @p(var(--color1), var(--color2)); @random(${shapeFrequency}) { :before { content: ''; position: absolute; inset: 0; background: @var(--a); -webkit-clip-path: polygon(@calc(round((50 - ((42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) - ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x))))) * 0.02)) * 100) / 100)% -2%, @calc(round((50 + ((42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) - ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x))))) * 0.02)) * 100) / 100)% -2%, @calc(round((50 + ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) + ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x))))) * 0.02)) * 100) / 100)% 102%, @calc(round((50 - ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) + ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x))))) * 0.02)) * 100) / 100)% 102%); clip-path: polygon(@calc(round((50 - ((42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) - ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x))))) * 0.02)) * 100) / 100)% -2%, @calc(round((50 + ((42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) - ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x))))) * 0.02)) * 100) / 100)% -2%, @calc(round((50 + ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) + ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x))))) * 0.02)) * 100) / 100)% 102%, @calc(round((50 - ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) + ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x))))) * 0.02)) * 100) / 100)% 102%); -webkit-mask: linear-gradient(180deg, @match(1 * cos(2 * PI * (1.6 * (y - 1) / Y + 0.21 * x)) > 0, #000, transparent) 0 @calc(round((max(0, min(100, 100 * (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) / ((42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) + 0.0001)))) * 100) / 100)%, @match(1 * cos(2 * PI * (1.6 * y / Y + 0.21 * x)) > 0, #000, transparent) @calc(round((max(0, min(100, 100 * (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) / ((42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) + 0.0001)))) * 100) / 100)% 100%); mask: linear-gradient(180deg, @match(1 * cos(2 * PI * (1.6 * (y - 1) / Y + 0.21 * x)) > 0, #000, transparent) 0 @calc(round((max(0, min(100, 100 * (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) / ((42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) + 0.0001)))) * 100) / 100)%, @match(1 * cos(2 * PI * (1.6 * y / Y + 0.21 * x)) > 0, #000, transparent) @calc(round((max(0, min(100, 100 * (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) / ((42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) + 0.0001)))) * 100) / 100)% 100%); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background: @p(var(--color3), var(--color4)); -webkit-clip-path: polygon(@calc(round((50 - ((42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) - ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x))))) * 0.02)) * 100) / 100)% -2%, @calc(round((50 + ((42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) - ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x))))) * 0.02)) * 100) / 100)% -2%, @calc(round((50 + ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) + ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x))))) * 0.02)) * 100) / 100)% 102%, @calc(round((50 - ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) + ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x))))) * 0.02)) * 100) / 100)% 102%); clip-path: polygon(@calc(round((50 - ((42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) - ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x))))) * 0.02)) * 100) / 100)% -2%, @calc(round((50 + ((42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) - ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x))))) * 0.02)) * 100) / 100)% -2%, @calc(round((50 + ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) + ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x))))) * 0.02)) * 100) / 100)% 102%, @calc(round((50 - ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) + ((42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x))))) * 0.02)) * 100) / 100)% 102%); -webkit-mask: linear-gradient(180deg, @match(-1 * cos(2 * PI * (1.6 * (y - 1) / Y + 0.21 * x)) > 0, #000, transparent) 0 @calc(round((max(0, min(100, 100 * (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) / ((42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) + 0.0001)))) * 100) / 100)%, @match(-1 * cos(2 * PI * (1.6 * y / Y + 0.21 * x)) > 0, #000, transparent) @calc(round((max(0, min(100, 100 * (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) / ((42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) + 0.0001)))) * 100) / 100)% 100%); mask: linear-gradient(180deg, @match(-1 * cos(2 * PI * (1.6 * (y - 1) / Y + 0.21 * x)) > 0, #000, transparent) 0 @calc(round((max(0, min(100, 100 * (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) / ((42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) + 0.0001)))) * 100) / 100)%, @match(-1 * cos(2 * PI * (1.6 * y / Y + 0.21 * x)) > 0, #000, transparent) @calc(round((max(0, min(100, 100 * (42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) / ((42 * cos((2 * PI * (1.6 * (@y - 1) / @Y + 0.21 * @x)))) - (42 * cos((2 * PI * (1.6 * (@y) / @Y + 0.21 * @x)))) + 0.0001)))) * 100) / 100)% 100%); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

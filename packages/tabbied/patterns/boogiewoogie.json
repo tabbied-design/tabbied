@@ -1,0 +1,63 @@
+{
+  "name": "Boogie Woogie",
+  "slug": "boogiewoogie",
+  "galleryOrder": 4232,
+  "description": "A Wang network of yellow street lines that meet, turn and stop where the edge rules say, with small red, blue and gray blocks set along them.",
+  "tags": [
+    "lines",
+    "squares",
+    "grid",
+    "maze"
+  ],
+  "mood": [
+    "playful",
+    "retro"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "poster",
+    "wallpaper"
+  ],
+  "palette": [
+    "#EEEAE0",
+    "#F2C40C",
+    "#C7311E",
+    "#2350A0",
+    "#A9A69C"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "8x12",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --gate: @r(1); --s: @pd(@r(0, 50)); --hr: @calc(0 + floor(0.5 + ((sin(@x * 12.9898 + @y * 78.233 + $(s) * 1) * 43758.5453) - floor(sin(@x * 12.9898 + @y * 78.233 + $(s) * 1) * 43758.5453)))); --hl: @calc(max(0, 2 - @x) * floor(0.5 + ((sin((@x - 1) * 12.9898 + @y * 78.233 + $(s) * 1) * 43758.5453) - floor(sin((@x - 1) * 12.9898 + @y * 78.233 + $(s) * 1) * 43758.5453)))); --vb: @calc(0 + floor(0.5 + ((sin(@x * 39.3467 + @y * 11.1351 + $(s) * 1.7) * 43758.5453) - floor(sin(@x * 39.3467 + @y * 11.1351 + $(s) * 1.7) * 43758.5453)))); --vt: @calc(max(0, 2 - @y) * floor(0.5 + ((sin(@x * 39.3467 + (@y - 1) * 11.1351 + $(s) * 1.7) * 43758.5453) - floor(sin(@x * 39.3467 + (@y - 1) * 11.1351 + $(s) * 1.7) * 43758.5453)))); @random(${shapeFrequency}) { :before { content: ''; position: absolute; left: -100%; top: -100%; width: 300%; height: 300%; background: @p(var(--color1)); -webkit-clip-path: polygon(@calc(round(((100 + 50 - 10 - 100 * $(hl)) / 3) * 100) / 100)% @calc(round(((100 + 50 - 10) / 3) * 100) / 100)%, @calc(round(((100 + 50 + 10 + 100 * $(hr)) / 3) * 100) / 100)% @calc(round(((100 + 50 - 10) / 3) * 100) / 100)%, @calc(round(((100 + 50 + 10 + 100 * $(hr)) / 3) * 100) / 100)% @calc(round(((100 + 50 + 10) / 3) * 100) / 100)%, @calc(round(((100 + 50 - 10 - 100 * $(hl)) / 3) * 100) / 100)% @calc(round(((100 + 50 + 10) / 3) * 100) / 100)%, @calc(round(((100 + 50 - 10 - 100 * $(hl)) / 3) * 100) / 100)% @calc(round(((100 + 50 - 10) / 3) * 100) / 100)%, @calc(round(((100 + 50 - 10) / 3) * 100) / 100)% @calc(round(((100 + 50 - 10 - 100 * $(vt)) / 3) * 100) / 100)%, @calc(round(((100 + 50 + 10) / 3) * 100) / 100)% @calc(round(((100 + 50 - 10 - 100 * $(vt)) / 3) * 100) / 100)%, @calc(round(((100 + 50 + 10) / 3) * 100) / 100)% @calc(round(((100 + 50 + 10 + 100 * $(vb)) / 3) * 100) / 100)%, @calc(round(((100 + 50 - 10) / 3) * 100) / 100)% @calc(round(((100 + 50 + 10 + 100 * $(vb)) / 3) * 100) / 100)%, @calc(round(((100 + 50 - 10) / 3) * 100) / 100)% @calc(round(((100 + 50 - 10 - 100 * $(vt)) / 3) * 100) / 100)%); clip-path: polygon(@calc(round(((100 + 50 - 10 - 100 * $(hl)) / 3) * 100) / 100)% @calc(round(((100 + 50 - 10) / 3) * 100) / 100)%, @calc(round(((100 + 50 + 10 + 100 * $(hr)) / 3) * 100) / 100)% @calc(round(((100 + 50 - 10) / 3) * 100) / 100)%, @calc(round(((100 + 50 + 10 + 100 * $(hr)) / 3) * 100) / 100)% @calc(round(((100 + 50 + 10) / 3) * 100) / 100)%, @calc(round(((100 + 50 - 10 - 100 * $(hl)) / 3) * 100) / 100)% @calc(round(((100 + 50 + 10) / 3) * 100) / 100)%, @calc(round(((100 + 50 - 10 - 100 * $(hl)) / 3) * 100) / 100)% @calc(round(((100 + 50 - 10) / 3) * 100) / 100)%, @calc(round(((100 + 50 - 10) / 3) * 100) / 100)% @calc(round(((100 + 50 - 10 - 100 * $(vt)) / 3) * 100) / 100)%, @calc(round(((100 + 50 + 10) / 3) * 100) / 100)% @calc(round(((100 + 50 - 10 - 100 * $(vt)) / 3) * 100) / 100)%, @calc(round(((100 + 50 + 10) / 3) * 100) / 100)% @calc(round(((100 + 50 + 10 + 100 * $(vb)) / 3) * 100) / 100)%, @calc(round(((100 + 50 - 10) / 3) * 100) / 100)% @calc(round(((100 + 50 + 10 + 100 * $(vb)) / 3) * 100) / 100)%, @calc(round(((100 + 50 - 10) / 3) * 100) / 100)% @calc(round(((100 + 50 - 10 - 100 * $(vt)) / 3) * 100) / 100)%); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: 40%; top: 40%; width: 20%; height: 20%; background: @p(var(--color2), var(--color3), var(--color4), var(--color1), var(--color1)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

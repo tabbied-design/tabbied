@@ -1,0 +1,64 @@
+{
+  "name": "Hypsometric",
+  "slug": "hypsometric",
+  "galleryOrder": 4099,
+  "galleryWhite": true,
+  "description": "Layer tints of a relief map, each level a flat ink holding a dot of the next level up that swells as the ground rises, so the bands dither into each other.",
+  "tags": [
+    "dots",
+    "halftone",
+    "squares"
+  ],
+  "mood": [
+    "organic",
+    "technical"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "wallpaper",
+    "poster"
+  ],
+  "palette": [
+    "#1E3A34",
+    "#3C7A5A",
+    "#9DBF6B",
+    "#EBD27A",
+    "#C9874A",
+    "#F6F0E4"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "9x13",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { --n: @rn(-0.4, 4.4, 1.3); --v: $(max(0, min(3.999, n))); background: @match($(v) < 1, @p(var(--color1)), $(v) < 2, @p(var(--color2)), $(v) < 3, @p(var(--color3)), @p(var(--color4))); :after { content: ''; position: absolute; inset: 0; background: @match($(v) < 1, @p(var(--color2)), $(v) < 2, @p(var(--color3)), $(v) < 3, @p(var(--color4)), @p(var(--color5))); -webkit-clip-path: circle(@calc(72 * ($(v) - floor($(v))))% at 50% 50%); clip-path: circle(@calc(72 * ($(v) - floor($(v))))% at 50% 50%); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

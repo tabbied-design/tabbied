@@ -1,0 +1,69 @@
+{
+  "name": "Peacock",
+  "slug": "peacock",
+  "galleryOrder": 4117,
+  "galleryWhite": true,
+  "description": "Peacock tail feathers row on row, each a fringed plume of barbs around a ringed eye.",
+  "tags": [
+    "ovals",
+    "radial",
+    "concentric"
+  ],
+  "mood": [
+    "elegant",
+    "bold"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "textile",
+    "wallpaper",
+    "poster"
+  ],
+  "palette": [
+    "#0B1E2D",
+    "#1F3F8C",
+    "#1B998B",
+    "#5FAD56",
+    "#F2C14E",
+    "#B4654A",
+    "#2BB3A3"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 7,
+    "default": 7
+  },
+  "sizing": {
+    "minCellPx": 50
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { z-index: @y; -webkit-transform: rotate(@rn(-25, 25, 3)deg); transform: rotate(@rn(-25, 25, 3)deg); :before { content: ''; position: absolute; left: 6%; right: 6%; top: -10%; bottom: -2%; border-radius: 50% 50% 50% 50% / 56% 56% 44% 44%; background: @p(var(--color3), var(--color4), var(--color5), var(--color6)); -webkit-mask: @var(--barbs), radial-gradient(32% 30% at 50% 58%, #000 100%, transparent 100%); mask: @var(--barbs), radial-gradient(32% 30% at 50% 58%, #000 100%, transparent 100%); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: 28%; right: 28%; top: 22%; bottom: 22%; border-radius: 50% 50% 50% 50% / 56% 56% 44% 44%; background: radial-gradient(50% 50% at 50% 58%, var(--color1) 0 42%, var(--color2) 42% 68%, transparent 68%), @p(var(--color3), var(--color4), var(--color5), var(--color6)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --barbs: conic-gradient(from 0deg at 50% 58%, #000 0deg 6deg, transparent 6deg 11.25deg, #000 11.25deg 17.25deg, transparent 17.25deg 22.5deg, #000 22.5deg 28.5deg, transparent 28.5deg 33.75deg, #000 33.75deg 39.75deg, transparent 39.75deg 45deg, #000 45deg 51deg, transparent 51deg 56.25deg, #000 56.25deg 62.25deg, transparent 62.25deg 67.5deg, #000 67.5deg 73.5deg, transparent 73.5deg 78.75deg, #000 78.75deg 84.75deg, transparent 84.75deg 90deg, #000 90deg 96deg, transparent 96deg 101.25deg, #000 101.25deg 107.25deg, transparent 107.25deg 112.5deg, #000 112.5deg 118.5deg, transparent 118.5deg 123.75deg, #000 123.75deg 129.75deg, transparent 129.75deg 135deg, #000 135deg 141deg, transparent 141deg 146.25deg, #000 146.25deg 152.25deg, transparent 152.25deg 157.5deg, #000 157.5deg 163.5deg, transparent 163.5deg 168.75deg, #000 168.75deg 174.75deg, transparent 174.75deg 180deg, #000 180deg 186deg, transparent 186deg 191.25deg, #000 191.25deg 197.25deg, transparent 197.25deg 202.5deg, #000 202.5deg 208.5deg, transparent 208.5deg 213.75deg, #000 213.75deg 219.75deg, transparent 219.75deg 225deg, #000 225deg 231deg, transparent 231deg 236.25deg, #000 236.25deg 242.25deg, transparent 242.25deg 247.5deg, #000 247.5deg 253.5deg, transparent 253.5deg 258.75deg, #000 258.75deg 264.75deg, transparent 264.75deg 270deg, #000 270deg 276deg, transparent 276deg 281.25deg, #000 281.25deg 287.25deg, transparent 287.25deg 292.5deg, #000 292.5deg 298.5deg, transparent 298.5deg 303.75deg, #000 303.75deg 309.75deg, transparent 309.75deg 315deg, #000 315deg 321deg, transparent 321deg 326.25deg, #000 326.25deg 332.25deg, transparent 332.25deg 337.5deg, #000 337.5deg 343.5deg, transparent 343.5deg 348.75deg, #000 348.75deg 354.75deg, transparent 354.75deg 360deg); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

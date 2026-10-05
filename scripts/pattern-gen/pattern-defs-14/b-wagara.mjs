@@ -901,47 +901,52 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
   // Cracked ice: the grid's corners pushed about by a fixed hash, so every
   // cell is a crooked quadrilateral; each is split corner to corner along a
   // random diagonal and both halves pulled in a little, leaving the cracks.
+  // Everything is computed once per cell into a property and read back with
+  // $(): a hash per corner coordinate, then each corner's place in percent
+  // of the pseudo-element's box (1.6 cells wide, starting 0.3 cells out),
+  // then the third corner of each triangle and each triangle's middle.
   const A0 = 0.26;
-  const hash = (i, j, k) => {
-    const s = `sin(${i} * 12.9898 + ${j} * 78.233 + ${k}) * 437.5453`;
-    return `(${s} - floor(${s}))`;
-  };
-  // A corner on the sheet's border only slides along it.
-  const keep = (v, n) => `min(1, ${v}) * min(1, ${n} - ${v})`;
-  const jit = (name, i, j, k, along) =>
-    `--${name}: @calc(round(1000 * ${A0} * ${along} * (2 * ${hash(i, j, k)} - 1)) / 1000);`;
-  const corners = [
-    ['a', '(@x - 1)', '(@y - 1)'],
-    ['b', '@x', '(@y - 1)'],
-    ['c', '@x', '@y'],
-    ['d', '(@x - 1)', '@y'],
+  // The hash of corner (i, j) is sin(12.9898 i + 78.233 j + k), taken from
+  // one sum per cell; a corner on the sheet's border only slides along it.
+  const decl = [
+    '--u: @calc(@x * 12.9898 + @y * 78.233);',
+    '--k0: @calc(min(1, @x - 1));',
+    '--k1: @calc(min(1, @X - @x));',
+    '--l0: @calc(min(1, @y - 1));',
+    '--l1: @calc(min(1, @Y - @y));',
   ];
-  const vars = corners
-    .map(([n, i, j]) => `${jit(`${n}x`, i, j, 1.7, keep(i, '@X'))} ${jit(`${n}y`, i, j, 9.1, keep(j, '@Y'))}`)
-    .join(' ');
-  // Corner positions in cell units, as expressions.
-  const C = {
-    a: ['$(ax)', '$(ay)'],
-    b: ['(1 + $(bx))', '$(by)'],
-    c: ['(1 + $(cx))', '(1 + $(cy))'],
-    d: ['$(dx)', '(1 + $(dy))'],
-  };
-  const mix = (p, q, axis) => `(${C[p][axis]} + $(s) * (${C[q][axis]} - ${C[p][axis]}))`;
-  const tri = (pts) => {
-    const X = (e) => `@calc(round(6250 * ${e} + 1875) / 100)%`;
-    const poly = `polygon(${pts.map(([x, y]) => `${X(x)} ${X(y)}`).join(', ')})`;
-    const ox = `@calc(round(6250 * (${pts[0][0]} + ${pts[1][0]} + ${pts[2][0]}) / 3 + 1875) / 100)%`;
-    const oy = `@calc(round(6250 * (${pts[0][1]} + ${pts[1][1]} + ${pts[2][1]}) / 3 + 1875) / 100)%`;
-    return `${cp(poly)} ${tfo(`${ox} ${oy}`)} ${tf('scale(0.9)')}`;
-  };
-  const t1 = tri([C.a, C.b, [mix('c', 'd', 0), mix('c', 'd', 1)]]);
-  const t2 = tri([[mix('a', 'b', 0), mix('a', 'b', 1)], C.c, C.d]);
+  const corners = [
+    ['a', -1, -1, 0, 0, 'k0', 'l0'],
+    ['b', 0, -1, 1, 0, 'k1', 'l0'],
+    ['c', 0, 0, 1, 1, 'k1', 'l1'],
+    ['d', -1, 0, 0, 1, 'k0', 'l1'],
+  ];
+  for (const [n, di, dj, ox, oy, kx, ky] of corners) {
+    for (const [axis, k, o, kk] of [['x', 1.7, ox, kx], ['y', 9.1, oy, ky]]) {
+      const shift = +(di * 12.9898 + dj * 78.233 + k).toFixed(4);
+      const h = `h${n}${axis}`;
+      decl.push(`--${h}: @calc(sin($(u) + ${shift}) * 437.5453);`);
+      decl.push(`--${n}${axis}: @calc(round(${1875 + 6250 * o} + ${6250 * A0} * $(${kk}) * (2 * ($(${h}) - floor($(${h}))) - 1)) / 100);`);
+    }
+  }
+  // The corner opposite the split, and each triangle's middle.
+  for (const axis of ['x', 'y']) {
+    decl.push(`--m${axis}: @calc($(c${axis}) + $(s) * ($(d${axis}) - $(c${axis})));`);
+    decl.push(`--n${axis}: @calc($(a${axis}) + $(s) * ($(b${axis}) - $(a${axis})));`);
+    decl.push(`--o${axis}: @calc(round(100 * ($(a${axis}) + $(b${axis}) + $(m${axis})) / 3) / 100);`);
+    decl.push(`--q${axis}: @calc(round(100 * ($(n${axis}) + $(c${axis}) + $(d${axis})) / 3) / 100);`);
+  }
+  const vars = `--s: @p(0, 1); ${decl.join(' ')}`;
+  const tri = (pts, o) =>
+    `${cp(`polygon(${pts.map((p) => `$(${p}x)% $(${p}y)%`).join(', ')})`)} ${tfo(`$(${o}x)% $(${o}y)%`)} ${tf('scale(0.9)')}`;
+  const t1 = tri(['a', 'b', 'm'], 'o');
+  const t2 = tri(['n', 'c', 'd'], 'q');
   const box = 'left: -30%; top: -30%; width: 160%; height: 160%;';
   add(
     'Ice Crack',
     'Cracked ice: a crooked web of shards in pale glazes, every shard split once more and the cracks between them left open.',
     (c) => ({
-      rule: `${vars} --s: @p(0, 1); ${F} { ${B(`${box} background: ${ink(c)}; ${t1}`)} ${A(`${box} background: ${ink(c)}; ${t2}`)} }${TR}`,
+      rule: `${vars} ${F} { ${B(`${box} background: ${ink(c)}; ${t1}`)} ${A(`${box} background: ${ink(c)}; ${t2}`)} }${TR}`,
     }),
     {
       palette: ['#2D3A36', '#CFE0D5', '#B8D0C2', '#A3C2B0', '#E2EDE5'],

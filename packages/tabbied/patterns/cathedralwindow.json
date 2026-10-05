@@ -1,0 +1,67 @@
+{
+  "name": "Cathedral Window",
+  "slug": "cathedralwindow",
+  "galleryOrder": 4287,
+  "galleryWhite": true,
+  "description": "Cathedral window patchwork: squares of cream muslin, a curved window of bright fabric on every seam, the muslin rolled back round each one.",
+  "tags": [
+    "diamonds",
+    "curves",
+    "grid",
+    "squares"
+  ],
+  "mood": [
+    "elegant",
+    "retro"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "textile",
+    "wallpaper",
+    "card-texture"
+  ],
+  "palette": [
+    "#3B3355",
+    "#F6EFE2",
+    "#E5D8C3",
+    "#E4572E",
+    "#29335C",
+    "#F3A712",
+    "#669BBC"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 7,
+    "default": 7
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( background: linear-gradient(var(--color1), var(--color1)) 50% 50% / 96% 96% no-repeat; @random(${shapeFrequency}) { :before { content: ''; position: absolute; left: -21%; top: 0; width: 42%; height: 100%; background: radial-gradient(closest-side, transparent 84%, var(--color2) 84%), @p(var(--color3), var(--color4), var(--color5), var(--color6)); -webkit-clip-path: @var(--lv); clip-path: @var(--lv); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: 0; top: -21%; width: 100%; height: 42%; background: radial-gradient(closest-side, transparent 84%, var(--color2) 84%), @p(var(--color3), var(--color4), var(--color5), var(--color6)); -webkit-clip-path: @var(--lh); clip-path: @var(--lh); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --lv: polygon(50% 0%, 63.45% 6.25%, 74.08% 12.5%, 82.48% 18.75%, 89.01% 25%, 93.91% 31.25%, 97.32% 37.5%, 99.33% 43.75%, 100% 50%, 99.33% 56.25%, 97.32% 62.5%, 93.91% 68.75%, 89.01% 75%, 82.48% 81.25%, 74.08% 87.5%, 63.45% 93.75%, 50% 100%, 36.55% 93.75%, 25.92% 87.5%, 17.52% 81.25%, 10.99% 75%, 6.09% 68.75%, 2.68% 62.5%, 0.67% 56.25%, 0% 50%, 0.67% 43.75%, 2.68% 37.5%, 6.09% 31.25%, 10.99% 25%, 17.52% 18.75%, 25.92% 12.5%, 36.55% 6.25%); --lh: polygon(0% 50%, 6.25% 63.45%, 12.5% 74.08%, 18.75% 82.48%, 25% 89.01%, 31.25% 93.91%, 37.5% 97.32%, 43.75% 99.33%, 50% 100%, 56.25% 99.33%, 62.5% 97.32%, 68.75% 93.91%, 75% 89.01%, 81.25% 82.48%, 87.5% 74.08%, 93.75% 63.45%, 100% 50%, 93.75% 36.55%, 87.5% 25.92%, 81.25% 17.52%, 75% 10.99%, 68.75% 6.09%, 62.5% 2.68%, 56.25% 0.67%, 50% 0%, 43.75% 0.67%, 37.5% 2.68%, 31.25% 6.09%, 25% 10.99%, 18.75% 17.52%, 12.5% 25.92%, 6.25% 36.55%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

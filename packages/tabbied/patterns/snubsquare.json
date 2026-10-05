@@ -1,0 +1,64 @@
+{
+  "name": "Snub Square",
+  "slug": "snubsquare",
+  "galleryOrder": 4235,
+  "galleryWhite": true,
+  "description": "The snub square tiling: squares tipped alternately left and right, with pairs of equilateral triangles filling the gaps between them.",
+  "tags": [
+    "squares",
+    "triangles",
+    "mosaic"
+  ],
+  "mood": [
+    "elegant",
+    "bold"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "wallpaper",
+    "poster"
+  ],
+  "palette": [
+    "#0F1626",
+    "#F5F0E1",
+    "#FF6E6C",
+    "#FFC857",
+    "#4ECDC4",
+    "#7C77B9"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --gate: @r(1); @random(${shapeFrequency}) { :before { content: ''; position: absolute; left: -100%; top: -100%; width: 300%; height: 300%; background: @p(var(--color1), var(--color2)); -webkit-clip-path: polygon(@calc(round((54.25 + 11.6 * ((@x + @y) % 2)) * 100) / 100)% @calc(round((65.85 - 11.6 * ((@x + @y) % 2)) * 100) / 100)%, @calc(round((34.15 + 11.6 * ((@x + @y) % 2)) * 100) / 100)% @calc(round((54.25 + 11.6 * ((@x + @y) % 2)) * 100) / 100)%, @calc(round((45.75 - 11.6 * ((@x + @y) % 2)) * 100) / 100)% @calc(round((34.15 + 11.6 * ((@x + @y) % 2)) * 100) / 100)%, @calc(round((65.85 - 11.6 * ((@x + @y) % 2)) * 100) / 100)% @calc(round((45.75 - 11.6 * ((@x + @y) % 2)) * 100) / 100)%); clip-path: polygon(@calc(round((54.25 + 11.6 * ((@x + @y) % 2)) * 100) / 100)% @calc(round((65.85 - 11.6 * ((@x + @y) % 2)) * 100) / 100)%, @calc(round((34.15 + 11.6 * ((@x + @y) % 2)) * 100) / 100)% @calc(round((54.25 + 11.6 * ((@x + @y) % 2)) * 100) / 100)%, @calc(round((45.75 - 11.6 * ((@x + @y) % 2)) * 100) / 100)% @calc(round((34.15 + 11.6 * ((@x + @y) % 2)) * 100) / 100)%, @calc(round((65.85 - 11.6 * ((@x + @y) % 2)) * 100) / 100)% @calc(round((45.75 - 11.6 * ((@x + @y) % 2)) * 100) / 100)%); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: -100%; top: -100%; width: 300%; height: 300%; background: @p(var(--color3), var(--color4), var(--color5)); -webkit-clip-path: polygon(77.83% @calc(round((66.07 - 32.13 * ((@x + @y) % 2)) * 100) / 100)%, @calc(round((55.51 + 11.16 * ((@x + @y) % 2)) * 100) / 100)% @calc(round((66.07 - 12.8 * ((@x + @y) % 2)) * 100) / 100)%, @calc(round((66.67 - 11.16 * ((@x + @y) % 2)) * 100) / 100)% @calc(round((46.73 - 12.8 * ((@x + @y) % 2)) * 100) / 100)%, 77.83% @calc(round((66.07 - 32.13 * ((@x + @y) % 2)) * 100) / 100)%, @calc(round((33.93 + 32.13 * ((@x + @y) % 2)) * 100) / 100)% 55.51%, @calc(round((53.27 + 12.8 * ((@x + @y) % 2)) * 100) / 100)% @calc(round((66.67 + 11.16 * ((@x + @y) % 2)) * 100) / 100)%, @calc(round((33.93 + 12.8 * ((@x + @y) % 2)) * 100) / 100)% @calc(round((77.83 - 11.16 * ((@x + @y) % 2)) * 100) / 100)%, @calc(round((33.93 + 32.13 * ((@x + @y) % 2)) * 100) / 100)% 55.51%, @calc(round((77.83 - 33.33 * max(0, 2 - @x)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 32.13 * max(0, 2 - @x) + 64.27 * ((@x + @y) % 2) * max(0, 2 - @x)) * 100) / 100)%, @calc(round((77.83 - 44.49 * max(0, 2 - @x) - 11.16 * ((@x + @y) % 2) * max(0, 2 - @x)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 12.8 * max(0, 2 - @x) + 44.93 * ((@x + @y) % 2) * max(0, 2 - @x)) * 100) / 100)%, @calc(round((77.83 - 55.66 * max(0, 2 - @x) + 11.16 * ((@x + @y) % 2) * max(0, 2 - @x)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 32.13 * max(0, 2 - @x) + 44.93 * ((@x + @y) % 2) * max(0, 2 - @x)) * 100) / 100)%, @calc(round((77.83 - 33.33 * max(0, 2 - @x)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 32.13 * max(0, 2 - @x) + 64.27 * ((@x + @y) % 2) * max(0, 2 - @x)) * 100) / 100)%, @calc(round((77.83 - 11.76 * max(0, 2 - @y) - 32.13 * ((@x + @y) % 2) * max(0, 2 - @y)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 43.89 * max(0, 2 - @y) + 32.13 * ((@x + @y) % 2) * max(0, 2 - @y)) * 100) / 100)%, @calc(round((77.83 - 11.76 * max(0, 2 - @y) - 12.8 * ((@x + @y) % 2) * max(0, 2 - @y)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 21.57 * max(0, 2 - @y) + 20.97 * ((@x + @y) % 2) * max(0, 2 - @y)) * 100) / 100)%, @calc(round((77.83 - 31.09 * max(0, 2 - @y) - 12.8 * ((@x + @y) % 2) * max(0, 2 - @y)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 32.73 * max(0, 2 - @y) + 43.29 * ((@x + @y) % 2) * max(0, 2 - @y)) * 100) / 100)%, @calc(round((77.83 - 11.76 * max(0, 2 - @y) - 32.13 * ((@x + @y) % 2) * max(0, 2 - @y)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 43.89 * max(0, 2 - @y) + 32.13 * ((@x + @y) % 2) * max(0, 2 - @y)) * 100) / 100)%, @calc(round((77.83 - 33.33 * max(0, 2 - @x)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 32.13 * max(0, 2 - @x) + 64.27 * ((@x + @y) % 2) * max(0, 2 - @x)) * 100) / 100)%, @calc(round((33.93 + 32.13 * ((@x + @y) % 2)) * 100) / 100)% 55.51%); clip-path: polygon(77.83% @calc(round((66.07 - 32.13 * ((@x + @y) % 2)) * 100) / 100)%, @calc(round((55.51 + 11.16 * ((@x + @y) % 2)) * 100) / 100)% @calc(round((66.07 - 12.8 * ((@x + @y) % 2)) * 100) / 100)%, @calc(round((66.67 - 11.16 * ((@x + @y) % 2)) * 100) / 100)% @calc(round((46.73 - 12.8 * ((@x + @y) % 2)) * 100) / 100)%, 77.83% @calc(round((66.07 - 32.13 * ((@x + @y) % 2)) * 100) / 100)%, @calc(round((33.93 + 32.13 * ((@x + @y) % 2)) * 100) / 100)% 55.51%, @calc(round((53.27 + 12.8 * ((@x + @y) % 2)) * 100) / 100)% @calc(round((66.67 + 11.16 * ((@x + @y) % 2)) * 100) / 100)%, @calc(round((33.93 + 12.8 * ((@x + @y) % 2)) * 100) / 100)% @calc(round((77.83 - 11.16 * ((@x + @y) % 2)) * 100) / 100)%, @calc(round((33.93 + 32.13 * ((@x + @y) % 2)) * 100) / 100)% 55.51%, @calc(round((77.83 - 33.33 * max(0, 2 - @x)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 32.13 * max(0, 2 - @x) + 64.27 * ((@x + @y) % 2) * max(0, 2 - @x)) * 100) / 100)%, @calc(round((77.83 - 44.49 * max(0, 2 - @x) - 11.16 * ((@x + @y) % 2) * max(0, 2 - @x)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 12.8 * max(0, 2 - @x) + 44.93 * ((@x + @y) % 2) * max(0, 2 - @x)) * 100) / 100)%, @calc(round((77.83 - 55.66 * max(0, 2 - @x) + 11.16 * ((@x + @y) % 2) * max(0, 2 - @x)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 32.13 * max(0, 2 - @x) + 44.93 * ((@x + @y) % 2) * max(0, 2 - @x)) * 100) / 100)%, @calc(round((77.83 - 33.33 * max(0, 2 - @x)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 32.13 * max(0, 2 - @x) + 64.27 * ((@x + @y) % 2) * max(0, 2 - @x)) * 100) / 100)%, @calc(round((77.83 - 11.76 * max(0, 2 - @y) - 32.13 * ((@x + @y) % 2) * max(0, 2 - @y)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 43.89 * max(0, 2 - @y) + 32.13 * ((@x + @y) % 2) * max(0, 2 - @y)) * 100) / 100)%, @calc(round((77.83 - 11.76 * max(0, 2 - @y) - 12.8 * ((@x + @y) % 2) * max(0, 2 - @y)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 21.57 * max(0, 2 - @y) + 20.97 * ((@x + @y) % 2) * max(0, 2 - @y)) * 100) / 100)%, @calc(round((77.83 - 31.09 * max(0, 2 - @y) - 12.8 * ((@x + @y) % 2) * max(0, 2 - @y)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 32.73 * max(0, 2 - @y) + 43.29 * ((@x + @y) % 2) * max(0, 2 - @y)) * 100) / 100)%, @calc(round((77.83 - 11.76 * max(0, 2 - @y) - 32.13 * ((@x + @y) % 2) * max(0, 2 - @y)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 43.89 * max(0, 2 - @y) + 32.13 * ((@x + @y) % 2) * max(0, 2 - @y)) * 100) / 100)%, @calc(round((77.83 - 33.33 * max(0, 2 - @x)) * 100) / 100)% @calc(round((66.07 - 32.13 * ((@x + @y) % 2) - 32.13 * max(0, 2 - @x) + 64.27 * ((@x + @y) % 2) * max(0, 2 - @x)) * 100) / 100)%, @calc(round((33.93 + 32.13 * ((@x + @y) % 2)) * 100) / 100)% 55.51%); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "name": "Washi Tape",
+  "slug": "washitape",
+  "galleryOrder": 4298,
+  "galleryWhite": true,
+  "description": "Strips of translucent washi tape with torn zigzag ends crisscrossing the sheet, some plain and some printed with stripes, dots or a check.",
+  "tags": [
+    "stripes",
+    "diagonals",
+    "dots",
+    "mosaic"
+  ],
+  "mood": [
+    "playful",
+    "calm"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "packaging",
+    "card-texture",
+    "wallpaper"
+  ],
+  "palette": [
+    "#33374A",
+    "#FFFDF8",
+    "#F4A7B9",
+    "#9AD1D4",
+    "#F6D186",
+    "#B8B5E3",
+    "#A7D7A0"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 7,
+    "default": 7
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 0.7,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { -webkit-transform: translate(@r(-12, 12)%, @r(-12, 12)%) rotate(@calc(@rn(-70, 70, 1.3) + @p(-90, 0, 0))deg); transform: translate(@r(-12, 12)%, @r(-12, 12)%) rotate(@calc(@rn(-70, 70, 1.3) + @p(-90, 0, 0))deg); :before { content: ''; position: absolute; left: -25%; width: 150%; top: 30%; height: 40%; background: @p(@var(--stripes), @var(--dots), @var(--check), none), @p(var(--color2), var(--color3), var(--color4), var(--color5), var(--color6)); opacity: 0.82; -webkit-clip-path: @var(--tape); clip-path: @var(--tape); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --tape: polygon(0% 0%, 3% 12.5%, 0% 25%, 3% 37.5%, 0% 50%, 3% 62.5%, 0% 75%, 3% 87.5%, 0% 100%, 100% 100%, 97% 87.5%, 100% 75%, 97% 62.5%, 100% 50%, 97% 37.5%, 100% 25%, 97% 12.5%, 100% 0%); --stripes: repeating-linear-gradient(90deg, transparent 0 4%, var(--color1) 4% 6%); --dots: radial-gradient(circle at 50% 50%, var(--color1) 0 18%, transparent 18%) 0 0 / 7% 25%; --check: repeating-linear-gradient(90deg, transparent 0 3%, var(--color1) 3% 6%), repeating-linear-gradient(180deg, transparent 0 12.5%, var(--color1) 12.5% 25%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

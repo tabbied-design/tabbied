@@ -1,0 +1,63 @@
+{
+  "name": "Baravelle",
+  "slug": "baravelle",
+  "galleryOrder": 4243,
+  "description": "Baravelle spirals: squares nested at half the size and turned, their corner triangles shaded in turn so four arms wind inward, each square whirling one way or the other.",
+  "tags": [
+    "spirals",
+    "triangles",
+    "squares"
+  ],
+  "mood": [
+    "bold",
+    "playful"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "poster",
+    "textile"
+  ],
+  "palette": [
+    "#FFF8EE",
+    "#E63946",
+    "#1D3557",
+    "#457B9D",
+    "#A8DADC",
+    "#F4A261"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --gate: @r(1); @random(${shapeFrequency}) { -webkit-transform: rotate(@p(0deg, 90deg)) scaleX(@p(1, -1)); transform: rotate(@p(0deg, 90deg)) scaleX(@p(1, -1)); :before { content: ''; position: absolute; inset: 0; background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-clip-path: @var(--ba); clip-path: @var(--ba); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-clip-path: @var(--bb); clip-path: @var(--bb); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --ba: polygon(0.8% 0.8%, 48.07% 0.8%, 0.8% 48.07%, 0.8% 0.8%, 98.87% 50%, 75.8% 73.07%, 75.8% 26.93%, 98.87% 50%, 25.8% 74.2%, 25.8% 51.93%, 48.07% 74.2%, 25.8% 74.2%, 50% 26.13%, 60.57% 36.7%, 39.43% 36.7%, 50% 26.13%, 61.7% 61.7%, 51.93% 61.7%, 61.7% 51.93%, 61.7% 61.7%, 38.63% 50%, 42.95% 45.68%, 42.95% 54.32%, 38.63% 50%, 55.45% 44.55%, 55.45% 48.07%, 51.93% 44.55%, 55.45% 44.55%, 99.2% 99.2%, 51.93% 99.2%, 99.2% 51.93%, 99.2% 99.2%, 1.13% 50%, 24.2% 26.93%, 24.2% 73.07%, 1.13% 50%, 74.2% 25.8%, 74.2% 48.07%, 51.93% 25.8%, 74.2% 25.8%, 50% 73.87%, 39.43% 63.3%, 60.57% 63.3%, 50% 73.87%, 38.3% 38.3%, 48.07% 38.3%, 38.3% 48.07%, 38.3% 38.3%, 61.37% 50%, 57.05% 54.32%, 57.05% 45.68%, 61.37% 50%, 44.55% 55.45%, 44.55% 51.93%, 48.07% 55.45%, 44.55% 55.45%, 61.37% 50%, 38.3% 38.3%, 50% 73.87%, 74.2% 25.8%, 1.13% 50%, 99.2% 99.2%, 55.45% 44.55%, 38.63% 50%, 61.7% 61.7%, 50% 26.13%, 25.8% 74.2%, 98.87% 50%); --bb: polygon(99.2% 0.8%, 99.2% 48.07%, 51.93% 0.8%, 99.2% 0.8%, 50% 98.87%, 26.93% 75.8%, 73.07% 75.8%, 50% 98.87%, 25.8% 25.8%, 48.07% 25.8%, 25.8% 48.07%, 25.8% 25.8%, 73.87% 50%, 63.3% 60.57%, 63.3% 39.43%, 73.87% 50%, 38.3% 61.7%, 38.3% 51.93%, 48.07% 61.7%, 38.3% 61.7%, 50% 38.63%, 54.32% 42.95%, 45.68% 42.95%, 50% 38.63%, 55.45% 55.45%, 51.93% 55.45%, 55.45% 51.93%, 55.45% 55.45%, 0.8% 99.2%, 0.8% 51.93%, 48.07% 99.2%, 0.8% 99.2%, 50% 1.13%, 73.07% 24.2%, 26.93% 24.2%, 50% 1.13%, 74.2% 74.2%, 51.93% 74.2%, 74.2% 51.93%, 74.2% 74.2%, 26.13% 50%, 36.7% 39.43%, 36.7% 60.57%, 26.13% 50%, 61.7% 38.3%, 61.7% 48.07%, 51.93% 38.3%, 61.7% 38.3%, 50% 61.37%, 45.68% 57.05%, 54.32% 57.05%, 50% 61.37%, 44.55% 44.55%, 48.07% 44.55%, 44.55% 48.07%, 44.55% 44.55%, 50% 61.37%, 61.7% 38.3%, 26.13% 50%, 74.2% 74.2%, 50% 1.13%, 0.8% 99.2%, 55.45% 55.45%, 50% 38.63%, 38.3% 61.7%, 73.87% 50%, 25.8% 25.8%, 50% 98.87%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "name": "Ice Crack",
+  "slug": "icecrack",
+  "galleryOrder": 4047,
+  "galleryWhite": true,
+  "description": "Cracked ice: a crooked web of shards in pale glazes, every shard split once more and the cracks between them left open.",
+  "tags": [
+    "triangles",
+    "mosaic",
+    "lines"
+  ],
+  "mood": [
+    "organic",
+    "calm"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "wallpaper",
+    "card-texture",
+    "hero-background"
+  ],
+  "palette": [
+    "#2D3A36",
+    "#CFE0D5",
+    "#B8D0C2",
+    "#A3C2B0",
+    "#E2EDE5"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --ax: @calc(round(1000 * 0.26 * min(1, (@x - 1)) * min(1, @X - (@x - 1)) * (2 * (sin((@x - 1) * 12.9898 + (@y - 1) * 78.233 + 1.7) * 437.5453 - floor(sin((@x - 1) * 12.9898 + (@y - 1) * 78.233 + 1.7) * 437.5453)) - 1)) / 1000); --ay: @calc(round(1000 * 0.26 * min(1, (@y - 1)) * min(1, @Y - (@y - 1)) * (2 * (sin((@x - 1) * 12.9898 + (@y - 1) * 78.233 + 9.1) * 437.5453 - floor(sin((@x - 1) * 12.9898 + (@y - 1) * 78.233 + 9.1) * 437.5453)) - 1)) / 1000); --bx: @calc(round(1000 * 0.26 * min(1, @x) * min(1, @X - @x) * (2 * (sin(@x * 12.9898 + (@y - 1) * 78.233 + 1.7) * 437.5453 - floor(sin(@x * 12.9898 + (@y - 1) * 78.233 + 1.7) * 437.5453)) - 1)) / 1000); --by: @calc(round(1000 * 0.26 * min(1, (@y - 1)) * min(1, @Y - (@y - 1)) * (2 * (sin(@x * 12.9898 + (@y - 1) * 78.233 + 9.1) * 437.5453 - floor(sin(@x * 12.9898 + (@y - 1) * 78.233 + 9.1) * 437.5453)) - 1)) / 1000); --cx: @calc(round(1000 * 0.26 * min(1, @x) * min(1, @X - @x) * (2 * (sin(@x * 12.9898 + @y * 78.233 + 1.7) * 437.5453 - floor(sin(@x * 12.9898 + @y * 78.233 + 1.7) * 437.5453)) - 1)) / 1000); --cy: @calc(round(1000 * 0.26 * min(1, @y) * min(1, @Y - @y) * (2 * (sin(@x * 12.9898 + @y * 78.233 + 9.1) * 437.5453 - floor(sin(@x * 12.9898 + @y * 78.233 + 9.1) * 437.5453)) - 1)) / 1000); --dx: @calc(round(1000 * 0.26 * min(1, (@x - 1)) * min(1, @X - (@x - 1)) * (2 * (sin((@x - 1) * 12.9898 + @y * 78.233 + 1.7) * 437.5453 - floor(sin((@x - 1) * 12.9898 + @y * 78.233 + 1.7) * 437.5453)) - 1)) / 1000); --dy: @calc(round(1000 * 0.26 * min(1, @y) * min(1, @Y - @y) * (2 * (sin((@x - 1) * 12.9898 + @y * 78.233 + 9.1) * 437.5453 - floor(sin((@x - 1) * 12.9898 + @y * 78.233 + 9.1) * 437.5453)) - 1)) / 1000); --s: @p(0, 1); @random(${shapeFrequency}) { :before { content: ''; position: absolute; left: -30%; top: -30%; width: 160%; height: 160%; background: @p(var(--color1), var(--color2), var(--color3), var(--color4)); -webkit-clip-path: polygon(@calc(round(6250 * $(ax) + 1875) / 100)% @calc(round(6250 * $(ay) + 1875) / 100)%, @calc(round(6250 * (1 + $(bx)) + 1875) / 100)% @calc(round(6250 * $(by) + 1875) / 100)%, @calc(round(6250 * ((1 + $(cx)) + $(s) * ($(dx) - (1 + $(cx)))) + 1875) / 100)% @calc(round(6250 * ((1 + $(cy)) + $(s) * ((1 + $(dy)) - (1 + $(cy)))) + 1875) / 100)%); clip-path: polygon(@calc(round(6250 * $(ax) + 1875) / 100)% @calc(round(6250 * $(ay) + 1875) / 100)%, @calc(round(6250 * (1 + $(bx)) + 1875) / 100)% @calc(round(6250 * $(by) + 1875) / 100)%, @calc(round(6250 * ((1 + $(cx)) + $(s) * ($(dx) - (1 + $(cx)))) + 1875) / 100)% @calc(round(6250 * ((1 + $(cy)) + $(s) * ((1 + $(dy)) - (1 + $(cy)))) + 1875) / 100)%); -webkit-transform-origin: @calc(round(6250 * ($(ax) + (1 + $(bx)) + ((1 + $(cx)) + $(s) * ($(dx) - (1 + $(cx))))) / 3 + 1875) / 100)% @calc(round(6250 * ($(ay) + $(by) + ((1 + $(cy)) + $(s) * ((1 + $(dy)) - (1 + $(cy))))) / 3 + 1875) / 100)%; transform-origin: @calc(round(6250 * ($(ax) + (1 + $(bx)) + ((1 + $(cx)) + $(s) * ($(dx) - (1 + $(cx))))) / 3 + 1875) / 100)% @calc(round(6250 * ($(ay) + $(by) + ((1 + $(cy)) + $(s) * ((1 + $(dy)) - (1 + $(cy))))) / 3 + 1875) / 100)%; -webkit-transform: scale(0.9); transform: scale(0.9); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: -30%; top: -30%; width: 160%; height: 160%; background: @p(var(--color1), var(--color2), var(--color3), var(--color4)); -webkit-clip-path: polygon(@calc(round(6250 * ($(ax) + $(s) * ((1 + $(bx)) - $(ax))) + 1875) / 100)% @calc(round(6250 * ($(ay) + $(s) * ($(by) - $(ay))) + 1875) / 100)%, @calc(round(6250 * (1 + $(cx)) + 1875) / 100)% @calc(round(6250 * (1 + $(cy)) + 1875) / 100)%, @calc(round(6250 * $(dx) + 1875) / 100)% @calc(round(6250 * (1 + $(dy)) + 1875) / 100)%); clip-path: polygon(@calc(round(6250 * ($(ax) + $(s) * ((1 + $(bx)) - $(ax))) + 1875) / 100)% @calc(round(6250 * ($(ay) + $(s) * ($(by) - $(ay))) + 1875) / 100)%, @calc(round(6250 * (1 + $(cx)) + 1875) / 100)% @calc(round(6250 * (1 + $(cy)) + 1875) / 100)%, @calc(round(6250 * $(dx) + 1875) / 100)% @calc(round(6250 * (1 + $(dy)) + 1875) / 100)%); -webkit-transform-origin: @calc(round(6250 * (($(ax) + $(s) * ((1 + $(bx)) - $(ax))) + (1 + $(cx)) + $(dx)) / 3 + 1875) / 100)% @calc(round(6250 * (($(ay) + $(s) * ($(by) - $(ay))) + (1 + $(cy)) + (1 + $(dy))) / 3 + 1875) / 100)%; transform-origin: @calc(round(6250 * (($(ax) + $(s) * ((1 + $(bx)) - $(ax))) + (1 + $(cx)) + $(dx)) / 3 + 1875) / 100)% @calc(round(6250 * (($(ay) + $(s) * ($(by) - $(ay))) + (1 + $(cy)) + (1 + $(dy))) / 3 + 1875) / 100)%; -webkit-transform: scale(0.9); transform: scale(0.9); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

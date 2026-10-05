@@ -1,0 +1,64 @@
+{
+  "name": "Peapod",
+  "slug": "peapod",
+  "galleryOrder": 4217,
+  "description": "Open pea pods drifting in a slow current across the sheet, each a pointed green shell with a curl of stalk and a row of five round peas inside.",
+  "tags": [
+    "ovals",
+    "dots",
+    "curves"
+  ],
+  "mood": [
+    "organic",
+    "calm",
+    "playful"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "textile",
+    "packaging",
+    "wallpaper"
+  ],
+  "palette": [
+    "#FBF6E9",
+    "#2F6B3C",
+    "#4F9D5D",
+    "#8CC084",
+    "#B9D86A"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "5x7",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { --a: @rn(-160, 160, .8); transform: rotate($deg(a)) rotate(@r(-12deg, 12deg)) scale(@r(.95, 1.12)); z-index: @ri(1, 9); :before { content: ''; position: absolute; inset: 0; background: @p(var(--color1), var(--color2)); -webkit-clip-path: @var(--pod); clip-path: @var(--pod); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background: @p(var(--color3), var(--color4)); -webkit-mask: @var(--peas); mask: @var(--peas); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --pod: polygon(6% 50%, 9.31% 46.5%, 12.62% 43.95%, 15.92% 41.71%, 19.23% 39.71%, 22.54% 37.91%, 25.85% 36.32%, 29.15% 34.93%, 32.46% 33.74%, 35.77% 32.76%, 39.08% 31.99%, 42.38% 31.44%, 45.69% 31.11%, 49% 31%, 52.31% 31.11%, 55.62% 31.44%, 58.92% 31.99%, 62.23% 32.76%, 65.54% 33.74%, 68.85% 34.93%, 72.15% 36.32%, 75.46% 37.91%, 78.77% 39.71%, 82.08% 41.71%, 85.38% 43.95%, 88.69% 46.5%, 92% 50%, 88.69% 53.5%, 85.38% 56.05%, 82.08% 58.29%, 78.77% 60.29%, 75.46% 62.09%, 72.15% 63.68%, 68.85% 65.07%, 65.54% 66.26%, 62.23% 67.24%, 58.92% 68.01%, 55.62% 68.56%, 52.31% 68.89%, 49% 69%, 45.69% 68.89%, 42.38% 68.56%, 39.08% 68.01%, 35.77% 67.24%, 32.46% 66.26%, 29.15% 65.07%, 25.85% 63.68%, 22.54% 62.09%, 19.23% 60.29%, 15.92% 58.29%, 12.62% 56.05%, 9.31% 53.5%, 6% 50%, 88.88% 51.39%, 88.08% 51.06%, 87.64% 50.31%, 87.71% 49.45%, 88.28% 48.8%, 92.89% 46.14%, 94.61% 41.14%, 91.88% 37.84%, 91.6% 37.02%, 91.86% 36.19%, 92.55% 35.68%, 93.41% 35.66%, 94.12% 36.16%, 97.39% 40.86%, 95.11% 47.86%, 89.72% 51.2%, 88.88% 51.39%, 6% 50%, 16.69% 52.48%, 19.38% 54.3%, 22.08% 55.89%, 24.77% 57.31%, 27.46% 58.59%, 30.15% 59.72%, 32.85% 60.71%, 35.54% 61.55%, 38.23% 62.25%, 40.92% 62.79%, 43.62% 63.19%, 46.31% 63.42%, 49% 63.5%, 51.69% 63.42%, 54.38% 63.19%, 57.08% 62.79%, 59.77% 62.25%, 62.46% 61.55%, 65.15% 60.71%, 67.85% 59.72%, 70.54% 58.59%, 73.23% 57.31%, 75.92% 55.89%, 78.62% 54.3%, 81.31% 52.48%, 84% 50%, 81.31% 47.52%, 78.62% 45.7%, 75.92% 44.11%, 73.23% 42.69%, 70.54% 41.41%, 67.85% 40.28%, 65.15% 39.29%, 62.46% 38.45%, 59.77% 37.75%, 57.08% 37.21%, 54.38% 36.81%, 51.69% 36.58%, 49% 36.5%, 46.31% 36.58%, 43.62% 36.81%, 40.92% 37.21%, 38.23% 37.75%, 35.54% 38.45%, 32.85% 39.29%, 30.15% 40.28%, 27.46% 41.41%, 24.77% 42.69%, 22.08% 44.11%, 19.38% 45.7%, 16.69% 47.52%, 14% 50%, 16.69% 52.48%, 6% 50%); --peas: radial-gradient(circle closest-side, #000 98%, transparent 100%) 19.59% 50% / 14.5% 14.5% no-repeat, radial-gradient(circle closest-side, #000 98%, transparent 100%) 34.8% 50% / 14.5% 14.5% no-repeat, radial-gradient(circle closest-side, #000 98%, transparent 100%) 50% 50% / 14.5% 14.5% no-repeat, radial-gradient(circle closest-side, #000 98%, transparent 100%) 65.2% 50% / 14.5% 14.5% no-repeat, radial-gradient(circle closest-side, #000 98%, transparent 100%) 80.41% 50% / 14.5% 14.5% no-repeat; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

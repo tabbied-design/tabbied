@@ -1,0 +1,68 @@
+{
+  "name": "Allsorts",
+  "slug": "allsorts",
+  "galleryOrder": 4209,
+  "galleryWhite": true,
+  "description": "Licorice allsorts in a loose heap of rows: striped sandwiches of fondant and licorice, coconut wheels round a black core and fondant squares round a licorice one.",
+  "tags": [
+    "squares",
+    "circles",
+    "stripes",
+    "blocks"
+  ],
+  "mood": [
+    "playful",
+    "retro",
+    "bold"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "packaging",
+    "wallpaper",
+    "poster"
+  ],
+  "palette": [
+    "#35505E",
+    "#1E1B1C",
+    "#F49AC1",
+    "#FFD23F",
+    "#FBF7EE",
+    "#5FB7D4",
+    "#F28C38"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 7,
+    "default": 7
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --z0: @r(1); @random(${shapeFrequency}) { --k: @p(0, 1, 2); --mk: @match($(k) == 0, @var(--m0), $(k) == 1, @var(--m1), @var(--m2)); transform: translate(@r(-5%, 5%), @r(-5%, 5%)) rotate(@p(0deg, 90deg)) rotate(@r(-12deg, 12deg)) scale(.8); border-radius: @match($(k) == 1, 50%, 7%); background: @p(var(--color2), var(--color3), var(--color4), var(--color5), var(--color6)); :before { content: ''; position: absolute; inset: 0; background: @p(var(--color2), var(--color3), var(--color4), var(--color5), var(--color6)); opacity: @match($(k) == 0, 1, 0%); -webkit-mask: @var(--mid); mask: @var(--mid); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background: var(--color1); -webkit-mask: @var(--mk); mask: @var(--mk); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --m0: linear-gradient(180deg, transparent 27%, #000 27% 38%, transparent 38% 62%, #000 62% 73%, transparent 73%); --m1: radial-gradient(circle closest-side, #000 40%, transparent 40%); --m2: linear-gradient(#000, #000) center / 46% 46% no-repeat; --mid: linear-gradient(180deg, transparent 0 38%, #000 38% 62%, transparent 62%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

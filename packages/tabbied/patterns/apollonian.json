@@ -1,0 +1,64 @@
+{
+  "name": "Apollonian",
+  "slug": "apollonian",
+  "galleryOrder": 4242,
+  "galleryWhite": true,
+  "description": "Three generations of an Apollonian circle packing: big discs touching in a square grid, middling discs in the hollows between them and tiny discs in the gaps left over.",
+  "tags": [
+    "circles",
+    "dots",
+    "grid"
+  ],
+  "mood": [
+    "calm",
+    "elegant"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "wallpaper",
+    "textile"
+  ],
+  "palette": [
+    "#071A26",
+    "#F7B267",
+    "#F79D65",
+    "#F4845F",
+    "#F27059",
+    "#F25C54"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --gate: @r(1); @random(${shapeFrequency}) { :before { content: ''; position: absolute; inset: 1.4%; border-radius: 50%; background: @p(var(--color1), var(--color2), var(--color3)); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: -30%; top: -30%; width: 160%; height: 160%; background: @p(var(--color4), var(--color5)); -webkit-mask: @match(x == 1, @match(y == 1, @var(--ap11), @var(--ap10)), @match(y == 1, @var(--ap01), @var(--ap00))); mask: @match(x == 1, @match(y == 1, @var(--ap11), @var(--ap10)), @match(y == 1, @var(--ap01), @var(--ap00))); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --ap00: radial-gradient(ellipse 12.07% 12.07% at 81.25% 81.25%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 81.25% 35.08%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 81.25% 64.92%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 35.08% 81.25%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 64.92% 81.25%, #000 100%, transparent 100%); --ap10: radial-gradient(ellipse 12.07% 12.07% at 81.25% 81.25%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 81.25% 35.08%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 81.25% 64.92%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 35.08% 81.25%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 64.92% 81.25%, #000 100%, transparent 100%), radial-gradient(ellipse 12.07% 12.07% at 18.75% 81.25%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 18.75% 35.08%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 18.75% 64.92%, #000 100%, transparent 100%); --ap01: radial-gradient(ellipse 12.07% 12.07% at 81.25% 81.25%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 81.25% 35.08%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 81.25% 64.92%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 35.08% 81.25%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 64.92% 81.25%, #000 100%, transparent 100%), radial-gradient(ellipse 12.07% 12.07% at 81.25% 18.75%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 35.08% 18.75%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 64.92% 18.75%, #000 100%, transparent 100%); --ap11: radial-gradient(ellipse 12.07% 12.07% at 81.25% 81.25%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 81.25% 35.08%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 81.25% 64.92%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 35.08% 81.25%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 64.92% 81.25%, #000 100%, transparent 100%), radial-gradient(ellipse 12.07% 12.07% at 18.75% 81.25%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 18.75% 35.08%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 18.75% 64.92%, #000 100%, transparent 100%), radial-gradient(ellipse 12.07% 12.07% at 81.25% 18.75%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 35.08% 18.75%, #000 100%, transparent 100%), radial-gradient(ellipse 2.51% 2.51% at 64.92% 18.75%, #000 100%, transparent 100%), radial-gradient(ellipse 12.07% 12.07% at 18.75% 18.75%, #000 100%, transparent 100%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

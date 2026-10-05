@@ -1,0 +1,65 @@
+{
+  "name": "Silver Dollar",
+  "slug": "silverdollar",
+  "galleryOrder": 4104,
+  "galleryWhite": true,
+  "description": "Eucalyptus stems climbing the sheet behind round coin leaves, the coins alternating single and in pairs.",
+  "tags": [
+    "circles",
+    "dots",
+    "lines",
+    "grid"
+  ],
+  "mood": [
+    "calm",
+    "elegant"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "wallpaper",
+    "textile"
+  ],
+  "palette": [
+    "#1F2B2A",
+    "#C9A27E",
+    "#9DB4AB",
+    "#C9D6CF",
+    "#6F8F86",
+    "#E5EDE8"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { background: linear-gradient(90deg, transparent 0 47.5%, var(--color1) 47.5% 52.5%, transparent 52.5%); :before { content: ''; position: absolute; left: @match((x + y) % 2 == 0, 50%, 26%); top: 50%; width: @match((x + y) % 2 == 0, @rn(58, 76, 2)%, 47%); height: @match((x + y) % 2 == 0, @rn(58, 76, 2)%, 47%); border-radius: 50%; background: @p(var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: 74%; top: 50%; width: 47%; height: 47%; border-radius: 50%; background: @p(var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); opacity: @match((x + y) % 2 == 0, 0, 1); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "name": "Hemp Leaf",
+  "slug": "hempleaf",
+  "galleryOrder": 4026,
+  "description": "Fine lines radiating twelve ways from every point of a hexagonal grid, joining into six-pointed stars of slender leaves.",
+  "tags": [
+    "lattice",
+    "stars",
+    "lines"
+  ],
+  "mood": [
+    "elegant",
+    "calm"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "wallpaper",
+    "textile",
+    "card-texture"
+  ],
+  "palette": [
+    "#F4EDE1",
+    "#1F3A5F",
+    "#C8553D",
+    "#E9B44C",
+    "#3C6E71"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @y(even) { -webkit-transform: translateX(50%); transform: translateX(50%); } @random(${shapeFrequency}) { :before { content: ''; position: absolute; left: 0; top: -16.67%; width: 100%; height: 133.33%; background: @p(var(--color1), var(--color2), var(--color3), var(--color4)); -webkit-clip-path: @var(--star); clip-path: @var(--star); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: -100%; top: -16.67%; width: 100%; height: 133.33%; background: @p(var(--color1), var(--color2), var(--color3), var(--color4)); -webkit-clip-path: @var(--star); clip-path: @var(--star); opacity: @match(x == 1, 1, 0); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --star: polygon(-3.81% 25.57%, -0.76% 22.14%, 42.91% 43.98%, 21.31% 11.58%, 26.23% 9.73%, 47.25% 41.26%, 47.25% -2.06%, 52.75% -2.06%, 52.75% 41.26%, 73.77% 9.73%, 78.69% 11.58%, 57.09% 43.98%, 100.76% 22.14%, 103.81% 25.57%, 59.08% 47.94%, 102.75% 47.94%, 102.75% 52.06%, 59.08% 52.06%, 103.81% 74.43%, 100.76% 77.86%, 57.09% 56.02%, 78.69% 88.42%, 73.77% 90.27%, 52.75% 58.74%, 52.75% 102.06%, 47.25% 102.06%, 47.25% 58.74%, 26.23% 90.27%, 21.31% 88.42%, 42.91% 56.02%, -0.76% 77.86%, -3.81% 74.43%, 40.92% 52.06%, -2.75% 52.06%, -2.75% 47.94%, 40.92% 47.94%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

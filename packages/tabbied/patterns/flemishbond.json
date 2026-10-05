@@ -1,0 +1,65 @@
+{
+  "name": "Flemish Bond",
+  "slug": "flemishbond",
+  "galleryOrder": 4125,
+  "description": "A brick wall in Flemish bond, stretchers and dark burnt headers alternating in every course so the headers line up into a diagonal diaper.",
+  "tags": [
+    "blocks",
+    "grid",
+    "diamonds"
+  ],
+  "mood": [
+    "calm",
+    "retro"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "wallpaper",
+    "card-texture",
+    "textile"
+  ],
+  "palette": [
+    "#D9D2C3",
+    "#2E2224",
+    "#4A2C26",
+    "#B4533A",
+    "#C76B45",
+    "#9C4330",
+    "#D9895E"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 7,
+    "default": 7
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "5x8",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { :after { content: ''; position: absolute; left: -50%; top: 0%; width: 166.667%; height: 100%; background: @p(var(--color3), var(--color4), var(--color5), var(--color6)); -webkit-mask: @var(--st); mask: @var(--st); -webkit-transition: ease 450ms; transition: ease 450ms; } :before { content: ''; position: absolute; inset: 0; background: @p(var(--color1), var(--color2)); -webkit-mask: @var(--hd); mask: @var(--hd); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --st: linear-gradient(#000, #000) 48.356% 0% / 37.96% 21.6% no-repeat, linear-gradient(#000, #000) 96.712% 31.888% / 37.96% 21.6% no-repeat, linear-gradient(#000, #000) 0% 31.888% / 37.96% 21.6% no-repeat, linear-gradient(#000, #000) 48.356% 63.776% / 37.96% 21.6% no-repeat, linear-gradient(#000, #000) 96.712% 95.663% / 37.96% 21.6% no-repeat, linear-gradient(#000, #000) 0% 95.663% / 37.96% 21.6% no-repeat; --hd: linear-gradient(#000, #000) 95.147% 0% / 29.933% 21.6% no-repeat, linear-gradient(#000, #000) 23.787% 31.888% / 29.933% 21.6% no-repeat, linear-gradient(#000, #000) 95.147% 63.776% / 29.933% 21.6% no-repeat, linear-gradient(#000, #000) 23.787% 95.663% / 29.933% 21.6% no-repeat; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "name": "Breeze Block",
+  "slug": "breezeblock",
+  "galleryOrder": 4131,
+  "galleryWhite": true,
+  "description": "Mid-century concrete screen blocks pierced with four petals and a round eye, the petals of neighboring blocks meeting as flowers at every joint.",
+  "tags": [
+    "petals",
+    "squares",
+    "grid",
+    "circles"
+  ],
+  "mood": [
+    "retro",
+    "calm"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "wallpaper",
+    "textile",
+    "packaging"
+  ],
+  "palette": [
+    "#263A3A",
+    "#ECE5D3",
+    "#E0D7C1",
+    "#F4EFE3",
+    "#E9B44C"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "sizing": {
+    "minCellPx": 40
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "5x8",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { :before { content: ''; position: absolute; left: -20.711%; top: -20.711%; width: 141.421%; height: 141.421%; transform: rotate(45deg); background: @p(var(--color1), var(--color1), var(--color2), var(--color2), var(--color3), var(--color4)); -webkit-clip-path: @var(--bc); clip-path: @var(--bc); -webkit-mask: @var(--bh); mask: @var(--bh); -webkit-mask-composite: source-in; mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --bc: polygon(2.6% 50%, 50% 2.6%, 97.4% 50%, 50% 97.4%); --bh: radial-gradient(15% 7.4% at 20% 50%, transparent 100%, #000 100%), radial-gradient(15% 7.4% at 80% 50%, transparent 100%, #000 100%), radial-gradient(7.4% 15% at 50% 20%, transparent 100%, #000 100%), radial-gradient(7.4% 15% at 50% 80%, transparent 100%, #000 100%), radial-gradient(9.5% 9.5% at 50% 50%, transparent 100%, #000 100%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

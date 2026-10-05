@@ -1,0 +1,67 @@
+{
+  "name": "Tartan",
+  "slug": "tartan",
+  "galleryOrder": 4000,
+  "galleryWhite": true,
+  "description": "A tartan sett: warp bands of three widths crossed by a translucent weft in the same order, mixing where they meet, under a fine light overcheck.",
+  "tags": [
+    "stripes",
+    "grid",
+    "squares",
+    "lines"
+  ],
+  "mood": [
+    "bold",
+    "retro"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "textile",
+    "packaging",
+    "wallpaper"
+  ],
+  "palette": [
+    "#141B26",
+    "#B3262C",
+    "#2B4C8C",
+    "#1E5B43",
+    "#7A2E2A",
+    "#E2B33C",
+    "#EFE6D2"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 7,
+    "default": 7
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --ka: @pd(@p(var(--color1), var(--color2))); --kb: @pd(@p(var(--color3), var(--color4))); --kc: @pd(@p(var(--color5), var(--color6))); --ko: @pd(@p(var(--color5), var(--color6))); --wx: @match((x) % 4 == 0, @var(--ka), (x) % 4 == 1, @var(--kb), (x) % 4 == 2, @var(--kc), @var(--kb)); --wy: @match((y) % 4 == 0, @var(--ka), (y) % 4 == 1, @var(--kb), (y) % 4 == 2, @var(--kc), @var(--kb)); --sx: @match(x % 4 == 0, 64%, x % 4 == 2, 24%, 42%); --sy: @match(y % 4 == 0, 64%, y % 4 == 2, 24%, 42%); @random(${shapeFrequency}) { :before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: @var(--sx); background-color: @p(@var(--wx)); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background-color: @var(--wy); background-image: linear-gradient(90deg, transparent 0 84%, @var(--ko) 84% 88%, transparent 88%), linear-gradient(180deg, transparent 0 84%, @var(--ko) 84% 88%, transparent 88%); opacity: .6; -webkit-mask: linear-gradient(180deg, #000 0 @var(--sy), transparent @var(--sy)), linear-gradient(90deg, transparent 0, transparent 84%, #000 84% 88%, transparent 88%), linear-gradient(180deg, transparent 0, transparent 84%, #000 84% 88%, transparent 88%); mask: linear-gradient(180deg, #000 0 @var(--sy), transparent @var(--sy)), linear-gradient(90deg, transparent 0, transparent 84%, #000 84% 88%, transparent 88%), linear-gradient(180deg, transparent 0, transparent 84%, #000 84% 88%, transparent 88%); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

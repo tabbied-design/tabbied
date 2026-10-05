@@ -1,0 +1,62 @@
+{
+  "name": "Dit Dah",
+  "slug": "ditdah",
+  "galleryOrder": 4261,
+  "description": "Rows of dots and dashes like a telegraph tape, two lines of marks to a row of cells, mostly in one ink with the odd mark picked out in another.",
+  "tags": [
+    "dots",
+    "lines",
+    "stripes"
+  ],
+  "mood": [
+    "technical",
+    "calm"
+  ],
+  "density": "sparse",
+  "goodFor": [
+    "hero-background",
+    "section-divider",
+    "card-texture"
+  ],
+  "palette": [
+    "#FBF6EC",
+    "#2A2A2A",
+    "#D1495B",
+    "#EDAE49"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 4,
+    "default": 4
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "8x12",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { :before { content: ''; position: absolute; left: 14%; top: 21%; height: 17%; width: @p(17%, 17%, 66%); border-radius: 99px; background: @p(var(--color1), var(--color1), var(--color1), var(--color2), var(--color3)); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: 14%; top: 62%; height: 17%; width: @p(17%, 17%, 66%); border-radius: 99px; background: @p(var(--color1), var(--color1), var(--color1), var(--color2), var(--color3)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

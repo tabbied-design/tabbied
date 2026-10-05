@@ -1,0 +1,63 @@
+{
+  "name": "Pythagorean",
+  "slug": "pythagorean",
+  "galleryOrder": 4236,
+  "description": "The Pythagorean tiling: big and small squares, both turned off the grid, locking together so every small square sits in the notch between four big ones.",
+  "tags": [
+    "squares",
+    "mosaic",
+    "grid"
+  ],
+  "mood": [
+    "calm",
+    "elegant"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "wallpaper",
+    "textile"
+  ],
+  "palette": [
+    "#EFE7DA",
+    "#5B3A29",
+    "#A0522D",
+    "#D9A066",
+    "#6B7F3A",
+    "#2F4858"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --gate: @r(1); @random(${shapeFrequency}) { :before { content: ''; position: absolute; left: -100%; top: -100%; width: 300%; height: 300%; background: @p(var(--color1), var(--color5)); -webkit-clip-path: polygon(48.12% 36.84%, 63.16% 48.12%, 51.88% 63.16%, 36.84% 51.88%); clip-path: polygon(48.12% 36.84%, 63.16% 48.12%, 51.88% 63.16%, 36.84% 51.88%); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: -100%; top: -100%; width: 300%; height: 300%; background: @p(var(--color2), var(--color3), var(--color4)); -webkit-clip-path: polygon(64.12% 48.84%, 84.49% 64.12%, 69.21% 84.49%, 48.84% 69.21%, 64.12% 48.84%, @calc(round((64.12 - 33.33 * max(0, 2 - @x)) * 100) / 100)% 48.84%, @calc(round((64.12 - 12.96 * max(0, 2 - @x)) * 100) / 100)% @calc(round((48.84 + 15.28 * max(0, 2 - @x)) * 100) / 100)%, @calc(round((64.12 - 28.24 * max(0, 2 - @x)) * 100) / 100)% @calc(round((48.84 + 35.65 * max(0, 2 - @x)) * 100) / 100)%, @calc(round((64.12 - 48.61 * max(0, 2 - @x)) * 100) / 100)% @calc(round((48.84 + 20.37 * max(0, 2 - @x)) * 100) / 100)%, @calc(round((64.12 - 33.33 * max(0, 2 - @x)) * 100) / 100)% 48.84%, 64.12% @calc(round((48.84 - 33.33 * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 + 20.37 * max(0, 2 - @y)) * 100) / 100)% @calc(round((48.84 - 18.05 * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 + 5.09 * max(0, 2 - @y)) * 100) / 100)% @calc(round((48.84 + 2.32 * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 - 15.28 * max(0, 2 - @y)) * 100) / 100)% @calc(round((48.84 - 12.96 * max(0, 2 - @y)) * 100) / 100)%, 64.12% @calc(round((48.84 - 33.33 * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 - 33.33 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)% @calc(round((48.84 - 33.33 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 - 12.96 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)% @calc(round((48.84 - 18.05 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 - 28.24 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)% @calc(round((48.84 + 2.32 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 - 48.61 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)% @calc(round((48.84 - 12.96 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 - 33.33 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)% @calc(round((48.84 - 33.33 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)%, 64.12% @calc(round((48.84 - 33.33 * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 - 33.33 * max(0, 2 - @x)) * 100) / 100)% 48.84%); clip-path: polygon(64.12% 48.84%, 84.49% 64.12%, 69.21% 84.49%, 48.84% 69.21%, 64.12% 48.84%, @calc(round((64.12 - 33.33 * max(0, 2 - @x)) * 100) / 100)% 48.84%, @calc(round((64.12 - 12.96 * max(0, 2 - @x)) * 100) / 100)% @calc(round((48.84 + 15.28 * max(0, 2 - @x)) * 100) / 100)%, @calc(round((64.12 - 28.24 * max(0, 2 - @x)) * 100) / 100)% @calc(round((48.84 + 35.65 * max(0, 2 - @x)) * 100) / 100)%, @calc(round((64.12 - 48.61 * max(0, 2 - @x)) * 100) / 100)% @calc(round((48.84 + 20.37 * max(0, 2 - @x)) * 100) / 100)%, @calc(round((64.12 - 33.33 * max(0, 2 - @x)) * 100) / 100)% 48.84%, 64.12% @calc(round((48.84 - 33.33 * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 + 20.37 * max(0, 2 - @y)) * 100) / 100)% @calc(round((48.84 - 18.05 * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 + 5.09 * max(0, 2 - @y)) * 100) / 100)% @calc(round((48.84 + 2.32 * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 - 15.28 * max(0, 2 - @y)) * 100) / 100)% @calc(round((48.84 - 12.96 * max(0, 2 - @y)) * 100) / 100)%, 64.12% @calc(round((48.84 - 33.33 * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 - 33.33 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)% @calc(round((48.84 - 33.33 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 - 12.96 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)% @calc(round((48.84 - 18.05 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 - 28.24 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)% @calc(round((48.84 + 2.32 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 - 48.61 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)% @calc(round((48.84 - 12.96 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 - 33.33 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)% @calc(round((48.84 - 33.33 * max(0, 2 - @x) * max(0, 2 - @y)) * 100) / 100)%, 64.12% @calc(round((48.84 - 33.33 * max(0, 2 - @y)) * 100) / 100)%, @calc(round((64.12 - 33.33 * max(0, 2 - @x)) * 100) / 100)% 48.84%); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

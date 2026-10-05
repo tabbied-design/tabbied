@@ -1,0 +1,65 @@
+{
+  "name": "Imposition",
+  "slug": "imposition",
+  "galleryOrder": 4253,
+  "description": "A press sheet of printed cards before trimming: bold modernist cards in four inks, crop marks at every corner and a small register ring where the gutters cross.",
+  "tags": [
+    "squares",
+    "circles",
+    "lines",
+    "grid"
+  ],
+  "mood": [
+    "technical",
+    "bold"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "poster",
+    "packaging",
+    "card-texture"
+  ],
+  "palette": [
+    "#FFF8EE",
+    "#E63946",
+    "#1D3557",
+    "#457B9D",
+    "#A8DADC",
+    "#F4A261"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "5x7",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { :before { content: ''; position: absolute; inset: 0; background: @p(var(--color2)); -webkit-mask: @var(--crop); mask: @var(--crop); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 17%; background: @p(var(--color1), var(--color3), var(--color4), var(--color5)); -webkit-mask: @p(@var(--m0), @var(--m1), @var(--m2), @var(--m3), @var(--m4)); mask: @p(@var(--m0), @var(--m1), @var(--m2), @var(--m3), @var(--m4)); -webkit-transform: rotate(@p(0deg, 90deg, 180deg, 270deg)); transform: rotate(@p(0deg, 90deg, 180deg, 270deg)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --crop: linear-gradient(#000, #000) 2.25% 16.53% / 11% 1.4% no-repeat, linear-gradient(#000, #000) 16.53% 2.25% / 1.4% 11% no-repeat, linear-gradient(#000, #000) 2.25% 83.47% / 11% 1.4% no-repeat, linear-gradient(#000, #000) 16.53% 97.75% / 1.4% 11% no-repeat, linear-gradient(#000, #000) 97.75% 16.53% / 11% 1.4% no-repeat, linear-gradient(#000, #000) 83.47% 2.25% / 1.4% 11% no-repeat, linear-gradient(#000, #000) 97.75% 83.47% / 11% 1.4% no-repeat, linear-gradient(#000, #000) 83.47% 97.75% / 1.4% 11% no-repeat, radial-gradient(7% 7% at 0% 0%, transparent 62%, #000 62% 84%, transparent 84%), radial-gradient(7% 7% at 100% 0%, transparent 62%, #000 62% 84%, transparent 84%), radial-gradient(7% 7% at 0% 100%, transparent 62%, #000 62% 84%, transparent 84%), radial-gradient(7% 7% at 100% 100%, transparent 62%, #000 62% 84%, transparent 84%); --m0: linear-gradient(#000, #000); --m1: radial-gradient(circle at 74% 30%, transparent 17%, #000 17%); --m2: linear-gradient(180deg, #000 0 56%, transparent 56% 70%, #000 70%); --m3: linear-gradient(90deg, #000 0 38%, transparent 38%), radial-gradient(circle at 72% 50%, #000 22%, transparent 22%); --m4: conic-gradient(from 45deg, #000 0 180deg, transparent 180deg); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "name": "Ammonite",
+  "slug": "ammonite",
+  "galleryOrder": 4121,
+  "description": "Coiled ammonite fossils, each a spiral groove winding out from the center, its outer whorls crossed by radial ribs.",
+  "tags": [
+    "spirals",
+    "circles",
+    "radial"
+  ],
+  "mood": [
+    "organic",
+    "calm"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "textile",
+    "card-texture"
+  ],
+  "palette": [
+    "#E9E4DA",
+    "#7F5539",
+    "#9C6644",
+    "#B08968",
+    "#DDB892",
+    "#3E2723"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "sizing": {
+    "minCellPx": 50
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --k: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); @random(${shapeFrequency}) { -webkit-mask: @var(--ribs), radial-gradient(24% 24% at 48% 50%, #000 100%, transparent 100%); mask: @var(--ribs), radial-gradient(24% 24% at 48% 50%, #000 100%, transparent 100%); -webkit-transform: translate(@r(-6, 6)%, @r(-6, 6)%) rotate(@r(0, 360)deg) scale(@rn(0.75, 1.08, 3)); transform: translate(@r(-6, 6)%, @r(-6, 6)%) rotate(@r(0, 360)deg) scale(@rn(0.75, 1.08, 3)); :before { content: ''; position: absolute; left: 4%; top: 6%; width: 88%; height: 88%; border-radius: 50%; background: @p(@var(--k)); -webkit-mask: repeating-radial-gradient(circle closest-side at 50% 50%, #000 0 15%, transparent 15% 19%), linear-gradient(180deg, #000 0 50%, transparent 50%); mask: repeating-radial-gradient(circle closest-side at 50% 50%, #000 0 15%, transparent 15% 19%), linear-gradient(180deg, #000 0 50%, transparent 50%); -webkit-mask-composite: source-in; mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: 8.18%; top: 6%; width: 88%; height: 88%; border-radius: 50%; background: @p(@var(--k)); -webkit-mask: repeating-radial-gradient(circle closest-side at 50% 50%, #000 0 5.5%, transparent 5.5% 9.5%, #000 9.5% 19%), linear-gradient(180deg, transparent 0 50%, #000 50%); mask: repeating-radial-gradient(circle closest-side at 50% 50%, #000 0 5.5%, transparent 5.5% 9.5%, #000 9.5% 19%), linear-gradient(180deg, transparent 0 50%, #000 50%); -webkit-mask-composite: source-in; mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --ribs: conic-gradient(from 0deg at 48% 50%, #000 0deg 12deg, transparent 12deg 15deg, #000 15deg 27deg, transparent 27deg 30deg, #000 30deg 42deg, transparent 42deg 45deg, #000 45deg 57deg, transparent 57deg 60deg, #000 60deg 72deg, transparent 72deg 75deg, #000 75deg 87deg, transparent 87deg 90deg, #000 90deg 102deg, transparent 102deg 105deg, #000 105deg 117deg, transparent 117deg 120deg, #000 120deg 132deg, transparent 132deg 135deg, #000 135deg 147deg, transparent 147deg 150deg, #000 150deg 162deg, transparent 162deg 165deg, #000 165deg 177deg, transparent 177deg 180deg, #000 180deg 192deg, transparent 192deg 195deg, #000 195deg 207deg, transparent 207deg 210deg, #000 210deg 222deg, transparent 222deg 225deg, #000 225deg 237deg, transparent 237deg 240deg, #000 240deg 252deg, transparent 252deg 255deg, #000 255deg 267deg, transparent 267deg 270deg, #000 270deg 282deg, transparent 282deg 285deg, #000 285deg 297deg, transparent 297deg 300deg, #000 300deg 312deg, transparent 312deg 315deg, #000 315deg 327deg, transparent 327deg 330deg, #000 330deg 342deg, transparent 342deg 345deg, #000 345deg 357deg, transparent 357deg 360deg); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

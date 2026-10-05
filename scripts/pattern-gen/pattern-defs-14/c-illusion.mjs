@@ -80,20 +80,24 @@ const stripeL = (angle, on, period, inv = false) =>
   })`;
 
 /**
- * Stripes of a warped checker column: W0 and W1 are the warped coordinate
- * (in checker columns) at the cell's two edges, `par` adds a column for the
- * other parity. Ink where floor(W) is even. The repeat is two columns long
- * and starts at 0 whatever the phase, so the stripes meet the next cell.
+ * A number worked out once per cell. css-doodle evaluates every @calc on its
+ * own, so an expression repeated across a dozen gradient stops is a dozen
+ * evaluations; `--name: $(...)` stores it on the cell, and $(name)
+ * reads it back as a number in the expressions that follow.
  */
-const warpL = (angle, W0, W1, par) => {
-  const s = `((${W1}) - (${W0}))`;
-  const L = `(200 / ${s})`;
-  const z = `(((${W0}) + ${par}) / 2)`;
-  const ph = `(${z} - floor(${z}))`;
-  const a = K(`max(0, 0.5 - ${ph}) * ${L}`);
-  const b = K(`(1 - ${ph}) * ${L}`);
-  const c = K(`min(1, 1.5 - ${ph}) * ${L}`);
-  return `repeating-linear-gradient(${angle}, #000 0 ${a}%, transparent ${a}% ${b}%, #000 ${b}% ${c}%, transparent ${c}% ${K(L)}%)`;
+const once = (e, places = 2) => `$(round((${e}) * ${10 ** places}) / ${10 ** places})`;
+
+/**
+ * A warped checker column's stripes, from the cell's two-column repeat `L`
+ * (percent) and the phase `ph` (0-1) it starts at. Ink where floor(W) is
+ * even; the repeat starts at 0 whatever the phase, so the stripes meet the
+ * next cell.
+ */
+const warpV = (angle, L, ph) => {
+  const a = once(`max(0, 0.5 - ${ph}) * ${L}`);
+  const b = once(`(1 - ${ph}) * ${L}`);
+  const c = once(`min(1, 1.5 - ${ph}) * ${L}`);
+  return `repeating-linear-gradient(${angle}, #000 0 ${a}%, transparent ${a}% ${b}%, #000 ${b}% ${c}%, transparent ${c}% $(${L})%)`;
 };
 /** A smooth monotone warp of 0-1 onto 0-1, dense around t0 when a > 0. */
 const warp = (t, a, t0 = 0.5) => `((${t}) + ${a} * sin(2 * PI * ((${t}) - (${t0}))) / (2 * PI))`;
@@ -182,13 +186,19 @@ add(
   'Lens Check',
   'A checkerboard swelling toward the middle of the sheet as if seen through a lens, its squares shrinking toward every edge.',
   () => {
-    const Wx0 = `(1.2 * @X) * ${warp('(@x - 1) / @X', -0.72)}`;
-    const Wx1 = `(1.2 * @X) * ${warp('@x / @X', -0.72)}`;
-    const Wy0 = `(1.2 * @Y) * ${warp('(@y - 1) / @Y', -0.72)}`;
-    const Wy1 = `(1.2 * @Y) * ${warp('@y / @Y', -0.72)}`;
+    // Per cell, once: the warped coordinate at both edges (ax, bx), the
+    // two-column repeat (lx) and the phase the cell starts at (kx; jx for the
+    // other parity), the same down the rows, and from those the four stripe
+    // layers. The layers are kept on the cell and read by both pseudos with
+    // @var, so the prefixed and plain mask share one evaluation.
+    const W = (t, n) => `(1.2 * ${n} * ${warp(t, -0.72)})`;
+    const axis = (v, edge0, edge1, n) =>
+      `--a${v}: ${once(W(edge0, n), 4)}; --b${v}: ${once(W(edge1, n), 4)}; --l${v}: ${once(`200 / (b${v} - a${v})`)}; --k${v}: ${once(`a${v} / 2 - floor(a${v} / 2)`, 4)}; --j${v}: ${once(`k${v} + 0.5 - floor(k${v} + 0.5)`, 4)};`;
+    const layers = `--sk: ${warpV('90deg', 'lx', 'kx')}; --sj: ${warpV('90deg', 'lx', 'jx')}; --tk: ${warpV('180deg', 'ly', 'ky')}; --tj: ${warpV('180deg', 'ly', 'jy')};`;
+    const vars = `${axis('x', '(@x - 1) / @X', '@x / @X', '@X')} ${axis('y', '(@y - 1) / @Y', '@y / @Y', '@Y')} ${layers}`;
     return {
-      rule: `${F} { ${B(`inset: 0; background: ${pick(1, 1, 2)}; ${mskI(warpL('90deg', Wx0, Wx1, 0), warpL('180deg', Wy0, Wy1, 1))}`)} ${A(
-        `inset: 0; background: @lp(); ${mskI(warpL('90deg', Wx0, Wx1, 1), warpL('180deg', Wy0, Wy1, 0))}`
+      rule: `${vars} ${F} { ${B(`inset: 0; background: ${pick(1, 1, 2)}; ${mskI('@var(--sk)', '@var(--tj)')}`)} ${A(
+        `inset: 0; background: @lp(); ${mskI('@var(--sj)', '@var(--tk)')}`
       )} }${TR}`,
     };
   },
@@ -199,35 +209,30 @@ add(
 
 // Diamonds: the L1 rings around the middle, each band a slit polygon (outer
 // diamond one way, inner the other), in sheet coordinates.
-const P2 = (X, Y) => `${K(`100 * (${X}) + ${CX}`)}% ${K(`100 * (${Y}) + ${CY}`)}%`;
-const diamondRing = (c1, c2) =>
-  `polygon(${[
-    [c2, 0],
-    [0, c2],
-    [`0 - ${c2}`, 0],
-    [0, `0 - ${c2}`],
-    [c2, 0],
-    [c1, 0],
-    [0, `0 - ${c1}`],
-    [`0 - ${c1}`, 0],
-    [0, c1],
-    [c1, 0],
-  ]
-    .map(([x, y]) => P2(x, y))
-    .join(', ')})`;
 add(
   'Diamond Ripple',
   'Nested diamonds spreading from the middle of the sheet, their bands swelling and thinning as they go out.',
   (c) => {
-    // A cell spans two bands of the ripple; these are the two it holds.
-    const base = '(abs(@dx) + abs(@dy) - 1)';
-    const band = (k) => {
-      const d = `(${base} + ${k})`;
-      const h = `(0.1 + 0.32 * (0.5 + 0.5 * cos(PI * ${d} / ${RC} * 1.5)))`;
-      return diamondRing(`max(0, ${d} - ${h})`, `max(0, ${d} + ${h})`);
+    // A cell spans two bands of the ripple; these are the two it holds. The
+    // middle of the sheet (cx, cy) and each band's inner and outer radius
+    // (ia/oa, ib/ob, in cell percent) are worked out once per cell.
+    const band = (k, d, h, i, o) => {
+      const dv = `--${d}: ${once(`abs(@dx) + abs(@dy) - 1 + ${k}`)};`;
+      const hv = `--${h}: ${once(`0.1 + 0.32 * (0.5 + 0.5 * cos(PI * ${d} / ${RC} * 1.5))`, 4)};`;
+      const rv = `--${o}: ${once(`100 * max(0, ${d} + ${h})`)}; --${i}: ${once(`100 * max(0, ${d} - ${h})`)};`;
+      return `${dv} ${hv} ${rv}`;
     };
+    const pt = (dx, dy) => `$(cx + ${dx})% $(cy + ${dy})%`;
+    const ring = (i, o) =>
+      `polygon(${[
+        [o, 0], [0, o], [`0 - ${o}`, 0], [0, `0 - ${o}`], [o, 0],
+        [i, 0], [0, `0 - ${i}`], [`0 - ${i}`, 0], [0, i], [i, 0],
+      ]
+        .map(([x, y]) => pt(x, y))
+        .join(', ')})`;
+    const vars = `--cx: $(50 - 100 * @dx); --cy: $(50 - 100 * @dy); ${band(0.5, 'da', 'ha', 'ia', 'oa')} ${band(1.5, 'db', 'hb', 'ib', 'ob')}`;
     return {
-      rule: `--a: ${ink(c)}; ${F} { ${B(`inset: 0; background: @var(--a); ${cp(band(0.5))}`)} ${A(`inset: 0; background: ${ink(c)}; ${cp(band(1.5))}`)} }${TR}`,
+      rule: `--a: ${ink(c)}; ${vars} ${F} { ${B(`inset: 0; background: @var(--a); ${cp(ring('ia', 'oa'))}`)} ${A(`inset: 0; background: ${ink(c)}; ${cp(ring('ib', 'ob'))}`)} }${TR}`,
     };
   },
   { pal: 13, inks: 3, grid: '6x9', tg: '8x8', meta: { tags: ['diamonds', 'concentric', 'stripes'], mood: ['bold', 'festive'], density: 'dense', goodFor: ['poster', 'og-image'] } }
@@ -494,19 +499,18 @@ add(
   'Ribbon Twist',
   'Upright ribbons twisting about their own length down the sheet, flashing a warm face and a cool back as they turn.',
   () => {
-    const th = (yy) => `(2 * PI * (1.6 * (${yy}) / @Y + 0.21 * @x))`;
-    const w0 = `(42 * cos(${th('@y - 1')}))`;
-    const w1 = `(42 * cos(${th('@y')}))`;
-    const t = K(`max(0, min(100, 100 * ${w0} / (${w0} - ${w1} + 0.0001)))`);
+    // Per cell: the ribbon's half-width at the top and bottom edges (wa, wb,
+    // negative once it has turned past edge-on), the same run on 2% past the
+    // cell (ea, eb) and where it crosses edge-on (tc), each worked out once.
+    const w = (yy) => once(`42 * cos(2 * PI * (1.6 * (${yy}) / @Y + 0.21 * @x))`, 3);
+    const vars = `--wa: ${w('@y - 1')}; --wb: ${w('@y')}; --ea: ${once('wa - (wb - wa) * 0.02')}; --eb: ${once('wb + (wb - wa) * 0.02')}; --tc: ${once('max(0, min(100, 100 * wa / (wa - wb + 0.0001)))')};`;
     // The edges run on 2% past the cell so the clip never lands on the
     // cell's own edge, where the browser would leave a seam between rows.
-    const e0 = `(${w0} - (${w1} - ${w0}) * 0.02)`;
-    const e1 = `(${w1} + (${w1} - ${w0}) * 0.02)`;
-    const bow = cp(`polygon(${K(`50 - ${e0}`)}% -2%, ${K(`50 + ${e0}`)}% -2%, ${K(`50 + ${e1}`)}% 102%, ${K(`50 - ${e1}`)}% 102%)`);
-    const face = (sgn) =>
-      `linear-gradient(180deg, @match(${sgn} * cos(2 * PI * (1.6 * (y - 1) / Y + 0.21 * x)) > 0, #000, transparent) 0 ${t}%, @match(${sgn} * cos(2 * PI * (1.6 * y / Y + 0.21 * x)) > 0, #000, transparent) ${t}% 100%)`;
+    const bow = cp('polygon($(50 - ea)% -2%, $(50 + ea)% -2%, $(50 + eb)% 102%, $(50 - eb)% 102%)');
+    const face = (cmp) =>
+      `linear-gradient(180deg, @match($(wa) ${cmp} 0, #000, transparent) 0 $(tc)%, @match($(wb) ${cmp} 0, #000, transparent) $(tc)% 100%)`;
     return {
-      rule: `--a: ${pick(1, 2)}; ${F} { ${B(`inset: 0; background: @var(--a); ${bow} ${msk(face(1))}`)} ${A(`inset: 0; background: ${pick(3, 4)}; ${bow} ${msk(face(-1))}`)} }${TR}`,
+      rule: `--a: ${pick(1, 2)}; ${vars} ${F} { ${B(`inset: 0; background: @var(--a); ${bow} ${msk(face('>'))}`)} ${A(`inset: 0; background: ${pick(3, 4)}; ${bow} ${msk(face('<'))}`)} }${TR}`,
     };
   },
   { palette: ['#FBF6EC', '#E4572E', '#F3A712', '#29335C', '#2E86AB'], grid: '8x12', tg: '8x8', meta: { tags: ['curves', 'stripes', 'diamonds'], mood: ['playful'], density: 'medium', goodFor: ['poster', 'packaging'] } }

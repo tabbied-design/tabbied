@@ -1,0 +1,64 @@
+{
+  "name": "Star And Cross",
+  "slug": "starandcross",
+  "galleryOrder": 4043,
+  "description": "Zellige tilework: eight-pointed stars point to point, the cross-shaped spaces between them left open, each star holding a smaller star and a round hole.",
+  "tags": [
+    "stars",
+    "crosses",
+    "mosaic",
+    "grid"
+  ],
+  "mood": [
+    "bold",
+    "elegant"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "wallpaper",
+    "packaging",
+    "poster"
+  ],
+  "palette": [
+    "#F3EEE4",
+    "#1B5E5A",
+    "#1D3E7A",
+    "#C8892B",
+    "#2B2B2B"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { :before { content: ''; position: absolute; inset: 0; background: @p(var(--color1), var(--color2), var(--color3), var(--color4)); -webkit-clip-path: @var(--star); clip-path: @var(--star); -webkit-mask: radial-gradient(circle closest-side, transparent 16%, #000 16%); mask: radial-gradient(circle closest-side, transparent 16%, #000 16%); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 25%; background: @p(var(--color1), var(--color2), var(--color3), var(--color4)); -webkit-clip-path: @var(--star); clip-path: @var(--star); -webkit-mask: radial-gradient(circle closest-side, transparent 32%, #000 32%); mask: radial-gradient(circle closest-side, transparent 32%, #000 32%); -webkit-transform: rotate(22.5deg); transform: rotate(22.5deg); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --star: polygon(50% -0.01%, 64.65% 14.64%, 85.36% 14.64%, 85.36% 35.35%, 100.01% 50%, 85.36% 64.65%, 85.36% 85.36%, 64.65% 85.36%, 50% 100.01%, 35.35% 85.36%, 14.64% 85.36%, 14.64% 64.65%, -0.01% 50%, 14.64% 35.35%, 14.64% 14.64%, 35.35% 14.64%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "name": "Regolith",
+  "slug": "regolith",
+  "galleryOrder": 4188,
+  "description": "A grey lunar surface pocked with craters of every size, each a raised rim with its inner wall in shadow on the side the light comes from.",
+  "tags": [
+    "circles",
+    "rings",
+    "semicircles",
+    "dots"
+  ],
+  "mood": [
+    "organic",
+    "calm"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "card-texture",
+    "wallpaper",
+    "textile"
+  ],
+  "palette": [
+    "#D8D4CB",
+    "#A29D93",
+    "#615D57",
+    "#BDB8AE"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 4,
+    "default": 4
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "7x10",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --s: @calc(@rn(0.35, 1.5, 1.3) * @r(0.45, 1.3)); --jx: @r(-22%, 22%); --jy: @r(-22%, 22%); z-index: @calc(round(120 - $(s) * 60)); @random(${shapeFrequency}) { background: radial-gradient(circle at @r(6, 94)% @r(6, 94)%, var(--color2) 0 2%, transparent 2.6%), radial-gradient(circle at @r(6, 94)% @r(6, 94)%, var(--color1) 0 1.6%, transparent 2.2%); :before { content: ''; position: absolute; inset: 8%; border-radius: 50%; background: @p(var(--color1), var(--color3)); mask: radial-gradient(ellipse 38% 38% at 50% 50%, transparent 100%, #000 100%); transform: translate(@var(--jx), @var(--jy)) scale(@var(--s)); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 8%; border-radius: 50%; background: var(--color2); mask: radial-gradient(ellipse 38% 38% at 50% 50%, #000 100%, transparent 100%), radial-gradient(ellipse 38% 38% at 60% 60%, transparent 100%, #000 100%); mask-composite: intersect; transform: translate(@var(--jx), @var(--jy)) scale(@var(--s)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

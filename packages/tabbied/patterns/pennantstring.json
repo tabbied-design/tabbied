@@ -1,0 +1,65 @@
+{
+  "name": "Pennant String",
+  "slug": "pennantstring",
+  "galleryOrder": 4296,
+  "description": "Strings of party bunting drooping across the sheet row under row, hung with bright pennants and swallowtail flags.",
+  "tags": [
+    "triangles",
+    "curves",
+    "lines"
+  ],
+  "mood": [
+    "festive",
+    "playful"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "section-divider",
+    "packaging",
+    "og-image"
+  ],
+  "palette": [
+    "#FFF8EC",
+    "#3D405B",
+    "#E63946",
+    "#F4A261",
+    "#2A9D8F",
+    "#E9C46A",
+    "#8E7DBE"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 7,
+    "default": 7
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --l: @calc((10 + (36 + 22 * ((@y % 3) / 2)) * 4 * ((@x - 1) / @X) * (1 - ((@x - 1) / @X)))); --r: @calc((10 + (36 + 22 * ((@y % 3) / 2)) * 4 * (@x / @X) * (1 - (@x / @X)))); :after { content: ''; position: absolute; left: 0; top: calc($(l) * 1% - 1.2%); width: $(sqrt(10000 + (r - l) * (r - l)))%; height: 2.4%; background: var(--color1); -webkit-transform-origin: 0 50%; transform-origin: 0 50%; -webkit-transform: rotate($(atan2(r - l, 100) * 57.29578)deg); transform: rotate($(atan2(r - l, 100) * 57.29578)deg); -webkit-transition: ease 450ms; transition: ease 450ms; } @random(${shapeFrequency}) { :before { content: ''; position: absolute; left: 8%; width: 84%; top: $((l + r) / 2)%; height: 82%; background: @p(var(--color2), var(--color3), var(--color4), var(--color5), var(--color6)); -webkit-clip-path: @p(@var(--pennant), @var(--swallow)); clip-path: @p(@var(--pennant), @var(--swallow)); -webkit-transform-origin: 50% 0; transform-origin: 50% 0; -webkit-transform: rotate($(atan2(r - l, 100) * 57.29578)deg); transform: rotate($(atan2(r - l, 100) * 57.29578)deg); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --pennant: polygon(10% 0%, 90% 0%, 70% 40%, 50% 80%, 30% 40%); --swallow: polygon(12% 0%, 88% 0%, 88% 74%, 50% 50%, 12% 74%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

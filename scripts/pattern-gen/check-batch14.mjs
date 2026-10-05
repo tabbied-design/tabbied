@@ -204,8 +204,12 @@ if (chosen.length && (flag('preview') || flag('cost'))) {
     }
 
     if (flag('cost')) {
-      // The same plate and budget as scripts/pattern-cost.mjs.
+      // The same plate and budget as scripts/pattern-cost.mjs, plus the
+      // timings it prints: generating and reshuffling are paid on every
+      // redraw in the editor and the gallery, so a design past TIME_MS on
+      // either is reported too (one machine's numbers, so a soft budget).
       const BUDGET = { cssKB: 300, nodes: 800 };
+      const TIME_MS = Number(process.env.TIME_MS) || 300;
       const page = await browser.newPage({ viewport: { width: 640, height: 720 } });
       await page.goto(`http://127.0.0.1:${port}/scripts/render-pattern.html`);
       for (const def of chosen) {
@@ -217,7 +221,14 @@ if (chosen.length && (flag('preview') || flag('cost'))) {
               (sum, s) => sum + s.textContent.length,
               0
             );
+          const layout = () => {
+            void stage.offsetHeight;
+            doodle()?.shadowRoot?.querySelector('cssd-grid, [part="grid"]')?.lastElementChild?.getBoundingClientRect();
+          };
+          const t0 = performance.now();
           await window.__render(d, { seed: 'cost01', fit: 'grid', width: 418, height: 646, cell: 36 });
+          layout();
+          const genMs = performance.now() - t0;
           let last = -1;
           let stable = 0;
           while (stable < 20) {
@@ -226,14 +237,28 @@ if (chosen.length && (flag('preview') || flag('cost'))) {
             stable = now === last ? stable + 1 : 0;
             last = now;
           }
-          return { cssKB: last / 1024, nodes: doodle()?.shadowRoot?.querySelectorAll('*').length ?? 0 };
+          const t1 = performance.now();
+          window.__controller.redraw('cost02');
+          await new Promise((r) => requestAnimationFrame(r));
+          layout();
+          const shuffleMs = performance.now() - t1;
+          return {
+            cssKB: last / 1024,
+            nodes: doodle()?.shadowRoot?.querySelectorAll('*').length ?? 0,
+            genMs,
+            shuffleMs,
+          };
         }, built.get(def.slug));
         const over = row.cssKB > BUDGET.cssKB || row.nodes > BUDGET.nodes;
+        const slow = row.genMs > TIME_MS || row.shuffleMs > TIME_MS;
         console.log(
-          `  cost ${def.slug.padEnd(22)} ${row.cssKB.toFixed(0).padStart(5)} KB ${String(row.nodes).padStart(5)} nodes${over ? '  OVER BUDGET' : ''}`
+          `  cost ${def.slug.padEnd(22)} ${row.cssKB.toFixed(0).padStart(5)} KB ${String(row.nodes).padStart(5)} nodes ${row.genMs.toFixed(0).padStart(6)} ms gen ${row.shuffleMs.toFixed(0).padStart(6)} ms shuffle${over ? '  OVER BUDGET' : ''}${slow ? '  SLOW' : ''}`
         );
         if (over) {
           problems.push(`${def.slug}: ${row.cssKB.toFixed(0)} KB of CSS, ${row.nodes} nodes (budget ${BUDGET.cssKB} KB, ${BUDGET.nodes} nodes)`);
+        }
+        if (slow) {
+          problems.push(`${def.slug}: ${row.genMs.toFixed(0)} ms to generate, ${row.shuffleMs.toFixed(0)} ms to reshuffle (soft budget ${TIME_MS} ms)`);
         }
       }
       await page.close();

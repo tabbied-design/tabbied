@@ -1,0 +1,70 @@
+{
+  "name": "Ablaq",
+  "slug": "ablaq",
+  "galleryOrder": 4146,
+  "galleryWhite": true,
+  "description": "Arcades in ablaq masonry: round arches whose wedge-shaped voussoirs alternate red brick and pale stone, on stout piers under a string course.",
+  "tags": [
+    "arcs",
+    "semicircles",
+    "stripes",
+    "radial"
+  ],
+  "mood": [
+    "bold",
+    "elegant"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "wallpaper",
+    "poster",
+    "section-divider"
+  ],
+  "palette": [
+    "#2A2320",
+    "#C4A276",
+    "#7E6347",
+    "#F6EEDC",
+    "#EDE1C6",
+    "#B8392A",
+    "#9A2E22"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 7,
+    "default": 7
+  },
+  "sizing": {
+    "minCellPx": 56
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "4x6",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { background: linear-gradient(180deg, var(--color2) 0 6%, transparent 6%), radial-gradient(33% 52.38% at 50% 100%, transparent 100%, var(--color1) 100%) 0 0 / 100% 63% no-repeat, linear-gradient(90deg, var(--color1) 0 17%, transparent 17% 83%, var(--color1) 83%); :before { content: ''; position: absolute; left: 0%; top: 13%; width: 100%; height: 100%; background: @p(var(--color3), var(--color4)); -webkit-mask: @var(--ae), @var(--ar); mask: @var(--ae), @var(--ar); -webkit-mask-composite: source-in; mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: 0%; top: 13%; width: 100%; height: 100%; background: @p(var(--color5), var(--color6)); -webkit-mask: @var(--ao), @var(--ar); mask: @var(--ao), @var(--ar); -webkit-mask-composite: source-in; mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --ae: conic-gradient(from -90deg at 50% 50%, transparent 0deg 0.9deg, #000 0.9deg 15.464deg, transparent 15.464deg 16.364deg, transparent 16.364deg 32.727deg, transparent 32.727deg 33.627deg, #000 33.627deg 48.191deg, transparent 48.191deg 49.091deg, transparent 49.091deg 65.455deg, transparent 65.455deg 66.355deg, #000 66.355deg 80.918deg, transparent 80.918deg 81.818deg, transparent 81.818deg 98.182deg, transparent 98.182deg 99.082deg, #000 99.082deg 113.645deg, transparent 113.645deg 114.545deg, transparent 114.545deg 130.909deg, transparent 130.909deg 131.809deg, #000 131.809deg 146.373deg, transparent 146.373deg 147.273deg, transparent 147.273deg 163.636deg, transparent 163.636deg 164.536deg, #000 164.536deg 179.1deg, transparent 179.1deg 180deg, transparent 180deg 360deg); --ao: conic-gradient(from -90deg at 50% 50%, transparent 0deg 16.364deg, transparent 16.364deg 17.264deg, #000 17.264deg 31.827deg, transparent 31.827deg 32.727deg, transparent 32.727deg 49.091deg, transparent 49.091deg 49.991deg, #000 49.991deg 64.555deg, transparent 64.555deg 65.455deg, transparent 65.455deg 81.818deg, transparent 81.818deg 82.718deg, #000 82.718deg 97.282deg, transparent 97.282deg 98.182deg, transparent 98.182deg 114.545deg, transparent 114.545deg 115.445deg, #000 115.445deg 130.009deg, transparent 130.009deg 130.909deg, transparent 130.909deg 147.273deg, transparent 147.273deg 148.173deg, #000 148.173deg 162.736deg, transparent 162.736deg 163.636deg, transparent 163.636deg 180deg, transparent 180deg 360deg); --ar: radial-gradient(circle closest-side, transparent 64%, #000 64% 100%, transparent 100%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

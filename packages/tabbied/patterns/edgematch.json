@@ -1,0 +1,65 @@
+{
+  "name": "Edge Match",
+  "slug": "edgematch",
+  "galleryOrder": 4245,
+  "galleryWhite": true,
+  "description": "An edge-matching puzzle: square tiles whose sides carry half-diamonds with round cut-out motifs, laid so every pair of halves meets its partner across the seams.",
+  "tags": [
+    "diamonds",
+    "circles",
+    "grid",
+    "mosaic"
+  ],
+  "mood": [
+    "playful",
+    "bold"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "packaging",
+    "poster"
+  ],
+  "palette": [
+    "#101C2C",
+    "#E2E8F0",
+    "#F6AD55",
+    "#63B3ED",
+    "#F56565",
+    "#68D391"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { :before { content: ''; position: absolute; --m: @p(0, 1, 2, 3); left: -100%; top: -100%; width: 300%; height: 300%; background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-clip-path: polygon(50.94% 50%, 66.67% 34.28%, 82.39% 50%, 66.67% 65.72%, 50.94% 50%, @calc(round((50.94 - 33.33 * max(0, 2 - @x)) * 100) / 100)% 50%, @calc(round((50.94 - 17.61 * max(0, 2 - @x)) * 100) / 100)% @calc(round((50 - 15.72 * max(0, 2 - @x)) * 100) / 100)%, @calc(round((50.94 - 1.89 * max(0, 2 - @x)) * 100) / 100)% 50%, @calc(round((50.94 - 17.61 * max(0, 2 - @x)) * 100) / 100)% @calc(round((50 + 15.72 * max(0, 2 - @x)) * 100) / 100)%, @calc(round((50.94 - 33.33 * max(0, 2 - @x)) * 100) / 100)% 50%); clip-path: polygon(50.94% 50%, 66.67% 34.28%, 82.39% 50%, 66.67% 65.72%, 50.94% 50%, @calc(round((50.94 - 33.33 * max(0, 2 - @x)) * 100) / 100)% 50%, @calc(round((50.94 - 17.61 * max(0, 2 - @x)) * 100) / 100)% @calc(round((50 - 15.72 * max(0, 2 - @x)) * 100) / 100)%, @calc(round((50.94 - 1.89 * max(0, 2 - @x)) * 100) / 100)% 50%, @calc(round((50.94 - 17.61 * max(0, 2 - @x)) * 100) / 100)% @calc(round((50 + 15.72 * max(0, 2 - @x)) * 100) / 100)%, @calc(round((50.94 - 33.33 * max(0, 2 - @x)) * 100) / 100)% 50%); -webkit-mask: @match($(m) == 0, @var(--ev0), $(m) == 1, @var(--ev1), $(m) == 2, @var(--ev2), @var(--ev3)); mask: @match($(m) == 0, @var(--ev0), $(m) == 1, @var(--ev1), $(m) == 2, @var(--ev2), @var(--ev3)); -webkit-mask-composite: source-in; mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; --m: @p(0, 1, 2, 3); left: -100%; top: -100%; width: 300%; height: 300%; background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-clip-path: polygon(34.28% 66.67%, 50% 50.94%, 65.72% 66.67%, 50% 82.39%, 34.28% 66.67%, 34.28% @calc(round((66.67 - 33.33 * max(0, 2 - @y)) * 100) / 100)%, @calc(round((34.28 + 15.72 * max(0, 2 - @y)) * 100) / 100)% @calc(round((66.67 - 49.06 * max(0, 2 - @y)) * 100) / 100)%, @calc(round((34.28 + 31.45 * max(0, 2 - @y)) * 100) / 100)% @calc(round((66.67 - 33.33 * max(0, 2 - @y)) * 100) / 100)%, @calc(round((34.28 + 15.72 * max(0, 2 - @y)) * 100) / 100)% @calc(round((66.67 - 17.61 * max(0, 2 - @y)) * 100) / 100)%, 34.28% @calc(round((66.67 - 33.33 * max(0, 2 - @y)) * 100) / 100)%); clip-path: polygon(34.28% 66.67%, 50% 50.94%, 65.72% 66.67%, 50% 82.39%, 34.28% 66.67%, 34.28% @calc(round((66.67 - 33.33 * max(0, 2 - @y)) * 100) / 100)%, @calc(round((34.28 + 15.72 * max(0, 2 - @y)) * 100) / 100)% @calc(round((66.67 - 49.06 * max(0, 2 - @y)) * 100) / 100)%, @calc(round((34.28 + 31.45 * max(0, 2 - @y)) * 100) / 100)% @calc(round((66.67 - 33.33 * max(0, 2 - @y)) * 100) / 100)%, @calc(round((34.28 + 15.72 * max(0, 2 - @y)) * 100) / 100)% @calc(round((66.67 - 17.61 * max(0, 2 - @y)) * 100) / 100)%, 34.28% @calc(round((66.67 - 33.33 * max(0, 2 - @y)) * 100) / 100)%); -webkit-mask: @match($(m) == 0, @var(--eh0), $(m) == 1, @var(--eh1), $(m) == 2, @var(--eh2), @var(--eh3)); mask: @match($(m) == 0, @var(--eh0), $(m) == 1, @var(--eh1), $(m) == 2, @var(--eh2), @var(--eh3)); -webkit-mask-composite: source-in; mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --ev0: linear-gradient(90deg, #000 32.67%, transparent 32.67% 34%, #000 34% 66%, transparent 66% 67.33%, #000 67.33%), radial-gradient(ellipse 5% 5% at 66.67% 50%, transparent 100%, #000 100%), radial-gradient(ellipse 5% 5% at 33.33% 50%, transparent 100%, #000 100%); --eh0: linear-gradient(180deg, #000 32.67%, transparent 32.67% 34%, #000 34% 66%, transparent 66% 67.33%, #000 67.33%), radial-gradient(ellipse 5% 5% at 50% 66.67%, transparent 100%, #000 100%), radial-gradient(ellipse 5% 5% at 50% 33.33%, transparent 100%, #000 100%); --ev1: linear-gradient(90deg, #000 32.67%, transparent 32.67% 34%, #000 34% 66%, transparent 66% 67.33%, #000 67.33%), radial-gradient(ellipse 5.67% 5.67% at 66.67% 50%, #000 0 38%, transparent 38% 100%, #000 100%), radial-gradient(ellipse 5.67% 5.67% at 33.33% 50%, #000 0 38%, transparent 38% 100%, #000 100%); --eh1: linear-gradient(180deg, #000 32.67%, transparent 32.67% 34%, #000 34% 66%, transparent 66% 67.33%, #000 67.33%), radial-gradient(ellipse 5.67% 5.67% at 50% 66.67%, #000 0 38%, transparent 38% 100%, #000 100%), radial-gradient(ellipse 5.67% 5.67% at 50% 33.33%, #000 0 38%, transparent 38% 100%, #000 100%); --ev2: linear-gradient(90deg, #000 32.67%, transparent 32.67% 34%, #000 34% 66%, transparent 66% 67.33%, #000 67.33%), radial-gradient(ellipse 7.33% 3.33% at 66.67% 50%, transparent 100%, #000 100%), radial-gradient(ellipse 7.33% 3.33% at 33.33% 50%, transparent 100%, #000 100%); --eh2: linear-gradient(180deg, #000 32.67%, transparent 32.67% 34%, #000 34% 66%, transparent 66% 67.33%, #000 67.33%), radial-gradient(ellipse 7.33% 3.33% at 50% 66.67%, transparent 100%, #000 100%), radial-gradient(ellipse 7.33% 3.33% at 50% 33.33%, transparent 100%, #000 100%); --ev3: linear-gradient(90deg, #000 32.67%, transparent 32.67% 34%, #000 34% 66%, transparent 66% 67.33%, #000 67.33%), radial-gradient(ellipse 3.33% 7.33% at 66.67% 50%, transparent 100%, #000 100%), radial-gradient(ellipse 3.33% 7.33% at 33.33% 50%, transparent 100%, #000 100%); --eh3: linear-gradient(180deg, #000 32.67%, transparent 32.67% 34%, #000 34% 66%, transparent 66% 67.33%, #000 67.33%), radial-gradient(ellipse 3.33% 7.33% at 50% 66.67%, transparent 100%, #000 100%), radial-gradient(ellipse 3.33% 7.33% at 50% 33.33%, transparent 100%, #000 100%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

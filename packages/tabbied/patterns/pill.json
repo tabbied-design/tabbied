@@ -1,0 +1,65 @@
+{
+  "name": "Pill",
+  "slug": "pill",
+  "galleryOrder": 4167,
+  "description": "Two-tone capsules, each half a different flat color, tossed across the sheet at every angle like a spilled bottle.",
+  "tags": [
+    "ovals",
+    "semicircles",
+    "blocks"
+  ],
+  "mood": [
+    "playful",
+    "retro"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "packaging",
+    "wallpaper",
+    "card-texture"
+  ],
+  "palette": [
+    "#FCE9EC",
+    "#E5446D",
+    "#FF9F1C",
+    "#3D348B",
+    "#2EC4B6",
+    "#FFFFFF",
+    "#1B998B"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 7,
+    "default": 7
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 0.85,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { transform: translate(@r(-12%, 12%), @r(-12%, 12%)) rotate(@r(0deg, 180deg)) scale(@r(1, 1.35)); z-index: @ri(1, 9); :before { content: ''; position: absolute; left: 12%; top: 37%; width: 38%; height: 26%; border-radius: 50% 0 0 50% / 50% 0 0 50%; background: @p(var(--color1), var(--color2), var(--color3)); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: 50%; top: 37%; width: 38%; height: 26%; border-radius: 0 50% 50% 0 / 0 50% 50% 0; background: @p(var(--color4), var(--color5), var(--color6)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

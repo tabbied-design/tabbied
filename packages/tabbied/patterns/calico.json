@@ -1,0 +1,65 @@
+{
+  "name": "Calico",
+  "slug": "calico",
+  "galleryOrder": 4020,
+  "galleryWhite": true,
+  "description": "A ditsy calico print: tiny five-petal flowers scattered at every angle, each with a bright eye, on a dark cotton ground.",
+  "tags": [
+    "petals",
+    "dots"
+  ],
+  "mood": [
+    "playful",
+    "organic"
+  ],
+  "density": "sparse",
+  "goodFor": [
+    "textile",
+    "wallpaper",
+    "packaging",
+    "hero-background"
+  ],
+  "palette": [
+    "#3A2B3F",
+    "#F4EBD9",
+    "#F2A7B5",
+    "#9FD3C7",
+    "#E8706F",
+    "#F6C85F"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --tx: @r(-18, 18)%; --ty: @r(-18, 18)%; --s: @r(.62, 1); --r: @r(0, 72)deg; @random(${shapeFrequency}) { :before { content: ''; position: absolute; left: 22%; top: 22%; width: 56%; height: 56%; background-color: @p(var(--color1), var(--color2), var(--color3), var(--color4)); -webkit-clip-path: @var(--flower); clip-path: @var(--flower); -webkit-transform: translate(@var(--tx), @var(--ty)) rotate(@var(--r)) scale(@var(--s)); transform: translate(@var(--tx), @var(--ty)) rotate(@var(--r)) scale(@var(--s)); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: 44%; top: 44%; width: 12%; height: 12%; border-radius: 50%; background-color: var(--color5); -webkit-transform: translate(@var(--tx), @var(--ty)) scale(@var(--s)); transform: translate(@var(--tx), @var(--ty)) scale(@var(--s)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --flower: @shape(split: 150; r: .38 + .62 * abs(cos(2.5t)); scale: .98); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

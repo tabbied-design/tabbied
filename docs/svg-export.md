@@ -309,12 +309,15 @@ should not reach for the construction on the left.
   stop stays at or under 100%.
 - **`repeat-x` / `repeat-y` on a mask layer is ignored**; tile both ways and
   intersect.
-- **`z-index` between neighboring cells is not honored**, so a design that
-  stacks one cell's shape over the next looks right and fails parity. Cut a
-  real gap where one strand passes under another, or keep the stacking
-  inside one cell.
+- **`z-index` works only inside a cell.** The converter paints cell after
+  cell, so a later cell's background covers an earlier cell's overflowing
+  pseudo-element even where z-index lifts it on screen, and the design looks
+  right and fails parity (2-5%). Cut a real gap where one strand passes under
+  another, or keep the stacking inside one cell.
 - **A parent's clip-path or mask also clips its pseudo-elements**, and the
   nested clip costs parity; give each piece its own shape.
+- **`clip-path: inset(... round a b c d)` exports with the first radius
+  only.** Per-corner rounding goes on a box with `border-radius`.
 
 And three things the *screen* does that SVG does not, which read as
 converter failures and are not:

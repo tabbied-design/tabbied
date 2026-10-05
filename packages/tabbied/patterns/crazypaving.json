@@ -1,0 +1,64 @@
+{
+  "name": "Crazy Paving",
+  "slug": "crazypaving",
+  "galleryOrder": 4135,
+  "description": "Crazy paving of broken flagstones: irregular slabs cut every which way, with joints that widen and narrow as they wander.",
+  "tags": [
+    "mosaic",
+    "blocks",
+    "triangles"
+  ],
+  "mood": [
+    "organic",
+    "calm"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "wallpaper",
+    "card-texture",
+    "textile"
+  ],
+  "palette": [
+    "#F3EFE0",
+    "#434343",
+    "#7D8471",
+    "#B5A886",
+    "#D4A373",
+    "#5E6472"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "5x8",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { transform: rotate(@p(0deg, 90deg, 180deg, 270deg)) scaleX(@p(1, -1)); :before { content: ''; position: absolute; inset: 0; background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-clip-path: @match(((x * 7 + y * 3) % 3) == 0, polygon(@r(1%, 7%) @r(1%, 7%), 37.8% @r(1%, 5%), 57.8% @r(95%, 99%), @r(1%, 7%) @r(93%, 99%)), ((x * 7 + y * 3) % 3) == 1, polygon(@r(1%, 7%) @r(1%, 7%), 50.92% @r(1%, 5%), @r(95%, 99%) 63.08%, @r(93%, 99%) @r(93%, 99%), @r(1%, 7%) @r(93%, 99%)), polygon(@r(1%, 7%) @r(1%, 7%), 27.8% @r(1%, 5%), 55.8% 46%, 41.8% @r(95%, 99%), @r(1%, 7%) @r(93%, 99%))); clip-path: @match(((x * 7 + y * 3) % 3) == 0, polygon(@r(1%, 7%) @r(1%, 7%), 37.8% @r(1%, 5%), 57.8% @r(95%, 99%), @r(1%, 7%) @r(93%, 99%)), ((x * 7 + y * 3) % 3) == 1, polygon(@r(1%, 7%) @r(1%, 7%), 50.92% @r(1%, 5%), @r(95%, 99%) 63.08%, @r(93%, 99%) @r(93%, 99%), @r(1%, 7%) @r(93%, 99%)), polygon(@r(1%, 7%) @r(1%, 7%), 27.8% @r(1%, 5%), 55.8% 46%, 41.8% @r(95%, 99%), @r(1%, 7%) @r(93%, 99%))); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-clip-path: @match(((x * 7 + y * 3) % 3) == 0, polygon(42.2% @r(1%, 5%), @r(93%, 99%) @r(1%, 7%), @r(93%, 99%) @r(93%, 99%), 62.2% @r(95%, 99%)), ((x * 7 + y * 3) % 3) == 1, polygon(57.08% @r(1%, 5%), @r(93%, 99%) @r(1%, 7%), @r(95%, 99%) 56.92%), polygon(32.2% @r(1%, 5%), @r(93%, 99%) @r(1%, 7%), @r(93%, 99%) @r(93%, 99%), 46.2% @r(95%, 99%), 60.2% 46%)); clip-path: @match(((x * 7 + y * 3) % 3) == 0, polygon(42.2% @r(1%, 5%), @r(93%, 99%) @r(1%, 7%), @r(93%, 99%) @r(93%, 99%), 62.2% @r(95%, 99%)), ((x * 7 + y * 3) % 3) == 1, polygon(57.08% @r(1%, 5%), @r(93%, 99%) @r(1%, 7%), @r(95%, 99%) 56.92%), polygon(32.2% @r(1%, 5%), @r(93%, 99%) @r(1%, 7%), @r(93%, 99%) @r(93%, 99%), 46.2% @r(95%, 99%), 60.2% 46%)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

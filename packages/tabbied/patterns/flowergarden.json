@@ -1,0 +1,65 @@
+{
+  "name": "Flower Garden",
+  "slug": "flowergarden",
+  "galleryOrder": 4285,
+  "description": "Grandmother's flower garden: hexagon patches pieced into seven-patch flowers, each a ring of one fabric round a yellow center, set apart by a cream path.",
+  "tags": [
+    "hexagons",
+    "mosaic",
+    "petals"
+  ],
+  "mood": [
+    "retro",
+    "playful"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "textile",
+    "wallpaper",
+    "packaging"
+  ],
+  "palette": [
+    "#7D8C6E",
+    "#F2C14E",
+    "#F4EBD9",
+    "#D1495B",
+    "#3E7CB1",
+    "#8E5572",
+    "#E07A5F"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 7,
+    "default": 7
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "10x15",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --k0: @pd(@p(var(--color3), var(--color4))); --k1: @pd(@p(var(--color4), var(--color5))); --k2: @pd(@p(var(--color5), var(--color6))); --k3: @pd(@p(var(--color3), var(--color4), var(--color5), var(--color6))); @y(even) { --sh: 50%; } @y(odd) { --sh: 0%; } @random(${shapeFrequency}) { --f: @match((((((x - 1 - floor((y - 1) / 2))) - 3 * (y - 1)) % 13 + 13) % 13) == 0, var(--color1), (((((x - 1 - floor((y - 1) / 2))) - 3 * (y - 1)) % 13 + 13) % 13) == 1, @match(((((4 * ((x - 1 - floor((y - 1) / 2)) - 1) + ((y - 1) - 0)) / 13) * 2 + ((3 * ((y - 1) - 0) - ((x - 1 - floor((y - 1) / 2)) - 1)) / 13) * 3) % 4 + 4) % 4 == 0, @var(--k0), ((((4 * ((x - 1 - floor((y - 1) / 2)) - 1) + ((y - 1) - 0)) / 13) * 2 + ((3 * ((y - 1) - 0) - ((x - 1 - floor((y - 1) / 2)) - 1)) / 13) * 3) % 4 + 4) % 4 == 1, @var(--k1), ((((4 * ((x - 1 - floor((y - 1) / 2)) - 1) + ((y - 1) - 0)) / 13) * 2 + ((3 * ((y - 1) - 0) - ((x - 1 - floor((y - 1) / 2)) - 1)) / 13) * 3) % 4 + 4) % 4 == 2, @var(--k2), @var(--k3)), (((((x - 1 - floor((y - 1) / 2))) - 3 * (y - 1)) % 13 + 13) % 13) == 3, @match(((((4 * ((x - 1 - floor((y - 1) / 2)) - 0) + ((y - 1) - -1)) / 13) * 2 + ((3 * ((y - 1) - -1) - ((x - 1 - floor((y - 1) / 2)) - 0)) / 13) * 3) % 4 + 4) % 4 == 0, @var(--k0), ((((4 * ((x - 1 - floor((y - 1) / 2)) - 0) + ((y - 1) - -1)) / 13) * 2 + ((3 * ((y - 1) - -1) - ((x - 1 - floor((y - 1) / 2)) - 0)) / 13) * 3) % 4 + 4) % 4 == 1, @var(--k1), ((((4 * ((x - 1 - floor((y - 1) / 2)) - 0) + ((y - 1) - -1)) / 13) * 2 + ((3 * ((y - 1) - -1) - ((x - 1 - floor((y - 1) / 2)) - 0)) / 13) * 3) % 4 + 4) % 4 == 2, @var(--k2), @var(--k3)), (((((x - 1 - floor((y - 1) / 2))) - 3 * (y - 1)) % 13 + 13) % 13) == 4, @match(((((4 * ((x - 1 - floor((y - 1) / 2)) - 1) + ((y - 1) - -1)) / 13) * 2 + ((3 * ((y - 1) - -1) - ((x - 1 - floor((y - 1) / 2)) - 1)) / 13) * 3) % 4 + 4) % 4 == 0, @var(--k0), ((((4 * ((x - 1 - floor((y - 1) / 2)) - 1) + ((y - 1) - -1)) / 13) * 2 + ((3 * ((y - 1) - -1) - ((x - 1 - floor((y - 1) / 2)) - 1)) / 13) * 3) % 4 + 4) % 4 == 1, @var(--k1), ((((4 * ((x - 1 - floor((y - 1) / 2)) - 1) + ((y - 1) - -1)) / 13) * 2 + ((3 * ((y - 1) - -1) - ((x - 1 - floor((y - 1) / 2)) - 1)) / 13) * 3) % 4 + 4) % 4 == 2, @var(--k2), @var(--k3)), (((((x - 1 - floor((y - 1) / 2))) - 3 * (y - 1)) % 13 + 13) % 13) == 9, @match(((((4 * ((x - 1 - floor((y - 1) / 2)) - -1) + ((y - 1) - 1)) / 13) * 2 + ((3 * ((y - 1) - 1) - ((x - 1 - floor((y - 1) / 2)) - -1)) / 13) * 3) % 4 + 4) % 4 == 0, @var(--k0), ((((4 * ((x - 1 - floor((y - 1) / 2)) - -1) + ((y - 1) - 1)) / 13) * 2 + ((3 * ((y - 1) - 1) - ((x - 1 - floor((y - 1) / 2)) - -1)) / 13) * 3) % 4 + 4) % 4 == 1, @var(--k1), ((((4 * ((x - 1 - floor((y - 1) / 2)) - -1) + ((y - 1) - 1)) / 13) * 2 + ((3 * ((y - 1) - 1) - ((x - 1 - floor((y - 1) / 2)) - -1)) / 13) * 3) % 4 + 4) % 4 == 2, @var(--k2), @var(--k3)), (((((x - 1 - floor((y - 1) / 2))) - 3 * (y - 1)) % 13 + 13) % 13) == 10, @match(((((4 * ((x - 1 - floor((y - 1) / 2)) - 0) + ((y - 1) - 1)) / 13) * 2 + ((3 * ((y - 1) - 1) - ((x - 1 - floor((y - 1) / 2)) - 0)) / 13) * 3) % 4 + 4) % 4 == 0, @var(--k0), ((((4 * ((x - 1 - floor((y - 1) / 2)) - 0) + ((y - 1) - 1)) / 13) * 2 + ((3 * ((y - 1) - 1) - ((x - 1 - floor((y - 1) / 2)) - 0)) / 13) * 3) % 4 + 4) % 4 == 1, @var(--k1), ((((4 * ((x - 1 - floor((y - 1) / 2)) - 0) + ((y - 1) - 1)) / 13) * 2 + ((3 * ((y - 1) - 1) - ((x - 1 - floor((y - 1) / 2)) - 0)) / 13) * 3) % 4 + 4) % 4 == 2, @var(--k2), @var(--k3)), (((((x - 1 - floor((y - 1) / 2))) - 3 * (y - 1)) % 13 + 13) % 13) == 12, @match(((((4 * ((x - 1 - floor((y - 1) / 2)) - -1) + ((y - 1) - 0)) / 13) * 2 + ((3 * ((y - 1) - 0) - ((x - 1 - floor((y - 1) / 2)) - -1)) / 13) * 3) % 4 + 4) % 4 == 0, @var(--k0), ((((4 * ((x - 1 - floor((y - 1) / 2)) - -1) + ((y - 1) - 0)) / 13) * 2 + ((3 * ((y - 1) - 0) - ((x - 1 - floor((y - 1) / 2)) - -1)) / 13) * 3) % 4 + 4) % 4 == 1, @var(--k1), ((((4 * ((x - 1 - floor((y - 1) / 2)) - -1) + ((y - 1) - 0)) / 13) * 2 + ((3 * ((y - 1) - 0) - ((x - 1 - floor((y - 1) / 2)) - -1)) / 13) * 3) % 4 + 4) % 4 == 2, @var(--k2), @var(--k3)), var(--color2)); :before { content: ''; position: absolute; left: @var(--sh); top: -18.75%; width: 100%; height: 137.5%; background: @p(@var(--f)); -webkit-clip-path: @var(--hex); clip-path: @var(--hex); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: calc(@var(--sh) - 100%); top: -18.75%; width: @match(x == 1, 100%, 0%); height: 137.5%; background: @p(@var(--f)); -webkit-clip-path: @var(--hex); clip-path: @var(--hex); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --hex: polygon(50% 2.5%, 97.5% 28.41%, 97.5% 71.59%, 50% 97.5%, 2.5% 71.59%, 2.5% 28.41%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "name": "Autotile",
+  "slug": "autotile",
+  "galleryOrder": 4246,
+  "galleryWhite": true,
+  "description": "A game map drawn with corner-matched tiles: rounded islands of land in open water, with hills rising inside them, the coastlines running smoothly from tile to tile.",
+  "tags": [
+    "curves",
+    "blocks",
+    "quarter-circles",
+    "grid"
+  ],
+  "mood": [
+    "playful",
+    "organic"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "wallpaper",
+    "packaging"
+  ],
+  "palette": [
+    "#3F86A8",
+    "#F0DFA8",
+    "#5E8F4A"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 3,
+    "default": 3
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "8x12",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --gate: @r(1); --s: @pd(@r(0, 50)); --la: @calc(max(0, min(1, floor((sin((@x - 1) * 1.13 + (@y - 1) * 0.47 + $(s)) + sin((@y - 1) * 1.05 - (@x - 1) * 0.41 + 1.7 * $(s)) + 0.7 * sin(((@x - 1) - (@y - 1)) * 0.83 + 2.3 * $(s))) - 0.15 + 1)))); --lb: @calc(max(0, min(1, floor((sin(@x * 1.13 + (@y - 1) * 0.47 + $(s)) + sin((@y - 1) * 1.05 - @x * 0.41 + 1.7 * $(s)) + 0.7 * sin((@x - (@y - 1)) * 0.83 + 2.3 * $(s))) - 0.15 + 1)))); --lc: @calc(max(0, min(1, floor((sin(@x * 1.13 + @y * 0.47 + $(s)) + sin(@y * 1.05 - @x * 0.41 + 1.7 * $(s)) + 0.7 * sin((@x - @y) * 0.83 + 2.3 * $(s))) - 0.15 + 1)))); --ld: @calc(max(0, min(1, floor((sin((@x - 1) * 1.13 + @y * 0.47 + $(s)) + sin(@y * 1.05 - (@x - 1) * 0.41 + 1.7 * $(s)) + 0.7 * sin(((@x - 1) - @y) * 0.83 + 2.3 * $(s))) - 0.15 + 1)))); --ha: @calc(max(0, min(1, floor((sin((@x - 1) * 1.13 + (@y - 1) * 0.47 + $(s)) + sin((@y - 1) * 1.05 - (@x - 1) * 0.41 + 1.7 * $(s)) + 0.7 * sin(((@x - 1) - (@y - 1)) * 0.83 + 2.3 * $(s))) - 1.05 + 1)))); --hb: @calc(max(0, min(1, floor((sin(@x * 1.13 + (@y - 1) * 0.47 + $(s)) + sin((@y - 1) * 1.05 - @x * 0.41 + 1.7 * $(s)) + 0.7 * sin((@x - (@y - 1)) * 0.83 + 2.3 * $(s))) - 1.05 + 1)))); --hc: @calc(max(0, min(1, floor((sin(@x * 1.13 + @y * 0.47 + $(s)) + sin(@y * 1.05 - @x * 0.41 + 1.7 * $(s)) + 0.7 * sin((@x - @y) * 0.83 + 2.3 * $(s))) - 1.05 + 1)))); --hd: @calc(max(0, min(1, floor((sin((@x - 1) * 1.13 + @y * 0.47 + $(s)) + sin(@y * 1.05 - (@x - 1) * 0.41 + 1.7 * $(s)) + 0.7 * sin(((@x - 1) - @y) * 0.83 + 2.3 * $(s))) - 1.05 + 1)))); @random(${shapeFrequency}) { :before { content: ''; position: absolute; inset: 0; background: @p(var(--color1)); -webkit-mask: @match($(la) == 1, @var(--at0), none), @match($(lb) == 1, @var(--at1), none), @match($(lc) == 1, @var(--at2), none), @match($(ld) == 1, @var(--at3), none), @match($(la) * $(lb) == 1, @var(--at4), none), @match($(lb) * $(lc) == 1, @var(--at5), none), @match($(lc) * $(ld) == 1, @var(--at6), none), @match($(ld) * $(la) == 1, @var(--at7), none), @match($(lb) * $(lc) * $(ld) * (1 - $(la)) == 1, @var(--at8), none), @match($(la) * $(lc) * $(ld) * (1 - $(lb)) == 1, @var(--at9), none), @match($(la) * $(lb) * $(ld) * (1 - $(lc)) == 1, @var(--at10), none), @match($(la) * $(lb) * $(lc) * (1 - $(ld)) == 1, @var(--at11), none), @var(--at12); mask: @match($(la) == 1, @var(--at0), none), @match($(lb) == 1, @var(--at1), none), @match($(lc) == 1, @var(--at2), none), @match($(ld) == 1, @var(--at3), none), @match($(la) * $(lb) == 1, @var(--at4), none), @match($(lb) * $(lc) == 1, @var(--at5), none), @match($(lc) * $(ld) == 1, @var(--at6), none), @match($(ld) * $(la) == 1, @var(--at7), none), @match($(lb) * $(lc) * $(ld) * (1 - $(la)) == 1, @var(--at8), none), @match($(la) * $(lc) * $(ld) * (1 - $(lb)) == 1, @var(--at9), none), @match($(la) * $(lb) * $(ld) * (1 - $(lc)) == 1, @var(--at10), none), @match($(la) * $(lb) * $(lc) * (1 - $(ld)) == 1, @var(--at11), none), @var(--at12); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background: @p(var(--color2)); -webkit-mask: @match($(ha) == 1, @var(--at0), none), @match($(hb) == 1, @var(--at1), none), @match($(hc) == 1, @var(--at2), none), @match($(hd) == 1, @var(--at3), none), @match($(ha) * $(hb) == 1, @var(--at4), none), @match($(hb) * $(hc) == 1, @var(--at5), none), @match($(hc) * $(hd) == 1, @var(--at6), none), @match($(hd) * $(ha) == 1, @var(--at7), none), @match($(hb) * $(hc) * $(hd) * (1 - $(ha)) == 1, @var(--at8), none), @match($(ha) * $(hc) * $(hd) * (1 - $(hb)) == 1, @var(--at9), none), @match($(ha) * $(hb) * $(hd) * (1 - $(hc)) == 1, @var(--at10), none), @match($(ha) * $(hb) * $(hc) * (1 - $(hd)) == 1, @var(--at11), none), @var(--at12); mask: @match($(ha) == 1, @var(--at0), none), @match($(hb) == 1, @var(--at1), none), @match($(hc) == 1, @var(--at2), none), @match($(hd) == 1, @var(--at3), none), @match($(ha) * $(hb) == 1, @var(--at4), none), @match($(hb) * $(hc) == 1, @var(--at5), none), @match($(hc) * $(hd) == 1, @var(--at6), none), @match($(hd) * $(ha) == 1, @var(--at7), none), @match($(hb) * $(hc) * $(hd) * (1 - $(ha)) == 1, @var(--at8), none), @match($(ha) * $(hc) * $(hd) * (1 - $(hb)) == 1, @var(--at9), none), @match($(ha) * $(hb) * $(hd) * (1 - $(hc)) == 1, @var(--at10), none), @match($(ha) * $(hb) * $(hc) * (1 - $(hd)) == 1, @var(--at11), none), @var(--at12); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --at0: radial-gradient(circle farthest-side at 0 0, #000 50%, transparent 50%); --at1: radial-gradient(circle farthest-side at 100% 0, #000 50%, transparent 50%); --at2: radial-gradient(circle farthest-side at 100% 100%, #000 50%, transparent 50%); --at3: radial-gradient(circle farthest-side at 0 100%, #000 50%, transparent 50%); --at4: linear-gradient(#000 0 50%, transparent 50%); --at5: linear-gradient(90deg, transparent 50%, #000 50%); --at6: linear-gradient(transparent 50%, #000 50%); --at7: linear-gradient(90deg, #000 0 50%, transparent 50%); --at8: radial-gradient(circle farthest-side at 0 0, transparent 50%, #000 50%); --at9: radial-gradient(circle farthest-side at 100% 0, transparent 50%, #000 50%); --at10: radial-gradient(circle farthest-side at 100% 100%, transparent 50%, #000 50%); --at11: radial-gradient(circle farthest-side at 0 100%, transparent 50%, #000 50%); --at12: linear-gradient(transparent, transparent); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

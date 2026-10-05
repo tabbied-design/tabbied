@@ -518,36 +518,43 @@ const PIPE = (() => {
       cap,
     ];
   };
-  const [t, r, b, l] = ['$(pt)', '$(pr)', '$(pb)', '$(pl)'];
-  // which piece shows, in the order the shapes are listed
-  const conds = [
-    `${t} * ${r}`,
-    `${r} * ${b}`,
-    `${b} * ${l}`,
-    `${l} * ${t}`,
-    `${t} * ${b} * (1 - ${l}) * (1 - ${r})`,
-    `${l} * ${r} * (1 - ${t}) * (1 - ${b})`,
-    `${t} * (1 - ${r}) * (1 - ${b}) * (1 - ${l})`,
-    `${b} * (1 - ${r}) * (1 - ${t}) * (1 - ${l})`,
-    `${l} * (1 - ${r}) * (1 - ${b}) * (1 - ${t})`,
-    `${r} * (1 - ${t}) * (1 - ${b}) * (1 - ${l})`,
-    `${t} + ${r} + ${b} + ${l}`,
-  ];
-  const host = (name, hw) => `${shapes(hw).map((sh, i) => `--${name}${i}: ${sh};`).join(' ')} --${name}e: ${EMPTY};`;
-  const layers = (name) => [...conds.map((cond, i) => `@match(${cond} == 1, @var(--${name}${i}), none)`), `@var(--${name}e)`];
-  return { host, layers };
+  // the pieces each of the sixteen edge codes (8 top + 4 right + 2 bottom + left) needs
+  const host = (name, hw) => {
+    const sh = shapes(hw);
+    return Array.from({ length: 16 }, (_, k) => {
+      const [t, r, b, l] = [(k >> 3) & 1, (k >> 2) & 1, (k >> 1) & 1, k & 1];
+      const on = [
+        t * r,
+        r * b,
+        b * l,
+        l * t,
+        t * b * (1 - l) * (1 - r),
+        l * r * (1 - t) * (1 - b),
+        t * (1 - r) * (1 - b) * (1 - l),
+        b * (1 - r) * (1 - t) * (1 - l),
+        l * (1 - r) * (1 - b) * (1 - t),
+        r * (1 - t) * (1 - b) * (1 - l),
+        t + r + b + l === 1 ? 1 : 0,
+      ];
+      const list = sh.filter((_, i) => on[i]);
+      return hostList(`${name}${k}`, list.length ? list : [EMPTY]);
+    }).join(' ');
+  };
+  return { host };
 })();
 add(
   'Pipework',
   'Wang tiles of pipe: elbows, straights, tees and crosses with rounded bends, each tile open only where its neighbor is, so the pipes join into one tangled network.',
   (c) => {
-    const open = (xe, ye, a, b, k) => `@calc(floor(0.55 + ((sin(${xe} * ${a} + ${ye} * ${b} + $(s) * ${k}) * 43758.5453) - floor(sin(${xe} * ${a} + ${ye} * ${b} + $(s) * ${k}) * 43758.5453))))`;
-    const H = (xe, ye) => open(xe, ye, 12.9898, 78.233, 1);
-    const G = (xe, ye) => open(xe, ye, 39.3467, 11.1351, 1.7);
+    // each edge's hash: the sine once into --q*, then its fraction, so it is worked out once
+    const edge = (n, xe, ye, a, b, k) =>
+      `--q${n}: $(sin(${xe} * ${a} + ${ye} * ${b} + s * ${k}) * 43758.5453); --p${n}: $(floor(0.55 + q${n} - floor(q${n})));`;
+    const H = (n, xe, ye) => edge(n, xe, ye, 12.9898, 78.233, 1);
+    const G = (n, xe, ye) => edge(n, xe, ye, 39.3467, 11.1351, 1.7);
     return {
       host: `${PIPE.host('po', 17)} ${PIPE.host('pi', 4)}`,
-      rule: `${SHIFT} ${SEED} --pr: ${H('@x', '@y')}; --pl: ${H('(@x - 1)', '@y')}; --pb: ${G('@x', '@y')}; --pt: ${G('@x', '(@y - 1)')}; --pipe: ${sheetInk(c, 1, 2)}; ${F} { ${B(`inset: 0; background: @p(@var(--pipe)); ${msk(...PIPE.layers('po'))}`)} ${A(
-        `inset: 0; background: @p(var(--color3), var(--color4)); ${msk(...PIPE.layers('pi'))}`
+      rule: `${SHIFT} ${SEED} ${H('r', '@x', '@y')} ${H('l', '(@x - 1)', '@y')} ${G('b', '@x', '@y')} ${G('t', '@x', '(@y - 1)')} --pk: $(8 * pt + 4 * pr + 2 * pb + pl); --pipe: ${sheetInk(c, 1, 2)}; ${F} { ${B(`inset: 0; background: @p(@var(--pipe)); ${msk('@var(--po$(pk))')}`)} ${A(
+        `inset: 0; background: @p(var(--color3), var(--color4)); ${msk('@var(--pi$(pk))')}`
       )} }${TR}`,
     };
   },
@@ -1245,11 +1252,13 @@ add(
 // along every shared side, so the coast runs on unbroken. A second, higher
 // level draws hills inside the land.
 const AUTO = (() => {
+  // the field at a grid corner, computed once per corner and shared by both levels
   const field = (i, j) =>
-    `(sin(${i} * 1.13 + ${j} * 0.47 + $(s)) + sin(${j} * 1.05 - ${i} * 0.41 + 1.7 * $(s)) + 0.7 * sin((${i} - ${j}) * 0.83 + 2.3 * $(s)))`;
-  const step = (i, j, t) => `@calc(max(0, min(1, floor(${field(i, j)} - ${t} + 1))))`;
-  const corners = (p, t) =>
-    `--${p}a: ${step('(@x - 1)', '(@y - 1)', t)}; --${p}b: ${step('@x', '(@y - 1)', t)}; --${p}c: ${step('@x', '@y', t)}; --${p}d: ${step('(@x - 1)', '@y', t)};`;
+    `$(sin(${i} * 1.13 + ${j} * 0.47 + s) + sin(${j} * 1.05 - ${i} * 0.41 + 1.7 * s) + 0.7 * sin((${i} - ${j}) * 0.83 + 2.3 * s))`;
+  const fields = `--fa: ${field('(@x - 1)', '(@y - 1)')}; --fb: ${field('@x', '(@y - 1)')}; --fc: ${field('@x', '@y')}; --fd: ${field('(@x - 1)', '@y')};`;
+  const bit = (f, t) => `max(0, min(1, floor(${f} - ${t} + 1)))`;
+  /** The level's four corners as one number, 8 a + 4 b + 2 c + d. */
+  const code = (p, t) => `--${p}k: $(8 * ${bit('fa', t)} + 4 * ${bit('fb', t)} + 2 * ${bit('fc', t)} + ${bit('fd', t)});`;
   const shapes = [
     cornerDisc('50%', '0 0'),
     cornerDisc('50%', '100% 0'),
@@ -1264,23 +1273,24 @@ const AUTO = (() => {
     cornerBore('50%', '100% 100%'),
     cornerBore('50%', '0 100%'),
   ];
-  const host = `${shapes.map((sh, i) => `--at${i}: ${sh};`).join(' ')} --at12: ${EMPTY};`;
-  const layers = (p) => {
-    const [a, b, cc, d] = ['a', 'b', 'c', 'd'].map((k) => `$(${p}${k})`);
-    const conds = [a, b, cc, d, `${a} * ${b}`, `${b} * ${cc}`, `${cc} * ${d}`, `${d} * ${a}`, `${b} * ${cc} * ${d} * (1 - ${a})`, `${a} * ${cc} * ${d} * (1 - ${b})`, `${a} * ${b} * ${d} * (1 - ${cc})`, `${a} * ${b} * ${cc} * (1 - ${d})`];
-    return [...conds.map((cond, i) => `@match(${cond} == 1, @var(--at${i}), none)`), '@var(--at12)'];
-  };
-  return { corners, layers, host };
+  // the layers each of the sixteen corner codes needs, worked out here once
+  const host = Array.from({ length: 16 }, (_, k) => {
+    const [a, b, cc, d] = [(k >> 3) & 1, (k >> 2) & 1, (k >> 1) & 1, k & 1];
+    const on = [a, b, cc, d, a * b, b * cc, cc * d, d * a, b * cc * d * (1 - a), a * cc * d * (1 - b), a * b * d * (1 - cc), a * b * cc * (1 - d)];
+    const list = shapes.filter((_, i) => on[i]);
+    return hostList(`am${k}`, list.length ? list : [EMPTY]);
+  }).join(' ');
+  return { vars: `${fields} ${code('l', 0.15)} ${code('h', 1.05)}`, host };
 })();
 add(
   'Autotile',
   'A game map drawn with corner-matched tiles: rounded islands of land in open water, with hills rising inside them, the coastlines running smoothly from tile to tile.',
   () => ({
     host: AUTO.host,
-    rule: `${SHIFT} ${SEED} ${AUTO.corners('l', 0.15)} ${AUTO.corners('h', 1.05)} ${F} { ${B(`inset: 0; background: @p(var(--color1)); ${msk(...AUTO.layers('l'))}`)} ${A(`inset: 0; background: @p(var(--color2)); ${msk(...AUTO.layers('h'))}`)} }${TR}`,
+    rule: `${SHIFT} ${SEED} ${AUTO.vars} ${F} { ${B(`inset: 0; background: @p(var(--color1)); ${msk('@var(--am$(lk))')}`)} ${A(`inset: 0; background: @p(var(--color2)); ${msk('@var(--am$(hk))')}`)} }${TR}`,
   }),
   {
-    palette: ['#7FC8D8', '#EAD9A6', '#6E9B57'],
+    palette: ['#3F86A8', '#F0DFA8', '#5E8F4A'],
     grid: '8x12',
     tg: '10x10',
     meta: { tags: ['curves', 'blocks', 'quarter-circles', 'grid'], mood: ['playful', 'organic'], density: 'medium', goodFor: ['wallpaper', 'packaging'] },

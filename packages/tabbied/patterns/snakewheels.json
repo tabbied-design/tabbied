@@ -1,0 +1,62 @@
+{
+  "name": "Snake Wheels",
+  "slug": "snakewheels",
+  "galleryOrder": 4064,
+  "description": "Wheels of stepped wedges, black to blue to pale to gold, turning the opposite way in neighboring cells.",
+  "tags": [
+    "circles",
+    "radial",
+    "triangles"
+  ],
+  "mood": [
+    "bold",
+    "playful"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "poster",
+    "packaging"
+  ],
+  "palette": [
+    "#F4EEDC",
+    "#16161C",
+    "#2D57A3",
+    "#E9B93A",
+    "#1F6E6A"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "4x6",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --turn: @r(60)deg; @random(${shapeFrequency}) { border-radius: 50%; background: @p(var(--color2), var(--color2), var(--color4)); -webkit-clip-path: @var(--rim); clip-path: @var(--rim); transform: scaleX(@calc(round((1 - 2 * ((@x + @y) % 2)) * 100) / 100)) rotate(@var(--turn)) scale(0.92); :before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--color1); -webkit-clip-path: @var(--wk); clip-path: @var(--wk); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--color3); -webkit-clip-path: @var(--wy); clip-path: @var(--wy); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --rim: polygon(50% 50%, 29.29% -27.27%, 60.44% -29.32%, 90% -19.28%, 50% 50%, 106.57% -6.57%, 123.91% 19.39%, 130% 50%, 50% 50%, 127.27% 70.71%, 113.47% 98.7%, 90% 119.28%, 50% 50%, 70.71% 127.27%, 39.56% 129.32%, 10% 119.28%, 50% 50%, -6.57% 106.57%, -23.91% 80.61%, -30% 50%, 50% 50%, -27.27% 29.29%, -13.47% 1.3%, 10% -19.28%); --wk: polygon(50% 50%, 50% -30%, 70.71% -27.27%, 50% 50%, 119.28% 10%, 127.27% 29.29%, 50% 50%, 119.28% 90%, 106.57% 106.57%, 50% 50%, 50% 130%, 29.29% 127.27%, 50% 50%, -19.28% 90%, -27.27% 70.71%, 50% 50%, -19.28% 10%, -6.57% -6.57%); --wy: polygon(50% 50%, 29.29% -27.27%, 50% -30%, 50% 50%, 106.57% -6.57%, 119.28% 10%, 50% 50%, 127.27% 70.71%, 119.28% 90%, 50% 50%, 70.71% 127.27%, 50% 130%, 50% 50%, -6.57% 106.57%, -19.28% 90%, 50% 50%, -27.27% 29.29%, -19.28% 10%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

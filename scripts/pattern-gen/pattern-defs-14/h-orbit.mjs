@@ -139,25 +139,31 @@ add(
 
 // Each star sits at a fixed jitter from its cell's center, written as a
 // function of the cell's column and row, so a cell can work out where its
-// neighbor's star is and draw a line to it.
-const SX = (x, y) => `(0.5 + 0.27 * sin(1.9 * (${x}) + 2.7 * (${y}) + 0.3))`;
-const SY = (x, y) => `(0.5 + 0.27 * sin(2.3 * (${x}) - 1.7 * (${y}) + 1.9))`;
-const starLink = (ox, oy) => {
-  const nx = ox === 0 ? '@x' : ox > 0 ? `@x + ${ox}` : `@x - ${-ox}`;
-  const ny = oy === 0 ? '@y' : `@y + ${oy}`;
-  const ddx = `(${ox} + ${SX(nx, ny)} - ${SX('@x', '@y')})`;
-  const ddy = `(${oy} + ${SY(nx, ny)} - ${SY('@x', '@y')})`;
-  return `rotate(@calc(atan2(${ddy}, ${ddx}) * 180 / PI)deg) scaleX(@calc(sqrt(${ddx} * ${ddx} + ${ddy} * ${ddy})))`;
-};
+// neighbor's star is and draw a line to it. Every value is worked out once
+// per cell into a custom property and read back with $(), so css-doodle
+// evaluates each expression a single time: the star's own place (sx, sy),
+// the neighbor the cell links to (o picks right, down, down-right,
+// down-left or none, its tens digit the column offset plus one and its units
+// the row offset), and the line to it (lx, ly).
+const STAR_VARS = [
+  '--cx: @x; --cy: @y;',
+  '--sx: $(round(5000 + 2700 * sin(1.9 * cx + 2.7 * cy + 0.3)) / 10000);',
+  '--sy: $(round(5000 + 2700 * sin(2.3 * cx - 1.7 * cy + 1.9)) / 10000);',
+  '--o: @p(20, 11, 21, 1, 10);',
+  '--ox: $(floor(o / 10) - 1);',
+  '--oy: $(o % 10);',
+  '--lx: $(round(10000 * (ox + 0.5 + 0.27 * sin(1.9 * (cx + ox) + 2.7 * (cy + oy) + 0.3) - sx)) / 10000);',
+  '--ly: $(round(10000 * (oy + 0.5 + 0.27 * sin(2.3 * (cx + ox) - 1.7 * (cy + oy) + 1.9) - sy)) / 10000);',
+].join(' ');
 
 add(
   'Star Map',
   'Stars of several magnitudes, loosely scattered, with fine lines joining them into constellations that wander across the sheet.',
   (c) => ({
-    rule: `--z: @p(5%, 7%, 9%, 12%, 15%);
+    rule: `--z: @p(5%, 7%, 9%, 12%, 15%); ${STAR_VARS}
     ${F} {
-      ${B(`left: @calc(${SX('@x', '@y')} * 100)%; top: calc(@calc(${SY('@x', '@y')} * 100)% - 1.1%); width: 100%; height: 2.2%; transform-origin: 0 50%; background: var(--color1); transform: @p(${starLink(1, 0)}, ${starLink(0, 1)}, ${starLink(1, 1)}, ${starLink(-1, 1)}, scaleX(0));`)}
-      ${A(`z-index: 1; width: @var(--z); height: @var(--z); left: calc(@calc(${SX('@x', '@y')} * 100)% - @var(--z) / 2); top: calc(@calc(${SY('@x', '@y')} * 100)% - @var(--z) / 2); border-radius: 50%; background: ${ink(c, 2)};`)}
+      ${B(`left: $(sx * 100)%; top: calc($(sy * 100)% - 1.1%); width: 100%; height: 2.2%; transform-origin: 0 50%; background: var(--color1); transform: rotate($(round(atan2(ly, lx) * 5729.58) / 100)deg) scaleX($(round(10000 * sqrt(lx * lx + ly * ly)) / 10000));`)}
+      ${A(`z-index: 1; width: @var(--z); height: @var(--z); left: calc($(sx * 100)% - @var(--z) / 2); top: calc($(sy * 100)% - @var(--z) / 2); border-radius: 50%; background: ${ink(c, 2)};`)}
     }${TR}`,
   }),
   {

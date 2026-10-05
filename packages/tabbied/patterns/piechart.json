@@ -1,0 +1,62 @@
+{
+  "name": "Pie Chart",
+  "slug": "piechart",
+  "galleryOrder": 4272,
+  "description": "A sheet of pie and donut charts, each split into three slices in the same three inks at its own proportions and turned to its own angle.",
+  "tags": [
+    "circles",
+    "radial",
+    "rings"
+  ],
+  "mood": [
+    "technical",
+    "playful"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "poster",
+    "og-image",
+    "packaging"
+  ],
+  "palette": [
+    "#F4EFE4",
+    "#E4572E",
+    "#29335C",
+    "#76B5A8"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 4,
+    "default": 4
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { --a1: @ri(40, 150); --a2: @ri(60, 150); --r0: @ri(0, 360); --d: @p(0, 1); background: radial-gradient(circle closest-side, transparent $(d * 44)%, @p(var(--color3)) $(d * 44)% 84.6%, transparent 84.6%); :before { content: ''; position: absolute; inset: 7%; border-radius: 50%; background: @p(var(--color2)); -webkit-clip-path: polygon(50% 50%, $(round((50 + 75 * sin((r0 + (a1 + a2) * 0) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1 + a2) * 0) * 0.0174533)) * 100) / 100)%, $(round((50 + 75 * sin((r0 + (a1 + a2) * 0.25) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1 + a2) * 0.25) * 0.0174533)) * 100) / 100)%, $(round((50 + 75 * sin((r0 + (a1 + a2) * 0.5) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1 + a2) * 0.5) * 0.0174533)) * 100) / 100)%, $(round((50 + 75 * sin((r0 + (a1 + a2) * 0.75) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1 + a2) * 0.75) * 0.0174533)) * 100) / 100)%, $(round((50 + 75 * sin((r0 + (a1 + a2) * 1) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1 + a2) * 1) * 0.0174533)) * 100) / 100)%); clip-path: polygon(50% 50%, $(round((50 + 75 * sin((r0 + (a1 + a2) * 0) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1 + a2) * 0) * 0.0174533)) * 100) / 100)%, $(round((50 + 75 * sin((r0 + (a1 + a2) * 0.25) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1 + a2) * 0.25) * 0.0174533)) * 100) / 100)%, $(round((50 + 75 * sin((r0 + (a1 + a2) * 0.5) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1 + a2) * 0.5) * 0.0174533)) * 100) / 100)%, $(round((50 + 75 * sin((r0 + (a1 + a2) * 0.75) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1 + a2) * 0.75) * 0.0174533)) * 100) / 100)%, $(round((50 + 75 * sin((r0 + (a1 + a2) * 1) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1 + a2) * 1) * 0.0174533)) * 100) / 100)%); -webkit-mask: radial-gradient(circle closest-side, transparent $(d * 50)%, #000 $(d * 50)%); mask: radial-gradient(circle closest-side, transparent $(d * 50)%, #000 $(d * 50)%); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 7%; border-radius: 50%; background: @p(var(--color1)); -webkit-clip-path: polygon(50% 50%, $(round((50 + 75 * sin((r0 + (a1) * 0) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1) * 0) * 0.0174533)) * 100) / 100)%, $(round((50 + 75 * sin((r0 + (a1) * 0.25) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1) * 0.25) * 0.0174533)) * 100) / 100)%, $(round((50 + 75 * sin((r0 + (a1) * 0.5) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1) * 0.5) * 0.0174533)) * 100) / 100)%, $(round((50 + 75 * sin((r0 + (a1) * 0.75) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1) * 0.75) * 0.0174533)) * 100) / 100)%, $(round((50 + 75 * sin((r0 + (a1) * 1) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1) * 1) * 0.0174533)) * 100) / 100)%); clip-path: polygon(50% 50%, $(round((50 + 75 * sin((r0 + (a1) * 0) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1) * 0) * 0.0174533)) * 100) / 100)%, $(round((50 + 75 * sin((r0 + (a1) * 0.25) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1) * 0.25) * 0.0174533)) * 100) / 100)%, $(round((50 + 75 * sin((r0 + (a1) * 0.5) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1) * 0.5) * 0.0174533)) * 100) / 100)%, $(round((50 + 75 * sin((r0 + (a1) * 0.75) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1) * 0.75) * 0.0174533)) * 100) / 100)%, $(round((50 + 75 * sin((r0 + (a1) * 1) * 0.0174533)) * 100) / 100)% $(round((50 - 75 * cos((r0 + (a1) * 1) * 0.0174533)) * 100) / 100)%); -webkit-mask: radial-gradient(circle closest-side, transparent $(d * 50)%, #000 $(d * 50)%); mask: radial-gradient(circle closest-side, transparent $(d * 50)%, #000 $(d * 50)%); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

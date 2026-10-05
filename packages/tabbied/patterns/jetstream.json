@@ -1,0 +1,64 @@
+{
+  "name": "Jet Stream",
+  "slug": "jetstream",
+  "galleryOrder": 4075,
+  "galleryWhite": true,
+  "description": "Long thin strokes laid end to end along a slow, smooth current, so the sheet reads as a wind map of streaming lines.",
+  "tags": [
+    "lines",
+    "curves",
+    "waves"
+  ],
+  "mood": [
+    "calm",
+    "organic"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "hero-background",
+    "wallpaper"
+  ],
+  "palette": [
+    "#0E1E2B",
+    "#A9D6E5",
+    "#61A5C2",
+    "#2C7DA0",
+    "#F1FAEE",
+    "#E9C46A"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "8x12",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { --a: @rn(-60, 220, 0.9); :after { content: ''; position: absolute; left: -34%; top: 45%; width: 168%; height: 10%; border-radius: 99px; background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-transform: rotate($deg(a)); transform: rotate($deg(a)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

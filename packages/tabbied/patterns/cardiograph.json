@@ -1,0 +1,61 @@
+{
+  "name": "Cardiograph",
+  "slug": "cardiograph",
+  "galleryOrder": 4269,
+  "description": "Heartbeat traces on pink ECG paper, row after row of sharp spikes and soft bumps running over a grid of small and large squares.",
+  "tags": [
+    "lines",
+    "zigzags",
+    "grid"
+  ],
+  "mood": [
+    "technical",
+    "calm"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "section-divider",
+    "hero-background",
+    "card-texture"
+  ],
+  "palette": [
+    "#FBEFEA",
+    "#1E1B24",
+    "#E0827A"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 3,
+    "default": 3
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "5x8",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { :before { content: ''; position: absolute; inset: 0; background: @p(var(--color2)); opacity: 0.55; -webkit-mask: @var(--grid); mask: @var(--grid); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: -20%; width: 140%; top: 0; height: 100%; background: @p(var(--color1)); -webkit-clip-path: @p(@var(--b0), @var(--b0), @var(--b1), @var(--b2), @var(--b3)); clip-path: @p(@var(--b0), @var(--b0), @var(--b1), @var(--b2), @var(--b3)); -webkit-transform: translateX(@r(-4%, 4%)); transform: translateX(@r(-4%, 4%)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --b0: polygon(0% 61.6%, 20.38% 61.6%, 23.46% 58.37%, 25.71% 56.79%, 27.97% 58.37%, 31.05% 61.6%, 36.57% 61.6%, 38.37% 64.96%, 40.42% 64.14%, 42.05% 39.13%, 43.86% 72.12%, 46.11% 72.39%, 48.04% 61.6%, 53.26% 61.6%, 57.1% 57.29%, 60.71% 53.92%, 64.32% 57.29%, 68.17% 61.6%, 100% 61.6%, 100% 58.4%, 68.97% 58.4%, 65.68% 54.71%, 60.71% 50.08%, 55.75% 54.71%, 52.46% 58.4%, 46.25% 58.4%, 45.6% 62.05%, 41% 19.86%, 43.28% 19.88%, 38.42% 59.71%, 37.71% 58.4%, 31.81% 58.4%, 29.17% 55.63%, 25.71% 53.21%, 22.25% 55.63%, 19.62% 58.4%, 0% 58.4%); --b1: polygon(0% 61.6%, 20.47% 61.6%, 23.53% 57.31%, 25.71% 55.79%, 27.89% 57.31%, 30.96% 61.6%, 37.15% 61.6%, 38.98% 66.72%, 41.14% 66.11%, 42.73% 33.75%, 44.57% 80.09%, 46.84% 80.24%, 48.84% 61.6%, 54.04% 61.6%, 57.91% 56.18%, 61.43% 52.08%, 64.94% 56.18%, 68.81% 61.6%, 100% 61.6%, 100% 58.4%, 69.76% 58.4%, 66.49% 53.82%, 61.43% 47.92%, 56.37% 53.82%, 53.1% 58.4%, 46.87% 58.4%, 46.24% 64.33%, 41.72% 7.89%, 44% 7.91%, 39.15% 60.04%, 38.56% 58.4%, 31.9% 58.4%, 29.25% 54.69%, 25.71% 52.21%, 22.18% 54.69%, 19.53% 58.4%, 0% 58.4%); --b2: polygon(0% 61.6%, 21.81% 61.6%, 24.89% 58.37%, 27.14% 56.79%, 29.4% 58.37%, 32.48% 61.6%, 38% 61.6%, 39.8% 64.96%, 41.85% 64.17%, 43.49% 42.39%, 45.29% 70.14%, 47.52% 70.46%, 49.42% 61.6%, 53.88% 61.6%, 57.24% 65.36%, 62.14% 68.79%, 67.05% 65.36%, 70.4% 61.6%, 100% 61.6%, 100% 58.4%, 69.6% 58.4%, 65.81% 62.64%, 62.14% 65.21%, 58.48% 62.64%, 54.69% 58.4%, 47.72% 58.4%, 47.03% 61.62%, 42.43% 25.83%, 44.71% 25.86%, 39.88% 59.78%, 39.14% 58.4%, 33.24% 58.4%, 30.6% 55.63%, 27.14% 53.21%, 23.68% 55.63%, 21.05% 58.4%, 0% 58.4%); --b3: polygon(0% 61.6%, 26.54% 61.6%, 31.12% 42.36%, 36.73% 84.29%, 38.96% 84.43%, 44.86% 55.06%, 49.53% 61.6%, 59.04% 61.6%, 63.47% 55.4%, 66.97% 53.77%, 70.79% 57.33%, 75.37% 61.6%, 100% 61.6%, 100% 58.4%, 76.06% 58.4%, 72.06% 54.67%, 67.31% 50.23%, 62.24% 52.6%, 58.1% 58.4%, 50.47% 58.4%, 43.71% 48.94%, 38.08% 76.98%, 30.34% 35.49%, 32.55% 35.71%, 24.89% 58.4%, 0% 58.4%); --grid: repeating-linear-gradient(90deg, #000 0 1.2%, transparent 1.2% 20%), repeating-linear-gradient(180deg, #000 0 1.2%, transparent 1.2% 20%), linear-gradient(90deg, #000 0 2.6%, transparent 2.6%), linear-gradient(180deg, #000 0 2.6%, transparent 2.6%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

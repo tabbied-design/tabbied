@@ -1,0 +1,64 @@
+{
+  "name": "Chalk Stripe",
+  "slug": "chalkstripe",
+  "galleryOrder": 4008,
+  "galleryWhite": true,
+  "description": "Suiting flannel: soft, broad chalk lines in pale colors on a dark ground, each pair parted by a fine pinstripe.",
+  "tags": [
+    "stripes",
+    "lines",
+    "gradients"
+  ],
+  "mood": [
+    "elegant",
+    "calm"
+  ],
+  "density": "sparse",
+  "goodFor": [
+    "textile",
+    "hero-background",
+    "card-texture"
+  ],
+  "palette": [
+    "#2A2E35",
+    "#EDE6D6",
+    "#C6D4E1",
+    "#E7C3BE",
+    "#8FA3B8"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --t: @pd(@m(@X, @p(var(--color1), var(--color2), var(--color3)))); @random(${shapeFrequency}) { :before { content: ''; position: absolute; inset: 0; background-color: @p(@var(--t)); opacity: .9; -webkit-mask: linear-gradient(90deg, transparent 36%, #000 45% 55%, transparent 64%); mask: linear-gradient(90deg, transparent 36%, #000 45% 55%, transparent 64%); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; top: 0; bottom: 0; left: -2%; width: 4%; background-color: var(--color4); opacity: .35; -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

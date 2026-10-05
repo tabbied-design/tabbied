@@ -1,0 +1,69 @@
+{
+  "name": "Astrolabe",
+  "slug": "astrolabe",
+  "galleryOrder": 4199,
+  "description": "Brass astrolabes on parchment: a graduated rim, nested almucantar circles drawn toward the zenith, and the alidade laid across, each dial turned its own way.",
+  "tags": [
+    "rings",
+    "radial",
+    "circles",
+    "lines"
+  ],
+  "mood": [
+    "technical",
+    "elegant",
+    "retro"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "packaging",
+    "wallpaper",
+    "card-texture"
+  ],
+  "palette": [
+    "#EFE6D2",
+    "#8A5A24",
+    "#B8862E",
+    "#C9A25A",
+    "#9C3D2E",
+    "#2F3B52"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "sizing": {
+    "minCellPx": 52
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "5x8",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { transform: rotate(@r(0deg, 360deg)); background: radial-gradient(ellipse 3% 3% at 50% 50%, var(--color4) 100%, transparent 100%), linear-gradient(90deg, transparent 49%, var(--color4) 49% 51%, transparent 51%) 0 8% / 100% 84% no-repeat, radial-gradient(ellipse 37% 37% at 50% 55%, transparent 96.2%, var(--color3) 96.2% 100%, transparent 100%), radial-gradient(ellipse 29% 29% at 50% 59%, transparent 95.2%, var(--color3) 95.2% 100%, transparent 100%), radial-gradient(ellipse 21% 21% at 50% 62.5%, transparent 93.3%, var(--color3) 93.3% 100%, transparent 100%), radial-gradient(ellipse 13% 13% at 50% 65.5%, transparent 89.2%, var(--color3) 89.2% 100%, transparent 100%); :before { content: ''; position: absolute; inset: 6%; border-radius: 50%; background: @p(var(--color1), var(--color2)); mask: radial-gradient(closest-side, transparent 88%, #000 88%); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 6%; background: @p(var(--color1), var(--color5)); mask: @var(--tk), radial-gradient(closest-side, transparent 74%, #000 74% 86%, transparent 86%); mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --tk: conic-gradient(#000 0deg 1.3deg, transparent 1.3deg 5deg, #000 5deg 6.3deg, transparent 6.3deg 10deg, #000 10deg 11.3deg, transparent 11.3deg 15deg, #000 15deg 16.3deg, transparent 16.3deg 20deg, #000 20deg 21.3deg, transparent 21.3deg 25deg, #000 25deg 26.3deg, transparent 26.3deg 30deg, #000 30deg 31.3deg, transparent 31.3deg 35deg, #000 35deg 36.3deg, transparent 36.3deg 40deg, #000 40deg 41.3deg, transparent 41.3deg 45deg, #000 45deg 46.3deg, transparent 46.3deg 50deg, #000 50deg 51.3deg, transparent 51.3deg 55deg, #000 55deg 56.3deg, transparent 56.3deg 60deg, #000 60deg 61.3deg, transparent 61.3deg 65deg, #000 65deg 66.3deg, transparent 66.3deg 70deg, #000 70deg 71.3deg, transparent 71.3deg 75deg, #000 75deg 76.3deg, transparent 76.3deg 80deg, #000 80deg 81.3deg, transparent 81.3deg 85deg, #000 85deg 86.3deg, transparent 86.3deg 90deg, #000 90deg 91.3deg, transparent 91.3deg 95deg, #000 95deg 96.3deg, transparent 96.3deg 100deg, #000 100deg 101.3deg, transparent 101.3deg 105deg, #000 105deg 106.3deg, transparent 106.3deg 110deg, #000 110deg 111.3deg, transparent 111.3deg 115deg, #000 115deg 116.3deg, transparent 116.3deg 120deg, #000 120deg 121.3deg, transparent 121.3deg 125deg, #000 125deg 126.3deg, transparent 126.3deg 130deg, #000 130deg 131.3deg, transparent 131.3deg 135deg, #000 135deg 136.3deg, transparent 136.3deg 140deg, #000 140deg 141.3deg, transparent 141.3deg 145deg, #000 145deg 146.3deg, transparent 146.3deg 150deg, #000 150deg 151.3deg, transparent 151.3deg 155deg, #000 155deg 156.3deg, transparent 156.3deg 160deg, #000 160deg 161.3deg, transparent 161.3deg 165deg, #000 165deg 166.3deg, transparent 166.3deg 170deg, #000 170deg 171.3deg, transparent 171.3deg 175deg, #000 175deg 176.3deg, transparent 176.3deg 180deg, #000 180deg 181.3deg, transparent 181.3deg 185deg, #000 185deg 186.3deg, transparent 186.3deg 190deg, #000 190deg 191.3deg, transparent 191.3deg 195deg, #000 195deg 196.3deg, transparent 196.3deg 200deg, #000 200deg 201.3deg, transparent 201.3deg 205deg, #000 205deg 206.3deg, transparent 206.3deg 210deg, #000 210deg 211.3deg, transparent 211.3deg 215deg, #000 215deg 216.3deg, transparent 216.3deg 220deg, #000 220deg 221.3deg, transparent 221.3deg 225deg, #000 225deg 226.3deg, transparent 226.3deg 230deg, #000 230deg 231.3deg, transparent 231.3deg 235deg, #000 235deg 236.3deg, transparent 236.3deg 240deg, #000 240deg 241.3deg, transparent 241.3deg 245deg, #000 245deg 246.3deg, transparent 246.3deg 250deg, #000 250deg 251.3deg, transparent 251.3deg 255deg, #000 255deg 256.3deg, transparent 256.3deg 260deg, #000 260deg 261.3deg, transparent 261.3deg 265deg, #000 265deg 266.3deg, transparent 266.3deg 270deg, #000 270deg 271.3deg, transparent 271.3deg 275deg, #000 275deg 276.3deg, transparent 276.3deg 280deg, #000 280deg 281.3deg, transparent 281.3deg 285deg, #000 285deg 286.3deg, transparent 286.3deg 290deg, #000 290deg 291.3deg, transparent 291.3deg 295deg, #000 295deg 296.3deg, transparent 296.3deg 300deg, #000 300deg 301.3deg, transparent 301.3deg 305deg, #000 305deg 306.3deg, transparent 306.3deg 310deg, #000 310deg 311.3deg, transparent 311.3deg 315deg, #000 315deg 316.3deg, transparent 316.3deg 320deg, #000 320deg 321.3deg, transparent 321.3deg 325deg, #000 325deg 326.3deg, transparent 326.3deg 330deg, #000 330deg 331.3deg, transparent 331.3deg 335deg, #000 335deg 336.3deg, transparent 336.3deg 340deg, #000 340deg 341.3deg, transparent 341.3deg 345deg, #000 345deg 346.3deg, transparent 346.3deg 350deg, #000 350deg 351.3deg, transparent 351.3deg 355deg, #000 355deg 356.3deg, transparent 356.3deg 360deg); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

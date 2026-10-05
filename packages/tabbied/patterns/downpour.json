@@ -1,0 +1,61 @@
+{
+  "name": "Downpour",
+  "slug": "downpour",
+  "galleryOrder": 4083,
+  "galleryWhite": true,
+  "description": "Rain in thin streaks, each bright at its head and fading up its tail, slanting with the gusts so the shower leans one way and then another.",
+  "tags": [
+    "lines",
+    "gradients",
+    "diagonals"
+  ],
+  "mood": [
+    "calm"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "hero-background",
+    "wallpaper"
+  ],
+  "palette": [
+    "#14213D",
+    "#E5E5E5",
+    "#8ECAE6",
+    "#B8C0FF"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 4,
+    "default": 4
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "8x12",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { --a: @rn(-30, 30, 1.1); --l: @rn(0.55, 1.25, 2); -webkit-transform: rotate($deg(a + 16)); transform: rotate($deg(a + 16)); :before { content: ''; position: absolute; left: 24%; top: -40%; width: 8%; height: 120%; border-radius: 99px; background: @p(var(--color1), var(--color2), var(--color3)); -webkit-mask: linear-gradient(180deg, transparent, #000 85%); mask: linear-gradient(180deg, transparent, #000 85%); -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; -webkit-transform: scaleY($(l)); transform: scaleY($(l)); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: 66%; top: -10%; width: 8%; height: 100%; border-radius: 99px; background: @p(var(--color1), var(--color2), var(--color3)); -webkit-mask: linear-gradient(180deg, transparent, #000 85%); mask: linear-gradient(180deg, transparent, #000 85%); -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; -webkit-transform: scaleY($(l)); transform: scaleY($(l)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

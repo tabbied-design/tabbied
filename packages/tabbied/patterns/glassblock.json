@@ -1,0 +1,69 @@
+{
+  "name": "Glass Block",
+  "slug": "glassblock",
+  "galleryOrder": 4132,
+  "galleryWhite": true,
+  "description": "A wall of pressed glass blocks, each pillowed face rippled with concentric rings and lit unevenly from behind.",
+  "tags": [
+    "squares",
+    "concentric",
+    "grid",
+    "rings"
+  ],
+  "mood": [
+    "calm",
+    "retro"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "wallpaper",
+    "hero-background",
+    "card-texture"
+  ],
+  "palette": [
+    "#14202B",
+    "#7FA7B8",
+    "#6C97A8",
+    "#CDE7EE",
+    "#A9D4DE",
+    "#F4FBFC"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "sizing": {
+    "minCellPx": 40
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "5x8",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { background: @p(var(--color1), var(--color2)); -webkit-clip-path: inset(3.5% round 7%); clip-path: inset(3.5% round 7%); :before { content: ''; position: absolute; inset: 12%; border-radius: 9%; background: @p(var(--color3), var(--color4)); opacity: @rn(.35, 1); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 12%; border-radius: 9%; background: @p(var(--color5)); -webkit-mask: repeating-radial-gradient(circle at 50% 50%, #000 0 7%, transparent 7% 14%); mask: repeating-radial-gradient(circle at 50% 50%, #000 0 7%, transparent 7% 14%); opacity: .55; -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

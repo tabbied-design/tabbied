@@ -1,0 +1,68 @@
+{
+  "name": "Dresden Plate",
+  "slug": "dresdenplate",
+  "galleryOrder": 4286,
+  "galleryWhite": true,
+  "description": "Dresden plate quilt blocks: twelve pointed blades in four alternating fabrics fanned round a plain center circle.",
+  "tags": [
+    "radial",
+    "stars",
+    "circles",
+    "triangles"
+  ],
+  "mood": [
+    "retro",
+    "festive",
+    "playful"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "textile",
+    "packaging",
+    "wallpaper"
+  ],
+  "palette": [
+    "#2F3E46",
+    "#F3EBDD",
+    "#3B4A52",
+    "#C8553D",
+    "#E9B44C",
+    "#4F8A8B",
+    "#B56576"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 7,
+    "default": 7
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "4x6",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( background: linear-gradient(90deg, var(--color2) 0 2.5%, transparent 2.5% 97.5%, var(--color2) 97.5%), linear-gradient(180deg, var(--color2) 0 2.5%, transparent 2.5% 97.5%, var(--color2) 97.5%), var(--color1); @random(${shapeFrequency}) { --b1: @p(var(--color3), var(--color4)); --b3: @p(var(--color3), var(--color4)); --b2: @p(var(--color5), var(--color6)); --b4: @p(var(--color5), var(--color6)); :before { content: ''; position: absolute; inset: 2%; background: conic-gradient(transparent 0deg 30deg, @var(--b2) 30deg 60deg, @var(--b3) 60deg 90deg, @var(--b4) 90deg 120deg, transparent 120deg 150deg, @var(--b2) 150deg 180deg, @var(--b3) 180deg 210deg, @var(--b4) 210deg 240deg, transparent 240deg 270deg, @var(--b2) 270deg 300deg, @var(--b3) 300deg 330deg, @var(--b4) 330deg 360deg), @var(--b1); -webkit-clip-path: @var(--plate); clip-path: @var(--plate); -webkit-transform: rotate(@r(0, 30)deg); transform: rotate(@r(0, 30)deg); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: 35%; top: 35%; width: 30%; height: 30%; border-radius: 50%; background: @p(var(--color3), var(--color4), var(--color5), var(--color6)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --plate: polygon(50% 10%, 56.33% 4.94%, 62.68% 2.67%, 67.04% 7.81%, 70% 15.36%, 78.01% 14.15%, 84.65% 15.35%, 85.85% 21.99%, 84.64% 30%, 92.19% 32.96%, 97.33% 37.32%, 95.06% 43.67%, 90% 50%, 95.06% 56.33%, 97.33% 62.68%, 92.19% 67.04%, 84.64% 70%, 85.85% 78.01%, 84.65% 84.65%, 78.01% 85.85%, 70% 84.64%, 67.04% 92.19%, 62.68% 97.33%, 56.33% 95.06%, 50% 90%, 43.67% 95.06%, 37.32% 97.33%, 32.96% 92.19%, 30% 84.64%, 21.99% 85.85%, 15.35% 84.65%, 14.15% 78.01%, 15.36% 70%, 7.81% 67.04%, 2.67% 62.68%, 4.94% 56.33%, 10% 50%, 4.94% 43.67%, 2.67% 37.32%, 7.81% 32.96%, 15.36% 30%, 14.15% 21.99%, 15.35% 15.35%, 21.99% 14.15%, 30% 15.36%, 32.96% 7.81%, 37.32% 2.67%, 43.67% 4.94%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

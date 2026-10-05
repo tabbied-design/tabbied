@@ -1,0 +1,64 @@
+{
+  "name": "Glen Check",
+  "slug": "glencheck",
+  "galleryOrder": 4002,
+  "description": "A glen check: blocks of tiny pin squares alternating with blocks of fine stripes running across and down, crossed by a thin colored overcheck.",
+  "tags": [
+    "squares",
+    "stripes",
+    "grid",
+    "lines"
+  ],
+  "mood": [
+    "elegant",
+    "retro"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "textile",
+    "card-texture"
+  ],
+  "palette": [
+    "#F1EEE8",
+    "#73767D",
+    "#7D6A5C",
+    "#64718A",
+    "#B5492F",
+    "#2E7D9A"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "4x6",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --m: @pd(@p(var(--color1), var(--color2), var(--color3))); --o: @pd(@p(var(--color4), var(--color5))); background: repeating-linear-gradient(90deg, @var(--m) 0 8.333%, transparent 8.333% 16.667%) 100% 0 / 50% 50% no-repeat, repeating-linear-gradient(180deg, @var(--m) 0 8.333%, transparent 8.333% 16.667%) 0 100% / 50% 50% no-repeat; :before { content: ''; position: absolute; inset: 0; background-color: @p(@var(--m), var(--color1)); -webkit-mask: @var(--pins); mask: @var(--pins); -webkit-mask-composite: source-in; mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background-color: @var(--o); opacity: .85; -webkit-mask: @var(--over); mask: @var(--over); -webkit-transition: ease 450ms; transition: ease 450ms; } visibility: hidden; @random(${shapeFrequency}) { visibility: visible; } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --pins: repeating-linear-gradient(90deg, #000 0 10.417%, transparent 10.417% 16.667%), repeating-linear-gradient(180deg, #000 0 10.417%, transparent 10.417% 16.667%), conic-gradient(from 90deg, #000 0 90deg, transparent 90deg 180deg, #000 180deg 270deg, transparent 270deg); --over: linear-gradient(90deg, transparent 0, transparent 0%, #000 0% 1.2%, transparent 1.2%, transparent 98.8%, #000 98.8% 100%, transparent 100%), linear-gradient(180deg, transparent 0, transparent 0%, #000 0% 1.2%, transparent 1.2%, transparent 98.8%, #000 98.8% 100%, transparent 100%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

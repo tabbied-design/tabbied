@@ -1,0 +1,67 @@
+{
+  "name": "Molecule",
+  "slug": "molecule",
+  "galleryOrder": 4152,
+  "description": "A ball-and-stick model spread over the sheet: colored balls of every size joined to their neighbors by dark sticks, across, down and on the slant.",
+  "tags": [
+    "dots",
+    "circles",
+    "lattice",
+    "lines",
+    "diagonals"
+  ],
+  "mood": [
+    "retro",
+    "playful",
+    "technical"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "wallpaper",
+    "textile",
+    "card-texture"
+  ],
+  "palette": [
+    "#F3EBDD",
+    "#2A2A2A",
+    "#E4572E",
+    "#F3A712",
+    "#29335C",
+    "#4F9D69"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --d: @r(26%, 56%); @random(${shapeFrequency}) { --k: @p(@var(--k0), @var(--k1), @var(--k2), @var(--k3), @var(--k4), @var(--k5), @var(--k6), @var(--k7), @var(--k8)); :before { content: ''; position: absolute; left: 0; top: 0; width: 200%; height: 200%; background: var(--color1); -webkit-clip-path: @var(--k); clip-path: @var(--k); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; width: @var(--d); height: @var(--d); left: calc(50% - @var(--d) / 2); top: calc(50% - @var(--d) / 2); border-radius: 50%; background: @p(var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --k0: polygon(25% 26.4%, 75% 26.4%, 75% 23.6%, 25% 23.6%); --k1: polygon(23.6% 25%, 23.6% 75%, 26.4% 75%, 26.4% 25%); --k2: polygon(25% 26.4%, 75% 26.4%, 75% 23.6%, 25% 23.6%, 23.6% 25%, 23.6% 75%, 26.4% 75%, 26.4% 25%); --k3: polygon(25% 26.4%, 75% 26.4%, 75% 23.6%, 25% 23.6%, 24.01% 25.99%, 74.01% 75.99%, 75.99% 74.01%, 25.99% 24.01%); --k4: polygon(23.6% 25%, 23.6% 75%, 26.4% 75%, 26.4% 25%, 24.01% 25.99%, 74.01% 75.99%, 75.99% 74.01%, 25.99% 24.01%); --k5: polygon(24.01% 25.99%, 74.01% 75.99%, 75.99% 74.01%, 25.99% 24.01%); --k6: polygon(25% 25%, 25% 25%, 25% 25%); --k7: polygon(25% 26.4%, 75% 26.4%, 75% 23.6%, 25% 23.6%, 23.6% 25%, 23.6% 75%, 26.4% 75%, 26.4% 25%, 24.01% 25.99%, 74.01% 75.99%, 75.99% 74.01%, 25.99% 24.01%); --k8: polygon(25% 26.4%, 75% 26.4%, 75% 23.6%, 25% 23.6%, 23.6% 25%, 23.6% 75%, 26.4% 75%, 26.4% 25%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

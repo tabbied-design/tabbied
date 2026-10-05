@@ -1,0 +1,63 @@
+{
+  "name": "Ticking",
+  "slug": "ticking",
+  "galleryOrder": 4004,
+  "description": "Mattress ticking: every column a broad stripe of its own color and width between two pinlines, with a hairline of another color dividing the columns.",
+  "tags": [
+    "stripes",
+    "lines"
+  ],
+  "mood": [
+    "calm",
+    "retro"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "textile",
+    "wallpaper",
+    "packaging"
+  ],
+  "palette": [
+    "#F4EEE1",
+    "#1F3A5F",
+    "#B8322A",
+    "#3C6E71",
+    "#8C5E58",
+    "#C9A227"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "8x12",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --t: @pd(@m(@X, @p(var(--color1), var(--color2), var(--color3), var(--color4)))); --w: @pd(@m(@X, @p(12%, 22%, 32%))); background: linear-gradient(90deg, var(--color5) 0 1%, transparent 1% 99%, var(--color5) 99%); :before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: @var(--w); background-color: @p(@var(--t)); -webkit-transform: translateX(-50%); transform: translateX(-50%); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background-color: @var(--t); -webkit-mask: linear-gradient(90deg, transparent 0, transparent 19%, #000 19% 23%, transparent 23%, transparent 77%, #000 77% 81%, transparent 81%); mask: linear-gradient(90deg, transparent 0, transparent 19%, #000 19% 23%, transparent 23%, transparent 77%, #000 77% 81%, transparent 81%); -webkit-transition: ease 450ms; transition: ease 450ms; } visibility: hidden; @random(${shapeFrequency}) { visibility: visible; } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

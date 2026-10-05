@@ -283,13 +283,13 @@ add(
 // Banknote rosettes: a wavy ring and a spirograph star traced as fine bands,
 // each turned its own way, inside a thin bounding circle.
 const GUILL = [
-  P(stroke(curve((t) => [50 + (40 + 4 * Math.sin(14 * t)) * Math.cos(t), 50 + (40 + 4 * Math.sin(14 * t)) * Math.sin(t)], 420), 2.4, true)),
+  P(stroke(curve((t) => [50 + (40 + 4 * Math.sin(14 * t)) * Math.cos(t), 50 + (40 + 4 * Math.sin(14 * t)) * Math.sin(t)], 280), 2.4, true)),
   P(stroke(curve((t) => {
     const [R, r, d] = [8, 3, 4.6];
     const x = (R - r) * Math.cos(t) + d * Math.cos(((R - r) / r) * t);
     const y = (R - r) * Math.sin(t) - d * Math.sin(((R - r) / r) * t);
     return [50 + x * 3.3, 50 + y * 3.3];
-  }, 480, 3), 2.4, true)),
+  }, 330, 3), 2.4, true)),
 ];
 
 add(
@@ -649,7 +649,7 @@ const LISSA = [
   [5, 4, Math.PI / 2],
   [1, 1, Math.PI / 3],
 ].map(([a, b, d]) =>
-  P(stroke(curve((t) => [50 + 46 * Math.sin(a * t + d), 50 + 46 * Math.sin(b * t)], 300), 2.4, true))
+  P(stroke(curve((t) => [50 + 46 * Math.sin(a * t + d), 50 + 46 * Math.sin(b * t)], 180), 2.4, true))
 );
 
 add(
@@ -743,20 +743,26 @@ add(
 
 // -- K23 Pie Chart ----------------------------------------------------------------
 // The pie is a disc painted as a gradient on the cell, and two slices laid
-// over it, each a round box cut by a polygon fanned out past the rim (five
-// points on a circle well outside it, so every chord clears the edge). Every
-// slice starts at the same rolled angle, which turns the whole pie; a donut's
-// hole is bored through the disc and both slices alike.
-const sector = (deg) =>
-  `polygon(50% 50%, ${[0, 1, 2, 3, 4]
-    .map((k) => `${q(`50 + 75 * sin((r0 + (${deg}) * ${k / 4}) * 0.0174533)`)}% ${q(`50 - 75 * cos((r0 + (${deg}) * ${k / 4}) * 0.0174533)`)}%`)
-    .join(', ')})`;
+// over it, each a round box cut by a sector. Slice angles come in steps of
+// ten degrees, so every sector (40 to 300 degrees) is a polygon set once on
+// the host, fanned out past the rim (five points on a circle well outside it,
+// so every chord clears the edge); a cell names its two and turns the whole
+// pie. A donut's hole is bored through the disc and both slices alike.
+const PIE_HOST = Array.from({ length: 27 }, (_, i) => {
+  const deg = 40 + 10 * i;
+  const pts = [0, 1, 2, 3, 4].map((k) => {
+    const t = ((deg * k) / 4) * (Math.PI / 180);
+    return [50 + 75 * Math.sin(t), 50 - 75 * Math.cos(t)];
+  });
+  return `--s${deg}: ${P([[50, 50], ...pts])};`;
+}).join(' ') + ' --hole0: none; --hole1: radial-gradient(circle closest-side, transparent 50%, #000 50%);';
 
 add(
   'Pie Chart',
   'A sheet of pie and donut charts, each split into three slices in the same three inks at its own proportions and turned to its own angle.',
   (c) => ({
-    rule: `${F} { --a1: @ri(40, 150); --a2: @ri(60, 150); --r0: @ri(0, 360); --d: @p(0, 1); background: radial-gradient(circle closest-side, transparent $(d * 44)%, @p(var(--color3)) $(d * 44)% 84.6%, transparent 84.6%); ${B(`inset: 7%; border-radius: 50%; background: @p(var(--color2)); ${cp(sector('a1 + a2'))} ${msk('radial-gradient(circle closest-side, transparent $(d * 50)%, #000 $(d * 50)%)')}`)} ${A(`inset: 7%; border-radius: 50%; background: @p(var(--color1)); ${cp(sector('a1'))} ${msk('radial-gradient(circle closest-side, transparent $(d * 50)%, #000 $(d * 50)%)')}`)} }${TR}`,
+    host: PIE_HOST,
+    rule: `${F} { --a1: @p(4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15); --a2: @p(6, 7, 8, 9, 10, 11, 12, 13, 14, 15); --d: @p(0, 1); background: radial-gradient(circle closest-side, transparent $(d * 44)%, @p(var(--color3)) $(d * 44)% 84.6%, transparent 84.6%); ${tf('rotate(@ri(0, 359)deg)')} ${B(`inset: 7%; border-radius: 50%; background: @p(var(--color2)); ${cp('@var(--s$(10 * (a1 + a2)))')} ${msk('@var(--hole$(d))')}`)} ${A(`inset: 7%; border-radius: 50%; background: @p(var(--color1)); ${cp('@var(--s$(10 * a1))')} ${msk('@var(--hole$(d))')}`)} }${TR}`,
   }),
   {
     palette: ['#F4EFE4', '#E4572E', '#29335C', '#76B5A8'],
@@ -770,20 +776,41 @@ add(
 // -- K24 Streamgraph --------------------------------------------------------------
 // Three layers stacked about each row's midline, their thicknesses running on
 // sine waves of the sheet column whose phases are rolled once per drawing, so
-// the stream is continuous from cell to cell and reshapes on a reseed.
+// the stream is continuous from cell to cell and reshapes on a reseed. Each
+// cell samples the three thicknesses once at five points across it (--ua to
+// --we), builds its three outlines from those once (--k1 to --k3), and every
+// clip reads them back, so no sine is worked out twice.
 const SG_N = 4; // segments across a cell
-const sgThick = (j, X) =>
-  `(${[13, 11, 12][j]} * (1.05 + 0.6 * sin(${X} * ${[0.9, 1.3, 0.7][j]} + p${j} + @y * ${[1.7, 2.3, 2.9][j]}) + 0.35 * sin(${X} * ${[2.1, 2.7, 1.9][j]} + p${j} * 1.7 + @y * ${[0.8, 1.9, 1.3][j]})))`;
-const sgEdges = (X) => {
-  const h = [0, 1, 2].map((j) => sgThick(j, X));
-  const top = `(50 - (${h[0]} + ${h[1]} + ${h[2]}) / 2)`;
-  return [top, `(${top} + ${h[0]})`, `(${top} + ${h[0]} + ${h[1]})`, `(${top} + ${h[0]} + ${h[1]} + ${h[2]})`];
+const SG_AT = 'abcde';
+const SG_AMP = [13, 11, 12];
+const SG_W = [
+  [0.9, 1.3, 0.7],
+  [2.1, 2.7, 1.9],
+];
+const SG_Y = [
+  [1.7, 2.3, 2.9],
+  [0.8, 1.9, 1.3],
+];
+// the two sine phases of band j at the cell's left edge (--fj, --gj), then
+// its thickness at each sample, stepping the phases a quarter cell at a time
+const SG_VARS = [
+  ...[0, 1, 2].map((j) => `--f${j}: $((@x - 1) * ${SG_W[0][j]} + p${j} + @y * ${SG_Y[0][j]}); --g${j}: $((@x - 1) * ${SG_W[1][j]} + p${j} * 1.7 + @y * ${SG_Y[1][j]});`),
+  ...[0, 1, 2].map((j) =>
+    SG_AT.split('')
+      .map((a, i) => `--${'uvw'[j]}${a}: $(${SG_AMP[j]} * (1.05 + 0.6 * sin(f${j} + ${+((SG_W[0][j] * i) / SG_N).toFixed(4)}) + 0.35 * sin(g${j} + ${+((SG_W[1][j] * i) / SG_N).toFixed(4)})));`)
+      .join(' ')
+  ),
+].join(' ');
+/** Boundary k (0 the top edge, 3 the bottom) at sample a. */
+const sgEdge = (k, a) => {
+  const h = ['u', 'v', 'w'].map((n) => n + a);
+  return `50 - (${h.join(' + ')}) / 2${h.slice(0, k).map((n) => ` + ${n}`).join('')}`;
 };
 /** The region from the stream's top edge down to boundary k (1-3). */
 const sgDown = (k) => {
-  const xs = Array.from({ length: SG_N + 1 }, (_, i) => i / SG_N);
-  const upper = xs.map((u) => `${(u * 100).toFixed(1)}% ${q(sgEdges(`(@x - 1 + ${u})`)[0])}%`);
-  const lower = [...xs].reverse().map((u) => `${(u * 100).toFixed(1)}% ${q(sgEdges(`(@x - 1 + ${u})`)[k])}%`);
+  const xs = SG_AT.split('').map((a, i) => [a, ((i * 100) / SG_N).toFixed(1)]);
+  const upper = xs.map(([a, x]) => `${x}% ${q(sgEdge(0, a))}%`);
+  const lower = [...xs].reverse().map(([a, x]) => `${x}% ${q(sgEdge(k, a))}%`);
   return `polygon(${[...upper, ...lower].join(', ')})`;
 };
 
@@ -791,7 +818,7 @@ add(
   'Streamgraph',
   'Rows of streamgraphs: three colored layers stacked about a midline, swelling and thinning in smooth waves as they flow across the sheet.',
   (c) => ({
-    rule: `--p0: @once(@r(0, 6.283)); --p1: @once(@r(0, 6.283)); --p2: @once(@r(0, 6.283)); ${F} { background: @p(var(--color3)); ${cp(sgDown(3))} ${B(`inset: 0; background: @p(var(--color2)); ${cp(sgDown(2))}`)} ${A(`inset: 0; background: @p(var(--color1)); ${cp(sgDown(1))}`)} }${TR}`,
+    rule: `--p0: @once(@r(0, 6.283)); --p1: @once(@r(0, 6.283)); --p2: @once(@r(0, 6.283)); ${F} { ${SG_VARS} --k1: ${sgDown(1)}; --k2: ${sgDown(2)}; --k3: ${sgDown(3)}; background: @p(var(--color3)); ${cp('@var(--k3)')} ${B(`inset: 0; background: @p(var(--color2)); ${cp('@var(--k2)')}`)} ${A(`inset: 0; background: @p(var(--color1)); ${cp('@var(--k1)')}`)} }${TR}`,
   }),
   {
     pal: 27,

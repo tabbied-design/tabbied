@@ -1,0 +1,67 @@
+{
+  "name": "Disco",
+  "slug": "disco",
+  "galleryOrder": 4165,
+  "galleryWhite": true,
+  "description": "A light-up disco floor: square tiles glowing from the middle out, bright in drifting patches and dim between, with a sparkle on a few.",
+  "tags": [
+    "squares",
+    "grid",
+    "gradients",
+    "stars"
+  ],
+  "mood": [
+    "festive",
+    "retro",
+    "bold"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "poster",
+    "og-image",
+    "hero-background"
+  ],
+  "palette": [
+    "#120E1F",
+    "#FFFFFF",
+    "#F15BB5",
+    "#00BBF9",
+    "#FEE440",
+    "#9B5DE5"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { :before { content: ''; position: absolute; inset: 5%; border-radius: 6%; background: @p(var(--color2), var(--color3), var(--color4), var(--color5)); opacity: @rn(.42, 1.25); -webkit-mask: radial-gradient(closest-side, #000 25%, #0000008c 100%); mask: radial-gradient(closest-side, #000 25%, #0000008c 100%); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: 52%; top: 12%; width: 36%; height: 36%; background: var(--color1); -webkit-clip-path: @var(--spark); clip-path: @var(--spark); transform: scale(@p(0, 0, 0, 1)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --spark: polygon(50% 0%, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0% 50%, 42% 42%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "name": "Blanket Stitch",
+  "slug": "blanketstitch",
+  "galleryOrder": 4293,
+  "description": "Squares of colored felt sewn down slightly askew, each edged with a cream blanket stitch: a running thread with short upright stitches at even spacing.",
+  "tags": [
+    "squares",
+    "lines",
+    "grid"
+  ],
+  "mood": [
+    "organic",
+    "calm",
+    "retro"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "textile",
+    "card-texture",
+    "wallpaper"
+  ],
+  "palette": [
+    "#E8E0D0",
+    "#FBF6EC",
+    "#B5543C",
+    "#3E6259",
+    "#D9A441",
+    "#6C4F70",
+    "#8A9A5B"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 7,
+    "default": 7
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { background: @p(var(--color2), var(--color3), var(--color4), var(--color5), var(--color6)); -webkit-transform: rotate(@r(-9, 9)deg) scale(0.8); transform: rotate(@r(-9, 9)deg) scale(0.8); :after { content: ''; position: absolute; inset: 0; background: @var(--stitches); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --stitches: linear-gradient(var(--color1), var(--color1)) 50% 8.18% / 84% 2.2% no-repeat, linear-gradient(var(--color1), var(--color1)) 50% 91.82% / 84% 2.2% no-repeat, linear-gradient(var(--color1), var(--color1)) 8.18% 50% / 2.2% 84% no-repeat, linear-gradient(var(--color1), var(--color1)) 91.82% 50% / 2.2% 84% no-repeat, repeating-linear-gradient(90deg, var(--color1) 0 2.6%, transparent 2.6% 10%) 59.18% 8.99% / 80.4% 11% no-repeat, repeating-linear-gradient(90deg, var(--color1) 0 2.6%, transparent 2.6% 10%) 59.18% 91.01% / 80.4% 11% no-repeat, repeating-linear-gradient(180deg, var(--color1) 0 2.6%, transparent 2.6% 10%) 8.99% 59.18% / 11% 80.4% no-repeat, repeating-linear-gradient(180deg, var(--color1) 0 2.6%, transparent 2.6% 10%) 91.01% 59.18% / 11% 80.4% no-repeat; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "name": "Perihelion",
+  "slug": "perihelion",
+  "galleryOrder": 4195,
+  "description": "Diagrams of three nested orbits that share one focus, the sun sitting in it and a single body somewhere on its path, turned every way.",
+  "tags": [
+    "ovals",
+    "rings",
+    "dots",
+    "curves"
+  ],
+  "mood": [
+    "technical",
+    "calm"
+  ],
+  "density": "sparse",
+  "goodFor": [
+    "hero-background",
+    "card-texture",
+    "wallpaper"
+  ],
+  "palette": [
+    "#F0F4F8",
+    "#334E68",
+    "#E0912F",
+    "#D64545",
+    "#102A43"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "sizing": {
+    "minCellPx": 48
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --e: @r(0deg, 360deg); @random(${shapeFrequency}) { transform: rotate(@r(0deg, 360deg)); background: radial-gradient(ellipse 6.5% 6.5% at 79.4% 50%, var(--color2) 100%, transparent 100%); :before { content: ''; position: absolute; inset: 0; background: var(--color1); mask: radial-gradient(ellipse 42% 30% at 50% 50%, transparent 92.67%, #000 92.67% 100%, transparent 100%), radial-gradient(ellipse 26% 18.76% at 61.4% 50%, transparent 88.27%, #000 88.27% 100%, transparent 100%), radial-gradient(ellipse 12% 10.9% at 74.4% 50%, transparent 79.82%, #000 79.82% 100%, transparent 100%); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background: @p(var(--color3), var(--color4)); mask: radial-gradient(ellipse 5.2% 5.2% at 50% 50%, #000 100%, transparent 100%); transform: @p(translate(calc(0.0% + 42% * cos(@var(--e))), calc(30% * sin(@var(--e)))), translate(calc(11.4% + 26% * cos(@var(--e))), calc(18.76% * sin(@var(--e)))), translate(calc(24.4% + 12% * cos(@var(--e))), calc(10.9% * sin(@var(--e))))); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

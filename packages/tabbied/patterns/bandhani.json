@@ -1,0 +1,64 @@
+{
+  "name": "Bandhani",
+  "slug": "bandhani",
+  "galleryOrder": 4015,
+  "description": "Bandhani tie-dots: a dyed cloth pricked with rosettes of small pale resist dots, each with the dark knot of its tie at the center.",
+  "tags": [
+    "dots",
+    "circles",
+    "radial"
+  ],
+  "mood": [
+    "festive",
+    "organic"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "textile",
+    "packaging",
+    "wallpaper"
+  ],
+  "palette": [
+    "#F6E7C8",
+    "#B3202A",
+    "#7A1631",
+    "#1F2A55",
+    "#3E2A1E",
+    "#E0A526"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "4x6",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --k: @pd(@p(var(--color1), var(--color2))); @even { :before { content: ''; position: absolute; inset: 0; background-color: @p(@var(--k)); -webkit-mask: @var(--holes8); mask: @var(--holes8); -webkit-mask-composite: source-in; mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background-color: @p(var(--color3), var(--color4), var(--color5)); -webkit-mask: @var(--knots8); mask: @var(--knots8); -webkit-transition: ease 450ms; transition: ease 450ms; } } @odd { :before { content: ''; position: absolute; inset: 0; background-color: @p(@var(--k)); -webkit-mask: @var(--holes4); mask: @var(--holes4); -webkit-mask-composite: source-in; mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background-color: @p(var(--color3), var(--color4), var(--color5)); -webkit-mask: @var(--knots4); mask: @var(--knots4); -webkit-transition: ease 450ms; transition: ease 450ms; } } visibility: hidden; @random(${shapeFrequency}) { visibility: visible; } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --holes8: radial-gradient(7% 7% at 50% 50%, transparent 70%, #000 100%), radial-gradient(7% 7% at 81% 50%, transparent 70%, #000 100%), radial-gradient(7% 7% at 71.9% 71.9%, transparent 70%, #000 100%), radial-gradient(7% 7% at 50% 81%, transparent 70%, #000 100%), radial-gradient(7% 7% at 28.1% 71.9%, transparent 70%, #000 100%), radial-gradient(7% 7% at 19% 50%, transparent 70%, #000 100%), radial-gradient(7% 7% at 28.1% 28.1%, transparent 70%, #000 100%), radial-gradient(7% 7% at 50% 19%, transparent 70%, #000 100%), radial-gradient(7% 7% at 71.9% 28.1%, transparent 70%, #000 100%); --knots8: radial-gradient(2% 2% at 50% 50%, #000 50%, transparent 100%), radial-gradient(2% 2% at 81% 50%, #000 50%, transparent 100%), radial-gradient(2% 2% at 71.9% 71.9%, #000 50%, transparent 100%), radial-gradient(2% 2% at 50% 81%, #000 50%, transparent 100%), radial-gradient(2% 2% at 28.1% 71.9%, #000 50%, transparent 100%), radial-gradient(2% 2% at 19% 50%, #000 50%, transparent 100%), radial-gradient(2% 2% at 28.1% 28.1%, #000 50%, transparent 100%), radial-gradient(2% 2% at 50% 19%, #000 50%, transparent 100%), radial-gradient(2% 2% at 71.9% 28.1%, #000 50%, transparent 100%); --holes4: radial-gradient(7% 7% at 50% 50%, transparent 70%, #000 100%), radial-gradient(7% 7% at 50% 22%, transparent 70%, #000 100%), radial-gradient(7% 7% at 78% 50%, transparent 70%, #000 100%), radial-gradient(7% 7% at 50% 78%, transparent 70%, #000 100%), radial-gradient(7% 7% at 22% 50%, transparent 70%, #000 100%); --knots4: radial-gradient(2% 2% at 50% 50%, #000 50%, transparent 100%), radial-gradient(2% 2% at 50% 22%, #000 50%, transparent 100%), radial-gradient(2% 2% at 78% 50%, #000 50%, transparent 100%), radial-gradient(2% 2% at 50% 78%, #000 50%, transparent 100%), radial-gradient(2% 2% at 22% 50%, #000 50%, transparent 100%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

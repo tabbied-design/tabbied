@@ -1,0 +1,62 @@
+{
+  "name": "Barchan",
+  "slug": "barchan",
+  "galleryOrder": 4084,
+  "description": "Crescent dunes seen from the air, every crescent turned with its horns downwind by a smooth wind field and larger where the sand runs deep.",
+  "tags": [
+    "arcs",
+    "curves"
+  ],
+  "mood": [
+    "organic",
+    "calm"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "wallpaper",
+    "textile",
+    "packaging"
+  ],
+  "palette": [
+    "#F3E3C3",
+    "#C8864B",
+    "#A9673A",
+    "#E0A96D",
+    "#7A4A2A"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "7x10",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { -webkit-transform: rotate(@rn(-60, 240, 1.1)deg); transform: rotate(@rn(-60, 240, 1.1)deg); :after { content: ''; position: absolute; inset: 6%; background: @p(var(--color1), var(--color2), var(--color3), var(--color4)); -webkit-clip-path: @var(--moon); clip-path: @var(--moon); -webkit-transform: scale(@calc(max(0.42, min(1.05, @rn(0.1, 1.4, 1.5))))); transform: scale(@calc(max(0.42, min(1.05, @rn(0.1, 1.4, 1.5))))); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --moon: polygon(90.0% 70.7%, 92.6% 64.6%, 94.2% 58.3%, 95.0% 51.7%, 94.7% 45.1%, 93.6% 38.7%, 91.4% 32.4%, 88.4% 26.6%, 84.6% 21.2%, 80.1% 16.5%, 74.9% 12.5%, 69.1% 9.3%, 63.0% 6.9%, 56.6% 5.5%, 50.0% 5.0%, 43.4% 5.5%, 37.0% 6.9%, 30.9% 9.3%, 25.1% 12.5%, 19.9% 16.5%, 15.4% 21.2%, 11.6% 26.6%, 8.6% 32.4%, 6.4% 38.7%, 5.3% 45.1%, 5.0% 51.7%, 5.8% 58.3%, 7.4% 64.6%, 10.0% 70.7%, 10.0% 70.7%, 10.5% 65.6%, 11.7% 60.6%, 13.4% 55.8%, 15.8% 51.2%, 18.7% 47.0%, 22.2% 43.2%, 26.1% 39.9%, 30.4% 37.1%, 35.0% 34.9%, 39.9% 33.3%, 44.9% 32.3%, 50.0% 32.0%, 55.1% 32.3%, 60.1% 33.3%, 65.0% 34.9%, 69.6% 37.1%, 73.9% 39.9%, 77.8% 43.2%, 81.3% 47.0%, 84.2% 51.2%, 86.6% 55.8%, 88.3% 60.6%, 89.5% 65.6%, 90.0% 70.7%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

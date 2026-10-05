@@ -1,0 +1,66 @@
+{
+  "name": "Umbra",
+  "slug": "umbra",
+  "galleryOrder": 4187,
+  "galleryWhite": true,
+  "description": "A field of full moons with the earth's round shadow fallen across the middle of the sheet: moons inside it glow red, and those on its edge are cut by its curve.",
+  "tags": [
+    "circles",
+    "grid",
+    "dots",
+    "arcs"
+  ],
+  "mood": [
+    "bold",
+    "calm"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "poster",
+    "og-image",
+    "wallpaper"
+  ],
+  "palette": [
+    "#0D0B16",
+    "#B5322B",
+    "#D4572E",
+    "#8E2A2A",
+    "#F1EAD7",
+    "#DCE2EC"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "8x12",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { :before { content: ''; position: absolute; inset: 12%; border-radius: 50%; background: @p(var(--color1), var(--color2), var(--color3)); mask: radial-gradient(ellipse @calc((0.62 * (min(@X, @Y) / 2)) * 131.58)% @calc((0.62 * (min(@X, @Y) / 2)) * 131.58)% at @calc(50 - @dx * 131.58)% @calc(50 - @dy * 131.58)%, #000 100%, transparent 100%); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 12%; border-radius: 50%; background: @p(var(--color4), var(--color5)); opacity: @calc(min(1, 0.4 + 0.6 * max(0, sqrt(@dx * @dx + @dy * @dy) - (0.62 * (min(@X, @Y) / 2))) / (0.5 * (min(@X, @Y) / 2)))); mask: radial-gradient(ellipse @calc((0.62 * (min(@X, @Y) / 2)) * 131.58)% @calc((0.62 * (min(@X, @Y) / 2)) * 131.58)% at @calc(50 - @dx * 131.58)% @calc(50 - @dy * 131.58)%, transparent 100%, #000 100%); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "name": "Four State",
+  "slug": "fourstate",
+  "galleryOrder": 4262,
+  "description": "Rows of mail sorting bars on kraft paper: tall bars, rising and falling half bars and short trackers at an even pitch, mostly navy with the odd group in red.",
+  "tags": [
+    "lines",
+    "stripes",
+    "steps"
+  ],
+  "mood": [
+    "technical",
+    "calm"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "section-divider",
+    "card-texture",
+    "packaging"
+  ],
+  "palette": [
+    "#E6D7BC",
+    "#1E2B4A",
+    "#C23B22"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 3,
+    "default": 3
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "8x12",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { background: @p(var(--color1), var(--color1), var(--color1), var(--color2)); mask: linear-gradient(#000, #000) 9.68% @p(50% / 7% 80%, 20.83% / 7% 52%, 79.17% / 7% 52%, 50% / 7% 24%) no-repeat, linear-gradient(#000, #000) 36.56% @p(50% / 7% 80%, 20.83% / 7% 52%, 79.17% / 7% 52%, 50% / 7% 24%) no-repeat, linear-gradient(#000, #000) 63.44% @p(50% / 7% 80%, 20.83% / 7% 52%, 79.17% / 7% 52%, 50% / 7% 24%) no-repeat, linear-gradient(#000, #000) 90.32% @p(50% / 7% 80%, 20.83% / 7% 52%, 79.17% / 7% 52%, 50% / 7% 24%) no-repeat; } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

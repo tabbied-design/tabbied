@@ -1,0 +1,66 @@
+{
+  "name": "Slate",
+  "slug": "slate",
+  "galleryOrder": 4142,
+  "galleryWhite": true,
+  "description": "A slate roof laid in staggered courses, each slate lapping the course below with its lower corners clipped, and a band of pointed purple slates every few rows.",
+  "tags": [
+    "blocks",
+    "grid",
+    "triangles"
+  ],
+  "mood": [
+    "calm",
+    "elegant"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "wallpaper",
+    "textile",
+    "card-texture"
+  ],
+  "palette": [
+    "#1C2027",
+    "#4E5A6B",
+    "#5C6878",
+    "#455063",
+    "#69778A",
+    "#5D4F6E",
+    "#8D99A8"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 7,
+    "default": 7
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x10",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @y(even) { transform: translateX(50%); } @random(${shapeFrequency}) { z-index: @calc(100 - @y); --sh: @match(y % 4 == 0, @var(--sp), @var(--sc)); :after { content: ''; position: absolute; left: 1.5%; top: 0; width: 97%; height: 124%; background: linear-gradient(180deg, var(--color6) 0, transparent 30%), @match(y % 4 == 0, var(--color5), @p(var(--color1), var(--color2), var(--color3), var(--color4))); -webkit-clip-path: @var(--sh); clip-path: @var(--sh); -webkit-transition: ease 450ms; transition: ease 450ms; } :before { content: ''; position: absolute; left: -98.5%; top: 0; width: @match(x == 1, 97%, 0); height: 124%; background: linear-gradient(180deg, var(--color6) 0, transparent 30%), @match(y % 4 == 0, var(--color5), @p(var(--color1), var(--color2), var(--color3), var(--color4))); -webkit-clip-path: @var(--sh); clip-path: @var(--sh); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --sc: polygon(0% 0%, 100% 0%, 100% 86%, 86% 100%, 14% 100%, 0% 86%); --sp: polygon(0% 0%, 100% 0%, 100% 76%, 50% 100%, 0% 76%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

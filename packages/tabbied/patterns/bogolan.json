@@ -1,0 +1,64 @@
+{
+  "name": "Bogolan",
+  "slug": "bogolan",
+  "galleryOrder": 4016,
+  "galleryWhite": true,
+  "description": "Mudcloth: hand-painted rows of marks, a row of dots, a row of crosses, a zigzag and a ladder, in pale earth on a dark ground.",
+  "tags": [
+    "dots",
+    "crosses",
+    "zigzags",
+    "lines"
+  ],
+  "mood": [
+    "organic",
+    "bold"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "textile",
+    "poster",
+    "section-divider"
+  ],
+  "palette": [
+    "#2B1E16",
+    "#EDE0C4",
+    "#E4CFA3",
+    "#C99A4B"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 4,
+    "default": 4
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "4x6",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --k: @p(var(--color1), var(--color2), var(--color3)); visibility: hidden; @random(${shapeFrequency}) { visibility: visible; } @match(y % 4 == 1) { :before { content: ''; position: absolute; left: 0; right: 0; top: 38%; height: 24%; background-color: @p(@var(--k)); -webkit-mask: radial-gradient(closest-side, #000 72%, transparent 78%) 0 0 / 33.333% 100%; mask: radial-gradient(closest-side, #000 72%, transparent 78%) 0 0 / 33.333% 100%; -webkit-transition: ease 450ms; transition: ease 450ms; } } @match(y % 4 == 2) { :before { content: ''; position: absolute; left: 22%; top: 22%; width: 56%; height: 56%; background-color: @p(@var(--k)); -webkit-clip-path: polygon(0.0% 0.0%, 16.0% 0.0%, 50.0% 34.0%, 84.0% 0.0%, 100.0% 0.0%, 100.0% 16.0%, 66.0% 50.0%, 100.0% 84.0%, 100.0% 100.0%, 84.0% 100.0%, 50.0% 66.0%, 16.0% 100.0%, 0.0% 100.0%, 0.0% 84.0%, 34.0% 50.0%, 0.0% 16.0%); clip-path: polygon(0.0% 0.0%, 16.0% 0.0%, 50.0% 34.0%, 84.0% 0.0%, 100.0% 0.0%, 100.0% 16.0%, 66.0% 50.0%, 100.0% 84.0%, 100.0% 100.0%, 84.0% 100.0%, 50.0% 66.0%, 16.0% 100.0%, 0.0% 100.0%, 0.0% 84.0%, 34.0% 50.0%, 0.0% 16.0%); -webkit-transition: ease 450ms; transition: ease 450ms; } } @match(y % 4 == 3) { :before { content: ''; position: absolute; left: 0; right: 0; top: 30%; height: 40%; background-color: @p(@var(--k)); -webkit-clip-path: polygon(0.0% 0.0%, 25.0% 70.0%, 50.0% 0.0%, 75.0% 70.0%, 100.0% 0.0%, 100.0% 30.0%, 75.0% 100.0%, 50.0% 30.0%, 25.0% 100.0%, 0.0% 30.0%); clip-path: polygon(0.0% 0.0%, 25.0% 70.0%, 50.0% 0.0%, 75.0% 70.0%, 100.0% 0.0%, 100.0% 30.0%, 75.0% 100.0%, 50.0% 30.0%, 25.0% 100.0%, 0.0% 30.0%); -webkit-transition: ease 450ms; transition: ease 450ms; } } @match(y % 4 == 0) { :before { content: ''; position: absolute; left: 0; right: 0; top: 28%; height: 44%; background-color: @p(@var(--k)); -webkit-mask: linear-gradient(180deg, transparent 0, transparent 0%, #000 0% 14%, transparent 14%, transparent 86%, #000 86% 100%, transparent 100%); mask: linear-gradient(180deg, transparent 0, transparent 0%, #000 0% 14%, transparent 14%, transparent 86%, #000 86% 100%, transparent 100%); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: 0; right: 0; top: 34%; height: 32%; background-color: @var(--k); -webkit-mask: repeating-linear-gradient(90deg, transparent 0 9.5%, #000 9.5% 15.5%, transparent 15.5% 25%); mask: repeating-linear-gradient(90deg, transparent 0 9.5%, #000 9.5% 15.5%, transparent 15.5% 25%); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

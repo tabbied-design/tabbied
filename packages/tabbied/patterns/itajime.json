@@ -1,0 +1,63 @@
+{
+  "name": "Itajime",
+  "slug": "itajime",
+  "galleryOrder": 4013,
+  "description": "Clamp-resist shibori: indigo cloth folded into squares, each one left with a soft pale window in the middle and blurred pale seams where the folds were pressed.",
+  "tags": [
+    "squares",
+    "grid",
+    "gradients"
+  ],
+  "mood": [
+    "calm",
+    "organic"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "textile",
+    "wallpaper",
+    "card-texture"
+  ],
+  "palette": [
+    "#EEF0F0",
+    "#1C2E57",
+    "#24407A",
+    "#16244A",
+    "#2F5590"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "4x6",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --k: @p(var(--color1), var(--color2), var(--color3), var(--color4)); @random(${shapeFrequency}) { :before { content: ''; position: absolute; inset: 0; background-color: @p(@var(--k)); -webkit-mask: linear-gradient(90deg, transparent 6%, #000 14% 27%, transparent 36% 64%, #000 73% 86%, transparent 94%), linear-gradient(180deg, transparent 6%, #000 14% 86%, transparent 94%); mask: linear-gradient(90deg, transparent 6%, #000 14% 27%, transparent 36% 64%, #000 73% 86%, transparent 94%), linear-gradient(180deg, transparent 6%, #000 14% 86%, transparent 94%); -webkit-mask-composite: source-in; mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background-color: @var(--k); -webkit-mask: linear-gradient(90deg, transparent 6%, #000 14% 86%, transparent 94%), linear-gradient(180deg, transparent 6%, #000 14% 27%, transparent 36% 64%, #000 73% 86%, transparent 94%); mask: linear-gradient(90deg, transparent 6%, #000 14% 86%, transparent 94%), linear-gradient(180deg, transparent 6%, #000 14% 27%, transparent 36% 64%, #000 73% 86%, transparent 94%); -webkit-mask-composite: source-in; mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

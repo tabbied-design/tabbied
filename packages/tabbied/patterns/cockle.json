@@ -1,0 +1,62 @@
+{
+  "name": "Cockle",
+  "slug": "cockle",
+  "galleryOrder": 4119,
+  "description": "Scallop shells set upright or upturned, each with a fluted rim and two ears at the hinge, its ribs parted by fine grooves fanning from it.",
+  "tags": [
+    "scallops",
+    "radial",
+    "lines"
+  ],
+  "mood": [
+    "organic",
+    "elegant"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "textile",
+    "packaging"
+  ],
+  "palette": [
+    "#F2EEE3",
+    "#283D3B",
+    "#197278",
+    "#C44536",
+    "#772E25"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { background: @p(var(--color1), var(--color2), var(--color3), var(--color4)); -webkit-clip-path: @var(--shell); clip-path: @var(--shell); -webkit-mask: @var(--grooves), linear-gradient(180deg, transparent 0 66%, #000 66%); mask: @var(--grooves), linear-gradient(180deg, transparent 0 66%, #000 66%); -webkit-transform: rotate(@p(0deg, 180deg)) scale(0.96); transform: rotate(@p(0deg, 180deg)) scale(0.96); } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --shell: polygon(34% 90%, 35% 82%, 42% 79%, -0.2% 37.7%, 1.5% 36%, 3.3% 34.6%, 5.2% 33.3%, 7.3% 32.1%, 9.4% 31.1%, 11.6% 30.2%, 13.2% 28.5%, 14.8% 26.8%, 16.6% 25.2%, 18.4% 23.8%, 20.4% 22.5%, 22.5% 21.5%, 24.7% 20.7%, 27% 20%, 29.3% 19.6%, 31.7% 19.4%, 34.1% 19.3%, 36.4% 19.4%, 38.6% 18.4%, 40.8% 17.5%, 43% 16.8%, 45.3% 16.2%, 47.6% 15.9%, 50% 15.8%, 52.4% 15.9%, 54.7% 16.2%, 57% 16.8%, 59.2% 17.5%, 61.4% 18.4%, 63.6% 19.4%, 65.9% 19.3%, 68.3% 19.4%, 70.7% 19.6%, 73% 20%, 75.3% 20.7%, 77.5% 21.5%, 79.6% 22.5%, 81.6% 23.8%, 83.4% 25.2%, 85.2% 26.8%, 86.8% 28.5%, 88.4% 30.2%, 90.6% 31.1%, 92.7% 32.1%, 94.8% 33.3%, 96.7% 34.6%, 98.5% 36%, 100.2% 37.7%, 58% 79%, 65% 82%, 66% 90%); --grooves: conic-gradient(from -52deg at 50% 82%, #000 0deg 16.4deg, transparent 16.4deg 20deg, #000 20deg 36.4deg, transparent 36.4deg 40deg, #000 40deg 56.4deg, transparent 56.4deg 60deg, #000 60deg 76.4deg, transparent 76.4deg 80deg, #000 80deg 96.4deg, transparent 96.4deg 100deg, #000 100deg 116.4deg, transparent 116.4deg 120deg, #000 120deg 136.4deg, transparent 136.4deg 140deg, #000 140deg 156.4deg, transparent 156.4deg 160deg, #000 160deg 176.4deg, transparent 176.4deg 180deg, #000 180deg 196.4deg, transparent 196.4deg 200deg, #000 200deg 216.4deg, transparent 216.4deg 220deg, #000 220deg 236.4deg, transparent 236.4deg 240deg, #000 240deg 256.4deg, transparent 256.4deg 260deg, #000 260deg 276.4deg, transparent 276.4deg 280deg, #000 280deg 296.4deg, transparent 296.4deg 300deg, #000 300deg 316.4deg, transparent 316.4deg 320deg, #000 320deg 336.4deg, transparent 336.4deg 340deg, #000 340deg 356.4deg, transparent 356.4deg 360deg); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

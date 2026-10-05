@@ -1,0 +1,63 @@
+{
+  "name": "Star Map",
+  "slug": "starmap",
+  "galleryOrder": 4177,
+  "galleryWhite": true,
+  "description": "Stars of several magnitudes, loosely scattered, with fine lines joining them into constellations that wander across the sheet.",
+  "tags": [
+    "dots",
+    "lines",
+    "diagonals"
+  ],
+  "mood": [
+    "technical",
+    "calm"
+  ],
+  "density": "sparse",
+  "goodFor": [
+    "hero-background",
+    "wallpaper"
+  ],
+  "palette": [
+    "#101828",
+    "#4A5D80",
+    "#F7F2E4",
+    "#FFD27A",
+    "#9CC9F5"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "7x10",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --z: @p(5%, 7%, 9%, 12%, 15%); @random(${shapeFrequency}) { :before { content: ''; position: absolute; left: @calc((0.5 + 0.27 * sin(1.9 * (@x) + 2.7 * (@y) + 0.3)) * 100)%; top: calc(@calc((0.5 + 0.27 * sin(2.3 * (@x) - 1.7 * (@y) + 1.9)) * 100)% - 1.1%); width: 100%; height: 2.2%; transform-origin: 0 50%; background: var(--color1); transform: @p(rotate(@calc(atan2((0 + (0.5 + 0.27 * sin(2.3 * (@x + 1) - 1.7 * (@y) + 1.9)) - (0.5 + 0.27 * sin(2.3 * (@x) - 1.7 * (@y) + 1.9))), (1 + (0.5 + 0.27 * sin(1.9 * (@x + 1) + 2.7 * (@y) + 0.3)) - (0.5 + 0.27 * sin(1.9 * (@x) + 2.7 * (@y) + 0.3)))) * 180 / PI)deg) scaleX(@calc(sqrt((1 + (0.5 + 0.27 * sin(1.9 * (@x + 1) + 2.7 * (@y) + 0.3)) - (0.5 + 0.27 * sin(1.9 * (@x) + 2.7 * (@y) + 0.3))) * (1 + (0.5 + 0.27 * sin(1.9 * (@x + 1) + 2.7 * (@y) + 0.3)) - (0.5 + 0.27 * sin(1.9 * (@x) + 2.7 * (@y) + 0.3))) + (0 + (0.5 + 0.27 * sin(2.3 * (@x + 1) - 1.7 * (@y) + 1.9)) - (0.5 + 0.27 * sin(2.3 * (@x) - 1.7 * (@y) + 1.9))) * (0 + (0.5 + 0.27 * sin(2.3 * (@x + 1) - 1.7 * (@y) + 1.9)) - (0.5 + 0.27 * sin(2.3 * (@x) - 1.7 * (@y) + 1.9)))))), rotate(@calc(atan2((1 + (0.5 + 0.27 * sin(2.3 * (@x) - 1.7 * (@y + 1) + 1.9)) - (0.5 + 0.27 * sin(2.3 * (@x) - 1.7 * (@y) + 1.9))), (0 + (0.5 + 0.27 * sin(1.9 * (@x) + 2.7 * (@y + 1) + 0.3)) - (0.5 + 0.27 * sin(1.9 * (@x) + 2.7 * (@y) + 0.3)))) * 180 / PI)deg) scaleX(@calc(sqrt((0 + (0.5 + 0.27 * sin(1.9 * (@x) + 2.7 * (@y + 1) + 0.3)) - (0.5 + 0.27 * sin(1.9 * (@x) + 2.7 * (@y) + 0.3))) * (0 + (0.5 + 0.27 * sin(1.9 * (@x) + 2.7 * (@y + 1) + 0.3)) - (0.5 + 0.27 * sin(1.9 * (@x) + 2.7 * (@y) + 0.3))) + (1 + (0.5 + 0.27 * sin(2.3 * (@x) - 1.7 * (@y + 1) + 1.9)) - (0.5 + 0.27 * sin(2.3 * (@x) - 1.7 * (@y) + 1.9))) * (1 + (0.5 + 0.27 * sin(2.3 * (@x) - 1.7 * (@y + 1) + 1.9)) - (0.5 + 0.27 * sin(2.3 * (@x) - 1.7 * (@y) + 1.9)))))), rotate(@calc(atan2((1 + (0.5 + 0.27 * sin(2.3 * (@x + 1) - 1.7 * (@y + 1) + 1.9)) - (0.5 + 0.27 * sin(2.3 * (@x) - 1.7 * (@y) + 1.9))), (1 + (0.5 + 0.27 * sin(1.9 * (@x + 1) + 2.7 * (@y + 1) + 0.3)) - (0.5 + 0.27 * sin(1.9 * (@x) + 2.7 * (@y) + 0.3)))) * 180 / PI)deg) scaleX(@calc(sqrt((1 + (0.5 + 0.27 * sin(1.9 * (@x + 1) + 2.7 * (@y + 1) + 0.3)) - (0.5 + 0.27 * sin(1.9 * (@x) + 2.7 * (@y) + 0.3))) * (1 + (0.5 + 0.27 * sin(1.9 * (@x + 1) + 2.7 * (@y + 1) + 0.3)) - (0.5 + 0.27 * sin(1.9 * (@x) + 2.7 * (@y) + 0.3))) + (1 + (0.5 + 0.27 * sin(2.3 * (@x + 1) - 1.7 * (@y + 1) + 1.9)) - (0.5 + 0.27 * sin(2.3 * (@x) - 1.7 * (@y) + 1.9))) * (1 + (0.5 + 0.27 * sin(2.3 * (@x + 1) - 1.7 * (@y + 1) + 1.9)) - (0.5 + 0.27 * sin(2.3 * (@x) - 1.7 * (@y) + 1.9)))))), rotate(@calc(atan2((1 + (0.5 + 0.27 * sin(2.3 * (@x - 1) - 1.7 * (@y + 1) + 1.9)) - (0.5 + 0.27 * sin(2.3 * (@x) - 1.7 * (@y) + 1.9))), (-1 + (0.5 + 0.27 * sin(1.9 * (@x - 1) + 2.7 * (@y + 1) + 0.3)) - (0.5 + 0.27 * sin(1.9 * (@x) + 2.7 * (@y) + 0.3)))) * 180 / PI)deg) scaleX(@calc(sqrt((-1 + (0.5 + 0.27 * sin(1.9 * (@x - 1) + 2.7 * (@y + 1) + 0.3)) - (0.5 + 0.27 * sin(1.9 * (@x) + 2.7 * (@y) + 0.3))) * (-1 + (0.5 + 0.27 * sin(1.9 * (@x - 1) + 2.7 * (@y + 1) + 0.3)) - (0.5 + 0.27 * sin(1.9 * (@x) + 2.7 * (@y) + 0.3))) + (1 + (0.5 + 0.27 * sin(2.3 * (@x - 1) - 1.7 * (@y + 1) + 1.9)) - (0.5 + 0.27 * sin(2.3 * (@x) - 1.7 * (@y) + 1.9))) * (1 + (0.5 + 0.27 * sin(2.3 * (@x - 1) - 1.7 * (@y + 1) + 1.9)) - (0.5 + 0.27 * sin(2.3 * (@x) - 1.7 * (@y) + 1.9)))))), scaleX(0)); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; z-index: 1; width: @var(--z); height: @var(--z); left: calc(@calc((0.5 + 0.27 * sin(1.9 * (@x) + 2.7 * (@y) + 0.3)) * 100)% - @var(--z) / 2); top: calc(@calc((0.5 + 0.27 * sin(2.3 * (@x) - 1.7 * (@y) + 1.9)) * 100)% - @var(--z) / 2); border-radius: 50%; background: @p(var(--color2), var(--color3), var(--color4)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

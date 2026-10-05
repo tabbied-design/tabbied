@@ -1,0 +1,66 @@
+{
+  "name": "Reticulatum",
+  "slug": "reticulatum",
+  "galleryOrder": 4129,
+  "galleryWhite": true,
+  "description": "A Roman wall in opus reticulatum: square stones set on their points in a diagonal net, banded every few courses with thin red brick.",
+  "tags": [
+    "diamonds",
+    "lattice",
+    "blocks",
+    "stripes"
+  ],
+  "mood": [
+    "calm",
+    "organic"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "wallpaper",
+    "textile",
+    "card-texture"
+  ],
+  "palette": [
+    "#5A4A3E",
+    "#D8CBB0",
+    "#C7B794",
+    "#E6DCC6",
+    "#A4452E",
+    "#BF5B3A"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { background: @match(y % 3 == 0, @var(--rb), none); :before { content: ''; position: absolute; left: -58%; top: -58%; width: 216%; height: 216%; transform: rotate(45deg); background: @p(var(--color1), var(--color2), var(--color3)); -webkit-mask: @var(--rh); mask: @var(--rh); opacity: @match(y % 3 == 0, 0, 1); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: -58%; top: -58%; width: 216%; height: 216%; transform: rotate(45deg); background: @p(var(--color1), var(--color2), var(--color3)); -webkit-mask: @var(--rc); mask: @var(--rc); opacity: @match(y % 3 == 0, 0, 1); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --rc: linear-gradient(#000, #000) 2.444% 50% / 31.162% 31.162% no-repeat, linear-gradient(#000, #000) 50% 2.444% / 31.162% 31.162% no-repeat, linear-gradient(#000, #000) 50% 97.556% / 31.162% 31.162% no-repeat, linear-gradient(#000, #000) 97.556% 50% / 31.162% 31.162% no-repeat; --rh: linear-gradient(#000, #000) 50% 50% / 31.162% 31.162% no-repeat; --rb: linear-gradient(var(--color4), var(--color4)) 2.83% 4.132% / 47% 27.4% no-repeat, linear-gradient(var(--color4), var(--color4)) 97.17% 4.132% / 47% 27.4% no-repeat, linear-gradient(var(--color5), var(--color5)) -44.34% 50% / 47% 27.4% no-repeat, linear-gradient(var(--color5), var(--color5)) 50% 50% / 47% 27.4% no-repeat, linear-gradient(var(--color5), var(--color5)) 144.34% 50% / 47% 27.4% no-repeat, linear-gradient(var(--color4), var(--color4)) 2.83% 95.868% / 47% 27.4% no-repeat, linear-gradient(var(--color4), var(--color4)) 97.17% 95.868% / 47% 27.4% no-repeat; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

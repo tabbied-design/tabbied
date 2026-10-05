@@ -1,0 +1,70 @@
+{
+  "name": "Portico",
+  "slug": "portico",
+  "galleryOrder": 4148,
+  "galleryWhite": true,
+  "description": "Little classical temple fronts in rows: a pediment with a round light, four columns and a three-stepped base, in marble, stone and painted stucco.",
+  "tags": [
+    "triangles",
+    "stripes",
+    "steps",
+    "grid"
+  ],
+  "mood": [
+    "playful",
+    "retro"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "wallpaper",
+    "packaging",
+    "poster"
+  ],
+  "palette": [
+    "#2F4858",
+    "#F2ECE0",
+    "#E3D6BE",
+    "#D9734E",
+    "#E9B44C",
+    "#86A99A",
+    "#F7E7CE"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 7,
+    "default": 7
+  },
+  "sizing": {
+    "minCellPx": 54
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "5x7",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { :before { content: ''; position: absolute; inset: 0; background: @p(var(--color3), var(--color4), var(--color5)); -webkit-clip-path: @var(--pp); clip-path: @var(--pp); -webkit-mask: radial-gradient(4.5% 4.5% at 50% 25%, transparent 100%, #000 100%); mask: radial-gradient(4.5% 4.5% at 50% 25%, transparent 100%, #000 100%); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background: @p(var(--color1), var(--color2), var(--color6)); -webkit-clip-path: @var(--pb); clip-path: @var(--pb); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --pp: polygon(50% 8%, 95% 30%, 95% 38%, 5% 38%, 5% 30%); --pb: polygon(2% 97%, 98% 97%, 98% 93%, 94% 93%, 94% 89%, 90% 89%, 90% 85%, 87% 85%, 87% 40%, 79% 40%, 79% 85%, 65% 85%, 65% 40%, 57% 40%, 57% 85%, 43% 85%, 43% 40%, 35% 40%, 35% 85%, 21% 85%, 21% 40%, 13% 40%, 13% 85%, 10% 85%, 10% 89%, 6% 89%, 6% 93%, 2% 93%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "name": "Ginkgo",
+  "slug": "ginkgo",
+  "galleryOrder": 4100,
+  "description": "Fan-shaped ginkgo leaves with a notched, waved rim and a fine stalk, drifting at angles that lean together across the sheet.",
+  "tags": [
+    "leaves",
+    "semicircles"
+  ],
+  "mood": [
+    "organic",
+    "calm"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "wallpaper",
+    "textile"
+  ],
+  "palette": [
+    "#FAF7F2",
+    "#1E3A34",
+    "#C2410C",
+    "#CA8A04",
+    "#7C2D12",
+    "#365314"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-clip-path: @var(--ginkgo); clip-path: @var(--ginkgo); -webkit-transform: rotate(@calc(@rn(-120, 120, 3) + @r(-25, 25))deg) scale(1.15); transform: rotate(@calc(@rn(-120, 120, 3) + @r(-25, 25))deg) scale(1.15); } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --ginkgo: polygon(51.4% 99%, 51.4% 73%, 58.9% 64.6%, 67.3% 58.5%, 76% 52.7%, 85.5% 48.2%, 97.2% 44.9%, 94.3% 42.3%, 91.2% 40.1%, 88.5% 37.7%, 86.3% 34.9%, 84.5% 31.6%, 82.6% 28.3%, 80.1% 25.4%, 76.8% 23.6%, 73% 22.8%, 69.2% 22.6%, 65.5% 22.2%, 62.2% 21.1%, 58.9% 19.4%, 55.3% 19.7%, 51.5% 27.1%, 48.5% 27.1%, 44.7% 19.7%, 41.1% 19.4%, 37.8% 21.1%, 34.5% 22.2%, 30.8% 22.6%, 27% 22.8%, 23.2% 23.6%, 19.9% 25.4%, 17.4% 28.3%, 15.5% 31.6%, 13.7% 34.9%, 11.5% 37.7%, 8.8% 40.1%, 5.7% 42.3%, 2.8% 44.9%, 14.5% 48.2%, 24% 52.7%, 32.7% 58.5%, 41.1% 64.6%, 48.6% 73%, 48.6% 99%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

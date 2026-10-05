@@ -1,0 +1,63 @@
+{
+  "name": "Paper Planes",
+  "slug": "paperplanes",
+  "galleryOrder": 4275,
+  "description": "Folded paper darts flying in a loose flock, every plane trailing a dashed line, their headings swinging together across the sheet.",
+  "tags": [
+    "triangles",
+    "lines",
+    "diagonals"
+  ],
+  "mood": [
+    "playful",
+    "calm"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "wallpaper",
+    "packaging",
+    "card-texture"
+  ],
+  "palette": [
+    "#FEF9EF",
+    "#FE6D73",
+    "#17C3B2",
+    "#FFCB77",
+    "#227C9D"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { --k: @p(var(--color1), var(--color2), var(--color3), var(--color4)); background: repeating-linear-gradient(90deg, @var(--k) 0 7%, transparent 7% 14%) 0% 60% / 34% 2.4% no-repeat; -webkit-transform: translate(@r(-12, 12)%, @r(-12, 12)%) rotate(@calc(@rn(-75, 35, 1.4) + @r(-12, 12))deg) scale(@r(0.85, 1.05)); transform: translate(@r(-12, 12)%, @r(-12, 12)%) rotate(@calc(@rn(-75, 35, 1.4) + @r(-12, 12))deg) scale(@r(0.85, 1.05)); :before { content: ''; position: absolute; inset: 0; background: @p(@var(--k)); -webkit-clip-path: @var(--near); clip-path: @var(--near); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: 0; background: @p(@var(--k)); opacity: 0.55; -webkit-clip-path: @var(--far); clip-path: @var(--far); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --near: polygon(95% 45%, 6% 15%, 31% 54%); --far: polygon(95% 45%, 31% 54%, 16% 79%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

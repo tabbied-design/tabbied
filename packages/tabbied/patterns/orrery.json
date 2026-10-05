@@ -1,0 +1,66 @@
+{
+  "name": "Orrery",
+  "slug": "orrery",
+  "galleryOrder": 4194,
+  "galleryWhite": true,
+  "description": "Thin orbits ring the middle of the sheet around a small sun, and planets of every size ride on them.",
+  "tags": [
+    "rings",
+    "concentric",
+    "circles",
+    "dots"
+  ],
+  "mood": [
+    "technical",
+    "calm"
+  ],
+  "density": "sparse",
+  "goodFor": [
+    "hero-background",
+    "poster"
+  ],
+  "palette": [
+    "#0B1426",
+    "#33476B",
+    "#F2C14E",
+    "#F28F6B",
+    "#8FD3E8",
+    "#E9E4D8",
+    "#B48EE0"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 7,
+    "default": 7
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "8x12",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 0.5,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --a: @r(-0.4, 0.4); --ps: @p(10%, 13%, 16%, 21%, 27%); :before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse @calc((min(@X, @Y) / 2) * 100)% @calc((min(@X, @Y) / 2) * 100)% at @calc(50 + (0 - @dx) * 100)% @calc(50 + (0 - @dy) * 100)%, var(--color2) 0 10%, transparent 10%), repeating-radial-gradient(ellipse @calc((min(@X, @Y) / 2) * 100)% @calc((min(@X, @Y) / 2) * 100)% at @calc(50 + (0 - @dx) * 100)% @calc(50 + (0 - @dy) * 100)%, var(--color1) 0 0.9%, transparent 0.9% 24%); -webkit-transition: ease 450ms; transition: ease 450ms; } @random(${shapeFrequency}) { :after { content: ''; position: absolute; width: @var(--ps); height: @var(--ps); left: calc(50% + (@calc((max(round(sqrt(@dx * @dx + @dy * @dy) / (0.24 * (min(@X, @Y) / 2))), 1) * (0.24 * (min(@X, @Y) / 2)))) * cos(@calc(atan2(@dy, @dx) * 180 / PI)deg + @var(--a) * @calc((57.3 / (max(round(sqrt(@dx * @dx + @dy * @dy) / (0.24 * (min(@X, @Y) / 2))), 1) * (0.24 * (min(@X, @Y) / 2)))))deg) - @dx) * 100% - @var(--ps) / 2); top: calc(50% + (@calc((max(round(sqrt(@dx * @dx + @dy * @dy) / (0.24 * (min(@X, @Y) / 2))), 1) * (0.24 * (min(@X, @Y) / 2)))) * sin(@calc(atan2(@dy, @dx) * 180 / PI)deg + @var(--a) * @calc((57.3 / (max(round(sqrt(@dx * @dx + @dy * @dy) / (0.24 * (min(@X, @Y) / 2))), 1) * (0.24 * (min(@X, @Y) / 2)))))deg) - @dy) * 100% - @var(--ps) / 2); border-radius: 50%; background: @p(var(--color2), var(--color3), var(--color4), var(--color5), var(--color6)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

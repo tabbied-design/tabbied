@@ -1,0 +1,65 @@
+{
+  "name": "Hex Truchet",
+  "slug": "hextruchet",
+  "galleryOrder": 4228,
+  "galleryWhite": true,
+  "description": "Hexagonal truchet tiles: three arcs in every hexagon, each joining two neighboring sides, so the arcs link into long meandering loops with no ends.",
+  "tags": [
+    "hexagons",
+    "curves",
+    "arcs",
+    "maze"
+  ],
+  "mood": [
+    "calm",
+    "organic"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "textile",
+    "wallpaper"
+  ],
+  "palette": [
+    "#1C0F13",
+    "#6E7E85",
+    "#B7CECE",
+    "#BBBAC6",
+    "#E2E2E2",
+    "#C83E4D"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --gate: @r(1); @random(${shapeFrequency}) { -webkit-transform: translateX(@calc(50 - 50 * (@y % 2))%); transform: translateX(@calc(50 - 50 * (@y % 2))%); :before { content: ''; position: absolute; left: -25%; top: -25%; width: 150%; height: 150%; background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-mask: @var(--hm); mask: @var(--hm); -webkit-clip-path: @var(--hc); clip-path: @var(--hc); -webkit-transform: rotate(@p(0deg, 180deg)); transform: rotate(@p(0deg, 180deg)); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: -125%; top: -25%; width: 150%; height: 150%; background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); opacity: @calc(max(0, 2 - @x) * (1 - @y % 2)); -webkit-mask: @var(--hm); mask: @var(--hm); -webkit-clip-path: @var(--hc); clip-path: @var(--hc); -webkit-transform: rotate(@p(0deg, 180deg)); transform: rotate(@p(0deg, 180deg)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --hm: radial-gradient(ellipse 33.33% 33.33% at 50% 4.17%, transparent 50.5%, #000 50.5% 74.5%, transparent 74.5%), radial-gradient(ellipse 33.33% 33.33% at 83.33% 70.83%, transparent 50.5%, #000 50.5% 74.5%, transparent 74.5%), radial-gradient(ellipse 33.33% 33.33% at 16.67% 70.83%, transparent 50.5%, #000 50.5% 74.5%, transparent 74.5%); --hc: polygon(50% 4.17%, 83.33% 29.17%, 83.33% 70.83%, 50% 95.83%, 16.67% 70.83%, 16.67% 29.17%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}
