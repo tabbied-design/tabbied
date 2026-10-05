@@ -152,7 +152,7 @@ add(
     palette: ['#F1EEE8', '#73767D', '#7D6A5C', '#64718A', '#B5492F', '#2E7D9A'],
     grid: '4x6',
     tg: '4x4',
-    meta: { tags: ['checkerboard', 'stripes', 'squares', 'grid'], mood: ['elegant', 'calm'], density: 'dense', goodFor: ['textile', 'card-texture'] },
+    meta: { tags: ['squares', 'stripes', 'grid', 'lines'], mood: ['elegant', 'retro'], density: 'dense', goodFor: ['textile', 'card-texture'] },
   }
 );
 
@@ -280,7 +280,7 @@ add(
       }${TR}`,
   }),
   {
-    palette: ['#D9D1C1', '#4A3F35', '#5E5A55', '#E07A2E', '#2E86AB', '#C23B5A', '#E9C46A'],
+    palette: ['#D9D1C1', '#4A3F35', '#5E5A55', '#E07A2E', '#2E86AB', '#C23B5A', '#3F7D4E'],
     grid: '6x9',
     tg: '6x6',
     meta: { tags: ['chevrons', 'diagonals', 'lines', 'dots'], mood: ['organic', 'calm'], density: 'dense', goodFor: ['textile', 'card-texture', 'wallpaper'] },
@@ -302,7 +302,7 @@ add(
     palette: ['#F3EDE2', '#E9D6B9', '#B89272', '#7F5539', '#A8806A'],
     grid: '6x9',
     tg: '6x6',
-    meta: { tags: ['squares', 'grid', 'triangles'], mood: ['calm', 'organic'], density: 'dense', goodFor: ['textile', 'card-texture'] },
+    meta: { tags: ['squares', 'grid', 'blocks'], mood: ['calm', 'organic'], density: 'dense', goodFor: ['textile', 'card-texture', 'packaging'] },
   }
 );
 
@@ -345,7 +345,7 @@ add(
     };
   },
   {
-    pal: 15,
+    palette: ['#2B193D', '#F49D37', '#F7E1D7', '#C5283D', '#E9724C', '#6FB3B8'],
     grid: '4x6',
     tg: '5x5',
     meta: { tags: ['diamonds', 'stripes', 'lattice'], mood: ['festive', 'organic'], density: 'medium', goodFor: ['textile', 'poster', 'packaging'] },
@@ -484,7 +484,7 @@ add(
         ${B(`inset: 0; ${paint('--a')} clip-path: @var(--boteh); -webkit-clip-path: @var(--boteh);`)}
         ${A(`left: 30%; top: 34%; width: 44%; height: 44%; background-color: @p(${list(c, 4)}); clip-path: @var(--boteh); -webkit-clip-path: @var(--boteh);`)}
       }${TR}`,
-    host: '--boteh: @shape(split: 160; x: sin(t); y: (1 + sin(t)) * cos(t) / 1.3 - 1.3 * ((1 - sin(t)) / 2)^3; rotate: 90; scale: .8);',
+    host: '--boteh: @shape(split: 160; x: sin(t); y: (1 + sin(t)) * cos(t) / 1.3 - 1.3 * ((1 - sin(t)) / 2)^3; rotate: 90; scale: .72);',
   }),
   {
     palette: ['#1F2440', '#E07A5F', '#D1495B', '#81B29A', '#F2CC8F', '#F4F1DE'],
@@ -530,7 +530,7 @@ add(
     palette: ['#3A2B3F', '#F4EBD9', '#F2A7B5', '#9FD3C7', '#E8706F', '#F6C85F'],
     grid: '6x9',
     tg: '6x6',
-    meta: { tags: ['petals', 'dots'], mood: ['playful', 'organic'], density: 'medium', goodFor: ['textile', 'wallpaper', 'packaging'] },
+    meta: { tags: ['petals', 'dots'], mood: ['playful', 'organic'], density: 'sparse', goodFor: ['textile', 'wallpaper', 'packaging', 'hero-background'] },
   }
 );
 
