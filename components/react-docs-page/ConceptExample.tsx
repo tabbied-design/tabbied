@@ -26,6 +26,7 @@ export default function ConceptExample({ id }: { id: ConceptId }) {
           return {
             id: setup,
             label,
+            icon: setup,
             panel: (
               <CodeBlock
                 code={code.replaceAll('@VERSION@', PACKAGE_VERSION)}
