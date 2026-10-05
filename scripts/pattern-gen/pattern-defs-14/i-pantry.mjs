@@ -890,18 +890,20 @@ add(
 // differ wedge to wedge) go right through to the ground. Every other
 // column faces the other way.
 const WEDGE = (() => {
-  const [A, Bp, C] = [[6, 90], [76, 90], [76, 28]];
-  const off = [16, -12];
+  const [A, Bp, C] = [[3, 93], [69, 93], [69, 50]];
+  const off = [21, -34];
   const sh = ([x, y]) => [x + off[0], y + off[1]];
+  // the top face reaches a hair over the front one, so no seam shows
+  const dn = ([x, y]) => [x + 0.4, y + 0.7];
   return {
-    all: polyOf(roundCorners([A, Bp, sh(Bp), sh(C), sh(A)], 1.5, 3)),
+    all: polyOf(roundCorners([A, Bp, sh(Bp), sh(C), sh(A)], 1.2, 3)),
     front: polyOf([A, Bp, C]),
-    top: polyOf([A, C, sh(C), sh(A)]),
+    top: polyOf([dn(A), dn(C), sh(C), sh(A)]),
   };
 })();
 const cheeseHoles = Array.from(
   { length: 4 },
-  () => 'radial-gradient(circle at @r(12%, 76%) @r(52%, 92%), transparent @r(5%, 11%), #000 0)'
+  () => 'radial-gradient(circle at @r(24%, 64%) @r(70%, 90%), transparent @r(4%, 9.5%), #000 0)'
 ).join(', ');
 
 add(
@@ -910,7 +912,7 @@ add(
   () => ({
     host: `--wedge: ${WEDGE.all}; --front: ${WEDGE.front}; --top: ${WEDGE.top};`,
     rule: `--z: @r(1); @x(even) { transform: scaleX(-1); } ${F} {
-      ${clip('@var(--wedge)')} background: linear-gradient(90deg, transparent 76%, ${inkOf(4, 5)} 76%);
+      ${clip('@var(--wedge)')} background: linear-gradient(90deg, transparent 68.6%, ${inkOf(4, 5)} 68.6%);
       ${B(`inset: 0; background: ${inkOf(1, 2)}; ${clip('@var(--front)')} ${maskI(cheeseHoles)}`)}
       ${A(`inset: 0; background: var(--color3); ${clip('@var(--top)')}`)}
     }${TR}`,
@@ -1021,9 +1023,9 @@ add(
 // cell's own background (a bar and a ball), so it shows only between and
 // beyond the olives it runs through.
 const OLIVE = (() => {
-  const xs = [32, 56, 80];
-  const olives = xs.map((x) => ellipsePts(x, 50, 10, 8.4, 36));
-  const pim = xs.map((x) => dotL(x + 7.2, 50, 8)).join(', ');
+  const xs = [31, 55.5, 80];
+  const olives = xs.map((x) => ellipsePts(x, 50, 11.2, 9.4, 36));
+  const pim = xs.map((x) => dotL(x + 7.8, 50, 8.6)).join(', ');
   const far = Math.hypot(94, 50);
   const r = pct((4.6 / far) * 100);
   const pick = `radial-gradient(circle at 6% 50%, @var(--pk) 0 ${r}, transparent ${r}), linear-gradient(180deg, transparent 48.6%, @var(--pk) 48.6% 51.4%, transparent 51.4%) 60% 0 / 90% 100% no-repeat`;

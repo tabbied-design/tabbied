@@ -23,6 +23,8 @@ const Q = '((@x + @y) % 2)';
 /** 1 in the first column (or row), 0 elsewhere. */
 const FIRST_X = 'max(0, 2 - @x)';
 const FIRST_Y = 'max(0, 2 - @y)';
+const LAST_X = 'max(0, @x - @X + 1)';
+const LAST_Y = 'max(0, @y - @Y + 1)';
 
 /**
  * A number that depends on binary flags, as one @calc: `table` maps each
@@ -229,20 +231,25 @@ const turnedSquare = (cx, cy, side) => {
   const h = side / 2;
   return [[-h, -h], [h, -h], [h, h], [-h, h]].map(([u, v]) => [cx + PY.c * u - PY.s * v, cy + PY.s * u + PY.c * v]);
 };
-const FIRST_XY = 'max(max(0, 2 - @x), max(0, 2 - @y))';
 
 add(
   'Pythagorean',
   'The Pythagorean tiling: big and small squares, both turned off the grid, locking together so every small square sits in the notch between four big ones.',
   (c) => {
     const small = flagPoly(() => insetPoly(turnedSquare(0.5, 0.5, PY.b), PY.g), [], inSpan(3));
+    // the big squares on the right and bottom corners, and on the sheet's
+    // outer corners for the first column and row
     const big = flagPoly(
-      ([e]) => {
-        const a = insetPoly(turnedSquare(1, 1, PY.a), PY.g);
-        const b = insetPoly(turnedSquare(0, 0, PY.a), PY.g);
-        return slit(a, e ? b : b.map(() => a[0]));
+      ([ex, ey]) => {
+        const sqAt = (u, v) => insetPoly(turnedSquare(u, v, PY.a), PY.g);
+        const a = sqAt(1, 1);
+        const none = (pts) => pts.map(() => a[0]);
+        const bl = sqAt(0, 1);
+        const tr = sqAt(1, 0);
+        const tl = sqAt(0, 0);
+        return slit(a, ex ? bl : none(bl), ey ? tr : none(tr), ex && ey ? tl : none(tl));
       },
-      [FIRST_XY],
+      [FIRST_X, FIRST_Y],
       inSpan(3)
     );
     return {
@@ -270,12 +277,18 @@ const SNUB = (() => {
       return [cx + d * Math.cos(t), cy + d * Math.sin(t)];
     });
   };
-  const near = (pts, p) => pts.reduce((b, v) => (Math.hypot(v[0] - p[0], v[1] - p[1]) < Math.hypot(b[0] - p[0], b[1] - p[1]) ? v : b));
-  /** The two triangles of the rhombus at vertex (vx, vy), for a sheet whose cell (0, 0) has parity q. */
+  /** The rhombus round vertex (vx, vy): the four square corners on the cell edges meeting there, split in two. */
   const rhombusTris = (vx, vy, q) => {
     const cells = [[vx - 0.5, vy - 0.5], [vx + 0.5, vy - 0.5], [vx + 0.5, vy + 0.5], [vx - 0.5, vy + 0.5]];
-    const vs = cells.map(([cx, cy]) => near(sq(cx, cy, (q + Math.round(cx + cy) + 4) % 2), [vx, vy]));
-    // split along the shorter diagonal
+    const vs = [];
+    for (const [cx, cy] of cells) {
+      for (const v of sq(cx, cy, (q + Math.round(cx + cy) + 4) % 2)) {
+        const onEdge = Math.abs(v[0] - vx) < 1e-9 || Math.abs(v[1] - vy) < 1e-9;
+        if (onEdge && !vs.some((w) => Math.hypot(w[0] - v[0], w[1] - v[1]) < 1e-9)) vs.push(v);
+      }
+    }
+    if (vs.length !== 4) throw new Error(`snub: ${vs.length} rhombus corners`);
+    vs.sort((a, b) => Math.atan2(a[1] - vy, a[0] - vx) - Math.atan2(b[1] - vy, b[0] - vx));
     const d02 = Math.hypot(vs[0][0] - vs[2][0], vs[0][1] - vs[2][1]);
     const d13 = Math.hypot(vs[1][0] - vs[3][0], vs[1][1] - vs[3][1]);
     return d02 < d13 ? [[vs[0], vs[1], vs[2]], [vs[0], vs[2], vs[3]]] : [[vs[1], vs[2], vs[3]], [vs[1], vs[3], vs[0]]];
@@ -398,7 +411,7 @@ add(
     const G = (xe, ye) => hash01(xe, ye, 39.3467, 11.1351, 1.7);
     return {
       host: JIG.host,
-      rule: `${SEED} --k: @calc(8 * ${H('@x', '@y')} + 4 * ${G('@x', '@y')} + 2 - 2 * ${H('(@x - 1)', '@y')} + 1 - ${G('@x', '(@y - 1)')}); ${F} { ${B(`${spanBox(1.6)} background: ${ink(c)}; ${cp(JIG.pickRule)}`)} }${TR}`,
+      rule: `${SEED} --k: @calc(8 * max(${LAST_X}, ${H('@x', '@y')}) + 4 * max(${LAST_Y}, ${G('@x', '@y')}) + 2 * max(${FIRST_X}, 1 - ${H('(@x - 1)', '@y')}) + max(${FIRST_Y}, 1 - ${G('@x', '(@y - 1)')})); ${F} { ${B(`${spanBox(1.6)} background: ${ink(c)}; ${cp(JIG.pickRule)}`)} }${TR}`,
     };
   },
   {

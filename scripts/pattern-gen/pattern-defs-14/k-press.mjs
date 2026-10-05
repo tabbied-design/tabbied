@@ -271,7 +271,7 @@ const tapeCol = (k) => {
   return `linear-gradient(180deg, ${stops.join(', ')}) ${pct((k * 100) / 3)} 0 / 25% 100% no-repeat`;
 };
 const TAPE_HOLES = 'radial-gradient(circle closest-side, transparent 72%, #000 72%) 0 0 / 25% 33.333%';
-const FEED = 'radial-gradient(circle at 50% 16.6%, transparent 4.2%, #000 4.2%) 0 0 / 25% 100%';
+const FEED = 'radial-gradient(circle at 50% 13.8%, transparent 4.2%, #000 4.2%) 0 0 / 25% 100%';
 
 add(
   'Paper Tape',
@@ -613,6 +613,176 @@ add(
     grid: '5x7',
     tg: '5x5',
     meta: { tags: ['squares', 'circles', 'lines', 'grid'], mood: ['technical', 'bold'], density: 'medium', goodFor: ['poster', 'packaging', 'card-texture'] },
+  }
+);
+
+// -- K20 Ben Day -----------------------------------------------------------------
+// Comic panels: each panel filled with a screen of dots on a diagonal lattice
+// (two square grids, one shifted half a pitch), a line screen or flat color,
+// with a black frame drawn as four edge bands.
+const dotScreen = (r) =>
+  `radial-gradient(circle closest-side, #000 ${r}, transparent ${r}) 0 0 / 12.5% 12.5%, radial-gradient(circle closest-side, #000 ${r}, transparent ${r}) 7.1429% 7.1429% / 12.5% 12.5%`;
+const SCREENS = [
+  dotScreen('42%'),
+  dotScreen('60%'),
+  dotScreen('78%'),
+  'repeating-linear-gradient(180deg, #000 0 3.4%, transparent 3.4% 8.33%)',
+  'linear-gradient(#000, #000)',
+];
+const FRAME = [
+  'linear-gradient(#000, #000) 0 0 / 100% 5% no-repeat',
+  'linear-gradient(#000, #000) 0 100% / 100% 5% no-repeat',
+  'linear-gradient(#000, #000) 0 0 / 5% 100% no-repeat',
+  'linear-gradient(#000, #000) 100% 0 / 5% 100% no-repeat',
+].join(', ');
+
+add(
+  'Ben Day',
+  'A comic page of square panels in heavy black frames, each panel filled with a Ben-Day dot screen of small, medium or large dots, a line screen or flat color.',
+  (c) => ({
+    host: `${SCREENS.map((m, i) => `--sc${i}: ${m};`).join(' ')} --frame: ${FRAME};`,
+    rule: `${F} { ${B(`inset: 6%; background: ${ink(c, 2)}; ${msk(`@p(@var(--sc0), @var(--sc1), @var(--sc1), @var(--sc2), @var(--sc2), @var(--sc3), @var(--sc4))`)}`)} ${A(`inset: 6%; background: @p(var(--color1)); ${msk('@var(--frame)')}`)} }${TR}`,
+  }),
+  {
+    palette: ['#FBF4E2', '#1B1B1B', '#E63946', '#F4C430', '#2E86DE', '#F28CA8'],
+    grid: '4x6',
+    tg: '5x5',
+    meta: { tags: ['dots', 'halftone', 'squares', 'grid'], mood: ['playful', 'bold', 'retro'], density: 'dense', goodFor: ['poster', 'packaging', 'og-image'] },
+  }
+);
+
+// -- K21 Swatch Book ---------------------------------------------------------------
+// Two chip strips to a cell, each one ink in five stepped tints (alpha steps in
+// the mask, so the tints are the ink thinned over the ground), with a rivet hole
+// through the end of the strip.
+const CHIPS = 'linear-gradient(90deg, #000 0 17.6%, transparent 17.6% 18.6%, #000000c2 18.6% 36.2%, transparent 36.2% 37.2%, #00000087 37.2% 54.8%, transparent 54.8% 55.8%, #0000004d 55.8% 73.4%, transparent 73.4% 74.4%, #00000026 74.4%)';
+const RIVET = 'radial-gradient(circle at 88% 50%, transparent 5.6%, #000 5.6%)';
+
+add(
+  'Swatch Book',
+  'Strips from an ink swatch book, two to a cell, each one color stepped down from solid through four lighter tints, with a rivet hole punched through the pale end.',
+  (c) => ({
+    host: `--chips: ${CHIPS}; --rivet: ${RIVET};`,
+    rule: `${F} { ${B(`left: 5%; right: 5%; top: 9%; height: 36%; background: ${ink(c)}; ${mskI('@var(--chips)', '@var(--rivet)')}`)} ${A(`left: 5%; right: 5%; top: 55%; height: 36%; background: ${ink(c)}; ${mskI('@var(--chips)', '@var(--rivet)')}`)} }${TR}`,
+  }),
+  {
+    pal: 21,
+    grid: '5x10',
+    tg: '5x5',
+    meta: { tags: ['stripes', 'blocks', 'gradients'], mood: ['playful', 'calm'], density: 'medium', goodFor: ['packaging', 'card-texture', 'wallpaper'] },
+  }
+);
+
+// -- K22 Four State ------------------------------------------------------------------
+// A mail sorting code: bars of four kinds (full, rising, falling and the short
+// tracker) at an even pitch, four to a cell, each kind rolled per bar.
+const STATES = ['50% / 7% 80%', '20.83% / 7% 52%', '79.17% / 7% 52%', '50% / 7% 24%'];
+const stateBar = (k) => `linear-gradient(#000, #000) ${pct(((25 * k + 9) / 93) * 100)} @p(${STATES.join(', ')}) no-repeat`;
+
+add(
+  'Four State',
+  'Rows of mail sorting bars on kraft paper: tall bars, rising and falling half bars and short trackers at an even pitch, mostly navy with the odd group in red.',
+  (c) => ({
+    rule: `${F} { background: @p(var(--color1), var(--color1), var(--color1), var(--color2)); mask: ${[0, 1, 2, 3].map(stateBar).join(', ')}; }${TR}`,
+  }),
+  {
+    palette: ['#E6D7BC', '#1E2B4A', '#C23B22'],
+    grid: '8x12',
+    tg: '10x10',
+    meta: { tags: ['lines', 'stripes', 'steps'], mood: ['technical', 'calm'], density: 'medium', goodFor: ['section-divider', 'card-texture', 'packaging'] },
+  }
+);
+
+// -- K23 Guilloche -------------------------------------------------------------------
+// Banknote rosettes: a wavy ring and a spirograph star traced as fine bands,
+// each turned its own way, inside a thin bounding circle.
+const GUILL = [
+  P(stroke(curve((t) => [50 + (40 + 4 * Math.sin(14 * t)) * Math.cos(t), 50 + (40 + 4 * Math.sin(14 * t)) * Math.sin(t)], 420), 2.4, true)),
+  P(stroke(curve((t) => {
+    const [R, r, d] = [8, 3, 4.6];
+    const x = (R - r) * Math.cos(t) + d * Math.cos(((R - r) / r) * t);
+    const y = (R - r) * Math.sin(t) - d * Math.sin(((R - r) / r) * t);
+    return [50 + x * 3.3, 50 + y * 3.3];
+  }, 480, 3), 2.4, true)),
+];
+
+add(
+  'Guilloche',
+  'Banknote rosettes in fine engraved line: a wavy ring around a looping spirograph star, each pair turned its own way and drawn in green, brown and blue on pale paper.',
+  (c) => ({
+    host: `--g0: ${GUILL[0]}; --g1: ${GUILL[1]};`,
+    rule: `${F} { background: radial-gradient(circle closest-side, transparent 93%, @p(var(--color1), var(--color2), var(--color3)) 93% 97%, transparent 97%); ${B(`inset: 0; background: ${ink(c)}; ${cp('@var(--g0)')} ${tf('rotate(@r(0deg, 30deg))')}`)} ${A(`inset: 0; background: ${ink(c)}; ${cp('@var(--g1)')} ${tf('rotate(@r(0deg, 72deg))')}`)} }${TR}`,
+  }),
+  {
+    palette: ['#EEF0E2', '#2E6B4F', '#8C3B2A', '#3B5A8C', '#A8823A'],
+    grid: '4x6',
+    tg: '4x4',
+    meta: { tags: ['rings', 'curves', 'radial', 'circles'], mood: ['elegant', 'technical'], density: 'medium', goodFor: ['packaging', 'card-texture', 'wallpaper'] },
+  }
+);
+
+// -- K24 Printers Flower ----------------------------------------------------------------
+// A printer's ivy-leaf ornament set four ways: every cell holds one leaf with
+// its stem, mirrored by the parity of its column and row so each block of
+// four turns into a rosette, and the block's ink is rolled per block.
+const LEAF = (() => {
+  const pts = curve((t) => {
+    const x = 16 * Math.sin(t) ** 3;
+    const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+    return [x, -y];
+  }, 72);
+  // point the tip (t = pi, at y = +17 here) at the cell's bottom right corner
+  const a = -Math.PI / 4;
+  return P(pts.map(([x, y]) => {
+    const rx = x * Math.cos(a) - y * Math.sin(a);
+    const ry = x * Math.sin(a) + y * Math.cos(a);
+    return [56 + rx * 1.9, 56 + ry * 1.9];
+  }));
+})();
+const STEM = P(stroke(Array.from({ length: 26 }, (_, i) => {
+  const t = i / 25;
+  const ang = Math.PI * (1.25 + 1.35 * t);
+  const r = 22 - 13 * t;
+  return [30 + r * Math.cos(ang) + 8, 30 + r * Math.sin(ang) + 8];
+}), 3.4));
+
+add(
+  'Printers Flower',
+  'Printer\'s ivy-leaf ornaments set four to a block, tips meeting in the middle and stems curling out, so the sheet reads as a run of leafy rosettes in old ink colors.',
+  (c) => ({
+    host: `--leaf: ${LEAF}; --stem: ${STEM};`,
+    rule: `--s: @once(@r(0, 100)); ${F} { --k: $(floor(${blockHash('floor((@x - 1) / 2)', 'floor((@y - 1) / 2)')} * 3)); ${tf('scale(@match(x % 2 == 0, -1, 1), @match(y % 2 == 0, -1, 1))')} ${B(`inset: 0; background: ${inkAt('$(k)', 3)}; ${cp('@var(--leaf)')}`)} ${A(`inset: 0; background: ${inkAt('$(k)', 3)}; ${cp('@var(--stem)')}`)} }${TR}`,
+  }),
+  {
+    palette: ['#F3ECDD', '#7A2E2A', '#1F3B5A', '#2F5D3A'],
+    grid: '6x9',
+    tg: '6x6',
+    meta: { tags: ['leaves', 'curves', 'radial'], mood: ['elegant', 'retro'], density: 'medium', goodFor: ['wallpaper', 'textile', 'packaging'] },
+  }
+);
+
+// -- K25 Contact Sheet ----------------------------------------------------------------
+// Strips of film printed on a contact sheet: the film is cut with a row of
+// rectangular sprocket holes along each edge, and every frame shows a small
+// two-tone landscape with a sun.
+const FILM = [
+  'linear-gradient(180deg, transparent 0 7%, #000 7% 11%, transparent 11% 18%, #000 18% 82%, transparent 82% 89%, #000 89% 93%, transparent 93%)',
+  `linear-gradient(90deg, #000 0 30%, transparent 30% 70%, #000 70%) 0 ${pct((11 / 93) * 100)} / 12.5% 7% repeat-x`,
+  `linear-gradient(90deg, #000 0 30%, transparent 30% 70%, #000 70%) 0 ${pct((82 / 93) * 100)} / 12.5% 7% repeat-x`,
+].join(', ');
+
+add(
+  'Contact Sheet',
+  'A contact sheet of film strips with sprocket holes along both edges, every frame a little two-tone landscape with a round sun hanging over its horizon.',
+  (c) => ({
+    host: `--film: ${FILM};`,
+    rule: `${F} { background: @p(var(--color1)); ${msk('@var(--film)')} ${B(`left: 6%; right: 6%; top: 22%; bottom: 22%; background: linear-gradient(180deg, @p(var(--color2), var(--color3)) 0 @r(52%, 74%), @p(var(--color4), var(--color5)) 0);`)} ${A(`left: @r(14%, 64%); top: @r(25%, 38%); width: 22%; height: 22%; border-radius: 50%; background: @p(var(--color6), var(--color5));`)} }${TR}`,
+  }),
+  {
+    palette: ['#F4F1EA', '#24201E', '#7FB7D6', '#F2B5A0', '#3E7C59', '#C8553D', '#F6D365'],
+    grid: '5x8',
+    tg: '5x5',
+    meta: { tags: ['squares', 'circles', 'stripes'], mood: ['retro', 'calm'], density: 'medium', goodFor: ['section-divider', 'poster', 'packaging'] },
   }
 );
 
