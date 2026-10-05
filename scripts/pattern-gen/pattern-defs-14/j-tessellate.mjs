@@ -962,36 +962,44 @@ add(
 // quadrilateral is split corner to corner into two triangles shaded from a
 // smooth noise field, the halves a step apart so the facets show.
 const LP = (() => {
-  const fr = (i, j, a, b, k) => `((sin(${i} * ${a} + ${j} * ${b} + $(s) * ${k}) * 43758.5453) - floor(sin(${i} * ${a} + ${j} * ${b} + $(s) * ${k}) * 43758.5453))`;
   const J = 0.56;
-  // corners on the sheet's edge only slide along it
-  const jx = (i, j) => `(${J} * ${fr(i, j, 12.9898, 78.233, 1)} - ${J / 2}) * min(1, ${i}) * min(1, @X - ${i})`;
-  const jy = (i, j) => `(${J} * ${fr(i, j, 39.3467, 11.1351, 1.3)} - ${J / 2}) * min(1, ${j}) * min(1, @Y - ${j})`;
-  const corner = (name, i, j, u, v) => `--${name}x: ${rc(`${u} + ${jx(i, j)}`)}; --${name}y: ${rc(`${v} + ${jy(i, j)}`)};`;
+  // A corner's two hashes: each sine is worked out once into --h*, its
+  // fraction read twice. The corner is then stored straight in percent of
+  // the doubled box the facets are drawn in, rounded, so a polygon point is
+  // one read. Corners on the sheet's edge only slide along it.
+  const corner = (name, i, j, u, v) => {
+    const h = (axis, a, b, k) => `--h${name}${axis}: $(sin(${i} * ${a} + ${j} * ${b} + s * ${k}) * 43758.5453);`;
+    const at = (axis, base, edge) =>
+      `--${name}${axis}: $(round(((${base} + (${J} * (h${name}${axis} - floor(h${name}${axis})) - ${J / 2}) * ${edge}) + 0.5) * 5000) / 100);`;
+    return [
+      h('x', 12.9898, 78.233, 1),
+      h('y', 39.3467, 11.1351, 1.3),
+      at('x', u, `min(1, ${i}) * min(1, @X - ${i})`),
+      at('y', v, `min(1, ${j}) * min(1, @Y - ${j})`),
+    ].join(' ');
+  };
   const vars = [
     corner('a', '(@x - 1)', '(@y - 1)', 0, 0),
     corner('b', '@x', '(@y - 1)', 1, 0),
     corner('c', '@x', '@y', 1, 1),
     corner('d', '(@x - 1)', '@y', 0, 1),
+    // the third corner of the triangle: c, or d when the split runs the other way
+    '--ex: $(round((cx + t * (dx - cx)) * 100) / 100); --ey: $(round((cy + t * (dy - cy)) * 100) / 100);',
   ].join(' ');
-  const map = (u) => `${rc(`(${u} + 0.5) * 50`)}%`;
-  const P = (n) => `${map(`$(${n}x)`)} ${map(`$(${n}y)`)}`;
-  // split along a-c, or along b-d when $(t) is 1
-  const lerp = (p, q) => `${map(`$(${p}x) + $(t) * ($(${q}x) - $(${p}x))`)} ${map(`$(${p}y) + $(t) * ($(${q}y) - $(${p}y))`)}`;
+  const P = (n) => `$(${n}x)% $(${n}y)%`;
   const quad = `polygon(${P('a')}, ${P('b')}, ${P('c')}, ${P('d')})`;
-  const tri = `polygon(${P('a')}, ${P('b')}, ${lerp('c', 'd')})`;
+  const tri = `polygon(${P('a')}, ${P('b')}, ${P('e')})`;
   return { vars, quad, tri };
 })();
 add(
   'Low Poly',
   'A low poly mesh of irregular triangles, every grid point nudged off true and the facets shaded through smooth bands of color like a faceted landscape.',
   (c) => {
-    const band = (j) => `@match(${[0.2, 0.4, 0.6, 0.8]
-      .map((t, i) => `$(n) + $(${j}) < ${t}, @p(var(--color${i + 1}))`)
-      .join(', ')}, @p(var(--color5)))`;
+    // which of five bands of the field a facet falls in, as the ink's number
+    const band = (j) => `--b${j}: $(1 + min(4, max(0, floor((n + ${j}) * 5))));`;
     return {
-      rule: `${SEED} ${LP.vars} --t: @p(0, 1); --n: ${noise(-0.6, 1.6, 1.1)}; --j1: @r(-0.13, 0.13); --j2: @r(-0.13, 0.13); ${F} { ${B(`left: -50%; top: -50%; width: 200%; height: 200%; background: ${band('j1')}; ${cp(LP.quad)}`)} ${A(
-        `left: -50%; top: -50%; width: 200%; height: 200%; background: ${band('j2')}; ${cp(LP.tri)}`
+      rule: `${SEED} --t: @p(0, 1); ${LP.vars} --n: ${noise(-0.6, 1.6, 1.1)}; --j1: @r(-0.13, 0.13); --j2: @r(-0.13, 0.13); ${band('j1')} ${band('j2')} ${F} { ${B(`left: -50%; top: -50%; width: 200%; height: 200%; background: @p(@var(--color$(bj1))); ${cp(LP.quad)}`)} ${A(
+        `left: -50%; top: -50%; width: 200%; height: 200%; background: @p(@var(--color$(bj2))); ${cp(LP.tri)}`
       )} }${TR}`,
     };
   },
