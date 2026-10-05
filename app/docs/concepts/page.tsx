@@ -10,9 +10,10 @@ import { pageMetadata } from 'lib/seo';
 // What every setup shares, said once and without a framework: the setup
 // pages (React, Vue, Svelte, the web component, plain HTML) link here for
 // what a setting means, and keep only how their own setup spells it. Each
-// section carries an example written in every setup, behind a switch that
-// remembers the reader's (examples/concepts.ts), and the table at the end
-// is the spelling side by side. The setup pages keep the live demos.
+// section carries an example, drawn live above its code (ConceptPreview),
+// written in every setup behind a switch that remembers the reader's
+// (examples/concepts.ts), and the table at the end is the spelling side by
+// side.
 
 export const metadata: Metadata = pageMetadata({
   title: 'Concepts - Tabbied',

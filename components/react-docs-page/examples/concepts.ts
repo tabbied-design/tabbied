@@ -1,6 +1,6 @@
 // The examples on /docs/concepts: one short file per idea, in each of the six
 // setups, shown under the section that explains it with a switch between the
-// setups. The setup pages' guide samples (examples/guide.ts) sit under their
+// setups, and what each draws (CONCEPT_PREVIEWS), drawn live above it. The setup pages' guide samples (examples/guide.ts) sit under their
 // live demos and show the everyday case; these show the settings the
 // concepts prose names that the guide leaves out: two designs and what gets
 // bundled, density, cellSize and coverRender, a two-color palette, several
@@ -52,6 +52,103 @@ const boot = (designs: string[], after = '') =>
   ].join('\n');
 
 const LABEL = 'Five rings, one for each year of the studio';
+
+/** One pattern a concept's example draws, and what its preview says under it. */
+export type ConceptPattern = {
+  design: string;
+  seed?: string;
+  palette?: readonly string[];
+  options?: Record<string, number>;
+  fit?: 'grid' | 'cover' | 'fixed';
+  density?: number;
+  cellSize?: number;
+  coverRender?: { width: number; height: number };
+  height?: number;
+  aspectRatio?: string;
+  /** A fixed canvas, in px. */
+  canvas?: { width: number; height: number };
+  redrawInterval?: number;
+  ariaLabel?: string;
+  /** The caption's first line, set in the mono, and the line under it. */
+  label?: string;
+  note?: string;
+};
+
+/**
+ * What a concept's example draws, for the live result above it
+ * (ConceptPreview.tsx). One per concept serves all six setups, since each
+ * setup's example draws the same thing; lib/docsExamples.test.mjs holds
+ * every entry to every setup's code.
+ */
+export type ConceptPreviewSpec = {
+  /** Every pattern the example draws, in the order it draws them. */
+  patterns: ConceptPattern[];
+  /** The buttons the example wires up, by their labels in the code. */
+  buttons?: string[];
+};
+
+export const CONCEPT_PREVIEWS: Record<ConceptId, ConceptPreviewSpec> = {
+  designs: {
+    patterns: [
+      { design: 'radius', height: 240, label: 'radius' },
+      { design: 'windowpane', height: 240, label: 'windowpane' },
+    ],
+  },
+  sizing: {
+    patterns: [
+      { design: 'vitrail', density: 0.75, aspectRatio: '16 / 9', label: 'grid, density 0.75', note: 'A 16 / 9 ratio gives the box its height.' },
+      { design: 'vitrail', cellSize: 48, height: 240, label: 'grid, 48px cells', note: 'As many cells as fit, 240px tall.' },
+      {
+        design: 'vitrail',
+        fit: 'cover',
+        coverRender: { width: 1200, height: 600 },
+        height: 240,
+        label: 'cover, 1200 x 600',
+        note: 'One drawing, scaled to cover the box.',
+      },
+      {
+        design: 'vitrail',
+        fit: 'fixed',
+        canvas: { width: 360, height: 540 },
+        label: 'fixed, 360 x 540',
+        note: 'An exact canvas, drawn here at half size.',
+      },
+    ],
+  },
+  colors: {
+    patterns: [
+      { design: 'mixtape', seed: 'k9Pz', height: 180, label: 'no palette', note: "The design's own colors." },
+      { design: 'mixtape', seed: 'k9Pz', palette: TWO_COLORS, height: 180, label: 'two colors', note: 'The background, then one ink.' },
+      {
+        design: 'mixtape',
+        seed: 'k9Pz',
+        palette: ANY_COLORS,
+        height: 180,
+        label: 'any CSS color',
+        note: 'Transparent, over a photograph here.',
+      },
+    ],
+  },
+  options: {
+    patterns: [
+      { design: 'maze', options: { frequency: 0.6, thickness: 14 }, height: 240, label: 'frequency 0.6, thickness 14' },
+    ],
+  },
+  seeds: {
+    patterns: [{ design: 'blossom', seed: 'k9Pz', height: 280 }],
+    buttons: ['New seed', 'Back to k9Pz', 'PNG for print', 'SVG'],
+  },
+  motion: {
+    patterns: [{ design: 'quilt', redrawInterval: 3000, height: 280 }],
+    buttons: ['Pause'],
+  },
+  accessibility: {
+    patterns: [
+      { design: 'ring', height: 180, label: 'decorative', note: 'Hidden from screen readers.' },
+      { design: 'ring', height: 180, ariaLabel: LABEL, label: 'labelled', note: `Read as an image: "${LABEL}".` },
+    ],
+  },
+};
 
 export const CONCEPT_EXAMPLES: Record<ConceptId, Record<GuideSetup, GuideSample>> = {
   designs: {

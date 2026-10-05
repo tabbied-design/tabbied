@@ -93,6 +93,23 @@ function ResultBox({ result }: { result: Result }) {
   );
 }
 
+/**
+ * The boxes a few cases draw, side by side and to scale, for a sample
+ * elsewhere that sizes a box those ways.
+ */
+export function SizingResults({ setup, ids }: { setup: Setup; ids: string[] }) {
+  return (
+    <div className={styles.sizeResults}>
+      {ids.map((id) => {
+        const sizing = SIZING_CASES.find((entry) => entry.id === id);
+        const variant = sizing && variantFor(setup, sizing);
+        if (!variant) throw new Error(`No sizing case "${id}" for ${setup}`);
+        return <ResultBox key={id} result={variant.result} />;
+      })}
+    </div>
+  );
+}
+
 const RULES: Record<'props' | 'css', string[]> = {
   props: [
     'A pattern has no size of its own: it fills the box it is given, and an empty box draws nothing.',

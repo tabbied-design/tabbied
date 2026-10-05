@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type Ref } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import type { PatternDefinition } from 'tabbied';
 import { ortho, quilt, radius, vitrail } from 'tabbied/patterns';
-import { TabbiedPattern, type TabbiedPatternHandle } from 'tabbied/react';
+import type { TabbiedPatternHandle } from 'tabbied/react';
+import { Button, Live, Row, kilobytes, type LiveProps } from './live';
 import { RECIPE_PREVIEWS, type RecipePreviewSpec } from './examples/recipes/previews';
 import styles from './ReactDocs.module.css';
 
@@ -12,78 +13,10 @@ import styles from './ReactDocs.module.css';
 // setup's page, since each setup's recipe of an id draws the same thing; the
 // designs, seeds, palettes and boxes come from examples/recipes/previews.ts,
 // which the tests hold to every recipe's code. Each pattern is built only as
-// it nears the viewport, and its box is drawn before, so nothing shifts.
+// it nears the viewport (live.tsx), and its box is drawn before, so nothing
+// shifts.
 
 const DESIGNS: Record<string, PatternDefinition> = { radius, quilt, vitrail, ortho };
-
-const MOUNT_MARGIN = '400px';
-
-/** True once `ref`'s element has come within MOUNT_MARGIN of the viewport. */
-function useNear(ref: { current: Element | null }) {
-  const [near, setNear] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[entries.length - 1].isIntersecting) {
-          setNear(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: MOUNT_MARGIN }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [ref]);
-
-  return near;
-}
-
-type LiveProps = {
-  pattern: PatternDefinition;
-  seed?: string;
-  palette?: string[];
-  options?: Record<string, number>;
-  density?: number;
-  redrawInterval?: number;
-  paused?: boolean;
-  ariaLabel?: string;
-  /** The box, as the recipe sizes it. */
-  style?: CSSProperties;
-  className?: string;
-  /** Painted until the pattern mounts, and behind a transparent ground. */
-  ground?: string;
-  onReady?: () => void;
-  handle?: Ref<TabbiedPatternHandle>;
-};
-
-/** A pattern in its box, built once the box is near. */
-function Live({ pattern, style, className, ground, handle, ariaLabel, ...config }: LiveProps) {
-  const frame = useRef<HTMLDivElement>(null);
-  const near = useNear(frame);
-  const background = ground ?? config.palette?.[0] ?? pattern.palette[0];
-
-  return (
-    <div
-      ref={frame}
-      className={className}
-      style={{ position: 'relative', overflow: 'hidden', width: '100%', backgroundColor: background, ...style }}
-    >
-      {near ? (
-        <TabbiedPattern
-          ref={handle}
-          pattern={pattern}
-          {...config}
-          decorative={!ariaLabel}
-          ariaLabel={ariaLabel}
-          style={{ position: 'absolute', inset: 0 }}
-        />
-      ) : null}
-    </div>
-  );
-}
 
 const box = (spec: RecipePreviewSpec): CSSProperties => ({
   ...(spec.height ? { height: spec.height } : {}),
@@ -92,18 +25,6 @@ const box = (spec: RecipePreviewSpec): CSSProperties => ({
 });
 
 const design = (spec: RecipePreviewSpec, index = 0) => DESIGNS[spec.designs[index]];
-
-function Button({ children, onClick, disabled }: { children: ReactNode; onClick: () => void; disabled?: boolean }) {
-  return (
-    <button type="button" className={styles.demoBtn} onClick={onClick} disabled={disabled}>
-      {children}
-    </button>
-  );
-}
-
-function Row({ children }: { children: ReactNode }) {
-  return <div className={styles.previewRow}>{children}</div>;
-}
 
 // ---- the kinds of preview
 
@@ -293,7 +214,7 @@ function Upload({ spec }: { spec: RecipePreviewSpec }) {
 
   const save = async () => {
     const result = await handle.current?.exportSvg();
-    if (result) setSent(`${(new Blob([result.svg]).size / 1024).toFixed(1)} KB`);
+    if (result) setSent(kilobytes(result.svg));
   };
 
   return (

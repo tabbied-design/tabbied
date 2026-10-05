@@ -1,11 +1,14 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { radius, vitrail } from 'tabbied/patterns';
 import { PACKAGE_VERSION, PATTERN_COUNT } from 'lib/siteCounts';
 import CodeBlock from 'components/react-docs-page/CodeBlock';
 import DocsShell from 'components/react-docs-page/DocsShell';
 import { Callout, Code } from 'components/react-docs-page/parts';
 import { SETUP_SECTIONS } from 'components/react-docs-page/sections';
 import { QuickStartDemo, RedrawDemo } from 'components/react-docs-page/GuideDemos';
+import Example from 'components/react-docs-page/Example';
+import { ControllerDemo, HydrateDemo, ReadyDemo } from 'components/react-docs-page/PageDemos';
 import {
   ExampleSections,
   ExportNotes,
@@ -14,6 +17,7 @@ import {
   SetupSection as Section,
   SizingGuide,
 } from 'components/react-docs-page/SetupGuide';
+import { SizingResults } from 'components/react-docs-page/SizingExamples';
 import { JAVASCRIPT_RECIPES } from 'components/react-docs-page/examples/recipes/javascript';
 import styles from 'components/react-docs-page/ReactDocs.module.css';
 import { pageMetadata } from 'lib/seo';
@@ -40,13 +44,17 @@ import { radius } from 'tabbied/patterns';`;
 const sizingCode = `import { resolveBoxStyle } from 'tabbied';
 
 // Fill the width, cap it, and let the ratio set the height.
-Object.assign(host.style, resolveBoxStyle({ maxWidth: 960, aspectRatio: '3 / 2' }));
+Object.assign(host.style, resolveBoxStyle({ maxWidth: 600, aspectRatio: '3 / 2' }));
 
 // Pin one axis; numbers are px, strings are CSS.
 Object.assign(host.style, resolveBoxStyle({ height: 320 }));`;
 
+// The update the controller sample makes, which the demo beside it runs.
+const WARM = ['#FFF4E6', '#E8590C'];
+const FREQUENCY = 0.6;
+
 const controllerCode = `// Only what changed reaches the page.
-controller.update({ palette: ['#FFF4E6', '#E8590C'], options: { frequency: 0.6 } });
+controller.update({ palette: [${WARM.map((color) => `'${color}'`).join(', ')}], options: { frequency: ${FREQUENCY} } });
 
 controller.redraw();        // a new seed, morphing into the new arrangement
 controller.redraw('k9Pz');  // or a seed of your own
@@ -66,13 +74,16 @@ const readyCode = `const controller = createPattern(host, {
   },
 });`;
 
+// The timer the hydrate sample's defaults give every pattern.
+const HYDRATE_INTERVAL = 5200;
+
 const hydrateCode = `import { hydratePatterns } from 'tabbied';
 import { radius, vitrail } from 'tabbied/patterns';
 
 const mounted = hydratePatterns({
   patterns: { radius, vitrail },        // the designs the markup names
   root: document.querySelector('main'), // optional: where to look
-  defaults: { redrawInterval: 5200 },   // optional: merged into every one
+  defaults: { redrawInterval: ${HYDRATE_INTERVAL} },   // optional: merged into every one
   onError: (error, element) => element.remove(),
 });
 
@@ -176,7 +187,9 @@ export default function JavaScriptDocsPage() {
           <Code>resolveBoxStyle()</Code> takes the box settings and returns
           the style to give the host, or size it in your own CSS instead:
         </p>
-        <CodeBlock code={sizingCode} lang="ts" className={styles.codeStandalone} />
+        <Example code={sizingCode} lang="ts">
+          <SizingResults setup="javascript" ids={['capped', 'height']} />
+        </Example>
         <p>
           <Code>aspectRatio</Code> takes CSS&apos;s <Code>3 / 2</Code>, a
           number, or the editor&apos;s <Code>3:2</Code>.
@@ -193,7 +206,20 @@ export default function JavaScriptDocsPage() {
           <Code>update()</Code> merges settings in, and only what changed
           reaches the page, so calling it on every change is cheap.
         </p>
-        <CodeBlock code={controllerCode} lang="ts" className={styles.codeStandalone} />
+        <Example code={controllerCode} lang="ts">
+          <ControllerDemo
+            pattern={radius}
+            height={280}
+            actions={[
+              { kind: 'update', label: 'update()', palette: WARM, options: { frequency: FREQUENCY } },
+              { kind: 'redraw', label: 'redraw()' },
+              { kind: 'redraw', label: "redraw('k9Pz')", seed: 'k9Pz' },
+              { kind: 'svg', label: 'exportSvg()' },
+              { kind: 'png', label: 'exportImage()', scale: 2 },
+              { kind: 'destroy', label: 'destroy()' },
+            ]}
+          />
+        </Example>
         <p>
           Under the measured fits, <Code>grid</Code> (the default) and{' '}
           <Code>cover</Code>, the pattern can only be drawn once the host has
@@ -205,7 +231,9 @@ export default function JavaScriptDocsPage() {
           <Code>fit: &apos;fixed&apos;</Code> the canvas size is given, so it
           mounts at once.
         </p>
-        <CodeBlock code={readyCode} lang="ts" className={styles.codeStandalone} />
+        <Example code={readyCode} lang="ts">
+          <ReadyDemo pattern={radius} height={240} />
+        </Example>
         <RedrawDemo setup="javascript" />
         <ExportNotes />
       </Section>
@@ -277,7 +305,16 @@ export default function JavaScriptDocsPage() {
           lists. It is idempotent, so call it again after adding patterns; an
           element it already mounted is skipped.
         </p>
-        <CodeBlock code={hydrateCode} lang="ts" className={styles.codeStandalone} />
+        <Example code={hydrateCode} lang="ts">
+          <HydrateDemo
+            patterns={[
+              { slug: 'radius', pattern: radius },
+              { slug: 'vitrail', pattern: vitrail },
+            ]}
+            redrawInterval={HYDRATE_INTERVAL}
+            height={200}
+          />
+        </Example>
         <p>
           <Code>patterns</Code> is the only required option: the designs to
           resolve slugs against, as a record or an array. <Code>root</Code>{' '}
