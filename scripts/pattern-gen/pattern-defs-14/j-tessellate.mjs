@@ -600,20 +600,29 @@ add(
   'Boogie Woogie',
   'A Wang network of yellow street lines that meet, turn and stop where the edge rules say, with small red, blue and gray blocks set along them.',
   () => {
-    const open = (xe, ye, a, b, k) =>
-      `floor(0.5 + ((sin(${xe} * ${a} + ${ye} * ${b} + $(s) * ${k}) * 43758.5453) - floor(sin(${xe} * ${a} + ${ye} * ${b} + $(s) * ${k}) * 43758.5453)))`;
+    // Each line's far end, in percent of the three-cell box, from the hash
+    // of the edge it crosses: one $() each, written over the cell's own
+    // variables so the text is the same in every cell. The first column and
+    // row also run their lines out across the sheet's outer edge.
+    const open = (xe, ye, a, b, k) => `floor(0.5 + (sin(${xe} * ${a} + ${ye} * ${b} + s * ${k}) * 43758.5453 % 1 + 1) % 1)`;
     const H = (xe, ye) => open(xe, ye, 12.9898, 78.233, 1);
     const G = (xe, ye) => open(xe, ye, 39.3467, 11.1351, 1.7);
     const h = BW / 2;
-    // a cell percent written into the three-cell box
-    const bx = (e) => `${rc(`(100 + ${e}) / 3`)}%`;
-    const rect = (x0, x1, y0, y1) => [`${bx(x0)} ${bx(y0)}`, `${bx(x1)} ${bx(y0)}`, `${bx(x1)} ${bx(y1)}`, `${bx(x0)} ${bx(y1)}`];
-    const across = rect(`50 - ${h} - 100 * $(hl)`, `50 + ${h} + 100 * $(hr)`, `50 - ${h}`, `50 + ${h}`);
-    const down = rect(`50 - ${h}`, `50 + ${h}`, `50 - ${h} - 100 * $(vt)`, `50 + ${h} + 100 * $(vb)`);
-    const lines = `polygon(${[...across, across[0], ...down, down[0]].join(', ')})`;
+    const end = (name, sign, bit) => `--${name}: $(round((${100 + 50 + sign * h} ${sign < 0 ? '-' : '+'} 100 * ${bit}) * 100 / 3) / 100)%;`;
+    const ends = [
+      end('xr', 1, H('ix', 'iy')),
+      end('xl', -1, `max(0, 2 - ix) * ${H('(ix - 1)', 'iy')}`),
+      end('yb', 1, G('ix', 'iy')),
+      end('yt', -1, `max(0, 2 - iy) * ${G('ix', '(iy - 1)')}`),
+    ].join(' ');
+    const c0 = `${r2((150 - h) / 3)}%`;
+    const c1 = `${r2((150 + h) / 3)}%`;
+    const across = ['@var(--xl) ' + c0, '@var(--xr) ' + c0, '@var(--xr) ' + c1, '@var(--xl) ' + c1];
+    const down = [`${c0} @var(--yt)`, `${c1} @var(--yt)`, `${c1} @var(--yb)`, `${c0} @var(--yb)`];
+    const lines = `--ln: polygon(${[...across, across[0], ...down, down[0]].join(', ')});`;
     return {
-      rule: `${SHIFT} ${SEED} --hr: @calc(0 + ${H('@x', '@y')}); --hl: @calc(${FIRST_X} * ${H('(@x - 1)', '@y')}); --vb: @calc(0 + ${G('@x', '@y')}); --vt: @calc(${FIRST_Y} * ${G('@x', '(@y - 1)')}); ${F} { ${B(
-        `${spanBox(3)} background: @p(var(--color1)); ${cp(lines)}`
+      rule: `${SHIFT} ${SEED} --ix: @x; --iy: @y; ${ends} ${lines} ${F} { ${B(
+        `${spanBox(3)} background: @p(var(--color1)); ${cp('@var(--ln)')}`
       )} ${A(`left: ${50 - h}%; top: ${50 - h}%; width: ${BW}%; height: ${BW}%; background: @p(var(--color2), var(--color3), var(--color4), var(--color1), var(--color1));`)} }${TR}`,
     };
   },
@@ -1210,7 +1219,8 @@ const JIG = (() => {
     return frames.flatMap((fr, i) => edge(outs[i]).map(fr));
   };
   const host = Array.from({ length: 16 }, (_, k) => `--j${k}: ${flagPoly(() => piece(k), [], inSpan(1.6))};`).join(' ');
-  const pickRule = `@match(${Array.from({ length: 15 }, (_, k) => `$(k) == ${k}, @var(--j${k})`).join(', ')}, @var(--j15))`;
+  // the cell's outline by name: css-doodle joins the text, so this reads --j0 .. --j15
+  const pickRule = '@var(--j$(k))';
   return { host, pickRule };
 })();
 
@@ -1218,11 +1228,18 @@ add(
   'Jigsaw',
   'Jigsaw puzzle pieces in mixed colors, each edge cut with a round knob that pokes out of one piece and into its neighbor, so the whole sheet fits together.',
   (c) => {
-    const H = (xe, ye) => hash01(xe, ye, 12.9898, 78.233, 1);
-    const G = (xe, ye) => hash01(xe, ye, 39.3467, 11.1351, 1.7);
+    // Each edge's hash, written over the cell's own variables so the text of
+    // the whole sum is the same in every cell and css-doodle parses it once.
+    // The sheet's last column and row read their size as X + 0.5 (--ex,
+    // --ey): $() treats four equal values read in a row as a cycle and reads
+    // the fourth as 0, and the column, the row and the size can all be equal.
+    const hash = (xe, ye, a, b, k) => `floor(2 * ((sin(${xe} * ${a} + ${ye} * ${b} + s * ${k}) * 43758.5453 % 1 + 1) % 1))`;
+    const H = (xe, ye) => hash(xe, ye, 12.9898, 78.233, 1);
+    const G = (xe, ye) => hash(xe, ye, 39.3467, 11.1351, 1.7);
+    const code = `--k: $(8 * max(${H('ix', 'iy')}, ix > ex - 1) + 4 * max(${G('ix', 'iy')}, iy > ey - 1) + 2 * max(1 - ${H('(ix - 1)', 'iy')}, ix < 2) + max(1 - ${G('ix', '(iy - 1)')}, iy < 2));`;
     return {
       host: JIG.host,
-      rule: `${SEED} --k: @calc(8 * max(${LAST_X}, ${H('@x', '@y')}) + 4 * max(${LAST_Y}, ${G('@x', '@y')}) + 2 * max(${FIRST_X}, 1 - ${H('(@x - 1)', '@y')}) + max(${FIRST_Y}, 1 - ${G('@x', '(@y - 1)')})); ${F} { ${B(`${spanBox(1.6)} background: ${ink(c)}; ${cp(JIG.pickRule)}`)} }${TR}`,
+      rule: `${SEED} --ix: @x; --iy: @y; --ex: @calc(@X + 0.5); --ey: @calc(@Y + 0.5); ${code} ${F} { ${B(`${spanBox(1.6)} background: ${ink(c)}; ${cp(JIG.pickRule)}`)} }${TR}`,
     };
   },
   {
