@@ -1033,7 +1033,7 @@ add(
     // the ink of a facet: which of five bands of the field (nudged a little) it falls in
     const band = `@p(@var(--color$(1 + min(4, max(0, floor((n + @p(-0.12, -0.06, 0, 0.06, 0.12)) * 5))))))`;
     return {
-      rule: `${SEED} ${LP.vars} --n: ${noise(-0.6, 1.6, 1.1)}; ${F} { ${B(`left: -50%; top: -50%; width: 200%; height: 200%; background: ${band}; ${cp(LP.quad)}`)} ${A(
+      rule: `${SHIFT} ${SEED} ${LP.vars} --n: ${noise(-0.6, 1.6, 1.1)}; ${F} { ${B(`left: -50%; top: -50%; width: 200%; height: 200%; background: ${band}; ${cp(LP.quad)}`)} ${A(
         `left: -50%; top: -50%; width: 200%; height: 200%; background: ${band}; ${cp('@var(--tri)')}`
       )} }${TR}`,
     };
