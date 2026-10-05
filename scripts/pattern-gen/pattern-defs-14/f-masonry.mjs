@@ -1,4 +1,28 @@
 // F. Masonry - floors, walls and roofs: bonds, parquet, shingles, screens and tracery.
+//
+// Walls and screens:  Flemish Bond, Hit and Miss, Subway Tile, Fachwerk,
+//                     Reticulatum, Diamond Point, Breeze Block, Glass Block,
+//                     Brise Soleil
+// Paving and floors:  Cobblestone, Crazy Paving, Tactile Paving, Manhole,
+//                     Hongrie, Versailles, Encaustic
+// Roofs and ceilings: Pantile, Slate, Coffered
+// Openings, ornament: Rose Window, Lancet, Ablaq, Balustrade, Portico, Skyline
+//
+// Three constructions recur:
+//
+//   * A piece laid across a cell edge (a brick in a shifted course, a plank
+//     slanting into the next row) is drawn by the cell it starts in, and the
+//     same element also draws the piece running in from the neighbor. The
+//     twin lands exactly on the piece the neighbor drew and the later cell
+//     paints over it, so every piece keeps one color and the sheet's first
+//     row or column is never left with a gap.
+//   * A diagonal joint is cut by a box turned 45deg, in whose own space the
+//     joint is an axis-aligned band (a hard diagonal gradient edge is drawn
+//     aliased and fails parity); its outline is the box's clip-path.
+//   * Something that sits on a cell edge or corner and must look the same
+//     from both sides (a timber, a fin, a medallion, a pier) takes an ink
+//     that is fixed, or a function of the grid point it sits on, so every
+//     cell that draws a part of it agrees.
 import { section, F, TR, B, A, ink, cp, msk, mskI, slabLin } from './shared.mjs';
 
 const { add, all } = section('F. Masonry');
@@ -121,7 +145,7 @@ const slotsConic = (n, duty, from = 0) => {
   return `conic-gradient(from ${from}deg at 50% 50%, ${stops.join(', ')})`;
 };
 
-// -- walls -----------------------------------------------------------------------
+// -- walls and screens ------------------------------------------------------------
 
 // Flemish bond: a stretcher and a header in every course, the header of one
 // course centered on the stretcher below. A cell is one stretcher plus one
@@ -215,6 +239,156 @@ add(
   }
 );
 
+// Subway tile: glazed tiles two courses to a cell in running bond, each with
+// a gloss along its top edge and a shade along its foot. The second course
+// draws its own tile and the one running in from the left (see Flemish).
+const SUBWAY = (() => {
+  const g = 2;
+  const lo = -50 + g;
+  const w = 200 - 2 * g;
+  const cut = (x) => ((x - lo) / w) * 100;
+  return {
+    bBox: box(g, g, 100 - 2 * g, 50 - 2 * g),
+    aBox: box(lo, 50 + g, w, 50 - 2 * g),
+    joint: `linear-gradient(90deg, #000 ${pc(cut(50 - g))}, transparent ${pc(cut(50 - g))} ${pc(cut(50 + g))}, #000 ${pc(cut(50 + g))})`,
+  };
+})();
+const GLAZE = 'linear-gradient(180deg, var(--color6) 0, transparent 34% 70%, var(--color1) 100%)';
+
+add(
+  'Subway Tile',
+  'Glazed subway tiles in running bond, bottle greens and ivories with a gloss along each top edge and a shade along each foot.',
+  (c) => ({
+    host: `--sj: ${SUBWAY.joint};`,
+    rule: `${F} {
+      ${B(`${SUBWAY.bBox} background: ${GLAZE}, ${inkOf(2, 3, 4, 5)};`)}
+      ${A(`${SUBWAY.aBox} background: ${GLAZE}, ${inkOf(2, 3, 4, 5)}; ${msk('@var(--sj)')}`)}
+    }${TR}`,
+  }),
+  {
+    palette: ['#D6D0C4', '#2B4A42', '#3E7B6B', '#5E9C86', '#E9E1CC', '#A8CBBB', '#FBF8F0'],
+    grid: '5x10',
+    freq: 1,
+    tg: '6x6',
+    tf: 1,
+    meta: { tags: ['blocks', 'stripes', 'gradients', 'grid'], mood: ['calm', 'retro'], density: 'dense', goodFor: ['wallpaper', 'card-texture', 'textile'] },
+  }
+);
+
+// Fachwerk: German timber framing. Posts and rails sit on the cell edges,
+// half a timber in each cell, so the frame takes one ink; the braces inside
+// (a single strut either way, a St Andrew's cross or a plain rail) are
+// picked per panel, and every panel is plastered its own color.
+const FACH = (() => {
+  const h = 4.6;
+  const d = h * SQ2;
+  const slash = [[100 - d, 0], [100, 0], [100, d], [d, 100], [0, 100], [0, 100 - d]];
+  const back = [[0, 0], [d, 0], [100, 100 - d], [100, 100], [100 - d, 100], [0, d]];
+  const cross = [
+    [d, 0], [50, 50 - d], [100 - d, 0], [100, 0], [100, d], [50 + d, 50], [100, 100 - d], [100, 100],
+    [100 - d, 100], [50, 50 + d], [d, 100], [0, 100], [0, 100 - d], [50 - d, 50], [0, d], [0, 0],
+  ];
+  const rail = [[0, 50 - h], [100, 50 - h], [100, 50 + h], [0, 50 + h]];
+  const frame = ['90deg', '270deg', '180deg', '0deg'].map((a) => slabLin(a, `${h}%`)).join(', ');
+  return { slash: polyOf(slash), back: polyOf(back), cross: polyOf(cross), rail: polyOf(rail), frame };
+})();
+
+add(
+  'Fachwerk',
+  'Half-timbered walls: dark posts and rails framing plastered panels in chalk, ochre and rose, braced with struts, crosses and rails.',
+  (c) => ({
+    host: `--f1: ${FACH.slash}; --f2: ${FACH.back}; --f3: ${FACH.cross}; --f4: ${FACH.rail}; --ff: ${FACH.frame};`,
+    rule: `${F} {
+      background: ${inkOf(3, 3, 4, 5, 6)};
+      ${B(`inset: 0; background: var(--color1); ${msk('@var(--ff)')}`)}
+      ${A(`inset: 0; background: ${inkOf(1, 2)}; ${cp('@p(@var(--f1), @var(--f2), @var(--f3), @var(--f3), @var(--f4))')}`)}
+    }${TR}`,
+  }),
+  {
+    palette: ['#EDE6D6', '#3A2B22', '#4C392C', '#F3EEE2', '#E7C77F', '#D9A7A0', '#C9D3C4'],
+    grid: '5x7',
+    min: 40,
+    freq: 1,
+    tg: '5x5',
+    tf: 1,
+    meta: { tags: ['crosses', 'diagonals', 'grid', 'lattice'], mood: ['retro', 'organic'], density: 'dense', goodFor: ['wallpaper', 'textile', 'packaging'] },
+  }
+);
+
+// Opus reticulatum: square stones set on their points in a net, banded every
+// third row by courses of thin Roman brick. The net is two turned boxes, so
+// its stones are plain rectangles in their masks: one stone at the cell's
+// heart, and the four on its corners, which neighbors draw too (exactly on
+// top of each other, so each stone keeps one color).
+const RETIC = (() => {
+  const S = 216;
+  const hs = 50 / SQ2 - 1.7;
+  const sq = (cx, cy) => {
+    const [[u, v]] = localPts([[cx, cy]], 50, 50, S, 45);
+    const half = (hs / S) * 100;
+    return rectL(u - half, v - half, 2 * half, 2 * half);
+  };
+  const corners = [sq(0, 0), sq(100, 0), sq(0, 100), sq(100, 100)].join(', ');
+  const heart = sq(50, 50);
+  const brick = (x, y, w, h, color) => rectL(x, y, w, h).replace('#000, #000', `${color}, ${color}`);
+  const bricks = [];
+  const courses = [[3, 0], [36.3, -25], [69.6, 0]];
+  courses.forEach(([y, off], k) => {
+    const color = k === 1 ? 'var(--color5)' : 'var(--color4)';
+    for (let x = off; x < 100; x += 50) bricks.push(brick(x + 1.5, y, 47, 27.4, color));
+  });
+  return { box: turnedBox(50, 50, S, 45), corners, heart, bricks: bricks.join(', ') };
+})();
+
+add(
+  'Reticulatum',
+  'A Roman wall in opus reticulatum: square stones set on their points in a diagonal net, banded every few courses with thin red brick.',
+  (c) => ({
+    host: `--rc: ${RETIC.corners}; --rh: ${RETIC.heart}; --rb: ${RETIC.bricks};`,
+    rule: `${F} {
+      background: @match(y % 3 == 0, @var(--rb), none);
+      ${B(`${RETIC.box} background: ${inkOf(1, 2, 3)}; ${msk('@var(--rh)')} opacity: @match(y % 3 == 0, 0, 1);`)}
+      ${A(`${RETIC.box} background: ${inkOf(1, 2, 3)}; ${msk('@var(--rc)')} opacity: @match(y % 3 == 0, 0, 1);`)}
+    }${TR}`,
+  }),
+  {
+    palette: ['#5A4A3E', '#D8CBB0', '#C7B794', '#E6DCC6', '#A4452E', '#BF5B3A'],
+    grid: '6x9',
+    freq: 1,
+    tg: '6x6',
+    tf: 1,
+    meta: { tags: ['diamonds', 'lattice', 'blocks', 'stripes'], mood: ['calm', 'organic'], density: 'dense', goodFor: ['wallpaper', 'textile', 'card-texture'] },
+  }
+);
+
+// Diamond point: rusticated blocks cut as low pyramids. Light falls from the
+// top, so a block that stands proud has a bright upper facet; a cell turned
+// half a turn reads as a block sunk into the wall. Noise decides which, so
+// the wall is carved in broad swells.
+add(
+  'Diamond Point',
+  'Blocks cut as low four-sided pyramids like the Palazzo dei Diamanti, lit from above, with broad patches sunk where the rest stand proud.',
+  (c) => ({
+    rule: `${F} {
+      --turn: @calc(round(@rn(0, 1, 2)) * 180)deg;
+      background: conic-gradient(from 225deg at 50% 50%, var(--color2) 0 90deg, transparent 90deg), ${inkOf(3)};
+      ${cp('inset(3%)')}
+      transform: rotate(@var(--turn));
+      ${B(`inset: 0; background: ${inkOf(1)}; ${cp(polyOf([[0, 0], [100, 0], [50, 50]]))}`)}
+      ${A(`inset: 0; background: ${inkOf(4, 5)}; ${cp(polyOf([[0, 100], [100, 100], [50, 50]]))}`)}
+    }${TR}`,
+  }),
+  {
+    palette: ['#2B2622', '#F2E6D0', '#D9C6A5', '#B89E78', '#7E6A50', '#6F5C45'],
+    grid: '5x8',
+    min: 40,
+    freq: 1,
+    tg: '5x5',
+    tf: 1,
+    meta: { tags: ['triangles', 'squares', 'grid'], mood: ['bold', 'elegant'], density: 'dense', goodFor: ['wallpaper', 'poster', 'packaging'] },
+  }
+);
+
 // Breeze block: a square concrete screen block pierced with four petals that
 // point at its corners and a round eye in the middle, so the petals of four
 // blocks meet as a flower at every joint. The block is a box turned 45deg
@@ -253,34 +427,6 @@ add(
   }
 );
 
-// Diamond point: rusticated blocks cut as low pyramids. Light falls from the
-// top, so a block that stands proud has a bright upper facet; a cell turned
-// half a turn reads as a block sunk into the wall. Noise decides which, so
-// the wall is carved in broad swells.
-add(
-  'Diamond Point',
-  'Blocks cut as low four-sided pyramids like the Palazzo dei Diamanti, lit from above, with broad patches sunk where the rest stand proud.',
-  (c) => ({
-    rule: `${F} {
-      --turn: @calc(round(@rn(0, 1, 2)) * 180)deg;
-      background: conic-gradient(from 225deg at 50% 50%, var(--color2) 0 90deg, transparent 90deg), ${inkOf(3)};
-      ${cp('inset(3%)')}
-      transform: rotate(@var(--turn));
-      ${B(`inset: 0; background: ${inkOf(1)}; ${cp(polyOf([[0, 0], [100, 0], [50, 50]]))}`)}
-      ${A(`inset: 0; background: ${inkOf(4, 5)}; ${cp(polyOf([[0, 100], [100, 100], [50, 50]]))}`)}
-    }${TR}`,
-  }),
-  {
-    palette: ['#2B2622', '#F2E6D0', '#D9C6A5', '#B89E78', '#7E6A50', '#6F5C45'],
-    grid: '5x8',
-    min: 40,
-    freq: 1,
-    tg: '5x5',
-    tf: 1,
-    meta: { tags: ['triangles', 'squares', 'grid'], mood: ['bold', 'elegant'], density: 'dense', goodFor: ['wallpaper', 'poster', 'packaging'] },
-  }
-);
-
 // Glass block: a pressed-glass brick with a pillowed face rippled in rings,
 // lit unevenly from behind so some of the wall glows.
 add(
@@ -305,7 +451,35 @@ add(
   }
 );
 
-// -- paving ----------------------------------------------------------------------
+// Brise soleil: a concrete egg-crate sunscreen. The fins sit on the cell
+// edges (half in each cell, one ink); the panel behind each opening is
+// painted its own color, and the fins' shadow falls across it in an L whose
+// two arms are sized by two noise fields, as if the sun swung across the
+// facade.
+add(
+  'Brise Soleil',
+  'A concrete egg-crate sunscreen over panels painted in mid-century colors, the fins casting an L of shadow that deepens and thins across the facade.',
+  (c) => ({
+    host: `--bf: ${['90deg', '270deg', '180deg', '0deg'].map((a) => slabLin(a, '8%')).join(', ')};`,
+    rule: `${F} {
+      background: ${inkOf(2, 3, 4, 5)};
+      ${B(`inset: 8%; background: ${inkOf(1)}; opacity: .45;
+        ${msk('linear-gradient(#000, #000) 0 0 / 100% @rn(2%, 62%) no-repeat', 'linear-gradient(#000, #000) 0 0 / @rn(2%, 56%) 100% no-repeat')}`)}
+      ${A(`inset: 0; background: var(--color6); ${msk('@var(--bf)')}`)}
+    }${TR}`,
+  }),
+  {
+    palette: ['#EFE9DC', '#231F1C', '#E07A5F', '#3D7A8C', '#E9B44C', '#81B29A', '#F2EDE2'],
+    grid: '5x7',
+    min: 40,
+    freq: 1,
+    tg: '5x5',
+    tf: 1,
+    meta: { tags: ['squares', 'grid', 'blocks'], mood: ['retro', 'bold'], density: 'dense', goodFor: ['wallpaper', 'poster', 'packaging'] },
+  }
+);
+
+// -- paving and floors ------------------------------------------------------------
 
 // Cobblestone: rounded stones laid in staggered courses. Every other row is
 // shifted half a stone, and the first column of a shifted row lays one more
@@ -416,7 +590,39 @@ add(
   }
 );
 
-// -- floors ----------------------------------------------------------------------
+// Manhole: cast-iron covers on a concrete pavement, each with its own raised
+// tread - dots, squares, rings, ribs or bars - around a round boss.
+const FULL = 'linear-gradient(#000, #000)';
+const COVERS = {
+  dots: `radial-gradient(circle closest-side, #000 58%, transparent 58%) 0 0 / 14.2857% 14.2857%, ${FULL}`,
+  squares: 'linear-gradient(90deg, #000 70%, transparent 70%) 0 0 / 14.2857% 14.2857%, linear-gradient(180deg, #000 70%, transparent 70%) 0 0 / 14.2857% 14.2857%',
+  rings: `repeating-radial-gradient(circle at 50% 50%, #000 0 6%, transparent 6% 12%), ${FULL}`,
+  ribs: `${slotsConic(16, 0.45)}, ${FULL}`,
+  bars: `linear-gradient(90deg, transparent 6%, #000 6% 16%, transparent 16% 26%, #000 26% 36%, transparent 36% 46%, #000 46% 56%, transparent 56% 66%, #000 66% 76%, transparent 76% 86%, #000 86% 96%, transparent 96%), ${FULL}`,
+};
+
+add(
+  'Manhole',
+  'Cast-iron manhole covers set in the pavement, each cast with its own tread of studs, squares, rings, ribs or bars around a round boss.',
+  (c) => ({
+    host: Object.entries(COVERS).map(([k, v]) => `--m${k}: ${v};`).join(' '),
+    rule: `${F} {
+      --m: @p(@var(--mdots), @var(--msquares), @var(--mrings), @var(--mribs), @var(--mbars));
+      background: radial-gradient(circle closest-side, ${inkOf(1, 2)} 92%, transparent 92%);
+      ${B(`inset: 12%; border-radius: 50%; background: ${inkOf(3, 4, 5)}; ${mskI('@var(--m)')}`)}
+      ${A(`inset: 39%; border-radius: 50%; background: ${inkOf(1, 2)}; ${msk('radial-gradient(circle closest-side, #000 60%, transparent 60% 78%, #000 78%)')}`)}
+    }${TR}`,
+  }),
+  {
+    palette: ['#C9C3B6', '#33373C', '#45403B', '#6E757D', '#8C6A4E', '#5A6470'],
+    grid: '4x6',
+    min: 50,
+    freq: 1,
+    tg: '4x4',
+    tf: 1,
+    meta: { tags: ['circles', 'dots', 'radial', 'grid'], mood: ['technical', 'bold'], density: 'medium', goodFor: ['wallpaper', 'poster', 'card-texture'] },
+  }
+);
 
 // Point de Hongrie: chevron parquet, two planks meeting on the cell's center
 // line in a V. A plank is a cell tall and slants half a cell down, so it runs
@@ -573,7 +779,7 @@ add(
   }
 );
 
-// -- roofs -------------------------------------------------------------------------
+// -- roofs and ceilings -----------------------------------------------------------
 
 // Pantiles: an S-tile per cell, a round cover on the left lapping over the
 // pan beside it. Each course hangs a quarter of a cell over the course below
@@ -600,11 +806,82 @@ add(
   }
 );
 
-// -- openings and ornament -----------------------------------------------------
+// Slate: courses of slates, each hanging a quarter of a cell over the one
+// below and sitting above it, every other course shifted half a slate (the
+// first column of a shifted row lays an extra slate at the edge). Most
+// slates have their lower corners clipped; every fourth course is a band of
+// pointed slates in a darker, purpler stone.
+const SLATE = {
+  clipped: polyOf([[0, 0], [100, 0], [100, 86], [86, 100], [14, 100], [0, 86]]),
+  pointed: polyOf([[0, 0], [100, 0], [100, 76], [50, 100], [0, 76]]),
+};
 
 add(
+  'Slate',
+  'A slate roof laid in staggered courses, each slate lapping the course below with its lower corners clipped, and a band of pointed purple slates every few rows.',
+  (c) => ({
+    host: `--sc: ${SLATE.clipped}; --sp: ${SLATE.pointed};`,
+    rule: `@y(even) { transform: translateX(50%); } ${F} {
+      z-index: @calc(100 - @y);
+      --sh: @match(y % 4 == 0, @var(--sp), @var(--sc));
+      ${A(`left: 1.5%; top: 0; width: 97%; height: 124%; background: linear-gradient(180deg, var(--color6) 0, transparent 30%), @match(y % 4 == 0, var(--color5), ${inkOf(1, 2, 3, 4)}); ${cp('@var(--sh)')}`)}
+      ${B(`left: -98.5%; top: 0; width: @match(x == 1, 97%, 0); height: 124%; background: linear-gradient(180deg, var(--color6) 0, transparent 30%), @match(y % 4 == 0, var(--color5), ${inkOf(1, 2, 3, 4)}); ${cp('@var(--sh)')}`)}
+    }${TR}`,
+  }),
+  {
+    palette: ['#1C2027', '#4E5A6B', '#5C6878', '#455063', '#69778A', '#5D4F6E', '#8D99A8'],
+    grid: '6x10',
+    freq: 1,
+    tg: '6x6',
+    tf: 1,
+    meta: { tags: ['blocks', 'grid', 'triangles'], mood: ['calm', 'elegant'], density: 'dense', goodFor: ['wallpaper', 'textile', 'card-texture'] },
+  }
+);
+
+// Coffered: a coffered ceiling seen from below. Each coffer steps down in
+// two bevelled frames (hard-stop conic sectors sized to each frame, lit
+// from below so the upper faces fall in shade) to a painted floor holding a
+// gilt rosette. The ribs between coffers are the ground.
+const ROSETTE = polyOf(
+  Array.from({ length: 96 }, (_, i) => {
+    const t = (i / 96) * Math.PI * 2;
+    const r = 26 + 24 * Math.pow(Math.abs(Math.cos(4 * t)), 0.6);
+    return [50 + r * Math.cos(t), 50 + r * Math.sin(t)];
+  })
+);
+const BEVEL = 'conic-gradient(from -45deg, var(--color1) 0 90deg, var(--color2) 90deg 180deg, var(--color3) 180deg 270deg, var(--color2) 270deg 360deg)';
+const RIB = (deg) => `linear-gradient(${deg}, var(--color6) 0 5%, transparent 5% 95%, var(--color6) 95%)`;
+
+add(
+  'Coffered',
+  'A coffered ceiling: gilt-ribbed square coffers stepping down in two bevelled frames to painted blue and red floors, each holding a rosette.',
+  (c) => ({
+    host: `--ro: ${ROSETTE};`,
+    rule: `${F} {
+      --fl: ${inkOf(4, 5)};
+      background: ${RIB('90deg')}, ${RIB('180deg')}, ${BEVEL};
+      ${B(`inset: 20%; background: linear-gradient(@var(--fl), @var(--fl)) 50% 50% / 58.3333% 58.3333% no-repeat, ${BEVEL};`)}
+      ${A(`inset: 33%; background: ${inkOf(6, 3)}; ${cp('@var(--ro)')} transform: rotate(@r(0deg, 45deg));`)}
+    }${TR}`,
+  }),
+  {
+    palette: ['#EDE3CC', '#776B57', '#A99C82', '#D8CDB4', '#2D4778', '#8C2E2E', '#D9A93B'],
+    grid: '5x7',
+    min: 48,
+    freq: 1,
+    tg: '5x5',
+    tf: 1,
+    meta: { tags: ['squares', 'concentric', 'petals', 'grid'], mood: ['elegant', 'calm'], density: 'dense', goodFor: ['wallpaper', 'textile', 'packaging'] },
+  }
+);
+
+// -- openings and ornament --------------------------------------------------------
+
+// Rose window: a wheel of twelve glass petals (hard conic slots cut to a
+// ring), a band of tracery round it and a pierced roundel at the hub.
+add(
   'Rose Window',
-  'Gothic rose windows: a wheel of glass petals around a ring of roundels, a jewel at the hub, set in a dark stone wall.',
+  'Gothic rose windows set in a dark wall: a wheel of twelve stained glass petals inside a pale stone ring, with a ringed jewel at the hub.',
   (c) => ({
     host: `--rp: ${slotsConic(12, 0.62, -11.16)};`,
     rule: `${F} {
@@ -621,6 +898,101 @@ add(
     tg: '4x4',
     tf: 1,
     meta: { tags: ['radial', 'circles', 'petals', 'rings'], mood: ['elegant', 'festive'], density: 'medium', goodFor: ['wallpaper', 'poster', 'packaging'] },
+  }
+);
+
+// Lancet: a two-light Gothic window per cell, two pointed lancets drawn as
+// equilateral arches with a quatrefoil in the oculus above them.
+const LANCET = (() => {
+  const arch = (x0, w, spring, sill, n = 14) => {
+    const r = w;
+    const pts = [[x0, sill], [x0, spring]];
+    for (let i = 1; i <= n; i++) {
+      const t = Math.PI + (Math.PI / 3) * (i / n);
+      pts.push([x0 + w + r * Math.cos(t), spring + r * Math.sin(t)]);
+    }
+    for (let i = 1; i <= n; i++) {
+      const t = (5 * Math.PI) / 3 + (Math.PI / 3) * (i / n);
+      pts.push([x0 + r * Math.cos(t), spring + r * Math.sin(t)]);
+    }
+    pts.push([x0 + w, sill]);
+    return polyOf(pts);
+  };
+  const lobe = (x, y) => `radial-gradient(6% 6% at ${pc(x)} ${pc(y)}, @var(--q) 100%, transparent 100%)`;
+  return {
+    left: arch(11, 36, 56, 97),
+    right: arch(53, 36, 56, 97),
+    foil: [lobe(44.6, 18), lobe(55.4, 18), lobe(50, 12.6), lobe(50, 23.4)].join(', '),
+  };
+})();
+
+add(
+  'Lancet',
+  'Gothic two-light windows in a pale stone wall: twin pointed lancets of deep stained glass under a quatrefoil in the window head.',
+  (c) => ({
+    host: `--ll: ${LANCET.left}; --lr: ${LANCET.right};`,
+    rule: `${F} {
+      --q: ${inkOf(3, 4, 5, 6)};
+      background: ${LANCET.foil}, radial-gradient(13.8% 13.8% at 50% 18%, transparent 84%, var(--color2) 84% 100%, transparent 100%);
+      ${B(`inset: 0; background: ${inkOf(1, 3, 4, 5, 6)}; ${cp('@var(--ll)')}`)}
+      ${A(`inset: 0; background: ${inkOf(1, 3, 4, 5, 6)}; ${cp('@var(--lr)')}`)}
+    }${TR}`,
+  }),
+  {
+    palette: ['#DCD2BE', '#24345C', '#8C7F67', '#7E1F2B', '#2E5F4F', '#C9902C', '#3B5E9A'],
+    grid: '5x6',
+    min: 54,
+    freq: 1,
+    tg: '5x5',
+    tf: 1,
+    meta: { tags: ['arcs', 'curves', 'circles', 'grid'], mood: ['elegant', 'calm'], density: 'medium', goodFor: ['wallpaper', 'packaging', 'poster'] },
+  }
+);
+
+// Ablaq: arcades in striped masonry, the voussoirs of each round arch
+// alternating red brick and pale stone as in the great mosque of Cordoba.
+// Each cell is one bay; the piers and the wall over the arch sit on the
+// cell edges (half in each cell), so they take one fixed ink, and so does
+// the string course along the top of every tier.
+const ABLAQ = (() => {
+  const n = 11;
+  const step = 180 / n;
+  const gap = 0.9;
+  const set = (parity) => {
+    const stops = [];
+    for (let k = 0; k < n; k++) {
+      const a = n3(k * step);
+      const e = n3((k + 1) * step);
+      if (k % 2 === parity) stops.push(`transparent ${a}deg ${n3(a + gap)}deg`, `#000 ${n3(a + gap)}deg ${n3(e - gap)}deg`, `transparent ${n3(e - gap)}deg ${e}deg`);
+      else stops.push(`transparent ${a}deg ${e}deg`);
+    }
+    stops.push('transparent 180deg 360deg');
+    return `conic-gradient(from -90deg at 50% 50%, ${stops.join(', ')})`;
+  };
+  return { even: set(0), odd: set(1), ring: 'radial-gradient(circle closest-side, transparent 64%, #000 64% 100%, transparent 100%)' };
+})();
+
+add(
+  'Ablaq',
+  'Arcades in ablaq masonry: round arches whose wedge-shaped voussoirs alternate red brick and pale stone, on stout piers under a string course.',
+  (c) => ({
+    host: `--ae: ${ABLAQ.even}; --ao: ${ABLAQ.odd}; --ar: ${ABLAQ.ring};`,
+    rule: `${F} {
+      background: linear-gradient(180deg, var(--color2) 0 6%, transparent 6%),
+        radial-gradient(33% 52.38% at 50% 100%, transparent 100%, var(--color1) 100%) 0 0 / 100% 63% no-repeat,
+        linear-gradient(90deg, var(--color1) 0 17%, transparent 17% 83%, var(--color1) 83%);
+      ${B(`${box(0, 13, 100, 100)} background: ${inkOf(3, 4)}; ${mskI('@var(--ae)', '@var(--ar)')}`)}
+      ${A(`${box(0, 13, 100, 100)} background: ${inkOf(5, 6)}; ${mskI('@var(--ao)', '@var(--ar)')}`)}
+    }${TR}`,
+  }),
+  {
+    palette: ['#2A2320', '#C4A276', '#7E6347', '#F6EEDC', '#EDE1C6', '#B8392A', '#9A2E22'],
+    grid: '4x6',
+    min: 56,
+    freq: 1,
+    tg: '4x4',
+    tf: 1,
+    meta: { tags: ['arcs', 'semicircles', 'stripes', 'radial'], mood: ['bold', 'elegant'], density: 'medium', goodFor: ['wallpaper', 'poster', 'section-divider'] },
   }
 );
 
@@ -677,298 +1049,6 @@ add(
   }
 );
 
-// -- more walls ------------------------------------------------------------------
-
-// Subway tile: glazed tiles two courses to a cell in running bond, each with
-// a gloss along its top edge and a shade along its foot. The second course
-// draws its own tile and the one running in from the left (see Flemish).
-const SUBWAY = (() => {
-  const g = 2;
-  const lo = -50 + g;
-  const w = 200 - 2 * g;
-  const cut = (x) => ((x - lo) / w) * 100;
-  return {
-    bBox: box(g, g, 100 - 2 * g, 50 - 2 * g),
-    aBox: box(lo, 50 + g, w, 50 - 2 * g),
-    joint: `linear-gradient(90deg, #000 ${pc(cut(50 - g))}, transparent ${pc(cut(50 - g))} ${pc(cut(50 + g))}, #000 ${pc(cut(50 + g))})`,
-  };
-})();
-const GLAZE = 'linear-gradient(180deg, var(--color6) 0, transparent 34% 70%, var(--color1) 100%)';
-
-add(
-  'Subway Tile',
-  'Glazed subway tiles in running bond, bottle greens and ivories with a gloss along each top edge and a shade along each foot.',
-  (c) => ({
-    host: `--sj: ${SUBWAY.joint};`,
-    rule: `${F} {
-      ${B(`${SUBWAY.bBox} background: ${GLAZE}, ${inkOf(2, 3, 4, 5)};`)}
-      ${A(`${SUBWAY.aBox} background: ${GLAZE}, ${inkOf(2, 3, 4, 5)}; ${msk('@var(--sj)')}`)}
-    }${TR}`,
-  }),
-  {
-    palette: ['#D6D0C4', '#2B4A42', '#3E7B6B', '#5E9C86', '#E9E1CC', '#A8CBBB', '#FBF8F0'],
-    grid: '5x10',
-    freq: 1,
-    tg: '6x6',
-    tf: 1,
-    meta: { tags: ['blocks', 'stripes', 'gradients', 'grid'], mood: ['calm', 'retro'], density: 'dense', goodFor: ['wallpaper', 'card-texture', 'textile'] },
-  }
-);
-
-// Fachwerk: German timber framing. Posts and rails sit on the cell edges,
-// half a timber in each cell, so the frame takes one ink; the braces inside
-// (a single strut either way, a St Andrew's cross or a plain rail) are
-// picked per panel, and every panel is plastered its own color.
-const FACH = (() => {
-  const h = 4.6;
-  const d = h * SQ2;
-  const slash = [[100 - d, 0], [100, 0], [100, d], [d, 100], [0, 100], [0, 100 - d]];
-  const back = [[0, 0], [d, 0], [100, 100 - d], [100, 100], [100 - d, 100], [0, d]];
-  const cross = [
-    [d, 0], [50, 50 - d], [100 - d, 0], [100, 0], [100, d], [50 + d, 50], [100, 100 - d], [100, 100],
-    [100 - d, 100], [50, 50 + d], [d, 100], [0, 100], [0, 100 - d], [50 - d, 50], [0, d], [0, 0],
-  ];
-  const rail = [[0, 50 - h], [100, 50 - h], [100, 50 + h], [0, 50 + h]];
-  const frame = ['90deg', '270deg', '180deg', '0deg'].map((a) => slabLin(a, `${h}%`)).join(', ');
-  return { slash: polyOf(slash), back: polyOf(back), cross: polyOf(cross), rail: polyOf(rail), frame };
-})();
-
-add(
-  'Fachwerk',
-  'Half-timbered walls: dark posts and rails framing plastered panels in chalk, ochre and rose, braced with struts, crosses and rails.',
-  (c) => ({
-    host: `--f1: ${FACH.slash}; --f2: ${FACH.back}; --f3: ${FACH.cross}; --f4: ${FACH.rail}; --ff: ${FACH.frame};`,
-    rule: `${F} {
-      background: ${inkOf(3, 3, 4, 5, 6)};
-      ${B(`inset: 0; background: var(--color1); ${msk('@var(--ff)')}`)}
-      ${A(`inset: 0; background: ${inkOf(1, 2)}; ${cp('@p(@var(--f1), @var(--f2), @var(--f3), @var(--f3), @var(--f4))')}`)}
-    }${TR}`,
-  }),
-  {
-    palette: ['#EDE6D6', '#3A2B22', '#4C392C', '#F3EEE2', '#E7C77F', '#D9A7A0', '#C9D3C4'],
-    grid: '5x7',
-    min: 40,
-    freq: 1,
-    tg: '5x5',
-    tf: 1,
-    meta: { tags: ['crosses', 'diagonals', 'grid', 'lattice'], mood: ['retro', 'organic'], density: 'dense', goodFor: ['wallpaper', 'textile', 'packaging'] },
-  }
-);
-
-// Opus reticulatum: square stones set on their points in a net, banded every
-// third row by courses of thin Roman brick. The net is two turned boxes, so
-// its stones are plain rectangles in their masks: one stone at the cell's
-// heart, and the four on its corners, which neighbors draw too (exactly on
-// top of each other, so each stone keeps one color).
-const RETIC = (() => {
-  const S = 216;
-  const hs = 50 / SQ2 - 1.7;
-  const sq = (cx, cy) => {
-    const [[u, v]] = localPts([[cx, cy]], 50, 50, S, 45);
-    const half = (hs / S) * 100;
-    return rectL(u - half, v - half, 2 * half, 2 * half);
-  };
-  const corners = [sq(0, 0), sq(100, 0), sq(0, 100), sq(100, 100)].join(', ');
-  const heart = sq(50, 50);
-  const brick = (x, y, w, h, color) => rectL(x, y, w, h).replace('#000, #000', `${color}, ${color}`);
-  const bricks = [];
-  const courses = [[3, 0], [36.3, -25], [69.6, 0]];
-  courses.forEach(([y, off], k) => {
-    const color = k === 1 ? 'var(--color5)' : 'var(--color4)';
-    for (let x = off; x < 100; x += 50) bricks.push(brick(x + 1.5, y, 47, 27.4, color));
-  });
-  return { box: turnedBox(50, 50, S, 45), corners, heart, bricks: bricks.join(', ') };
-})();
-
-add(
-  'Reticulatum',
-  'A Roman wall in opus reticulatum: square stones set on their points in a diagonal net, banded every few courses with thin red brick.',
-  (c) => ({
-    host: `--rc: ${RETIC.corners}; --rh: ${RETIC.heart}; --rb: ${RETIC.bricks};`,
-    rule: `${F} {
-      background: @match(y % 3 == 0, @var(--rb), none);
-      ${B(`${RETIC.box} background: ${inkOf(1, 2, 3)}; ${msk('@var(--rh)')} opacity: @match(y % 3 == 0, 0, 1);`)}
-      ${A(`${RETIC.box} background: ${inkOf(1, 2, 3)}; ${msk('@var(--rc)')} opacity: @match(y % 3 == 0, 0, 1);`)}
-    }${TR}`,
-  }),
-  {
-    palette: ['#5A4A3E', '#D8CBB0', '#C7B794', '#E6DCC6', '#A4452E', '#BF5B3A'],
-    grid: '6x9',
-    freq: 1,
-    tg: '6x6',
-    tf: 1,
-    meta: { tags: ['diamonds', 'lattice', 'blocks', 'stripes'], mood: ['calm', 'organic'], density: 'dense', goodFor: ['wallpaper', 'textile', 'card-texture'] },
-  }
-);
-
-// -- roofs -------------------------------------------------------------------------
-
-// Slate: courses of slates, each hanging a quarter of a cell over the one
-// below and sitting above it, every other course shifted half a slate (the
-// first column of a shifted row lays an extra slate at the edge). Most
-// slates have their lower corners clipped; every fourth course is a band of
-// pointed slates in a darker, purpler stone.
-const SLATE = {
-  clipped: polyOf([[0, 0], [100, 0], [100, 86], [86, 100], [14, 100], [0, 86]]),
-  pointed: polyOf([[0, 0], [100, 0], [100, 76], [50, 100], [0, 76]]),
-};
-
-add(
-  'Slate',
-  'A slate roof laid in staggered courses, each slate lapping the course below with its lower corners clipped, and a band of pointed purple slates every few rows.',
-  (c) => ({
-    host: `--sc: ${SLATE.clipped}; --sp: ${SLATE.pointed};`,
-    rule: `@y(even) { transform: translateX(50%); } ${F} {
-      z-index: @calc(100 - @y);
-      --sh: @match(y % 4 == 0, @var(--sp), @var(--sc));
-      ${A(`left: 1.5%; top: 0; width: 97%; height: 124%; background: linear-gradient(180deg, var(--color6) 0, transparent 30%), @match(y % 4 == 0, var(--color5), ${inkOf(1, 2, 3, 4)}); ${cp('@var(--sh)')}`)}
-      ${B(`left: -98.5%; top: 0; width: @match(x == 1, 97%, 0); height: 124%; background: linear-gradient(180deg, var(--color6) 0, transparent 30%), @match(y % 4 == 0, var(--color5), ${inkOf(1, 2, 3, 4)}); ${cp('@var(--sh)')}`)}
-    }${TR}`,
-  }),
-  {
-    palette: ['#1C2027', '#4E5A6B', '#5C6878', '#455063', '#69778A', '#5D4F6E', '#8D99A8'],
-    grid: '6x10',
-    freq: 1,
-    tg: '6x6',
-    tf: 1,
-    meta: { tags: ['blocks', 'grid', 'triangles'], mood: ['calm', 'elegant'], density: 'dense', goodFor: ['wallpaper', 'textile', 'card-texture'] },
-  }
-);
-
-// -- openings and ornament, continued ----------------------------------------------
-
-// Coffered: a coffered ceiling seen from below. Each coffer steps down in
-// two bevelled frames (hard-stop conic sectors sized to each frame, lit
-// from below so the upper faces fall in shade) to a painted floor holding a
-// gilt rosette. The ribs between coffers are the ground.
-const ROSETTE = polyOf(
-  Array.from({ length: 96 }, (_, i) => {
-    const t = (i / 96) * Math.PI * 2;
-    const r = 26 + 24 * Math.pow(Math.abs(Math.cos(4 * t)), 0.6);
-    return [50 + r * Math.cos(t), 50 + r * Math.sin(t)];
-  })
-);
-const BEVEL = 'conic-gradient(from -45deg, var(--color1) 0 90deg, var(--color2) 90deg 180deg, var(--color3) 180deg 270deg, var(--color2) 270deg 360deg)';
-const RIB = (deg) => `linear-gradient(${deg}, var(--color6) 0 5%, transparent 5% 95%, var(--color6) 95%)`;
-
-add(
-  'Coffered',
-  'A coffered ceiling: gilt-ribbed square coffers stepping down in two bevelled frames to painted blue and red floors, each holding a rosette.',
-  (c) => ({
-    host: `--ro: ${ROSETTE};`,
-    rule: `${F} {
-      --fl: ${inkOf(4, 5)};
-      background: ${RIB('90deg')}, ${RIB('180deg')}, ${BEVEL};
-      ${B(`inset: 20%; background: linear-gradient(@var(--fl), @var(--fl)) 50% 50% / 58.3333% 58.3333% no-repeat, ${BEVEL};`)}
-      ${A(`inset: 33%; background: ${inkOf(6, 3)}; ${cp('@var(--ro)')} transform: rotate(@r(0deg, 45deg));`)}
-    }${TR}`,
-  }),
-  {
-    palette: ['#EDE3CC', '#776B57', '#A99C82', '#D8CDB4', '#2D4778', '#8C2E2E', '#D9A93B'],
-    grid: '5x7',
-    min: 48,
-    freq: 1,
-    tg: '5x5',
-    tf: 1,
-    meta: { tags: ['squares', 'concentric', 'petals', 'grid'], mood: ['elegant', 'calm'], density: 'dense', goodFor: ['wallpaper', 'textile', 'packaging'] },
-  }
-);
-
-// Lancet: a two-light Gothic window per cell, two pointed lancets drawn as
-// equilateral arches with a quatrefoil in the oculus above them.
-const LANCET = (() => {
-  const arch = (x0, w, spring, sill, n = 14) => {
-    const r = w;
-    const pts = [[x0, sill], [x0, spring]];
-    for (let i = 1; i <= n; i++) {
-      const t = Math.PI + (Math.PI / 3) * (i / n);
-      pts.push([x0 + w + r * Math.cos(t), spring + r * Math.sin(t)]);
-    }
-    for (let i = 1; i <= n; i++) {
-      const t = (5 * Math.PI) / 3 + (Math.PI / 3) * (i / n);
-      pts.push([x0 + r * Math.cos(t), spring + r * Math.sin(t)]);
-    }
-    pts.push([x0 + w, sill]);
-    return polyOf(pts);
-  };
-  const lobe = (x, y) => `radial-gradient(6% 6% at ${pc(x)} ${pc(y)}, @var(--q) 100%, transparent 100%)`;
-  return {
-    left: arch(11, 36, 56, 97),
-    right: arch(53, 36, 56, 97),
-    foil: [lobe(44.6, 18), lobe(55.4, 18), lobe(50, 12.6), lobe(50, 23.4)].join(', '),
-  };
-})();
-
-add(
-  'Lancet',
-  'Gothic two-light windows in a pale stone wall: twin pointed lancets of deep stained glass under a quatrefoil in the window head.',
-  (c) => ({
-    host: `--ll: ${LANCET.left}; --lr: ${LANCET.right};`,
-    rule: `${F} {
-      --q: ${inkOf(3, 4, 5, 6)};
-      background: ${LANCET.foil}, radial-gradient(13.8% 13.8% at 50% 18%, transparent 84%, var(--color2) 84% 100%, transparent 100%);
-      ${B(`inset: 0; background: ${inkOf(1, 3, 4, 5, 6)}; ${cp('@var(--ll)')}`)}
-      ${A(`inset: 0; background: ${inkOf(1, 3, 4, 5, 6)}; ${cp('@var(--lr)')}`)}
-    }${TR}`,
-  }),
-  {
-    palette: ['#DCD2BE', '#24345C', '#8C7F67', '#7E1F2B', '#2E5F4F', '#C9902C', '#3B5E9A'],
-    grid: '5x6',
-    min: 54,
-    freq: 1,
-    tg: '5x5',
-    tf: 1,
-    meta: { tags: ['arcs', 'triangles', 'circles', 'grid'], mood: ['elegant', 'calm'], density: 'medium', goodFor: ['wallpaper', 'packaging', 'poster'] },
-  }
-);
-
-// Ablaq: arcades in striped masonry, the voussoirs of each round arch
-// alternating red brick and pale stone as in the great mosque of Cordoba.
-// Each cell is one bay; the piers and the wall over the arch sit on the
-// cell edges (half in each cell), so they take one fixed ink, and so does
-// the string course along the top of every tier.
-const ABLAQ = (() => {
-  const n = 11;
-  const step = 180 / n;
-  const gap = 0.9;
-  const set = (parity) => {
-    const stops = [];
-    for (let k = 0; k < n; k++) {
-      const a = n3(k * step);
-      const e = n3((k + 1) * step);
-      if (k % 2 === parity) stops.push(`transparent ${a}deg ${n3(a + gap)}deg`, `#000 ${n3(a + gap)}deg ${n3(e - gap)}deg`, `transparent ${n3(e - gap)}deg ${e}deg`);
-      else stops.push(`transparent ${a}deg ${e}deg`);
-    }
-    stops.push('transparent 180deg 360deg');
-    return `conic-gradient(from -90deg at 50% 50%, ${stops.join(', ')})`;
-  };
-  return { even: set(0), odd: set(1), ring: 'radial-gradient(circle closest-side, transparent 64%, #000 64% 100%, transparent 100%)' };
-})();
-
-add(
-  'Ablaq',
-  'Arcades in ablaq masonry: round arches whose wedge-shaped voussoirs alternate red brick and pale stone, on stout piers under a string course.',
-  (c) => ({
-    host: `--ae: ${ABLAQ.even}; --ao: ${ABLAQ.odd}; --ar: ${ABLAQ.ring};`,
-    rule: `${F} {
-      background: linear-gradient(180deg, var(--color2) 0 6%, transparent 6%),
-        radial-gradient(33% 52.38% at 50% 100%, transparent 100%, var(--color1) 100%) 0 0 / 100% 63% no-repeat,
-        linear-gradient(90deg, var(--color1) 0 17%, transparent 17% 83%, var(--color1) 83%);
-      ${B(`${box(0, 13, 100, 100)} background: ${inkOf(3, 4)}; ${mskI('@var(--ae)', '@var(--ar)')}`)}
-      ${A(`${box(0, 13, 100, 100)} background: ${inkOf(5, 6)}; ${mskI('@var(--ao)', '@var(--ar)')}`)}
-    }${TR}`,
-  }),
-  {
-    palette: ['#2A2320', '#C4A276', '#7E6347', '#F6EEDC', '#EDE1C6', '#B8392A', '#9A2E22'],
-    grid: '4x6',
-    min: 56,
-    freq: 1,
-    tg: '4x4',
-    tf: 1,
-    meta: { tags: ['arcs', 'semicircles', 'stripes', 'radial'], mood: ['bold', 'elegant'], density: 'medium', goodFor: ['wallpaper', 'poster', 'section-divider'] },
-  }
-);
-
 // Portico: a temple front in every cell, pediment over four columns on a
 // three-stepped stylobate, with a round light in the tympanum.
 const PORTICO = {
@@ -999,68 +1079,6 @@ add(
     tg: '5x5',
     tf: 1,
     meta: { tags: ['triangles', 'stripes', 'steps', 'grid'], mood: ['playful', 'retro'], density: 'medium', goodFor: ['wallpaper', 'packaging', 'poster'] },
-  }
-);
-
-// Brise soleil: a concrete egg-crate sunscreen. The fins sit on the cell
-// edges (half in each cell, one ink); the panel behind each opening is
-// painted its own color, and the fins' shadow falls across it in an L whose
-// two arms are sized by two noise fields, as if the sun swung across the
-// facade.
-add(
-  'Brise Soleil',
-  'A concrete egg-crate sunscreen over panels painted in mid-century colors, the fins casting an L of shadow that deepens and thins across the facade.',
-  (c) => ({
-    host: `--bf: ${['90deg', '270deg', '180deg', '0deg'].map((a) => slabLin(a, '8%')).join(', ')};`,
-    rule: `${F} {
-      background: ${inkOf(2, 3, 4, 5)};
-      ${B(`inset: 8%; background: ${inkOf(1)}; opacity: .45;
-        ${msk('linear-gradient(#000, #000) 0 0 / 100% @rn(2%, 62%) no-repeat', 'linear-gradient(#000, #000) 0 0 / @rn(2%, 56%) 100% no-repeat')}`)}
-      ${A(`inset: 0; background: var(--color6); ${msk('@var(--bf)')}`)}
-    }${TR}`,
-  }),
-  {
-    palette: ['#EFE9DC', '#231F1C', '#E07A5F', '#3D7A8C', '#E9B44C', '#81B29A', '#F2EDE2'],
-    grid: '5x7',
-    min: 40,
-    freq: 1,
-    tg: '5x5',
-    tf: 1,
-    meta: { tags: ['squares', 'grid', 'blocks'], mood: ['retro', 'bold'], density: 'dense', goodFor: ['wallpaper', 'poster', 'packaging'] },
-  }
-);
-
-// Manhole: cast-iron covers on a concrete pavement, each with its own raised
-// tread - dots, squares, rings, ribs or bars - around a round boss.
-const FULL = 'linear-gradient(#000, #000)';
-const COVERS = {
-  dots: `radial-gradient(circle closest-side, #000 58%, transparent 58%) 0 0 / 14.2857% 14.2857%, ${FULL}`,
-  squares: 'linear-gradient(90deg, #000 70%, transparent 70%) 0 0 / 14.2857% 14.2857%, linear-gradient(180deg, #000 70%, transparent 70%) 0 0 / 14.2857% 14.2857%',
-  rings: `repeating-radial-gradient(circle at 50% 50%, #000 0 6%, transparent 6% 12%), ${FULL}`,
-  ribs: `${slotsConic(16, 0.45)}, ${FULL}`,
-  bars: `linear-gradient(90deg, transparent 6%, #000 6% 16%, transparent 16% 26%, #000 26% 36%, transparent 36% 46%, #000 46% 56%, transparent 56% 66%, #000 66% 76%, transparent 76% 86%, #000 86% 96%, transparent 96%), ${FULL}`,
-};
-
-add(
-  'Manhole',
-  'Cast-iron manhole covers set in the pavement, each cast with its own tread of studs, squares, rings, ribs or bars around a round boss.',
-  (c) => ({
-    host: Object.entries(COVERS).map(([k, v]) => `--m${k}: ${v};`).join(' '),
-    rule: `${F} {
-      --m: @p(@var(--mdots), @var(--msquares), @var(--mrings), @var(--mribs), @var(--mbars));
-      background: radial-gradient(circle closest-side, ${inkOf(1, 2)} 92%, transparent 92%);
-      ${B(`inset: 12%; border-radius: 50%; background: ${inkOf(3, 4, 5)}; ${mskI('@var(--m)')}`)}
-      ${A(`inset: 39%; border-radius: 50%; background: ${inkOf(1, 2)}; ${msk('radial-gradient(circle closest-side, #000 60%, transparent 60% 78%, #000 78%)')}`)}
-    }${TR}`,
-  }),
-  {
-    palette: ['#C9C3B6', '#33373C', '#45403B', '#6E757D', '#8C6A4E', '#5A6470'],
-    grid: '4x6',
-    min: 50,
-    freq: 1,
-    tg: '4x4',
-    tf: 1,
-    meta: { tags: ['circles', 'dots', 'radial', 'grid'], mood: ['technical', 'bold'], density: 'medium', goodFor: ['wallpaper', 'poster', 'card-texture'] },
   }
 );
 

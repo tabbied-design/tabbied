@@ -1,4 +1,20 @@
 // B. Wagara - the old repeat motifs of Japan and of tilework and folk ornament elsewhere.
+//
+//   Japan      Wave Fans (seigaiha), Hemp Leaf (asanoha), Yabane, Mitsuuroko,
+//              Sakura, Kiku, Kanoko, Igeta, Amime, Matsukawabishi, Kagome,
+//              Hitomezashi, Same Komon, Tachiwaki, Tomoe
+//   elsewhere  Greek Key, Guilloche, Kawung, Star And Cross, Chakana,
+//              Selbu Star, Talavera, Ice Crack, Cross Stitch, Cintamani
+//
+// Most motifs are drawn once, in JS, as a polygon on the host and read in
+// the cell with @var(), so a long outline costs nothing per cell: bitmaps are
+// traced square by square (Greek Key, Chakana, Selbu Star), smooth shapes are
+// contoured from an implicit function by marching squares (Tomoe, Cross
+// Stitch, Cintamani), and radial ones come from a polar profile (Sakura,
+// Kiku, Talavera). Patterns that join across cells do it without z-index
+// between cells, which the SVG export does not keep: the fans of Wave Fans
+// stack inside one cell's stacking context, and Guilloche cuts a real gap
+// in the under strand of every crossing instead of layering the rings.
 import { section, F, TR, ink, cp, msk, mskI, B, A, noise } from './shared.mjs';
 
 const { add, all } = section('B. Wagara');
@@ -354,9 +370,9 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
 }
 
 {
-  // Two up-pointing triangles per three: each cell's triangle split into the
-  // three-scale crest, its middle a real hole, the gaps between the cells'
-  // triangles the plain scales of the ground.
+  // Each cell holds one up-pointing triangle, split into the three-scale
+  // crest with a real hole at its middle; the down-pointing triangles left
+  // between the cells are the plain scales of the ground.
   const topT = P([[50, 0], [75, 50], [25, 50]]);
   const feet = P([[25, 50], [50, 100], [75, 50], [100, 100], [0, 100]]);
   add(
@@ -434,17 +450,17 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
 
 {
   // Shibori dots: two tied dots to a cell on a diagonal grid, each a softly
-  // squared knot with the undyed point at its middle, set a little askew.
+  // squared knot with a dyed point at its middle, set a little askew.
   const dot = (c, pos) =>
     `left: ${pos}; top: ${pos}; width: 36%; height: 36%; margin: -18% 0 0 -18%; border-radius: 24%; background: ${ink(c)}; ${msk(boreL(34))} ${tf('rotate(@r(32deg, 58deg)) scale(@r(0.82, 1.04))')}`;
   add(
     'Kanoko',
-    'Tie-dye dots on a diagonal grid, each a softly squared knot with a dyed point at its middle, set slightly askew the way hand-tied cloth comes out.',
+    'Fawn-spot tie-dye on purple silk: pale, softly squared knots on a diagonal grid, each with a dyed point at its middle, set askew the way hand-tied cloth comes out.',
     (c) => ({
       rule: `${F} { ${B(dot(c, '25%'))} ${A(dot(c, '75%'))} }${TR}`,
     }),
     {
-      palette: ['#8E1B2C', '#F6EEE6', '#F2D9C9', '#E9B9A5'],
+      palette: ['#3B2A5A', '#F3EDF5', '#DCCDE8', '#BFAED6'],
       grid: '7x10',
       tg: '6x6',
       meta: { tags: ['dots', 'squares', 'diamonds', 'grid'], mood: ['organic', 'calm'], density: 'medium', goodFor: ['textile', 'card-texture', 'wallpaper'] },
@@ -479,7 +495,7 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
   // middles, so the arcs cross into curved meshes. A knot sits where three
   // arcs meet.
   const arc = (at) =>
-    `radial-gradient(ellipse 100% 100% at ${at}, transparent 94%, #000 94% 100%, transparent 100%)`;
+    `radial-gradient(ellipse 100% 100% at ${at}, transparent 92.5%, #000 92.5% 100%, transparent 100%)`;
   add(
     'Amime',
     'A fishing net of sagging arcs crossing into curved meshes, with a colored knot tied at the top of every mesh.',
@@ -498,7 +514,7 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
 
 {
   // Pine-bark lozenge: a wide diamond with a smaller one rising out of its
-  // top and bottom, nested with a second, smaller copy in another ink.
+  // top and bottom, drawn as an outline with a solid copy nested inside.
   const shape = [
     [0.5, 0], [0.75, 0.25], [2 / 3, 1 / 3], [1, 0.5], [2 / 3, 2 / 3], [0.75, 0.75],
     [0.5, 1], [0.25, 0.75], [1 / 3, 2 / 3], [0, 0.5], [1 / 3, 1 / 3], [0.25, 0.25],

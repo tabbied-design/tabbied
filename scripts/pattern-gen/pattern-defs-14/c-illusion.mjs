@@ -240,13 +240,21 @@ add(
     const f = 21;
     const kx = `max(-26, min(26, 24 * @dx / ${RC}))`;
     const ky = `max(-26, min(26, 24 * @dy / ${RC}))`;
-    const x0 = K(`50 - ${f} + ${kx}`);
-    const x1 = K(`50 + ${f} + ${kx}`);
-    const y0 = K(`50 - ${f} + ${ky}`);
-    const y1 = K(`50 + ${f} + ${ky}`);
+    const X0 = `(50 - ${f} + ${kx})`;
+    const X1 = `(50 + ${f} + ${kx})`;
+    const Y0 = `(50 - ${f} + ${ky})`;
+    const Y1 = `(50 + ${f} + ${ky})`;
+    const [x0, x1, y0, y1] = [X0, X1, Y0, Y1].map(K);
+    // The outer corners are pushed 6% further out along each miter, so the
+    // cell's own edge (not the clip) cuts the walls where cells meet.
+    const out = (c, i) => K(`${c} + 0.06 * (${c} - ${i})`);
+    const tl = `${out(0, X0)}% ${out(0, Y0)}%`;
+    const tr = `${out(100, X1)}% ${out(0, Y0)}%`;
+    const bl = `${out(0, X0)}% ${out(100, Y1)}%`;
+    const br = `${out(100, X1)}% ${out(100, Y1)}%`;
     return {
-      rule: `${F} { background: ${ink(c, 3)}; ${B(`inset: 0; background: var(--color1); ${cp(`polygon(0 0, 100% 0, ${x1}% ${y0}%, ${x0}% ${y0}%, ${x0}% ${y1}%, 0 100%)`)}`)} ${A(
-        `inset: 0; background: var(--color2); ${cp(`polygon(100% 100%, 0 100%, ${x0}% ${y1}%, ${x1}% ${y1}%, ${x1}% ${y0}%, 100% 0)`)}`
+      rule: `${F} { background: ${ink(c, 3)}; ${B(`inset: 0; background: var(--color1); ${cp(`polygon(${tl}, ${tr}, ${x1}% ${y0}%, ${x0}% ${y0}%, ${x0}% ${y1}%, ${bl})`)}`)} ${A(
+        `inset: 0; background: var(--color2); ${cp(`polygon(${br}, ${bl}, ${x0}% ${y1}%, ${x1}% ${y1}%, ${x1}% ${y0}%, ${tr})`)}`
       )} }${TR}`,
     };
   },
@@ -383,7 +391,7 @@ add(
 
 add(
   'Cafe Wall',
-  'Rows of dark tiles divided by thin mortar lines, each row stepped a quarter tile along, so the level courses seem to wedge apart.',
+  'Rows of dark tiles divided by thin mortar lines, each row stepped half a tile along, so the level courses seem to wedge apart.',
   () => {
     const s = '(25 * (2 - abs(((@y - 1) % 4) - 2)))';
     const a = K(`max(0, ${s} - 50)`);
@@ -490,7 +498,11 @@ add(
     const w0 = `(42 * cos(${th('@y - 1')}))`;
     const w1 = `(42 * cos(${th('@y')}))`;
     const t = K(`max(0, min(100, 100 * ${w0} / (${w0} - ${w1} + 0.0001)))`);
-    const bow = cp(`polygon(${K(`50 - ${w0}`)}% 0, ${K(`50 + ${w0}`)}% 0, ${K(`50 + ${w1}`)}% 100%, ${K(`50 - ${w1}`)}% 100%)`);
+    // The edges run on 2% past the cell so the clip never lands on the
+    // cell's own edge, where the browser would leave a seam between rows.
+    const e0 = `(${w0} - (${w1} - ${w0}) * 0.02)`;
+    const e1 = `(${w1} + (${w1} - ${w0}) * 0.02)`;
+    const bow = cp(`polygon(${K(`50 - ${e0}`)}% -2%, ${K(`50 + ${e0}`)}% -2%, ${K(`50 + ${e1}`)}% 102%, ${K(`50 - ${e1}`)}% 102%)`);
     const face = (sgn) =>
       `linear-gradient(180deg, @match(${sgn} * cos(2 * PI * (1.6 * (y - 1) / Y + 0.21 * x)) > 0, #000, transparent) 0 ${t}%, @match(${sgn} * cos(2 * PI * (1.6 * y / Y + 0.21 * x)) > 0, #000, transparent) ${t}% 100%)`;
     return {
@@ -593,7 +605,9 @@ add(
   'A diagonal lattice of fine black rules colored only where they cross, so soft discs of color seem to glow at every crossing.',
   () => {
     const r = K(`20 + 9 * (1 - min(1, ${fr}))`);
-    const X = cp('polygon(0 0, 6% 0, 50% 44%, 94% 0, 100% 0, 100% 6%, 56% 50%, 100% 94%, 100% 100%, 94% 100%, 50% 56%, 6% 100%, 0 100%, 0 94%, 44% 50%, 0 6%)');
+    // The two bars run on past the corners, so the cell's own edge (not the
+    // clip) cuts them and the rules join their neighbors without a seam.
+    const X = cp('polygon(-9% -3%, -3% -9%, 50% 44%, 103% -9%, 109% -3%, 56% 50%, 109% 103%, 103% 109%, 50% 56%, -3% 109%, -9% 103%, 44% 50%)');
     return {
       rule: `${F} { ${B(`inset: 0; background: var(--color1); ${X} ${msk(`radial-gradient(ellipse ${r}% ${r}% at 50% 50%, transparent 0 100%, #000 100%)`)}`)} ${A(
         `inset: 0; background: ${pick(2, 3, 4)}; ${X} ${msk(dotL(r))}`
