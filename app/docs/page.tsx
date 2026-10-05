@@ -10,7 +10,7 @@ import DocsShell from 'components/react-docs-page/DocsShell';
 import { Code } from 'components/react-docs-page/parts';
 import SetupIconMark, { type SetupIcon } from 'components/react-docs-page/SetupIcon';
 import PatternBand from 'components/react-docs-page/PatternBand';
-import { homePalette } from 'components/react-docs-page/homePalettes';
+import { editorColors, homePalette } from 'components/react-docs-page/homePalettes';
 import styles from 'components/react-docs-page/ReactDocs.module.css';
 import { pageMetadata } from 'lib/seo';
 
@@ -136,8 +136,16 @@ npx tabbied render radius --seed k9Pz --size 1600x900 --out hero.svg`;
 // heading, a band between sections and a strip of six tiles before the last,
 // each a different design in one of the homepage's four palettes on the
 // page's own white, so the page is drawn by the package it documents. Each
-// runs the window's full width. Decorative only (aria-hidden), built as each
-// nears the viewport.
+// runs the window's full width. Decorative (aria-hidden), built as each
+// nears the viewport; the strip's tiles are also links to their designs in
+// the editor, in the colors they wear.
+//
+// Every piece reseeds on a short timer (REDRAW_INTERVAL), the package's own
+// motion: the controller skips a tick while the piece is off screen or the
+// tab is hidden, starts each piece's first tick at a random point so they do
+// not step together, and stops under reduced motion.
+const REDRAW_INTERVAL = 2500;
+
 type Art = { pattern: PatternDefinition; palette: PaletteName; seed: string; density?: number };
 
 const BANNER: Art = { pattern: radius, palette: 'Mint', seed: 'developers', density: 0.3 };
@@ -159,13 +167,28 @@ const MOSAIC: Art[] = [
 /** The band after the command line, a design the strip does not use. */
 const CLI_BAND: Art = { pattern: bauhaus, palette: 'Sunset', seed: 'cli', density: 0.45 };
 
+/** The colors a piece is drawn in: its home palette on the page's own white. */
+const artColors = (art: Art) => homePalette(art.palette, art.pattern, { transparent: true });
+
+/**
+ * The design's page in the editor, in the colors the piece wears: its oklch
+ * inks as hex, the only form the editor takes from a link, and the ground
+ * `transparent`, which it does take, so it opens as drawn here.
+ */
+function editorHref(art: Art): string {
+  const params = new URLSearchParams();
+  for (const color of editorColors(artColors(art))) params.append('palette', color);
+  return `/patterns/${art.pattern.slug}/?${params.toString()}`;
+}
+
 function ArtPiece({ art, className, caption }: { art: Art; className: string; caption?: boolean }) {
   return (
     <PatternBand
       pattern={art.pattern}
-      palette={homePalette(art.palette, art.pattern, { transparent: true })}
+      palette={artColors(art)}
       seed={art.seed}
       density={art.density}
+      redrawInterval={REDRAW_INTERVAL}
       className={className}
     >
       {caption ? (
@@ -318,10 +341,15 @@ export default function DevelopersPage() {
         </div>
       </Part>
 
-      <div className={styles.bleed} aria-hidden="true">
+      {/* Not aria-hidden like the bands: each tile is a link to its design
+          in the editor, named by its caption. The patterns themselves are
+          decorative (TabbiedPattern's default). */}
+      <div className={styles.bleed}>
         <div className={styles.docsMosaic}>
           {MOSAIC.map((art) => (
-            <ArtPiece key={art.seed} art={art} className={styles.docsTile} caption />
+            <a key={art.seed} href={editorHref(art)} className={styles.docsTileLink}>
+              <ArtPiece art={art} className={styles.docsTile} caption />
+            </a>
           ))}
         </div>
       </div>

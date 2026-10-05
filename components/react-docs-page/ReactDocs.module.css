@@ -930,7 +930,8 @@ code.entryName {
 
 @media (prefers-reduced-motion: reduce) {
   .article a.setupCard,
-  .setupIcon {
+  .setupIcon,
+  .docsTileLink .artCaption {
     transition: none;
   }
 }
@@ -1320,6 +1321,29 @@ code.entryName {
 
 .docsTile {
   aspect-ratio: 4 / 3;
+}
+
+/* A tile of the strip is a link to its design in the editor, in the colors
+   it wears. A block, so `.article a`'s underline and color stay off it; its
+   caption turns teal as the setup cards' marks do. */
+.article a.docsTileLink {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.article a.docsTileLink:focus-visible {
+  outline: 2px solid var(--h-teal);
+  outline-offset: 2px;
+}
+
+.docsTileLink .artCaption {
+  transition: background-color 150ms ease;
+}
+
+.docsTileLink:hover .artCaption,
+.docsTileLink:focus-visible .artCaption {
+  background-color: var(--h-teal);
 }
 
 /* The design and palette a piece is drawn in, on a dark plate in its corner
