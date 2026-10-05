@@ -486,7 +486,7 @@ add(
     host: `--daisy: ${DAISY};`,
     rule: `${F} {
       --t: translate(@r(-18%, 18%), @r(-18%, 18%)) rotate(@r(0deg, 30deg)) scale(@r(.6, 1.3));
-      z-index: @r(1, 9);
+      z-index: @ri(1, 9);
       ${B(`inset: 0; background: ${inkOf(1, 3, 4)}; ${clip('@var(--daisy)')} transform: @var(--t);`)}
       ${A(`inset: 38%; border-radius: 50%; background: ${inkOf(2, 2, 4)}; transform: @var(--t);`)}
     }${TR}`,
@@ -524,7 +524,7 @@ add(
     rule: `${F} {
       --b: ${KAPOW};
       --t: translate(@r(-12%, 12%), @r(-12%, 12%)) rotate(@r(0deg, 360deg)) scale(@r(.95, 1.45));
-      z-index: @r(1, 9);
+      z-index: @ri(1, 9);
       ${B(`inset: 0; background: ${inkOf(1, 2)}; clip-path: @var(--b); transform: @var(--t);`)}
       ${A(`inset: 0; background: ${inkOf(3, 4)}; clip-path: @var(--b); transform: @var(--t) rotate(14deg) scale(.56);`)}
     }${TR}`,
@@ -649,7 +649,7 @@ add(
   (c) => ({
     rule: `${F} {
       transform: translate(@r(-14%, 14%), @r(-10%, 10%)) rotate(@r(-16deg, 16deg)) scale(@r(.6, 1.35));
-      z-index: @r(1, 9);
+      z-index: @ri(1, 9);
       ${B(`left: 8%; top: 14%; width: 84%; height: 44%; z-index: 1; background: ${inkOf(1, 2, 3)};
         border-radius: 50% 50% 14% 14% / 100% 100% 22% 22%;
         ${maskV(`${holeL(30, 40, 6)}, ${holeL(58, 30, 7)}, ${holeL(78, 62, 5)}`)}
@@ -698,7 +698,7 @@ add(
   (c) => ({
     rule: `${F} {
       transform: translate(@r(-16%, 16%), @r(-16%, 16%)) scale(@r(1, 1.25));
-      z-index: @r(1, 9);
+      z-index: @ri(1, 9);
       ${B(`inset: 0; border-radius: 50%; background: ${inkOf(1, 2, 3)};
         ${maskV('repeating-radial-gradient(circle closest-side, #000 0 5%, #0000009e 5% 7%), radial-gradient(circle closest-side, transparent 5%, #000 5%)')}
         -webkit-mask-composite: source-in; mask-composite: intersect;`)}
@@ -723,7 +723,7 @@ add(
   (c) => ({
     rule: `${F} {
       transform: translate(@r(-12%, 12%), @r(-12%, 12%)) rotate(@r(0deg, 180deg)) scale(@r(1, 1.35));
-      z-index: @r(1, 9);
+      z-index: @ri(1, 9);
       ${B(`left: 12%; top: 37%; width: 38%; height: 26%; border-radius: 50% 0 0 50% / 50% 0 0 50%; background: ${inkOf(1, 2, 3)};`)}
       ${A(`left: 50%; top: 37%; width: 38%; height: 26%; border-radius: 0 50% 50% 0 / 0 50% 50% 0; background: ${inkOf(4, 5, 6)};`)}
     }${TR}`,
@@ -984,7 +984,7 @@ add(
     host: `--drops: ${DROPS}; ${BLOTS.map((v, i) => `--blot${i}: ${v};`).join(' ')}`,
     rule: `${F} {
       --t: translate(@r(-10%, 10%), @r(-10%, 10%)) rotate(@r(0deg, 360deg)) scale(@r(.7, 1.15));
-      z-index: @r(1, 9);
+      z-index: @ri(1, 9);
       ${B(`inset: 0; clip-path: @p(@var(--blot0), @var(--blot1), @var(--blot2)); background: ${ink(c)}; transform: @var(--t);`)}
       ${A(`inset: 0; background: @lp(); ${maskV('@var(--drops)')} transform: @var(--t);`)}
     }${TR}`,

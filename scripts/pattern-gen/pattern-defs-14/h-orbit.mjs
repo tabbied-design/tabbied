@@ -502,10 +502,11 @@ add(
   'Regolith',
   'A grey lunar surface pocked with craters of every size, each a raised rim with its inner wall in shadow on the side the light comes from.',
   (c) => {
-    const turn = 'transform: translate(@var(--jx), @var(--jy)) scale(@var(--s)); z-index: calc(120 - @var(--s) * 60);';
+    const turn = 'transform: translate(@var(--jx), @var(--jy)) scale(@var(--s));';
     return {
-      rule: `--s: @calc(@rn(0.35, 1.5, 1.3) * @r(0.45, 1.3)); --jx: @r(-22%, 22%); --jy: @r(-22%, 22%);
+      rule: `--s: @calc(@rn(0.35, 1.5, 1.3) * @r(0.45, 1.3)); --jx: @r(-22%, 22%); --jy: @r(-22%, 22%); z-index: calc(120 - @var(--s) * 60);
       ${F} {
+        background: radial-gradient(circle at @r(6, 94)% @r(6, 94)%, var(--color2) 0 2%, transparent 2.6%), radial-gradient(circle at @r(6, 94)% @r(6, 94)%, var(--color1) 0 1.6%, transparent 2.2%);
         ${B(`inset: 8%; border-radius: 50%; background: @p(var(--color1), var(--color3)); ${msk1(bore(38))} ${turn}`)}
         ${A(`inset: 8%; border-radius: 50%; background: var(--color2); ${mskI1(disc(38), bore(38, '60% 60%'))} ${turn}`)}
       }${TR}`,
@@ -605,7 +606,7 @@ add(
     const at = sheetAt(SX, SY);
     return {
       rule: `--ps: @p(24%, 30%, 36%, 44%); --jx: @r(-12%, 12%); --jy: @r(-12%, 12%);
-      background: radial-gradient(${unit(HALF)} ${at}, var(--color2) 0 34%, transparent 34%), radial-gradient(${unit(HALF)} ${at}, var(--color3) 34%, transparent 105%);
+      background: radial-gradient(${unit(HALF)} ${at}, var(--color2) 0 34%, transparent 34%), radial-gradient(${unit(HALF)} ${at}, var(--color3) 34%, transparent 100%);
       ${F} {
         ${B(`width: @var(--ps); height: @var(--ps); left: calc(50% + @var(--jx) - @var(--ps) / 2); top: calc(50% + @var(--jy) - @var(--ps) / 2); border-radius: 50%; background: var(--color1); ${turn}`)}
         ${A(`width: @var(--ps); height: @var(--ps); left: calc(50% + @var(--jx) - @var(--ps) / 2); top: calc(50% + @var(--jy) - @var(--ps) / 2); border-radius: 50%; background: ${ink(c, 4)}; ${cp('inset(0 0 0 50%)')} ${turn}`)}
@@ -789,7 +790,7 @@ add(
   (c) => {
     const alm = [
       [37, 55], [29, 59], [21, 62.5], [13, 65.5],
-    ].map(([r, cy]) => `radial-gradient(ellipse ${r}% ${r}% at 50% ${cy}%, transparent ${(100 - 100 / r).toFixed(1)}%, var(--color3) ${(100 - 100 / r).toFixed(1)}% 100%, transparent 100%)`);
+    ].map(([r, cy]) => `radial-gradient(ellipse ${r}% ${r}% at 50% ${cy}%, transparent ${(100 - 140 / r).toFixed(1)}%, var(--color3) ${(100 - 140 / r).toFixed(1)}% 100%, transparent 100%)`);
     return {
       host: `--tk: ${TICKS};`,
       rule: `${F} {

@@ -43,6 +43,13 @@ const GATE = `visibility: hidden; ${F} { visibility: visible; }`;
 
 const xf = (v) => `-webkit-transform: ${v}; transform: ${v};`;
 
+// A value the same in every cell is written once on the host and read back
+// with @var(), so it is not copied into every cell's rule.
+const clipBy = (name) => `-webkit-clip-path: @var(${name}); clip-path: @var(${name});`;
+const maskBy = (name) => `-webkit-mask: @var(${name}); mask: @var(${name});`;
+const maskAllOf = (name) =>
+  `${maskBy(name)} -webkit-mask-composite: source-in; mask-composite: intersect;`;
+
 /** Hard-stop bands across `angle`: [[from, to], ...] in percent. */
 const bands = (angle, spans) => {
   const stops = ['transparent 0'];
@@ -134,17 +141,15 @@ add(
     return {
       rule: `--m: ${constant(c, 1, 3)}; --o: ${constant(c, 4, 5)}; ${F} {
           background: ${stripes('90deg')} 100% 0 / 50% 50% no-repeat, ${stripes('180deg')} 0 100% / 50% 50% no-repeat;
-          ${B(`inset: 0; background-color: @p(@var(--m), var(--color1)); ${mskI(
-            'repeating-linear-gradient(90deg, #000 0 8.333%, transparent 8.333% 16.667%)',
-            'repeating-linear-gradient(180deg, #000 0 8.333%, transparent 8.333% 16.667%)',
-            quad
-          )}`)}
-          ${A(`inset: 0; background-color: @var(--o); ${msk(bands('90deg', [[0, 1.5], [98.5, 100]]), bands('180deg', [[0, 1.5], [98.5, 100]]))}`)}
+          ${B(`inset: 0; background-color: @p(@var(--m), var(--color1)); ${maskAllOf('--pins')}`)}
+          ${A(`inset: 0; background-color: @var(--o); opacity: .85; ${maskBy('--over')}`)}
         }${TR}`,
+      host: `--pins: repeating-linear-gradient(90deg, #000 0 10.417%, transparent 10.417% 16.667%), repeating-linear-gradient(180deg, #000 0 10.417%, transparent 10.417% 16.667%), ${quad};
+        --over: ${bands('90deg', [[0, 1.2], [98.8, 100]])}, ${bands('180deg', [[0, 1.2], [98.8, 100]])};`,
     };
   },
   {
-    palette: ['#F1EEE8', '#5F626A', '#6E5A4C', '#4F5D70', '#B5492F', '#2E7D9A'],
+    palette: ['#F1EEE8', '#73767D', '#7D6A5C', '#64718A', '#B5492F', '#2E7D9A'],
     grid: '4x6',
     tg: '4x4',
     meta: { tags: ['checkerboard', 'stripes', 'squares', 'grid'], mood: ['elegant', 'calm'], density: 'dense', goodFor: ['textile', 'card-texture'] },
@@ -331,9 +336,12 @@ add(
     const lozenge = ring([[50, 0], [100, 50], [50, 100], [0, 50]], [[50, 28], [72, 50], [50, 72], [28, 50]]);
     return {
       rule: `--k: @p(${list(c)}); ${F} {
-          ${B(`inset: 0; ${paint('--k')} ${cp(lozenge)} ${msk('repeating-linear-gradient(180deg, #000 0 6.25%, transparent 6.25% 12.5%)')} ${xf(`translateX(${noise(-9, 9, 1.4)}%)`)}`)}
-          ${A(`inset: 0; background-color: @var(--k); ${cp(lozenge)} ${msk('repeating-linear-gradient(180deg, transparent 0 6.25%, #000 6.25% 12.5%)')} ${xf(`translateX(${noise(-9, 9, 1.4)}%)`)}`)}
+          ${B(`inset: 0; ${paint('--k')} ${clipBy('--lozenge')} ${maskBy('--odd')} ${xf(`translateX(${noise(-9, 9, 1.4)}%)`)}`)}
+          ${A(`inset: 0; background-color: @var(--k); ${clipBy('--lozenge')} ${maskBy('--even')} ${xf(`translateX(${noise(-9, 9, 1.4)}%)`)}`)}
         }${TR}`,
+      host: `--lozenge: ${lozenge};
+        --odd: repeating-linear-gradient(180deg, #000 0 6.25%, transparent 6.25% 12.5%);
+        --even: repeating-linear-gradient(180deg, transparent 0 6.25%, #000 6.25% 12.5%);`,
     };
   },
   {
@@ -400,15 +408,18 @@ add(
       ring8.push([50 + 31 * Math.cos((k * Math.PI) / 4), 50 + 31 * Math.sin((k * Math.PI) / 4)].map((v) => +v.toFixed(1)));
     }
     const ring4 = [[50, 22], [78, 50], [50, 78], [22, 50]];
-    const rosette = (pts) => {
-      const all = [[50, 50], ...pts];
-      return `${B(`inset: 0; ${paint('--k')} ${mskI(...all.map(([x, y]) => hole(x, y, 7, 0.7)))}`)}
-        ${A(`inset: 0; background-color: @p(${list(c, 3)}); ${msk(...all.map(([x, y]) => dot(x, y, 2, 0.5)))}`)}`;
-    };
+    const all8 = [[50, 50], ...ring8];
+    const all4 = [[50, 50], ...ring4];
+    const rosette = (n) => `${B(`inset: 0; ${paint('--k')} ${maskAllOf(`--holes${n}`)}`)}
+        ${A(`inset: 0; background-color: @p(${list(c, 3)}); ${maskBy(`--knots${n}`)}`)}`;
     return {
       rule: `--k: ${constant(c, 1, 2)}; ${GATE}
-        @even { ${rosette(ring8)} }
-        @odd { ${rosette(ring4)} }${TR}`,
+        @even { ${rosette(8)} }
+        @odd { ${rosette(4)} }${TR}`,
+      host: `--holes8: ${all8.map(([x, y]) => hole(x, y, 7, 0.7)).join(', ')};
+        --knots8: ${all8.map(([x, y]) => dot(x, y, 2, 0.5)).join(', ')};
+        --holes4: ${all4.map(([x, y]) => hole(x, y, 7, 0.7)).join(', ')};
+        --knots4: ${all4.map(([x, y]) => dot(x, y, 2, 0.5)).join(', ')};`,
     };
   },
   {
@@ -446,22 +457,19 @@ add(
 
 add(
   'Batik',
-  'Wax-resist batik: pale flower medallions on a deep dyed ground, every one crazed with the fine dark cracks where the wax split.',
-  (c) => {
-    const crack = (pos) => `linear-gradient(@r(0, 180)deg, #000 ${pos - 1.2}%, transparent ${pos - 0.3}% ${pos + 0.3}%, #000 ${pos + 1.2}%)`;
-    return {
-      rule: `${F} {
-          ${B(`left: 6%; top: 6%; width: 88%; height: 88%; background-color: @p(${list(c, 1, 2)}); clip-path: @var(--flower); -webkit-clip-path: @var(--flower); ${mskI(crack(31), crack(46), crack(57), crack(70))}`)}
-          ${A(`left: 41%; top: 41%; width: 18%; height: 18%; border-radius: 50%; background-color: @p(${list(c, 3)});`)}
-        }${TR}`,
-      host: '--flower: @shape(split: 180; r: .66 + .34 * abs(cos(3t)); scale: .96);',
-    };
-  },
+  'Wax-resist batik: dark six-petal flowers on a pale ground crazed all over with fine dark cracks, where the dye ran into the split wax.',
+  (c) => ({
+    rule: `${F} {
+        ${B(`left: -50%; top: 49.5%; width: 200%; height: 1%; background-color: @p(${list(c, 1, 2)}); opacity: .6; ${xf('translate(@r(-30, 30)%, @r(-40, 40)%) rotate(@r(0, 180)deg)')}`)}
+        ${A(`left: 9%; top: 9%; width: 82%; height: 82%; z-index: 1; background-color: @p(${list(c)}); clip-path: @var(--flower); -webkit-clip-path: @var(--flower); ${msk(hole(50, 50, 13, 0.98))}`)}
+      }${TR}`,
+    host: '--flower: @shape(split: 180; r: .66 + .34 * abs(cos(3t)); scale: .96);',
+  }),
   {
-    palette: ['#1E2A3A', '#E9DFC8', '#DCC79E', '#C9643A', '#7FA7B5', '#B5442E'],
+    palette: ['#EFE6D2', '#2B3A55', '#5A3A28', '#3D5A80', '#7A4A2A', '#8C3B2E'],
     grid: '4x6',
     tg: '5x5',
-    meta: { tags: ['petals', 'circles', 'lines'], mood: ['organic', 'elegant'], density: 'medium', goodFor: ['textile', 'wallpaper', 'packaging'] },
+    meta: { tags: ['petals', 'lines', 'circles'], mood: ['organic', 'elegant'], density: 'medium', goodFor: ['textile', 'wallpaper', 'packaging'] },
   }
 );
 
@@ -612,9 +620,10 @@ add(
   'A dhurrie rug: stepped lozenges built from little square blocks, nested one inside another, in bands of color down the rug.',
   (c) => ({
     rule: `--r0: ${constant(c, 1, 2)}; --r1: ${constant(c, 3, 4)}; --a: ${cycle('y', ['--r0', '--r1'])}; ${F} {
-        ${B(`inset: 0; ${paint('--a')} ${cp(ring(stepDiamond(48, 6), stepDiamond(32, 4)))}`)}
-        ${A(`inset: 0; background-color: @p(${list(c)}); ${cp(poly(stepDiamond(16, 2)))}`)}
+        ${B(`inset: 0; ${paint('--a')} ${clipBy('--lozenge')}`)}
+        ${A(`inset: 0; background-color: @p(${list(c)}); ${clipBy('--heart')}`)}
       }${TR}`,
+    host: `--lozenge: ${ring(stepDiamond(48, 6), stepDiamond(32, 4))}; --heart: ${poly(stepDiamond(16, 2))};`,
   }),
   {
     palette: ['#2A1F1A', '#B5332E', '#C8642F', '#E8D5B0', '#D9A441', '#2F5D7C'],

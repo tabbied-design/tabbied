@@ -176,6 +176,82 @@ const frame = (pts, t) => {
   return [...pts, pts[0], inner[0], ...inner.slice(1).reverse(), inner[0]];
 };
 
+/**
+ * Smooth outlines of an implicit shape (inside where f < 0) by marching
+ * squares on an n x n sampling of the unit box. Loops run clockwise around
+ * the ink (y down), holes the other way, so joined() keeps holes open.
+ */
+const contour = (f, n = 96, eps = 0.0012) => {
+  const v = [];
+  for (let j = 0; j <= n; j++) {
+    const row = [];
+    for (let i = 0; i <= n; i++) row.push(f(i / n, j / n));
+    v.push(row);
+  }
+  const inside = (i, j) => v[j][i] < 0;
+  const at = (k) => {
+    const [t, i, j] = k.split(',');
+    const a = +i, b = +j;
+    if (t === 'h') {
+      const u = v[b][a] / (v[b][a] - v[b][a + 1]);
+      return [(a + u) / n, b / n];
+    }
+    const u = v[b][a] / (v[b][a] - v[b + 1][a]);
+    return [a / n, (b + u) / n];
+  };
+  const next = new Map();
+  for (let j = 0; j < n; j++) {
+    for (let i = 0; i < n; i++) {
+      // The cell's sides, walked clockwise: [from corner, to corner, edge key].
+      const sides = [
+        [[i, j], [i + 1, j], `h,${i},${j}`],
+        [[i + 1, j], [i + 1, j + 1], `v,${i + 1},${j}`],
+        [[i + 1, j + 1], [i, j + 1], `h,${i},${j + 1}`],
+        [[i, j + 1], [i, j], `v,${i},${j}`],
+      ];
+      const cross = [];
+      for (const [a, b, k] of sides) {
+        const ia = inside(...a), ib = inside(...b);
+        if (ia && !ib) cross.push(['out', k]);
+        if (!ia && ib) cross.push(['in', k]);
+      }
+      cross.forEach(([type, k], idx) => {
+        if (type === 'out') next.set(k, cross[(idx + 1) % cross.length][1]);
+      });
+    }
+  }
+  const result = [];
+  while (next.size) {
+    const [start] = next.keys();
+    const loop = [];
+    let k = start;
+    for (let guard = 0; guard < 1e6 && next.has(k); guard++) {
+      loop.push(at(k));
+      const nk = next.get(k);
+      next.delete(k);
+      k = nk;
+    }
+    // Drop points that sit on the line through their kept neighbors.
+    const kept = [];
+    for (let idx = 0; idx < loop.length; idx++) {
+      const p = loop[idx];
+      const q = loop[(idx + 1) % loop.length];
+      const o = kept.length ? kept[kept.length - 1] : loop[loop.length - 1];
+      const L = Math.hypot(q[0] - o[0], q[1] - o[1]) || 1;
+      const d = Math.abs((q[0] - o[0]) * (o[1] - p[1]) - (o[0] - p[0]) * (q[1] - o[1])) / L;
+      if (d > eps || idx === 0) kept.push(p);
+    }
+    if (kept.length > 2) result.push(kept);
+  }
+  return result;
+};
+
+/** An implicit shape on the unit box as one clip-path polygon. */
+const shapeOf = (f, n, eps) => P(pct(joined(contour(f, n, eps))));
+
+/** Signed distance to a disc. */
+const disc = (x, y, cx, cy, r) => Math.hypot(x - cx, y - cy) - r;
+
 /** A ring band as a mask layer, its radii in percent of the box half-side. */
 const ringL = (inner, outer, at = '50% 50%') =>
   `radial-gradient(circle closest-side at ${at}, transparent ${inner}%, #000 ${inner}% ${outer}%, transparent ${outer}%)`;
@@ -257,9 +333,9 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
   const right = P([[50, 0], [100, (a / h) * 100], [100, 100], [50, (100 / h) * 100]]);
   add(
     'Yabane',
-    'Arrow feathers stacked in columns, each chevron split down the shaft into a dark half and a light half, the columns pointing up and down by turns.',
+    'Arrow feathers stacked in columns, dark and light by turns like a checker, each chevron split down the shaft in two shades and the columns pointing up and down.',
     () => ({
-      rule: `@x(even) { ${tf('scaleY(-1)')} } ${F} { ${B(clipped(left, pick(1, 2), `left: 0; top: 0; width: 100%; height: ${h}%;`))} ${A(clipped(right, pick(3, 4), `left: 0; top: 0; width: 100%; height: ${h}%;`))} }${TR}`,
+      rule: `@x(even) { ${tf('scaleY(-1)')} } ${F} { ${B(clipped(left, `@match((x + y) % 2 == 0, ${pick(1, 2)}, ${pick(3, 4)})`, `left: 0; top: 0; width: 100%; height: ${h}%;`))} ${A(clipped(right, `@match((x + y) % 2 == 0, ${pick(2, 1)}, ${pick(4, 3)})`, `left: 0; top: 0; width: 100%; height: ${h}%;`))} }${TR}`,
     }),
     {
       palette: ['#F6EFE6', '#4E2A5A', '#7A2E4F', '#EADBC8', '#D7AFC0'],
@@ -278,9 +354,9 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
   const feet = P([[25, 50], [50, 100], [75, 50], [100, 100], [0, 100]]);
   add(
     'Mitsuuroko',
-    'Rows of triangles like dragon scales, each one split into three smaller triangles round an empty middle, in red, black and gold.',
+    'Rows of triangles like dragon scales, each one a crest of three smaller triangles round an empty middle, in red, black and gold.',
     (c) => ({
-      rule: `${F} { ${B(clipped(topT, ink(c)))} ${A(clipped(feet, ink(c)))} }${TR}`,
+      rule: `--k: ${ink(c)}; ${F} { ${B(clipped(topT, '@p(@var(--k))'))} ${A(clipped(feet, '@var(--k)'))} }${TR}`,
     }),
     {
       pal: 29,
@@ -419,16 +495,17 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
     [0.5, 0], [0.75, 0.25], [2 / 3, 1 / 3], [1, 0.5], [2 / 3, 2 / 3], [0.75, 0.75],
     [0.5, 1], [0.25, 0.75], [1 / 3, 2 / 3], [0, 0.5], [1 / 3, 1 / 3], [0.25, 0.25],
   ];
-  const outer = P(pct(shape));
+  const outer = P(pct(frame(shape, 0.085)));
+  const inner = P(pct(shape));
   add(
     'Matsukawabishi',
-    'Stepped pine-bark diamonds, each a wide lozenge with smaller ones rising from its top and bottom, nested two deep and touching tip to tip.',
+    'Stepped pine-bark diamonds, each a wide lozenge with smaller ones rising from its top and bottom, drawn as an outline with a solid one nested inside, tip to tip.',
     (c) => ({
-      rule: `${F} { ${B(clipped(outer, ink(c)))} ${A(clipped(outer, ink(c), 'inset: 22%;'))} }${TR}`,
+      rule: `${F} { ${B(clipped(outer, ink(c)))} ${A(clipped(inner, ink(c), 'inset: 26%;'))} }${TR}`,
     }),
     {
       pal: 5,
-      inks: 4,
+      inks: 3,
       grid: '6x9',
       tg: '5x5',
       meta: { tags: ['diamonds', 'steps', 'lattice'], mood: ['elegant', 'calm'], density: 'medium', goodFor: ['textile', 'wallpaper', 'packaging'] },
@@ -439,7 +516,7 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
 {
   // Hexagons touching only at their corners, so the triangles between them
   // make the six-pointed stars of a woven bamboo basket.
-  const k = 0.07;
+  const k = 0.1;
   const hexPts = [[0, 0.5], [0.25, 0], [0.75, 0], [1, 0.5], [0.75, 1], [0.25, 1]];
   const ring = P(pct(frame(hexPts, k)));
   const box = (left) => `left: ${left}; top: 0; width: 100%; height: 100%;`;
@@ -450,8 +527,7 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
       rule: `@y(even) { ${tf('translateX(50%)')} } ${F} { ${B(clipped(ring, ink(c), box('0')))} ${A(clipped(ring, ink(c), box('-100%'), 'opacity: @match(x == 1, 1, 0);'))} }${TR}`,
     }),
     {
-      pal: 31,
-      inks: 4,
+      palette: ['#1E2B3C', '#E3C88F', '#D3A35F', '#F1E4C4', '#B9824A'],
       grid: '6x9',
       tg: '5x5',
       meta: { tags: ['hexagons', 'lattice', 'stars', 'lines'], mood: ['organic', 'calm'], density: 'medium', goodFor: ['wallpaper', 'textile', 'card-texture'] },
@@ -519,7 +595,7 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
   // run parallel.
   const band = (phase, side) => {
     const N = 48;
-    const h = 0.032;
+    const h = 0.045;
     const cx = (y) => {
       const s = Math.sin(Math.PI * y + phase) ** 2;
       const x = 0.5 - 0.07 - 0.29 * s;
@@ -542,8 +618,7 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
       rule: `${F} { ${B(clipped('@match(x % 2 == 0, @var(--lb), @var(--la))', ink(c)))} ${A(clipped('@match(x % 2 == 0, @var(--rb), @var(--ra))', ink(c)))} }${TR}`,
     }),
     {
-      pal: 30,
-      inks: 4,
+      palette: ['#F3EBDD', '#7A1F2B', '#1F3A5F', '#B5652A', '#3E6B52'],
       grid: '6x9',
       tg: '6x6',
       meta: { tags: ['waves', 'lines', 'curves', 'stripes'], mood: ['calm', 'organic', 'elegant'], density: 'medium', goodFor: ['wallpaper', 'textile', 'hero-background'] },
@@ -609,32 +684,10 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
       rule: `${F} { background: ${dot('50% 50%', 13)}, ${dot('0 0', 6.5)}, ${dot('100% 0', 6.5)}, ${dot('0 100%', 6.5)}, ${dot('100% 100%', 6.5)}; ${B(pair(c, '45deg'))} ${A(pair(c, '-45deg'))} }${TR}`,
     }),
     {
-      pal: 2,
+      palette: ['#F1E4CC', '#3B2A1E', '#7A4A26', '#2F3F5C', '#B07A3E'],
       grid: '6x9',
       tg: '5x5',
       meta: { tags: ['ovals', 'petals', 'lattice', 'dots'], mood: ['organic', 'elegant'], density: 'medium', goodFor: ['textile', 'wallpaper', 'packaging'] },
-    }
-  );
-}
-
-{
-  // Egg and dart: an egg in a shell hung from a running fillet, with a
-  // spear-point dart between every pair of shells.
-  const shell = 'radial-gradient(ellipse 38% 46% at 50% 50%, transparent 85%, #000 85% 100%, transparent 100%)';
-  const dart = (x) => `conic-gradient(from -8deg at ${x} 90%, #000 0 16deg, transparent 16deg 360deg)`;
-  const fillet = 'linear-gradient(180deg, #000 0 6%, transparent 6%)';
-  add(
-    'Egg And Dart',
-    'A classical molding in rows: eggs held in shells that hang from a running fillet, with a slim dart pointing down between each pair.',
-    (c) => ({
-      rule: `${F} { ${B(clipped('ellipse(28% 36% at 50% 52%)', ink(c, 2)))} ${A(`inset: 0; background: var(--color1); ${msk(shell, dart('0%'), dart('100%'), fillet)}`)} }${TR}`,
-    }),
-    {
-      pal: 31,
-      inks: 4,
-      grid: '6x9',
-      tg: '5x5',
-      meta: { tags: ['ovals', 'triangles', 'stripes'], mood: ['elegant', 'retro'], density: 'medium', goodFor: ['section-divider', 'packaging', 'textile'] },
     }
   );
 }
@@ -787,12 +840,12 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
   const vars = corners.map(([n, i, j]) => `${jit(`${n}x`, i, j, 1.7)} ${jit(`${n}y`, i, j, 9.1)}`).join(' ');
   // Corner positions in cell units, as expressions.
   const C = {
-    a: ['@var(--ax)', '@var(--ay)'],
-    b: ['(1 + @var(--bx))', '@var(--by)'],
-    c: ['(1 + @var(--cx))', '(1 + @var(--cy))'],
-    d: ['@var(--dx)', '(1 + @var(--dy))'],
+    a: ['$(ax)', '$(ay)'],
+    b: ['(1 + $(bx))', '$(by)'],
+    c: ['(1 + $(cx))', '(1 + $(cy))'],
+    d: ['$(dx)', '(1 + $(dy))'],
   };
-  const mix = (p, q, axis) => `(${C[p][axis]} + @var(--s) * (${C[q][axis]} - ${C[p][axis]}))`;
+  const mix = (p, q, axis) => `(${C[p][axis]} + $(s) * (${C[q][axis]} - ${C[p][axis]}))`;
   const tri = (pts) => {
     const X = (e) => `@calc(62.5 * ${e} + 18.75)%`;
     const poly = `polygon(${pts.map(([x, y]) => `${X(x)} ${X(y)}`).join(', ')})`;
