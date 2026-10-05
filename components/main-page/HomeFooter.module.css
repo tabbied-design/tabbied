@@ -6,7 +6,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1fr);
   gap: 32px;
   max-width: var(--h-max);
   margin: 0 auto;
@@ -52,6 +52,16 @@
 
 .links a:hover {
   color: var(--h-fg);
+}
+
+/* The Developers list in two columns, read down, so it is not three times
+   as long as the Product list beside it. The rows are set inline, from the
+   number of links. */
+.linksTwo {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 0 28px;
+  justify-content: start;
 }
 
 .contact {

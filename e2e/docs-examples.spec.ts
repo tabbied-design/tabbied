@@ -6,6 +6,7 @@ import { SIZING_CASES, sizingCode, variantFor, type Setup } from '../components/
 import { ELEMENT_RECIPES } from '../components/react-docs-page/examples/recipes/element';
 import { HTML_RECIPES } from '../components/react-docs-page/examples/recipes/html';
 import type { Recipe } from '../components/react-docs-page/examples/recipes/types';
+import { GUIDE } from '../components/react-docs-page/examples/guide';
 
 // The docs pages' examples, run in a browser against the built package.
 //
@@ -15,9 +16,10 @@ import type { Recipe } from '../components/react-docs-page/examples/recipes/type
 //   window and measured against the box its page says it draws. React, Vue
 //   and Svelte resolve the same box props as the JavaScript form
 //   (resolveBoxStyle), and lib/docsExamples.test.mjs compiles their code.
-// - Recipes: every HTML and web component recipe, as written, with esm.sh and
-//   jsdelivr answered from packages/tabbied/dist. Each pattern must mount, and
-//   pressing every control must not throw.
+// - Recipes and guide samples: every HTML and web component recipe, and the
+//   sample under every shared live demo (examples/guide.ts), as written, with
+//   esm.sh and jsdelivr answered from packages/tabbied/dist. Each pattern must
+//   mount, and pressing every control must not throw.
 //
 // Nothing here touches the site: the pages are served under a made-up origin,
 // so run `npm run build:packages` first, as the element spec needs.
@@ -224,9 +226,18 @@ test.describe('recipes run as written', () => {
     }
   };
 
+  // A guide sample is run the way a recipe is.
+  const guide = (setup: 'html' | 'element') =>
+    Object.entries(GUIDE[setup]).map(
+      ([part, sample]) =>
+        [setup, { id: `guide-${part}`, group: 'layout', title: part, says: '', ...sample } as Recipe] as const
+    );
+
   const recipes = [
     ...HTML_RECIPES.map((recipe) => ['html', recipe] as const),
     ...ELEMENT_RECIPES.map((recipe) => ['element', recipe] as const),
+    ...guide('html'),
+    ...guide('element'),
   ];
 
   for (const [setup, recipe] of recipes) {

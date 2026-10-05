@@ -1,4 +1,7 @@
+import { radius } from 'tabbied/patterns';
 import CodeBlock from './CodeBlock';
+import PatternBand from './PatternBand';
+import { homePalette } from './homePalettes';
 import { Code } from './parts';
 import {
   SIZING_CASES,
@@ -13,7 +16,13 @@ import styles from './ReactDocs.module.css';
 // The sizing section every setup's page shares: the rules, then each case
 // with what the browser draws (to scale, in an 800px-wide parent) and the
 // code in that page's spelling. The data and the code are
-// examples/sizing.ts; this only lays them out. Server component.
+// examples/sizing.ts; this only lays them out. Server component, apart from
+// the live pattern in each box.
+//
+// Each case is a card of its own, its code inside it, so a code block never
+// reads as belonging to the case after it. The boxes are the design the code
+// names, live, in the homepage hero's first palette (Mint) on a transparent
+// ground, outlined so the box's extent reads where the ground shows.
 
 /** Prose with `code` spans, the form the example data is written in. */
 export function Prose({ text }: { text: string }) {
@@ -46,6 +55,9 @@ const spell = (setup: Setup, text: string) =>
 /** The drawing scale: the 800px parent is drawn 320px wide. */
 const SCALE = 0.4;
 
+/** The hero's palette, on no ground of its own. */
+const BOX_PALETTE = homePalette('Mint', radius, { transparent: true });
+
 function ResultBox({ result }: { result: Result }) {
   const parentH = Math.max(result.parentH ?? 0, result.h) * SCALE;
   const drawn = result.h > 0;
@@ -57,7 +69,14 @@ function ResultBox({ result }: { result: Result }) {
         style={{ width: 800 * SCALE, height: Math.max(parentH, drawn ? 0 : 24) }}
       >
         {drawn ? (
-          <div className={styles.sizeBox} style={{ width: result.w * SCALE, height: result.h * SCALE }} />
+          <PatternBand
+            pattern={radius}
+            palette={BOX_PALETTE}
+            seed="k9Pz"
+            density={1}
+            className={styles.sizeBox}
+            style={{ width: result.w * SCALE, height: result.h * SCALE }}
+          />
         ) : (
           <div className={styles.sizeEmpty} />
         )}
@@ -110,7 +129,7 @@ export default function SizingExamples({ setup }: { setup: Setup }) {
         if (!variant || !snippet) return null;
 
         return (
-          <div key={sizing.id} className={styles.sizeCase}>
+          <div key={sizing.id} className={styles.exampleCard}>
             <div className={styles.sizeExample}>
               <div>
                 <h3 id={`sizing-${sizing.id}`} className={styles.minihead}>
@@ -122,7 +141,7 @@ export default function SizingExamples({ setup }: { setup: Setup }) {
               </div>
               <ResultBox result={variant.result} />
             </div>
-            <CodeBlock code={snippet.code} lang={snippet.lang} className={styles.sizeCode} />
+            <CodeBlock code={snippet.code} lang={snippet.lang} className={styles.exampleCode} />
           </div>
         );
       })}

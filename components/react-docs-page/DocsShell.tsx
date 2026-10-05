@@ -11,28 +11,35 @@ const NPM_URL = 'https://www.npmjs.com/package/tabbied';
 const PACKAGE_URL = 'https://github.com/tabbied-design/tabbied/tree/main/packages/tabbied';
 
 /**
- * The frame of a docs page (/docs, /docs/svelte, /docs/vue,
- * /docs/web-component, /docs/html, /docs/javascript): the light section of the homepage
- * shell, the masthead, the heading block with its version chips, the
- * contents rail beside the article, and the dark footer. The same parts
- * /docs/react and /docs/mcp draw inline.
+ * The frame of a docs page (/docs, /docs/concepts and the six setup pages):
+ * the light section of the homepage shell, the masthead, the heading block
+ * with its version chips, the contents rail beside the article, and the dark
+ * footer. /docs/mcp draws the same parts inline.
+ *
+ * `wide` is the Developers page's frame: no rail and no numbered sections,
+ * since its parts are choices rather than steps, and a banner that runs the
+ * full width of the window straight under the heading, in place of its rule.
  */
 export default function DocsShell({
   title,
   lede,
   chips,
-  sections,
+  sections = [],
   children,
   banner,
+  layout = 'rail',
   linkConcepts = true,
 }: {
   title: string;
   lede: ReactNode;
   chips: string[];
-  sections: DocsSection[];
+  /** The rail's entries; the wide layout has no rail. */
+  sections?: DocsSection[];
   children: ReactNode;
-  /** A full-width piece between the heading block and the article (the Developers page's pattern). */
+  /** A piece the full width of the window between the heading block and the article (the Developers page's pattern). */
   banner?: ReactNode;
+  /** The contents rail beside the article, or the article alone at the column's full width. */
+  layout?: 'rail' | 'wide';
   /** The footer's pointer to /docs/concepts/, which that page itself leaves out. */
   linkConcepts?: boolean;
 }) {
@@ -46,7 +53,7 @@ export default function DocsShell({
 
         <main className={styles.main}>
           <div className={styles.inner}>
-            <header className={styles.head}>
+            <header className={banner ? `${styles.head} ${styles.headOpen}` : styles.head}>
               <div>
                 <p className={styles.eyebrow}>Documentation</p>
                 <h1 className={styles.title}>{title}</h1>
@@ -68,12 +75,14 @@ export default function DocsShell({
                 </div>
               </div>
             </header>
+          </div>
 
-            {banner}
+          {banner}
 
-            <div className={styles.docs}>
-              <DocsNav sections={sections} />
-              <article className={styles.article}>
+          <div className={styles.inner}>
+            <div className={layout === 'wide' ? styles.wide : styles.docs}>
+              {layout === 'rail' ? <DocsNav sections={sections} /> : null}
+              <article className={layout === 'wide' ? `${styles.article} ${styles.wideArticle}` : styles.article}>
                 {children}
                 <footer className={styles.articleFooter}>
                   <p>

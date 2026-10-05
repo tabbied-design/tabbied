@@ -1,13 +1,19 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { buildSnippet } from 'tabbied/snippets';
 import { PACKAGE_VERSION, PATTERN_COUNT } from 'lib/siteCounts';
 import CodeBlock from 'components/react-docs-page/CodeBlock';
 import DocsShell from 'components/react-docs-page/DocsShell';
-import { Callout, Code, docsSection } from 'components/react-docs-page/parts';
-import type { DocsSection } from 'components/react-docs-page/sections';
-import SizingExamples, { Prose } from 'components/react-docs-page/SizingExamples';
-import RecipeExamples from 'components/react-docs-page/RecipeExamples';
+import { Callout, Code } from 'components/react-docs-page/parts';
+import { SETUP_SECTIONS } from 'components/react-docs-page/sections';
+import { QuickStartDemo, RedrawDemo } from 'components/react-docs-page/GuideDemos';
+import {
+  ExampleSections,
+  ExportNotes,
+  MotionGuide,
+  SettingsGuide,
+  SetupSection as Section,
+  SizingGuide,
+} from 'components/react-docs-page/SetupGuide';
 import { JAVASCRIPT_RECIPES } from 'components/react-docs-page/examples/recipes/javascript';
 import styles from 'components/react-docs-page/ReactDocs.module.css';
 import { pageMetadata } from 'lib/seo';
@@ -16,7 +22,8 @@ import { pageMetadata } from 'lib/seo';
 // returns, resolveBoxStyle() and hydratePatterns()'s options. Every other
 // setup is built on this, and until this page it was a section of
 // /docs/react. The package README's "Core" section says the same things;
-// keep the two in step.
+// keep the two in step. Its sections are every setup page's
+// (SETUP_SECTIONS), in the same order.
 
 export const metadata: Metadata = pageMetadata({
   title: 'JavaScript - Tabbied',
@@ -25,31 +32,10 @@ export const metadata: Metadata = pageMetadata({
   path: '/docs/javascript/',
 });
 
-const SECTIONS: DocsSection[] = [
-  { id: 'introduction', label: 'Introduction' },
-  { id: 'mount', label: 'Mounting a pattern' },
-  { id: 'sizing', label: 'Sizing the host' },
-  { id: 'controller', label: 'The controller' },
-  { id: 'ready', label: 'When it is ready' },
-  { id: 'markup', label: 'Patterns from markup' },
-  { id: 'recipes-layout', label: 'Recipes: layout' },
-  { id: 'recipes-state', label: 'Recipes: interaction' },
-  { id: 'recipes-integration', label: 'Recipes: in an app' },
-];
+const installCode = `npm install tabbied`;
 
-const Section = docsSection(SECTIONS);
-
-// The same builder the editor's Copy code and the MCP server's get_design
-// call, so the page shows exactly what they write.
-const mountCode = buildSnippet('core', {
-  slug: 'radius',
-  seed: 'k9Pz',
-  palette: ['#0B1020', '#3E8BFF', '#3FFFB2'],
-  ratio: [3, 2],
-  ratioLabel: '3:2',
-  density: 0.5,
-  version: PACKAGE_VERSION,
-});
+const importCode = `import { createPattern, resolveBoxStyle } from 'tabbied';
+import { radius } from 'tabbied/patterns';`;
 
 const sizingCode = `import { resolveBoxStyle } from 'tabbied';
 
@@ -137,9 +123,9 @@ export default function JavaScriptDocsPage() {
         </>
       }
       chips={[`tabbied v${PACKAGE_VERSION}`, 'No framework', 'MIT license']}
-      sections={SECTIONS}
+      sections={SETUP_SECTIONS}
     >
-      <Section id="introduction" title="Introduction">
+      <Section id="introduction">
         <p>
           <Code>createPattern(host, config)</Code> mounts a pattern into an
           element you own and returns a controller for it. The React and Vue
@@ -161,42 +147,101 @@ export default function JavaScriptDocsPage() {
         </Callout>
       </Section>
 
-      <Section id="mount" title="Mounting a pattern">
-        <CodeBlock code={mountCode} title="pattern.js" lang="ts" className={styles.codeStandalone} />
+      <Section id="installation">
         <p>
-          The design is a <Code>PatternDefinition</Code> from{' '}
-          <Code>tabbied/patterns</Code>; import only the ones you draw and a
-          bundler ships just those. Any pattern page in the gallery writes
-          its own version of this, with the seed, colors and options you
-          picked.
+          One package, with css-doodle inside it and no framework.
         </p>
+        <CodeBlock code={installCode} title="terminal" lang="sh" className={styles.codeStandalone} />
+        <p>
+          The core is <Code>tabbied</Code>; the designs are{' '}
+          <Code>tabbied/patterns</Code>, one named export each, so a bundler
+          ships only the ones you import.
+        </p>
+        <CodeBlock code={importCode} lang="ts" className={styles.codeStandalone} />
       </Section>
 
-      <Section id="sizing" title="Sizing the host">
+      <Section id="quick-start">
         <p>
-          A pattern has no size of its own: it fills the host, and a host
-          that sizes to its content draws nothing. Size it in your CSS, or
-          turn the box settings the components take (<Code>width</Code>,{' '}
-          <Code>height</Code>, <Code>maxWidth</Code>,{' '}
-          <Code>maxHeight</Code>, <Code>aspectRatio</Code>,{' '}
-          <Code>fill</Code>) into a style with{' '}
-          <Code>resolveBoxStyle()</Code>:
+          Size a host, then mount a design into it. The{' '}
+          <a href="/docs/mcp/">MCP server</a>&apos;s <Code>get_design</Code>{' '}
+          writes this form for any design; from a pattern page in the
+          gallery, carry its seed, palette and options across.
+        </p>
+        <QuickStartDemo setup="javascript" />
+      </Section>
+
+      <Section id="sizing">
+        <SizingGuide setup="javascript" />
+        <p>
+          <Code>resolveBoxStyle()</Code> takes the box settings and returns
+          the style to give the host, or size it in your own CSS instead:
         </p>
         <CodeBlock code={sizingCode} lang="ts" className={styles.codeStandalone} />
         <p>
           <Code>aspectRatio</Code> takes CSS&apos;s <Code>3 / 2</Code>, a
-          number, or the editor&apos;s <Code>3:2</Code>. With no width and
-          no ratio the box fills its parent both ways, which needs a parent
-          with a height.
+          number, or the editor&apos;s <Code>3:2</Code>.
         </p>
-        <p>
-          <Prose text={'Each case below was measured in a browser, in an 800px-wide parent: the drawing is the box the pattern gets, to scale, and the code is all it takes. Every case uses `radius`; any design behaves the same.'} />
-        </p>
-        <SizingExamples setup="javascript" />
       </Section>
 
-      <Section id="controller" title="The controller">
+      <Section id="settings">
+        <SettingsGuide setup="javascript" />
+      </Section>
+
+      <Section id="updates">
+        <p>
+          The controller changes the pattern already on the page:{' '}
+          <Code>update()</Code> merges settings in, and only what changed
+          reaches the page, so calling it on every change is cheap.
+        </p>
         <CodeBlock code={controllerCode} lang="ts" className={styles.codeStandalone} />
+        <p>
+          Under the measured fits, <Code>grid</Code> (the default) and{' '}
+          <Code>cover</Code>, the pattern can only be drawn once the host has
+          a size, so it mounts after the first resize observation rather than
+          inside <Code>createPattern()</Code>. Until then{' '}
+          <Code>element</Code> is null and an export has nothing to read.
+          Anything that needs the drawn pattern belongs in{' '}
+          <Code>onReady</Code>, which runs once, after the first render; under{' '}
+          <Code>fit: &apos;fixed&apos;</Code> the canvas size is given, so it
+          mounts at once.
+        </p>
+        <CodeBlock code={readyCode} lang="ts" className={styles.codeStandalone} />
+        <RedrawDemo setup="javascript" />
+        <ExportNotes />
+      </Section>
+
+      <Section id="motion">
+        <MotionGuide setup="javascript" />
+      </Section>
+
+      <Section id="server">
+        <p>
+          <Code>createPattern()</Code> needs a browser: it measures the host
+          and mounts a custom element into it. Importing{' '}
+          <Code>tabbied</Code> on a server is safe, though, and{' '}
+          <Code>resolveBoxStyle()</Code> is pure, so a server template can
+          write the host&apos;s size inline from the same box settings. The
+          page then arrives with the box at its final size, and the pattern
+          mounts into it in the browser without moving anything. Give the
+          host the pattern&apos;s background color inline too, and the box
+          shows it until the pattern arrives.
+        </p>
+      </Section>
+
+      <ExampleSections setup="javascript" recipes={JAVASCRIPT_RECIPES} />
+
+      <Section id="api">
+        <h3 className={styles.minihead}>createPattern(host, config)</h3>
+        <p>
+          <Code>config</Code> is the React component&apos;s props less the
+          box ones: <Code>pattern</Code> (required), <Code>seed</Code>,{' '}
+          <Code>palette</Code>, <Code>options</Code>, <Code>fit</Code>,{' '}
+          <Code>density</Code>, <Code>cellSize</Code>,{' '}
+          <Code>width</Code> and <Code>height</Code> (for a fixed canvas),{' '}
+          <Code>coverRender</Code>, <Code>redrawInterval</Code>,{' '}
+          <Code>paused</Code> and <Code>onReady</Code>. It returns the
+          controller:
+        </p>
         <div className={styles.tableScroll}>
           <table className={styles.propsTable}>
             <thead>
@@ -215,32 +260,22 @@ export default function JavaScriptDocsPage() {
             </tbody>
           </table>
         </div>
-      </Section>
 
-      <Section id="ready" title="When it is ready">
+        <h3 className={styles.minihead}>resolveBoxStyle(box)</h3>
         <p>
-          Under the measured fits, <Code>grid</Code> (the default) and{' '}
-          <Code>cover</Code>, the pattern can only be drawn once the host has
-          a size, so it mounts after the first resize observation rather than
-          inside <Code>createPattern()</Code>. Until then{' '}
-          <Code>element</Code> is null and an export has nothing to read.
-          Anything that needs the drawn pattern belongs in{' '}
-          <Code>onReady</Code>, which runs once, after the first render:
+          Takes <Code>fill</Code>, <Code>width</Code>, <Code>height</Code>,{' '}
+          <Code>maxWidth</Code>, <Code>maxHeight</Code> and{' '}
+          <Code>aspectRatio</Code> and returns the style for the host, as an
+          object of camel-cased CSS properties. Pure, so it runs on a server
+          too.
         </p>
-        <CodeBlock code={readyCode} lang="ts" className={styles.codeStandalone} />
-        <p>
-          Under <Code>fit: &apos;fixed&apos;</Code> the canvas size is given,
-          so it mounts at once.
-        </p>
-      </Section>
 
-      <Section id="markup" title="Patterns from markup">
+        <h3 className={styles.minihead}>hydratePatterns(options)</h3>
         <p>
-          <Code>hydratePatterns()</Code> mounts every{' '}
-          <Code>[data-pattern]</Code> element on the page from its data
-          attributes, which <a href="/docs/html/">Plain HTML</a> lists. It
-          is idempotent, so call it again after adding patterns; an element
-          it already mounted is skipped.
+          Mounts every <Code>[data-pattern]</Code> element on the page from
+          its data attributes, which <a href="/docs/html/">Plain HTML</a>{' '}
+          lists. It is idempotent, so call it again after adding patterns; an
+          element it already mounted is skipped.
         </p>
         <CodeBlock code={hydrateCode} lang="ts" className={styles.codeStandalone} />
         <p>
@@ -253,27 +288,6 @@ export default function JavaScriptDocsPage() {
           warning by default) and the rest still mount.
         </p>
       </Section>
-      <Section id="recipes-layout" title="Recipes: layout">
-        <p>
-          <Prose text={'Whole files, imports included, ready to paste. Swap the design for any slug in the gallery.'} />
-        </p>
-        <RecipeExamples recipes={JAVASCRIPT_RECIPES} group="layout" />
-      </Section>
-
-      <Section id="recipes-state" title="Recipes: interaction">
-        <p>
-          <Prose text={'Patterns that answer to state: colors, seeds, designs, options, motion and export.'} />
-        </p>
-        <RecipeExamples recipes={JAVASCRIPT_RECIPES} group="state" />
-      </Section>
-
-      <Section id="recipes-integration" title="Recipes: in an app">
-        <p>
-          <Prose text={'Where the pattern meets the rest of an app.'} />
-        </p>
-        <RecipeExamples recipes={JAVASCRIPT_RECIPES} group="integration" />
-      </Section>
-
     </DocsShell>
   );
 }

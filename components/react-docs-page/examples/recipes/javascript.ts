@@ -82,6 +82,67 @@ createPattern(host, {
 });`,
   },
   {
+    id: 'brand',
+    group: 'layout',
+    title: 'One palette across several designs',
+    says: 'A palette is just an array, so a brand\'s colors can dress any design: background first, then the inks. Each host names its design in the markup, and one loop mounts them all.',
+    file: 'tiles.js',
+    lang: 'ts',
+    code: `// <div class="tiles">  (display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px)
+//   <div data-design="radius"></div>
+//   <div data-design="quilt"></div>
+//   <div data-design="vitrail"></div>
+//   <div data-design="ortho"></div>
+// </div>
+import { createPattern, resolveBoxStyle } from 'tabbied';
+import { ortho, quilt, radius, vitrail } from 'tabbied/patterns';
+
+const DESIGNS = { radius, quilt, vitrail, ortho };
+const BRAND = ['#0B1020', '#3E8BFF', '#3FFFB2', '#FF3D8B'];
+
+for (const host of document.querySelectorAll('.tiles [data-design]')) {
+  Object.assign(host.style, resolveBoxStyle({ aspectRatio: '1' }));
+  createPattern(host, { pattern: DESIGNS[host.dataset.design], seed: 'brand', palette: BRAND });
+}`,
+  },
+  {
+    id: 'stylesheet',
+    group: 'layout',
+    title: 'Sized from a stylesheet',
+    says: 'Skip `resolveBoxStyle()` and the host keeps whatever your CSS gives it, breakpoints included: the pattern fills the box the stylesheet draws.',
+    file: 'banner.js',
+    lang: 'ts',
+    code: `// <div class="banner"></div>
+//
+// .banner { height: 160px; border-radius: 12px; }
+// @media (min-width: 768px) { .banner { height: 288px; } }
+import { createPattern } from 'tabbied';
+import { radius } from 'tabbied/patterns';
+
+createPattern(document.querySelector('.banner'), { pattern: radius });`,
+  },
+  {
+    id: 'labelled',
+    group: 'layout',
+    title: 'A pattern that means something',
+    says: 'The core leaves the host as you wrote it. A pattern that is only decoration wants `aria-hidden`; one that is content, say an illustration in an article, is an image with a label.',
+    file: 'figure.js',
+    lang: 'ts',
+    code: `// <figure>
+//   <div id="art"></div>
+//   <figcaption>Radius, seed k9Pz.</figcaption>
+// </figure>
+import { createPattern, resolveBoxStyle } from 'tabbied';
+import { radius } from 'tabbied/patterns';
+
+const host = document.querySelector('#art');
+Object.assign(host.style, resolveBoxStyle({ aspectRatio: '1' }));
+host.setAttribute('role', 'img');
+host.setAttribute('aria-label', 'Quarter circles in blue and green, packed edge to edge');
+
+createPattern(host, { pattern: radius, seed: 'k9Pz' });`,
+  },
+  {
     id: 'theme',
     group: 'state',
     title: 'Recolor with a theme switch',
@@ -172,12 +233,16 @@ document.querySelector('#design').addEventListener('change', (event) => {
     says: 'Option ids come from the design (`radius` has `frequency`, 0.2 to 1); `density` is the cell size, 0 coarse to 1 fine. Each `update()` redraws in place.',
     file: 'controls.js',
     lang: 'ts',
-    code: `import { createPattern, resolveBoxStyle } from 'tabbied';
+    code: `// <div id="art"></div>
+// <input id="frequency" type="range" min="0.2" max="1" step="0.1" value="0.8">
+// <input id="density" type="range" min="0" max="1" step="0.05" value="0.5">
+import { createPattern, resolveBoxStyle } from 'tabbied';
 import { radius } from 'tabbied/patterns';
 
 const host = document.querySelector('#art');
 Object.assign(host.style, resolveBoxStyle({ height: 280 }));
-const art = createPattern(host, { pattern: radius, seed: 'k9Pz' });
+// Start where the sliders start.
+const art = createPattern(host, { pattern: radius, seed: 'k9Pz', options: { frequency: 0.8 }, density: 0.5 });
 
 document.querySelector('#frequency').addEventListener('input', (event) => {
   art.update({ options: { frequency: Number(event.target.value) } });

@@ -235,7 +235,8 @@ ${SCRIPT}
     says: 'Options are `id: value` pairs in one attribute, or an object set as the `options` property; `density` is the cell size, 0 coarse to 1 fine.',
     file: 'index.html',
     lang: 'html',
-    code: `<tabbied-pattern id="art" pattern="radius" seed="k9Pz" style="display: block; height: 280px"></tabbied-pattern>
+    code: `<tabbied-pattern id="art" pattern="radius" seed="k9Pz" options="frequency: 0.8" density="0.5"
+  style="display: block; height: 280px"></tabbied-pattern>
 <label>Frequency <input id="frequency" type="range" min="0.2" max="1" step="0.1" value="0.8" /></label>
 <label>Density <input id="density" type="range" min="0" max="1" step="0.05" value="0.5" /></label>
 
@@ -293,8 +294,33 @@ ${SCRIPT}
 </script>`,
   },
   {
-    id: 'error',
+    id: 'upload',
     group: 'state',
+    title: 'Send the SVG to your server',
+    says: '`exportSvg()` resolves to the file as a string, so saving a design a person made is one `fetch`. It waits for any redraw in flight before it reads the page.',
+    file: 'index.html',
+    lang: 'html',
+    code: `<tabbied-pattern id="art" pattern="radius" seed="k9Pz"
+  style="display: block; width: 600px; max-width: 100%; height: 400px"></tabbied-pattern>
+<button id="save">Save artwork</button>
+
+${SCRIPT}
+<script type="module">
+  const art = document.querySelector('#art');
+
+  document.querySelector('#save').addEventListener('click', async () => {
+    const { svg } = await art.exportSvg();
+    await fetch('/api/artwork', {
+      method: 'POST',
+      headers: { 'Content-Type': 'image/svg+xml' },
+      body: svg,
+    });
+  });
+</script>`,
+  },
+  {
+    id: 'error',
+    group: 'integration',
     title: 'When a design cannot load',
     says: 'A slug that does not exist, or a design file that cannot be fetched, fires `error` with the reason in `detail`. The box keeps its size and its inline background, so a fallback can be as small as a class.',
     file: 'index.html',

@@ -127,7 +127,7 @@ export default function ConceptsPage() {
         </ul>
         <p>
           Every design supports all three. See them side by side in the{' '}
-          <a href="/docs/react/#fit-modes">live examples</a>.
+          <a href="/docs/react/#sizing">live examples</a>.
         </p>
       </Section>
 

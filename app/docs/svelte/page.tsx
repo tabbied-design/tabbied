@@ -2,16 +2,24 @@ import type { Metadata } from 'next';
 import { PACKAGE_VERSION, PATTERN_COUNT } from 'lib/siteCounts';
 import CodeBlock from 'components/react-docs-page/CodeBlock';
 import DocsShell from 'components/react-docs-page/DocsShell';
-import { Callout, Code, docsSection } from 'components/react-docs-page/parts';
-import type { DocsSection } from 'components/react-docs-page/sections';
-import SizingExamples, { Prose } from 'components/react-docs-page/SizingExamples';
-import RecipeExamples from 'components/react-docs-page/RecipeExamples';
+import { Callout, Code } from 'components/react-docs-page/parts';
+import { SETUP_SECTIONS } from 'components/react-docs-page/sections';
+import { QuickStartDemo, RedrawDemo } from 'components/react-docs-page/GuideDemos';
+import {
+  ExampleSections,
+  ExportNotes,
+  MotionGuide,
+  SettingsGuide,
+  SetupSection as Section,
+  SizingGuide,
+} from 'components/react-docs-page/SetupGuide';
 import { SVELTE_RECIPES } from 'components/react-docs-page/examples/recipes/svelte';
 import styles from 'components/react-docs-page/ReactDocs.module.css';
 import { pageMetadata } from 'lib/seo';
 
 // tabbied/svelte's page. The package README's Svelte section says the same
-// things; keep the two in step.
+// things; keep the two in step. Its sections are every setup page's
+// (SETUP_SECTIONS), in the same order.
 
 export const metadata: Metadata = pageMetadata({
   title: 'Svelte and SvelteKit - Tabbied',
@@ -20,32 +28,7 @@ export const metadata: Metadata = pageMetadata({
   path: '/docs/svelte/',
 });
 
-const SECTIONS: DocsSection[] = [
-  { id: 'introduction', label: 'Introduction' },
-  { id: 'installation', label: 'Installation' },
-  { id: 'quick-start', label: 'Quick start' },
-  { id: 'sveltekit', label: 'SvelteKit' },
-  { id: 'updates', label: 'Changing props' },
-  { id: 'controller', label: 'Redraw & export' },
-  { id: 'sizing', label: 'Sizing, case by case' },
-  { id: 'recipes-layout', label: 'Recipes: layout' },
-  { id: 'recipes-state', label: 'Recipes: interaction' },
-  { id: 'recipes-integration', label: 'Recipes: SvelteKit and more' },
-  { id: 'api', label: 'API reference' },
-];
-
-const Section = docsSection(SECTIONS);
-
 const installCode = `npm install tabbied`;
-
-const quickStartCode = `<script>
-  import { tabbied, tabbiedAttributes } from 'tabbied/svelte';
-  import { radius } from 'tabbied/patterns';
-
-  const props = { pattern: radius, seed: 'k9Pz', aspectRatio: '3 / 2' };
-</script>
-
-<div {...tabbiedAttributes(props)} use:tabbied={props}></div>`;
 
 const updatesCode = `<script>
   import { tabbied, tabbiedAttributes } from 'tabbied/svelte';
@@ -71,19 +54,6 @@ const updatesLegacyCode = `<script>
 <div {...tabbiedAttributes(props)} use:tabbied={props}></div>
 <button on:click={() => (palette = ['#FFF4E6', '#E8590C'])}>Warm</button>`;
 
-const controllerCode = `<script>
-  import { tabbied, tabbiedAttributes, patternController } from 'tabbied/svelte';
-  import { radius } from 'tabbied/patterns';
-
-  const props = { pattern: radius, height: 320 };
-  let host = $state();
-</script>
-
-<div bind:this={host} {...tabbiedAttributes(props)} use:tabbied={props}></div>
-
-<button onclick={() => patternController(host)?.redraw()}>Redraw</button>
-<button onclick={() => patternController(host)?.exportImage()}>Export PNG</button>`;
-
 export default function SvelteDocsPage() {
   return (
     <DocsShell
@@ -96,9 +66,9 @@ export default function SvelteDocsPage() {
         </>
       }
       chips={[`tabbied v${PACKAGE_VERSION}`, 'Svelte 4 and 5', 'MIT license']}
-      sections={SECTIONS}
+      sections={SETUP_SECTIONS}
     >
-      <Section id="introduction" title="Introduction">
+      <Section id="introduction">
         <p>
           <Code>tabbied/svelte</Code> has two parts, used on the same element.
           The <Code>tabbied</Code> action mounts the pattern, follows changes
@@ -116,7 +86,7 @@ export default function SvelteDocsPage() {
         </p>
       </Section>
 
-      <Section id="installation" title="Installation">
+      <Section id="installation">
         <p>
           One package. Svelte is not a dependency of it: your app already has
           the Svelte it needs.
@@ -124,21 +94,59 @@ export default function SvelteDocsPage() {
         <CodeBlock code={installCode} title="terminal" lang="sh" className={styles.codeStandalone} />
       </Section>
 
-      <Section id="quick-start" title="Quick start">
+      <Section id="quick-start">
         <p>
           Import the action and a preset, then pass the same props to both
-          parts. The pattern fills its box, so give the box a size: an{' '}
-          <Code>aspectRatio</Code>, a <Code>height</Code>, or a parent with a
-          height of its own.
+          parts. Give the box a size: here a <Code>height</Code>, with the
+          width filling the parent. Import only the presets you render from{' '}
+          <Code>tabbied/patterns</Code> and the bundler ships just those, a
+          couple of KB each.
         </p>
-        <CodeBlock code={quickStartCode} title="+page.svelte" lang="svelte" className={styles.codeStandalone} />
-        <p>
-          Import only the presets you render from <Code>tabbied/patterns</Code>{' '}
-          and the bundler ships just those, a couple of KB each.
-        </p>
+        <QuickStartDemo setup="svelte" />
       </Section>
 
-      <Section id="sveltekit" title="SvelteKit">
+      <Section id="sizing">
+        <SizingGuide setup="svelte" />
+      </Section>
+
+      <Section id="settings">
+        <SettingsGuide setup="svelte" />
+      </Section>
+
+      <Section id="updates">
+        <p>
+          When the props change, the action passes them on to the pattern
+          already on the page, so a new palette or option redraws in place,
+          with the design&apos;s own transition. Props that come out the same
+          are skipped.
+        </p>
+        <CodeBlock code={updatesCode} title="+page.svelte" lang="svelte" className={styles.codeStandalone} />
+        <p>
+          The examples here use Svelte 5&apos;s runes. The action is the same
+          in Svelte 4, where the component is written without them:
+        </p>
+        <CodeBlock
+          code={updatesLegacyCode}
+          title="+page.svelte (Svelte 4)"
+          lang="svelte"
+          className={styles.codeStandalone}
+        />
+        <p>
+          <Code>patternController(element)</Code> returns the controller the
+          action is driving: <Code>redraw()</Code> for a new seed,{' '}
+          <Code>exportImage()</Code> for a PNG and <Code>exportSvg()</Code>{' '}
+          for a vector file. It returns <Code>null</Code> before the action
+          has run and after the element is gone.
+        </p>
+        <RedrawDemo setup="svelte" />
+        <ExportNotes />
+      </Section>
+
+      <Section id="motion">
+        <MotionGuide setup="svelte" />
+      </Section>
+
+      <Section id="server">
         <p>
           An action runs only in the browser. On a server render, an element
           with the action alone arrives empty and unsized, and the page moves
@@ -164,66 +172,9 @@ export default function SvelteDocsPage() {
         </Callout>
       </Section>
 
-      <Section id="updates" title="Changing props">
-        <p>
-          When the props change, the action passes them on to the pattern
-          already on the page, so a new palette or option redraws in place,
-          with the design&apos;s own transition. Props that come out the same
-          are skipped.
-        </p>
-        <CodeBlock code={updatesCode} title="+page.svelte" lang="svelte" className={styles.codeStandalone} />
-        <p>
-          The examples here use Svelte 5&apos;s runes. The action is the same
-          in Svelte 4, where the component is written without them:
-        </p>
-        <CodeBlock
-          code={updatesLegacyCode}
-          title="+page.svelte (Svelte 4)"
-          lang="svelte"
-          className={styles.codeStandalone}
-        />
-      </Section>
+      <ExampleSections setup="svelte" recipes={SVELTE_RECIPES} />
 
-      <Section id="controller" title="Redraw & export">
-        <p>
-          <Code>patternController(element)</Code> returns the controller the
-          action is driving: <Code>redraw()</Code> for a new seed,{' '}
-          <Code>exportImage()</Code> for a PNG and <Code>exportSvg()</Code>{' '}
-          for a vector file. It returns <Code>null</Code> before the action
-          has run and after the element is gone.
-        </p>
-        <CodeBlock code={controllerCode} title="+page.svelte" lang="svelte" className={styles.codeStandalone} />
-      </Section>
-
-      <Section id="sizing" title="Sizing, case by case">
-        <p>
-          <Prose text={'Each case below was measured in a browser, in an 800px-wide parent: the drawing is the box the pattern gets, to scale, and the code is all it takes. Every case uses `radius`; any design behaves the same.'} />
-        </p>
-        <SizingExamples setup="svelte" />
-      </Section>
-
-      <Section id="recipes-layout" title="Recipes: layout">
-        <p>
-          <Prose text={'Whole files, imports included, ready to paste. Swap the design for any slug in the gallery.'} />
-        </p>
-        <RecipeExamples recipes={SVELTE_RECIPES} group="layout" />
-      </Section>
-
-      <Section id="recipes-state" title="Recipes: interaction">
-        <p>
-          <Prose text={'Patterns that answer to state: colors, seeds, designs, options, motion and export.'} />
-        </p>
-        <RecipeExamples recipes={SVELTE_RECIPES} group="state" />
-      </Section>
-
-      <Section id="recipes-integration" title="Recipes: SvelteKit and more">
-        <p>
-          <Prose text={'Where the pattern meets the rest of an app.'} />
-        </p>
-        <RecipeExamples recipes={SVELTE_RECIPES} group="integration" />
-      </Section>
-
-      <Section id="api" title="API reference">
+      <Section id="api">
         <div className={styles.tableScroll}>
           <table className={styles.propsTable}>
             <thead>

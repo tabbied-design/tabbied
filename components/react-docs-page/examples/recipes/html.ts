@@ -106,6 +106,30 @@ ${boot(['radius'])}`,
 ${boot(['radius', 'quilt', 'vitrail', 'ortho'])}`,
   },
   {
+    id: 'stylesheet',
+    group: 'layout',
+    title: 'Sized from a stylesheet',
+    says: 'The element is styled like any other: a class, a media query, a container query. The pattern fills the box the stylesheet draws.',
+    file: 'index.html',
+    lang: 'html',
+    code: `<style>
+  .banner {
+    height: 160px;
+    border-radius: 12px;
+  }
+
+  @media (min-width: 768px) {
+    .banner {
+      height: 288px;
+    }
+  }
+</style>
+
+<div class="banner" data-pattern="radius"></div>
+
+${boot(['radius'])}`,
+  },
+  {
     id: 'labelled',
     group: 'layout',
     title: 'A pattern that means something',
@@ -141,6 +165,27 @@ document.querySelector('#theme').addEventListener('click', () => {
   theme = theme === 'dark' ? 'light' : 'dark';
   mounted.forEach(({ controller }) => controller.update({ palette: PALETTES[theme] }));
 });`)}`,
+  },
+  {
+    id: 'system-theme',
+    group: 'state',
+    title: 'Follow the system color scheme',
+    says: 'Read `prefers-color-scheme` once the patterns are mounted and listen for changes; the markup carries no palette, so the first paint is the design\'s own.',
+    file: 'index.html',
+    lang: 'html',
+    code: `<div data-pattern="radius" data-seed="k9Pz" style="aspect-ratio: 3 / 1"></div>
+
+${boot(['radius'], `const LIGHT = ['#FFF4E6', '#E8590C', '#1C1C1C'];
+const DARK = ['#0B1020', '#3E8BFF', '#3FFFB2'];
+const query = window.matchMedia('(prefers-color-scheme: dark)');
+
+const sync = () => {
+  const palette = query.matches ? DARK : LIGHT;
+  mounted.forEach(({ controller }) => controller.update({ palette }));
+};
+
+sync();
+query.addEventListener('change', sync);`)}`,
   },
   {
     id: 'shuffle',
@@ -183,7 +228,8 @@ document.querySelector('#design').addEventListener('change', (event) => {
     says: 'Option ids come from the design (`radius` has `frequency`, 0.2 to 1); `density` is the cell size, 0 coarse to 1 fine. Each `update()` redraws in place.',
     file: 'index.html',
     lang: 'html',
-    code: `<div id="art" data-pattern="radius" data-seed="k9Pz" style="height: 280px"></div>
+    code: `<div id="art" data-pattern="radius" data-seed="k9Pz" data-options="frequency: 0.8" data-density="0.5"
+     style="height: 280px"></div>
 <label>Frequency <input id="frequency" type="range" min="0.2" max="1" step="0.1" value="0.8" /></label>
 <label>Density <input id="density" type="range" min="0" max="1" step="0.05" value="0.5" /></label>
 
@@ -224,6 +270,27 @@ ${boot(['radius'], `const art = mounted.find(({ element }) => element.id === 'ar
 
 document.querySelector('#png').addEventListener('click', () => art.exportImage({ scale: 2, download: true, name: 'banner' }));
 document.querySelector('#svg').addEventListener('click', () => art.exportSvg({ download: true, name: 'banner' }));`)}`,
+  },
+  {
+    id: 'upload',
+    group: 'state',
+    title: 'Send the SVG to your server',
+    says: '`exportSvg()` resolves to the file as a string, so saving a design a person made is one `fetch`. It waits for any redraw in flight before it reads the page.',
+    file: 'index.html',
+    lang: 'html',
+    code: `<div id="art" data-pattern="radius" data-seed="k9Pz" style="width: 600px; max-width: 100%; height: 400px"></div>
+<button id="save">Save artwork</button>
+
+${boot(['radius'], `const art = mounted.find(({ element }) => element.id === 'art').controller;
+
+document.querySelector('#save').addEventListener('click', async () => {
+  const { svg } = await art.exportSvg();
+  await fetch('/api/artwork', {
+    method: 'POST',
+    headers: { 'Content-Type': 'image/svg+xml' },
+    body: svg,
+  });
+});`)}`,
   },
   {
     id: 'later',

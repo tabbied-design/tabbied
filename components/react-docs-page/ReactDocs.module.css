@@ -948,37 +948,117 @@ code.entryName {
   font-size: 12px;
 }
 
-/* ---- The Developers page's decoration ---- */
+/* ---- The Developers page (DocsShell layout="wide") ---- */
 
-/* Under the heading block, the column's full width: the homepage's dark
-   ground and palettes, drawn by the package itself (PatternBand). */
-.docsBanner {
-  padding-top: 40px;
+/* No rule under the heading block when a banner follows it: the banner is
+   the separator. */
+.headOpen {
+  padding-bottom: 40px;
+  border-bottom: none;
 }
 
+/* The article at the column's full width, with no rail beside it. */
+.wide {
+  padding-top: 0;
+}
+
+.article.wideArticle {
+  max-width: none;
+}
+
+/* A piece that runs the window's full width from inside the column. The
+   paper clips the scrollbar's width that 100vw carries, so nothing scrolls
+   sideways. */
+.paper {
+  overflow-x: clip;
+}
+
+.bleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+}
+
+/* One part of the page: its heading and a few words in a narrow column,
+   what it offers beside them. Unnumbered: the parts are choices, not steps. */
+.landingSection {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+  gap: 56px;
+  align-items: start;
+  padding: 80px 0;
+  scroll-margin-top: 32px;
+}
+
+.landingIntro p {
+  margin: 14px 0 0;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.landingEntries,
+.landingCode {
+  margin-top: 0;
+}
+
+/* What every setup shares, as two columns of links into the Concepts page. */
+.sharedList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 40px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sharedList li {
+  border-bottom: 1px solid var(--h-paper-rule);
+}
+
+.article a.sharedLink {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 16px 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.sharedName {
+  font: 600 15px var(--h-sans);
+  color: var(--h-ink);
+  transition: color 150ms ease;
+}
+
+.sharedSays {
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.article a.sharedLink:hover .sharedName,
+.article a.sharedLink:focus-visible .sharedName {
+  color: var(--h-teal);
+}
+
+/* The decoration: the homepage's palettes on the page's own white, drawn by
+   the package itself (PatternBand). The banner straight under the heading,
+   a band between parts, and a strip of six tiles to close. */
 .docsBannerArt {
-  height: 200px;
-  border-radius: 18px;
+  height: 240px;
 }
 
-/* The band that closes a section, before the next one's rule. */
 .docsBand {
-  height: 88px;
-  margin-top: 40px;
-  border-radius: 14px;
+  height: 120px;
 }
 
-/* Six tiles, one design and one palette each. */
 .docsMosaic {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 24px;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
 }
 
 .docsTile {
   aspect-ratio: 4 / 3;
-  border-radius: 14px;
 }
 
 /* The design and palette a piece is drawn in, on a dark plate in its corner
@@ -996,54 +1076,86 @@ code.entryName {
   border-radius: 6px;
 }
 
-@media (max-width: 767.98px) {
-  .docsBanner {
-    padding-top: 28px;
-  }
+/* The banner's caption lines up with the column the page is set in. */
+.docsBannerArt .artCaption {
+  bottom: 14px;
+  left: calc(max(0px, (100% - var(--h-max)) / 2) + var(--h-pad));
+}
 
-  .docsBannerArt {
-    height: 140px;
-  }
-
-  .docsBand {
-    height: 64px;
+@media (max-width: 1023.98px) {
+  .landingSection {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    padding: 56px 0;
   }
 
   .docsMosaic {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-/* ---- Sizing examples (SizingExamples) ---- */
+@media (max-width: 767.98px) {
+  .docsBannerArt {
+    height: 160px;
+  }
 
-.sizeCase {
-  margin-top: 40px;
+  /* Wide enough for a tile's caption to sit on one line. */
+  .docsMosaic {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .docsBand {
+    height: 80px;
+  }
+
+  .sharedList {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
-/* The case and the box it draws, to scale, side by side; the code that
-   makes it runs the full width under them, so a line of it reads without
-   scrolling. */
-.sizeExample {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 24px;
-  align-items: start;
+@media (prefers-reduced-motion: reduce) {
+  .sharedName {
+    transition: none;
+  }
 }
 
-.sizeExample .minihead {
+/* ---- Worked examples: the sizing cases and the recipes ---- */
+
+/* One example, one card: its heading, what it does, what it draws and the
+   code that draws it, all inside the same border, with clear space before
+   the next. Without the card a code block sat as close to the case after it
+   as to its own, and read as either's. */
+.exampleCard {
+  margin-top: 32px;
+  padding: 28px;
+  border: 1px solid oklch(0 0 0 / 0.1);
+  border-radius: 18px;
+  scroll-margin-top: 32px;
+}
+
+.exampleCard:first-of-type {
+  margin-top: 28px;
+}
+
+.exampleCard .minihead {
   margin-top: 0;
 }
 
-.sizeExample .sizeResult {
-  margin-top: 4px;
+.exampleCard p {
+  margin-top: 10px;
+}
+
+/* The case and the box it draws, to scale, side by side; the code runs the
+   full width under them, so a line of it reads without scrolling. */
+.sizeExample {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 32px;
+  align-items: start;
 }
 
 .sizeResult {
-  margin: 0;
-  padding: 8px;
-  background-color: var(--h-paper-well);
-  border: 1px solid var(--h-paper-rule);
-  border-radius: 12px;
+  margin: 4px 0 0;
 }
 
 /* The 800px parent, drawn 320px wide: a dashed outline the box sits in. */
@@ -1054,11 +1166,12 @@ code.entryName {
   outline-offset: 0;
 }
 
-/* The pattern's box, shaded with a design's own preview. */
+/* The pattern's box: the design live, on no ground of its own, outlined in
+   the palette's teal so its extent reads where the page shows through. */
 .sizeBox {
   max-width: 100%;
-  background: #3b3f45 url('/previews/radius.webp') center / 160px;
-  border-radius: 2px;
+  outline: 1px solid oklch(0.5 0.1 195);
+  outline-offset: -1px;
 }
 
 /* Nothing drawn: the 0px box as a red rule across the parent. */
@@ -1071,7 +1184,7 @@ code.entryName {
 }
 
 .sizeCaption {
-  margin-top: 8px;
+  margin-top: 10px;
   font: 400 12px var(--h-mono);
   color: var(--h-ink);
 }
@@ -1080,26 +1193,198 @@ code.entryName {
   color: oklch(0.5 0.01 260);
 }
 
-.sizeCode {
-  margin: 16px 0 0;
+.exampleCode {
+  margin: 24px 0 0;
+}
+
+/* A recipe's result, live, above its file: a well with a label, so the
+   result reads as the code's output and not as part of the page. */
+.recipePreview {
+  position: relative;
+  margin-top: 20px;
+  padding: 44px 24px 24px;
+  overflow: hidden;
+  background-color: var(--h-paper-well);
+  border: 1px solid var(--h-paper-rule);
+  border-radius: 12px;
+}
+
+.previewLabel {
+  position: absolute;
+  top: 14px;
+  left: 24px;
+  font: 400 11px var(--h-mono);
+  color: var(--h-teal);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.previewBody {
+  font: 400 15px / 1.6 var(--h-sans);
+  color: var(--h-ink);
+}
+
+.previewBody p {
+  margin: 0;
+}
+
+.previewNarrow {
+  max-width: 560px;
+}
+
+.previewRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+  margin: 14px 0;
+}
+
+.previewRow:last-child {
+  margin-bottom: 0;
+}
+
+.previewRow:first-child {
+  margin-top: 0;
+}
+
+.previewNote {
+  font-size: 13px;
+  color: oklch(0.45 0.01 260);
+}
+
+.previewField {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  font: 400 12px var(--h-mono);
+  color: var(--h-ink);
+  letter-spacing: 0.04em;
+}
+
+.previewSelect {
+  height: 32px;
+  padding: 0 10px;
+  font: 400 14px var(--h-sans);
+  color: var(--h-ink);
+  background-color: var(--h-paper);
+  border: 1px solid oklch(0 0 0 / 0.18);
+  border-radius: 8px;
+}
+
+.demoBtn:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+/* The hero recipe: a section the copy sizes, the pattern behind it. */
+.previewHero {
+  position: relative;
+  isolation: isolate;
+  padding: 96px 24px;
+  color: #fff;
+}
+
+.previewBody .previewHeadline {
+  margin-bottom: 8px;
+  font: 700 30px / 1.15 var(--h-display);
+  letter-spacing: -0.01em;
+}
+
+.previewCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.previewBody .previewCardTitle {
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+.previewBody .previewText {
+  margin: 12px 0;
+}
+
+.previewPhoto {
+  background: url('/images/sites/nordlicht-coast.webp') center / cover;
+}
+
+.previewBrand {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+/* The stylesheet recipe's banner: 160px tall, 288px from 768px up. */
+.previewBanner {
+  height: 160px;
+  border-radius: 12px;
+}
+
+@media (min-width: 768px) {
+  .previewBanner {
+    height: 288px;
+  }
+}
+
+.previewFigure {
+  max-width: 320px;
+  margin: 0;
+}
+
+.previewFigure figcaption {
+  margin-top: 8px;
+  font-size: 13px;
+  color: oklch(0.45 0.01 260);
+}
+
+.previewStack {
+  display: grid;
+  gap: 12px;
+}
+
+.previewStack:empty {
+  display: none;
+}
+
+.previewEmpty {
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  font-size: 13px;
+  color: oklch(0.45 0.01 260);
+  text-align: center;
+  border: 1px dashed oklch(0 0 0 / 0.2);
 }
 
 @media (max-width: 1023.98px) {
   .sizeExample {
     grid-template-columns: minmax(0, 1fr);
-    gap: 16px;
+    gap: 20px;
   }
 
-  .sizeExample .sizeResult {
+  .sizeResult {
     margin-top: 0;
   }
 }
 
-/* One recipe: its heading, a sentence, the file. */
-.recipe {
-  margin-top: 40px;
-}
+@media (max-width: 767.98px) {
+  .exampleCard {
+    margin-top: 24px;
+    padding: 18px;
+    border-radius: 14px;
+  }
 
-.recipe:first-of-type {
-  margin-top: 24px;
+  .recipePreview {
+    padding: 40px 14px 14px;
+  }
+
+  .previewLabel {
+    left: 14px;
+  }
+
+  .previewBrand {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }

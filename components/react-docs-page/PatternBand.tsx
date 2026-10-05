@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import type { PatternDefinition } from 'tabbied';
 import { TabbiedPattern } from 'tabbied/react';
 
-// A decorative pattern in a box the caller's class sizes: the Developers
-// page's banner, the bands between its sections and the tiles of its mosaic.
+// A decorative pattern in a box the caller's class (or style) sizes: the
+// Developers page's banner, bands and mosaic, and the boxes the sizing cases
+// draw to scale.
 // Built only as it nears the viewport, like the gallery's tiles
 // (components/template/LazyPattern.tsx), so the page pays for the first
 // screenful on load; until then the box shows the palette's ground.
@@ -19,6 +20,7 @@ export default function PatternBand({
   density,
   redrawInterval,
   className,
+  style,
   children,
 }: {
   pattern: PatternDefinition;
@@ -28,6 +30,8 @@ export default function PatternBand({
   /** A slow reseed, as on the homepage; the controller stops it under reduced motion. */
   redrawInterval?: number;
   className?: string;
+  /** The box's own size, where a class cannot know it. */
+  style?: CSSProperties;
   /** Anything drawn over the pattern, such as a caption. */
   children?: ReactNode;
 }) {
@@ -56,7 +60,7 @@ export default function PatternBand({
     <div
       ref={frameRef}
       className={className}
-      style={{ position: 'relative', overflow: 'hidden', backgroundColor: palette[0] }}
+      style={{ ...style, position: 'relative', overflow: 'hidden', backgroundColor: palette[0] }}
     >
       {approached ? (
         <TabbiedPattern

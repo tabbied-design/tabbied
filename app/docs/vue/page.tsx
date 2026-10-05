@@ -2,16 +2,24 @@ import type { Metadata } from 'next';
 import { PACKAGE_VERSION, PATTERN_COUNT } from 'lib/siteCounts';
 import CodeBlock from 'components/react-docs-page/CodeBlock';
 import DocsShell from 'components/react-docs-page/DocsShell';
-import { Code, docsSection } from 'components/react-docs-page/parts';
-import type { DocsSection } from 'components/react-docs-page/sections';
-import SizingExamples, { Prose } from 'components/react-docs-page/SizingExamples';
-import RecipeExamples from 'components/react-docs-page/RecipeExamples';
+import { Code } from 'components/react-docs-page/parts';
+import { SETUP_SECTIONS } from 'components/react-docs-page/sections';
+import { QuickStartDemo, RedrawDemo } from 'components/react-docs-page/GuideDemos';
+import {
+  ExampleSections,
+  ExportNotes,
+  MotionGuide,
+  SettingsGuide,
+  SetupSection as Section,
+  SizingGuide,
+} from 'components/react-docs-page/SetupGuide';
 import { VUE_RECIPES } from 'components/react-docs-page/examples/recipes/vue';
 import styles from 'components/react-docs-page/ReactDocs.module.css';
 import { pageMetadata } from 'lib/seo';
 
 // tabbied/vue's page. The package README's Vue section says the same things;
-// keep the two in step.
+// keep the two in step. Its sections are every setup page's (SETUP_SECTIONS),
+// in the same order.
 
 export const metadata: Metadata = pageMetadata({
   title: 'Vue and Nuxt - Tabbied',
@@ -20,32 +28,7 @@ export const metadata: Metadata = pageMetadata({
   path: '/docs/vue/',
 });
 
-const SECTIONS: DocsSection[] = [
-  { id: 'introduction', label: 'Introduction' },
-  { id: 'installation', label: 'Installation' },
-  { id: 'quick-start', label: 'Quick start' },
-  { id: 'nuxt', label: 'Nuxt' },
-  { id: 'updates', label: 'Changing props' },
-  { id: 'template-ref', label: 'Redraw & export' },
-  { id: 'sizing', label: 'Sizing, case by case' },
-  { id: 'recipes-layout', label: 'Recipes: layout' },
-  { id: 'recipes-state', label: 'Recipes: interaction' },
-  { id: 'recipes-integration', label: 'Recipes: Vue and Nuxt' },
-  { id: 'api', label: 'API reference' },
-];
-
-const Section = docsSection(SECTIONS);
-
 const installCode = `npm install tabbied`;
-
-const quickStartCode = `<script setup>
-import { TabbiedPattern } from 'tabbied/vue';
-import { radius } from 'tabbied/patterns';
-</script>
-
-<template>
-  <TabbiedPattern :pattern="radius" seed="k9Pz" aspect-ratio="3 / 2" />
-</template>`;
 
 const updatesCode = `<script setup>
 import { ref } from 'vue';
@@ -60,20 +43,6 @@ const palette = ref(['#0B1020', '#3E8BFF', '#3FFFB2']);
   <button @click="palette = ['#FFF4E6', '#E8590C']">Warm</button>
 </template>`;
 
-const templateRefCode = `<script setup>
-import { ref } from 'vue';
-import { TabbiedPattern } from 'tabbied/vue';
-import { radius } from 'tabbied/patterns';
-
-const pattern = ref(null);
-</script>
-
-<template>
-  <TabbiedPattern ref="pattern" :pattern="radius" :height="320" @ready="console.log('drawn')" />
-  <button @click="pattern?.redraw()">Redraw</button>
-  <button @click="pattern?.exportImage()">Export PNG</button>
-</template>`;
-
 export default function VueDocsPage() {
   return (
     <DocsShell
@@ -86,9 +55,9 @@ export default function VueDocsPage() {
         </>
       }
       chips={[`tabbied v${PACKAGE_VERSION}`, 'Vue 3.3+', 'MIT license']}
-      sections={SECTIONS}
+      sections={SETUP_SECTIONS}
     >
-      <Section id="introduction" title="Introduction">
+      <Section id="introduction">
         <p>
           <Code>tabbied/vue</Code> is one component, <Code>TabbiedPattern</Code>,
           with the props, fits, palettes and options the{' '}
@@ -98,7 +67,7 @@ export default function VueDocsPage() {
         </p>
       </Section>
 
-      <Section id="installation" title="Installation">
+      <Section id="installation">
         <p>
           One package. Vue is an <em>optional</em> peer dependency: your app
           already has the Vue it renders with (3.3 or later).
@@ -106,30 +75,25 @@ export default function VueDocsPage() {
         <CodeBlock code={installCode} title="terminal" lang="sh" className={styles.codeStandalone} />
       </Section>
 
-      <Section id="quick-start" title="Quick start">
+      <Section id="quick-start">
         <p>
-          Import the component and a preset. The pattern fills its box, so give
-          the box a size: an <Code>aspect-ratio</Code>, a <Code>height</Code>,
-          or a parent with a height of its own.
+          Import the component and a preset, then give it a box: here a{' '}
+          <Code>height</Code>, with the width filling the parent. Import only
+          the presets you render from <Code>tabbied/patterns</Code> and the
+          bundler ships just those, a couple of KB each.
         </p>
-        <CodeBlock code={quickStartCode} title="App.vue" lang="vue" className={styles.codeStandalone} />
-        <p>
-          Import only the presets you render from <Code>tabbied/patterns</Code>{' '}
-          and the bundler ships just those, a couple of KB each.
-        </p>
+        <QuickStartDemo setup="vue" />
       </Section>
 
-      <Section id="nuxt" title="Nuxt">
-        <p>
-          The component renders on the server as the box alone: its final
-          size, filled with the pattern&apos;s background color. The pattern
-          mounts into it in the browser, so there is no layout shift and no
-          hydration mismatch. No <Code>&lt;ClientOnly&gt;</Code> wrapper and
-          no module to register: import it in a page or component as above.
-        </p>
+      <Section id="sizing">
+        <SizingGuide setup="vue" />
       </Section>
 
-      <Section id="updates" title="Changing props">
+      <Section id="settings">
+        <SettingsGuide setup="vue" />
+      </Section>
+
+      <Section id="updates">
         <p>
           When a prop changes, the component passes it on to the pattern
           already on the page, so a new palette or option redraws in place,
@@ -138,9 +102,6 @@ export default function VueDocsPage() {
           the box&apos;s own.
         </p>
         <CodeBlock code={updatesCode} title="App.vue" lang="vue" className={styles.codeStandalone} />
-      </Section>
-
-      <Section id="template-ref" title="Redraw & export">
         <p>
           A template ref exposes <Code>redraw()</Code> for a new seed,{' '}
           <Code>exportImage()</Code> for a PNG, <Code>exportSvg()</Code> for
@@ -148,38 +109,28 @@ export default function VueDocsPage() {
           <Code>&lt;css-doodle&gt;</Code> itself. The <Code>ready</Code> event
           fires once the first render is drawn.
         </p>
-        <CodeBlock code={templateRefCode} title="App.vue" lang="vue" className={styles.codeStandalone} />
+        <RedrawDemo setup="vue" />
+        <ExportNotes />
       </Section>
 
-      <Section id="sizing" title="Sizing, case by case">
+      <Section id="motion">
+        <MotionGuide setup="vue" />
+      </Section>
+
+      <Section id="server">
         <p>
-          <Prose text={'Each case below was measured in a browser, in an 800px-wide parent: the drawing is the box the pattern gets, to scale, and the code is all it takes. Every case uses `radius`; any design behaves the same.'} />
+          In Nuxt, the component renders on the server as the box alone: its
+          final size, filled with the pattern&apos;s background color. The
+          pattern mounts into it in the browser, so there is no layout shift
+          and no hydration mismatch. No <Code>&lt;ClientOnly&gt;</Code>{' '}
+          wrapper and no module to register: import it in a page or
+          component as in the quick start.
         </p>
-        <SizingExamples setup="vue" />
       </Section>
 
-      <Section id="recipes-layout" title="Recipes: layout">
-        <p>
-          <Prose text={'Whole files, imports included, ready to paste. Swap the design for any slug in the gallery.'} />
-        </p>
-        <RecipeExamples recipes={VUE_RECIPES} group="layout" />
-      </Section>
+      <ExampleSections setup="vue" recipes={VUE_RECIPES} />
 
-      <Section id="recipes-state" title="Recipes: interaction">
-        <p>
-          <Prose text={'Patterns that answer to state: colors, seeds, designs, options, motion and export.'} />
-        </p>
-        <RecipeExamples recipes={VUE_RECIPES} group="state" />
-      </Section>
-
-      <Section id="recipes-integration" title="Recipes: Vue and Nuxt">
-        <p>
-          <Prose text={'Where the pattern meets the rest of an app.'} />
-        </p>
-        <RecipeExamples recipes={VUE_RECIPES} group="integration" />
-      </Section>
-
-      <Section id="api" title="API reference">
+      <Section id="api">
         <p>
           The props are the React component&apos;s: <Code>pattern</Code>{' '}
           (required), <Code>seed</Code>, <Code>palette</Code>,{' '}
