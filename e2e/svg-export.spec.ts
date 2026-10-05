@@ -41,10 +41,12 @@ const supportedSlugs = allPatterns
 // mask (`radiance`), a stepped-conic mask (`mirrorblack`), a repeating-radial
 // ramp read off a rule-local custom property (`contourlines`), scaled ring
 // borders (`concentricrings`) and a skewed two-tone mosaic
-// (`patternsampler`). Every listed design with its own PER_PATTERN_MAX
-// headroom stays, so each looser threshold is exercised; SVG_FULL_SWEEP runs
-// the rest. Designs with `svgExport: false` are covered by the disabled-menu
-// case.
+// (`patternsampler`). Batch 14 adds two that read where a cell sits: a field
+// of strokes turned by css-doodle's 2D noise (`jetstream`) and a sett whose
+// stripes keep one ink down each column (`tartan`). Every listed design with
+// its own PER_PATTERN_MAX headroom stays, so each looser threshold is
+// exercised; SVG_FULL_SWEEP runs the rest. Designs with `svgExport: false`
+// are covered by the disabled-menu case.
 const REPRESENTATIVE = [
   'damier',
   'bauhaus',
