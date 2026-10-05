@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { BookOpen, type LucideIcon } from 'lucide-react';
 import { bauhaus, chamfer, cleat, epicentre, merlon, mixtape, prisma, radius, truchetrings, wander } from 'tabbied/patterns';
 import type { PatternDefinition } from 'tabbied';
 import type { PaletteName } from 'components/main-page/homeMotion';
@@ -31,7 +32,9 @@ export const metadata: Metadata = pageMetadata({
 
 const README_URL = 'https://github.com/tabbied-design/tabbied/tree/main/packages/tabbied#readme';
 
-type Card = { href: string; name: string; icon: SetupIcon; children: ReactNode; meta: string };
+// A card's mark: a setup's own (SetupIcon), or a drawn one for a page that
+// has no logo of its own (Concepts).
+type Card = { href: string; name: string; icon: SetupIcon | LucideIcon; children: ReactNode; meta: string };
 
 const SETUPS: Card[] = [
   {
@@ -116,6 +119,16 @@ const SHARED: { id: string; name: string; says: string }[] = [
   { id: 'names', name: 'Names in each setup', says: 'Every setting, spelled the way each setup spells it.' },
 ];
 
+// The Concepts page itself, as a card beside the list of what it covers, so
+// this part leads with a card as the others do.
+const CONCEPTS: Card = {
+  href: '/docs/concepts/',
+  icon: BookOpen,
+  name: 'Concepts',
+  children: <>Each setting explained once, with live examples and its name in every setup.</>,
+  meta: `${SHARED.length} topics, ${SETUPS.length} setups each`,
+};
+
 const cliCode = `npx tabbied list --good-for hero-background --density sparse
 npx tabbied render radius --seed k9Pz --size 1600x900 --out hero.svg`;
 
@@ -177,16 +190,27 @@ function Cards({ cards }: { cards: Card[] }) {
   return (
     <div className={`${styles.entries} ${styles.landingEntries}`}>
       {cards.map((card) => (
-        <a key={card.href} href={card.href} className={`${styles.entry} ${styles.setupCard}`}>
-          <span className={styles.setupIcon}>
-            <SetupIconMark icon={card.icon} />
-          </span>
-          <span className={styles.entryName}>{card.name}</span>
-          <p>{card.children}</p>
-          <span className={styles.setupMeta}>{card.meta}</span>
-        </a>
+        <CardLink key={card.href} card={card} />
       ))}
     </div>
+  );
+}
+
+function CardLink({ card }: { card: Card }) {
+  const { icon: Mark } = card;
+  return (
+    <a href={card.href} className={`${styles.entry} ${styles.setupCard}`}>
+      <span className={styles.setupIcon}>
+        {typeof Mark === 'string' ? (
+          <SetupIconMark icon={Mark} />
+        ) : (
+          <Mark size={22} strokeWidth={1.75} aria-hidden="true" />
+        )}
+      </span>
+      <span className={styles.entryName}>{card.name}</span>
+      <p>{card.children}</p>
+      <span className={styles.setupMeta}>{card.meta}</span>
+    </a>
   );
 }
 
@@ -277,24 +301,21 @@ export default function DevelopersPage() {
       <Part
         id="shared"
         title="In every setup"
-        intro={
-          <p>
-            These work the same way whichever setup you pick. The{' '}
-            <a href="/docs/concepts/">Concepts</a> page explains each one
-            once and gives its name in every setup.
-          </p>
-        }
+        intro={<p>These work the same way whichever setup you pick.</p>}
       >
-        <ul className={styles.sharedList}>
-          {SHARED.map((item) => (
-            <li key={item.id}>
-              <a href={`/docs/concepts/#${item.id}`} className={styles.sharedLink}>
-                <span className={styles.sharedName}>{item.name}</span>
-                <span className={styles.sharedSays}>{item.says}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
+        <div className={`${styles.entries} ${styles.landingEntries} ${styles.sharedEntries}`}>
+          <CardLink card={CONCEPTS} />
+          <ul className={styles.sharedList}>
+            {SHARED.map((item) => (
+              <li key={item.id}>
+                <a href={`/docs/concepts/#${item.id}`} className={styles.sharedLink}>
+                  <span className={styles.sharedName}>{item.name}</span>
+                  <span className={styles.sharedSays}>{item.says}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </Part>
 
       <div className={styles.bleed} aria-hidden="true">
