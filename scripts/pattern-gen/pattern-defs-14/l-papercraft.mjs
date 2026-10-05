@@ -320,16 +320,19 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
   // draws its own stretch and the one to its left, so a cell the frequency
   // gate leaves out is covered by its neighbor. The wave's two phases are
   // drawn once per sheet, so a reseed rolls the swell along.
-  // The two sines' phases are worked out once per cell (--a, --b), each of
-  // the thirteen sample heights is then one short expression, and the
-  // outline is built once on the cell (--e) for both layers to read.
+  // For speed: the two sines' phases are worked out once per cell (--a,
+  // --b), each of the thirteen sample heights is then one short expression
+  // written without spaces (css-doodle rescans every argument character by
+  // character in every cell), and the outline is built once on the cell
+  // (--e) for both layers to read.
   const n = 12;
   const k1 = 6.2832 / 4.6;
   const k2 = 6.2832 / 2.2;
   const f6 = (v) => Math.round(v * 1e6) / 1e6;
+  const f4 = (v) => Math.round(v * 1e4) / 1e4;
   const edge = Array.from({ length: n + 1 }, (_, i) => {
     const t = (2 * i) / n - 1;
-    return `${n2((100 * i) / n)}% $(round(2100+1300*sin(${f6(k1 * t)}+a)+500*sin(${f6(k2 * t)}+b))/100)%`;
+    return `${n2((100 * i) / n)}% $(round(2100+1300*sin(${f4(k1 * t)}+a)+500*sin(${f4(k2 * t)}+b))/100)%`;
   }).join(', ');
   const tone = '1 + floor(min(0.999, (@y - 1) / @Y) * 5)';
   // The shadow is the same outline lifted by a twentieth of a cell.

@@ -998,18 +998,19 @@ const LP = (() => {
   const AX = [12.9898, 78.233];
   const AY = [39.3467, 11.1351];
   const off = (co, di, dj) => r2(-(co[0] * di + co[1] * dj) * 10000) / 10000;
+  // in units of 1/5000 of the box, so the whole sum is one short line
   const at = (name, axis, base, hv, co, di, dj, edge) => {
     const o = off(co, di, dj);
     const arg = o ? `${hv} ${o < 0 ? '-' : '+'} ${Math.abs(o)}` : hv;
-    return `--${name}${axis}: $(round((${base} + (${J} * ((sin(${arg}) * 43758.5453 % 1 + 1) % 1) - ${J / 2}) * ${edge} + 0.5) * 5000) / 100)%;`;
+    return `--${name}${axis}: $(round(${(base + 0.5) * 5000} + (${J * 5000} * ((sin(${arg}) * 43758.5453 % 1 + 1) % 1) - ${(J / 2) * 5000}) * ${edge}) / 100)%;`;
   };
-  const corner = (name, di, dj, u, v) => {
-    const i = di ? '(ix - 1)' : 'ix';
-    const j = dj ? '(iy - 1)' : 'iy';
-    return `${at(name, 'x', u, 'hu', AX, di, dj, `min(1, ${i}) * min(1, mx - ${i})`)} ${at(name, 'y', v, 'hv', AY, di, dj, `min(1, ${j}) * min(1, my - ${j})`)}`;
-  };
+  // whether a corner may move along each axis: not if it sits on the sheet's edge
+  const flags = '--e0: $(min(1, ix - 1)); --e1: $(min(1, mx - ix)); --f0: $(min(1, iy - 1)); --f1: $(min(1, my - iy));';
+  const corner = (name, di, dj, u, v) =>
+    `${at(name, 'x', u, 'hu', AX, di, dj, di ? 'e0' : 'e1')} ${at(name, 'y', v, 'hv', AY, di, dj, dj ? 'f0' : 'f1')}`;
   const vars = [
     POS,
+    flags,
     `--hu: $(ix * ${AX[0]} + iy * ${AX[1]} + s); --hv: $(ix * ${AY[0]} + iy * ${AY[1]} + s * 1.3);`,
     corner('a', 1, 1, 0, 0),
     corner('b', 0, 1, 1, 0),
@@ -1027,7 +1028,7 @@ add(
   'A low poly mesh of irregular triangles, every grid point nudged off true and the facets shaded through smooth bands of color like a faceted landscape.',
   (c) => {
     // the ink of a facet: which of five bands of the field (nudged a little) it falls in
-    const band = `@p(@var(--color$(1 + min(4, max(0, floor((n + @r(-0.13, 0.13)) * 5))))))`;
+    const band = `@p(@var(--color$(1 + min(4, max(0, floor((n + @p(-0.12, -0.06, 0, 0.06, 0.12)) * 5))))))`;
     return {
       rule: `${SEED} ${LP.vars} --n: ${noise(-0.6, 1.6, 1.1)}; ${F} { ${B(`left: -50%; top: -50%; width: 200%; height: 200%; background: ${band}; ${cp(LP.quad)}`)} ${A(
         `left: -50%; top: -50%; width: 200%; height: 200%; background: ${band}; ${LP.tri} ${cp('@var(--tri)')}`
