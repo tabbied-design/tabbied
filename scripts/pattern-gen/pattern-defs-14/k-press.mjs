@@ -776,13 +776,14 @@ add(
 // -- K24 Streamgraph --------------------------------------------------------------
 // Three layers stacked about each row's midline, their thicknesses running on
 // sine waves of the sheet column whose phases are rolled once per drawing,
-// so the stream is continuous from cell to cell and reshapes on a reseed. A cell works out the three thicknesses once at four points across
-// it (--ua .. --wd) and the top edge from them (--ta .. --td); every other
-// vertex is left to CSS calc() over those, so no sine is worked out twice,
-// and the expressions are kept short, since css-doodle's cost is mostly in
-// reading them. Three segments a cell are as smooth as four at any size the
-// waves are drawn at, and a stream is never drawn in cells under 54px, where
-// its bands would be a few pixels thick. The clips are written unprefixed only, to keep
+// so the stream is continuous from cell to cell and reshapes on a reseed.
+// A cell works out the three thicknesses once at four points across it
+// (--ua .. --wd); the top edge (--ta .. --td) and every other vertex are left
+// to CSS calc() over those, so no sine is worked out twice, and the
+// expressions are kept short, since css-doodle's cost is mostly in reading
+// them. Three segments a cell are as smooth as four at any size the waves are
+// drawn at, and a stream is never drawn in cells under 54px, where its bands
+// would be a few pixels thick. The clips are written unprefixed only, to keep
 // the per-cell CSS small.
 const SG_N = 3; // segments across a cell
 const SG_AT = 'abcd';
@@ -813,7 +814,7 @@ const SG_XS = SG_AT.split('').map((a, i) => [a, `${+((i * 100) / SG_N).toFixed(3
 const SG_VARS = [
   SG_BASES,
   ...[0, 1, 2].map((j) => SG_AT.split('').map((a, i) => `--${'uvw'[j]}${a}: ${sgThick(j, i)};`).join(' ')),
-  SG_AT.split('').map((a) => `--t${a}: ${q(`50-(u${a}+v${a}+w${a})/2`)}%;`).join(' '),
+  SG_AT.split('').map((a) => `--t${a}: calc(50% - (@var(--u${a}) + @var(--v${a}) + @var(--w${a})) * 0.5%);`).join(' '),
   // the stream's top edge left to right, and its bottom edge right to left
   `--up: ${SG_XS.map(([a, x]) => `${x} @var(--t${a})`).join(', ')};`,
   `--dn: ${[...SG_XS].reverse().map(([a, x]) => `${x} calc(100% - @var(--t${a}))`).join(', ')};`,
