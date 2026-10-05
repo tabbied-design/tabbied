@@ -1,5 +1,5 @@
 import { betterAuth } from 'better-auth';
-import { admin } from 'better-auth/plugins';
+import { admin, oAuthProxy } from 'better-auth/plugins';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { createAuthMiddleware } from 'better-auth/api';
 import { and, eq, inArray, sql, type SQL } from 'drizzle-orm';
@@ -116,9 +116,23 @@ export function buildAuth(env: Env) {
     baseURL: env.PUBLIC_ORIGIN,
     basePath: '/api/auth',
 
-    // Roles, bans and impersonation. Every /api/admin/* route reads the role
-    // server-side; the pages hiding themselves is cosmetic.
-    plugins: [admin()],
+    plugins: [
+      // Roles, bans and impersonation. Every /api/admin/* route reads the
+      // role server-side; the pages hiding themselves is cosmetic.
+      admin(),
+      // Social sign-in on a preview deployment. GitHub and Google return only
+      // to a registered callback, and a preview's host is new for every
+      // version, so the provider always comes back to PUBLIC_ORIGIN. That
+      // deployment exchanges the code, creates no session, and redirects to
+      // the preview's /callback/<id>/oauth-proxy with the profile encrypted
+      // under BETTER_AUTH_SECRET; the preview signs the person in on its own
+      // host. It works because a preview shares production's secret and D1.
+      // Skipped wherever a request arrives on PUBLIC_ORIGIN itself:
+      // production, and localhost in dev, whose secret production's could
+      // never decrypt. Production has to run this before any preview can use
+      // it, since the callback in the middle is production's.
+      oAuthProxy({ productionURL: env.PUBLIC_ORIGIN }),
+    ],
 
     // Admins by configuration, promoted before the session is minted. A new
     // account is caught by the user hook below; an existing one signing in
@@ -236,42 +250,53 @@ export function buildAuth(env: Env) {
     // hardcoded list rejects the rest as "Invalid origin".
     //
     // On a preview deployment, its own *.workers.dev origin, so sign-in works
-    // on every branch's host. It is trusted only when same-origin with the
-    // host the request arrived on, and a preview's cookie is host-only, so it
-    // never reaches production.
+    // on every branch's host. It is read off the URL the request arrived on,
+    // not off its Origin header: the OAuth proxy's last hop (above) is a
+    // top-level GET redirect, which carries no Origin, and its callbackURL
+    // is checked all the same. A page elsewhere naming the preview as its
+    // Origin is still refused, since only the host itself is trusted, and a
+    // preview's cookie is host-only, so it never reaches production.
     trustedOrigins: (request) => {
       if (!request) {
         return [];
       }
 
+      const trusted: string[] = [];
+      const preview = previewOrigin(request);
+
+      if (preview) {
+        trusted.push(preview);
+      }
+
       const origin = request.headers.get('origin');
 
-      if (!origin) {
-        return [];
+      if (isDev(env) && origin && isLoopback(origin)) {
+        trusted.push(origin);
       }
 
-      const { hostname } = new URL(origin);
-
-      if (isDev(env) && (hostname === 'localhost' || hostname === '127.0.0.1')) {
-        return [origin];
-      }
-
-      return isPreviewOrigin(origin, request) ? [origin] : [];
+      return trusted;
     },
   });
 }
 
 /**
- * A preview deployment's own origin: a *.workers.dev host that is also the
- * host this request arrived on. A request from any other page carries that
- * page's origin, not this host's.
+ * A preview deployment's own origin: the *.workers.dev host this request
+ * arrived on, or null anywhere else. Cloudflare routes a workers.dev host
+ * only to the Worker it names, so the host is this Worker's own.
  */
-function isPreviewOrigin(origin: string, request: Request): boolean {
+function previewOrigin(request: Request): string | null {
+  const { hostname, origin } = new URL(request.url);
+
+  return hostname.endsWith('.workers.dev') ? origin : null;
+}
+
+function isLoopback(origin: string): boolean {
   try {
     const { hostname } = new URL(origin);
 
-    return hostname.endsWith('.workers.dev') && origin === new URL(request.url).origin;
+    return hostname === 'localhost' || hostname === '127.0.0.1';
   } catch {
+    // An opaque origin ("null") is no host at all.
     return false;
   }
 }

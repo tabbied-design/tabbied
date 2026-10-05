@@ -1294,6 +1294,20 @@ Things worth not re-litigating:
   per answer. With no Worker behind the export the request fails quietly and
   the form is email and password. A button for an unconfigured provider is
   one that 500s on click, which is the thing this exists to prevent.
+  Setting the providers up is `docs/social-sign-in.md`.
+- **Social sign-in on a preview goes by way of production.** A preview's
+  host is new for every version and neither GitHub nor Google takes a
+  wildcard, so the provider always returns to `PUBLIC_ORIGIN`; better-auth's
+  `oAuthProxy` has production exchange the code and hand the profile back,
+  encrypted under the shared `BETTER_AUTH_SECRET`, to the preview's
+  `/api/auth/callback/<id>/oauth-proxy`, which makes the session on its own
+  host. It stands aside where a request arrives on `PUBLIC_ORIGIN` (production,
+  and localhost in dev). Two things it needs that are easy to undo: production
+  must carry the plugin before any preview can use it, since the callback in
+  the middle is production's; and `trustedOrigins` trusts a preview's host
+  from the request's URL, not its `Origin` header, because that last hop is a
+  top-level redirect with no `Origin` and its `callbackURL` is still checked.
+  Trusting only a matching header answered it with 403 "Invalid callbackURL".
 - **A person's own generations are listable, like their sites.** `GET
   /api/studio/generations` is session-scoped and carries the three directions'
   names and palettes (never the copy); the account overview merges it with

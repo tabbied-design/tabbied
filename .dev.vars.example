@@ -40,6 +40,10 @@ PUBLIC_ORIGIN=http://localhost:8787
 # RESEND_API_KEY=
 # MAIL_FROM=Tabbied <hello@tabbied.com>
 # TEAM_EMAIL=you@example.com
+
+# Social sign-in (docs/social-sign-in.md). A provider is on only with both of
+# its pair. Register http://localhost:8787/api/auth/callback/<provider> with
+# it: a GitHub OAuth App takes one callback, so local development has its own.
 # GITHUB_CLIENT_ID=
 # GITHUB_CLIENT_SECRET=
 # GOOGLE_CLIENT_ID=
