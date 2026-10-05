@@ -127,7 +127,7 @@ add(
 
 add(
   'Glen Check',
-  'A glen check: blocks of tiny checks alternating with blocks of fine stripes, crossed by a thin colored overcheck.',
+  'A glen check: blocks of tiny pin squares alternating with blocks of fine stripes running across and down, crossed by a thin colored overcheck.',
   (c) => {
     const quad = 'conic-gradient(from 90deg, #000 0 90deg, transparent 90deg 180deg, #000 180deg 270deg, transparent 270deg)';
     const stripes = (angle) => `repeating-linear-gradient(${angle}, @var(--m) 0 8.333%, transparent 8.333% 16.667%)`;
@@ -135,10 +135,11 @@ add(
       rule: `--m: ${constant(c, 1, 3)}; --o: ${constant(c, 4, 5)}; ${F} {
           background: ${stripes('90deg')} 100% 0 / 50% 50% no-repeat, ${stripes('180deg')} 0 100% / 50% 50% no-repeat;
           ${B(`inset: 0; background-color: @p(@var(--m), var(--color1)); ${mskI(
-            'conic-gradient(#000 0 90deg, transparent 90deg 180deg, #000 180deg 270deg, transparent 270deg) 0 0 / 16.667% 16.667%',
+            'repeating-linear-gradient(90deg, #000 0 8.333%, transparent 8.333% 16.667%)',
+            'repeating-linear-gradient(180deg, #000 0 8.333%, transparent 8.333% 16.667%)',
             quad
           )}`)}
-          ${A(`inset: 0; background-color: @var(--o); ${msk(bands('90deg', [[0, 1.2], [98.8, 100]]), bands('180deg', [[0, 1.2], [98.8, 100]]))}`)}
+          ${A(`inset: 0; background-color: @var(--o); ${msk(bands('90deg', [[0, 1.5], [98.5, 100]]), bands('180deg', [[0, 1.5], [98.5, 100]]))}`)}
         }${TR}`,
     };
   },
@@ -247,11 +248,11 @@ add(
 
 add(
   'Chalk Stripe',
-  'Suiting flannel: soft chalk lines that fade in and out along their length, each with a fine pinstripe between.',
+  'Suiting flannel: soft, broad chalk lines in pale colors on a dark ground, each pair parted by a fine pinstripe.',
   (c) => ({
     rule: `--t: ${byColumn(c, 1, c - 2)}; ${F} {
-        ${B(`inset: 0; ${paint('--t')} opacity: ${noise(0.6, 1, 1.5)}; ${msk('linear-gradient(90deg, transparent 36%, #000 45% 55%, transparent 64%)')}`)}
-        ${A(`top: 0; bottom: 0; left: -.75%; width: 1.5%; background-color: var(--color${c - 1}); opacity: .4;`)}
+        ${B(`inset: 0; ${paint('--t')} opacity: .9; ${msk('linear-gradient(90deg, transparent 36%, #000 45% 55%, transparent 64%)')}`)}
+        ${A(`top: 0; bottom: 0; left: -2%; width: 4%; background-color: var(--color${c - 1}); opacity: .35;`)}
       }${TR}`,
   }),
   {
@@ -306,8 +307,8 @@ add(
   (c) => ({
     rule: `${GATE}
       @even {
-        ${B(`left: 12%; top: 12%; width: 76%; height: 76%; background-color: @p(${list(c, 1, 2)}); clip-path: @var(--flourish); -webkit-clip-path: @var(--flourish);`)}
-        ${A(`left: 18%; top: 2%; width: 64%; height: 96%; background-color: @p(${list(c, 3, c - 1)}); clip-path: @var(--vase); -webkit-clip-path: @var(--vase);`)}
+        ${B(`left: 4%; top: 4%; width: 92%; height: 92%; background-color: @p(${list(c, 1, 2)}); clip-path: @var(--flourish); -webkit-clip-path: @var(--flourish);`)}
+        ${A(`left: 12%; top: 1%; width: 76%; height: 98%; background-color: @p(${list(c, 3, c - 1)}); clip-path: @var(--vase); -webkit-clip-path: @var(--vase);`)}
       }
       @odd {
         ${B(`left: 26%; top: 26%; width: 48%; height: 48%; background-color: @p(${list(c, 3, c - 1)}); clip-path: @var(--flourish); -webkit-clip-path: @var(--flourish);`)}
@@ -366,19 +367,24 @@ add(
 
 add(
   'Tie Dye',
-  'A bullseye tie-dye: soft rings of two dyes spreading out from the middle of the cloth, pale between, crinkled where the cloth was bound.',
+  'A bullseye tie-dye: soft rings of three dyes spreading out from one point of the cloth, with a pale line left between each pair.',
   (c) => {
-    const at = '@calc(50 - @dx * 100)% @calc(50 - @dy * 100)%';
-    const rings = (stops) => `repeating-radial-gradient(ellipse 100% 100% at ${at}, ${stops})`;
+    const rings = (stops) => `repeating-radial-gradient(ellipse 160% 160% at @var(--at), ${stops})`;
     return {
-      rule: `--a: ${constant(c, 1, 3)}; --b: ${constant(c, 4, c - 1)}; --j: translate(${noise(-4, 4, 2)}%, ${noise(-4, 4, 2)}%); ${F} {
-          ${B(`inset: 0; ${paint('--a')} ${msk(rings('transparent 0, #000 7% 15%, transparent 21% 50%'))} ${xf('@var(--j)')}`)}
-          ${A(`inset: 0; background-color: @var(--b); ${msk(rings('transparent 0 25%, #000 31% 39%, transparent 45% 50%'))} ${xf('@var(--j)')}`)}
+      // Every cell draws the same rings about one point of the sheet, so
+      // they run on unbroken across the cell edges. The point is a constant
+      // for the sheet (one dice roll per axis), so a reseed moves it.
+      rule: `--a: ${constant(c, 1, 2)}; --b: ${constant(c, 3, 4)};
+        --at: @calc(50 - @dx * 100 + @pd(@p(-140, -60, 0, 60, 140)))% @calc(50 - @dy * 100 + @pd(@p(-140, -60, 0, 60, 140)))%;
+        ${F} {
+          background: ${rings(`transparent 0 40%, var(--color${c - 1}) 46% 54%, transparent 60%`)};
+          ${B(`inset: 0; ${paint('--a')} ${msk(rings('transparent 0, #000 6% 14%, transparent 20% 60%'))}`)}
+          ${A(`inset: 0; background-color: @var(--b); ${msk(rings('transparent 0 20%, #000 26% 34%, transparent 40% 60%'))}`)}
         }${TR}`,
     };
   },
   {
-    palette: ['#FBF7EF', '#E4407B', '#F06A3F', '#7A4FB5', '#2E86C8', '#F2A541', '#2BA58B'],
+    palette: ['#FBF7EF', '#E4407B', '#F06A3F', '#2E86C8', '#7A4FB5', '#F2B33D'],
     grid: '8x12',
     tg: '8x8',
     meta: { tags: ['concentric', 'rings', 'gradients', 'radial'], mood: ['playful', 'festive'], density: 'dense', goodFor: ['poster', 'og-image', 'textile'] },
@@ -523,26 +529,29 @@ add(
 // -- knitted -----------------------------------------------------------------
 
 add(
-  'Intarsia',
-  'Knitted stitches, each a V of two leaning loops, worked in rings of color that step out in diamonds from the middle of the piece.',
+  'Fair Isle',
+  'Fair Isle knitting: rows of V stitches charted into a band of stepped diamonds between plain stripes, three colors to the piece.',
   (c) => {
-    // The band test reads the turn with @lp() (the last pick, the @pd just
-    // above), so all three branches agree on it; @var() could not be tested.
-    const band = '(floor(abs(@dx) + abs(@dy)) + @lp())';
+    // A knitting chart, one stitch to a cell: every sixth row a stripe, and
+    // between, diamonds six stitches apart. The chart is slid along by a
+    // dice roll read back with @lp() (the last pick, the @pd just before), so
+    // every branch of the test agrees on it.
+    const u = '(x + @lp())';
     return {
-      rule: `--k0: ${constant(c, 1, 2)}; --k1: ${constant(c, 3, 4)}; --k2: ${constant(c, 5, 6)}; --n: @pd(@p(0, 1, 2));
-        --k: ${cycle(band, ['--k0', '--k1', '--k2'])};
+      rule: `--k0: ${constant(c, 1, 2)}; --k1: ${constant(c, 3, 4)}; --k2: ${constant(c, 5, 6)}; --n: @pd(@p(0, 1, 2, 3, 4, 5));
+        --k: @match(y % 8 == 0, @var(--k2), abs(${u} % 6 - 3) + abs(y % 8 - 4) <= 2, @var(--k1), @var(--k0));
         ${F} {
-          ${B(`left: 15%; top: 4%; width: 38%; height: 88%; border-radius: 50%; ${paint('--k')} ${rot('-18deg')}`)}
-          ${A(`left: 47%; top: 4%; width: 38%; height: 88%; border-radius: 50%; background-color: @var(--k); ${rot('18deg')}`)}
+          ${B(`left: 13%; top: -10%; width: 36%; height: 120%; ${paint('--k')} clip-path: @var(--leg); -webkit-clip-path: @var(--leg); ${rot('-20deg')}`)}
+          ${A(`left: 51%; top: -10%; width: 36%; height: 120%; background-color: @var(--k); clip-path: @var(--leg); -webkit-clip-path: @var(--leg); ${rot('20deg')}`)}
         }${TR}`,
+      host: '--leg: @shape(split: 120; x: sin(t) * abs(sin(t))^.6; y: cos(t) * .98);',
     };
   },
   {
-    palette: ['#26242B', '#EDE6D6', '#D8CDB4', '#C8413B', '#E28F3A', '#3D7EA6', '#5E9E7A'],
-    grid: '8x12',
-    tg: '9x9',
-    meta: { tags: ['chevrons', 'diamonds', 'ovals', 'concentric'], mood: ['playful', 'retro'], density: 'dense', goodFor: ['textile', 'packaging', 'card-texture'] },
+    palette: ['#26242B', '#EDE6D6', '#D8CDB4', '#C8413B', '#3D7EA6', '#E2A23B', '#5E9E7A'],
+    grid: '10x15',
+    tg: '10x10',
+    meta: { tags: ['chevrons', 'diamonds', 'stripes', 'ovals'], mood: ['playful', 'retro'], density: 'dense', goodFor: ['textile', 'packaging', 'card-texture'] },
   }
 );
 

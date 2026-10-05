@@ -14,14 +14,14 @@
 //   Northern Lights curtains of rayed light swaying across the sheet
 //   Sun Dogs        a sun, its halo and two mock suns on one long line
 // The moon
-//   Lunation        phases in reading order, new to full and back
+//   Lunation        a printed moon calendar, phases in reading order
 //   Umbra           a field of moons with the earth's round shadow on them
 //   Regolith        craters of every size, lit from the upper left
 //   Totality        an eclipse: a black moon, its corona and streamers
 // Planets and orbits
 //   Saturn          ringed planets, the near ring passing in front
 //   Jovian          banded gas giants, each with its storm
-//   Sunward         half-lit planets all facing a sun in the middle
+//   Sunward         half-lit planets all facing a sun in the corner
 //   Galilean        Galileo's notebook: Jupiter and four moons in a line
 //   Orrery          orbits round the middle of the sheet, planets on them
 //   Perihelion      three orbits sharing a focus, the sun in it
@@ -158,7 +158,7 @@ add(
   'Star Map',
   'Stars of several magnitudes, loosely scattered, with fine lines joining them into constellations that wander across the sheet.',
   (c) => ({
-    rule: `--z: @p(5%, 6%, 8%, 10%, 13%);
+    rule: `--z: @p(5%, 7%, 9%, 12%, 15%);
     ${F} {
       ${B(`left: @calc(${SX('@x', '@y')} * 100)%; top: calc(@calc(${SY('@x', '@y')} * 100)% - 1.1%); width: 100%; height: 2.2%; transform-origin: 0 50%; background: var(--color1); transform: @p(${starLink(1, 0)}, ${starLink(0, 1)}, ${starLink(1, 1)}, ${starLink(-1, 1)}, scaleX(0));`)}
       ${A(`z-index: 1; width: @var(--z); height: @var(--z); left: calc(@calc(${SX('@x', '@y')} * 100)% - @var(--z) / 2); top: calc(@calc(${SY('@x', '@y')} * 100)% - @var(--z) / 2); border-radius: 50%; background: ${ink(c, 2)};`)}
@@ -168,7 +168,7 @@ add(
     palette: ['#101828', '#4A5D80', '#F7F2E4', '#FFD27A', '#9CC9F5'],
     grid: '7x10',
     tg: '7x7',
-    meta: { tags: ['dots', 'lines', 'lattice'], mood: ['technical', 'calm'], density: 'sparse', goodFor: ['hero-background', 'wallpaper'] },
+    meta: { tags: ['dots', 'lines', 'diagonals'], mood: ['technical', 'calm'], density: 'sparse', goodFor: ['hero-background', 'wallpaper'] },
   }
 );
 
@@ -213,7 +213,7 @@ add(
     freq: 0.8,
     tg: '8x8',
     tf: 0.85,
-    meta: { tags: ['lines', 'concentric', 'radial', 'dots'], mood: ['technical', 'elegant'], density: 'medium', goodFor: ['hero-background', 'card-texture', 'wallpaper'] },
+    meta: { tags: ['lines', 'concentric', 'radial', 'dots'], mood: ['technical', 'elegant'], density: 'sparse', goodFor: ['hero-background', 'card-texture', 'wallpaper'] },
   }
 );
 
@@ -267,7 +267,7 @@ add(
     palette: ['#05060D', '#F4F2EC', '#F6C88F', '#93B9F2', '#E99B8F', '#C3A6EE'],
     grid: '8x12',
     tg: '8x8',
-    meta: { tags: ['ovals', 'dots', 'gradients', 'crosses'], mood: ['calm', 'organic'], density: 'medium', goodFor: ['hero-background', 'poster', 'og-image'] },
+    meta: { tags: ['ovals', 'dots', 'gradients', 'crosses'], mood: ['calm', 'organic'], density: 'sparse', goodFor: ['hero-background', 'poster', 'og-image'] },
   }
 );
 
@@ -327,7 +327,7 @@ add(
     palette: ['#0B1530', '#F6F3EA', '#8EC5FF', '#FFC870', '#7EE0C3', '#F59AB6'],
     grid: '7x10',
     tg: '7x7',
-    meta: { tags: ['lines', 'radial', 'dots', 'gradients'], mood: ['bold', 'festive'], density: 'medium', goodFor: ['poster', 'og-image', 'hero-background'] },
+    meta: { tags: ['lines', 'radial', 'dots', 'gradients'], mood: ['bold', 'elegant'], density: 'sparse', goodFor: ['poster', 'og-image', 'hero-background'] },
   }
 );
 
@@ -432,14 +432,17 @@ add(
   'Sun Dogs',
   'Pale suns in a blue sky, each inside its halo with a mock sun at either side, strung together row by row on one long parhelic line.',
   (c) => ({
-    rule: `${F} {
-      ${B(`inset: 0; background: var(--color1); opacity: @r(0.55, 0.85); ${msk1(`radial-gradient(ellipse @rn(32, 40)% @rn(32, 40)% at 50% 50%, transparent 84%, #000 96%, transparent 100%)`, 'linear-gradient(transparent 49.3%, #000 49.3% 50.7%, transparent 50.7%)')}`)}
-      ${A(`inset: 0; background: ${ink(c, 2)}; ${msk1(disc(8.5), 'radial-gradient(ellipse 4.4% 7.2% at 14.5% 50%, #000 45%, transparent 100%)', 'radial-gradient(ellipse 4.4% 7.2% at 85.5% 50%, #000 45%, transparent 100%)')}`)}
+    rule: `--hr: @rn(31, 39)%;
+    ${F} {
+      background: radial-gradient(closest-side, var(--color2) 0 12%, transparent 46%);
+      ${B(`inset: 0; background: var(--color1); opacity: @r(0.6, 0.9); ${msk1(`radial-gradient(ellipse @var(--hr) @var(--hr) at 50% 50%, transparent 82%, #000 95%, transparent 100%)`, 'linear-gradient(transparent 49.3%, #000 49.3% 50.7%, transparent 50.7%)')}`)}
+      ${A(`inset: 0; background: ${ink(c, 2)}; ${msk1(disc(8.5), 'radial-gradient(ellipse 4.6% 7.6% at calc(50% - @var(--hr) - 1.5%) 50%, #000 45%, transparent 100%)', 'radial-gradient(ellipse 4.6% 7.6% at calc(50% + @var(--hr) + 1.5%) 50%, #000 45%, transparent 100%)')}`)}
     }${TR}`,
   }),
   {
     palette: ['#3B76B2', '#E8F1FA', '#FFF6DC', '#FFE29A', '#FFD0B8'],
     grid: '5x8',
+    min: 50,
     tg: '4x4',
     meta: { tags: ['rings', 'circles', 'lines', 'dots'], mood: ['calm', 'elegant'], density: 'sparse', goodFor: ['hero-background', 'textile', 'wallpaper'] },
   }
@@ -451,7 +454,7 @@ add(
 
 add(
   'Lunation',
-  'Moons wax and wane cell by cell in reading order, new to full and back over every eight, each lit part over the faint disc of the whole moon.',
+  'A printed moon calendar: moons wax and wane cell by cell in reading order, new to full and back over every eight, each lit part inked over the pale disc of the whole moon.',
   (c) => {
     const p = '(((@i - 1) % 8) / 8)';
     const k = `(-220 * ${p} * (${p} <= 0.5) + (220 - 220 * ${p}) * (${p} > 0.5))`;
@@ -465,7 +468,7 @@ add(
     };
   },
   {
-    palette: ['#0E1A2B', '#25344C', '#F4EBD0', '#E8C872', '#C9D6E8'],
+    palette: ['#F2EDE3', '#DDD4C3', '#1F2D4A', '#3D5C8F', '#B4762A'],
     grid: '8x12',
     tg: '8x8',
     meta: { tags: ['circles', 'semicircles', 'grid', 'dots'], mood: ['calm', 'elegant'], density: 'medium', goodFor: ['wallpaper', 'textile', 'packaging'] },
@@ -534,8 +537,9 @@ add(
   {
     palette: ['#07080F', '#F6EFD8', '#FFF8E8', '#F7D58C', '#BFD9F2', '#F2B8A0'],
     grid: '6x9',
+    min: 44,
     tg: '5x5',
-    meta: { tags: ['rings', 'radial', 'circles', 'gradients'], mood: ['bold', 'elegant'], density: 'medium', goodFor: ['poster', 'og-image', 'wallpaper'] },
+    meta: { tags: ['rings', 'radial', 'circles', 'gradients'], mood: ['bold', 'elegant'], density: 'dense', goodFor: ['poster', 'og-image', 'wallpaper'] },
   }
 );
 
@@ -559,7 +563,7 @@ add(
     };
   },
   {
-    palette: ['#17122B', '#E9B872', '#D9785B', '#F3E6CC', '#8FB4D8'],
+    palette: ['#F4EBDD', '#E8A33D', '#D4573B', '#1F3A5F', '#3F8F8A'],
     grid: '6x9',
     tg: '5x5',
     meta: { tags: ['circles', 'ovals', 'rings'], mood: ['playful', 'retro'], density: 'medium', goodFor: ['wallpaper', 'packaging', 'poster'] },
@@ -570,7 +574,7 @@ add(
   'Jovian',
   'Gas giants banded in ochre and rust, each with its oval storm, their axes tipped together in slow drifts across the sheet.',
   (c) => {
-    const belts = 'linear-gradient(transparent 0 14%, #000 14% 21%, transparent 21% 31%, #000 31% 41%, transparent 41% 47%, #000 47% 50%, transparent 50% 58%, #000 58% 69%, transparent 69% 80%, #000 80% 85%, transparent 85%)';
+    const belts = 'linear-gradient(transparent 13.5%, #000 14.5% 20.5%, transparent 21.5% 30.5%, #000 31.5% 40.5%, transparent 41.5% 46.5%, #000 47.5% 49.5%, transparent 50.5% 57.5%, #000 58.5% 68.5%, transparent 69.5% 79.5%, #000 80.5% 84.5%, transparent 85.5%)';
     return {
       rule: `${F} {
         transform: rotate(@rn(-40, 40)deg);
@@ -589,14 +593,19 @@ add(
 
 add(
   'Sunward',
-  'Planets lit on one side, every terminator turned so the bright half faces a small sun glowing in the middle of the sheet.',
+  'Planets lit on one side, every terminator turned so the bright half faces a big sun rising out of the top corner of the sheet in a wide glow.',
   (c) => {
-    const sunR = `(0.16 * ${HALF})`;
-    const show = `((${DIST} > ${sunR} + 0.62) * 1)`;
-    const turn = `transform: rotate(@calc(atan2(-@dy, -@dx) * 180 / PI)deg) scale(@calc(${show}));`;
+    // the sun sits 0.6 cells in from the top left corner
+    const SX = '(0.6 - @X / 2)';
+    const SY = '(0.6 - @Y / 2)';
+    const sunR = `(0.34 * ${HALF})`;
+    const D = `sqrt((@dx - ${SX}) ^ 2 + (@dy - ${SY}) ^ 2)`;
+    const show = `((${D} > ${sunR} + 0.55) * 1)`;
+    const turn = `transform: rotate(@calc(atan2(${SY} - @dy, ${SX} - @dx) * 180 / PI)deg) scale(@calc(${show}));`;
+    const at = sheetAt(SX, SY);
     return {
       rule: `--ps: @p(24%, 30%, 36%, 44%); --jx: @r(-12%, 12%); --jy: @r(-12%, 12%);
-      background: radial-gradient(${unit(HALF)} ${sheetAt()}, var(--color2) 0 16%, transparent 16%), radial-gradient(${unit(HALF)} ${sheetAt()}, var(--color3) 16%, transparent 46%);
+      background: radial-gradient(${unit(HALF)} ${at}, var(--color2) 0 34%, transparent 34%), radial-gradient(${unit(HALF)} ${at}, var(--color3) 34%, transparent 105%);
       ${F} {
         ${B(`width: @var(--ps); height: @var(--ps); left: calc(50% + @var(--jx) - @var(--ps) / 2); top: calc(50% + @var(--jy) - @var(--ps) / 2); border-radius: 50%; background: var(--color1); ${turn}`)}
         ${A(`width: @var(--ps); height: @var(--ps); left: calc(50% + @var(--jx) - @var(--ps) / 2); top: calc(50% + @var(--jy) - @var(--ps) / 2); border-radius: 50%; background: ${ink(c, 4)}; ${cp('inset(0 0 0 50%)')} ${turn}`)}
@@ -607,7 +616,7 @@ add(
     palette: ['#0B0F1E', '#273049', '#FFC94D', '#E8743B', '#F4EEDC', '#8FD0E8', '#F29E9E'],
     grid: '8x12',
     tg: '8x8',
-    meta: { tags: ['circles', 'semicircles', 'radial', 'dots'], mood: ['bold', 'technical'], density: 'medium', goodFor: ['poster', 'og-image', 'hero-background'] },
+    meta: { tags: ['circles', 'semicircles', 'radial', 'dots', 'gradients'], mood: ['bold', 'technical'], density: 'medium', goodFor: ['poster', 'og-image', 'hero-background'] },
   }
 );
 
@@ -630,7 +639,7 @@ add(
     grid: '5x10',
     min: 56,
     tg: '4x4',
-    meta: { tags: ['dots', 'circles', 'rings', 'lines'], mood: ['technical', 'calm'], density: 'sparse', goodFor: ['hero-background', 'card-texture', 'textile'] },
+    meta: { tags: ['dots', 'circles', 'rings'], mood: ['technical', 'calm'], density: 'sparse', goodFor: ['hero-background', 'card-texture', 'textile'] },
   }
 );
 
@@ -717,7 +726,7 @@ add(
     pal: 11,
     grid: '8x12',
     tg: '8x8',
-    meta: { tags: ['blocks', 'dots', 'arcs', 'curves'], mood: ['organic', 'bold'], density: 'medium', goodFor: ['poster', 'og-image', 'hero-background'] },
+    meta: { tags: ['blocks', 'dots', 'arcs', 'diagonals'], mood: ['organic', 'bold'], density: 'medium', goodFor: ['poster', 'og-image', 'hero-background'] },
   }
 );
 

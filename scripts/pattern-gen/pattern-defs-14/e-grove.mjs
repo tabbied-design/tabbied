@@ -175,26 +175,6 @@ const samara = () => {
   return polyOf(pts);
 };
 
-/** A grass tuft: blades fanning from one root, curling outward. */
-const tuft = (seed) => {
-  const blades = seed === 0 ? [-52, -38, -26, -15, -5, 5, 15, 27, 39, 52] : [-40, -26, -13, -2, 10, 22, 36];
-  const lens = seed === 0 ? [56, 74, 90, 82, 98, 92, 86, 94, 72, 58] : [66, 84, 76, 94, 80, 88, 64];
-  const pts = [];
-  const n = blades.length;
-  for (let i = 0; i < n; i++) {
-    const b0 = 36 + (28 * i) / n;
-    const b1 = 36 + (28 * (i + 1)) / n;
-    const a = rad(blades[i]);
-    const L = lens[i];
-    const tip = [50 + L * Math.sin(a) * 0.85, 100 - L * Math.cos(a)];
-    const mx = (b0 + b1) / 2 + L * 0.45 * Math.sin(a * 0.5);
-    const my = 100 - L * 0.55 * Math.cos(a * 0.5);
-    pts.push([b0, 100], [mx - 1.4, my], tip, [mx + 1.4, my]);
-  }
-  pts.push([64, 100]);
-  return polyOf(pts);
-};
-
 /** Tulip cup: a rounded bowl with three petal tips along its rim. */
 const tulipCup = () => {
   const pts = [];
@@ -230,6 +210,29 @@ const bambooSpray = () => {
   return polyOf([...leaf(-24, 92, 8), ...leaf(6, 96, 8), ...leaf(34, 84, 7)]);
 };
 
+/** Frangipani: five petals that overlap like a pinwheel, each lobe swelling early. */
+const frangipani = () => {
+  const pts = [];
+  for (let d = 0; d < 360; d += 2) {
+    const f = ((d * 5) / 360) % 1;
+    const r = 0.3 + 0.7 * Math.sin(Math.PI * f ** 0.62) ** 0.85;
+    pts.push([50 + 48 * r * Math.cos(rad(d)), 50 + 48 * r * Math.sin(rad(d))]);
+  }
+  return polyOf(pts);
+};
+
+/** A conker husk: a round green case bristling with short spikes. */
+const husk = () => {
+  const pts = [];
+  const n = 26;
+  for (let k = 0; k < n; k++) {
+    const a0 = (360 * k) / n;
+    const a1 = (360 * (k + 0.5)) / n;
+    pts.push([50 + 38 * Math.cos(rad(a0)), 50 + 38 * Math.sin(rad(a0))]);
+    pts.push([50 + 49 * Math.cos(rad(a1)), 50 + 49 * Math.sin(rad(a1))]);
+  }
+  return polyOf(pts);
+};
 
 // -- small helpers -----------------------------------------------------------
 
@@ -362,21 +365,20 @@ add(
 );
 
 add(
-  'Tussock',
-  'Tufts of grass row after row, every blade curling outward and the whole meadow leaning in a slow wind.',
+  'Conker',
+  'Horse chestnuts bursting from their spiny green husks, each case split open on one side to show the glossy nut and its pale scar.',
   (c) => ({
-    host: `--tuftA: ${tuft(0)}; --tuftB: ${tuft(1)};`,
-    rule: `${F} { width: 130%; height: 160%; z-index: @y; transform-origin: 50% 100%;
-      ${xf(`translate(@r(-8, 8)%, -18.75%) skewX(${noise(-30, 30, 2)}deg)`)}
-      ${B(`inset: 0; background: ${ink(c)}; ${cp('@var(--tuftA)')}`)}
-      ${A(`left: 20%; right: 20%; top: 38%; bottom: 0; background: ${ink(c)}; ${cp('@var(--tuftB)')}`)}
+    host: `--husk: ${husk()};`,
+    rule: `${F} { ${xf(`translate(@r(-8, 8)%, @r(-8, 8)%) rotate(@r(0, 360)deg) scale(${noise(0.75, 1.05, 3)})`)}
+      ${B(`inset: 0; background: @p(var(--color2), var(--color3), var(--color4)); ${cp('@var(--husk)')} ${msk(pieL('262deg', { from: '140deg' }))}`)}
+      ${A(`left: 36%; top: 23%; width: 52%; height: 56%; border-radius: 50%; background: radial-gradient(34% 64% at 100% 50%, var(--color1) 0 100%, transparent 100%), @p(var(--color5), var(--color6));`)}
     }${TR}`,
   }),
   {
-    palette: ['#F3EBD8', '#3F5E35', '#5E7D3A', '#8BA34A', '#C9A646', '#B5763C'],
+    palette: ['#F1E7D3', '#E9D3A6', '#6E8B3D', '#8FA34A', '#4F6B2E', '#7A3E1D', '#5A2A12'],
     grid: '6x9',
-    tg: '6x6',
-    meta: { tags: ['lines', 'zigzags'], mood: ['organic', 'calm'], density: 'medium', goodFor: ['section-divider', 'wallpaper'] },
+    tg: '5x5',
+    meta: { tags: ['circles', 'stars', 'semicircles'], mood: ['organic', 'playful'], density: 'medium', goodFor: ['textile', 'packaging', 'wallpaper'] },
   }
 );
 
@@ -400,20 +402,19 @@ add(
 // -- flowers and seeds -------------------------------------------------------
 
 add(
-  'Primrose',
-  'Five-petal flowers with rounded petals and a contrasting eye, scattered at every angle.',
+  'Frangipani',
+  'Frangipani blossoms with five petals overlapping like a pinwheel, each flower glowing yellow at its throat.',
   (c) => ({
-    host: '--flower: @shape(split: 200; r: .5 + .5 * abs(cos(2.5t)); scale: .98);',
-    rule: `${F} { ${xf(`translate(@r(-8, 8)%, @r(-8, 8)%) rotate(@r(0, 72)deg) scale(${noise(0.6, 1.1, 3)})`)}
-      ${B(`inset: 2%; background: ${ink(c, 2)}; ${cp('@var(--flower)')}`)}
-      ${A('inset: 38%; border-radius: 50%; background: var(--color1);')}
+    host: `--frangipani: ${frangipani()};`,
+    rule: `${F} { ${xf(`translate(@r(-8, 8)%, @r(-8, 8)%) rotate(@r(0, 72)deg) scale(${noise(0.7, 1.1, 3)})`)}
+      ${B(`inset: 0; background: radial-gradient(circle at 50% 50%, var(--color1) 0 7%, transparent 36%), ${ink(c, 2)}; ${cp('@var(--frangipani)')}`)}
     }${TR}`,
   }),
   {
-    pal: 24,
+    palette: ['#163A2E', '#F6C84C', '#FBF5EC', '#F4B6C2', '#E8836B', '#F7DCC0'],
     grid: '6x9',
-    tg: '6x6',
-    meta: { tags: ['petals', 'circles', 'dots'], mood: ['playful', 'organic'], density: 'medium', goodFor: ['textile', 'packaging'] },
+    tg: '5x5',
+    meta: { tags: ['petals', 'spirals', 'radial'], mood: ['elegant', 'organic'], density: 'medium', goodFor: ['textile', 'wallpaper', 'packaging'] },
   }
 );
 
@@ -448,6 +449,7 @@ add(
   {
     pal: 45,
     grid: '6x9',
+    min: 48,
     tg: '5x5',
     meta: { tags: ['radial', 'lines', 'circles'], mood: ['calm', 'elegant'], density: 'medium', goodFor: ['wallpaper', 'hero-background'] },
   }
@@ -490,36 +492,36 @@ add(
 
 add(
   'Lunaria',
-  'Honesty seed pods: translucent discs overlapping on the sheet, each showing the three dark seeds inside it.',
+  'Honesty seed pods: translucent oval discs on short stalks, overlapping on the sheet, each showing the three dark seeds inside it.',
   (c) => ({
-    rule: `${F} { ${xf(`translate(@r(-10, 10)%, @r(-10, 10)%) scale(@r(0.8, 1.05))`)}
-      ${B(`inset: 2%; border-radius: 50%; background: ${ink(c, 2)}; opacity: @r(0.55, 0.85);`)}
-      ${A(`inset: 2%; background: var(--color1); ${msk(ovalL('9%', '11%', '34% 40%'), ovalL('9%', '11%', '58% 36%'), ovalL('9%', '11%', '48% 64%'))} ${xf('rotate(@r(0, 360)deg)')}`)}
+    rule: `${F} { ${xf(`translate(@r(-10, 10)%, @r(-10, 10)%) rotate(@r(-30, 30)deg) scale(@r(0.8, 1.05))`)}
+      ${B(`left: 8%; right: 8%; top: 2%; bottom: 10%; border-radius: 50%; background: ${ink(c, 2)}; opacity: @r(0.55, 0.85);`)}
+      ${A(`inset: 0; background: var(--color1); ${msk(ovalL('6%', '8%', '47% 26%'), ovalL('6%', '8%', '53% 45%'), ovalL('6%', '8%', '47% 64%'), 'linear-gradient(90deg, transparent 0 48.5%, #000 48.5% 51.5%, transparent 51.5%) 0 100% / 100% 12% no-repeat')}`)}
     }${TR}`,
   }),
   {
     palette: ['#EFE9DF', '#4E3B57', '#B8A9C9', '#9FB8B0', '#D9AE9C', '#C9C098'],
     grid: '6x9',
     tg: '6x6',
-    meta: { tags: ['circles', 'dots', 'ovals'], mood: ['calm', 'elegant'], density: 'dense', goodFor: ['wallpaper', 'hero-background', 'textile'] },
+    meta: { tags: ['ovals', 'dots', 'circles'], mood: ['calm', 'elegant'], density: 'dense', goodFor: ['wallpaper', 'hero-background', 'textile'] },
   }
 );
 
 add(
   'Mackerel',
-  'A shoal of striped mackerel all swimming the same way, the heading drifting slowly across the sheet.',
+  'Striped mackerel laid in rows like a fishmonger\'s print, each row swimming the opposite way to the one above.',
   (c) => ({
     host: '--fish: @shape(fish);',
-    rule: `${F} { ${xf(`translate(@r(-10, 10)%, @r(-10, 10)%) rotate(@calc(${noise(-50, 50, 2)} + @r(-12, 12))deg) scale(@r(0.85, 1.15))`)}
-      ${B(`left: 0; top: 18%; width: 100%; height: 64%; ${cp('@var(--fish)')} background: repeating-linear-gradient(90deg, transparent 0 14%, var(--color1) 14% 19%), ${ink(c, 2)};`)}
-      ${A('left: 22%; top: 42%; width: 8%; height: 8%; border-radius: 50%; background: var(--color1);')}
+    rule: `${F} { ${xf(`translate(@r(-6, 6)%, @r(-10, 10)%) rotate(@r(-8, 8)deg) scaleX(@calc(1 - 2 * (@y % 2)))`)}
+      ${B(`left: -8%; top: 16%; width: 116%; height: 68%; ${cp('@var(--fish)')} background: repeating-linear-gradient(90deg, transparent 0 12%, var(--color1) 12% 17%), ${ink(c, 2)};`)}
+      ${A('left: 16%; top: 42%; width: 8%; height: 8%; border-radius: 50%; background: var(--color1);')}
     }${TR}`,
   }),
   {
     pal: 43,
     grid: '6x9',
-    tg: '6x6',
-    meta: { tags: ['ovals', 'stripes'], mood: ['playful', 'organic'], density: 'medium', goodFor: ['textile', 'packaging', 'wallpaper'] },
+    tg: '5x5',
+    meta: { tags: ['ovals', 'stripes', 'grid'], mood: ['playful', 'retro'], density: 'medium', goodFor: ['textile', 'packaging', 'wallpaper'] },
   }
 );
 
@@ -539,23 +541,6 @@ add(
     grid: '6x9',
     tg: '5x5',
     meta: { tags: ['ovals', 'dots'], mood: ['playful', 'organic'], density: 'medium', goodFor: ['textile', 'packaging'] },
-  }
-);
-
-add(
-  'Toadstool',
-  'Domed toadstools with spotted caps on pale stems, leaning this way and that across the forest floor.',
-  (c) => ({
-    rule: `${F} { transform-origin: 50% 92%; ${xf(`translate(@r(-8, 8)%, 0) rotate(@r(-14, 14)deg) scale(${noise(0.7, 1.05, 3)})`)}
-      ${B(`left: 30%; right: 30%; top: 46%; bottom: 8%; border-radius: 40% 40% 30% 30% / 20% 20% 12% 12%; background: var(--color1);`)}
-      ${A(`left: 8%; right: 8%; top: 12%; height: 42%; border-radius: 50% 50% 10% 10% / 100% 100% 16% 16%; background: ${ink(c, 2)}; ${mskI(holeL('7%', '12%', '28% 46%'), holeL('6%', '10%', '50% 24%'), holeL('7%', '12%', '72% 50%'), holeL('5%', '8%', '46% 64%'), holeL('4%', '7%', '14% 76%'), holeL('4%', '7%', '86% 76%'))}`)}
-    }${TR}`,
-  }),
-  {
-    palette: ['#F4ECDC', '#C9AE86', '#C8382E', '#E07A2E', '#9E3B2B', '#B5651D'],
-    grid: '6x9',
-    tg: '5x5',
-    meta: { tags: ['semicircles', 'dots'], mood: ['playful', 'retro'], density: 'medium', goodFor: ['packaging', 'textile'] },
   }
 );
 
@@ -611,6 +596,7 @@ add(
   {
     palette: ['#0B1E2D', '#1F3F8C', '#1B998B', '#5FAD56', '#F2C14E', '#B4654A', '#2BB3A3'],
     grid: '6x9',
+    min: 50,
     tg: '4x4',
     meta: { tags: ['ovals', 'radial', 'concentric'], mood: ['elegant', 'bold'], density: 'dense', goodFor: ['textile', 'wallpaper', 'poster'] },
   }
@@ -665,6 +651,7 @@ add(
   {
     pal: 31,
     grid: '6x9',
+    min: 50,
     tg: '5x5',
     meta: { tags: ['spirals', 'circles', 'radial'], mood: ['organic', 'calm'], density: 'medium', goodFor: ['textile', 'card-texture'] },
   }

@@ -165,31 +165,17 @@ add(
   'Lens Check',
   'A checkerboard swelling toward the middle of the sheet as if seen through a lens, its squares shrinking toward every edge.',
   () => {
-    const Wx0 = `(1.1 * @X) * ${warp('(@x - 1) / @X', -0.62)}`;
-    const Wx1 = `(1.1 * @X) * ${warp('@x / @X', -0.62)}`;
-    const Wy0 = `(1.1 * @Y) * ${warp('(@y - 1) / @Y', -0.62)}`;
-    const Wy1 = `(1.1 * @Y) * ${warp('@y / @Y', -0.62)}`;
+    const Wx0 = `(1.2 * @X) * ${warp('(@x - 1) / @X', -0.72)}`;
+    const Wx1 = `(1.2 * @X) * ${warp('@x / @X', -0.72)}`;
+    const Wy0 = `(1.2 * @Y) * ${warp('(@y - 1) / @Y', -0.72)}`;
+    const Wy1 = `(1.2 * @Y) * ${warp('@y / @Y', -0.72)}`;
     return {
       rule: `${F} { ${B(`inset: 0; background: ${pick(1, 1, 2)}; ${mskI(warpL('90deg', Wx0, Wx1, 0), warpL('180deg', Wy0, Wy1, 1))}`)} ${A(
         `inset: 0; background: @lp(); ${mskI(warpL('90deg', Wx0, Wx1, 1), warpL('180deg', Wy0, Wy1, 0))}`
       )} }${TR}`,
     };
   },
-  { palette: ['#F2EFE8', '#18181F', '#2B2F45'], grid: '8x12', tg: '8x8', meta: { tags: ['checkerboard', 'squares', 'grid'], mood: ['bold'], density: 'dense', goodFor: ['poster', 'og-image'] } }
-);
-
-add(
-  'Fold Line',
-  'A checkerboard whose columns crowd into thin slivers along a crease that snakes down the sheet, then open out again either side.',
-  () => {
-    const t0 = '(0.55 + 0.14 * sin(2 * PI * (@y - 0.5) / @Y))';
-    const W0 = `(1.3 * @X) * ${warp('(@x - 1) / @X', 0.85, t0)}`;
-    const W1 = `(1.3 * @X) * ${warp('@x / @X', 0.85, t0)}`;
-    return {
-      rule: `${F} { ${B(`inset: 0; background: ${pick(1, 1, 2)}; ${msk(warpL('90deg', W0, W1, '(@y % 2)'))}`)} }${TR}`,
-    };
-  },
-  { palette: ['#ECE6D8', '#24232B', '#3B2F5C'], grid: '8x12', tg: '8x8', meta: { tags: ['checkerboard', 'stripes'], mood: ['bold'], density: 'dense', goodFor: ['poster', 'textile'] } }
+  { palette: ['#F2EFE8', '#16161D', '#22243A'], grid: '8x12', tg: '8x8', meta: { tags: ['checkerboard', 'squares', 'grid'], mood: ['bold'], density: 'dense', goodFor: ['poster', 'og-image'] } }
 );
 
 add(
@@ -397,14 +383,18 @@ add(
 
 // Small squares in two corners of every check: light in the dark checks,
 // dark in the light, set along the diagonal the quadrant calls for.
+// Small squares in two corners of every check inside a disc in the middle:
+// light in the dark checks, dark in the light, set along the diagonal each
+// quadrant calls for. Outside the disc the board is plain, so only the
+// middle seems to swell.
 add(
   'Bulge Pips',
-  'A checkerboard with small squares nipped into two corners of every check, set so the flat board seems to bulge in the middle.',
+  'A checkerboard with small squares nipped into two corners of each check near the middle, so the flat board seems to swell there.',
   () => {
     const q = '(@dx * @dy < 0)';
-    const s = 16;
-    const near = n2((6 / (100 - s)) * 100);
-    const far = n2(((100 - s - 6) / (100 - s)) * 100);
+    const s = K(`17 * (${fr} < 0.92)`);
+    const near = K(`600 / (100 - ${s})`);
+    const far = K(`100 * (94 - ${s}) / (100 - ${s})`);
     const x1 = K(`${q} * ${near} + (1 - ${q}) * ${far}`);
     const x2 = K(`${q} * ${far} + (1 - ${q}) * ${near}`);
     const sq = (x, y) => `linear-gradient(#000, #000) ${x}% ${y}% / ${s}% ${s}% no-repeat`;
@@ -412,7 +402,7 @@ add(
       rule: `${F} { @even { background: ${pick(1, 1, 2)}; } ${B(`inset: 0; background: var(--color1); ${msk(sq(x1, near), sq(x2, far))}`)} @even { :before { background: var(--color3); } } }${TR}`,
     };
   },
-  { palette: ['#F4EFE4', '#1D1D24', '#2A3A5C', '#FFFDF8'], grid: '8x12', tg: '10x10', meta: { tags: ['checkerboard', 'squares', 'grid'], mood: ['bold', 'technical'], density: 'dense', goodFor: ['poster', 'textile'] } }
+  { palette: ['#F4EFE4', '#1D1D24', '#2A2A36', '#FFFDF8'], grid: '8x12', tg: '10x10', meta: { tags: ['checkerboard', 'squares', 'grid'], mood: ['bold', 'technical'], density: 'dense', goodFor: ['poster', 'textile'] } }
 );
 
 add(
@@ -584,10 +574,10 @@ add(
 
 // -- 5. surfaces in motion ---------------------------------------------------
 
-// A checkerboard on cloth: two half-columns per cell, each skewed to the
-// slope of the wave about the cell's middle and lifted to its mean, and
-// shaded by the slope so the folds catch the light.
-const flagD = (t) => `(0.36 * sin(2 * PI * (1.3 * (${t}) + 0.12)))`;
+// A checkerboard on cloth: each column skewed to the slope of the wave over
+// it and lifted to its mean, the checks cut by stripes two cells long that
+// flip with the column, and shaded by the slope so the folds catch the light.
+const flagD = (t) => `(0.4 * sin(2 * PI * (1.25 * (${t}) + 0.12)))`;
 add(
   'Flag',
   'A checkerboard rippling like cloth in the wind, its folds swelling across the sheet and shaded where they turn away.',
@@ -595,28 +585,29 @@ add(
     const d0 = flagD('(@x - 1) / @X');
     const d1 = flagD('@x / @X');
     const slope = `((${d1}) - (${d0}))`;
-    const half = (left, origin, inv) =>
-      `left: ${left}; width: 50%; top: ${K(`-100 + 100 * (${d0} + ${d1}) / 2`)}%; height: 300%; transform-origin: ${origin} 50%; transform: skewY(${K(
-        `atan(${slope}) * 180 / PI`
-      )}deg); ${msk(stripeL('180deg', 16.6667, 33.3333, inv))} opacity: ${K(`max(0.5, min(1, 0.84 - 0.9 * ${slope}))`)};`;
     return {
-      rule: `${F} { overflow: hidden; ${B(`${half('0', '100%', false)} background: ${pick(1, 1, 2)};`)} ${A(`${half('50%', '0', true)} background: @lp();`)} }${TR}`,
+      rule: `${F} { overflow: hidden; ${B(
+        `left: 0; width: 100%; top: ${K(`-100 + 100 * (${d0} + ${d1}) / 2`)}%; height: 300%; background: ${pick(1, 1, 2)}; ${msk(
+          `repeating-linear-gradient(180deg, @match(x % 2, #000, transparent) 0 16.6667%, @match(x % 2, transparent, #000) 16.6667% 33.3333%)`
+        )} transform: skewY(${K(`atan(${slope}) * 180 / PI`)}deg); opacity: ${K(`max(0.42, min(1, 0.8 - 1.1 * ${slope}))`)};`
+      )} }${TR}`,
     };
   },
-  { pal: 28, inks: 3, grid: '6x9', tg: '6x6', meta: { tags: ['checkerboard', 'waves'], mood: ['bold', 'playful'], density: 'dense', goodFor: ['poster', 'textile'] } }
+  { palette: ['#F3EFE6', '#121214', '#1E2230'], grid: '8x12', tg: '6x6', meta: { tags: ['checkerboard', 'waves'], mood: ['bold'], density: 'dense', goodFor: ['poster', 'textile'] } }
 );
 
 add(
   'Corrugate',
   'Upright rules that swell and thin in long diagonal waves, so the flat sheet seems pressed into ridges.',
   () => {
-    const w = `(0.5 + 0.5 * sin(2 * PI * (1.1 * (@x - 0.5) / @X + 0.7 * (@y - 0.5) / @Y)))`;
-    const on = K(`3 + 22 * ${w}`);
+    const w = `(0.5 + 0.5 * sin(2 * PI * (1.2 * (@x - 0.5) / @X + 0.8 * (@y - 0.5) / @Y)))`;
+    const a = K(`12.5 - (1.5 + 8 * ${w})`);
+    const b = K(`12.5 + (1.5 + 8 * ${w})`);
     return {
-      rule: `${F} { ${B(`inset: 0; background: ${pick(1, 1, 2)}; ${msk(`repeating-linear-gradient(90deg, transparent 0 ${K(`12.5 - ${on} / 2`)}%, #000 ${K(`12.5 - ${on} / 2`)}% ${K(`12.5 + ${on} / 2`)}%, transparent ${K(`12.5 + ${on} / 2`)}% 25%)`)}`)} }${TR}`,
+      rule: `${F} { ${B(`inset: 0; background: ${pick(1, 1, 2)}; ${msk(`repeating-linear-gradient(90deg, transparent 0 ${a}%, #000 ${a}% ${b}%, transparent ${b}% 25%)`)}`)} }${TR}`,
     };
   },
-  { pal: 16, inks: 2, grid: '8x12', tg: '8x8', meta: { tags: ['lines', 'stripes', 'waves'], mood: ['calm', 'technical'], density: 'medium', goodFor: ['wallpaper', 'hero-background'] } }
+  { pal: 39, inks: 2, grid: '8x12', tg: '8x8', meta: { tags: ['lines', 'stripes', 'waves'], mood: ['calm', 'technical'], density: 'medium', goodFor: ['wallpaper', 'hero-background'] } }
 );
 
 // Three nested squares per cell, the inner two shifted along a direction that
@@ -636,6 +627,40 @@ add(
     };
   },
   { palette: ['#F1ECE2', '#E8B04B', '#E09A6B', '#B5533C', '#3B2A3F'], grid: '6x9', tg: '6x6', meta: { tags: ['squares', 'concentric', 'blocks'], mood: ['retro', 'bold'], density: 'dense', goodFor: ['poster', 'packaging'] } }
+);
+
+// Pac-man discs whose missing quarters face the middle of their 2x2 block,
+// so a square that is not drawn shows up between every four of them.
+add(
+  'Phantom Squares',
+  'Discs with a quarter bitten out, the bites of each four facing one another so pale squares that are never drawn appear between them.',
+  (c) => {
+    const right = '(@x % 2)';
+    const down = '(@y % 2)';
+    const from = K(`${right} * ${down} * 90 + (1 - ${right}) * ${down} * 180 + (1 - ${right}) * (1 - ${down}) * 270`);
+    const r = K(`27 + 9 * (1 - min(1, ${fr}))`);
+    return {
+      rule: `${F} { ${B(`inset: 0; background: ${ink(c)}; ${mskI(dotL(r), `conic-gradient(from ${from}deg at 50% 50%, transparent 0 90deg, #000 90deg 360deg)`)}`)} }${TR}`,
+    };
+  },
+  { pal: 26, inks: 4, grid: '8x12', tg: '8x8', meta: { tags: ['circles', 'quarter-circles', 'grid'], mood: ['playful', 'bold'], density: 'medium', goodFor: ['poster', 'wallpaper'] } }
+);
+
+// A lattice of diagonal rules, black except near every crossing, where a
+// short run is drawn in color; the color seems to spread into a glowing disc.
+add(
+  'Neon Spread',
+  'A diagonal lattice of fine black rules colored only where they cross, so soft discs of color seem to glow at every crossing.',
+  () => {
+    const r = K(`20 + 9 * (1 - min(1, ${fr}))`);
+    const X = cp('polygon(0 0, 6% 0, 50% 44%, 94% 0, 100% 0, 100% 6%, 56% 50%, 100% 94%, 100% 100%, 94% 100%, 50% 56%, 6% 100%, 0 100%, 0 94%, 44% 50%, 0 6%)');
+    return {
+      rule: `${F} { ${B(`inset: 0; background: var(--color1); ${X} ${msk(`radial-gradient(ellipse ${r}% ${r}% at 50% 50%, transparent 0 100%, #000 100%)`)}`)} ${A(
+        `inset: 0; background: ${pick(2, 3, 4)}; ${X} ${msk(dotL(r))}`
+      )} }${TR}`,
+    };
+  },
+  { palette: ['#F7F5EF', '#17171C', '#E4004B', '#0077B6', '#2BA84A'], grid: '8x12', tg: '8x8', meta: { tags: ['lattice', 'diagonals', 'lines'], mood: ['technical', 'calm'], density: 'sparse', goodFor: ['wallpaper', 'hero-background'] } }
 );
 
 export const sectionC = { title: 'C. Illusion', all };
