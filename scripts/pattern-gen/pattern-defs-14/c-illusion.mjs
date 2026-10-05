@@ -21,8 +21,8 @@
 //
 //   Target Stripe   rings crossed with upright stripes
 //   Two Stones      two sets of ripples crossed into interference fringes
-//   Lens Check      a checkerboard swelling as if under a lens
 //   Float           a disc of upright lines hovering in a field of level ones
+//   Lens Check      a checkerboard swelling as if under a lens
 //   Diamond Ripple  nested diamonds whose bands swell and thin
 //   Vanishing Point towers seen from above, leaning out from the middle
 //   Undertow        curved rays wound round a point off the middle
@@ -30,7 +30,6 @@
 //   Square Tunnel   square frames turning as they recede
 //   Blaze           zigzag rings stepped round so they seem to spin
 //   Globe           dots squashed into ellipses round the rim of a sphere
-//   Bulge Pips      a checkerboard swollen by pips at the corners of its checks
 //   Cafe Wall       mortar courses that seem to wedge apart
 //   Zollner         parallels that seem to splay under slanting hatches
 //   Zebra Wave      fine stripes carried on a swell across the sheet
@@ -40,10 +39,11 @@
 //   Ribbon Twist    ribbons turning about their length, face and back in two inks
 //   Spotlit         balls lit from a lamp over the middle of the sheet
 //   Wire Cubes      Necker cubes whose far faces all point to the middle
-//   Flag            a checkerboard rippling like cloth, its folds shaded
 //   Sightline       nested squares looking off in directions that sweep the sheet
 //   Phantom Squares bitten discs that conjure squares nobody drew
 //   Neon Spread     a lattice whose colored crossings seem to glow
+//   Twisted Cord    rings of slanted segments that read as a spiral
+//   Kaleidoscope    a picked figure mirrored about both middle lines
 import { section, F, TR, cp, msk, mskI, B, A, ink, fr } from './shared.mjs';
 
 const { add, all } = section('C. Illusion');
@@ -159,7 +159,24 @@ add(
   { pal: 41, inks: 3, grid: '6x9', tg: '8x8', meta: { tags: ['rings', 'concentric', 'diamonds'], mood: ['bold'], density: 'dense', goodFor: ['poster', 'og-image'] } }
 );
 
-// -- 2. warped checkerboards -------------------------------------------------
+add(
+  'Float',
+  'Fine level lines across the whole sheet, with a disc of upright lines set into the middle so it seems to hover over them.',
+  () => {
+    const disc = (inside) =>
+      `radial-gradient(ellipse ${K(`${RC} * 62`)}% ${K(`${RC} * 62`)}% at ${K(CX)}% ${K(CY)}%, ${
+        inside ? '#000 0 100%, transparent 100%' : 'transparent 0 100%, #000 100%'
+      })`;
+    return {
+      rule: `${F} { ${B(`inset: 0; background: ${pick(1, 1, 2)}; ${mskI(stripeL('180deg', 12.5, 25), disc(false))}`)} ${A(
+        `inset: 0; background: @lp(); ${mskI(stripeL('90deg', 12.5, 25), disc(true))}`
+      )} }${TR}`,
+    };
+  },
+  { palette: ['#E9F1F7', '#0B2545', '#1F4E79'], grid: '8x12', tg: '8x8', meta: { tags: ['stripes', 'circles', 'lines'], mood: ['bold', 'technical'], density: 'dense', goodFor: ['poster', 'og-image'] } }
+);
+
+// -- 2. a warped checkerboard ------------------------------------------------
 
 add(
   'Lens Check',
@@ -176,23 +193,6 @@ add(
     };
   },
   { palette: ['#F2EFE8', '#16161D', '#2E3170'], grid: '8x12', tg: '8x8', meta: { tags: ['checkerboard', 'squares', 'grid'], mood: ['bold'], density: 'dense', goodFor: ['poster', 'og-image'] } }
-);
-
-add(
-  'Float',
-  'Fine level lines across the whole sheet, with a disc of upright lines set into the middle so it seems to hover over them.',
-  () => {
-    const disc = (inside) =>
-      `radial-gradient(ellipse ${K(`${RC} * 62`)}% ${K(`${RC} * 62`)}% at ${K(CX)}% ${K(CY)}%, ${
-        inside ? '#000 0 100%, transparent 100%' : 'transparent 0 100%, #000 100%'
-      })`;
-    return {
-      rule: `${F} { ${B(`inset: 0; background: ${pick(1, 1, 2)}; ${mskI(stripeL('180deg', 12.5, 25), disc(false))}`)} ${A(
-        `inset: 0; background: @lp(); ${mskI(stripeL('90deg', 12.5, 25), disc(true))}`
-      )} }${TR}`,
-    };
-  },
-  { palette: ['#E9F1F7', '#0B2545', '#1F4E79'], grid: '8x12', tg: '8x8', meta: { tags: ['stripes', 'circles', 'lines'], mood: ['bold', 'technical'], density: 'dense', goodFor: ['poster', 'og-image'] } }
 );
 
 // -- 3. figures around the middle --------------------------------------------
@@ -381,28 +381,6 @@ add(
 
 // -- 4. classic illusions ----------------------------------------------------
 
-// Small squares in two corners of every check inside a disc in the middle:
-// light in the dark checks, dark in the light, set along the diagonal each
-// quadrant calls for. Outside the disc the board is plain, so only the
-// middle seems to swell.
-add(
-  'Bulge Pips',
-  'A checkerboard with small squares nipped into two corners of each check near the middle, so the flat board seems to swell there.',
-  () => {
-    const q = '(@dx * @dy < 0)';
-    const s = K(`17 * (${fr} < 0.92)`);
-    const near = K(`600 / (100 - ${s})`);
-    const far = K(`100 * (94 - ${s}) / (100 - ${s})`);
-    const x1 = K(`${q} * ${near} + (1 - ${q}) * ${far}`);
-    const x2 = K(`${q} * ${far} + (1 - ${q}) * ${near}`);
-    const sq = (x, y) => `linear-gradient(#000, #000) ${x}% ${y}% / ${s}% ${s}% no-repeat`;
-    return {
-      rule: `${F} { @even { background: ${pick(1, 1, 2)}; } ${B(`inset: 0; background: var(--color1); ${msk(sq(x1, near), sq(x2, far))}`)} @even { :before { background: var(--color3); } } }${TR}`,
-    };
-  },
-  { palette: ['#F1EEDF', '#1E3B2F', '#2C4A3B', '#FFFCF2'], grid: '8x12', tg: '10x10', meta: { tags: ['checkerboard', 'squares', 'grid'], mood: ['bold', 'technical'], density: 'dense', goodFor: ['poster', 'textile'] } }
-);
-
 add(
   'Cafe Wall',
   'Rows of dark tiles divided by thin mortar lines, each row stepped a quarter tile along, so the level courses seem to wedge apart.',
@@ -570,29 +548,7 @@ add(
   { palette: ['#F3EEE3', '#1D2A44', '#2F5D62', '#C8553D'], grid: '6x9', tg: '6x6', meta: { tags: ['squares', 'lines', 'grid'], mood: ['technical'], density: 'medium', goodFor: ['wallpaper', 'card-texture'] } }
 );
 
-// -- 5. surfaces in motion ---------------------------------------------------
-
-// A checkerboard on cloth: each column skewed to the slope of the wave over
-// it and lifted to its mean, the checks cut by stripes two cells long that
-// flip with the column, and shaded by the slope so the folds catch the light.
-const flagD = (t) => `(0.36 * sin(2 * PI * (1.6 * (${t}) + 0.12)))`;
-add(
-  'Flag',
-  'A checkerboard rippling like cloth in the wind, its folds swelling across the sheet and shaded where they turn away.',
-  () => {
-    const d0 = flagD('(@x - 1) / @X');
-    const d1 = flagD('@x / @X');
-    const slope = `((${d1}) - (${d0}))`;
-    return {
-      rule: `${F} { overflow: hidden; ${B(
-        `left: 0; width: 100%; top: ${K(`-100 + 100 * (${d0} + ${d1}) / 2`)}%; height: 300%; background: ${pick(1, 1, 2)}; ${msk(
-          `repeating-linear-gradient(180deg, @match(x % 2, #000, transparent) 0 16.6667%, @match(x % 2, transparent, #000) 16.6667% 33.3333%)`
-        )} transform: skewY(${K(`atan(${slope}) * 180 / PI`)}deg); opacity: ${K(`max(0.58, min(1, 0.84 - 0.8 * ${slope}))`)};`
-      )} }${TR}`,
-    };
-  },
-  { palette: ['#F7F0E3', '#B0222C', '#8C1A2B'], grid: '8x12', tg: '6x6', meta: { tags: ['checkerboard', 'waves'], mood: ['bold'], density: 'dense', goodFor: ['poster', 'textile'] } }
-);
+// -- 5. depth, phantoms and mirrors ----------------------------------------
 
 // Three nested squares per cell, the inner two shifted along a direction that
 // sweeps round as it crosses the sheet, so each cell looks down its own tube.
@@ -647,24 +603,32 @@ add(
   { palette: ['#F7F5EF', '#17171C', '#E4004B', '#0077B6', '#2BA84A'], grid: '8x12', tg: '8x8', meta: { tags: ['lattice', 'diagonals', 'lines'], mood: ['technical', 'calm'], density: 'sparse', goodFor: ['wallpaper', 'hero-background'] } }
 );
 
-// Fraser cords (prototype).
-const cordRings = (parity) => {
+// Fraser cords. Each ring is cut into short segments by slanted cuts; one
+// pseudo-element takes the even segments and the other the odd. A parity's
+// segments are traced as one crenellated loop round the ring (in through a
+// cut, along the outer arc, out through the next cut, along the inner arc to
+// the next segment of the parity), then the inner circle backwards, which
+// cancels the inner arcs and the disc inside. Every ring starts and ends at
+// bearing 0 on its inner edge, so the rings are joined along one ray only.
+const cordRings = (parity, { h = 3.4, gap = 6, first = 5, seg = 6, tilt = 30 } = {}) => {
   const pts = [];
-  const h = 3.4;
-  const tilt = 28;
-  for (let k = 0; k < 9; k++) {
-    const R = 6 + k * 8.2;
-    const seg = 5.2;
-    const n = Math.max(6, 2 * Math.round((2 * Math.PI * R) / seg / 2));
+  const starts = [];
+  for (let R = first; R - h / 2 < 74; R += gap) {
+    const n = 2 * Math.max(4, Math.round((2 * Math.PI * R) / seg / 2));
     const dth = 360 / n;
     const del = ((h / 2) * Math.tan((tilt * Math.PI) / 180) / R) * (180 / Math.PI);
-    for (let j = parity; j < n; j += 2) {
-      const a0 = j * dth;
-      const a1 = a0 + dth;
-      const q1 = P(a0 - del, R - h / 2);
-      pts.push([50, 50], q1, P(a1 - del, R - h / 2), P(a1 + del, R + h / 2), P(a0 + del, R + h / 2), q1);
-    }
+    // Segment j runs from cut j to cut j + 1; cut j leaves the inner edge at
+    // bearing j * dth and meets the outer edge at j * dth + 2 * del.
+    const inner = (j) => P(j * dth, R - h / 2);
+    const outer = (j) => P(j * dth + 2 * del, R + h / 2);
+    const ring = [inner(0)];
+    for (let j = parity; j < n; j += 2) ring.push(inner(j), outer(j), outer(j + 1), inner(j + 1));
+    for (let j = n; j >= 0; j--) ring.push(inner(j));
+    starts.push(inner(0));
+    pts.push(...ring);
   }
+  // The way back down the bridge ray.
+  pts.push(...starts.reverse());
   return polyStr(pts);
 };
 add(
@@ -676,7 +640,29 @@ add(
       `${bigBox(0.5, 0.5, '(max(@X, @Y))')} background: ${pick(3, 4)}; ${cp('@var(--cb)')}`
     )} }${TR}`,
   }),
-  { palette: ['#8E9A86', '#16161A', '#2B2A3A', '#F7F3E8', '#F2E2B8'], grid: '6x9', tg: '8x8', meta: { tags: ['rings', 'concentric', 'spirals'], mood: ['technical'], density: 'medium', goodFor: ['poster'] } }
+  { palette: ['#8E9A86', '#141418', '#26243A', '#F8F4EA', '#EEE0BC'], grid: '6x9', tg: '8x8', meta: { tags: ['rings', 'concentric', 'spirals'], mood: ['technical', 'calm'], density: 'dense', goodFor: ['poster', 'og-image'] } }
+);
+
+// A figure picked by a hash of |dx| and |dy|, then
+// mirrored by the signs of dx and dy, so the sheet folds about its middle.
+add(
+  'Kaleidoscope',
+  'Quarter discs and small squares, chosen cell by cell and mirrored about both middle lines, so the sheet reads as one big kaleidoscope.',
+  () => {
+    const u = 'abs(@dx)';
+    const v = 'abs(@dy)';
+    const hash = (a, b, m) => `((sin(${u} * ${a} + ${v} * ${b} + 0.7) * ${m}) - floor(sin(${u} * ${a} + ${v} * ${b} + 0.7) * ${m}))`;
+    const h1 = hash(12.9898, 78.233, 43758.5453);
+    const h2 = hash(39.346, 11.135, 24634.6345);
+    const sx = K('2 * (@dx >= 0) - 1');
+    const sy = K('2 * (@dy >= 0) - 1');
+    return {
+      rule: `${F} { transform: scale(${sx}, ${sy}); ${B(`inset: 0; border-radius: 100% 0 0 0; background: ${pick(1, 2)}; transform: rotate(${K(`90 * floor(${h1} * 4)`)}deg);`)} ${A(
+        `inset: 25%; border-radius: ${K(`50 * (${h2} > 0.5)`)}%; background: ${pick(3, 4)}; transform: rotate(${K(`45 * floor(${h2} * 4)`)}deg);`
+      )} }${TR}`,
+    };
+  },
+  { palette: ['#FBF4E6', '#1D3557', '#264F7A', '#E63946', '#F1A208'], grid: '6x9', tg: '6x6', meta: { tags: ['quarter-circles', 'squares', 'radial'], mood: ['festive', 'bold'], density: 'medium', goodFor: ['poster'] } }
 );
 
 export const sectionC = { title: 'C. Illusion', all };

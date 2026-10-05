@@ -56,6 +56,44 @@ const localPts = (pts, cx, cy, s, deg) => {
 /** The box and turn that go with localPts(). */
 const turnedBox = (cx, cy, s, deg) => `${box(cx - s / 2, cy - s / 2, s, s)} transform: rotate(${deg}deg);`;
 
+/** Clips a polygon to the axis-aligned box [x0, x1] x [y0, y1] (Sutherland-Hodgman). */
+const clipToBox = (pts, x0, y0, x1, y1) => {
+  const edges = [
+    [(p) => p[0] >= x0, (a, b) => [x0, a[1] + ((b[1] - a[1]) * (x0 - a[0])) / (b[0] - a[0])]],
+    [(p) => p[0] <= x1, (a, b) => [x1, a[1] + ((b[1] - a[1]) * (x1 - a[0])) / (b[0] - a[0])]],
+    [(p) => p[1] >= y0, (a, b) => [a[0] + ((b[0] - a[0]) * (y0 - a[1])) / (b[1] - a[1]), y0]],
+    [(p) => p[1] <= y1, (a, b) => [a[0] + ((b[0] - a[0]) * (y1 - a[1])) / (b[1] - a[1]), y1]],
+  ];
+  let out = pts;
+  for (const [inside, cross] of edges) {
+    const input = out;
+    out = [];
+    input.forEach((cur, i) => {
+      const prev = input[(i + input.length - 1) % input.length];
+      if (inside(cur)) {
+        if (!inside(prev)) out.push(cross(prev, cur));
+        out.push(cur);
+      } else if (inside(prev)) out.push(cross(prev, cur));
+    });
+  }
+  return out;
+};
+
+/**
+ * Several closed shapes (all wound the same way) as one polygon, joined by
+ * zero-width seams from the first shape's first point; the nonzero fill
+ * keeps every shape and their overlaps.
+ */
+const joined = (shapes) => {
+  const home = shapes[0][0];
+  const pts = [];
+  shapes.forEach((sh, i) => {
+    if (i > 0) pts.push(home);
+    pts.push(...sh, sh[0]);
+  });
+  return polyOf(pts);
+};
+
 /** An elliptical hole (radii in percent of the box) - everything else kept. */
 const holeL = (cx, cy, rx, ry) =>
   `radial-gradient(${pc(rx)} ${pc(ry)} at ${pc(cx)} ${pc(cy)}, transparent 100%, #000 100%)`;
@@ -207,6 +245,7 @@ add(
   {
     palette: ['#263A3A', '#ECE5D3', '#E0D7C1', '#F4EFE3', '#E9B44C'],
     grid: '5x8',
+    min: 40,
     freq: 1,
     tg: '5x5',
     tf: 1,
@@ -234,6 +273,7 @@ add(
   {
     palette: ['#2B2622', '#F2E6D0', '#D9C6A5', '#B89E78', '#7E6A50', '#6F5C45'],
     grid: '5x8',
+    min: 40,
     freq: 1,
     tg: '5x5',
     tf: 1,
@@ -257,6 +297,7 @@ add(
   {
     palette: ['#14202B', '#7FA7B8', '#6C97A8', '#CDE7EE', '#A9D4DE', '#F4FBFC'],
     grid: '5x8',
+    min: 40,
     freq: 1,
     tg: '5x5',
     tf: 1,
@@ -365,8 +406,9 @@ add(
     }${TR}`,
   }),
   {
-    palette: ['#8D8A84', '#F2C230', '#E8B21E', '#7A5A10', '#FFE07A', '#F7D25A'],
+    palette: ['#5F5C57', '#F2C230', '#E8B21E', '#7A5A10', '#FFE07A', '#F7D25A'],
     grid: '5x8',
+    min: 44,
     freq: 1,
     tg: '5x5',
     tf: 1,
@@ -425,45 +467,56 @@ add(
 );
 
 // Parquet de Versailles: a framed panel with a diagonal lattice laid in its
-// field. The lattice is a box turned 45deg so its strips are axis-aligned
-// bands, clipped back to the square field inside the frame. Field, frame and
-// lattice draw from separate inks so they never vanish into each other.
+// field. Each lattice strip is a band clipped to the field square, and the
+// strips are joined into one polygon (a clip-path edge is antialiased the
+// way the exported SVG is; a hard mask edge on a turned box is not). Field,
+// frame and lattice draw from separate inks so they never vanish into each
+// other.
 const VERSAILLES = (() => {
   const f = 13;
-  const S = 100 * SQ2;
   const h = 50 - f;
-  const corners = [[f, f], [100 - f, f], [100 - f, 100 - f], [f, 100 - f]];
-  const clip = polyOf(localPts(corners, 50, 50, S, 45));
-  const d = (h / SQ2 / S) * 100;
-  const w = 2.4;
-  const lines = [50 - d, 50 - d / 2, 50, 50 + d / 2, 50 + d];
-  const band = (angle) => {
-    const stops = ['transparent 0'];
-    for (const p of lines) {
-      const half = p === 50 || Math.abs(p - 50) > d * 0.9 ? w : w * 0.6;
-      stops.push(`transparent ${pc(p - half)}`, `#000 ${pc(p - half)} ${pc(p + half)}`, `transparent ${pc(p + half)}`);
-    }
-    return `linear-gradient(${angle}, ${stops.join(', ')})`;
+  const w = 2.4 * SQ2;
+  const strips = [];
+  const band = (dir, c, half) => {
+    // dir 1: the line x - y = c; dir -1: the line x + y = c
+    const L = 400;
+    const pts =
+      dir === 1
+        ? [[c - L + half, -L], [c + L + half, L], [c + L - half, L], [c - L - half, -L]]
+        : [[c + L - half, -L], [c - L - half, L], [c - L + half, L], [c + L + half, -L]];
+    const clipped = clipToBox(pts, f, f, 100 - f, 100 - f);
+    if (clipped.length > 2) strips.push(clipped);
   };
+  for (const k of [-1, -0.5, 0, 0.5, 1]) {
+    const half = k === 0 || Math.abs(k) === 1 ? w : w * 0.6;
+    band(1, k * h, half);
+    band(-1, 100 + k * h, half);
+  }
+  const area = (pts) => pts.reduce((acc, p, i) => {
+    const q = pts[(i + 1) % pts.length];
+    return acc + p[0] * q[1] - q[0] * p[1];
+  }, 0);
+  const wound = strips.map((sh) => (area(sh) < 0 ? [...sh].reverse() : sh));
   const frame = ['90deg', '270deg', '180deg', '0deg'].map((a) => slabLin(a, `${f - 2}%`)).join(', ');
-  return { lBox: turnedBox(50, 50, S, 45), clip, lattice: `${band('90deg')}, ${band('180deg')}`, frame };
+  return { lattice: joined(wound), frame };
 })();
 
 add(
   'Versailles',
   'Parquet de Versailles: square panels, each framed by a border of boards and crossed by a diagonal lattice with a diamond at its heart.',
   (c) => ({
-    host: `--vc: ${VERSAILLES.clip}; --vl: ${VERSAILLES.lattice}; --vf: ${VERSAILLES.frame};`,
+    host: `--vl: ${VERSAILLES.lattice}; --vf: ${VERSAILLES.frame};`,
     rule: `${F} {
       --fd: ${inkOf(1, 3)};
-      background: linear-gradient(@var(--fd), @var(--fd)) 50% 50% / 97% 97% no-repeat;
-      ${B(`inset: 1.5%; background: ${inkOf(2, 5)}; ${msk('@var(--vf)')}`)}
-      ${A(`${VERSAILLES.lBox} background: ${inkOf(2, 4)}; ${cp('@var(--vc)')} ${msk('@var(--vl)')}`)}
+      background: linear-gradient(@var(--fd), @var(--fd)) 50% 50% / 96% 96% no-repeat;
+      ${B(`inset: 2%; background: ${inkOf(2, 5)}; ${msk('@var(--vf)')}`)}
+      ${A(`inset: 0; background: ${inkOf(2, 4)}; ${cp('@var(--vl)')}`)}
     }${TR}`,
   }),
   {
     palette: ['#2B1D14', '#D6A86A', '#9C6A3C', '#E8C48E', '#6E4426', '#B9844F'],
     grid: '4x6',
+    min: 48,
     freq: 1,
     tg: '4x4',
     tf: 1,
@@ -512,6 +565,7 @@ add(
   {
     palette: ['#E6DCC6', '#F2E8D2', '#283845', '#B5462F', '#2E6E6A', '#D9A23A', '#E7D9BB'],
     grid: '4x6',
+    min: 48,
     freq: 1,
     tg: '4x4',
     tf: 1,
@@ -531,9 +585,9 @@ add(
     rule: `${F} {
       z-index: @calc(100 - @y);
       ${B(`left: 46%; top: 0; width: 54%; height: 121%; border-radius: 0 0 40% 40% / 0 0 12% 12%;
-        background: linear-gradient(180deg, var(--color1) 0, transparent 20%), linear-gradient(90deg, transparent 12%, var(--color1) 52%, transparent 92%), ${inkOf(2, 3, 4)};`)}
+        background: linear-gradient(180deg, var(--color1) 0 21%, transparent 33%), linear-gradient(90deg, transparent 14%, var(--color1) 52%, transparent 90%), ${inkOf(2, 3, 4)};`)}
       ${A(`left: -6%; top: 0; width: 56%; height: 127%; border-radius: 0 0 50% 50% / 0 0 22% 22%;
-        background: linear-gradient(180deg, var(--color1) 0, transparent 18%), linear-gradient(90deg, var(--color1) 0, transparent 34% 70%, var(--color1) 100%), linear-gradient(90deg, transparent 32%, var(--color5) 48%, transparent 64%), ${inkOf(2, 3, 4)};`)}
+        background: linear-gradient(180deg, var(--color1) 0 20%, transparent 31%), linear-gradient(90deg, var(--color1) 0, transparent 32% 72%, var(--color1) 100%), linear-gradient(90deg, transparent 38%, var(--color5) 47%, transparent 56%), ${inkOf(2, 3, 4)};`)}
     }${TR}`,
   }),
   {
@@ -562,6 +616,7 @@ add(
   {
     palette: ['#1D1A24', '#C9B98F', '#8E8064', '#2F5DA8', '#C2343C', '#E3A92B', '#3E8E6B'],
     grid: '4x6',
+    min: 56,
     freq: 1,
     tg: '4x4',
     tf: 1,
@@ -614,6 +669,7 @@ add(
   {
     palette: ['#33465A', '#E9DFC9', '#D8C9A7', '#F1E9D8', '#CDBB98', '#E2D4B4'],
     grid: '6x6',
+    min: 44,
     freq: 1,
     tg: '6x6',
     tf: 1,
@@ -627,14 +683,14 @@ add(
 // a gloss along its top edge and a shade along its foot. The second course
 // draws its own tile and the one running in from the left (see Flemish).
 const SUBWAY = (() => {
-  const gx = 3;
-  const lo = -50 + gx / 2;
-  const w = 200 - gx;
+  const g = 2;
+  const lo = -50 + g;
+  const w = 200 - 2 * g;
   const cut = (x) => ((x - lo) / w) * 100;
   return {
-    bBox: box(gx / 2, 1.5, 100 - gx, 47),
-    aBox: box(lo, 51.5, w, 47),
-    joint: `linear-gradient(90deg, #000 ${pc(cut(50 - gx / 2))}, transparent ${pc(cut(50 - gx / 2))} ${pc(cut(50 + gx / 2))}, #000 ${pc(cut(50 + gx / 2))})`,
+    bBox: box(g, g, 100 - 2 * g, 50 - 2 * g),
+    aBox: box(lo, 50 + g, w, 50 - 2 * g),
+    joint: `linear-gradient(90deg, #000 ${pc(cut(50 - g))}, transparent ${pc(cut(50 - g))} ${pc(cut(50 + g))}, #000 ${pc(cut(50 + g))})`,
   };
 })();
 const GLAZE = 'linear-gradient(180deg, var(--color6) 0, transparent 34% 70%, var(--color1) 100%)';
@@ -691,6 +747,7 @@ add(
   {
     palette: ['#EDE6D6', '#3A2B22', '#4C392C', '#F3EEE2', '#E7C77F', '#D9A7A0', '#C9D3C4'],
     grid: '5x7',
+    min: 40,
     freq: 1,
     tg: '5x5',
     tf: 1,
@@ -791,23 +848,25 @@ const ROSETTE = polyOf(
     return [50 + r * Math.cos(t), 50 + r * Math.sin(t)];
   })
 );
-const BEVEL = (size) =>
-  `conic-gradient(from -45deg, var(--color1) 0 90deg, var(--color2) 90deg 180deg, var(--color3) 180deg 270deg, var(--color2) 270deg) 50% 50% / ${size} ${size} no-repeat`;
+const BEVEL = 'conic-gradient(from -45deg, var(--color1) 0 90deg, var(--color2) 90deg 180deg, var(--color3) 180deg 270deg, var(--color2) 270deg 360deg)';
+const RIB = (deg) => `linear-gradient(${deg}, var(--color6) 0 5%, transparent 5% 95%, var(--color6) 95%)`;
 
 add(
   'Coffered',
-  'A coffered ceiling: square coffers stepping down in two bevelled frames to painted blue and red floors, each holding a gilt rosette.',
+  'A coffered ceiling: gilt-ribbed square coffers stepping down in two bevelled frames to painted blue and red floors, each holding a rosette.',
   (c) => ({
     host: `--ro: ${ROSETTE};`,
     rule: `${F} {
-      background: ${BEVEL('62%')}, ${BEVEL('88%')};
-      ${B(`inset: 31%; background: ${inkOf(4, 5)};`)}
-      ${A(`inset: 33.5%; background: ${inkOf(6, 6, 3)}; ${cp('@var(--ro)')} transform: rotate(@r(0deg, 45deg));`)}
+      --fl: ${inkOf(4, 5)};
+      background: ${RIB('90deg')}, ${RIB('180deg')}, ${BEVEL};
+      ${B(`inset: 20%; background: linear-gradient(@var(--fl), @var(--fl)) 50% 50% / 58.3333% 58.3333% no-repeat, ${BEVEL};`)}
+      ${A(`inset: 33%; background: ${inkOf(6, 3)}; ${cp('@var(--ro)')} transform: rotate(@r(0deg, 45deg));`)}
     }${TR}`,
   }),
   {
     palette: ['#EDE3CC', '#776B57', '#A99C82', '#D8CDB4', '#2D4778', '#8C2E2E', '#D9A93B'],
     grid: '5x7',
+    min: 48,
     freq: 1,
     tg: '5x5',
     tf: 1,
@@ -832,11 +891,11 @@ const LANCET = (() => {
     pts.push([x0 + w, sill]);
     return polyOf(pts);
   };
-  const lobe = (x, y) => `radial-gradient(5.4% 5.4% at ${pc(x)} ${pc(y)}, @var(--q) 100%, transparent 100%)`;
+  const lobe = (x, y) => `radial-gradient(6% 6% at ${pc(x)} ${pc(y)}, @var(--q) 100%, transparent 100%)`;
   return {
-    left: arch(15, 31, 58, 95),
-    right: arch(54, 31, 58, 95),
-    foil: [lobe(45.2, 24), lobe(54.8, 24), lobe(50, 19.2), lobe(50, 28.8)].join(', '),
+    left: arch(11, 36, 56, 97),
+    right: arch(53, 36, 56, 97),
+    foil: [lobe(44.6, 18), lobe(55.4, 18), lobe(50, 12.6), lobe(50, 23.4)].join(', '),
   };
 })();
 
@@ -847,7 +906,7 @@ add(
     host: `--ll: ${LANCET.left}; --lr: ${LANCET.right};`,
     rule: `${F} {
       --q: ${inkOf(3, 4, 5, 6)};
-      background: ${LANCET.foil}, radial-gradient(12.5% 12.5% at 50% 24%, transparent 84%, var(--color2) 84% 100%, transparent 100%);
+      background: ${LANCET.foil}, radial-gradient(13.8% 13.8% at 50% 18%, transparent 84%, var(--color2) 84% 100%, transparent 100%);
       ${B(`inset: 0; background: ${inkOf(1, 3, 4, 5, 6)}; ${cp('@var(--ll)')}`)}
       ${A(`inset: 0; background: ${inkOf(1, 3, 4, 5, 6)}; ${cp('@var(--lr)')}`)}
     }${TR}`,
@@ -855,6 +914,7 @@ add(
   {
     palette: ['#DCD2BE', '#24345C', '#8C7F67', '#7E1F2B', '#2E5F4F', '#C9902C', '#3B5E9A'],
     grid: '5x6',
+    min: 54,
     freq: 1,
     tg: '5x5',
     tf: 1,
@@ -862,42 +922,50 @@ add(
   }
 );
 
-// Aqueduct: tiers of round arches like the Pont du Gard. Each cell is one
-// bay: a ring of voussoirs with a keystone, the wall and piers around it
-// (on the cell edges, so one fixed ink), and a string course on every tier.
-const AQ_SLOTS = (() => {
-  const n = 9;
+// Ablaq: arcades in striped masonry, the voussoirs of each round arch
+// alternating red brick and pale stone as in the great mosque of Cordoba.
+// Each cell is one bay; the piers and the wall over the arch sit on the
+// cell edges (half in each cell), so they take one fixed ink, and so does
+// the string course along the top of every tier.
+const ABLAQ = (() => {
+  const n = 11;
   const step = 180 / n;
-  const stops = [];
-  for (let k = 0; k < n; k++) {
-    const a = n3(k * step + 1);
-    const b = n3((k + 1) * step - 1);
-    stops.push(`transparent ${n3(k * step)}deg ${a}deg`, `#000 ${a}deg ${b}deg`);
-  }
-  stops.push(`transparent 179deg 360deg`);
-  return `conic-gradient(from -90deg at 50% 50%, ${stops.join(', ')})`;
+  const gap = 0.9;
+  const set = (parity) => {
+    const stops = [];
+    for (let k = 0; k < n; k++) {
+      const a = n3(k * step);
+      const e = n3((k + 1) * step);
+      if (k % 2 === parity) stops.push(`transparent ${a}deg ${n3(a + gap)}deg`, `#000 ${n3(a + gap)}deg ${n3(e - gap)}deg`, `transparent ${n3(e - gap)}deg ${e}deg`);
+      else stops.push(`transparent ${a}deg ${e}deg`);
+    }
+    stops.push('transparent 180deg 360deg');
+    return `conic-gradient(from -90deg at 50% 50%, ${stops.join(', ')})`;
+  };
+  return { even: set(0), odd: set(1), ring: 'radial-gradient(circle closest-side, transparent 64%, #000 64% 100%, transparent 100%)' };
 })();
 
 add(
-  'Aqueduct',
-  'Tiers of Roman arches like the Pont du Gard: rings of wedge-shaped voussoirs with a dark keystone, on stout piers under a string course.',
+  'Ablaq',
+  'Arcades in ablaq masonry: round arches whose wedge-shaped voussoirs alternate red brick and pale stone, on stout piers under a string course.',
   (c) => ({
-    host: `--av: ${AQ_SLOTS};`,
+    host: `--ae: ${ABLAQ.even}; --ao: ${ABLAQ.odd}; --ar: ${ABLAQ.ring};`,
     rule: `${F} {
-      background: linear-gradient(180deg, var(--color2) 0 5%, transparent 5%),
-        radial-gradient(34% 54% at 50% 100%, transparent 100%, var(--color1) 100%) 0 0 / 100% 63% no-repeat,
-        linear-gradient(90deg, var(--color1) 0 16%, transparent 16% 84%, var(--color1) 84%);
-      ${B(`${box(0, 13, 100, 100)} background: ${inkOf(3, 4, 5)}; ${mskI('@var(--av)', 'radial-gradient(circle closest-side, transparent 68%, #000 68% 100%, transparent 100%)')}`)}
-      ${A(`inset: 0; background: ${inkOf(6, 2)}; ${cp(polyOf([[42.5, 11], [57.5, 11], [55.5, 31], [44.5, 31]]))}`)}
+      background: linear-gradient(180deg, var(--color2) 0 6%, transparent 6%),
+        radial-gradient(33% 52.38% at 50% 100%, transparent 100%, var(--color1) 100%) 0 0 / 100% 63% no-repeat,
+        linear-gradient(90deg, var(--color1) 0 17%, transparent 17% 83%, var(--color1) 83%);
+      ${B(`${box(0, 13, 100, 100)} background: ${inkOf(3, 4)}; ${mskI('@var(--ae)', '@var(--ar)')}`)}
+      ${A(`${box(0, 13, 100, 100)} background: ${inkOf(5, 6)}; ${mskI('@var(--ao)', '@var(--ar)')}`)}
     }${TR}`,
   }),
   {
-    palette: ['#A9CCDA', '#D8B98B', '#9C7A52', '#C9A06E', '#E2C596', '#B88B5B', '#7E5D3C'],
+    palette: ['#2A2320', '#C4A276', '#7E6347', '#F6EEDC', '#EDE1C6', '#B8392A', '#9A2E22'],
     grid: '4x6',
+    min: 56,
     freq: 1,
     tg: '4x4',
     tf: 1,
-    meta: { tags: ['arcs', 'semicircles', 'blocks', 'radial'], mood: ['calm', 'elegant'], density: 'medium', goodFor: ['wallpaper', 'hero-background', 'section-divider'] },
+    meta: { tags: ['arcs', 'semicircles', 'stripes', 'radial'], mood: ['bold', 'elegant'], density: 'medium', goodFor: ['wallpaper', 'poster', 'section-divider'] },
   }
 );
 
@@ -905,31 +973,28 @@ add(
 // three-stepped stylobate, with a round light in the tympanum.
 const PORTICO = {
   ped: polyOf([[50, 8], [95, 30], [95, 38], [5, 38], [5, 30]]),
-  cols: 'linear-gradient(90deg, transparent 13%, #000 13% 21%, transparent 21% 35%, #000 35% 43%, transparent 43% 57%, #000 57% 65%, transparent 65% 79%, #000 79% 87%, transparent 87%)',
-  steps: [
-    [10, 85, 80, 4],
-    [6, 89, 88, 4],
-    [2, 93, 96, 4],
-  ]
-    .map(([x, y, w, h]) => rectL(x, y, w, h).replace('#000, #000', '@var(--st), @var(--st)'))
-    .join(', '),
+  base: polyOf([
+    [2, 97], [98, 97], [98, 93], [94, 93], [94, 89], [90, 89], [90, 85],
+    [87, 85], [87, 40], [79, 40], [79, 85], [65, 85], [65, 40], [57, 40], [57, 85],
+    [43, 85], [43, 40], [35, 40], [35, 85], [21, 85], [21, 40], [13, 40], [13, 85],
+    [10, 85], [10, 89], [6, 89], [6, 93], [2, 93],
+  ]),
 };
 
 add(
   'Portico',
   'Little classical temple fronts in rows: a pediment with a round light, four columns and a three-stepped base, in marble, stone and painted stucco.',
   (c) => ({
-    host: `--pp: ${PORTICO.ped}; --pc: ${PORTICO.cols};`,
+    host: `--pp: ${PORTICO.ped}; --pb: ${PORTICO.base};`,
     rule: `${F} {
-      --st: ${inkOf(1, 2)};
-      background: ${PORTICO.steps};
       ${B(`inset: 0; background: ${inkOf(3, 4, 5)}; ${cp('@var(--pp)')} ${msk('radial-gradient(4.5% 4.5% at 50% 25%, transparent 100%, #000 100%)')}`)}
-      ${A(`${box(0, 40, 100, 45)} background: ${inkOf(1, 2, 6)}; ${msk('@var(--pc)')}`)}
+      ${A(`inset: 0; background: ${inkOf(1, 2, 6)}; ${cp('@var(--pb)')}`)}
     }${TR}`,
   }),
   {
     palette: ['#2F4858', '#F2ECE0', '#E3D6BE', '#D9734E', '#E9B44C', '#86A99A', '#F7E7CE'],
     grid: '5x7',
+    min: 54,
     freq: 1,
     tg: '5x5',
     tf: 1,
@@ -939,21 +1004,25 @@ add(
 
 // Brise soleil: a concrete egg-crate sunscreen. The fins sit on the cell
 // edges (half in each cell, one ink); the panel behind each opening is
-// painted its own color, with the fins' shadow falling across it in an L.
+// painted its own color, and the fins' shadow falls across it in an L whose
+// two arms are sized by two noise fields, as if the sun swung across the
+// facade.
 add(
   'Brise Soleil',
-  'A concrete egg-crate sunscreen over panels painted in mid-century colors, the fins casting an L of shadow into every opening.',
+  'A concrete egg-crate sunscreen over panels painted in mid-century colors, the fins casting an L of shadow that deepens and thins across the facade.',
   (c) => ({
     host: `--bf: ${['90deg', '270deg', '180deg', '0deg'].map((a) => slabLin(a, '8%')).join(', ')};`,
     rule: `${F} {
-      background: ${inkOf(2, 3, 4, 5, 6)};
-      ${A(`inset: 0; background: ${inkOf(1)}; opacity: .42; ${cp(polyOf([[8, 8], [92, 8], [92, 25], [25, 25], [25, 92], [8, 92]]))}`)}
-      ${B(`inset: 0; background: ${inkOf(1, 1, 6)}; ${msk('@var(--bf)')}`)}
+      background: ${inkOf(2, 3, 4, 5)};
+      ${B(`inset: 8%; background: ${inkOf(1)}; opacity: .45;
+        ${msk('linear-gradient(#000, #000) 0 0 / 100% @rn(2%, 62%) no-repeat', 'linear-gradient(#000, #000) 0 0 / @rn(2%, 56%) 100% no-repeat')}`)}
+      ${A(`inset: 0; background: var(--color6); ${msk('@var(--bf)')}`)}
     }${TR}`,
   }),
   {
-    palette: ['#EFE9DC', '#2D2A26', '#E07A5F', '#3D7A8C', '#E9B44C', '#81B29A', '#F4F1EA'],
+    palette: ['#EFE9DC', '#231F1C', '#E07A5F', '#3D7A8C', '#E9B44C', '#81B29A', '#F2EDE2'],
     grid: '5x7',
+    min: 40,
     freq: 1,
     tg: '5x5',
     tf: 1,
@@ -963,29 +1032,31 @@ add(
 
 // Manhole: cast-iron covers on a concrete pavement, each with its own raised
 // tread - dots, squares, rings, ribs or bars - around a round boss.
+const FULL = 'linear-gradient(#000, #000)';
 const COVERS = {
-  dots: 'radial-gradient(circle closest-side, #000 58%, transparent 58%) 0 0 / 14.2857% 14.2857%',
-  squares: 'conic-gradient(from 270deg at 72% 72%, #000 0 90deg, transparent 90deg) 0 0 / 14.2857% 14.2857%',
-  rings: 'repeating-radial-gradient(circle at 50% 50%, #000 0 6%, transparent 6% 12%)',
-  ribs: slotsConic(20, 0.45),
-  bars: 'linear-gradient(90deg, transparent 6%, #000 6% 16%, transparent 16% 26%, #000 26% 36%, transparent 36% 46%, #000 46% 56%, transparent 56% 66%, #000 66% 76%, transparent 76% 86%, #000 86% 96%, transparent 96%)',
+  dots: `radial-gradient(circle closest-side, #000 58%, transparent 58%) 0 0 / 14.2857% 14.2857%, ${FULL}`,
+  squares: 'linear-gradient(90deg, #000 70%, transparent 70%) 0 0 / 14.2857% 14.2857%, linear-gradient(180deg, #000 70%, transparent 70%) 0 0 / 14.2857% 14.2857%',
+  rings: `repeating-radial-gradient(circle at 50% 50%, #000 0 6%, transparent 6% 12%), ${FULL}`,
+  ribs: `${slotsConic(16, 0.45)}, ${FULL}`,
+  bars: `linear-gradient(90deg, transparent 6%, #000 6% 16%, transparent 16% 26%, #000 26% 36%, transparent 36% 46%, #000 46% 56%, transparent 56% 66%, #000 66% 76%, transparent 76% 86%, #000 86% 96%, transparent 96%), ${FULL}`,
 };
 
 add(
   'Manhole',
-  'Cast-iron manhole covers set in the pavement, each cast with its own tread of dots, squares, rings, ribs or bars around a round boss.',
+  'Cast-iron manhole covers set in the pavement, each cast with its own tread of studs, squares, rings, ribs or bars around a round boss.',
   (c) => ({
     host: Object.entries(COVERS).map(([k, v]) => `--m${k}: ${v};`).join(' '),
     rule: `${F} {
       --m: @p(@var(--mdots), @var(--msquares), @var(--mrings), @var(--mribs), @var(--mbars));
       background: radial-gradient(circle closest-side, ${inkOf(1, 2)} 92%, transparent 92%);
-      ${B(`inset: 12%; border-radius: 50%; background: ${inkOf(3, 4, 5)}; ${msk('@var(--m)')}`)}
+      ${B(`inset: 12%; border-radius: 50%; background: ${inkOf(3, 4, 5)}; ${mskI('@var(--m)')}`)}
       ${A(`inset: 39%; border-radius: 50%; background: ${inkOf(1, 2)}; ${msk('radial-gradient(circle closest-side, #000 60%, transparent 60% 78%, #000 78%)')}`)}
     }${TR}`,
   }),
   {
     palette: ['#C9C3B6', '#33373C', '#45403B', '#6E757D', '#8C6A4E', '#5A6470'],
     grid: '4x6',
+    min: 50,
     freq: 1,
     tg: '4x4',
     tf: 1,

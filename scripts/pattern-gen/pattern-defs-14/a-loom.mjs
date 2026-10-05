@@ -1,5 +1,20 @@
 // A. Loom - woven and printed cloth: checks, plaids, twills, stripes and the
 // figures printed onto fabric.
+//
+//   checks    Tartan, Vichy, Glen Check, Patch Madras
+//   stripes   Ticking, Plisse, Serape, Regimental, Chalk Stripe
+//   weaves    Donegal, Waffle, Lampas
+//   dyed      Patola, Itajime, Tie Dye, Bandhani, Bogolan, Batik
+//   printed   Boteh, Foulard, Calico
+//   knitted   Fair Isle, Aran
+//   figured   Argyll, Dhurrie
+//
+// Cloth runs across the sheet, so most of these keep an ink for a whole
+// column, row, diagonal or sheet (the pickers below) rather than rolling one
+// per cell: a warp thread is one color from selvedge to selvedge. Crossings
+// (tartan, gingham) are translucent layers, the one way an ink can be
+// mixed here. Long values that are the same in every cell (stepped
+// polygons, many-layer masks, @shape outlines) sit on the host.
 import { section, F, TR, B, A, msk, mskI, cp, rot, poly, noise } from './shared.mjs';
 
 const { add, all } = section('A. Loom');
@@ -11,7 +26,7 @@ const { add, all } = section('A. Loom');
 // a column the same ink, a list @X - 1 long does the same along each
 // anti-diagonal, and a list one item long is a constant for the whole sheet.
 // All three are random per seed, so a reseed re-dyes the cloth. They are
-// declared before the gate, so every cell advances the counter and thinning
+// declared outside the gate, so every cell advances the counter and thinning
 // the field never shifts a column's ink.
 //
 // @var(--x) is written out as var(--x) and resolved by the browser, so a
@@ -38,7 +53,13 @@ const cycle = (expr, names) =>
 /** A per-cell ink already chosen: still written as a pick, read once. */
 const paint = (name) => `background-color: @p(@var(${name}));`;
 
-/** The gate as a switch, so position blocks may sit outside it. */
+/**
+ * The gate as a switch, so position blocks may sit outside it. At frequency
+ * 1 the package gates at 0.999, so about one cell in a thousand drops out.
+ * Where the catalog preview's seed dropped one, the switch goes after the
+ * design's own rolls: that moves the gate's roll along the sequence, and a
+ * cell switched off still makes its rolls, so the cells after it keep theirs.
+ */
 const GATE = `visibility: hidden; ${F} { visibility: visible; }`;
 
 const xf = (v) => `-webkit-transform: ${v}; transform: ${v};`;
@@ -109,7 +130,7 @@ add(
   {
     palette: ['#141B26', '#B3262C', '#2B4C8C', '#1E5B43', '#7A2E2A', '#E2B33C', '#EFE6D2'],
     grid: '6x9',
-    tg: '8x8',
+    tg: '10x10',
     meta: { tags: ['stripes', 'grid', 'squares', 'lines'], mood: ['bold', 'retro'], density: 'dense', goodFor: ['textile', 'packaging', 'wallpaper'] },
   }
 );
@@ -118,10 +139,10 @@ add(
   'Vichy',
   'A two-color gingham: translucent warp and weft checks crossing to a third, deeper shade on a pale ground.',
   (c) => ({
-    rule: `--g: ${constant(c)}; --h: ${constant(c)}; ${F} {
+    rule: `--g: ${constant(c)}; --h: ${constant(c)};
         ${B(`inset: 0; ${paint('--g')} opacity: .5; ${msk('repeating-linear-gradient(90deg, #000 0 25%, transparent 25% 50%)')}`)}
         ${A(`inset: 0; ${paint('--h')} opacity: .5; ${msk('repeating-linear-gradient(180deg, #000 0 25%, transparent 25% 50%)')}`)}
-      }${TR}`,
+      ${GATE}${TR}`,
   }),
   {
     pal: 4,
@@ -139,11 +160,11 @@ add(
     const quad = 'conic-gradient(from 90deg, #000 0 90deg, transparent 90deg 180deg, #000 180deg 270deg, transparent 270deg)';
     const stripes = (angle) => `repeating-linear-gradient(${angle}, @var(--m) 0 8.333%, transparent 8.333% 16.667%)`;
     return {
-      rule: `--m: ${constant(c, 1, 3)}; --o: ${constant(c, 4, 5)}; ${F} {
+      rule: `--m: ${constant(c, 1, 3)}; --o: ${constant(c, 4, 5)};
           background: ${stripes('90deg')} 100% 0 / 50% 50% no-repeat, ${stripes('180deg')} 0 100% / 50% 50% no-repeat;
           ${B(`inset: 0; background-color: @p(@var(--m), var(--color1)); ${maskAllOf('--pins')}`)}
           ${A(`inset: 0; background-color: @var(--o); opacity: .85; ${maskBy('--over')}`)}
-        }${TR}`,
+        ${GATE}${TR}`,
       host: `--pins: repeating-linear-gradient(90deg, #000 0 10.417%, transparent 10.417% 16.667%), repeating-linear-gradient(180deg, #000 0 10.417%, transparent 10.417% 16.667%), ${quad};
         --over: ${bands('90deg', [[0, 1.2], [98.8, 100]])}, ${bands('180deg', [[0, 1.2], [98.8, 100]])};`,
     };
@@ -160,12 +181,12 @@ add(
   'Patch Madras',
   'Squares of bleeding madras plaid sewn edge to edge, each patch dyed its own colors, the stripes soft as if the dye had run.',
   (c) => ({
-    rule: `${F} {
+    rule: `
         background-color: @p(${list(c)});
         ${cp('inset(1.5%)')}
         ${B(`inset: 0; background-color: @p(${list(c)}); opacity: .7; ${msk('linear-gradient(90deg, transparent 6%, #000 12% 30%, transparent 36% 52%, #000 56% 62%, transparent 66% 76%, #000 80% 86%, transparent 90%)')}`)}
         ${A(`inset: 0; background-color: @p(${list(c)}); opacity: .55; ${msk('linear-gradient(180deg, transparent 4%, #000 10% 22%, transparent 28% 44%, #000 50% 70%, transparent 76% 84%, #000 88% 92%, transparent 96%)')}`)}
-      }${TR}`,
+      ${GATE}${TR}`,
   }),
   {
     palette: ['#2A2335', '#F2C14E', '#E4572E', '#29A3A3', '#7DBE5A', '#D9487A', '#3D5AA8'],
@@ -181,11 +202,11 @@ add(
   'Ticking',
   'Mattress ticking: every column a broad stripe of its own color and width between two pinlines, with a hairline of another color dividing the columns.',
   (c) => ({
-    rule: `--t: ${byColumn(c, 1, c - 2)}; --w: @pd(@m(@X, @p(12%, 22%, 32%))); ${F} {
+    rule: `--t: ${byColumn(c, 1, c - 2)}; --w: @pd(@m(@X, @p(12%, 22%, 32%)));
         background: linear-gradient(90deg, var(--color${c - 1}) 0 1%, transparent 1% 99%, var(--color${c - 1}) 99%);
         ${B(`top: 0; bottom: 0; left: 50%; width: @var(--w); ${paint('--t')} ${xf('translateX(-50%)')}`)}
         ${A(`inset: 0; background-color: @var(--t); ${msk(bands('90deg', [[19, 23], [77, 81]]))}`)}
-      }${TR}`,
+      ${GATE}${TR}`,
   }),
   {
     palette: ['#F4EEE1', '#1F3A5F', '#B8322A', '#3C6E71', '#8C5E58', '#C9A227'],
@@ -274,10 +295,10 @@ add(
   'Donegal',
   'Herringbone tweed: twill lines slanting one way down one column and back the other way down the next, flecked with bright knops of color.',
   (c) => ({
-    rule: `--m: ${constant(c, 1, 2)}; --r: @match(x % 2 == 0, 45deg, -45deg); ${F} {
+    rule: `--m: ${constant(c, 1, 2)}; --r: @match(x % 2 == 0, 45deg, -45deg);
         ${B(`left: -20.71%; top: -20.71%; width: 141.42%; height: 141.42%; ${paint('--m')} ${cp('polygon(50% 0, 100% 50%, 50% 100%, 0 50%)')} ${msk('repeating-linear-gradient(90deg, #000 0 6.25%, transparent 6.25% 12.5%)')} ${rot('@var(--r)')}`)}
         ${A(`inset: 0; background-color: @p(${list(c, 3)}); ${msk(dot('@r(8, 92)', '@r(8, 92)', 4), dot('@r(8, 92)', '@r(8, 92)', 3))}`)}
-      }${TR}`,
+      ${GATE}${TR}`,
   }),
   {
     palette: ['#D9D1C1', '#4A3F35', '#5E5A55', '#E07A2E', '#2E86AB', '#C23B5A', '#3F7D4E'],
@@ -310,15 +331,16 @@ add(
   'Lampas',
   'A damask diaper: tall ornamental medallions over a crossed flourish, alternating with small flourishes alone, woven tone on tone.',
   (c) => ({
-    rule: `${GATE}
+    rule: `
       @even {
-        ${B(`left: 4%; top: 4%; width: 92%; height: 92%; background-color: @p(${list(c, 1, 2)}); clip-path: @var(--flourish); -webkit-clip-path: @var(--flourish);`)}
-        ${A(`left: 12%; top: 1%; width: 76%; height: 98%; background-color: @p(${list(c, 3, c - 1)}); clip-path: @var(--vase); -webkit-clip-path: @var(--vase);`)}
+        ${B(`left: 4%; top: 4%; width: 92%; height: 92%; background-color: @p(${list(c, 1, 2)}); ${clipBy('--flourish')}`)}
+        ${A(`left: 12%; top: 1%; width: 76%; height: 98%; background-color: @p(${list(c, 3, c - 1)}); ${clipBy('--vase')}`)}
       }
       @odd {
-        ${B(`left: 26%; top: 26%; width: 48%; height: 48%; background-color: @p(${list(c, 3, c - 1)}); clip-path: @var(--flourish); -webkit-clip-path: @var(--flourish);`)}
+        ${B(`left: 26%; top: 26%; width: 48%; height: 48%; background-color: @p(${list(c, 3, c - 1)}); ${clipBy('--flourish')}`)}
         ${A(`left: 43%; top: 43%; width: 14%; height: 14%; border-radius: 50%; background-color: @p(${list(c, 1, 2)});`)}
-      }${TR}`,
+      }
+      ${GATE}${TR}`,
     host: '--vase: @shape(split: 240; x: sin(t) * (.55 + .45 * cos(4t)) * (1 - .25 * cos(t)) * .95; y: -cos(t) * .95); --flourish: @shape(split: 240; r: .55 + .3 * cos(4t) + .15 * cos(8t); rotate: 45);',
   }),
   {
@@ -335,10 +357,10 @@ add(
   (c) => {
     const lozenge = ring([[50, 0], [100, 50], [50, 100], [0, 50]], [[50, 28], [72, 50], [50, 72], [28, 50]]);
     return {
-      rule: `--k: @p(${list(c)}); ${F} {
+      rule: `--k: @p(${list(c)});
           ${B(`inset: 0; ${paint('--k')} ${clipBy('--lozenge')} ${maskBy('--odd')} ${xf(`translateX(${noise(-9, 9, 1.4)}%)`)}`)}
           ${A(`inset: 0; background-color: @var(--k); ${clipBy('--lozenge')} ${maskBy('--even')} ${xf(`translateX(${noise(-9, 9, 1.4)}%)`)}`)}
-        }${TR}`,
+        ${GATE}${TR}`,
       host: `--lozenge: ${lozenge};
         --odd: repeating-linear-gradient(180deg, #000 0 6.25%, transparent 6.25% 12.5%);
         --even: repeating-linear-gradient(180deg, transparent 0 6.25%, #000 6.25% 12.5%);`,
@@ -394,7 +416,7 @@ add(
   {
     palette: ['#FBF7EF', '#E4407B', '#F06A3F', '#2E86C8', '#7A4FB5', '#F2B33D'],
     grid: '8x12',
-    tg: '8x8',
+    tg: '6x6',
     meta: { tags: ['concentric', 'rings', 'gradients', 'radial'], mood: ['playful', 'festive'], density: 'dense', goodFor: ['poster', 'og-image', 'textile'] },
   }
 );
@@ -413,9 +435,10 @@ add(
     const rosette = (n) => `${B(`inset: 0; ${paint('--k')} ${maskAllOf(`--holes${n}`)}`)}
         ${A(`inset: 0; background-color: @p(${list(c, 3)}); ${maskBy(`--knots${n}`)}`)}`;
     return {
-      rule: `--k: ${constant(c, 1, 2)}; ${GATE}
+      rule: `--k: ${constant(c, 1, 2)};
         @even { ${rosette(8)} }
-        @odd { ${rosette(4)} }${TR}`,
+        @odd { ${rosette(4)} }
+        ${GATE}${TR}`,
       host: `--holes8: ${all8.map(([x, y]) => hole(x, y, 7, 0.7)).join(', ')};
         --knots8: ${all8.map(([x, y]) => dot(x, y, 2, 0.5)).join(', ')};
         --holes4: ${all4.map(([x, y]) => hole(x, y, 7, 0.7)).join(', ')};
@@ -461,7 +484,7 @@ add(
   (c) => ({
     rule: `${F} {
         ${B(`left: -50%; top: 49.5%; width: 200%; height: 1%; background-color: @p(${list(c, 1, 2)}); opacity: .6; ${xf('translate(@r(-30, 30)%, @r(-40, 40)%) rotate(@r(0, 180)deg)')}`)}
-        ${A(`left: 9%; top: 9%; width: 82%; height: 82%; z-index: 1; background-color: @p(${list(c)}); clip-path: @var(--flower); -webkit-clip-path: @var(--flower); ${msk(hole(50, 50, 13, 0.98))}`)}
+        ${A(`left: 9%; top: 9%; width: 82%; height: 82%; z-index: 1; background-color: @p(${list(c)}); ${clipBy('--flower')} ${msk(hole(50, 50, 13, 0.98))}`)}
       }${TR}`,
     host: '--flower: @shape(split: 180; r: .66 + .34 * abs(cos(3t)); scale: .96);',
   }),
@@ -481,8 +504,8 @@ add(
   (c) => ({
     rule: `--a: @p(${list(c, 1, 3)}); --r: @calc((@x + @y) % 2 * 180 + @r(-12, 12))deg; ${F} {
         ${xf('rotate(@var(--r))')}
-        ${B(`inset: 0; ${paint('--a')} clip-path: @var(--boteh); -webkit-clip-path: @var(--boteh);`)}
-        ${A(`left: 30%; top: 34%; width: 44%; height: 44%; background-color: @p(${list(c, 4)}); clip-path: @var(--boteh); -webkit-clip-path: @var(--boteh);`)}
+        ${B(`inset: 0; ${paint('--a')} ${clipBy('--boteh')}`)}
+        ${A(`left: 30%; top: 34%; width: 44%; height: 44%; background-color: @p(${list(c, 4)}); ${clipBy('--boteh')}`)}
       }${TR}`,
     host: '--boteh: @shape(split: 160; x: sin(t); y: (1 + sin(t)) * cos(t) / 1.3 - 1.3 * ((1 - sin(t)) / 2)^3; rotate: 90; scale: .72);',
   }),
@@ -501,11 +524,11 @@ add(
     const lozenge = ring([[50, 22], [78, 50], [50, 78], [22, 50]], [[50, 38], [62, 50], [50, 62], [38, 50]]);
     const corner = (at) => `radial-gradient(circle at ${at}, var(--color${c - 1}) 7%, transparent 7.5%)`;
     return {
-      rule: `${F} {
+      rule: `
           background: ${corner('0 0')}, ${corner('100% 0')}, ${corner('0 100%')}, ${corner('100% 100%')};
           ${B(`inset: 0; background-color: @p(${list(c, 1, 3)}); ${cp(lozenge)}`)}
           ${A(`left: 45%; top: 45%; width: 10%; height: 10%; border-radius: 50%; background-color: @p(${list(c, 3, c - 2)});`)}
-        }${TR}`,
+        ${GATE}${TR}`,
     };
   },
   {
@@ -521,7 +544,7 @@ add(
   'A ditsy calico print: tiny five-petal flowers scattered at every angle, each with a bright eye, on a dark cotton ground.',
   (c) => ({
     rule: `--tx: @r(-18, 18)%; --ty: @r(-18, 18)%; --s: @r(.62, 1); --r: @r(0, 72)deg; ${F} {
-        ${B(`left: 22%; top: 22%; width: 56%; height: 56%; background-color: @p(${list(c, 1, c - 2)}); clip-path: @var(--flower); -webkit-clip-path: @var(--flower); ${xf('translate(@var(--tx), @var(--ty)) rotate(@var(--r)) scale(@var(--s))')}`)}
+        ${B(`left: 22%; top: 22%; width: 56%; height: 56%; background-color: @p(${list(c, 1, c - 2)}); ${clipBy('--flower')} ${xf('translate(@var(--tx), @var(--ty)) rotate(@var(--r)) scale(@var(--s))')}`)}
         ${A(`left: 44%; top: 44%; width: 12%; height: 12%; border-radius: 50%; background-color: var(--color${c - 1}); ${xf('translate(@var(--tx), @var(--ty)) scale(@var(--s))')}`)}
       }${TR}`,
     host: '--flower: @shape(split: 150; r: .38 + .62 * abs(cos(2.5t)); scale: .98);',
@@ -540,7 +563,7 @@ add(
   'Fair Isle',
   'Fair Isle knitting: rows of V stitches charted into a band of stepped diamonds between plain stripes, three colors to the piece.',
   (c) => {
-    // A knitting chart, one stitch to a cell: every sixth row a stripe, and
+    // A knitting chart, one stitch to a cell: every eighth row a stripe, and
     // between, diamonds six stitches apart. The chart is slid along by a
     // dice roll read back with @lp() (the last pick, the @pd just before), so
     // every branch of the test agrees on it.
@@ -549,8 +572,8 @@ add(
       rule: `--k0: ${constant(c, 1, 2)}; --k1: ${constant(c, 3, 4)}; --k2: ${constant(c, 5, 6)}; --n: @pd(@p(0, 1, 2, 3, 4, 5));
         --k: @match(y % 8 == 0, @var(--k2), abs(${u} % 6 - 3) + abs(y % 8 - 4) <= 2, @var(--k1), @var(--k0));
         ${F} {
-          ${B(`left: 13%; top: -10%; width: 36%; height: 120%; ${paint('--k')} clip-path: @var(--leg); -webkit-clip-path: @var(--leg); ${rot('-20deg')}`)}
-          ${A(`left: 51%; top: -10%; width: 36%; height: 120%; background-color: @var(--k); clip-path: @var(--leg); -webkit-clip-path: @var(--leg); ${rot('20deg')}`)}
+          ${B(`left: 13%; top: -10%; width: 36%; height: 120%; ${paint('--k')} ${clipBy('--leg')} ${rot('-20deg')}`)}
+          ${A(`left: 51%; top: -10%; width: 36%; height: 120%; background-color: @var(--k); ${clipBy('--leg')} ${rot('20deg')}`)}
         }${TR}`,
       host: '--leg: @shape(split: 120; x: sin(t) * abs(sin(t))^.6; y: cos(t) * .98);',
     };
@@ -619,10 +642,10 @@ add(
   'Dhurrie',
   'A dhurrie rug: stepped lozenges built from little square blocks, nested one inside another, in bands of color down the rug.',
   (c) => ({
-    rule: `--r0: ${constant(c, 1, 2)}; --r1: ${constant(c, 3, 4)}; --a: ${cycle('y', ['--r0', '--r1'])}; ${F} {
+    rule: `--r0: ${constant(c, 1, 2)}; --r1: ${constant(c, 3, 4)}; --a: ${cycle('y', ['--r0', '--r1'])};
         ${B(`inset: 0; ${paint('--a')} ${clipBy('--lozenge')}`)}
         ${A(`inset: 0; background-color: @p(${list(c)}); ${clipBy('--heart')}`)}
-      }${TR}`,
+      ${GATE}${TR}`,
     host: `--lozenge: ${ring(stepDiamond(48, 6), stepDiamond(32, 4))}; --heart: ${poly(stepDiamond(16, 2))};`,
   }),
   {

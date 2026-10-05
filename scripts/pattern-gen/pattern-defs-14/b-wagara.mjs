@@ -263,6 +263,13 @@ const quadL = (from) =>
 /** A hole of radius r (percent of the box half-side) bored at the center. */
 const boreL = (r) => `radial-gradient(circle closest-side, transparent ${r}%, #000 ${r}%)`;
 
+/**
+ * Mask layers kept on the host as one property and read in the cell, so a
+ * long value is written once rather than once per cell.
+ */
+const mskVar = (name, intersect = false) =>
+  `-webkit-mask: @var(--${name}); mask: @var(--${name});${intersect ? ' -webkit-mask-composite: source-in; mask-composite: intersect;' : ''}`;
+
 /** Picks one of the listed inks (1-based palette slots). */
 const pick = (...slots) => `@p(${slots.map((s) => `var(--color${s})`).join(', ')})`;
 
@@ -449,11 +456,12 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
   // Well-curb crosses in kasuri: the four bars dyed into the threads, so the
   // ends blur and each pair sits a little off its neighbor.
   const bars = (c, turn) =>
-    `left: 26%; top: 12%; width: 48%; height: 76%; background: ${ink(c)}; ${mskI('linear-gradient(90deg, #000 0 22%, transparent 22% 78%, #000 78%)', 'linear-gradient(180deg, transparent, #000 24% 76%, transparent)')} ${tf(`rotate(${turn}) translate(@r(-5%, 5%), @r(-4%, 4%))`)}`;
+    `left: 26%; top: 12%; width: 48%; height: 76%; background: ${ink(c)}; ${mskVar('bars', true)} ${tf(`rotate(${turn}) translate(@r(-5%, 5%), @r(-4%, 4%))`)}`;
   add(
     'Igeta',
     'Well-curb crosses dyed into indigo cloth, the bars soft at their ends and each one a little out of register, like ikat-woven kasuri.',
     (c) => ({
+      host: '--bars: linear-gradient(90deg, #000 0 22%, transparent 22% 78%, #000 78%), linear-gradient(180deg, transparent, #000 24% 76%, transparent);',
       rule: `${F} { ${B(bars(c, '0deg'))} ${A(bars(c, '90deg'))} }${TR}`,
     }),
     {
@@ -501,7 +509,8 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
     'Matsukawabishi',
     'Stepped pine-bark diamonds, each a wide lozenge with smaller ones rising from its top and bottom, drawn as an outline with a solid one nested inside, tip to tip.',
     (c) => ({
-      rule: `${F} { ${B(clipped(outer, ink(c)))} ${A(clipped(inner, ink(c), 'inset: 26%;'))} }${TR}`,
+      host: `--outline: ${outer}; --core: ${inner};`,
+      rule: `${F} { ${B(clipped('@var(--outline)', ink(c)))} ${A(clipped('@var(--core)', ink(c), 'inset: 26%;'))} }${TR}`,
     }),
     {
       pal: 5,
@@ -524,7 +533,8 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
     'Kagome',
     'A woven-basket lattice: hexagon outlines touching corner to corner, the triangles between them closing into rows of six-pointed stars.',
     (c) => ({
-      rule: `@y(even) { ${tf('translateX(50%)')} } ${F} { ${B(clipped(ring, ink(c), box('0')))} ${A(clipped(ring, ink(c), box('-100%'), 'opacity: @match(x == 1, 1, 0);'))} }${TR}`,
+      host: `--ring: ${ring};`,
+      rule: `@y(even) { ${tf('translateX(50%)')} } ${F} { ${B(clipped('@var(--ring)', ink(c), box('0')))} ${A(clipped('@var(--ring)', ink(c), box('-100%'), 'opacity: @match(x == 1, 1, 0);'))} }${TR}`,
     }),
     {
       palette: ['#1E2B3C', '#E3C88F', '#D3A35F', '#F1E4C4', '#B9824A'],
@@ -554,7 +564,7 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
     {
       palette: ['#1B2A47', '#F1ECE1', '#E3D5B8', '#C5D1E0', '#D8604C'],
       grid: '8x12',
-      tg: '9x9',
+      tg: '10x10',
       meta: { tags: ['lines', 'maze', 'steps', 'grid'], mood: ['calm', 'organic'], density: 'medium', goodFor: ['textile', 'card-texture', 'wallpaper'] },
     }
   );
@@ -583,7 +593,7 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
     {
       palette: ['#26355A', '#E8E4DA', '#C9CFDB'],
       grid: '8x12',
-      tg: '8x8',
+      tg: '10x10',
       meta: { tags: ['dots', 'arcs', 'scallops', 'halftone'], mood: ['calm', 'elegant'], density: 'dense', goodFor: ['textile', 'card-texture', 'wallpaper'] },
     }
   );
@@ -626,6 +636,49 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
   );
 }
 
+{
+  // Three commas swirling round a middle: each a round head with a tail that
+  // sweeps out to the rim and runs round the outside of the next head,
+  // tapering away. The crest sits in a ring; neighbors swirl the other way.
+  const R = 0.4;
+  const tau = 2 * Math.PI;
+  const smooth = (t) => t * t * (3 - 2 * t);
+  const comma = (x, y, a0) => {
+    const ca = Math.cos(-a0), sa = Math.sin(-a0);
+    const qx = x * ca - y * sa, qy = x * sa + y * ca;
+    const head = Math.hypot(qx - 0.42, qy) - 0.27;
+    const r = Math.hypot(qx, qy);
+    const back = ((-Math.atan2(qy, qx)) % tau + tau) % tau;
+    const span = (170 / 180) * Math.PI;
+    let tail = 1;
+    if (back <= span) {
+      const u = back / span;
+      const out = 0.69 + 0.31 * smooth(Math.min(1, u / 0.3));
+      const w = 0.54 * (1 - u) ** 1.5;
+      tail = Math.max(out - w - r, r - out);
+    }
+    return Math.min(head, tail);
+  };
+  const crest = shapeOf((x, y) => {
+    const px = (x - 0.5) / R, py = (y - 0.5) / R;
+    return Math.min(comma(px, py, 0), comma(px, py, tau / 3), comma(px, py, (2 * tau) / 3));
+  }, 120);
+  add(
+    'Tomoe',
+    'Crests of three swirling commas, each tail sweeping round the head of the next inside a thin ring, the crests turning one way and the other like a checker.',
+    (c) => ({
+      host: `--tomoe: ${crest};`,
+      rule: `@odd { ${tf('scaleX(-1)')} } ${F} { ${B(clipped('@var(--tomoe)', ink(c)))} ${A(`inset: 4%; border-radius: 50%; background: ${ink(c)}; ${msk(ringL(90, 98))}`)} }${TR}`,
+    }),
+    {
+      palette: ['#EFE6D2', '#1E2A3A', '#A12B2B', '#C8902E', '#2F5D50'],
+      grid: '6x9',
+      tg: '5x5',
+      meta: { tags: ['spirals', 'circles', 'rings', 'radial'], mood: ['bold', 'elegant'], density: 'medium', goodFor: ['textile', 'packaging', 'poster'] },
+    }
+  );
+}
+
 // -- elsewhere -----------------------------------------------------------------
 
 {
@@ -650,15 +703,21 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
 }
 
 {
-  // Each ring is cut into opposite quarters on two layers; the layers sit at
-  // different heights, so where two rings cross one passes over and the
-  // next crossing passes under.
+  // Each ring passes over its neighbors in two opposite quarters and under
+  // them in the other two. The under quarters have a real gap cut wherever a
+  // neighbor's band crosses them, so the over-under reads in any paint
+  // order, the way interlace is drawn in line art.
   const band = ringL(83, 96);
+  // A neighbor's band, widened a little, as a hole: its ring is centered one
+  // cell away, and the element box is 1.4 cells wide.
+  const cut = (at) => `radial-gradient(ellipse 100% 100% at ${at}, #000 39%, transparent 39% 50.5%, #000 50.5%)`;
+  const near = ['-21.43% 50%', '121.43% 50%', '50% -21.43%', '50% 121.43%'].map(cut);
   add(
     'Guilloche',
-    'Rings linked into a mesh, every ring passing over one neighbor and under the next, like a band of interlaced chain.',
+    'Rings linked into a mesh, every ring passing over one neighbor and under the next, the under strand broken where it crosses, like interlaced chain.',
     (c) => ({
-      rule: `--k: ${ink(c)}; ${F} { ${B(`inset: -20%; background: @p(@var(--k)); ${mskI(band, quadL('0deg'))} z-index: 2;`)} ${A(`inset: -20%; background: @var(--k); ${mskI(band, quadL('90deg'))} z-index: 1;`)} }${TR}`,
+      host: `--over: ${band}, ${quadL('0deg')}; --under: ${[band, quadL('90deg'), ...near].join(', ')};`,
+      rule: `--k: ${ink(c)}; ${F} { ${B(`inset: -20%; background: @p(@var(--k)); ${mskVar('over', true)}`)} ${A(`inset: -20%; background: @var(--k); ${mskVar('under', true)}`)} }${TR}`,
     }),
     {
       pal: 10,
@@ -675,13 +734,14 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
   // oval eye; the ovals of four cells close into a flower at every corner.
   const oval = (y) => `radial-gradient(ellipse 11.3% 21.3% at 50% ${y}, transparent 0 42%, #000 42% 100%, transparent 100%)`;
   const pair = (c, turn) =>
-    `inset: -25%; background: ${ink(c)}; ${msk(oval('26.4%'), oval('73.6%'))} ${tf(`rotate(${turn})`)}`;
+    `inset: -25%; background: ${ink(c)}; ${mskVar('ovals')} ${tf(`rotate(${turn})`)}`;
   const dot = (at, r) => `radial-gradient(circle farthest-side at ${at}, var(--color1) ${r}%, transparent ${r}%)`;
   add(
     'Kawung',
     'Javanese batik ovals, four to a cell pointing into the corners, each with an oval eye, closing into four-petaled flowers with a seed at every center.',
     (c) => ({
-      rule: `${F} { background: ${dot('50% 50%', 13)}, ${dot('0 0', 6.5)}, ${dot('100% 0', 6.5)}, ${dot('0 100%', 6.5)}, ${dot('100% 100%', 6.5)}; ${B(pair(c, '45deg'))} ${A(pair(c, '-45deg'))} }${TR}`,
+      host: `--ovals: ${oval('26.4%')}, ${oval('73.6%')}; --seeds: ${dot('50% 50%', 13)}, ${dot('0 0', 6.5)}, ${dot('100% 0', 6.5)}, ${dot('0 100%', 6.5)}, ${dot('100% 100%', 6.5)};`,
+      rule: `${F} { background: @var(--seeds); ${B(pair(c, '45deg'))} ${A(pair(c, '-45deg'))} }${TR}`,
     }),
     {
       palette: ['#F1E4CC', '#3B2A1E', '#7A4A26', '#2F3F5C', '#B07A3E'],
@@ -809,8 +869,8 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
     'Talavera',
     'Painted tiles each holding a rosette of four broad and four narrow petals, with quarter rings at the corners that close into a ring wherever four tiles meet.',
     (c) => ({
-      host: `--rosette: ${rosette};`,
-      rule: `${F} { ${B(clipped('@var(--rosette)', ink(c, 2), 'inset: 8%;', msk(boreL(18))))} ${A(`inset: 0; background: var(--color1); ${msk(corner('0 0'), corner('100% 0'), corner('0 100%'), corner('100% 100%'))}`)} }${TR}`,
+      host: `--rosette: ${rosette}; --corners: ${['0 0', '100% 0', '0 100%', '100% 100%'].map(corner).join(', ')};`,
+      rule: `${F} { ${B(clipped('@var(--rosette)', ink(c, 2), 'inset: 8%;', msk(boreL(18))))} ${A(`inset: 0; background: var(--color1); ${mskVar('corners')}`)} }${TR}`,
     }),
     {
       palette: ['#F7F3EA', '#1F4E9C', '#E2A72E', '#2E7D5B', '#C0502E', '#3C6FC4'],
@@ -825,19 +885,24 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
   // Cracked ice: the grid's corners pushed about by a fixed hash, so every
   // cell is a crooked quadrilateral; each is split corner to corner along a
   // random diagonal and both halves pulled in a little, leaving the cracks.
-  const A0 = 0.22;
+  const A0 = 0.26;
   const hash = (i, j, k) => {
     const s = `sin(${i} * 12.9898 + ${j} * 78.233 + ${k}) * 437.5453`;
     return `(${s} - floor(${s}))`;
   };
-  const jit = (name, i, j, k) => `--${name}: @calc(${A0} * (2 * ${hash(i, j, k)} - 1));`;
+  // A corner on the sheet's border only slides along it.
+  const keep = (v, n) => `min(1, ${v}) * min(1, ${n} - ${v})`;
+  const jit = (name, i, j, k, along) =>
+    `--${name}: @calc(round(1000 * ${A0} * ${along} * (2 * ${hash(i, j, k)} - 1)) / 1000);`;
   const corners = [
     ['a', '(@x - 1)', '(@y - 1)'],
     ['b', '@x', '(@y - 1)'],
     ['c', '@x', '@y'],
     ['d', '(@x - 1)', '@y'],
   ];
-  const vars = corners.map(([n, i, j]) => `${jit(`${n}x`, i, j, 1.7)} ${jit(`${n}y`, i, j, 9.1)}`).join(' ');
+  const vars = corners
+    .map(([n, i, j]) => `${jit(`${n}x`, i, j, 1.7, keep(i, '@X'))} ${jit(`${n}y`, i, j, 9.1, keep(j, '@Y'))}`)
+    .join(' ');
   // Corner positions in cell units, as expressions.
   const C = {
     a: ['$(ax)', '$(ay)'],
@@ -847,10 +912,10 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
   };
   const mix = (p, q, axis) => `(${C[p][axis]} + $(s) * (${C[q][axis]} - ${C[p][axis]}))`;
   const tri = (pts) => {
-    const X = (e) => `@calc(62.5 * ${e} + 18.75)%`;
+    const X = (e) => `@calc(round(6250 * ${e} + 1875) / 100)%`;
     const poly = `polygon(${pts.map(([x, y]) => `${X(x)} ${X(y)}`).join(', ')})`;
-    const ox = `@calc(62.5 * (${pts[0][0]} + ${pts[1][0]} + ${pts[2][0]}) / 3 + 18.75)%`;
-    const oy = `@calc(62.5 * (${pts[0][1]} + ${pts[1][1]} + ${pts[2][1]}) / 3 + 18.75)%`;
+    const ox = `@calc(round(6250 * (${pts[0][0]} + ${pts[1][0]} + ${pts[2][0]}) / 3 + 1875) / 100)%`;
+    const oy = `@calc(round(6250 * (${pts[0][1]} + ${pts[1][1]} + ${pts[2][1]}) / 3 + 1875) / 100)%`;
     return `${cp(poly)} ${tfo(`${ox} ${oy}`)} ${tf('scale(0.9)')}`;
   };
   const t1 = tri([C.a, C.b, [mix('c', 'd', 0), mix('c', 'd', 1)]]);
@@ -867,6 +932,82 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
       grid: '6x9',
       tg: '5x5',
       meta: { tags: ['triangles', 'mosaic', 'lines'], mood: ['organic', 'calm'], density: 'dense', goodFor: ['wallpaper', 'card-texture', 'hero-background'] },
+    }
+  );
+}
+
+{
+  // Cross-stitch: a stepped diamond, a smaller one inside it and a star at
+  // the heart, every stitch a little X; the outer diamonds of neighbors meet
+  // tip to tip, and a small diamond closes at every corner.
+  const G = 11;
+  const c0 = 5;
+  const sets = { outer: new Set(), inner: new Set() };
+  for (let j = 0; j < G; j++) {
+    for (let i = 0; i < G; i++) {
+      const d = Math.abs(i - c0) + Math.abs(j - c0);
+      if (d === 5 || d >= 9) sets.outer.add(`${i},${j}`);
+      if (d === 2 || d === 0 || (d === 1 && (i === c0 || j === c0))) sets.inner.add(`${i},${j}`);
+    }
+  }
+  const stitches = (set) => (x, y) => {
+    const gi = Math.floor(x * G), gj = Math.floor(y * G);
+    let best = 1;
+    for (let j = gj - 1; j <= gj + 1; j++) {
+      for (let i = gi - 1; i <= gi + 1; i++) {
+        if (!set.has(`${i},${j}`)) continue;
+        const dx = x * G - (i + 0.5), dy = y * G - (j + 0.5);
+        const arm = Math.min(Math.abs(dx - dy), Math.abs(dx + dy)) / Math.SQRT2 - 0.19;
+        best = Math.min(best, Math.max(arm, Math.max(Math.abs(dx), Math.abs(dy)) - 0.5));
+      }
+    }
+    return best;
+  };
+  add(
+    'Cross Stitch',
+    'Folk embroidery in little X stitches: stepped diamonds meeting tip to tip, a smaller diamond and a star inside each, worked in red and black on linen.',
+    (c) => ({
+      host: `--outer: ${shapeOf(stitches(sets.outer), 154)}; --inner: ${shapeOf(stitches(sets.inner), 154)};`,
+      rule: `${F} { ${B(clipped('@var(--outer)', pick(1, 2)))} ${A(clipped('@var(--inner)', pick(3, 4)))} }${TR}`,
+    }),
+    {
+      palette: ['#EEE6D6', '#B3262E', '#8E1C24', '#1F1B1A', '#3B2F5C'],
+      grid: '6x9',
+      tg: '5x5',
+      meta: { tags: ['diamonds', 'crosses', 'stars', 'steps'], mood: ['festive', 'retro'], density: 'medium', goodFor: ['textile', 'packaging', 'card-texture'] },
+    }
+  );
+}
+
+{
+  // Cintamani: three crescent-marked balls in a pyramid, and a pair of wavy
+  // tiger stripes, alternating on a diagonal grid.
+  const ball = (x, y, cx, cy) => {
+    const moon = Math.max(disc(x, y, cx - 0.015, cy + 0.02, 0.13), -disc(x, y, cx + 0.035, cy - 0.02, 0.11));
+    return Math.max(disc(x, y, cx, cy, 0.2), -moon);
+  };
+  const stripe = (x, y, base) => {
+    const u = (x - 0.5) / 0.46;
+    if (Math.abs(u) >= 1) return 1;
+    const mid = base + 0.06 * Math.sin(((x - 0.04) / 0.3) * 2 * Math.PI);
+    return Math.abs(y - mid) - 0.075 * (1 - u * u) ** 0.5;
+  };
+  const balls = shapeOf((x, y) => Math.min(ball(x, y, 0.5, 0.27), ball(x, y, 0.27, 0.71), ball(x, y, 0.73, 0.71)), 120);
+  const stripes = shapeOf((x, y) => Math.min(stripe(x, y, 0.36), stripe(x, y, 0.64)), 120);
+  const at = (shape, inkValue, pos) =>
+    clipped(shape, inkValue, `left: ${pos}; top: ${pos}; width: 48%; height: 48%;`);
+  add(
+    'Cintamani',
+    'The Ottoman cintamani on cream silk: triplets of crescent-marked balls and pairs of wavy tiger stripes, alternating on a diagonal grid.',
+    (c) => ({
+      host: `--balls: ${balls}; --stripes: ${stripes};`,
+      rule: `${F} { ${B(at('@var(--balls)', ink(c), '1%'))} ${A(at('@var(--stripes)', ink(c), '51%'))} }${TR}`,
+    }),
+    {
+      palette: ['#F2E8D5', '#B0222C', '#1F3B6E', '#C8963A', '#2E2A26'],
+      grid: '5x8',
+      tg: '5x5',
+      meta: { tags: ['circles', 'waves', 'dots', 'grid'], mood: ['elegant', 'bold'], density: 'sparse', goodFor: ['textile', 'packaging', 'wallpaper'] },
     }
   );
 }

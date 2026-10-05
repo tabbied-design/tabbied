@@ -8,6 +8,7 @@
 //   node scripts/pattern-gen/check-batch14.mjs d --cost     # + generation cost
 //   node scripts/pattern-gen/check-batch14.mjs d --all      # all of the above
 //   ONLY=slug,slug node scripts/pattern-gen/check-batch14.mjs d --svg
+//   FREQ=0.4 node scripts/pattern-gen/check-batch14.mjs d --preview  # thinned out
 //
 // The family is named by its file's letter (pattern-defs-14/d-drift.mjs is
 // `d`). Contact sheets land in $B14_OUT/<letter>/ (default /tmp/b14/<letter>/):
@@ -150,9 +151,20 @@ if (chosen.length && (flag('preview') || flag('cost'))) {
       const page = await browser.newPage({ viewport: { width: SIZE, height: SIZE } });
       await page.goto(`http://127.0.0.1:${port}/scripts/render-pattern.html`);
       const tiles = [];
+      // FREQ=0.4 draws the sheets at that frequency instead of the default,
+      // to see the slider thin each design out.
+      const atFrequency = (pattern) =>
+        process.env.FREQ
+          ? {
+              ...pattern,
+              options: pattern.options.map((o) =>
+                o.id === 'frequency' ? { ...o, default: Number(process.env.FREQ) } : o
+              ),
+            }
+          : pattern;
       for (const def of chosen) {
         await page.evaluate(async ([d, o]) => window.__render(d, o), [
-          built.get(def.slug),
+          atFrequency(built.get(def.slug)),
           { seed: 'preview1', fit: 'grid', width: SIZE, height: SIZE },
         ]);
         await page.waitForTimeout(600);
@@ -179,7 +191,10 @@ if (chosen.length && (flag('preview') || flag('cost'))) {
           });
           composites.push({ input: t.png, left: x, top: y + LABEL });
         });
-        const out = path.join(OUT, `preview-${s + 1}.png`);
+        const out = path.join(
+          OUT,
+          `preview-${s + 1}${process.env.FREQ ? `-freq${process.env.FREQ}` : ''}.png`
+        );
         await sharp({ create: { width: W, height: H, channels: 3, background: '#555555' } })
           .composite(composites)
           .png()

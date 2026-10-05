@@ -34,7 +34,7 @@
 // Many of these read where the cell sits in the sheet: @dx/@dy put a sun,
 // a pole or a radiant at one place for the whole sheet, and @rn() lets
 // neighbors agree on a size or a heading.
-import { section, F, TR, cp, msk, mskI, B, A, ink, poly } from './shared.mjs';
+import { section, F, TR, cp, msk, B, A, ink, poly } from './shared.mjs';
 
 const { add, all } = section('H. Orbit');
 
@@ -71,10 +71,6 @@ const mskI1 = (...layers) => `mask: ${layers.join(', ')}; mask-composite: inters
 const disc = (r, at = '50% 50%') => `radial-gradient(ellipse ${r}% ${r}% at ${at}, #000 100%, transparent 100%)`;
 /** Everything outside such a disc. */
 const bore = (r, at = '50% 50%') => `radial-gradient(ellipse ${r}% ${r}% at ${at}, transparent 100%, #000 100%)`;
-/** A ring between radii a and b (percent of the box side). */
-const ringL = (a, b, at = '50% 50%') =>
-  `radial-gradient(ellipse ${b}% ${b}% at ${at}, transparent ${((100 * a) / b).toFixed(2)}%, #000 ${((100 * a) / b).toFixed(2)}% 100%, transparent 100%)`;
-
 /** Hard conic sectors from a list of [from, to] angles in degrees, #000 on them. */
 const sectorStops = (list) => {
   const out = [];
@@ -113,7 +109,7 @@ add(
   {
     pal: 13,
     grid: '7x10',
-    tg: '7x7',
+    tg: '6x6',
     meta: { tags: ['stars', 'dots'], mood: ['festive', 'playful'], density: 'medium', goodFor: ['wallpaper', 'packaging', 'textile'] },
   }
 );
@@ -136,7 +132,7 @@ add(
   {
     palette: ['#0B0A1F', '#5B4C9A', '#F6F1FF', '#FFD98E', '#A9C8FF', '#F2A7D8'],
     grid: '9x13',
-    tg: '9x9',
+    tg: '10x10',
     meta: { tags: ['stars', 'dots', 'diagonals', 'gradients'], mood: ['calm', 'elegant'], density: 'medium', goodFor: ['hero-background', 'poster', 'og-image'] },
   }
 );
@@ -167,7 +163,7 @@ add(
   {
     palette: ['#101828', '#4A5D80', '#F7F2E4', '#FFD27A', '#9CC9F5'],
     grid: '7x10',
-    tg: '7x7',
+    tg: '6x6',
     meta: { tags: ['dots', 'lines', 'diagonals'], mood: ['technical', 'calm'], density: 'sparse', goodFor: ['hero-background', 'wallpaper'] },
   }
 );
@@ -211,7 +207,7 @@ add(
     palette: ['#F3EDDE', '#1C2C4C', '#B5402F', '#C8922E', '#8E9AB3'],
     grid: '8x12',
     freq: 0.8,
-    tg: '8x8',
+    tg: '10x10',
     tf: 0.85,
     meta: { tags: ['lines', 'concentric', 'radial', 'dots'], mood: ['technical', 'elegant'], density: 'sparse', goodFor: ['hero-background', 'card-texture', 'wallpaper'] },
   }
@@ -248,7 +244,7 @@ add(
   {
     palette: ['#0A1020', '#F4F1E6', '#9CC7F0', '#F6C36A', '#E58FB0', '#7FD6C2'],
     grid: '8x12',
-    tg: '7x7',
+    tg: '10x10',
     meta: { tags: ['arcs', 'concentric', 'lines', 'curves'], mood: ['calm', 'elegant'], density: 'medium', goodFor: ['hero-background', 'wallpaper'] },
   }
 );
@@ -266,7 +262,7 @@ add(
   {
     palette: ['#05060D', '#F4F2EC', '#F6C88F', '#93B9F2', '#E99B8F', '#C3A6EE'],
     grid: '8x12',
-    tg: '8x8',
+    tg: '10x10',
     meta: { tags: ['ovals', 'dots', 'gradients', 'crosses'], mood: ['calm', 'organic'], density: 'sparse', goodFor: ['hero-background', 'poster', 'og-image'] },
   }
 );
@@ -326,7 +322,7 @@ add(
   {
     palette: ['#0B1530', '#F6F3EA', '#8EC5FF', '#FFC870', '#7EE0C3', '#F59AB6'],
     grid: '7x10',
-    tg: '7x7',
+    tg: '6x6',
     meta: { tags: ['lines', 'radial', 'dots', 'gradients'], mood: ['bold', 'elegant'], density: 'sparse', goodFor: ['poster', 'og-image', 'hero-background'] },
   }
 );
@@ -374,7 +370,7 @@ add(
   (c) => ({
     host: `--dust: ${COMET.dust}; --ion: ${COMET.ion};`,
     rule: `${F} {
-      transform: rotate(@rn(0, 360)deg) scale(@r(0.8, 1.15));
+      transform: rotate(@rn(-200, 560)deg) scale(@r(0.8, 1.15));
       ${B(`inset: -40%; background: @p(var(--color2), var(--color3)); ${cp('@var(--dust)')} ${msk1(`linear-gradient(90deg, transparent ${toBox(-0.18).toFixed(1)}%, #000 ${toBox(0.66).toFixed(1)}%)`)}`)}
       ${A(`inset: -40%; background: @p(var(--color1), var(--color4), var(--color5)); ${cp('@var(--ion)')} ${msk1(`linear-gradient(90deg, transparent ${toBox(-0.15).toFixed(1)}%, #000 ${toBox(0.62).toFixed(1)}%)`)}`)}
     }${TR}`,
@@ -423,7 +419,8 @@ add(
   {
     palette: ['#06131F', '#E9F7F2', '#5BE3A8', '#3CC6D6', '#9B7BEA', '#E07AB8'],
     grid: '8x12',
-    tg: '8x8',
+    min: 44,
+    tg: '6x6',
     meta: { tags: ['stripes', 'gradients', 'waves', 'lines'], mood: ['organic', 'calm'], density: 'medium', goodFor: ['hero-background', 'poster', 'og-image'] },
   }
 );
@@ -470,7 +467,7 @@ add(
   {
     palette: ['#F2EDE3', '#DDD4C3', '#1F2D4A', '#3D5C8F', '#B4762A'],
     grid: '8x12',
-    tg: '8x8',
+    tg: '6x6',
     meta: { tags: ['circles', 'semicircles', 'grid', 'dots'], mood: ['calm', 'elegant'], density: 'medium', goodFor: ['wallpaper', 'textile', 'packaging'] },
   }
 );
@@ -493,7 +490,7 @@ add(
   {
     palette: ['#0D0B16', '#B5322B', '#D4572E', '#8E2A2A', '#F1EAD7', '#DCE2EC'],
     grid: '8x12',
-    tg: '8x8',
+    tg: '10x10',
     meta: { tags: ['circles', 'grid', 'dots', 'arcs'], mood: ['bold', 'calm'], density: 'medium', goodFor: ['poster', 'og-image', 'wallpaper'] },
   }
 );
@@ -504,7 +501,7 @@ add(
   (c) => {
     const turn = 'transform: translate(@var(--jx), @var(--jy)) scale(@var(--s));';
     return {
-      rule: `--s: @calc(@rn(0.35, 1.5, 1.3) * @r(0.45, 1.3)); --jx: @r(-22%, 22%); --jy: @r(-22%, 22%); z-index: calc(120 - @var(--s) * 60);
+      rule: `--s: @calc(@rn(0.35, 1.5, 1.3) * @r(0.45, 1.3)); --jx: @r(-22%, 22%); --jy: @r(-22%, 22%); z-index: @calc(round(120 - $(s) * 60));
       ${F} {
         background: radial-gradient(circle at @r(6, 94)% @r(6, 94)%, var(--color2) 0 2%, transparent 2.6%), radial-gradient(circle at @r(6, 94)% @r(6, 94)%, var(--color1) 0 1.6%, transparent 2.2%);
         ${B(`inset: 8%; border-radius: 50%; background: @p(var(--color1), var(--color3)); ${msk1(bore(38))} ${turn}`)}
@@ -616,7 +613,7 @@ add(
   {
     palette: ['#0B0F1E', '#273049', '#FFC94D', '#E8743B', '#F4EEDC', '#8FD0E8', '#F29E9E'],
     grid: '8x12',
-    tg: '8x8',
+    tg: '10x10',
     meta: { tags: ['circles', 'semicircles', 'radial', 'dots', 'gradients'], mood: ['bold', 'technical'], density: 'medium', goodFor: ['poster', 'og-image', 'hero-background'] },
   }
 );
@@ -664,7 +661,7 @@ add(
     palette: ['#0B1426', '#33476B', '#F2C14E', '#F28F6B', '#8FD3E8', '#E9E4D8', '#B48EE0'],
     grid: '8x12',
     freq: 0.5,
-    tg: '8x8',
+    tg: '10x10',
     tf: 0.55,
     meta: { tags: ['rings', 'concentric', 'circles', 'dots'], mood: ['technical', 'calm'], density: 'sparse', goodFor: ['hero-background', 'poster'] },
   }
@@ -726,7 +723,7 @@ add(
   {
     pal: 11,
     grid: '8x12',
-    tg: '8x8',
+    tg: '10x10',
     meta: { tags: ['blocks', 'dots', 'arcs', 'diagonals'], mood: ['organic', 'bold'], density: 'medium', goodFor: ['poster', 'og-image', 'hero-background'] },
   }
 );

@@ -216,18 +216,32 @@ const spokesL = (n, on, from = 0) => {
 // -- fruit -------------------------------------------------------------------------
 
 // Citrus Wheel: a rind ring, a pith gap, then ten segments parted by gaps
-// and bored at the core; a third of them cut in half.
+// of even width and stopped short of the core; a third of them cut in half.
+const SEGMENTS = (() => {
+  const segs = [];
+  const h = 1.3;
+  const [ri, ro] = [7.5, 40];
+  for (let k = 0; k < 10; k++) {
+    const p0 = ((k * 36 - 18) * Math.PI) / 180;
+    const p1 = p0 + (36 * Math.PI) / 180;
+    const arc = (r, a0, a1, n) => Array.from({ length: n + 1 }, (_, i) => at(r, a0 + ((a1 - a0) * i) / n));
+    const [go, gi] = [Math.asin(h / ro), Math.asin(h / ri)];
+    segs.push([...arc(ro, p0 + go, p1 - go, 10), ...arc(ri, p1 - gi, p0 + gi, 3)]);
+  }
+  return polyOf(compound(segs));
+})();
+
 add(
   'Citrus Wheel',
   'Lemon, lime and orange slices: a rind ring, a pale gap, then wedge segments round a hollow core, some cut in half, tossed at every angle.',
   () => ({
-    host: `--seg: ${spokesL(10, 32.4, -16.2)};`,
+    host: `--seg: ${SEGMENTS};`,
     rule: `${F} {
       --cut: @p(inset(0), inset(0), inset(0 0 50% 0));
       transform: translate(@r(-8%, 8%), @r(-8%, 8%)) rotate(@r(0deg, 360deg)) scale(@r(.8, 1.08));
-      z-index: @r(1, 9); ${clip('@var(--cut)')}
+      z-index: @ri(1, 9); ${clip('@var(--cut)')}
       ${B(`inset: 0; border-radius: 50%; background: ${inkOf(1, 2, 3, 4)}; ${maskV(ringL(88, 100))}`)}
-      ${A(`inset: 0; background: @lp(); opacity: .78; ${maskI('@var(--seg)', ringL(15, 80))}`)}
+      ${A(`inset: 0; background: @lp(); opacity: .78; ${clip('@var(--seg)')}`)}
     }${TR}`,
   }),
   {
@@ -372,7 +386,7 @@ add(
   () => ({
     host: `--icing: ${DONUT.icing}; --spr: ${DONUT.sprinkles};`,
     rule: `${F} {
-      transform: translate(@r(-6%, 6%), @r(-6%, 6%)) scale(@r(.86, 1)); z-index: @r(1, 9);
+      transform: translate(@r(-6%, 6%), @r(-6%, 6%)) scale(@r(.86, 1)); z-index: @ri(1, 9);
       border-radius: 50%; background: ${inkOf(1, 2)}; ${maskV('radial-gradient(circle closest-side, transparent 22%, #000 22%)')}
       ${B(`inset: 0; background: ${inkOf(3, 4, 5)}; ${clip('@var(--icing)')} transform: rotate(@r(0deg, 360deg));`)}
       ${A(`inset: 0; background: ${inkOf(3, 5, 6)}; ${clip('@var(--spr)')} transform: rotate(@r(0deg, 360deg));`)}
@@ -413,7 +427,7 @@ add(
   () => ({
     host: EGG.map((v, i) => `--egg${i}: ${v};`).join(' '),
     rule: `${F} {
-      transform: translate(@r(-10%, 10%), @r(-10%, 10%)) rotate(@r(0deg, 360deg)) scale(@r(.85, 1.15)); z-index: @r(1, 9);
+      transform: translate(@r(-10%, 10%), @r(-10%, 10%)) rotate(@r(0deg, 360deg)) scale(@r(.85, 1.15)); z-index: @ri(1, 9);
       ${B(`inset: 0; background: ${inkOf(1, 2)}; ${clip('@p(@var(--egg0), @var(--egg1), @var(--egg2))')}`)}
       ${A(`left: 36%; top: 30%; width: 36%; height: 36%; border-radius: 50%; background: ${inkOf(3, 4)};
         ${maskV('radial-gradient(ellipse 22% 13% at 32% 30%, transparent 98%, #000 100%)')}`)}
@@ -481,7 +495,7 @@ add(
     host: `--h2: ${HOLES2}; --h4: ${HOLES4};`,
     rule: `${F} {
       --holes: @p(@var(--h2), @var(--h4));
-      transform: translate(@r(-12%, 12%), @r(-12%, 12%)) rotate(@r(0deg, 360deg)) scale(@r(.62, 1.05)); z-index: @r(1, 9);
+      transform: translate(@r(-12%, 12%), @r(-12%, 12%)) rotate(@r(0deg, 360deg)) scale(@r(.62, 1.05)); z-index: @ri(1, 9);
       border-radius: 50%; background: ${inkOf(1, 2, 3, 4, 5)};
       -webkit-mask: @var(--holes); mask: @var(--holes); -webkit-mask-composite: source-in; mask-composite: intersect;
       ${B(`inset: 13%; border-radius: 50%; background: ${inkOf(1, 2, 3, 4, 5)}; opacity: .55; ${maskV(ringL(84, 100))}`)}
