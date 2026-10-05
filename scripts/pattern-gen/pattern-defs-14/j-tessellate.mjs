@@ -95,8 +95,6 @@ const Q = '((@x + @y) % 2)';
 /** 1 in the first column (or row), 0 elsewhere. */
 const FIRST_X = 'max(0, 2 - @x)';
 const FIRST_Y = 'max(0, 2 - @y)';
-const LAST_X = 'max(0, @x - @X + 1)';
-const LAST_Y = 'max(0, @y - @Y + 1)';
 
 /**
  * A number that depends on binary flags, as one @calc: `table` maps each
@@ -239,11 +237,10 @@ const hostList = (name, layers) => `--${name}: ${Array.isArray(layers) ? layers.
 const cornerDisc = (r, at) => `radial-gradient(circle farthest-side at ${at}, #000 ${r}, transparent ${r})`;
 const cornerBore = (r, at) => `radial-gradient(circle farthest-side at ${at}, transparent ${r}, #000 ${r})`;
 
-// A hash of an edge's place in the sheet, 0 or 1, the same whichever of its
-// two cells asks. `s` is a per-sheet number rolled once (@pd caches the
-// first roll), so a reseed recuts the whole puzzle.
-const hash01 = (xe, ye, a, b, k) =>
-  `floor(2 * ((sin(${xe} * ${a} + ${ye} * ${b} + $(s) * ${k}) * 43758.5453) - floor(sin(${xe} * ${a} + ${ye} * ${b} + $(s) * ${k}) * 43758.5453)))`;
+// The edge and corner hashes below are worked out from a place in the sheet,
+// so both cells sharing an edge get the same answer, plus `s`, a per-sheet
+// number rolled once (@pd caches the first roll), so a reseed recuts the
+// whole sheet.
 const SEED = '--s: @pd(@r(0, 50));';
 
 /** A polygon string from cell-unit points, mapped into a box `span` cells wide. */
