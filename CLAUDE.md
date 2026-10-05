@@ -2166,6 +2166,14 @@ written side by side. Things the batch learned, all silent when wrong:
   `@rn`) back as a number when the CSS is generated, so one roll can drive
   several properties; `$deg(x)` adds the unit. `rotate(@calc(...) deg)` with a
   space is invalid, and so is a bare `0` as an `@match` result.
+- **Compute a value once per cell and read it back.** Every `@calc` and `$()`
+  is evaluated by css-doodle in JavaScript, cell by cell, so a polygon whose
+  every vertex repeats the same sine sum took two seconds to reshuffle
+  (Streamgraph). `--h: $(...)` once and `$(h)` at each vertex brought it, and
+  a dozen others, from 400-2000 ms to 100-250 ms. Two traps inside `$()`: a
+  comparison like `(k == 0)` evaluates to 0 in a custom property, and four
+  variable reads in a row that expand to the same text are taken for a loop
+  and give 0. Read each variable once and decode picks arithmetically.
 - **Noise is bell-shaped**: `@rn(0, 1)` lands in 0.27-0.73 nine times in ten.
   Draw from a wider range and clamp to reach the ends.
 - **`@pd(@m(@X, @p(...)))` deals one pick per column**, which is how a stripe

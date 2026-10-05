@@ -574,17 +574,15 @@ add(
   'Pipework',
   'Wang tiles of pipe: elbows, straights, tees and crosses with rounded bends, each tile open only where its neighbor is, so the pipes join into one tangled network.',
   (c) => {
-    // each edge's hash: the sine once into --q*, then its fraction, so it is worked out once.
-    // The code is summed in two steps: css-doodle's $() reads a variable as
-    // text, and four reads of the same text in a row trip its cycle guard,
-    // which reads the fourth as 0 (four open edges came out as 14, not 15).
-    const edge = (n, xe, ye, a, b, k) =>
-      `--q${n}: $(sin(${xe} * ${a} + ${ye} * ${b} + s * ${k}) * 43758.5453); --p${n}: $(floor(0.55 + q${n} - floor(q${n})));`;
+    // Each edge's hash is one $() whose text is the same in every cell. The
+    // code is summed in two steps: four reads in a row of the same text trip
+    // $()'s cycle guard (four open edges came out as 14, not 15).
+    const edge = (n, xe, ye, a, b, k) => `--p${n}: $(floor(0.55 + (sin(${xe} * ${a} + ${ye} * ${b} + s * ${k}) * 43758.5453 % 1 + 1) % 1));`;
     const H = (n, xe, ye) => edge(n, xe, ye, 12.9898, 78.233, 1);
     const G = (n, xe, ye) => edge(n, xe, ye, 39.3467, 11.1351, 1.7);
     return {
       host: `${PIPE.host('po', 17)} ${PIPE.host('pi', 4)}`,
-      rule: `${SHIFT} ${SEED} ${H('r', '@x', '@y')} ${H('l', '(@x - 1)', '@y')} ${G('b', '@x', '@y')} ${G('t', '@x', '(@y - 1)')} --pj: $(8 * pt + 4 * pr + 2 * pb); --pk: $(pj + pl); --pipe: ${sheetInk(c, 1, 2)}; ${F} { ${B(`inset: 0; background: @p(@var(--pipe)); ${msk('@var(--po$(pk))')}`)} ${A(
+      rule: `${SHIFT} ${SEED} ${POS} ${H('r', 'ix', 'iy')} ${H('l', '(ix - 1)', 'iy')} ${G('b', 'ix', 'iy')} ${G('t', 'ix', '(iy - 1)')} --pj: $(8 * pt + 4 * pr + 2 * pb); --pk: $(pj + pl); --pipe: ${sheetInk(c, 1, 2)}; ${F} { ${B(`inset: 0; background: @p(@var(--pipe)); ${msk('@var(--po$(pk))')}`)} ${A(
         `inset: 0; background: @p(var(--color3), var(--color4)); ${msk('@var(--pi$(pk))')}`
       )} }${TR}`,
     };
@@ -1308,8 +1306,8 @@ add(
 const AUTO = (() => {
   // the field at a grid corner, computed once per corner and shared by both levels
   const field = (i, j) =>
-    `$(sin(${i} * 1.13 + ${j} * 0.47 + s) + sin(${j} * 1.05 - ${i} * 0.41 + 1.7 * s) + 0.7 * sin((${i} - ${j}) * 0.83 + 2.3 * s))`;
-  const fields = `--fa: ${field('(@x - 1)', '(@y - 1)')}; --fb: ${field('@x', '(@y - 1)')}; --fc: ${field('@x', '@y')}; --fd: ${field('(@x - 1)', '@y')};`;
+    `$(round((sin(${i} * 1.13 + ${j} * 0.47 + s) + sin(${j} * 1.05 - ${i} * 0.41 + 1.7 * s) + 0.7 * sin((${i} - ${j}) * 0.83 + 2.3 * s)) * 10000) / 10000)`;
+  const fields = `${POS} --fa: ${field('(ix - 1)', '(iy - 1)')}; --fb: ${field('ix', '(iy - 1)')}; --fc: ${field('ix', 'iy')}; --fd: ${field('(ix - 1)', 'iy')};`;
   const bit = (f, t) => `max(0, min(1, floor(${f} - ${t} + 1)))`;
   /** The level's four corners as one number, 8 a + 4 b + 2 c + d. */
   const code = (p, t) => `--${p}k: $(8 * ${bit('fa', t)} + 4 * ${bit('fb', t)} + 2 * ${bit('fc', t)} + ${bit('fd', t)});`;

@@ -777,13 +777,14 @@ add(
 // Three layers stacked about each row's midline, their thicknesses running on
 // sine waves of the sheet column whose phases are rolled once per drawing (on
 // the host), so the stream is continuous from cell to cell and reshapes on a
-// reseed. A cell works out the three thicknesses once at five points across
-// it (--ua .. --we, to a tenth of a percent) and the top edge from them
-// (--ta .. --te); every other vertex is left to CSS calc() over those, so no
-// sine is worked out twice. The clips are written unprefixed only, to keep
+// reseed. A cell works out the three thicknesses once at four points across
+// it (--ua .. --wd) and the top edge from them (--ta .. --td); every other
+// vertex is left to CSS calc() over those, so no sine is worked out twice,
+// and the expressions are kept short, since css-doodle's cost is mostly in
+// reading them. The clips are written unprefixed only, to keep
 // the per-cell CSS small.
-const SG_N = 4; // segments across a cell
-const SG_AT = 'abcde';
+const SG_N = 3; // segments across a cell
+const SG_AT = 'abcd';
 const SG_AMP = [13, 11, 12];
 const SG_W = [
   [0.9, 1.3, 0.7],
@@ -794,12 +795,20 @@ const SG_Y = [
   [0.8, 1.9, 1.3],
 ];
 const SG_HOST = [0, 1, 2].map((j) => `--p${j}: @r(0, 6.283);`).join(' ');
+const n4 = (v) => +v.toFixed(4);
+// Each band's two sine phases at the cell's right edge (--fj, --gj), from the
+// cell's column and row and the band's rolled phase; a sample i quarters in
+// from the left steps back from there by a constant.
+const SG_BASES = [0, 1, 2]
+  .map((j) => `--f${j}: $(@x*${SG_W[0][j]}+@y*${SG_Y[0][j]}+p${j}); --g${j}: $(@x*${SG_W[1][j]}+@y*${SG_Y[1][j]}+p${j}*1.7);`)
+  .join(' ');
 const sgThick = (j, i) => {
-  const X = `(@x - 1 + ${i / SG_N})`;
-  return `$(round(${SG_AMP[j] * 10}*(1.05+0.6*sin(${X} * ${SG_W[0][j]} + p${j} + @y * ${SG_Y[0][j]})+0.35*sin(${X} * ${SG_W[1][j]} + p${j} * 1.7 + @y * ${SG_Y[1][j]})))/10)`;
+  const A = SG_AMP[j];
+  return `$(${n4(A * 1.05)}+${n4(A * 0.6)}*sin(f${j}+${n4((i / SG_N - 1) * SG_W[0][j])})+${n4(A * 0.35)}*sin(g${j}+${n4((i / SG_N - 1) * SG_W[1][j])}))`;
 };
-const SG_XS = SG_AT.split('').map((a, i) => [a, `${(i * 100) / SG_N}%`]);
+const SG_XS = SG_AT.split('').map((a, i) => [a, `${+((i * 100) / SG_N).toFixed(3)}%`]);
 const SG_VARS = [
+  SG_BASES,
   ...[0, 1, 2].map((j) => SG_AT.split('').map((a, i) => `--${'uvw'[j]}${a}: ${sgThick(j, i)};`).join(' ')),
   SG_AT.split('').map((a) => `--t${a}: ${q(`50-(u${a}+v${a}+w${a})/2`)}%;`).join(' '),
   // the stream's top edge left to right, and its bottom edge right to left
