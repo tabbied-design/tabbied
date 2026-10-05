@@ -5,11 +5,11 @@
 // lemon by its rind and segments whatever ink it takes.
 //
 //   fruit     Citrus Wheel, Watermelon, Kiwi, Strawberry, Cherries, Avocado
-//   sweets    Peppermint, Doughnut, Allsorts, Candy Corn, Gingerbread,
+//   sweets    Candy Corn, Doughnut, Peppermint, Allsorts, Gingerbread,
 //             Linzer, Ice Cream
-//   savory    Sunny Side, Emmental, Farfalle, Coffee Beans, Peapod,
-//             Cocktail Olives
-//   drawer    Buttons, Dice, Card Suits, Marbles, Spools, Paper Clips
+//   savory    Sunny Side, Coffee Beans, Emmental, Farfalle, Peapod
+//   table     Tea Party, Buttons, Dice, Card Suits, Marbles, Spools,
+//             Paper Clips
 //
 // Most figures are outlines computed here once and parked on the host as a
 // custom property, read in the cell with @var(). A figure with a hole in it
@@ -19,6 +19,9 @@
 // empty. Where a figure needs bands of color inside one element (the three
 // bands of a candy corn) the bands are hard-stop gradients over a picked
 // background color, so the picked ink still transitions on a reseed.
+// Where the parts of a cell must agree on a choice (which allsort, which
+// suit and its red or black) one roll is set per cell and read back with
+// $(k) inside @match.
 import { section, F, TR, B, A } from './shared.mjs';
 
 const { add, all } = section('I. Pantry');
@@ -170,6 +173,14 @@ const turn = (pts, a, cx = 50, cy = 50) =>
     cy + (x - cx) * Math.sin(a) + (y - cy) * Math.cos(a),
   ]);
 
+/**
+ * Rolls made ahead of the frequency gate, read by nothing. The catalog
+ * preview runs the gate at @random(0.999), which drops about one cell in a
+ * thousand; these move which one, so a tidy grid ships a preview with no
+ * gap in it.
+ */
+const skip = (n) => Array.from({ length: n }, (_, i) => `--z${i}: @r(1);`).join(' ');
+
 /** A small seeded generator, so a scatter computed here is the same every build. */
 const rng = (seed) => {
   let s = seed >>> 0;
@@ -220,7 +231,7 @@ const SEGMENTS = (() => {
 
 add(
   'Citrus Wheel',
-  'Lemon, lime and orange slices: a rind ring, a pale gap, then wedge segments round a hollow core, some cut in half, tossed at every angle.',
+  'Lemon, lime, orange and grapefruit slices tossed at every angle, some cut in half: a rind ring, a pale gap, then wedge segments round a hollow core.',
   () => ({
     host: `--seg: ${SEGMENTS};`,
     rule: `${F} {
@@ -283,7 +294,7 @@ const MELON = (() => {
 
 add(
   'Watermelon',
-  'Wide watermelon wedges pointing up and down in turn, so each row interlocks: a curved rind, a pale gap and pink flesh with dark pips.',
+  'Wide watermelon wedges pointing up and down in turn, so each row interlocks: a curved rind, a pale gap and pink or yellow flesh with its pips cut out.',
   () => ({
     host: `--rind: ${MELON.rind}; --flesh: ${MELON.flesh};`,
     rule: `@odd { transform: rotate(180deg); } ${F} {
@@ -442,7 +453,7 @@ const CHERRY = (() => {
 
 add(
   'Cherries',
-  'Pairs of cherries on stalks joined at the top with a single leaf, a glint on every cherry, swinging at easy angles across a dark ground.',
+  'Pairs of cherries on stalks joined at the top with a single leaf, a glint of light on every cherry, swinging at easy angles across a mint ground.',
   () => ({
     host: `--fruit: ${CHERRY.fruit}; --stems: ${CHERRY.stems};`,
     rule: `${F} {
@@ -452,7 +463,7 @@ add(
     }${TR}`,
   }),
   {
-    palette: ['#16253D', '#E63946', '#FF8FA3', '#7FB069', '#E9C46A'],
+    palette: ['#DCEFEA', '#D62839', '#F2607B', '#3A7D44', '#8B5A2B'],
     grid: '5x7',
     freq: 0.9,
     tg: '5x5',
@@ -475,10 +486,10 @@ const AVO = (() => {
 
 add(
   'Avocado',
-  'Halved avocados in columns, stalk up then stalk down: a dark skin, a pale green rim of flesh and a round brown stone in the wide end.',
+  'Halved avocados in columns, stalk up then stalk down: a dark green skin round pale flesh, with a round brown stone in the wide end.',
   () => ({
     host: `--skin: ${AVO.skin}; --avo: ${AVO.flesh};`,
-    rule: `@x(even) { transform: rotate(180deg) scale(.9); } @x(odd) { transform: scale(.9); } ${F} {
+    rule: `${skip(1)} @x(even) { transform: rotate(180deg) scale(.9); } @x(odd) { transform: scale(.9); } ${F} {
       background: ${inkOf(1, 2)}; ${clip('@var(--skin)')}
       ${B(`inset: 0; background: ${inkOf(3, 4)}; ${clip('@var(--avo)')}`)}
       ${A(`left: 34.5%; top: 52.5%; width: 31%; height: 31%; border-radius: 50%; background: ${inkOf(5, 6)};
@@ -512,7 +523,7 @@ const kernel = (dir, shape) =>
 
 add(
   'Candy Corn',
-  'Rows of candy corn kernels, point up and point down in turn so they nest, each banded white at the tip, orange through the middle and yellow at the base.',
+  'Rows of candy corn kernels, point up and point down in turn so they nest, each banded white at the tip, orange or pink through the middle and yellow or brown at the base.',
   () => ({
     host: `--up: ${CORN.up}; --dn: ${CORN.dn};`,
     rule: `${F} {
@@ -637,29 +648,30 @@ add(
 
 // Allsorts: one roll per cell decides the sweet, and every part reads it:
 // a sandwich of fondant and licorice, a coconut wheel round a licorice
-// core, or a square of fondant framing one.
+// core, or a square of fondant round one. The fondant is the cell itself
+// and the licorice sits inside it, so no two pieces share an outline.
 const SORTS = [
-  'linear-gradient(180deg, #000 0 27%, transparent 27% 73%, #000 73%)',
-  'radial-gradient(circle closest-side, transparent 40%, #000 40%)',
-  'linear-gradient(90deg, #000 0 27%, transparent 27% 73%, #000 73%), linear-gradient(180deg, #000 0 27%, transparent 27% 73%, #000 73%)',
+  'linear-gradient(180deg, transparent 27%, #000 27% 38%, transparent 38% 62%, #000 62% 73%, transparent 73%)',
+  'radial-gradient(circle closest-side, #000 40%, transparent 40%)',
+  'linear-gradient(#000, #000) center / 46% 46% no-repeat',
 ];
 
 add(
   'Allsorts',
-  'Licorice allsorts in a loose heap of rows: striped sandwiches of fondant and licorice, coconut wheels round a black core and framed licorice squares.',
+  'Licorice allsorts in a loose heap of rows: striped sandwiches of fondant and licorice, coconut wheels round a black core and fondant squares round a licorice one.',
   () => ({
     host: SORTS.map((v, i) => `--m${i}: ${v};`).join(' ') + ' --mid: linear-gradient(180deg, transparent 0 38%, #000 38% 62%, transparent 62%);',
-    rule: `${F} {
+    rule: `${skip(1)} ${F} {
       --k: @p(0, 1, 2);
       --mk: @match($(k) == 0, @var(--m0), $(k) == 1, @var(--m1), @var(--m2));
       transform: translate(@r(-5%, 5%), @r(-5%, 5%)) rotate(@p(0deg, 90deg)) rotate(@r(-12deg, 12deg)) scale(.8);
-      border-radius: @match($(k) == 1, 50%, 7%); background: var(--color1);
-      ${B(`inset: 0; border-radius: inherit; background: ${inkOf(2, 3, 4, 5)}; -webkit-mask: @var(--mk); mask: @var(--mk);`)}
-      ${A(`inset: 0; background: ${inkOf(2, 3, 4, 5)}; opacity: @match($(k) == 0, 1, 0%); ${maskV('@var(--mid)')}`)}
+      border-radius: @match($(k) == 1, 50%, 7%); background: ${inkOf(2, 3, 4, 5, 6)};
+      ${B(`inset: 0; background: ${inkOf(2, 3, 4, 5, 6)}; opacity: @match($(k) == 0, 1, 0%); ${maskV('@var(--mid)')}`)}
+      ${A(`inset: 0; background: var(--color1); -webkit-mask: @var(--mk); mask: @var(--mk);`)}
     }${TR}`,
   }),
   {
-    palette: ['#F3EEE4', '#1E1B1C', '#F49AC1', '#FFD23F', '#F7F3EA', '#5FB7D4'],
+    palette: ['#35505E', '#1E1B1C', '#F49AC1', '#FFD23F', '#FBF7EE', '#5FB7D4', '#F28C38'],
     grid: '6x9',
     freq: 1,
     tg: '5x5',
@@ -705,7 +717,7 @@ add(
   'Rows of gingerbread men holding hands in a long chain, each piped with white or pink icing: dot eyes, a smile, three buttons and zigzag cuffs.',
   () => ({
     host: `--man: ${GINGER.body}; --icing: ${GINGER.icing};`,
-    rule: `${F} {
+    rule: `${skip(1)} ${F} {
       ${B(`inset: 0; background: ${inkOf(1, 2, 3)}; ${clip('@var(--man)')}`)}
       ${A(`inset: 0; background: ${inkOf(4, 5)}; ${clip('@var(--icing)')}`)}
     }${TR}`,
@@ -747,7 +759,7 @@ add(
   'Linzer cookies with scalloped edges, each with a heart, star, flower or round window cut through to the jam beneath.',
   () => ({
     host: LINZER.map((v, i) => `--lz${i}: ${v};`).join(' '),
-    rule: `${F} {
+    rule: `${skip(1)} ${F} {
       transform: translate(@r(-5%, 5%), @r(-5%, 5%)) rotate(@r(-20deg, 20deg)) scale(.92);
       ${B(`left: 25%; top: 25%; width: 50%; height: 50%; border-radius: 50%; background: ${inkOf(3, 4, 5)};`)}
       ${A(`inset: 0; background: ${inkOf(1, 2)}; ${clip('@p(@var(--lz0), @var(--lz1), @var(--lz2), @var(--lz3))')}`)}
@@ -787,7 +799,7 @@ add(
   () => ({
     host: `--cone: ${CONE.cone}; --scoop: ${CONE.scoop};
       --waffle: repeating-linear-gradient(0deg, #000 0 8%, #00000052 8% 10%), repeating-linear-gradient(90deg, #000 0 8%, #00000052 8% 10%);`,
-    rule: `${F} {
+    rule: `${skip(1)} ${F} {
       transform: translate(@r(-5%, 5%), @r(-3%, 3%)) rotate(@r(-14deg, 14deg)) scale(1.06);
       background: radial-gradient(circle at 50% 17%, var(--color6) 0 6.5%, transparent 6.5%);
       ${B(`inset: 0; background: ${inkOf(1, 2)}; ${clip('@var(--cone)')} transform: rotate(45deg);
@@ -865,7 +877,7 @@ const BEAN = (() => {
 })();
 const bean = (ink) =>
   `inset: 0; background: ${ink}; ${clip('@var(--bean)')}
-   transform: translate(@r(-22%, 22%), @r(-22%, 22%)) rotate(@r(0deg, 360deg)) scale(@r(.62, .86));`;
+   transform: translate(@r(-20%, 20%), @r(-20%, 20%)) rotate(@r(0deg, 360deg)) scale(@r(.7, .96));`;
 
 add(
   'Coffee Beans',
@@ -890,8 +902,8 @@ add(
 // differ wedge to wedge) go right through to the ground. Every other
 // column faces the other way.
 const WEDGE = (() => {
-  const [A, Bp, C] = [[3, 93], [69, 93], [69, 50]];
-  const off = [21, -34];
+  const [A, Bp, C] = [[3, 92], [70, 92], [70, 38]];
+  const off = [14, -26];
   const sh = ([x, y]) => [x + off[0], y + off[1]];
   // the top face reaches a hair over the front one, so no seam shows
   const dn = ([x, y]) => [x + 0.4, y + 0.7];
@@ -903,7 +915,7 @@ const WEDGE = (() => {
 })();
 const cheeseHoles = Array.from(
   { length: 4 },
-  () => 'radial-gradient(circle at @r(24%, 64%) @r(70%, 90%), transparent @r(4%, 9.5%), #000 0)'
+  () => 'radial-gradient(circle at @r(26%, 66%) @r(58%, 90%), transparent @r(5%, 10.5%), #000 0)'
 ).join(', ');
 
 add(
@@ -911,9 +923,10 @@ add(
   'Wedges of cheese in rows, facing left and right in turn: a pale top, a wax rind at the back and a front face bored with holes of every size.',
   () => ({
     host: `--wedge: ${WEDGE.all}; --front: ${WEDGE.front}; --top: ${WEDGE.top};`,
-    rule: `--z: @r(1); @x(even) { transform: scaleX(-1); } ${F} {
-      ${clip('@var(--wedge)')} background: linear-gradient(90deg, transparent 68.6%, ${inkOf(4, 5)} 68.6%);
-      ${B(`inset: 0; background: ${inkOf(1, 2)}; ${clip('@var(--front)')} ${maskI(cheeseHoles)}`)}
+    rule: `${skip(1)} @x(even) { transform: scaleX(-1); } ${F} {
+      ${clip('@var(--wedge)')} background: linear-gradient(90deg, transparent 69.6%, ${inkOf(4, 5)} 69.6%);
+      --holes: ${cheeseHoles};
+      ${B(`inset: 0; background: ${inkOf(1, 2)}; ${clip('@var(--front)')} ${maskI('@var(--holes)')}`)}
       ${A(`inset: 0; background: var(--color3); ${clip('@var(--top)')}`)}
     }${TR}`,
   }),
@@ -1018,44 +1031,88 @@ add(
   }
 );
 
-// Cocktail Olives: a pick with a ball on its end through three stuffed
-// olives, each with its red pimento showing at one end. The pick is the
-// cell's own background (a bar and a ball), so it shows only between and
-// beyond the olives it runs through.
-const OLIVE = (() => {
-  const xs = [31, 55.5, 80];
-  const olives = xs.map((x) => ellipsePts(x, 50, 11.2, 9.4, 36));
-  const pim = xs.map((x) => dotL(x + 7.8, 50, 8.6)).join(', ');
-  const far = Math.hypot(94, 50);
-  const r = pct((4.6 / far) * 100);
-  const pick = `radial-gradient(circle at 6% 50%, @var(--pk) 0 ${r}, transparent ${r}), linear-gradient(180deg, transparent 48.6%, @var(--pk) 48.6% 51.4%, transparent 51.4%) 60% 0 / 90% 100% no-repeat`;
-  return { olives: polyOf(compound(olives)), pim, pick };
+// -- on the table --------------------------------------------------------------------
+
+// Tea Party: teapots and teacups on a checkerboard. Each silhouette is
+// one polygon (a handle's eye is a hole, the spout and the curls of steam
+// are strokes); the second piece is clipped to the pot's body or the cup's
+// bowl and printed with dots or a band, chosen per cell.
+const TEA = (() => {
+  const taper = (path, w0, w1, capN = 6) => {
+    const n = path.length;
+    const left = [];
+    const right = [];
+    path.forEach((p, i) => {
+      const [a, b] = [path[Math.max(0, i - 1)], path[Math.min(n - 1, i + 1)]];
+      const l = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      const [dx, dy] = [(b[0] - a[0]) / l, (b[1] - a[1]) / l];
+      const w = w0 + ((w1 - w0) * i) / (n - 1);
+      left.push([p[0] - dy * w, p[1] + dx * w]);
+      right.push([p[0] + dy * w, p[1] - dx * w]);
+    });
+    const end = path[n - 1];
+    const prev = path[n - 2];
+    const a0 = Math.atan2(end[1] - prev[1], end[0] - prev[0]) + Math.PI / 2;
+    const cap = Array.from({ length: capN - 1 }, (_, k) => at(w1, a0 - ((k + 1) / capN) * Math.PI, end[0], end[1]));
+    return [...left, ...cap, ...right.reverse()];
+  };
+  const quad = (p0, c, p1, n = 14) =>
+    Array.from({ length: n + 1 }, (_, i) => {
+      const t = i / n;
+      return [0, 1].map((j) => (1 - t) ** 2 * p0[j] + 2 * (1 - t) * t * c[j] + t * t * p1[j]);
+    });
+  // the pot
+  const body = Array.from({ length: 48 }, (_, i) => {
+    const t = (i / 48) * TAU;
+    return [48 + 27 * Math.cos(t), Math.min(79, 61 + 19.5 * Math.sin(t))];
+  });
+  const lid = [...Array.from({ length: 13 }, (_, i) => at(12.5, Math.PI + (Math.PI * i) / 12, 48, 40.5)), [61.5, 42.5], [34.5, 42.5]];
+  const knob = circlePts(48, 25.5, 3.6, 16);
+  const foot = [[35, 77], [61, 77], [59, 83], [37, 83]];
+  const spout = taper(quad([30, 66], [15, 64], [9, 42]), 5.2, 2.3);
+  const potHandle = ellipsePts(76.5, 58, 10.5, 12, 32);
+  const potEye = ellipsePts(76.5, 58, 5.6, 7, 28);
+  const pot = polyOf(compound([body, lid, knob, foot, spout, potHandle], [potEye]));
+  const potBody = polyOf(body.filter(([, y]) => y > 47.5).map(([x, y]) => [x, Math.min(y, 76)]));
+  // the cup, its saucer and two curls of steam
+  const bowl = [...Array.from({ length: 25 }, (_, i) => at(25, (Math.PI * i) / 24, 46, 46).map((v, j) => (j ? 46 + (v - 46) * 1.15 : v)))];
+  const cupHandle = ellipsePts(72, 56, 9, 9.5, 28);
+  const cupEye = ellipsePts(72, 56, 4.8, 5.4, 24);
+  const saucer = ellipsePts(47, 81.5, 34, 5, 40);
+  const curl = (x) =>
+    strokePts(Array.from({ length: 13 }, (_, i) => [x + 3.2 * Math.sin((i / 12) * TAU), 38 - (i / 12) * 22]), 1.6, 5);
+  const cup = polyOf(compound([bowl, cupHandle, saucer, curl(38), curl(54)], [cupEye]));
+  const cupBody = polyOf(bowl);
+  return { pot, potBody, cup, cupBody };
 })();
+const TEA_PRINT = [
+  'radial-gradient(circle closest-side, #000 42%, transparent 45%) 0 0 / 17% 17%',
+  'linear-gradient(180deg, transparent 0 54%, #000 54% 61%, transparent 61% 65%, #000 65% 68%, transparent 68%)',
+  'repeating-linear-gradient(90deg, #000 0 2.6%, transparent 2.6% 7%)',
+];
 
 add(
-  'Cocktail Olives',
-  'Cocktail picks at every angle, each run through three green or black olives with the red pimento showing at the end of every one.',
+  'Tea Party',
+  'Teapots and teacups in a checkerboard, the pots with spout, lid and looped handle and the cups steaming on their saucers, each printed with dots, a band or stripes.',
   () => ({
-    host: `--olives: ${OLIVE.olives}; --pim: ${OLIVE.pim};`,
-    rule: `${F} {
-      --pk: ${inkOf(3, 6)};
-      transform: translate(@r(-6%, 6%), @r(-6%, 6%)) rotate(@r(0deg, 360deg)) scale(@r(1, 1.15)); z-index: @ri(1, 9);
-      background: ${OLIVE.pick};
-      ${B(`inset: 0; background: ${inkOf(1, 2)}; ${clip('@var(--olives)')}`)}
-      ${A(`inset: 0; background: ${inkOf(4, 5)}; ${maskV('@var(--pim)')}`)}
+    host: `--pot: ${TEA.pot}; --potb: ${TEA.potBody}; --cup: ${TEA.cup}; --cupb: ${TEA.cupBody}; ${TEA_PRINT.map((v, i) => `--tp${i}: ${v};`).join(' ')}`,
+    rule: `${skip(1)} ${F} {
+      --tp: @p(@var(--tp0), @var(--tp1), @var(--tp2));
+      transform: scale(.92);
+      ${B(`inset: 0; background: ${inkOf(1, 2, 3, 4)}; ${clip('@match((x + y) % 2 == 0, @var(--pot), @var(--cup))')}`)}
+      ${A(`inset: 0; background: var(--color5); opacity: .9; ${clip('@match((x + y) % 2 == 0, @var(--potb), @var(--cupb))')}
+        -webkit-mask: @var(--tp); mask: @var(--tp);`)}
     }${TR}`,
   }),
   {
-    palette: ['#F1E9D8', '#6B8E23', '#36402A', '#C9A227', '#D62828', '#F25C3B', '#2B2D42'],
-    grid: '5x7',
+    palette: ['#F3E9DC', '#2B6F77', '#D1495B', '#E09F3E', '#30638E', '#FFFBF2'],
+    grid: '6x9',
     freq: 1,
     tg: '5x5',
     tf: 1,
-    meta: { tags: ['ovals', 'lines', 'dots'], mood: ['retro', 'playful'], density: 'medium', goodFor: ['packaging', 'poster', 'textile'] },
+    meta: { tags: ['checkerboard', 'dots', 'stripes', 'curves'], mood: ['playful', 'retro'], density: 'medium', goodFor: ['textile', 'packaging', 'wallpaper'] },
   }
 );
-
-// -- the drawer ----------------------------------------------------------------------
 
 // Buttons: a disc with two or four holes bored right through, a raised lip
 // drawn as a ring inside the rim.
@@ -1107,7 +1164,7 @@ add(
   'Dice faces showing one to six, tossed a little askew in rows: colored cubes with their pips picked out in a second ink.',
   () => ({
     host: DIE,
-    rule: `${F} {
+    rule: `${skip(1)} ${F} {
       --pips: @p(@var(--f1), @var(--f2), @var(--f3), @var(--f4), @var(--f5), @var(--f6));
       transform: translate(@r(-5%, 5%), @r(-5%, 5%)) rotate(@r(-16deg, 16deg)) scale(.78);
       border-radius: 18%; background: ${inkOf(2, 3, 4)};
@@ -1153,7 +1210,7 @@ const SUITS = (() => {
   })();
   const stem = [[50, 56], [56, 72], [60, 76], [40, 76], [44, 72]];
   const spade = [heartPts(50, 50, 1.15, -1), stem];
-  const club = [circlePts(50, 37, 10.5, 32), circlePts(39, 55, 10.5, 32), circlePts(61, 55, 10.5, 32), [[50, 40], [56, 52], [44, 52]], stem];
+  const club = [circlePts(50, 37, 10.5, 32), circlePts(39, 55, 10.5, 32), circlePts(61, 55, 10.5, 32), [[50, 38], [59, 58], [41, 58]], stem];
   return {
     heart: polyOf(heart),
     diamond: polyOf(diamond),
@@ -1171,7 +1228,7 @@ add(
       --k: @p(0, 1, 2, 3);
       ${B(`inset: 0; background: @match($(k) < 2, ${inkOf(1, 2)}, ${inkOf(3, 4)});
         ${clip('@match($(k) == 0, @var(--hearts), $(k) == 1, @var(--diamonds), $(k) == 2, @var(--clubs), @var(--spades))')}
-        transform: rotate(@match(y % 2 == 0, 180deg, 0deg)) scale(1.04);`)}
+        transform: rotate(@match(y % 2 == 0, 180deg, 0deg)) scale(1.24);`)}
       ${A(`left: -10%; top: -10%; width: 20%; height: 20%; background: ${inkOf(5)}; ${clip('polygon(50% 8%, 82% 50%, 50% 92%, 18% 50%)')}`)}
     }${TR}`,
   }),
@@ -1185,7 +1242,7 @@ add(
   }
 );
 
-// Marbles: glass marbles with a twisted cat's eye of three curved vanes and
+// Marbles: glass marbles with a twisted cat's eye of four curved vanes and
 // a glint of light, rolled together at every size.
 const VANES = (() => {
   const blades = [];
@@ -1230,9 +1287,7 @@ add(
 // fuller or emptier than the next.
 const SPOOL = (() => {
   const rr = (x0, y0, x1, y1, r) => roundCorners([[x0, y0], [x1, y0], [x1, y1], [x0, y1]], r, 4);
-  const flanges = [rr(20, 9, 80, 21, 3), rr(20, 79, 80, 91, 3)];
-  const core = rr(36, 18, 64, 82, 1);
-  return { wood: polyOf(compound([...flanges, core])) };
+  return { wood: polyOf(compound([rr(20, 9, 80, 21, 3), rr(20, 79, 80, 91, 3)])) };
 })();
 
 add(
@@ -1240,10 +1295,10 @@ add(
   'Cotton reels standing in rows like a haberdasher\'s shelf: wooden flanges top and bottom and the colored thread between them, some reels fuller than others.',
   () => ({
     host: `--wood: ${SPOOL.wood};`,
-    rule: `${F} {
+    rule: `${skip(1)} ${F} {
       transform: scale(.9);
       ${B(`inset: 0; background: ${inkOf(1, 2)}; ${clip('@var(--wood)')}`)}
-      ${A(`left: 25%; top: 21%; width: 50%; height: 58%; background: ${inkOf(3, 4, 5, 6)}; transform: scaleX(@r(.5, 1));
+      ${A(`left: 25%; top: 19.6%; width: 50%; height: 60.8%; background: ${inkOf(3, 4, 5, 6)}; transform: scaleX(@r(.55, 1));
         ${maskV('repeating-linear-gradient(180deg, #000 0 4.4%, #00000080 4.4% 6%)')}`)}
     }${TR}`,
   }),
