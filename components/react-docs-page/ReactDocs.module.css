@@ -1325,7 +1325,8 @@ code.entryName {
 
 /* A tile of the strip is a link to its design in the editor, in the colors
    it wears. A block, so `.article a`'s underline and color stay off it; its
-   caption turns teal as the setup cards' marks do. */
+   caption's plate lightens to a neutral gray of the same hue, opaque, which
+   reads over any palette the tile is in. */
 .article a.docsTileLink {
   display: block;
   color: inherit;
@@ -1343,7 +1344,7 @@ code.entryName {
 
 .docsTileLink:hover .artCaption,
 .docsTileLink:focus-visible .artCaption {
-  background-color: var(--h-teal);
+  background-color: oklch(0.42 0.012 285);
 }
 
 /* The design and palette a piece is drawn in, on a dark plate in its corner
