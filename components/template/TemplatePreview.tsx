@@ -22,6 +22,7 @@ import { stopImpersonating } from 'lib/impersonation';
 import { ebGaramond, plexMono, plexSans } from 'lib/fonts';
 import { chosenOf, customizeHref as customizerFor, startDownload } from 'lib/myTemplates';
 import useMediaQuery from 'lib/useMediaQuery';
+import { withArticle } from 'lib/article';
 import { TemplateUsage, choiceNote, useTemplateGate } from './ChooseTemplate';
 import styles from './TemplatePreview.module.css';
 
@@ -64,7 +65,7 @@ export default function TemplatePreview({
       {/* The page's heading, for a screen reader and an outline: the bar is
           chrome and the template is in a frame, so nothing else names it. */}
       <h1 className={styles.srOnly}>
-        {name}, a {topic.toLowerCase()} website template
+        {name}, {withArticle(topic.toLowerCase())} website template
       </h1>
 
       <header className={styles.bar}>

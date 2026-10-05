@@ -254,6 +254,8 @@ function listTool(context: ToolContext): Tool | null {
           : 0;
 
       const matched = catalog.templates.filter((entry) => {
+        // The fields the site's template gallery searches too
+        // (lib/catalogSearch.ts, `templateKeywords`).
         const haystack =
           `${entry.slug} ${entry.name} ${entry.category ?? ''} ${entry.topic ?? ''}`.toLowerCase();
         return (

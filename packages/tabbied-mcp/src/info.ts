@@ -20,4 +20,6 @@ Designs are addressed by slug, and slugs are opaque - "cleat", "karst", "radius"
 
 Metadata narrows the field; it does not settle it. These are pictures, so call preview_design on your shortlist and look before you commit. Choosing off tags alone is the main way this goes wrong.
 
+The package works in React, Vue, Svelte and SvelteKit, any page or CMS through the <tabbied-pattern> web component, plain HTML with no build step, and framework-free JavaScript. get_design writes ready-to-paste code for each; pass framework to get only the one the project uses, and match it to the project rather than defaulting to React.
+
 When you write integration code, remember a pattern has no intrinsic size: it fills its parent and collapses to nothing in a parent that sizes to content. Pass height or aspectRatio unless the parent is definitely sized. get_docs has the full API contract and recipes.`;

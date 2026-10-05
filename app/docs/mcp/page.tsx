@@ -82,7 +82,8 @@ const localConfig = `{
   }
 }`;
 
-const programmaticCode = `import { createMcpHandler } from '@modelcontextprotocol/server';
+const programmaticCode = `// On Node: the readers the local server itself uses.
+import { createMcpHandler } from '@modelcontextprotocol/server';
 import { buildServer, catalogTools } from 'tabbied-mcp';
 import {
   fetchDocs,
@@ -103,6 +104,58 @@ const tools = catalogTools({
 export default {
   // The factory, not a built server: one server per request.
   fetch: createMcpHandler(() => buildServer(tools)).fetch,
+};`;
+
+// A Worker has no disk and no I/O outside a request, so it reads the same
+// files over fetch, once, on the first request.
+const workerCode = `import { createMcpHandler } from '@modelcontextprotocol/server';
+import {
+  buildServer,
+  catalogTools,
+  type Catalog,
+  type TemplateCatalog,
+  type TemplateSpec,
+  type Tool,
+} from 'tabbied-mcp';
+
+const SITE = 'https://tabbied.com';
+
+const get = async (path: string) => {
+  const response = await fetch(new URL(path, SITE));
+  if (!response.ok) throw new Error(\`\${path}: \${response.status}\`);
+  return response;
+};
+
+const base64 = (bytes: Uint8Array) => {
+  let binary = '';
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary);
+};
+
+let tools: Promise<Tool[]> | undefined;
+
+const load = async () =>
+  catalogTools({
+    catalog: (await (await get('/catalog.json')).json()) as Catalog,
+    fetchDocs: async () => (await get('/llms-full.txt')).text(),
+    fetchPreview: async (design) => {
+      const response = await get(design.preview);
+      return {
+        data: base64(new Uint8Array(await response.arrayBuffer())),
+        mimeType: response.headers.get('Content-Type') ?? 'image/webp',
+      };
+    },
+    fetchTemplateCatalog: async () =>
+      (await (await get('/editable-catalog.json')).json()) as TemplateCatalog,
+    fetchTemplate: async (slug) =>
+      (await (await get(\`/editable/\${encodeURIComponent(slug)}.json\`)).json()) as TemplateSpec,
+  });
+
+export default {
+  async fetch(request: Request) {
+    const ready = await (tools ??= load());
+    return createMcpHandler(() => buildServer(ready)).fetch(request);
+  },
 };`;
 
 type ToolRow = { name: string; where: 'Both' | 'Local'; description: ReactNode };
@@ -129,7 +182,9 @@ const TOOLS: ToolRow[] = [
     description: (
       <>
         One design in full: its palette, every option with its range and
-        default, and code for React, plain JavaScript and the CLI.
+        default, and the code for it in React, Vue, Svelte, the web
+        component, plain HTML or plain JavaScript, plus a command for the
+        CLI.
       </>
     ),
   },
@@ -172,6 +227,7 @@ const TOOLS: ToolRow[] = [
 
 const PROMPTS = [
   'Find a calm, sparse Tabbied pattern for the header of a meditation app. Show me three, and give me the React code for the one I pick.',
+  'This is a SvelteKit site. Find a bold Tabbied pattern for the pricing section and give me the Svelte code for it.',
   'Which Tabbied patterns export cleanly to SVG and would work as a print poster? Show me the previews.',
   'Render radius as a 1600 by 900 SVG in #0f172a, #38bdf8 and #f8fafc.',
   'Which Tabbied website template suits a family bakery? Show me what I can change on it.',
@@ -238,9 +294,12 @@ export default function McpDocsPage() {
                       </p>
                     </div>
                     <div className={styles.entry}>
-                      <code className={styles.entryName}>npx -y tabbied-mcp</code>
+                      <code className={styles.entryName}>
+                        npx -y -p tabbied-mcp -p playwright tabbied-mcp
+                      </code>
                       <p>
-                        On your own machine, with Node 20 or later. Adds{' '}
+                        On your own machine, with Node 20 or later. With
+                        Playwright beside it, it adds{' '}
                         <Code>render_design</Code>, which writes SVG and PNG
                         files.
                       </p>
@@ -498,7 +557,7 @@ export default function McpDocsPage() {
                   </p>
                   <CodeBlock
                     code={programmaticCode}
-                    title="worker.ts"
+                    title="server.ts"
                     lang="ts"
                     className={styles.codeStandalone}
                   />
@@ -512,9 +571,23 @@ export default function McpDocsPage() {
                     <Code>fetchTemplate</Code> as well,{' '}
                     <Code>get_template</Code>. With all five, as here, it serves
                     the same six tools as the hosted server at{' '}
-                    <Code>{ENDPOINT}</Code>. A Worker cannot read the disk, so
-                    it passes fetchers of its own, as the hosted server does
-                    with its static files. The{' '}
+                    <Code>{ENDPOINT}</Code>.
+                  </p>
+                  <p>
+                    The Node readers take the catalog from the installed{' '}
+                    <Code>tabbied</Code> package. A Worker cannot read the
+                    disk, so it passes fetchers of its own, each an async
+                    function returning the same data, as the hosted server
+                    does with its static files:
+                  </p>
+                  <CodeBlock
+                    code={workerCode}
+                    title="worker.ts"
+                    lang="ts"
+                    className={styles.codeStandalone}
+                  />
+                  <p>
+                    The{' '}
                     <a href={NPM_URL} target="_blank" rel="noreferrer">
                       package README
                     </a>{' '}
@@ -529,7 +602,7 @@ export default function McpDocsPage() {
                       GitHub
                     </a>
                     . The MCP server is MIT-licensed, like the{' '}
-                    <a href="/docs/react/">tabbied package</a> it serves.
+                    <a href="/docs/">tabbied package</a> it serves.
                   </p>
                 </footer>
               </article>

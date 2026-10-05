@@ -61,7 +61,8 @@ Render options:
   --size <WxH>          Output size in px (default 960x960).
   --fit <mode>          grid | cover | fixed (default grid).
   --scale <n>           PNG device-scale factor (default 2).
-  --frames <n>          Render a PNG sequence of n frames into --out/.
+  --frames <n>          Render a PNG sequence of n frames into --out/, named
+                        frame-000.png on (more digits past frame 999).
   --reseed-every <n>    Frames between reseeds in a sequence (default 30).
   --browser <path>      Chromium executable (or set TABBIED_CHROMIUM).
 
@@ -137,9 +138,14 @@ function runList(flags: Map<string, string>): void {
           .includes(query))
   );
 
+  // Columns as wide as their longest entry, so a long slug cannot push the
+  // rest of its row out of line.
+  const slugWidth = Math.max(0, ...matches.map((design) => design.slug.length));
+  const densityWidth = Math.max(0, ...matches.map((design) => design.density.length));
+
   for (const design of matches) {
     console.log(
-      `${design.slug.padEnd(14)} ${design.density.padEnd(7)} [${design.tags.join(
+      `${design.slug.padEnd(slugWidth)}  ${design.density.padEnd(densityWidth)}  [${design.tags.join(
         ', '
       )}] - ${design.name}`
     );
@@ -496,7 +502,9 @@ async function runRender(args: RenderArgs): Promise<void> {
 
     if (args.frames > 0) {
       mkdirSync(args.out, { recursive: true });
-      const pad = String(args.frames).length;
+      // Three digits at least, so ffmpeg's `frame-%03d.png` reads any sequence
+      // under a thousand frames; a longer one takes as many as its last index.
+      const pad = Math.max(3, String(args.frames - 1).length);
       for (let frame = 0; frame < args.frames; frame += 1) {
         if (frame > 0 && frame % args.reseedEvery === 0) {
           const generation = frame / args.reseedEvery;

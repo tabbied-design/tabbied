@@ -23,6 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'docs/concepts',
     'docs/react',
     'docs/html',
+    'docs/javascript',
     'docs/mcp',
     'docs/svelte',
     'docs/vue',

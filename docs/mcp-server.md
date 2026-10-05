@@ -84,12 +84,17 @@ toolset is built around a single flow: **narrow on metadata, then look.**
   merely narrow one and fix the next call without another round trip.
 
 - **`get_design`** returns the full record - palette, every option with its
-  range and default, SVG-export support - plus slug-substituted React, core,
-  and CLI snippets, and a reminder that a pattern has no intrinsic size. The
-  React snippet is a component at the design's default aspect ratio, written
-  as CSS's `2 / 3` (the catalog's `2:3` id is not a CSS value), the same
-  shape as the React snippet under the editor's Copy code. The CLI command asks for a
-  `.png` when the design has no vector export.
+  range and default, SVG-export support - plus code for every setup (`react`,
+  `vue`, `svelte`, `element` for the web component, `html` for data
+  attributes and `hydratePatterns()`, `core` for `createPattern()`), a CLI
+  command, and a reminder that a pattern has no intrinsic size. An optional
+  `framework` argument returns only that setup's snippet. The snippets come
+  from `tabbied/snippets`, the builders the editor's Copy code and the
+  catalog's `usage` call too, so all three agree: each draws the design at its
+  default aspect ratio, written as CSS's `2 / 3` (the catalog's `2:3` id is
+  not a CSS value), and the two markup snippets paint its ground color before
+  the script runs. The CLI command asks for a `.png` when the design has no
+  vector export.
 
 - **`preview_design`** returns the rendered preview image for up to six slugs
   as MCP image content. This is the step that makes a choice reliable; metadata

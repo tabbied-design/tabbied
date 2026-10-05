@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import useMediaQuery from 'lib/useMediaQuery';
 import { paginationWindow } from 'lib/pagination';
 import type { GalleryItem } from 'lib/pattern';
+import { matchesQuery } from 'lib/catalogSearch';
 import {
   deletePalette,
   previewPalette,
@@ -215,12 +216,10 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
     () => (search.trim() ? mergePalettes(savedPalettes, PALETTE_LIBRARY, search).length : 0),
     [savedPalettes, search]
   );
+  // A design matches on its motifs, moods and uses as well as its name
+  // (lib/catalogSearch), so "dots" finds every design tagged with dots.
   const designMatches = useMemo(
-    () =>
-      gallery.filter(
-        (item) =>
-          !search || item.name.toLowerCase().includes(search.toLowerCase())
-      ),
+    () => gallery.filter((item) => matchesQuery(item.keywords, search)),
     [gallery, search]
   );
   const paletteOnlySearch = designMatches.length === 0 && paletteMatches > 0;
@@ -373,6 +372,11 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
               {paletteMatches === 1
                 ? 'One palette matches: choose it from the palettes to recolor them.'
                 : `${paletteMatches} palettes match: choose one from the palettes to recolor them.`}
+            </p>
+          ) : !hasResults ? null : search.trim() ? (
+            <p className={styles.intro} role="status">
+              {filtered.length} {filtered.length === 1 ? 'pattern matches' : 'patterns match'}{' '}
+              &quot;{search.trim()}&quot;, by name, motif, mood or use.
             </p>
           ) : (
             <p className={styles.intro}>

@@ -1,21 +1,22 @@
 'use client';
 
 import { useRef } from 'react';
+import type { PatternDefinition } from 'tabbied';
 import { TabbiedPattern, type TabbiedPatternHandle } from 'tabbied/react';
-import { blossom } from 'tabbied/patterns';
 import styles from './ReactDocs.module.css';
 
-// Interactive companion to the "Reseed & export" section: a ref to the
-// component's handle drives redraw()/exportImage() from the buttons. The page
-// passes the palette, because the sample beside it prints the same one.
-export default function ReseedExportDemo({ palette }: { palette: string[] }) {
+// Interactive companion to the "Updates, redraw and export" section: a ref
+// to the component's handle drives redraw()/exportImage() from the buttons.
+// The page passes the design and palette, because the sample beside it
+// prints the same ones.
+export default function ReseedExportDemo({ pattern, palette }: { pattern: PatternDefinition; palette: string[] }) {
   const ref = useRef<TabbiedPatternHandle>(null);
 
   return (
     <div>
       <TabbiedPattern
         ref={ref}
-        pattern={blossom}
+        pattern={pattern}
         palette={palette}
         fit="cover"
         className={styles.demoArt}

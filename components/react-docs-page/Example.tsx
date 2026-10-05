@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
 import CodeBlock from './CodeBlock';
 import styles from './ReactDocs.module.css';
 
@@ -7,15 +7,20 @@ import styles from './ReactDocs.module.css';
 // component.
 export default function Example({
   code,
+  lang,
+  title,
   children,
 }: {
   code: string;
+  lang?: ComponentProps<typeof CodeBlock>['lang'];
+  /** The sample's file name, for the code panel's bar. */
+  title?: string;
   children: ReactNode;
 }) {
   return (
     <div className={styles.example}>
       <div className={styles.preview}>{children}</div>
-      <CodeBlock code={code} />
+      <CodeBlock code={code} lang={lang} title={title} />
     </div>
   );
 }

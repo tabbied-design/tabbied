@@ -53,6 +53,7 @@ const NAMES: Row[] = [
   { setting: 'Fit', camel: 'fit', vue: 'fit', kebab: 'fit' },
   { setting: 'Density', camel: 'density', vue: ':density', kebab: 'density' },
   { setting: 'Cell size', camel: 'cellSize', vue: ':cell-size', kebab: 'cell-size' },
+  { setting: 'Cover render', camel: 'coverRender', vue: ':cover-render', kebab: 'cover-render' },
   { setting: 'Box size', camel: 'box props', vue: 'box props', kebab: 'style' },
   { setting: 'Redraw timer', camel: 'redrawInterval', vue: ':redraw-interval', kebab: 'redraw-interval' },
   { setting: 'Pause', camel: 'paused', vue: 'paused', kebab: 'paused' },
@@ -65,6 +66,7 @@ const cell = (value: string) => <Code>{value}</Code>;
 export default function ConceptsPage() {
   return (
     <DocsShell
+      linkConcepts={false}
       title="Concepts"
       lede={
         <>
@@ -114,9 +116,9 @@ export default function ConceptsPage() {
             to 1 (fine), or <Code>cellSize</Code> sets them in pixels.
           </li>
           <li>
-            <Code>cover</Code> draws at a fixed resolution and scales the
-            drawing to cover the box, which keeps fine strokes and shadows in
-            proportion.
+            <Code>cover</Code> draws at a fixed resolution (800 by 800 unless{' '}
+            <Code>coverRender</Code> sets it) and scales the drawing to cover
+            the box, which keeps fine strokes and shadows in proportion.
           </li>
           <li>
             <Code>fixed</Code> draws at an exact canvas size in pixels
@@ -125,7 +127,7 @@ export default function ConceptsPage() {
         </ul>
         <p>
           Every design supports all three. See them side by side in the{' '}
-          <a href="/docs/react/#fit-modes">live examples</a>.
+          <a href="/docs/react/#sizing">live examples</a>.
         </p>
       </Section>
 

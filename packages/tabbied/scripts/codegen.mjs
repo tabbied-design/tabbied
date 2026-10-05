@@ -10,6 +10,7 @@
 // one entry per design with what is needed to pick and configure it, minus the
 // css-doodle source. It ships in the tarball and is served by the site, so an
 // AI coding assistant can search the designs instead of guessing slugs.
+import { transform } from 'esbuild';
 import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -179,6 +180,26 @@ const { version } = JSON.parse(
   await readFile(path.join(packageRoot, 'package.json'), 'utf-8')
 );
 
+// The snippets come from src/snippets, the builders the site's editor and the
+// MCP server's get_design call too. tsc has not run yet, so the source is
+// stripped of its types here (it has no imports, so nothing else resolves).
+const loadSnippets = async () => {
+  const source = await readFile(path.join(packageRoot, 'src', 'snippets', 'index.ts'), 'utf-8');
+  const { code } = await transform(source, { loader: 'ts', format: 'esm' });
+  return import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
+};
+
+const { buildSnippets, parseRatio } = await loadSnippets();
+
+// The catalog's usage is written for one real design, so every snippet in it
+// is one that runs; for another, its slug and its own defaultAspectRatio go
+// in their place (get_design on the MCP server does exactly that).
+const USAGE_EXAMPLE = 'radius';
+const example = patterns.find((definition) => definition.slug === USAGE_EXAMPLE);
+if (!example) {
+  throw new Error(`codegen: the catalog's usage example "${USAGE_EXAMPLE}" is not a design`);
+}
+
 const catalog = {
   package: 'tabbied',
   version,
@@ -190,10 +211,20 @@ const catalog = {
   usage: {
     install: 'npm install tabbied',
     import: "import { <slug> } from 'tabbied/patterns';",
-    react:
-      "import { TabbiedPattern } from 'tabbied/react';\n<TabbiedPattern pattern={<slug>} height={320} />",
-    core: "import { createPattern } from 'tabbied';",
     fit: "grid (default) | cover | fixed - the same three for every design",
+    example: USAGE_EXAMPLE,
+    note:
+      `Each snippet below draws ${USAGE_EXAMPLE} at its own ratio. For another design, ` +
+      'put its slug in place of the example and use its defaultAspectRatio (2:3 when ' +
+      'it has none). react, vue and svelte are the framework components; element is ' +
+      'the <tabbied-pattern> web component from a CDN; html is data attributes plus ' +
+      'hydratePatterns(), with no build step; core is createPattern() on any element.',
+    ...buildSnippets({
+      slug: USAGE_EXAMPLE,
+      ratio: parseRatio(example.defaultAspectRatio),
+      ground: example.palette?.[0],
+      version,
+    }),
   },
   designs: patterns.map((definition) => ({
     slug: definition.slug,

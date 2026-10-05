@@ -12,10 +12,10 @@ import type { ChosenTemplate } from 'lib/myTemplates';
 import { downloadCustomisedSite } from 'lib/studioDownload';
 
 /** Build and save the customized zip in the browser, with the outcome in a toast. */
-async function saveCustomised(siteId: string): Promise<void> {
+async function saveCustomised(siteId: string, format: 'html' | 'react'): Promise<void> {
   try {
     toaster.add({ title: 'Preparing your customized download...' });
-    await downloadCustomisedSite(siteId);
+    await downloadCustomisedSite(siteId, format);
   } catch (cause) {
     toaster.add({ title: cause instanceof Error ? cause.message : 'Could not build the download.' });
   }
@@ -30,16 +30,16 @@ export type DownloadMenuClasses = {
   menuLabel: string;
   menuItem: string;
   menuRule: string;
-  /** The line under the customized version saying why it has one format. */
+  /** The line under the customized version saying how each format carries it. */
   menuNote: string;
 };
 
-// Why the customized version is HTML only: the edits are applied to the
-// packaged page, which has no React left in it; the React project is the
-// template's authored source, and a document of edits cannot be written into
-// JSX. Said where the missing button would be, rather than left to guess.
+// How each format carries the changes: written into the HTML page, which has
+// no React left in it, but laid over the React project's source in files of
+// their own, because a document of edits cannot be written into JSX
+// (lib/studioDownload.ts). Said where the choice is made.
 export const CUSTOMIZED_FORMAT_NOTE =
-  'HTML only: your colors and patterns are written into the page. The React project is the original source.';
+  'Your colors and patterns are written into the HTML page, and laid over the React source in files of their own.';
 
 export default function DownloadMenu({
   name,
@@ -70,8 +70,11 @@ export default function DownloadMenu({
               <>
                 <Menu.Group>
                   <Menu.GroupLabel className={classes.menuLabel}>Your customized version</Menu.GroupLabel>
-                  <Menu.Item className={classes.menuItem} onClick={() => saveCustomised(site.id)}>
+                  <Menu.Item className={classes.menuItem} onClick={() => saveCustomised(site.id, 'html')}>
                     HTML &amp; CSS
+                  </Menu.Item>
+                  <Menu.Item className={classes.menuItem} onClick={() => saveCustomised(site.id, 'react')}>
+                    React project
                   </Menu.Item>
                   <p className={classes.menuNote}>{CUSTOMIZED_FORMAT_NOTE}</p>
                 </Menu.Group>

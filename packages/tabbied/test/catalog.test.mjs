@@ -104,3 +104,35 @@ test('every SVG-export limitation is documented in the catalog', () => {
     }
   }
 });
+
+test("the catalog's usage is tabbied/snippets' output for its example design", async () => {
+  const { buildSnippets, parseRatio, SNIPPET_SETUPS } = await import('../dist/snippets/index.js');
+  const example = patterns[catalog.usage.example];
+
+  assert.ok(example, `usage.example "${catalog.usage.example}" is not a design`);
+  const expected = buildSnippets({
+    slug: example.slug,
+    ratio: parseRatio(example.defaultAspectRatio),
+    ground: example.palette?.[0],
+    version: catalog.version,
+  });
+  for (const setup of SNIPPET_SETUPS) {
+    assert.equal(catalog.usage[setup], expected[setup], setup);
+  }
+});
+
+test('AGENTS.md and llms.txt name every entry point the package exports', () => {
+  const manifest = JSON.parse(fs.readFileSync(path.join(packageRoot, 'package.json'), 'utf-8'));
+  const agents = fs.readFileSync(path.join(packageRoot, 'AGENTS.md'), 'utf-8');
+  const llms = fs.readFileSync(path.join(packageRoot, 'llms.txt'), 'utf-8');
+
+  for (const subpath of Object.keys(manifest.exports)) {
+    if (subpath === './package.json') continue;
+    const name = subpath === '.' ? 'tabbied' : `tabbied/${subpath.slice(2).replace('*', '<slug>')}`;
+    assert.ok(agents.includes(`\`${name}\``), `AGENTS.md does not mention ${name}`);
+    assert.ok(llms.includes(`\`${name}\``), `llms.txt does not mention ${name}`);
+  }
+  // The phrase that told agents the package was React plus a core (spelled
+  // out in pieces, so a grep for it finds no file at all).
+  assert.doesNotMatch(agents, new RegExp(['React', 'and', 'vanilla'].join(' '), 'i'));
+});

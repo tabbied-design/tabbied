@@ -6,6 +6,7 @@ import TemplatePreview from 'components/template/TemplatePreview';
 import { TEMPLATE_NAMES } from 'lib/templateIndex';
 import { pageMetadata, templateImage } from 'lib/seo';
 import { templateShot } from 'lib/templateShots';
+import { withArticle } from 'lib/article';
 
 // A template, framed: the live page in a browser chrome under a bar with the
 // two things a person does with a template - customize it, or download it as
@@ -44,7 +45,7 @@ export async function generateMetadata({
   return {
     ...pageMetadata({
       title: `${entry.name} - Template preview - Tabbied`,
-      description: `${entry.name}, a ${entry.topic.toLowerCase()} website template built on a Tabbied pattern. Customize its colors and patterns, or download it as it is.`,
+      description: `${entry.name}, ${withArticle(entry.topic.toLowerCase())} website template built on a Tabbied pattern. Customize its colors and patterns, or download it as it is.`,
       path: `/templates/${entry.slug}/`,
       image: templateImage(entry.slug, entry.name, templateShot(entry.slug), entry.pattern),
     }),

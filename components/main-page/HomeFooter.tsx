@@ -11,7 +11,8 @@ import styles from './HomeFooter.module.css';
 const GITHUB_URL = 'https://github.com/tabbied-design/tabbied/';
 
 // The docs, one link per setup, in the order the /docs landing page lists
-// them. A new docs page joins this list and the landing page's cards.
+// them. A new docs page joins this list and the landing page's cards. They
+// and GitHub are set in two columns, read down, so the column stays short.
 const DEVELOPER_LINKS = [
   ['/docs', 'Overview'],
   ['/docs/concepts', 'Concepts'],
@@ -20,9 +21,12 @@ const DEVELOPER_LINKS = [
   ['/docs/svelte', 'Svelte'],
   ['/docs/web-component', 'Web component'],
   ['/docs/html', 'Plain HTML'],
+  ['/docs/javascript', 'JavaScript'],
   ['/docs/mcp', 'MCP server'],
 ] as const;
 
+/** Rows for the two Developers columns: the links and GitHub, split in half. */
+const DEVELOPER_ROWS = Math.ceil((DEVELOPER_LINKS.length + 1) / 2);
 
 export default function HomeFooter() {
   return (
@@ -59,7 +63,10 @@ export default function HomeFooter() {
 
         <div>
           <h2 className={styles.heading}>Developers</h2>
-          <ul className={styles.links}>
+          <ul
+            className={`${styles.links} ${styles.linksTwo}`}
+            style={{ gridTemplateRows: `repeat(${DEVELOPER_ROWS}, auto)` }}
+          >
             {DEVELOPER_LINKS.map(([href, label]) => (
               <li key={href}>
                 <SamePageLink href={href} prefetch={false}>

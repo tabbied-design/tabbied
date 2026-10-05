@@ -18,8 +18,9 @@ const altFrom = (prompt: string) => prompt.split(/\.\s/)[0].replace(/\.$/, '');
 /**
  * Card imagery, in one of two states.
  *
- * Once scripts/images/import-batch.mjs has written public/images/template/<id>.webp
- * the slot renders that image, cropped with object-fit so it is never stretched.
+ * Once public/images/template/<id>.webp exists (and its id is listed in
+ * generatedImages), the slot renders that image, cropped with object-fit so
+ * it is never stretched.
  * Until then it stays a labelled placeholder showing the ready-to-use image
  * prompt. Either way the full prompt hangs off data-image-prompt and a copy
  * button lifts it to the clipboard, since the display text is clamped.

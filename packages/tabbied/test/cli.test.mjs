@@ -51,6 +51,15 @@ test('list filters compose (tag + density)', () => {
   }
 });
 
+test('list lines its columns up however long a slug is', () => {
+  const rows = run('list').trim().split('\n').slice(0, -2);
+  // The density column starts at the same place on every row.
+  const starts = new Set(rows.map((row) => row.search(/\b(sparse|medium|dense)\b/)));
+
+  assert.equal(starts.size, 1, `density starts at ${[...starts].join(', ')}`);
+  assert.ok(rows.some((row) => row.startsWith('confettitriangles ')));
+});
+
 test('info prints a full catalog entry as JSON', () => {
   const design = JSON.parse(run('info', 'radius'));
   assert.equal(design.slug, 'radius');

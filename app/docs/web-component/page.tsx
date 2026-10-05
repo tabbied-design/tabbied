@@ -2,13 +2,24 @@ import type { Metadata } from 'next';
 import { PACKAGE_VERSION, PATTERN_COUNT } from 'lib/siteCounts';
 import CodeBlock from 'components/react-docs-page/CodeBlock';
 import DocsShell from 'components/react-docs-page/DocsShell';
-import { Callout, Code, docsSection } from 'components/react-docs-page/parts';
-import type { DocsSection } from 'components/react-docs-page/sections';
+import { Callout, Code } from 'components/react-docs-page/parts';
+import { SETUP_SECTIONS } from 'components/react-docs-page/sections';
+import { QuickStartDemo, RedrawDemo } from 'components/react-docs-page/GuideDemos';
+import {
+  ExampleSections,
+  ExportNotes,
+  MotionGuide,
+  SettingsGuide,
+  SetupSection as Section,
+  SizingGuide,
+} from 'components/react-docs-page/SetupGuide';
+import { ELEMENT_RECIPES } from 'components/react-docs-page/examples/recipes/element';
 import styles from 'components/react-docs-page/ReactDocs.module.css';
 import { pageMetadata } from 'lib/seo';
 
 // tabbied/element's page. The package README's web component section says
-// the same things; keep the two in step.
+// the same things; keep the two in step. Its sections are every setup
+// page's (SETUP_SECTIONS), in the same order.
 
 export const metadata: Metadata = pageMetadata({
   title: 'Web component - Tabbied',
@@ -16,18 +27,6 @@ export const metadata: Metadata = pageMetadata({
     'The <tabbied-pattern> custom element: Tabbied generative patterns in plain HTML or any framework, from one script tag, loading only the designs a page uses.',
   path: '/docs/web-component/',
 });
-
-const SECTIONS: DocsSection[] = [
-  { id: 'introduction', label: 'Introduction' },
-  { id: 'cdn', label: 'From a CDN' },
-  { id: 'sizing', label: 'Sizing the box' },
-  { id: 'bundler', label: 'In a bundled app' },
-  { id: 'frameworks', label: 'Frameworks' },
-  { id: 'scripting', label: 'Scripting it' },
-  { id: 'api', label: 'API reference' },
-];
-
-const Section = docsSection(SECTIONS);
 
 const SCRIPT_URL = `https://cdn.jsdelivr.net/npm/tabbied@${PACKAGE_VERSION}/dist/element/tabbied-element.js`;
 
@@ -59,6 +58,12 @@ export default {
   ],
 };`;
 
+const reactTypesCode = `// main.tsx, once: the element, and its tag typed in JSX.
+import 'tabbied/element';
+import 'tabbied/element/react-jsx';
+
+<tabbied-pattern pattern="radius" palette={['#0B1020', '#3E8BFF']} />`;
+
 const scriptingCode = `const pattern = document.querySelector('tabbied-pattern');
 
 pattern.addEventListener('ready', () => console.log('drawn'));
@@ -79,9 +84,9 @@ export default function WebComponentDocsPage() {
         </>
       }
       chips={[`tabbied v${PACKAGE_VERSION}`, 'Custom element', 'MIT license']}
-      sections={SECTIONS}
+      sections={SETUP_SECTIONS}
     >
-      <Section id="introduction" title="Introduction">
+      <Section id="introduction">
         <p>
           <Code>&lt;tabbied-pattern&gt;</Code> is a custom element. Its
           attributes are the settings the{' '}
@@ -93,7 +98,8 @@ export default function WebComponentDocsPage() {
         </p>
       </Section>
 
-      <Section id="cdn" title="From a CDN">
+      <Section id="installation">
+        <h3 className={styles.minihead}>From a CDN</h3>
         <p>
           One script defines the element, with everything it needs inside.
           Each design is a separate file next to it, and the element fetches
@@ -106,28 +112,8 @@ export default function WebComponentDocsPage() {
           copy the package&apos;s <Code>dist/element/</Code> and{' '}
           <Code>dist/patterns/</Code> folders side by side.
         </p>
-      </Section>
 
-      <Section id="sizing" title="Sizing the box">
-        <p>
-          A pattern has no size of its own, so give the element one: a{' '}
-          <Code>height</Code>, an <Code>aspect-ratio</Code>, or a parent with
-          a height. Write it in the element&apos;s <Code>style</Code>, with{' '}
-          <Code>display: block</Code> and the pattern&apos;s background
-          color. That style applies before the script has loaded, so the box
-          is already at its final size and the page does not shift when the
-          pattern appears. The same holds for a page rendered on a server.
-        </p>
-        <Callout>
-          <p>
-            Without <Code>display: block</Code> the element is inline until
-            the script runs, and an inline box ignores{' '}
-            <Code>aspect-ratio</Code>: the pattern has nothing to fill.
-          </p>
-        </Callout>
-      </Section>
-
-      <Section id="bundler" title="In a bundled app">
+        <h3 className={styles.minihead}>In a bundled app</h3>
         <p>
           With npm and a bundler, import the element from{' '}
           <Code>tabbied/element</Code>. A bundler cannot follow a slug written
@@ -137,13 +123,10 @@ export default function WebComponentDocsPage() {
         <CodeBlock code={bundlerCode} title="main.js" lang="ts" className={styles.codeStandalone} />
         <p>
           Or set the element&apos;s <Code>pattern</Code> property to the
-          design itself, which needs no registering at all. Importing{' '}
-          <Code>tabbied/element</Code> on a server is safe: it defines the
-          element only where there is a browser.
+          design itself, which needs no registering at all.
         </p>
-      </Section>
 
-      <Section id="frameworks" title="Frameworks">
+        <h3 className={styles.minihead}>In a framework</h3>
         <p>
           <strong>React 19</strong> passes props to a custom element as
           properties, so <Code>pattern={'{radius}'}</Code> and{' '}
@@ -158,6 +141,14 @@ export default function WebComponentDocsPage() {
         </p>
         <CodeBlock code={vueConfig} title="vite.config.js" lang="ts" className={styles.codeStandalone} />
         <p>
+          In a TypeScript React app, a tag JSX does not know is a type error
+          (&quot;Property &apos;tabbied-pattern&apos; does not exist on type
+          &apos;JSX.IntrinsicElements&apos;&quot;). Import{' '}
+          <Code>tabbied/element/react-jsx</Code> once to type it, attributes
+          included; the module is empty at runtime.
+        </p>
+        <CodeBlock code={reactTypesCode} title="main.tsx" lang="tsx" className={styles.codeStandalone} />
+        <p>
           Vue and Svelte also have their own entry points,{' '}
           <a href="/docs/vue/">tabbied/vue</a> and{' '}
           <a href="/docs/svelte/">tabbied/svelte</a>, with typed props and a
@@ -167,7 +158,35 @@ export default function WebComponentDocsPage() {
         </p>
       </Section>
 
-      <Section id="scripting" title="Scripting it">
+      <Section id="quick-start">
+        <p>
+          One tag names its design in <Code>pattern</Code> and gets its size
+          from its style: here a height, with the width filling the parent.
+        </p>
+        <QuickStartDemo setup="element" />
+      </Section>
+
+      <Section id="sizing">
+        <SizingGuide setup="element" />
+        <Callout>
+          <p>
+            Without <Code>display: block</Code> the element is inline until
+            the script runs, and an inline box ignores{' '}
+            <Code>aspect-ratio</Code>: the pattern has nothing to fill.
+          </p>
+        </Callout>
+      </Section>
+
+      <Section id="settings">
+        <SettingsGuide setup="element" />
+      </Section>
+
+      <Section id="updates">
+        <p>
+          Change an attribute, or set a property, and the pattern redraws in
+          place, with the design&apos;s own transition. The element has the
+          controller&apos;s methods itself:
+        </p>
         <CodeBlock code={scriptingCode} title="script.js" lang="ts" className={styles.codeStandalone} />
         <p>
           The <Code>ready</Code> event fires once the first render is drawn.{' '}
@@ -175,9 +194,33 @@ export default function WebComponentDocsPage() {
           reason in <Code>event.detail</Code>. Moving the element within the
           page keeps its pattern; only taking it out of the page ends it.
         </p>
+        <RedrawDemo setup="element" />
+        <ExportNotes />
       </Section>
 
-      <Section id="api" title="API reference">
+      <Section id="motion">
+        <MotionGuide setup="element" />
+      </Section>
+
+      <Section id="server">
+        <p>
+          The element needs no server render of its own. Until it is defined
+          it is an unknown inline tag, and its <Code>style</Code> still
+          applies, so <Code>display: block</Code>, a size and the
+          pattern&apos;s background color written there give the box its
+          final size and color before any script runs, and through any
+          framework&apos;s server render. The pattern then mounts into that
+          box without moving the page.
+        </p>
+        <p>
+          Importing <Code>tabbied/element</Code> on a server is safe: it
+          defines the element only where there is a browser.
+        </p>
+      </Section>
+
+      <ExampleSections setup="element" recipes={ELEMENT_RECIPES} />
+
+      <Section id="api">
         <div className={styles.tableScroll}>
           <table className={styles.propsTable}>
             <thead>

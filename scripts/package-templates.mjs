@@ -1007,6 +1007,9 @@ pictures carry their file inline as a data URI, so the page works opened
 straight from disk.
 `;
 
+// The design the README's swap example adds: one the page does not use yet.
+const swapExample = (slugs) => ['radius', 'vitrail', 'foliage'].find((slug) => !slugs.includes(slug));
+
 const README = (slug, name, version, slugs, imageCount, hasArtwork = false) => `# ${name}
 
 A Tabbied template, packaged as a plain HTML template. No build step, no
@@ -1038,6 +1041,23 @@ Change \`data-palette\` to recolor it, \`data-pattern\` to swap the design
 particular arrangement, or drop \`data-redraw-interval\` to hold it still.
 The script at the bottom of \`index.html\` is what brings them to life; remove
 it and the patterns disappear.
+
+That script imports only the designs this page uses, so a new one goes in
+three places: the \`data-pattern\` attribute, the import (both the name and
+the \`?exports=\` list), and the \`patterns\` object. A slug the script does
+not import draws nothing (the browser console says which). To add
+\`${swapExample(slugs)}\`, the element names it:
+
+\`\`\`html
+<div data-pattern="${swapExample(slugs)}" ...></div>
+\`\`\`
+
+and the script's last two lines become:
+
+\`\`\`js
+import { ${[...slugs, swapExample(slugs)].join(', ')} } from 'https://esm.sh/tabbied@${version}/patterns?exports=${[...slugs, swapExample(slugs)].join(',')}';
+hydratePatterns({ patterns: { ${[...slugs, swapExample(slugs)].join(', ')} } });
+\`\`\`
 
 ## Fonts
 

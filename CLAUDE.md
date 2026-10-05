@@ -226,7 +226,12 @@ same way. The template sites moved from `/template/<slug>/` to
 `/templates/<slug>/site/` (one noun, one tree: the framed preview is
 `/templates/<slug>/` and the site it frames is under it), and the old paths
 301 there. A route under `run_worker_first` never reaches this file, so a
-redirect for one of those belongs in the Worker.
+redirect for one of those belongs in the Worker. A rule here also beats a
+page the export has: `/docs/` redirected to `/docs/react/` long after the
+Developers page existed, so a hard load or a search result never reached it
+while in-app links did. `serve` ignores this file, so the e2e suite cannot
+see a rule fire; `e2e/smoke.spec.ts` instead fails on any rule whose source
+is an exported page.
 
 The Worker routes with Hono (`worker/index.ts`). That was added for the
 platform tier - the right shape for two routes was the wrong one for twenty -
@@ -259,8 +264,9 @@ Protocol. Full reference: `docs/mcp-server.md`.
 The protocol comes from `@modelcontextprotocol/server` (MCP SDK v2). We own
 the tools; the SDK owns the wire.
 
-- `src/tools.ts` - the four catalog tools, with no runtime imports at all. The
-  host injects what differs (preview bytes, docs text) through `ToolContext`.
+- `src/tools.ts` - the four catalog tools, with no runtime imports beyond
+  `tabbied/snippets` (pure string builders). The host injects what differs
+  (preview bytes, docs text) through `ToolContext`.
   `src/templates.ts` is the two template tools, the same way.
 - `src/server.ts` - registers those tools onto an `McpServer`. The seam.
 - `src/stdio.ts`, `src/node/` - the bin, the local catalog reader, and
@@ -960,9 +966,10 @@ Four things worth not re-litigating:
   the docs joined the bar later as its last destination, first as "React
   Component" and now as "Developers", the `/docs` landing page, which lights
   for every page under it. The footer's Developers column lists each docs
-  page (`DEVELOPER_LINKS` in `HomeFooter`) beside GitHub, and the legal
-  pages moved to its bottom bar; a new docs page joins that list and the
-  landing page's cards. The bar used to carry a different set of links on every
+  page (`DEVELOPER_LINKS` in `HomeFooter`) beside GitHub, in two columns
+  read down so it is no longer than the Product list, and the legal pages
+  moved to its bottom bar; a new docs page joins that list and the landing
+  page's cards. The bar used to carry a different set of links on every
   page, which is what one component ends. Studio is in neither now: the
   generation flow is held back from the first launch (see below), and the
   footer's Product list is the artboard's own - Patterns, Websites, My
@@ -1144,8 +1151,9 @@ the tokens sit on the page wrapper, not on `:root`, so restyling the homepage
 cannot reach `/patterns`, only the pages that opt into the set. The three
 how-it-works steps are hidden below 768px, as the artboard hides them.
 
-**The docs page is the design's light section, not a third theme.**
-`app/docs/react` wraps itself in `home.home` plus the two fonts, draws the
+**The docs pages are the design's light section, not a third theme.**
+`DocsShell` (every page under `/docs` but `/docs/mcp`, which draws the same
+parts inline) wraps the page in `home.home` plus the two fonts, draws the
 masthead in its light tone over a white `.paper` wrapper, and ends in
 `HomeFooter`, which brings its own dark ground; the light tokens the homepage
 declares for its inset sections (`--h-paper`, `--h-ink`, `--h-teal`, the
@@ -1162,7 +1170,10 @@ keywords). Two things about it:
 - **The section numbers come from the `SECTIONS` array**, in the contents
   rail and above each heading alike, so reordering a section renumbers both;
   a heading that is not in the array has no index and no rail entry, which is
-  the cue that it was forgotten.
+  the cue that it was forgotten. The six setup pages share one array,
+  `SETUP_SECTIONS` (below). The Developers landing page has no array, no
+  rail and no numbers (`DocsShell layout="wide"`): its parts are choices,
+  and "01 Choose your setup" read as the first of four steps.
 
 Three things worth not re-litigating:
 
@@ -1671,9 +1682,20 @@ whatever text Studio wrote, so putting them back is a UI change.
   to its `index.html` with the same engine the canvas was drawn with, rewrites
   the bootstrap's import list to the designs the page mounts now, ships any
   `/api/media` picture Studio made inside `images/`, and zips it again with
-  fflate (`lib/studioDownload.ts`). The React package is offered as the
-  template's source and labelled that way: the document cannot be applied to
-  JSX.
+  fflate (`lib/studioDownload.ts`). The document cannot be applied to JSX,
+  so the customized React project carries the *result* beside the
+  template's untouched source, read off the HTML page before and after the
+  engine ran: the root's changed custom properties as
+  `src/customizations.css` (`!important`, so they beat the module's rule and
+  a value set inline), and each changed pattern field's host attributes in
+  `src/customizations.ts`, keyed by slot id. Every `tabbied/react` import is
+  pointed at `src/customized.tsx`, a `TabbiedPattern` that finds its slot id
+  with `closest('[data-edit-pattern]')` from a marker class on its own
+  placeholder (in a layout effect, so before the first paint) and lays the
+  saved attributes over its props through `patternConfigFromElement`. That
+  reaches a slot on a wrapper `<div>`, on an `<Artwork>` and inside a
+  `.map()` alike. Text and picture edits are not carried, and the README
+  says so. `e2e/studio-site.spec.ts` unzips one.
 - **A site's title is its own.** `PATCH /api/studio/sites/:id {title}`
   renames it; the rail's name field commits on blur or Enter, and nothing on
   the page reads the title, so no revision is written. The listing's
@@ -1947,18 +1969,90 @@ not re-litigating:
 
 **The editor's Copy code offers a snippet per setup, gated on the release.**
 The Export menu's "Copy code" group (React component, Vue component,
-Svelte action, Web component, HTML embed) is built by
-`lib/patternSnippets.ts`, one builder per setup from the plate's state.
+Svelte action, Web component, HTML embed) is offered by
+`lib/patternSnippets.ts` and written by `tabbied/snippets`
+(`packages/tabbied/src/snippets/`), one builder per setup from the plate's
+state. The same builders write `get_design`'s snippets on the MCP server and
+the catalog's `usage` (codegen loads the source through esbuild, before tsc
+has run), so the three cannot drift; `core` is the one setup the editor does
+not offer.
 Each snippet names the release that first shipped its entry point
 (`since`), and the menu offers only those the package version in the repo
 has reached: a snippet importing what npm does not have yet fails for
 whoever pastes it. That needs no follow-up at release time, because the
 release workflow bumps the version in the same merge that publishes. The
-builders import nothing, so `npm run test:lib` runs their tests under
-Node's own TypeScript support; `e2e/svg-export.spec.ts` checks the menu
+builders import nothing; their text is pinned in
+`packages/tabbied/test/snippets.test.mjs`, and `npm run test:lib` checks
+the menu's gating under Node's own TypeScript support; `e2e/svg-export.spec.ts` checks the menu
 against `availableSnippets` at the checked-out version, so it holds on both
 sides of a release. A group, not a submenu: a hover submenu beside the
 popup is poor on touch and in the phone layout's narrow dropdown.
+
+## The setup pages - one structure, live demos, measured examples
+
+The six setup pages under `/docs` (React, Vue, Svelte, plain JavaScript, the
+web component, plain HTML) follow one structure: the same thirteen sections
+in the same order with the same labels, `SETUP_SECTIONS` in
+`components/react-docs-page/sections.ts`, rendered through `SetupSection`
+(`SetupGuide.tsx`), which titles each from that list. React used to have
+seventeen sections of its own (palettes, options, seeds, ambient animation,
+accessibility, vanilla JavaScript) and the others four to eight each, so a
+reader who learned one page had to relearn the next. A page writes its
+introduction, installation, updates, server rendering and API reference
+itself; the rest is shared:
+
+- **Sizing, Settings, Motion and accessibility** are `SizingGuide`,
+  `SettingsGuide` and `MotionGuide`, prose that names each setting the way
+  the page's setup spells it (`settingName`: `redrawInterval`,
+  `redraw-interval`, `data-redraw-interval`).
+- **The live demos** (`GuideDemos.tsx`: quick start, fit modes, palettes,
+  a transparent ground, options, redraw and export, motion, accessibility)
+  draw the same pattern on every page, since every setup draws the same
+  pattern from the same settings, over the file that draws it in that
+  page's setup, from `examples/guide.ts`. The transparent demo is `radius`
+  over a photograph: a design that covers every cell with ink, as `wander`
+  does, never shows its ground.
+- **The worked examples** (`ExampleSections`): three groups of recipes,
+  then "Sizing, case by case".
+
+**Sizing, case by case** (`examples/sizing.ts`): 18 cases, each the box a
+pattern gets for one combination (a width and a height, a ratio with both
+set, a parent with no height, a min-height, a flex row, a fixed canvas ...),
+with the code in every setup's spelling. Two families, because the box comes
+from two places: the four with box props share `resolveBoxStyle()`, and the
+element and the HTML div are plain blocks (full width, 0px tall until
+something gives them a height), so a case can have a different answer in
+each. Every result was measured in Chromium, never reasoned out: `fill`
+taking the width is what makes "a height and a ratio" 800 by 300 and not 600
+by 300. Each box is the design live, in the homepage hero's first palette
+(Mint) on a transparent ground, outlined so its extent reads.
+
+**Recipes** (`examples/recipes/<setup>.ts`): the same seven layout and eight
+interaction recipes on every page, then the setup's own "in an app" ones.
+Each has its result drawn live above its file (`RecipePreview`), from one
+entry per recipe id in `examples/recipes/previews.ts`: a recipe of an id
+draws the same thing in every setup, so one preview serves all six.
+
+Every case and every recipe is a card of its own, its code inside it: with
+the code between two diagrams and nothing around them, it read as belonging
+to either.
+
+The code is written as data, never in JSX, so one list feeds six pages, and
+three gates keep it true. `lib/docsExamples.test.mjs` (in `npm run
+test:lib`) type-checks the React code against the built package, compiles
+the Vue code with Vue's compiler, parses the rest, checks the guide's
+palettes against `lib/paletteLibrary.ts`, and holds every preview to the code
+of every recipe it stands for (designs, seeds, colors, sizes): it caught
+three `controls` recipes whose pattern started at a frequency their slider
+did not show. Svelte has no compiler in the repo, so a change to its
+examples is compiled by hand with Svelte 5. `e2e/docs-examples.spec.ts`
+renders every sizing case in the three setups whose code is the whole page
+and asserts the box each draws, and runs every HTML and web component recipe
+and guide sample as written, with esm.sh and jsdelivr answered from `dist/`,
+pressing each control. Change a package default and the spec names the
+cases whose documented box moved. The sizing code is broken at 80 columns,
+Prettier's width, because it is shown full width; a one-line tag of 120
+characters scrolled off the column.
 
 ## Grid snapping - invariant (full reference: docs/grid-snapping.md)
 
@@ -2159,7 +2253,7 @@ rendered patterns to true vector SVG. Rules that must not regress:
   range of gallery orders and deletes anything in range it no longer defines.
   Verify with `node scripts/svg-parity-sweep.mjs <slug>` and keep
   `e2e/svg-export.spec.ts`'s representative list + thresholds in sync.
-- **Bundle contract**: the converter (~21 KB gz) is lazy-loaded by
+- **Bundle contract**: the converter (~12 KB gz minified) is lazy-loaded by
   `exportSvg()`; `core/index.ts` re-exports only its *types*
   (`supportsSvgExport` lives in `types.ts`); `dist/core/svgExport.js` must
   keep zero runtime imports (tests inject it into pages).

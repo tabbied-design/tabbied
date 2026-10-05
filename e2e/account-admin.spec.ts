@@ -120,7 +120,9 @@ test.describe('account and admin pages', () => {
     // The Download menu offers the customized version only where there is one.
     await page.getByRole('button', { name: /Download/ }).nth(0).click();
     await expect(page.getByText('Your customized version')).toBeVisible();
-    await expect(page.getByRole('menuitem', { name: 'React project' })).toHaveAttribute('href', '/downloads/verdant-react.zip');
+    // Both formats of the customized version, then the original's two zips.
+    await expect(page.getByRole('menuitem', { name: 'React project' })).toHaveCount(2);
+    await expect(page.getByRole('menuitem', { name: 'React project' }).last()).toHaveAttribute('href', '/downloads/verdant-react.zip');
     await page.keyboard.press('Escape');
     await page.getByRole('button', { name: /Download/ }).nth(1).click();
     await expect(page.getByText('Your customized version')).toHaveCount(0);

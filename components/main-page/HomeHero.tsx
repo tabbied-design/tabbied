@@ -56,9 +56,12 @@ function MarginColumn({ cells }: { cells: MarginCell[] }) {
 export default function HomeHero({
   patternCount,
   templateCount,
+  setupCount,
 }: {
   patternCount: number;
   templateCount: number;
+  /** The ways to use a pattern in code, each with a page under /docs/. */
+  setupCount: number;
 }) {
   const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const [paletteIdx, setPaletteIdx] = useState(0);
@@ -205,14 +208,17 @@ export default function HomeHero({
             </span>
           </Link>
 
-          {/* Not a link: the engine is the thing the other two are made
-              with, and the design leaves it as a fact. */}
-          <div className={styles.stat}>
-            <span className={styles.statNumber}>1</span>
-            <span className={`${styles.statLabel} ${styles.statLabelQuiet}`}>
-              Pattern engine
+          {/* The developer side, which the stat row once left out: the
+              setups the package draws in, each with its docs page. */}
+          <Link href="/docs/" prefetch={false} className={styles.stat}>
+            <span className={styles.statNumber}>{setupCount}</span>
+            <span className={styles.statLabel}>
+              Ways to use them in code
+              <span className={styles.statArrow} aria-hidden="true">
+                <ArrowRight size={15} strokeWidth={1.5} />
+              </span>
             </span>
-          </div>
+          </Link>
         </div>
       </div>
     </>

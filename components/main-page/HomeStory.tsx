@@ -77,10 +77,12 @@ export default function HomeStory({
   patternCount,
   templateCount,
   paletteCount,
+  setupCount,
 }: {
   patternCount: number;
   templateCount: number;
   paletteCount: number;
+  setupCount: number;
 }) {
   const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const [squares, setSquares] = useState(initialSquares);
@@ -200,10 +202,12 @@ export default function HomeStory({
             </span>
           </Link>
 
-          <div className={styles.stat}>
-            <span className={styles.statNumber}>1</span>
-            <span className={styles.statLabel}>Pattern engine</span>
-          </div>
+          <Link href="/docs/" prefetch={false} className={styles.stat}>
+            <span className={styles.statNumber}>{setupCount}</span>
+            <span className={`${styles.statLabel} ${styles.statLink}`}>
+              Code setups
+            </span>
+          </Link>
         </div>
       </div>
     </section>
