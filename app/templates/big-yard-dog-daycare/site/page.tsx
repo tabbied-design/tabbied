@@ -197,7 +197,7 @@ export default function BigYardPage() {
 
             <div className={`${s.card} ${s.todayCard}`}>
               <h2 data-edit="hero.cardTitle" data-edit-max="60" className={s.cardTitle}>Today at the yard</h2>
-              <p data-edit="hero.cardDate" data-edit-max="240" data-edit-multiline className={s.cardDate}>Friday, September 26</p>
+              <p data-edit="hero.cardDate" data-edit-max="240" data-edit-multiline className={s.cardDate}>Updated every morning at drop-off</p>
               <dl className={s.today}>
                 {TODAY.map(([k, v], i) => (
                   <div key={k}>

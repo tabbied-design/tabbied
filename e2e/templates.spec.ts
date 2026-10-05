@@ -309,6 +309,25 @@ for (const fixture of FIXTURES) {
 // asked to sign in, a person sees Add to my templates or, for a template of
 // theirs, Customize and a Download menu of the two zips. The session and the
 // person's templates are stubbed, since `serve out` has no Worker.
+// The React packages ship the site's own components as their source, comments
+// and all; a note written for this repository's maintainers (a script, the
+// test suite, CLAUDE.md) means nothing in somebody's project.
+test("no React package names this repository's own tooling", () => {
+  const downloads = path.dirname(dirFor('x'));
+  const sources = fs
+    .readdirSync(downloads)
+    .filter((name) => name.endsWith('-react'))
+    .flatMap((name) =>
+      fs.readdirSync(path.join(downloads, name, 'src')).map((file) => path.join(downloads, name, 'src', file))
+    )
+    .filter((file) => /\.(tsx?|css)$/.test(file));
+
+  expect(sources.length).toBeGreaterThan(100);
+  for (const file of sources) {
+    expect(fs.readFileSync(file, 'utf-8'), file).not.toMatch(/scripts\/[\w/-]+\.mjs|MENU_SCRIPT|CLAUDE\.md|e2e\//);
+  }
+});
+
 const signedIn = {
   session: { id: 's', userId: 'u1', expiresAt: '2030-01-01T00:00:00Z' },
   user: { id: 'u1', name: 'Pat', email: 'pat@example.com', emailVerified: true, role: null },
@@ -445,6 +464,36 @@ test.describe('the /templates gallery', () => {
       if (i <= lead.length) return;
       expect(batch, `${firstPage[i - 1]} then ${firstPage[i]}`).not.toBe(batches[i - 1]);
     });
+  });
+
+  test('a search finds templates by the kind of business, and lives in the URL', async ({ page }) => {
+    await page.route('**/api/auth/get-session', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: 'null' })
+    );
+    const cards = page.getByRole('region', { name: /^Templates/ });
+    const search = page.getByRole('searchbox', { name: 'Search templates' });
+
+    await page.goto('/templates/');
+    await search.fill('bakery');
+    await expect(page).toHaveURL(/\/templates\/\?q=bakery$/);
+    const names = await cards.locator('p').allTextContents();
+    expect(names.length).toBeGreaterThan(0);
+    expect(names.length).toBeLessThan(50);
+    // Every card shown is a bakery by its own description.
+    for (const topic of names) expect(topic.toLowerCase()).toContain('bak');
+
+    // It narrows within a category, and a deep link opens on it.
+    await page.goto('/templates/?category=food-and-drink&q=bakery');
+    await expect(search).toHaveValue('bakery');
+    await expect(page.getByRole('button', { name: 'Food & drink' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(cards.locator('h3').first()).toBeVisible();
+
+    // Nothing matching says so, with the way out.
+    await search.fill('zzzz');
+    await expect(page.getByText('No templates match "zzzz" in Food & drink.')).toBeVisible();
+    await page.getByRole('button', { name: 'Clear search' }).click();
+    await expect(search).toHaveValue('');
+    await expect(page).toHaveURL(/\?category=food-and-drink$/);
   });
 
   test('a chosen template downloads a real zip, and choosing another asks first', async ({ page }) => {

@@ -20,6 +20,7 @@ const DEVELOPER_LINKS = [
   ['/docs/svelte', 'Svelte'],
   ['/docs/web-component', 'Web component'],
   ['/docs/html', 'Plain HTML'],
+  ['/docs/javascript', 'JavaScript'],
   ['/docs/mcp', 'MCP server'],
 ] as const;
 

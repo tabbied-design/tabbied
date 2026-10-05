@@ -59,6 +59,12 @@ export default {
   ],
 };`;
 
+const reactTypesCode = `// main.tsx, once: the element, and its tag typed in JSX.
+import 'tabbied/element';
+import 'tabbied/element/react-jsx';
+
+<tabbied-pattern pattern="radius" palette={['#0B1020', '#3E8BFF']} />`;
+
 const scriptingCode = `const pattern = document.querySelector('tabbied-pattern');
 
 pattern.addEventListener('ready', () => console.log('drawn'));
@@ -157,6 +163,14 @@ export default function WebComponentDocsPage() {
           its own components:
         </p>
         <CodeBlock code={vueConfig} title="vite.config.js" lang="ts" className={styles.codeStandalone} />
+        <p>
+          In a TypeScript React app, a tag JSX does not know is a type error
+          (&quot;Property &apos;tabbied-pattern&apos; does not exist on type
+          &apos;JSX.IntrinsicElements&apos;&quot;). Import{' '}
+          <Code>tabbied/element/react-jsx</Code> once to type it, attributes
+          included; the module is empty at runtime.
+        </p>
+        <CodeBlock code={reactTypesCode} title="main.tsx" lang="tsx" className={styles.codeStandalone} />
         <p>
           Vue and Svelte also have their own entry points,{' '}
           <a href="/docs/vue/">tabbied/vue</a> and{' '}

@@ -7,6 +7,7 @@
 import './register.js';
 import { buildDoodleSource, expandPalette } from './doodleSource.js';
 import { randomSeed } from './seed.js';
+import { nextInstanceId } from './instanceId.js';
 import {
   DEFAULT_CELL_PX,
   DEFAULT_COVER_RENDER,
@@ -158,10 +159,10 @@ async function settleAnimations(element: CssDoodleElement): Promise<void> {
 // on every frame of a drag. Between steps the canvas stretches via CSS.
 const GRID_RESIZE_DEBOUNCE_MS = 180;
 
-// Uniqueness for the per-instance <style> scope. An attribute selector
-// (css-doodle[data-tabbied="t0"]) sidesteps both id collisions when the same
+// Uniqueness for the per-instance <style> scope comes from nextInstanceId(),
+// shared by every copy of the library on the page. An attribute selector
+// (css-doodle[data-tabbied="t-0"]) sidesteps both id collisions when the same
 // pattern mounts twice and id-escaping issues.
-let instanceCounter = 0;
 
 // Every pattern's rules carry their own `transition`, which is what makes
 // redraw() morph one arrangement into the next instead of cutting. This
@@ -258,7 +259,7 @@ export function createPattern(
   host: HTMLElement,
   initialConfig: PatternConfig
 ): PatternController {
-  const uid = `t${instanceCounter++}`;
+  const uid = nextInstanceId();
 
   let config: PatternConfig = { ...initialConfig };
   let seed = config.seed ?? randomSeed();
@@ -909,8 +910,8 @@ export function createPattern(
 
       const { download, name, ...svgOptions } = options ?? {};
 
-      // The converter is ~21 KB gzipped and only needed here - load it on
-      // demand so consumers who never export don't bundle it.
+      // The converter is about 12 KB gzipped once minified and only needed
+      // here - load it on demand so consumers who never export don't bundle it.
       const [{ doodleToSvg }] = await Promise.all([
         import('./svgExport.js'),
         settleAnimations(element),

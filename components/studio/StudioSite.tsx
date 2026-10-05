@@ -36,7 +36,12 @@ import {
 import type { DesignChoice } from 'lib/designCatalog';
 import type { SiteDocument } from 'lib/studioDocument';
 import { apiFetch, ApiError } from 'lib/apiFetch';
-import { archiveNameFor, buildCustomisedArchive, saveArchive } from 'lib/studioDownload';
+import {
+  archiveNameFor,
+  buildCustomisedArchive,
+  buildCustomisedReactArchive,
+  saveArchive,
+} from 'lib/studioDownload';
 import { designOn, patternChanged, patternsChanged, pickDesign, shuffleDesigns } from 'lib/studioPatterns';
 import {
   buildPreviewDocument,
@@ -484,6 +489,26 @@ export default function StudioSite({
     }
   };
 
+  const downloadReact = async () => {
+    setDownloading(true);
+
+    try {
+      const { bytes, problems } = await buildCustomisedReactArchive({ slug: site.slug, spec, edits: draft });
+      const leftOut = problems.some((problem) => problem.path === 'text' || problem.path === 'images');
+
+      saveArchive(bytes, `${archiveNameFor(site.title)}-react.zip`);
+      toaster.add({
+        title: leftOut
+          ? `Downloaded ${site.title} as a React project, with your colors and patterns (its README says what else).`
+          : `Downloaded ${site.title} as a React project`,
+      });
+    } catch (cause) {
+      toaster.add({ title: cause instanceof Error ? cause.message : 'Could not build the download.' });
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   const patternEdit = (slot: PatternSlot): PatternEdit | undefined => draft.edits.patterns?.[slot.id];
 
   return (
@@ -493,6 +518,7 @@ export default function StudioSite({
         template={unsaved ? site.slug : undefined}
         downloading={downloading}
         onDownloadHtml={() => void downloadHtml()}
+        onDownloadReact={() => void downloadReact()}
         slug={site.slug}
         templateName={site.templateName}
         colors={palette}

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
 import Link from 'next/link';
-import { CircleCheck, Eye, Palette, Plus } from 'lucide-react';
+import { CircleCheck, Eye, Palette, Plus, Search } from 'lucide-react';
 import type { PatternDefinition } from 'tabbied';
 import {
   TEMPLATE_CATEGORIES,
@@ -11,6 +11,7 @@ import {
   type TemplateCategory,
 } from 'lib/templateCategories';
 import { paginationWindow } from 'lib/pagination';
+import { matchesQuery, templateKeywords } from 'lib/catalogSearch';
 import Toaster from 'components/Toaster';
 import { chosenOf, customizeHref, type MyTemplatesState } from 'lib/myTemplates';
 import { useTemplateGate, type TemplateAction } from './ChooseTemplate';
@@ -18,10 +19,12 @@ import DownloadMenu, { type DownloadMenuClasses } from './DownloadMenu';
 import LazyPattern from './LazyPattern';
 import s from './TemplatesGrid.module.css';
 
-// The template gallery's body: a row of category chips, a page of the cards
-// they filter, and the pager. Client-side for the chips and pages, and for
-// the one thing the server cannot know, which templates are the visitor's
-// (lib/myTemplates.ts).
+// The template gallery's body: a search box, a row of category chips, a page
+// of the cards they filter, and the pager. The search matches what the MCP
+// server's list_templates does (lib/catalogSearch.ts), so "bakery" finds the
+// same sites on the page and over MCP. Client-side for the search, the chips
+// and the pages, and for the one thing the server cannot know, which
+// templates are the visitor's (lib/myTemplates.ts).
 
 export type TemplateCard = {
   slug: string;
@@ -218,26 +221,28 @@ function Card({ c, templates, guard, here }: { c: TemplateCard; templates: MyTem
 type Filter = TemplateCategory | 'All' | 'Yours';
 
 /**
- * The gallery's address for a filter and a page: `?category=` and `?page=`,
- * each left out at its default, so All on page 1 is plain `/templates/`.
+ * The gallery's address for a filter, a page and a search: `?category=`,
+ * `?page=` and `?q=`, each left out at its default, so All on page 1 with
+ * nothing typed is plain `/templates/`.
  */
-function galleryHref(filter: Filter, page: number): string {
+function galleryHref(filter: Filter, page: number, query = ''): string {
   const params = new URLSearchParams();
   if (filter !== 'All') params.set('category', filter === 'Yours' ? 'yours' : categorySlug(filter));
+  if (query.trim()) params.set('q', query.trim());
   if (page > 1) params.set('page', String(page));
-  const query = params.toString();
+  const search = params.toString();
 
-  return query ? `/templates/?${query}` : '/templates/';
+  return search ? `/templates/?${search}` : '/templates/';
 }
 
-/** The filter and page a query string names; anything unknown is the default. */
-function readLocation(search: string): { filter: Filter; page: number } {
+/** The filter, page and search a query string names; anything unknown is the default. */
+function readLocation(search: string): { filter: Filter; page: number; query: string } {
   const params = new URLSearchParams(search);
   const category = params.get('category') ?? '';
   const filter: Filter = category === 'yours' ? 'Yours' : (categoryFromSlug(category) ?? 'All');
   const page = parseInt(params.get('page') ?? '', 10);
 
-  return { filter, page: Number.isFinite(page) && page >= 1 ? page : 1 };
+  return { filter, page: Number.isFinite(page) && page >= 1 ? page : 1, query: params.get('q') ?? '' };
 }
 
 /** A plain left click, which the page handles; anything else is the browser's. */
@@ -252,6 +257,7 @@ export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
   // deep link moves to its view once the script runs.
   const [filter, setFilter] = useState<Filter>('All');
   const [page, setPage] = useState(1);
+  const [query, setQuery] = useState('');
   const names = useMemo(() => Object.fromEntries(cards.map((c) => [c.slug, c.name])), [cards]);
   const { guard, dialog, templates } = useTemplateGate(names);
 
@@ -260,6 +266,7 @@ export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
       const next = readLocation(window.location.search);
       setFilter(next.filter);
       setPage(next.page);
+      setQuery(next.query);
     };
 
     read();
@@ -271,7 +278,15 @@ export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
   const go = (nextFilter: Filter, nextPage: number) => {
     setFilter(nextFilter);
     setPage(nextPage);
-    window.history.pushState(null, '', galleryHref(nextFilter, nextPage));
+    window.history.pushState(null, '', galleryHref(nextFilter, nextPage, query));
+  };
+
+  // Typing replaces the address rather than pushing one per keystroke, and
+  // starts the matches from their first page.
+  const search = (nextQuery: string) => {
+    setQuery(nextQuery);
+    setPage(1);
+    window.history.replaceState(null, '', galleryHref(active, 1, nextQuery));
   };
 
   // Only the categories that have a site, in the vocabulary's order.
@@ -282,12 +297,13 @@ export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
   // "Yours" means nothing until the account has answered, and nothing at all
   // to a visitor who is signed out: both see All.
   const active: Filter = filter === 'Yours' && templates.status !== 'ready' ? 'All' : filter;
-  const matching =
+  const inFilter =
     active === 'All'
       ? cards
       : active === 'Yours'
         ? cards.filter((c) => chosenOf(templates, c.slug))
         : cards.filter((c) => c.category === active);
+  const matching = query.trim() ? inFilter.filter((c) => matchesQuery(templateKeywords(c), query)) : inFilter;
   const filters: Filter[] = templates.status === 'ready' ? ['All', 'Yours', ...categories] : ['All', ...categories];
 
   // A page past the end (a link from before a category shrank, or a typed
@@ -295,7 +311,7 @@ export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
   const pageCount = Math.max(1, Math.ceil(matching.length / PER_PAGE));
   const current = Math.min(page, pageCount);
   const shown = matching.slice((current - 1) * PER_PAGE, current * PER_PAGE);
-  const here = galleryHref(active, current);
+  const here = galleryHref(active, current, query);
 
   // A page is chosen at the foot of the grid, so the new one is brought into
   // view from its top, and focus goes with it for a keyboard.
@@ -317,7 +333,21 @@ export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
 
   return (
     <>
-      <div className={s.filterWrap} ref={topRef}>
+      <div className={s.searchRow} ref={topRef}>
+        <label className={s.search}>
+          <Search size={15} strokeWidth={1.8} aria-hidden="true" />
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => search(event.target.value)}
+            placeholder="Search templates: bakery, dentist, studio..."
+            aria-label="Search templates"
+            autoComplete="off"
+            spellCheck={false}
+          />
+        </label>
+      </div>
+      <div className={s.filterWrap}>
         <div className={s.filters} role="group" aria-label="Filter by kind of site">
           {filters.map((category) => (
             <button
@@ -345,7 +375,15 @@ export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
           <Card key={c.slug} c={c} templates={templates} guard={guard} here={here} />
         ))}
       </div>
-      {active === 'Yours' && matching.length === 0 ? (
+      {matching.length === 0 && query.trim() ? (
+        <p className={s.none} role="status">
+          No templates match &quot;{query.trim()}&quot;
+          {active === 'All' ? '' : ` in ${active === 'Yours' ? 'yours' : active}`}.{' '}
+          <button type="button" className={s.clearSearch} onClick={() => search('')}>
+            Clear search
+          </button>
+        </p>
+      ) : active === 'Yours' && matching.length === 0 ? (
         <p className={s.none}>No templates chosen yet. Choose one from All.</p>
       ) : null}
 
@@ -361,7 +399,7 @@ export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
             ) : (
               <a
                 key={p}
-                href={galleryHref(active, p)}
+                href={galleryHref(active, p, query)}
                 className={s.pageNumber}
                 aria-label={`Page ${p}`}
                 aria-current={p === current ? 'page' : undefined}

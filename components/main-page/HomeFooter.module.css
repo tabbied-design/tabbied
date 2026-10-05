@@ -44,6 +44,9 @@
 }
 
 .links a {
+  /* The whole 28px line is the target, not the 18px run of text: WCAG 2.2
+     asks for 24px. */
+  display: inline-block;
   color: oklch(0.88 0.01 260);
 }
 
@@ -107,6 +110,8 @@
 }
 
 .legal a {
+  display: inline-block;
+  padding-block: 4px;
   color: inherit;
   text-decoration: none;
 }

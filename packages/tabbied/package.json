@@ -5,7 +5,7 @@
   "type": "module",
   "license": "MIT",
   "author": "Sy Hong and Ye Joo Park",
-  "homepage": "https://tabbied.com/docs/react/",
+  "homepage": "https://tabbied.com/docs/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tabbied-design/tabbied.git",
@@ -52,6 +52,11 @@
       "import": "./dist/element/index.js",
       "default": "./dist/element/index.js"
     },
+    "./element/react-jsx": {
+      "types": "./dist/element/react-jsx.d.ts",
+      "import": "./dist/element/react-jsx.js",
+      "default": "./dist/element/react-jsx.js"
+    },
     "./patterns": {
       "types": "./dist/patterns.generated.d.ts",
       "import": "./dist/patterns.generated.js",
@@ -61,6 +66,11 @@
       "types": "./dist/patterns/*.d.ts",
       "import": "./dist/patterns/*.js",
       "default": "./dist/patterns/*.js"
+    },
+    "./snippets": {
+      "types": "./dist/snippets/index.d.ts",
+      "import": "./dist/snippets/index.js",
+      "default": "./dist/snippets/index.js"
     },
     "./svg-export": {
       "types": "./dist/core/svgExport.d.ts",

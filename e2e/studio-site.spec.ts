@@ -5,6 +5,7 @@
 // its colors and patterns through the engine live, and the page says what it
 // knows about the document's state.
 import { test, expect } from '@playwright/test';
+import { strFromU8, unzipSync } from 'fflate';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -308,6 +309,66 @@ test.describe('studio site', () => {
       .poll(() => hosts.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-pattern'))))
       .toEqual(before);
     await expect(rail.getByRole('button', { name: /^Reset the .* pattern$/ })).toHaveCount(0);
+  });
+
+  test('the customized React project carries the colors and pattern fields over its source', async ({
+    page,
+  }) => {
+    await page.route('**/api/studio/sites/**', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(siteDocument({ mine: true })),
+      })
+    );
+
+    await page.goto('/studio/site/?id=e2esite');
+
+    const frame = page.frameLocator('iframe');
+    const hosts = frame.locator('[data-edit-pattern] [data-pattern]');
+    await expect(hosts.first()).toBeAttached({ timeout: 15_000 });
+    const first = await frame.locator('[data-edit-pattern]').first().getAttribute('data-edit-pattern');
+    const target = (await hosts.first().getAttribute('data-pattern')) === 'radius' ? 'lobe' : 'radius';
+
+    const rail = page.getByRole('complementary', { name: 'Customize this site' });
+    await rail.getByRole('button', { name: 'Cobalt', exact: true }).click();
+    await rail.getByRole('tab', { name: 'Patterns' }).click();
+    await rail.locator('li').first().getByRole('button', { name: /^Change the .* pattern$/ }).click();
+    const dialog = page.getByRole('dialog');
+    await dialog.getByLabel('Search patterns').fill(target);
+    await dialog.getByRole('button', { name: target === 'radius' ? 'Radius' : 'Lobe', exact: true }).click();
+    await expect.poll(() => hosts.first().getAttribute('data-pattern')).toBe(target);
+
+    await page.getByRole('button', { name: 'Download' }).click();
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('menuitem', { name: 'Your customized version, React project' }).click(),
+    ]);
+    expect(download.suggestedFilename()).toBe('ye-joo-park-react.zip');
+
+    const files = unzipSync(new Uint8Array(fs.readFileSync(await download.path())));
+    const read = (name: string) => strFromU8(files[`${SLUG}-react/${name}`] ?? new Uint8Array());
+
+    // The colors: the root's properties, after the page's own sheets.
+    expect(read('src/customizations.css')).toMatch(/\[data-edit-root\] \{[^}]*--brand-0: #0a1a3f !important;/);
+    expect(read('src/main.tsx')).toContain(`import './base.css';\nimport './customizations.css';`);
+
+    // The field: its host's attributes now, by the slot id around it, and
+    // every TabbiedPattern import pointed at the wrapper that applies them.
+    const fields = read('src/customizations.ts');
+    expect(fields).toContain(`"${first}": {`);
+    expect(fields).toContain(`"data-pattern": "${target}"`);
+    expect(read('src/customized.tsx')).toContain(`from 'tabbied/patterns'`);
+    expect(read('src/customized.tsx')).toMatch(new RegExp(`import \\{[^}]*\\b${target}\\b[^}]*\\} from 'tabbied/patterns'`));
+    expect(read('src/TemplateSite.tsx')).toContain(`from './customized'`);
+    expect(read('src/TemplateSite.tsx')).not.toContain(`from 'tabbied/react'`);
+
+    // The source is left as the template wrote it, and the README says what
+    // was carried and what (this document's text) was not.
+    const readme = read('README.md');
+    expect(readme).toContain('## Your customizations');
+    expect(readme).toContain('Not carried into this project: text');
+    expect(JSON.parse(read('tabbied-edits.json')).edits.palette[0].toLowerCase()).toBe('#0a1a3f');
   });
 
   test('customizing a template makes nothing until the first Save', async ({ page }) => {

@@ -267,8 +267,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   padding: 0;
   color: oklch(0.62 0.01 260);
   background: transparent;
@@ -403,8 +403,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   padding: 0;
   color: oklch(0.62 0.01 260);
   background: transparent;

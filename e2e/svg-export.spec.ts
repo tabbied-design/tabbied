@@ -410,7 +410,9 @@ test.describe('native SVG export', () => {
       return { palette: el.dataset.palette, style: el.getAttribute('style') };
     }, snippet);
     expect(parsed.palette?.split(',').length).toBeGreaterThan(1);
-    expect(parsed.style).toBe('width: 100%; aspect-ratio: 2 / 3');
+    // The ground color paints the box before the module loads, as the web
+    // component's snippet does.
+    expect(parsed.style).toBe(`width: 100%; aspect-ratio: 2 / 3; background: ${parsed.palette?.split(',')[0].trim()}`);
   });
 
   test('limited exports warn and confirm before downloading', async ({ page }) => {

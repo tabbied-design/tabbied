@@ -20,7 +20,7 @@ import { pageMetadata } from 'lib/seo';
 export const metadata: Metadata = pageMetadata({
   title: 'React component - Tabbied',
   description:
-    'Documentation for the tabbied npm package: render, resize, recolor, reseed, and export Tabbied generative patterns in React, vanilla JavaScript or plain HTML.',
+    'The TabbiedPattern React component: render, resize, recolor, reseed, and export Tabbied generative patterns in a React or Next.js app.',
   path: '/docs/react/',
 });
 
@@ -183,24 +183,6 @@ import { pebble } from 'tabbied/patterns';
 export default function Page() {
   return <TabbiedPattern pattern={pebble} height={320} />;
 }`;
-
-const coreCode = `import { createPattern } from 'tabbied';
-import { foliage } from 'tabbied/patterns';
-
-const controller = createPattern(document.querySelector('#stage'), {
-  pattern: foliage,
-  seed: 'k9Pz',
-  redrawInterval: 5200, // optional: reseed on a timer, gates included
-  // Measured fits (grid/cover) mount asynchronously, once the
-  // host's size is known - drive the controller from onReady.
-  onReady: async () => {
-    controller.redraw(); // re-randomize the seed
-    await controller.exportImage();
-  },
-});
-
-// later, when the pattern is removed:
-controller.destroy();`;
 
 const definitionCode = `import type { PatternDefinition } from 'tabbied';
 
@@ -512,12 +494,12 @@ export default function ReactDocsPage() {
             <header className={styles.head}>
               <div>
                 <p className={styles.eyebrow}>Documentation</p>
-                <h1 className={styles.title}>The tabbied package</h1>
+                <h1 className={styles.title}>React</h1>
               </div>
               <div>
                 <p className={styles.lede}>
-                  Tabbied&apos;s generative patterns as a library: a
-                  framework-agnostic core plus a React component, powered by{' '}
+                  <Code>tabbied/react</Code> draws Tabbied&apos;s generative
+                  patterns in a React app, powered by{' '}
                   <a href="https://css-doodle.com/">css-doodle</a>. Render any
                   preset (or your own definition) at any size, recolor it,
                   reseed it, and export it to PNG or SVG.
@@ -551,32 +533,14 @@ export default function ReactDocsPage() {
               <article className={styles.article}>
                 <Section id="introduction" title="Introduction">
                   <p>
-                    The <Code>tabbied</Code> package ships three entry points:
+                    <Code>tabbied/react</Code> gives you one component,{' '}
+                    <Code>TabbiedPattern</Code>, which renders a pattern into
+                    a normal, CSS-sizeable box, like an{' '}
+                    <Code>&lt;img&gt;</Code>. The designs come from{' '}
+                    <Code>tabbied/patterns</Code>: {PATTERN_COUNT} presets as
+                    tree-shakeable <Code>PatternDefinition</Code> exports, so
+                    an app ships only the ones it renders.
                   </p>
-                  <div className={styles.entries}>
-                    <div className={styles.entry}>
-                      <code className={styles.entryName}>tabbied/react</code>
-                      <p>
-                        The <Code>TabbiedPattern</Code> component. It renders a
-                        pattern into a normal, CSS-sizeable box, like an{' '}
-                        <Code>&lt;img&gt;</Code>.
-                      </p>
-                    </div>
-                    <div className={styles.entry}>
-                      <code className={styles.entryName}>tabbied/patterns</code>
-                      <p>
-                        {PATTERN_COUNT} preset designs as tree-shakeable{' '}
-                        <Code>PatternDefinition</Code> exports.
-                      </p>
-                    </div>
-                    <div className={styles.entry}>
-                      <code className={styles.entryName}>tabbied</code>
-                      <p>
-                        The framework-agnostic core (<Code>createPattern</Code>)
-                        plus all shared types and sizing helpers.
-                      </p>
-                    </div>
-                  </div>
                   <p>
                     Patterns are deterministic: the same pattern, seed, grid
                     and options always draw the same design, at any size.
@@ -588,7 +552,10 @@ export default function ReactDocsPage() {
                     <a href="/docs/svelte/">Svelte action</a>, a{' '}
                     <a href="/docs/vue/">Vue component</a>, a{' '}
                     <a href="/docs/web-component/">web component</a> for any
-                    page, and <a href="/docs/html/">plain HTML</a>.
+                    page, <a href="/docs/html/">plain HTML</a> and{' '}
+                    <a href="/docs/javascript/">plain JavaScript</a>; the{' '}
+                    <a href="/docs/">Developers</a> page lists every entry
+                    point.
                   </p>
                   <p>
                     Working with an AI assistant? The{' '}
@@ -998,21 +965,12 @@ export default function ReactDocsPage() {
                     returns a controller with{' '}
                     <Code>update()</Code>, <Code>redraw()</Code>,{' '}
                     <Code>exportImage()</Code>, <Code>exportSvg()</Code> and{' '}
-                    <Code>destroy()</Code>.
-                    It accepts the same config the component takes as props,
-                    minus the box props - the host element is yours to size,
-                    or run them through <Code>resolveBoxStyle()</Code>. That
-                    includes <Code>redrawInterval</Code> and{' '}
-                    <Code>paused</Code>: the timer and its reduced-motion,
-                    tab-visibility and viewport gates live in the
-                    controller, so patterns animate here without
-                    reimplementing any of it.
+                    <Code>destroy()</Code>, taking the component&apos;s props
+                    minus the box props. The{' '}
+                    <a href="/docs/javascript/">JavaScript</a> page covers it,
+                    with <Code>resolveBoxStyle()</Code> for sizing the host
+                    and <Code>hydratePatterns()</Code> for markup.
                   </p>
-                  <CodeBlock
-                    code={coreCode}
-                    lang="ts"
-                    className={styles.codeStandalone}
-                  />
                 </Section>
 
                 <Section id="api" title="API reference">
@@ -1090,6 +1048,15 @@ export default function ReactDocsPage() {
                     sizing metadata) ships with the package - {' '}
                     <Code>import type {'{ PatternDefinition }'} from
                     &apos;tabbied&apos;</Code>.
+                  </p>
+                  <p>
+                    Two option fields are named differently in{' '}
+                    <Code>catalog.json</Code> (and the MCP server), which
+                    describes designs for reading rather than authoring: its{' '}
+                    <Code>label</Code> is a definition&apos;s{' '}
+                    <Code>displayName</Code>, and its <Code>values</Code> are
+                    a definition&apos;s <Code>options</Code>. Write a
+                    definition with the names above.
                   </p>
                 </Section>
 

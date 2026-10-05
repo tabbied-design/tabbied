@@ -3,14 +3,49 @@
 
 /* ---- Filters ---- */
 
+/* The search box, over the chips: a page change scrolls here, and below
+   768px the site bar is pinned over the top 56px. */
+.searchRow {
+  margin-bottom: 16px;
+  scroll-margin-top: 80px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(100%, 420px);
+  padding: 0 16px;
+  color: oklch(0.7 0.01 260);
+  border: 1px solid oklch(1 0 0 / 0.18);
+  border-radius: 999px;
+  transition: border-color 150ms ease;
+}
+
+.search:focus-within {
+  border-color: var(--h-cyan);
+}
+
+.search input {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 0;
+  font: 400 14px var(--h-sans);
+  color: var(--h-fg);
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.search input::placeholder {
+  color: oklch(0.6 0.01 260);
+}
+
 /* On a phone, one row that scrolls sideways rather than wrapping, fading out
    at the right edge so the cut-off chip reads as "more this way". */
 .filterWrap {
   position: relative;
   margin-bottom: 40px;
-  /* A page change scrolls here; below 768px the site bar is pinned over the
-     top 56px. */
-  scroll-margin-top: 80px;
 }
 
 .filters {
@@ -377,6 +412,22 @@
   margin: 8px 0 0;
   font: 400 14px var(--h-sans);
   color: oklch(0.66 0.01 260);
+}
+
+.clearSearch {
+  padding: 0;
+  font: inherit;
+  color: var(--h-cyan);
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search {
+    transition: none;
+  }
 }
 
 /* The Download menu. Portaled under <body>, outside the page wrapper that

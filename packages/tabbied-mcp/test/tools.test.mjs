@@ -138,6 +138,15 @@ test('an over-narrow search explains itself instead of returning nothing', async
   assert.ok(result.vocabulary.tags.includes('dots'));
 });
 
+test('a free-text query matches tags, moods and uses as well as names', async () => {
+  // The site's gallery search reads the same fields (lib/catalogSearch.ts).
+  const result = parse(await call('search_designs', { query: 'circles', limit: 50 }));
+  const tagged = catalog.designs.filter((design) => design.tags.includes('circles')).length;
+
+  assert.ok(tagged > 1);
+  assert.ok(result.matched >= tagged, `${result.matched} matched, ${tagged} tagged circles`);
+});
+
 test('search can select on SVG-export support', async () => {
   const unsupported = parse(
     await call('search_designs', { svgExport: false, limit: 50 })
@@ -156,11 +165,56 @@ test('get_design returns the record plus slug-substituted usage', async () => {
   assert.equal(design.slug, slug);
   assert.ok(Array.isArray(design.options));
   assert.ok(design.usage.import.includes(slug));
-  assert.ok(design.usage.react.includes(slug));
   assert.ok(design.usage.cli.includes(slug));
+  // Every setup, not React plus a bare import.
+  for (const setup of ['react', 'vue', 'svelte', 'element', 'html', 'core']) {
+    assert.ok(design.usage[setup]?.includes(slug), `${setup}: ${design.usage[setup]}`);
+  }
+  assert.match(design.usage.core, /createPattern\(host, \{/);
+  assert.match(design.usage.core, /resolveBoxStyle/);
+  assert.match(design.usage.element, /<tabbied-pattern\n  pattern=/);
+  assert.match(design.usage.html, /hydratePatterns\(\{ patterns: \{/);
+  assert.match(design.usage.svelte, /use:tabbied=\{props\}/);
+  assert.match(design.usage.vue, /from 'tabbied\/vue'/);
   assert.ok(!JSON.stringify(design.usage).includes('<slug>'), 'placeholder left in');
   // The sizing note is the one thing worth repeating everywhere.
   assert.match(design.sizing, /no intrinsic size/);
+});
+
+test("get_design's snippets are the editor's builders, for the design as authored", async () => {
+  const { buildSnippets, parseRatio } = await import('tabbied/snippets');
+  const entry = catalog.designs.find((design) => design.slug === 'radius') ?? catalog.designs[0];
+  const { usage } = parse(await call('get_design', { slug: entry.slug }));
+  const expected = buildSnippets({
+    slug: entry.slug,
+    ratio: parseRatio(entry.defaultAspectRatio),
+    ground: entry.palette[0],
+    version: catalog.version,
+  });
+
+  for (const [setup, code] of Object.entries(expected)) {
+    assert.equal(usage[setup], code, setup);
+  }
+  // The markup snippets paint the ground before the script runs, and pin the
+  // version the catalog describes.
+  assert.ok(usage.html.includes(`background: ${entry.palette[0]}`));
+  assert.ok(usage.element.includes(`tabbied@${catalog.version}/`));
+});
+
+test('get_design with a framework returns that one snippet', async () => {
+  const slug = catalog.designs[0].slug;
+  const { usage } = parse(await call('get_design', { slug, framework: 'svelte' }));
+
+  assert.match(usage.svelte, /from 'tabbied\/svelte'/);
+  for (const other of ['react', 'vue', 'element', 'html', 'core']) {
+    assert.equal(usage[other], undefined, other);
+  }
+  // What every setup needs stays.
+  assert.ok(usage.install && usage.import && usage.cli);
+
+  const bad = await call('get_design', { slug, framework: 'angular' });
+  assert.equal(bad.isError, true);
+  assert.match(bad.content[0].text, /react, vue, svelte, element, html, core/);
 });
 
 test("get_design's React snippet sizes the pattern by its own ratio, in CSS's syntax", async () => {

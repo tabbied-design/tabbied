@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { test, expect } from '@playwright/test';
 
 test.describe('Tabbied site', () => {
@@ -212,9 +214,26 @@ test.describe('Tabbied site', () => {
     await expect(rail.getByRole('button', { name: /^Sorbet/ }).first()).toBeVisible();
     await expect(rail.getByRole('button', { name: /^Ocean/ }).first()).toBeVisible();
 
-    // A word that names nothing still empties the grid and says so.
+    // A word that names nothing still empties the grid and says so, and only
+    // that: no "0 patterns, each drawn live" above it.
     await search.fill('zzzz');
     await expect(page.getByText('No designs match your search.')).toBeVisible();
+    await expect(page.getByText(/^0 patterns/)).toHaveCount(0);
+  });
+
+  test('a search finds designs by motif, not only by name', async ({ page }) => {
+    await page.goto('/patterns');
+    const search = page.locator('aside').getByLabel('Search palettes and designs');
+
+    // One design is called Dotset; dozens are tagged dots.
+    await search.fill('dots');
+    const status = page.getByText(/^\d+ patterns match "dots"/);
+    await expect(status).toBeVisible();
+    expect(Number((await status.textContent())?.match(/\d+/)?.[0])).toBeGreaterThan(10);
+
+    await search.fill('circles');
+    await expect(page.getByText(/^\d+ patterns match "circles"/)).toBeVisible();
+    await expect(page.getByText('No designs match your search.')).toHaveCount(0);
   });
 
   test('the palette rail shows a scrollable, infinite palette list', async ({
@@ -1027,6 +1046,7 @@ test.describe('The Developers section', () => {
       ['Svelte and SvelteKit', '/docs/svelte/'],
       ['Web component', '/docs/web-component/'],
       ['Plain HTML', '/docs/html/'],
+      ['JavaScript', '/docs/javascript/'],
       ['MCP server', '/docs/mcp/'],
     ]) {
       // Each card is a link to its page, and every such page answers.
@@ -1035,12 +1055,33 @@ test.describe('The Developers section', () => {
       expect((await page.request.get(href)).status()).toBe(200);
     }
 
-    for (const label of ['Overview', 'Concepts', 'React', 'Vue', 'Svelte', 'Web component', 'Plain HTML', 'MCP server', 'GitHub']) {
+    for (const label of ['Overview', 'Concepts', 'React', 'Vue', 'Svelte', 'Web component', 'Plain HTML', 'JavaScript', 'MCP server', 'GitHub']) {
       await expect(footer.getByRole('link', { name: label, exact: true })).toBeVisible();
     }
     // The legal pages moved to the bottom bar, still linked.
     await expect(footer.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', /\/privacy-policy/);
     await expect(footer.getByRole('link', { name: 'Terms of Service' })).toHaveAttribute('href', /\/terms-of-service/);
+  });
+
+  test('/docs/ is its own page, and no redirect rule shadows an exported one', async ({ page }) => {
+    await page.goto('/docs/');
+    await expect(page).toHaveTitle('Developers - Tabbied');
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://tabbied.com/docs/');
+
+    // `serve` never reads public/_redirects, so the suite cannot see a rule
+    // fire; Workers static assets apply it before the file, on a hard load.
+    // A rule whose source is a page in the export takes that page away from
+    // everyone who arrives by URL, which is how /docs/ once led to React.
+    const rules = fs
+      .readFileSync(path.join(process.cwd(), 'public/_redirects'), 'utf8')
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line && !line.startsWith('#'))
+      .map((line) => line.split(/\s+/)[0]);
+    for (const source of rules.filter((rule) => !rule.includes(':') && !rule.includes('*'))) {
+      const file = path.join(process.cwd(), 'out', source.replace(/\/$/, ''), 'index.html');
+      expect(fs.existsSync(file), `${source} redirects away from an exported page`).toBe(false);
+    }
   });
 
   test('Concepts is linked from every setup page, and names each setting per setup', async ({ page }) => {

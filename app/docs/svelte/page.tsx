@@ -51,6 +51,19 @@ const updatesCode = `<script>
 <div {...tabbiedAttributes(props)} use:tabbied={props}></div>
 <button onclick={() => (palette = ['#FFF4E6', '#E8590C'])}>Warm</button>`;
 
+// The same component without runes, for Svelte 4 (and Svelte 5's legacy
+// mode): a plain `let` is reactive, `$:` derives, and events are `on:`.
+const updatesLegacyCode = `<script>
+  import { tabbied, tabbiedAttributes } from 'tabbied/svelte';
+  import { radius } from 'tabbied/patterns';
+
+  let palette = ['#0B1020', '#3E8BFF', '#3FFFB2'];
+  $: props = { pattern: radius, palette, height: 320 };
+</script>
+
+<div {...tabbiedAttributes(props)} use:tabbied={props}></div>
+<button on:click={() => (palette = ['#FFF4E6', '#E8590C'])}>Warm</button>`;
+
 const controllerCode = `<script>
   import { tabbied, tabbiedAttributes, patternController } from 'tabbied/svelte';
   import { radius } from 'tabbied/patterns';
@@ -152,6 +165,16 @@ export default function SvelteDocsPage() {
           are skipped.
         </p>
         <CodeBlock code={updatesCode} title="+page.svelte" lang="svelte" className={styles.codeStandalone} />
+        <p>
+          The examples here use Svelte 5&apos;s runes. The action is the same
+          in Svelte 4, where the component is written without them:
+        </p>
+        <CodeBlock
+          code={updatesLegacyCode}
+          title="+page.svelte (Svelte 4)"
+          lang="svelte"
+          className={styles.codeStandalone}
+        />
       </Section>
 
       <Section id="controller" title="Redraw & export">
@@ -197,7 +220,7 @@ export default function SvelteDocsPage() {
           The props are the React component&apos;s:{' '}
           <Code>pattern</Code>, <Code>seed</Code>, <Code>palette</Code>,{' '}
           <Code>options</Code>, <Code>fit</Code>, <Code>density</Code>,{' '}
-          <Code>cellSize</Code>, the box props (<Code>fill</Code>,{' '}
+          <Code>cellSize</Code>, <Code>coverRender</Code>, the box props (<Code>fill</Code>,{' '}
           <Code>width</Code>, <Code>height</Code>, <Code>maxWidth</Code>,{' '}
           <Code>maxHeight</Code>, <Code>aspectRatio</Code>),{' '}
           <Code>redrawInterval</Code>, <Code>paused</Code>,{' '}

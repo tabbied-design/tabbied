@@ -65,7 +65,7 @@ const SETUPS: Card[] = [
     meta: 'hydratePatterns()',
   },
   {
-    href: '/docs/react/#vanilla',
+    href: '/docs/javascript/',
     name: 'JavaScript',
     children: <>The framework-free controller every setup is built on.</>,
     meta: 'createPattern()',

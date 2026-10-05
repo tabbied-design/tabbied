@@ -226,7 +226,12 @@ same way. The template sites moved from `/template/<slug>/` to
 `/templates/<slug>/site/` (one noun, one tree: the framed preview is
 `/templates/<slug>/` and the site it frames is under it), and the old paths
 301 there. A route under `run_worker_first` never reaches this file, so a
-redirect for one of those belongs in the Worker.
+redirect for one of those belongs in the Worker. A rule here also beats a
+page the export has: `/docs/` redirected to `/docs/react/` long after the
+Developers page existed, so a hard load or a search result never reached it
+while in-app links did. `serve` ignores this file, so the e2e suite cannot
+see a rule fire; `e2e/smoke.spec.ts` instead fails on any rule whose source
+is an exported page.
 
 The Worker routes with Hono (`worker/index.ts`). That was added for the
 platform tier - the right shape for two routes was the wrong one for twenty -
@@ -259,8 +264,9 @@ Protocol. Full reference: `docs/mcp-server.md`.
 The protocol comes from `@modelcontextprotocol/server` (MCP SDK v2). We own
 the tools; the SDK owns the wire.
 
-- `src/tools.ts` - the four catalog tools, with no runtime imports at all. The
-  host injects what differs (preview bytes, docs text) through `ToolContext`.
+- `src/tools.ts` - the four catalog tools, with no runtime imports beyond
+  `tabbied/snippets` (pure string builders). The host injects what differs
+  (preview bytes, docs text) through `ToolContext`.
   `src/templates.ts` is the two template tools, the same way.
 - `src/server.ts` - registers those tools onto an `McpServer`. The seam.
 - `src/stdio.ts`, `src/node/` - the bin, the local catalog reader, and
@@ -1671,9 +1677,20 @@ whatever text Studio wrote, so putting them back is a UI change.
   to its `index.html` with the same engine the canvas was drawn with, rewrites
   the bootstrap's import list to the designs the page mounts now, ships any
   `/api/media` picture Studio made inside `images/`, and zips it again with
-  fflate (`lib/studioDownload.ts`). The React package is offered as the
-  template's source and labelled that way: the document cannot be applied to
-  JSX.
+  fflate (`lib/studioDownload.ts`). The document cannot be applied to JSX,
+  so the customized React project carries the *result* beside the
+  template's untouched source, read off the HTML page before and after the
+  engine ran: the root's changed custom properties as
+  `src/customizations.css` (`!important`, so they beat the module's rule and
+  a value set inline), and each changed pattern field's host attributes in
+  `src/customizations.ts`, keyed by slot id. Every `tabbied/react` import is
+  pointed at `src/customized.tsx`, a `TabbiedPattern` that finds its slot id
+  with `closest('[data-edit-pattern]')` from a marker class on its own
+  placeholder (in a layout effect, so before the first paint) and lays the
+  saved attributes over its props through `patternConfigFromElement`. That
+  reaches a slot on a wrapper `<div>`, on an `<Artwork>` and inside a
+  `.map()` alike. Text and picture edits are not carried, and the README
+  says so. `e2e/studio-site.spec.ts` unzips one.
 - **A site's title is its own.** `PATCH /api/studio/sites/:id {title}`
   renames it; the rail's name field commits on blur or Enter, and nothing on
   the page reads the title, so no revision is written. The listing's
@@ -1947,15 +1964,21 @@ not re-litigating:
 
 **The editor's Copy code offers a snippet per setup, gated on the release.**
 The Export menu's "Copy code" group (React component, Vue component,
-Svelte action, Web component, HTML embed) is built by
-`lib/patternSnippets.ts`, one builder per setup from the plate's state.
+Svelte action, Web component, HTML embed) is offered by
+`lib/patternSnippets.ts` and written by `tabbied/snippets`
+(`packages/tabbied/src/snippets/`), one builder per setup from the plate's
+state. The same builders write `get_design`'s snippets on the MCP server and
+the catalog's `usage` (codegen loads the source through esbuild, before tsc
+has run), so the three cannot drift; `core` is the one setup the editor does
+not offer.
 Each snippet names the release that first shipped its entry point
 (`since`), and the menu offers only those the package version in the repo
 has reached: a snippet importing what npm does not have yet fails for
 whoever pastes it. That needs no follow-up at release time, because the
 release workflow bumps the version in the same merge that publishes. The
-builders import nothing, so `npm run test:lib` runs their tests under
-Node's own TypeScript support; `e2e/svg-export.spec.ts` checks the menu
+builders import nothing; their text is pinned in
+`packages/tabbied/test/snippets.test.mjs`, and `npm run test:lib` checks
+the menu's gating under Node's own TypeScript support; `e2e/svg-export.spec.ts` checks the menu
 against `availableSnippets` at the checked-out version, so it holds on both
 sides of a release. A group, not a submenu: a hover submenu beside the
 popup is poor on touch and in the phone layout's narrow dropdown.
@@ -2159,7 +2182,7 @@ rendered patterns to true vector SVG. Rules that must not regress:
   range of gallery orders and deletes anything in range it no longer defines.
   Verify with `node scripts/svg-parity-sweep.mjs <slug>` and keep
   `e2e/svg-export.spec.ts`'s representative list + thresholds in sync.
-- **Bundle contract**: the converter (~21 KB gz) is lazy-loaded by
+- **Bundle contract**: the converter (~12 KB gz minified) is lazy-loaded by
   `exportSvg()`; `core/index.ts` re-exports only its *types*
   (`supportsSvgExport` lives in `types.ts`); `dist/core/svgExport.js` must
   keep zero runtime imports (tests inject it into pages).

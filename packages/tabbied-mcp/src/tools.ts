@@ -8,6 +8,15 @@
 // The point is design *selection*. Slugs are opaque ("cleat", "karst") and
 // these are pictures, so search narrows on closed-vocabulary enums, then
 // preview_design puts the shortlist in front of the model before it commits.
+import {
+  SNIPPET_SETUPS,
+  buildSnippet,
+  buildSnippets,
+  parseRatio,
+  type SnippetInput,
+  type SnippetSetup,
+} from 'tabbied/snippets';
+
 import { templateTools } from './templates.js';
 import type {
   Catalog,
@@ -74,40 +83,48 @@ function summarize(design: CatalogDesign) {
   };
 }
 
+/**
+ * What a free-text query is matched against: slug, name, the closed-vocabulary
+ * tags, moods and uses, and the description. The site's gallery search
+ * (lib/catalogSearch.ts) reads the same fields, so "dots" finds the designs
+ * tagged dots in both, not only one whose name says it.
+ */
+function designKeywords(design: CatalogDesign): string {
+  return [
+    design.slug,
+    design.name,
+    ...design.tags,
+    ...design.mood,
+    ...design.goodFor,
+    design.description ?? '',
+  ]
+    .join(' ')
+    .toLowerCase();
+}
+
 function findDesign(catalog: Catalog, slug: unknown): CatalogDesign | null {
   if (typeof slug !== 'string') return null;
   return catalog.designs.find((design) => design.slug === slug) ?? null;
 }
 
-const ASPECT_RATIO_DEFAULT = '2:3';
-
 /**
- * The React snippet: a component at the design's own aspect ratio. The ratio
- * is the catalog's id (`2:3`) written as CSS's `2 / 3`, which is what the
- * prop takes - the id itself is not valid CSS and would size nothing. Same
- * shape as the editor's "Copy React component", so the two agree.
+ * The snippets' input for one design as the catalog describes it: its own
+ * ratio (the catalog's `2:3` id, which the builders write as CSS's `2 / 3`)
+ * and its own ground color, with nothing else chosen, so each snippet draws
+ * the design as authored. The builders are tabbied/snippets, the same ones
+ * the site's editor copies from, so the two agree.
  */
-function reactSnippet(design: CatalogDesign): string {
-  const ratio = design.defaultAspectRatio ?? ASPECT_RATIO_DEFAULT;
-  const [width, height] = /^(\d+):(\d+)$/.exec(ratio)?.slice(1) ?? ['2', '3'];
-  const component = `${design.slug.charAt(0).toUpperCase()}${design.slug.slice(1)}Pattern`;
-
-  return [
-    `import { TabbiedPattern } from 'tabbied/react';`,
-    `import { ${design.slug} } from 'tabbied/patterns';`,
-    ``,
-    `// As wide as its parent, at the ${width}:${height} ratio it was designed at.`,
-    `// Add maxWidth to bound it, or swap aspectRatio for a fixed height.`,
-    `export function ${component}() {`,
-    `  return (`,
-    `    <TabbiedPattern`,
-    `      pattern={${design.slug}}`,
-    `      aspectRatio="${width} / ${height}"`,
-    `    />`,
-    `  );`,
-    `}`,
-  ].join('\n');
+function snippetInput(catalog: Catalog, design: CatalogDesign): SnippetInput {
+  return {
+    slug: design.slug,
+    ratio: parseRatio(design.defaultAspectRatio),
+    ...(design.palette[0] ? { ground: design.palette[0] } : {}),
+    version: catalog.version,
+  };
 }
+
+const isSetup = (value: unknown): value is SnippetSetup =>
+  typeof value === 'string' && (SNIPPET_SETUPS as readonly string[]).includes(value);
 
 /** What the CLI command in `usage.cli` needs where it runs. */
 const CLI_SETUP =
@@ -156,8 +173,9 @@ function searchTool(catalog: Catalog): Tool {
         query: {
           type: 'string',
           description:
-            'Free text matched against slug, name, and description. Every ' +
-            'whitespace-separated word must appear somewhere in the entry.',
+            'Free text matched against slug, name, tags, mood, goodFor and ' +
+            'description. Every whitespace-separated word must appear ' +
+            'somewhere in the entry.',
         },
         tags: {
           type: 'array',
@@ -225,8 +243,7 @@ function searchTool(catalog: Catalog): Tool {
       );
 
       const matches = (design: CatalogDesign) => {
-        const haystack =
-          `${design.slug} ${design.name} ${design.description ?? ''}`.toLowerCase();
+        const haystack = designKeywords(design);
         return (
           terms.every((term) => haystack.includes(term)) &&
           (!wantTags || wantTags.every((tag) => design.tags.includes(tag))) &&
@@ -251,11 +268,7 @@ function searchTool(catalog: Catalog): Tool {
           ...(terms.length
             ? [
                 alone(`query "${args.query}"`, (design) =>
-                  terms.every((term) =>
-                    `${design.slug} ${design.name} ${design.description ?? ''}`
-                      .toLowerCase()
-                      .includes(term)
-                  )
+                  terms.every((term) => designKeywords(design).includes(term))
                 ),
               ]
             : []),
@@ -320,8 +333,11 @@ function getDesignTool(catalog: Catalog): Tool {
     description:
       'The full catalog record for one design - palette, every option with its ' +
       'range and default, SVG-export support, preview URL - plus ready-to-paste ' +
-      'React and vanilla snippets. Call this once a slug is chosen; ' +
-      'search_designs already returns enough to shortlist.',
+      'code for every setup: React, Vue, a Svelte action, the <tabbied-pattern> ' +
+      'web component, plain HTML with no build step, and framework-free ' +
+      'JavaScript (createPattern). Pass `framework` to get only the one the ' +
+      'project uses. Call this once a slug is chosen; search_designs already ' +
+      'returns enough to shortlist.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -329,6 +345,15 @@ function getDesignTool(catalog: Catalog): Tool {
           type: 'string',
           minLength: 1,
           description: 'The design slug, e.g. "radius". Slugs are not guessable.',
+        },
+        framework: {
+          type: 'string',
+          enum: [...SNIPPET_SETUPS],
+          description:
+            'Only this setup\'s snippet: react, vue, svelte (the action, ' +
+            'SvelteKit included), element (the web component, for any page or ' +
+            'CMS), html (data attributes and one script, no build step) or core ' +
+            '(createPattern on any element). Omit for all six.',
         },
       },
       required: ['slug'],
@@ -352,8 +377,19 @@ function getDesignTool(catalog: Catalog): Tool {
         );
       }
 
-      const snippet = (template: string) =>
-        template.replaceAll('<slug>', design.slug);
+      // The schema rejects an unknown setup before this runs; this keeps a
+      // direct call (the toolset, without the SDK in front) as strict.
+      const framework = args.framework;
+      if (framework != null && !isSetup(framework)) {
+        return toolError(
+          `Unknown framework "${String(framework)}". One of: ${SNIPPET_SETUPS.join(', ')}.`
+        );
+      }
+
+      const input = snippetInput(catalog, design);
+      const snippets = framework
+        ? { [framework]: buildSnippet(framework, input) }
+        : buildSnippets(input);
 
       // A design that cannot be vectorized gets a command that works.
       const extension = design.svgExport.supported ? 'svg' : 'png';
@@ -364,9 +400,8 @@ function getDesignTool(catalog: Catalog): Tool {
             ...design,
             usage: {
               install: catalog.usage.install,
-              import: snippet(catalog.usage.import),
-              react: reactSnippet(design),
-              core: snippet(catalog.usage.core),
+              import: `import { ${design.slug} } from 'tabbied/patterns';`,
+              ...snippets,
               fit: catalog.usage.fit,
               cli: `npx tabbied render ${design.slug} --out ${design.slug}.${extension}`,
               cliSetup: CLI_SETUP,
@@ -493,8 +528,9 @@ function docsTool(context: ToolContext): Tool | null {
       name: 'get_docs',
       title: 'Get the Tabbied reference',
       description:
-        'The complete agent-facing reference (llms-full.txt): entry points, the ' +
-        'React and vanilla APIs, sizing rules that compile but render wrong, ' +
+        'The complete agent-facing reference (llms-full.txt): every entry point ' +
+        '(React, Vue, Svelte, the web component, plain HTML and the ' +
+        'framework-free core), sizing rules that compile but render wrong, ' +
         'integration recipes, and the share-link URL scheme. Fetch this once ' +
         'before writing integration code; the per-design tools do not repeat it.',
       inputSchema: { type: 'object', additionalProperties: false },

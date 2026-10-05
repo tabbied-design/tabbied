@@ -29,9 +29,11 @@ Node 20.19+ and 22.12+ (which can `require` an ES module) and throws
 | `tabbied/react`    | The `TabbiedPattern` React component (and its handle/prop types).                       |
 | `tabbied/svelte`   | The `tabbied` Svelte action, `tabbiedAttributes()` for the server render, and `patternController()`. |
 | `tabbied/vue`      | The `TabbiedPattern` Vue 3 component.                                                   |
-| `tabbied/element`  | The `<tabbied-pattern>` custom element, `definePatterns()` and `setPatternsBase()`. `dist/element/tabbied-element.js` is the same element as one self-contained file for a CDN. |
+| `tabbied/element`  | The `<tabbied-pattern>` custom element, `definePatterns()` and `setPatternsBase()`. `dist/element/tabbied-element.js` is the same element for a CDN, with css-doodle bundled in; it loads two chunks from its own folder, so self-host the whole `dist/element/`. |
+| `tabbied/element/react-jsx` | Types only: `<tabbied-pattern>` in React's JSX, for a TypeScript app that uses the tag directly. |
 | `tabbied/patterns/<slug>` | One design as a default export, with no imports: what the element loads by slug. |
 | `tabbied/patterns` | The preset `PatternDefinition`s (import individually) plus the full `patterns` record.  |
+| `tabbied/snippets` | `buildSnippet(setup, input)`: the code that puts one design on a page in React, Vue, Svelte, the web component, plain HTML or plain JavaScript, as the site's editor and the MCP server write it. |
 | `tabbied/svg-export` | The native SVG converter (`doodleToSvg`) on its own, for exporting a rendered `<css-doodle>` you mounted yourself. `exportSvg()` on a controller or handle loads it for you. |
 | `tabbied/catalog.json` | Every design as data - description, palette, options, SVG-export support. See [Finding a design](#finding-a-design). |
 
@@ -115,9 +117,9 @@ such as a filter-based shadow, `option.svgExportNote`) - surface these to the
 user before downloading, the way the Tabbied editor's confirmation dialog
 does.
 
-The converter itself (~21 KB gzipped) is **not** part of the main bundle:
-`exportSvg()` loads it on demand via a dynamic import, so apps that never
-export pay nothing for the feature. To call the converter directly (e.g. on a
+The converter itself (about 12 KB gzipped once minified) is **not** part of
+the main bundle: `exportSvg()` loads it on demand via a dynamic import, so
+apps that never export pay nothing for the feature. To call the converter directly (e.g. on a
 `<css-doodle>` you manage yourself), import it from the subpath:
 
 ```ts
@@ -231,7 +233,7 @@ get `grid`.
   style="display: block; aspect-ratio: 3 / 2; background: #0B1020"
 ></tabbied-pattern>
 
-<script type="module" src="https://cdn.jsdelivr.net/npm/tabbied@0.8/dist/element/tabbied-element.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/tabbied@0.8.0/dist/element/tabbied-element.js"></script>
 ```
 
 `<tabbied-pattern>` takes the React props as attributes, under the names
@@ -257,7 +259,9 @@ removing the element tears it down, and moving it does not.
 - **Frameworks:** React 19, Svelte, Solid and Angular set properties on it
   (`palette` takes an array, `options` an object). Vue needs
   `compilerOptions.isCustomElement` to match the tag, and Angular
-  `CUSTOM_ELEMENTS_SCHEMA`.
+  `CUSTOM_ELEMENTS_SCHEMA`. In a TypeScript React app,
+  `import 'tabbied/element/react-jsx'` once types the tag in JSX (the module
+  is empty at runtime).
 - **Scripting:** `redraw(seed?)`, `exportImage()`, `exportSvg()`,
   `refresh()` and `controller`; a `ready` event after the first render, and
   `error` (reason in `detail`) for a design that cannot be loaded. It is
@@ -279,7 +283,7 @@ removing the element tears it down, and moving it does not.
 ```
 
 Pass the same props to both parts; they are the React component's props
-(below), plus `style` as a string. The action mounts the pattern, forwards
+(above), plus `style` as a string. The action mounts the pattern, forwards
 prop changes to it and destroys it with the element.
 
 An action runs only in the browser, so on its own it would leave a SvelteKit
@@ -320,6 +324,8 @@ placeholder, and the pattern mounts into it in the browser: no
 on its element. Vue 3.3 or later.
 
 ## Core (framework-agnostic)
+
+The full guide is at [tabbied.com/docs/javascript](https://tabbied.com/docs/javascript/).
 
 ```ts
 import { createPattern } from 'tabbied';
@@ -398,10 +404,11 @@ all up with one call:
 
 <script type="module">
   // Pin a version: a bare `tabbied` on esm.sh is whatever is latest.
-  import { hydratePatterns } from 'https://esm.sh/tabbied@0.7';
-  import { patterns } from 'https://esm.sh/tabbied@0.7/patterns';
+  // `?exports=` trims the presets to the ones the page names.
+  import { hydratePatterns } from 'https://esm.sh/tabbied@0.8.0';
+  import { ortho } from 'https://esm.sh/tabbied@0.8.0/patterns?exports=ortho';
 
-  hydratePatterns({ patterns });
+  hydratePatterns({ patterns: { ortho } });
 </script>
 ```
 
@@ -470,7 +477,8 @@ The second form needs the browser downloaded once too
 (or `--format svg|png`) picks the format, and an SVG is cut to `--size` in
 every fit, as the PNG is; frame sequences are PNG, cut deterministically between
 seeds (frames within a reseed window are identical, so encoders can
-deduplicate). Every flag also takes `--flag=value`. Run `npx tabbied --help`
+deduplicate), and named `frame-000.png` on, so `ffmpeg -i frames/frame-%03d.png`
+reads any sequence of up to 1,000 frames. Every flag also takes `--flag=value`. Run `npx tabbied --help`
 for every flag.
 
 ## For AI agents

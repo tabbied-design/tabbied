@@ -15,10 +15,9 @@ import ImageCard from './ImageCard';
 import { TemplateMenu } from './TemplateMenu';
 import s from './TemplateSite.module.css';
 
-// Stable id for one image slot, shared with the batch pipeline: it is the
-// custom_id sent to the API and the filename that comes back, so a finished
-// image finds its way home without a lookup table. Keep it in step with
-// scripts/images/extract-prompts.mjs if the slot naming ever changes.
+// Stable id for one image slot. It is also the image's file name under
+// public/images/template/, so a picture finds its slot without a lookup
+// table.
 const imageId = (
   site: Site,
   slot: 'hero' | 'about' | 'card' | 'alt' | 'gallery' | 'team',

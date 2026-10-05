@@ -164,6 +164,49 @@ test.describe('<tabbied-pattern> from a CDN', () => {
   });
 });
 
+test.describe('Two copies of the library on one page', () => {
+  // The CDN element carries its own copy of the core; a page that also
+  // imports the core (from esm.sh, or a second bundle) has two. Each copy
+  // once counted its instances from "t0", so the two first patterns shared a
+  // style scope and one drew in the other's palette.
+  test('each pattern keeps its own palette', async ({ page }) => {
+    const DOODLE = 'https://cdn.test/npm/css-doodle/css-doodle.min.js';
+    await page.route(DOODLE, (route) =>
+      route.fulfill({
+        contentType: 'text/javascript',
+        headers: { 'access-control-allow-origin': '*' },
+        body: fs.readFileSync(path.join(__dirname, '..', 'node_modules', 'css-doodle', 'css-doodle.min.js')),
+      })
+    );
+    await serveCdn(
+      page,
+      `<!doctype html>
+<html><head><meta charset="utf-8">
+<script type="importmap">{ "imports": { "css-doodle": "${DOODLE}" } }</script></head>
+<body style="margin: 0">
+<tabbied-pattern id="a" pattern="radius" seed="k9Pz" palette="#0B1020, #3E8BFF, #3FFFB2"
+  style="display: block; width: 400px; aspect-ratio: 3 / 2; background: #0B1020"></tabbied-pattern>
+<div id="b" data-pattern="radius" data-seed="k9Pz" data-palette="#FFF4E6, #E8590C"
+  style="width: 400px; aspect-ratio: 3 / 2"></div>
+<script type="module" src="${CDN}/element/tabbied-element.js"></script>
+<script type="module">
+  import { hydratePatterns } from '${CDN}/core/index.js';
+  import radius from '${CDN}/patterns/radius.js';
+  hydratePatterns({ patterns: { radius } });
+</script>
+</body></html>`
+    );
+    await page.goto(`${CDN}/index.html`);
+
+    await expect(page.locator('#a css-doodle')).toBeAttached({ timeout: 15000 });
+    await expect(page.locator('#b css-doodle')).toBeAttached({ timeout: 15000 });
+    const scopes = await page.$$eval('css-doodle', (els) => els.map((el) => el.getAttribute('data-tabbied')));
+    expect(new Set(scopes).size).toBe(2);
+    await expect.poll(() => ground(page, '#a')).toBe('#0B1020');
+    await expect.poll(() => ground(page, '#b')).toBe('#FFF4E6');
+  });
+});
+
 test.describe('<tabbied-pattern> in a bundled app', () => {
   test('registered slugs and definition properties draw with nothing fetched', async ({ page }) => {
     const fetched: string[] = [];

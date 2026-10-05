@@ -7,8 +7,9 @@
 // Download is a menu of two packages, as the design draws it: the customized
 // version, rebuilt in the browser with the site's colors and patterns in it
 // (lib/studioDownload.ts), and the original template in both formats. The
-// customized version is static HTML only, because the document cannot be
-// applied to JSX; the React package is the template's own source.
+// customized HTML has the changes written into the page; the customized React
+// project carries them in files of its own over the template's source, since
+// the document cannot be written into JSX.
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Menu } from '@base-ui/react/menu';
@@ -41,6 +42,7 @@ export default function CustomizerBar({
   template,
   downloading,
   onDownloadHtml,
+  onDownloadReact,
   slug,
   templateName,
   colors,
@@ -56,6 +58,7 @@ export default function CustomizerBar({
   template?: string;
   downloading: boolean;
   onDownloadHtml: () => void;
+  onDownloadReact: () => void;
   /** The template the site is built on, for the original's two zips. */
   slug: string;
   templateName: string;
@@ -146,6 +149,13 @@ export default function CustomizerBar({
                       onClick={onDownloadHtml}
                     >
                       HTML &amp; CSS
+                    </Menu.Item>
+                    <Menu.Item
+                      className={`${styles.dlButton} ${styles.dlSecondary}`}
+                      aria-label="Your customized version, React project"
+                      onClick={onDownloadReact}
+                    >
+                      React
                     </Menu.Item>
                   </div>
                   <p className={styles.dlFormatNote}>{CUSTOMIZED_FORMAT_NOTE}</p>

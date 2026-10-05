@@ -87,8 +87,10 @@ framework. The core runs in any framework, or none. Node >=18.
 | \`tabbied/svelte\` | The \`tabbied\` action, \`tabbiedAttributes\` for the server render, \`patternController\`. |
 | \`tabbied/vue\` | The \`TabbiedPattern\` Vue component. |
 | \`tabbied/element\` | The \`<tabbied-pattern>\` custom element, \`definePatterns\`, \`setPatternsBase\`. CDN file: \`dist/element/tabbied-element.js\`. |
+| \`tabbied/element/react-jsx\` | Types only: \`<tabbied-pattern>\` in React's JSX for a TypeScript app. |
 | \`tabbied/patterns/<slug>\` | One design as a default export, no imports. |
 | \`tabbied/patterns\` | The presets. Import individually; the \`patterns\` record holds all ${count}. |
+| \`tabbied/snippets\` | \`buildSnippet(setup, input)\`: one design's code for \`react\`, \`vue\`, \`svelte\`, \`element\`, \`html\` or \`core\`, as the editor and the MCP server write it. |
 | \`tabbied/svg-export\` | \`doodleToSvg\`, the vector converter, for use on a doodle you manage. |
 | \`tabbied/catalog.json\` | This catalog as data. |
 
@@ -336,6 +338,10 @@ npx tabbied render radius --frames 120 --reseed-every 30 --size 1920x1080 --out 
 ffmpeg -framerate 30 -i frames/frame-%03d.png -pix_fmt yuv420p out.mp4
 \`\`\`
 
+Frames are named \`frame-000.png\` on: three digits for a sequence of up to
+1,000 frames, and as many as the last index needs past that
+(\`frame-%04d.png\` up to 10,000).
+
 In Remotion, drive the same idea from \`useCurrentFrame()\`:
 \`seed={'base-' + Math.floor(frame / 30)}\` re-renders the arrangement every
 30 frames; keep \`redrawInterval\` unset and let the seed prop do the work.
@@ -358,6 +364,14 @@ derives it from the plate at that density, as \`fit: "grid"\` derives it from
 a container. Unknown or out-of-range values fall back to defaults, so a
 partial link is safe.
 
+A link fixes the cell size, not the cell count. \`density\` is a size in px,
+so a plate that is smaller on screen shows fewer, same-sized cells: one link
+draws an 8x12 grid on a laptop and a 4x6 one on a phone, and a downloaded PNG
+or SVG is the plate as that screen showed it. The copied code behaves the
+same way in a page, which is the point: a pattern keeps its cell size at any
+width. To hand over one exact picture, export it, or render it at a fixed
+size with the CLI (\`npx tabbied render <slug> --seed <seed> --size 1600x900\`).
+
 ## Reduced motion
 
 Under \`prefers-reduced-motion: reduce\` the controller suppresses every source
@@ -379,6 +393,10 @@ bounds; the catalog lists the authored palette for every design.
 \`options\` is keyed by option id, and each design declares its own. Three
 control types: \`ButtonSelectGroup\` (one of \`values\`), \`Slider\` (a number
 within \`min\`/\`max\`), and \`ToggleSwitch\` (a boolean).
+
+The catalog names two option fields for reading, not authoring: its
+\`label\` is a \`PatternDefinition\`'s \`displayName\`, and its \`values\` are
+a definition's \`options\`. A custom definition uses the definition's names.
 
 \`\`\`tsx
 <TabbiedPattern
@@ -484,7 +502,7 @@ elements, no \`<foreignObject>\`), resolving with
 \`{ svg, width, height, warnings }\`. Pass \`{ download: true }\` to save a file,
 and \`{ clip: { width, height } }\` to keep only the top-left box of a canvas
 the host clips (the \`grid\` fit oversizes its canvas to whole tracks). The
-converter (~21 KB gzipped) is loaded on demand, so apps that never export
+converter (about 12 KB gzipped once minified) is loaded on demand, so apps that never export
 pay nothing.
 
 Call \`supportsSvgExport(pattern)\` before offering the option: ${

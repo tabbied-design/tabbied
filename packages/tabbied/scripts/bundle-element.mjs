@@ -9,7 +9,7 @@
 // - It sits in dist/element/, beside index.js, so the element's
 //   `../patterns/` still names dist/patterns/: a slug loads from the same
 //   folder whichever of the two files the page used.
-// - Splitting is on, so the SVG converter (~21 KB gzipped) stays a chunk of
+// - Splitting is on, so the SVG converter (about 12 KB gzipped) stays a chunk of
 //   its own that exportSvg() fetches when it is called, as it is in the
 //   package, instead of riding in every page that only draws.
 import { build } from 'esbuild';

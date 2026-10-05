@@ -43,8 +43,9 @@ Public surface:
   UI gating without pulling the converter into the bundle.
 - `import { doodleToSvg } from 'tabbied/svg-export'` - direct converter use.
 
-**Bundle contract:** the converter is ~75 KB raw / ~21 KB gzipped - two
-thirds of the package core. `exportSvg()` loads it via dynamic `import()` so
+**Bundle contract:** the converter is ~84 KB as tsc emits it (~23 KB
+gzipped), 32 KB minified and ~12 KB gzipped once a bundler minifies it -
+two thirds of the package core. `exportSvg()` loads it via dynamic `import()` so
 it stays out of the main bundle (verified: one lazily-loaded chunk in the
 site build). Never re-export converter *values* from `core/index.ts` - types
 only. `dist/core/svgExport.js` must keep **zero runtime imports** (only

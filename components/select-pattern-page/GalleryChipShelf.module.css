@@ -153,16 +153,17 @@
   opacity: 0.5;
 }
 
-/* Trailing delete mark (custom) / pencil (library). */
+/* Trailing delete mark (custom) / pencil (library). 24px, the least WCAG 2.2
+   asks of a target, whatever the pointer. */
 .trailing {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   flex: none;
-  margin: 0 7px 0 8px;
+  margin: 0 6px 0 7px;
   padding: 0;
   border: none;
   border-radius: 6px;
@@ -216,12 +217,12 @@
 }
 
 /* The shelf is a touch surface first: the chips are a 44px row already, and
-   on a coarse pointer the 22px marks get a 40px hit area behind their box. */
+   on a coarse pointer the 24px marks get a 40px hit area behind their box. */
 @media (pointer: coarse) {
   .trailing::before {
     content: '';
     position: absolute;
-    inset: -9px;
+    inset: -8px;
   }
 }
 

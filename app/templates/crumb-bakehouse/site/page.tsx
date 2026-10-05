@@ -146,7 +146,7 @@ export default function CrumbBakehousePage() {
           <p className={s.dateLine}>
             <span data-edit="name.text" data-edit-max="60">Today's list</span>
             <span className={s.dateSep} aria-hidden="true" />
-            <span data-edit="name.text2" data-edit-max="60">Thursday, September 25</span>
+            <span data-edit="name.text2" data-edit-max="60">Chalked up at 7am</span>
           </p>
         </section>
 

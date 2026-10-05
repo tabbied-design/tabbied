@@ -12,7 +12,7 @@ const PACKAGE_URL = 'https://github.com/tabbied-design/tabbied/tree/main/package
 
 /**
  * The frame of a docs page (/docs, /docs/svelte, /docs/vue,
- * /docs/web-component, /docs/html): the light section of the homepage
+ * /docs/web-component, /docs/html, /docs/javascript): the light section of the homepage
  * shell, the masthead, the heading block with its version chips, the
  * contents rail beside the article, and the dark footer. The same parts
  * /docs/react and /docs/mcp draw inline.
@@ -23,12 +23,15 @@ export default function DocsShell({
   chips,
   sections,
   children,
+  linkConcepts = true,
 }: {
   title: string;
   lede: ReactNode;
   chips: string[];
   sections: DocsSection[];
   children: ReactNode;
+  /** The footer's pointer to /docs/concepts/, which that page itself leaves out. */
+  linkConcepts?: boolean;
 }) {
   return (
     <div className={`${home.home} ${plexMono.variable} ${plexSans.variable} ${styles.page}`}>
@@ -77,9 +80,15 @@ export default function DocsShell({
                     >
                       GitHub
                     </a>
-                    . The settings are the same in every setup; the{' '}
-                    <a href="/docs/concepts/">Concepts</a> page says what each
-                    one does.
+                    .
+                    {linkConcepts ? (
+                      <>
+                        {' '}
+                        The settings are the same in every setup; the{' '}
+                        <a href="/docs/concepts/">Concepts</a> page says what
+                        each one does.
+                      </>
+                    ) : null}
                   </p>
                 </footer>
               </article>

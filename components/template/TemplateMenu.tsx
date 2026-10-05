@@ -8,13 +8,13 @@
 // The summary is already a disclosure button to assistive technology.
 //
 // Script adds only closing, on a followed link, an outside click and Escape:
-// the effect below, and the same few lines as a plain script in the HTML
-// package (MENU_SCRIPT in scripts/package-templates.mjs).
+// the effect below, and the same few lines as a plain script at the end of
+// the HTML version's index.html.
 //
-// No CSS module of its own, since the packager ships one stylesheet per page:
-// the shape is `.template-menu` in styles/globals.css (every package's
-// base.css), and the page's class supplies when to show the menu and
-// `--template-menu-bg`, the ground its panel sits on.
+// No CSS module of its own, since a template page has one stylesheet: the
+// shape is `.template-menu` in the global sheet (base.css), and the page's
+// class supplies when to show the menu and `--template-menu-bg`, the ground
+// its panel sits on.
 import { useEffect, useRef, type ReactNode } from 'react';
 
 export function TemplateMenu({

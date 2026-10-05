@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { plexMono, plexSans } from 'lib/fonts';
-import { PALETTE_COUNT, PATTERN_COUNT, TEMPLATE_COUNT } from 'lib/siteCounts';
+import { PALETTE_COUNT, PATTERN_COUNT, SETUP_COUNT, TEMPLATE_COUNT } from 'lib/siteCounts';
 import { pageMetadata } from 'lib/seo';
 import HomeNav from 'components/main-page/HomeNav';
 import HomeHero from 'components/main-page/HomeHero';
@@ -22,7 +22,7 @@ export default function Home() {
     <div className={`${styles.home} ${plexMono.variable} ${plexSans.variable}`}>
       <HomeNav />
 
-      <HomeHero patternCount={PATTERN_COUNT} templateCount={TEMPLATE_COUNT} />
+      <HomeHero patternCount={PATTERN_COUNT} templateCount={TEMPLATE_COUNT} setupCount={SETUP_COUNT} />
 
       <HomePatternLibrary patternCount={PATTERN_COUNT} />
 
@@ -34,6 +34,7 @@ export default function Home() {
         patternCount={PATTERN_COUNT}
         templateCount={TEMPLATE_COUNT}
         paletteCount={PALETTE_COUNT}
+        setupCount={SETUP_COUNT}
       />
 
       <HomeFooter />

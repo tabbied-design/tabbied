@@ -71,7 +71,7 @@ and `render_design` says what to install. Needs Node 20 or later.
 | Tool | What it does |
 | --- | --- |
 | `search_designs` | Filter by motif, mood, density, intended use, free text, or SVG-export support. |
-| `get_design` | The full record for one slug, plus ready-to-paste snippets. |
+| `get_design` | The full record for one slug, plus ready-to-paste code for React, Vue, Svelte, the web component, plain HTML and plain JavaScript (`framework` picks one). |
 | `preview_design` | The rendered preview image for up to six designs, so the model can *look*. |
 | `get_docs` | The complete API reference (`llms-full.txt`). |
 | `list_templates` | The Tabbied website templates, a page at a time, filtered by category or by words. |
@@ -80,7 +80,8 @@ and `render_design` says what to install. Needs Node 20 or later.
 
 Slugs are opaque - `cleat`, `karst`, `radius` - so the intended flow is
 `search_designs` to narrow, `preview_design` to look, then `get_design` for the
-options. Choosing off tags alone is the main way this goes wrong.
+options and the code for the project's setup. Choosing off tags alone is the
+main way this goes wrong.
 
 The website templates are licensed per Tabbied account, not with this package:
 downloading one needs an account that has chosen it, under the
