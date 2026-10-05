@@ -781,7 +781,9 @@ add(
 // it (--ua .. --wd) and the top edge from them (--ta .. --td); every other
 // vertex is left to CSS calc() over those, so no sine is worked out twice,
 // and the expressions are kept short, since css-doodle's cost is mostly in
-// reading them. The clips are written unprefixed only, to keep
+// reading them. Three segments a cell are as smooth as four at any size the
+// waves are drawn at, and a stream is never drawn in cells under 48px, where
+// its bands would be a few pixels thick. The clips are written unprefixed only, to keep
 // the per-cell CSS small.
 const SG_N = 3; // segments across a cell
 const SG_AT = 'abcd';
@@ -833,6 +835,7 @@ add(
     inks: 3,
     grid: '6x9',
     tg: '5x5',
+    min: 48,
     meta: { tags: ['waves', 'curves', 'stripes'], mood: ['calm', 'organic'], density: 'medium', goodFor: ['hero-background', 'section-divider'] },
   }
 );

@@ -574,15 +574,16 @@ add(
   'Pipework',
   'Wang tiles of pipe: elbows, straights, tees and crosses with rounded bends, each tile open only where its neighbor is, so the pipes join into one tangled network.',
   (c) => {
-    // Each edge's hash is one $() whose text is the same in every cell. The
-    // code is summed in two steps: four reads in a row of the same text trip
-    // $()'s cycle guard (four open edges came out as 14, not 15).
-    const edge = (n, xe, ye, a, b, k) => `--p${n}: $(floor(0.55 + (sin(${xe} * ${a} + ${ye} * ${b} + s * ${k}) * 43758.5453 % 1 + 1) % 1));`;
-    const H = (n, xe, ye) => edge(n, xe, ye, 12.9898, 78.233, 1);
-    const G = (n, xe, ye) => edge(n, xe, ye, 39.3467, 11.1351, 1.7);
+    // The four edges' hashes are summed into the cell's code in one $() whose
+    // text is the same in every cell. (Summed from stored 0/1 variables it
+    // tripped $()'s cycle guard: four open edges came out as 14, not 15.)
+    const edge = (xe, ye, a, b, k) => `floor(0.55 + (sin(${xe} * ${a} + ${ye} * ${b} + s * ${k}) * 43758.5453 % 1 + 1) % 1)`;
+    const H = (xe, ye) => edge(xe, ye, 12.9898, 78.233, 1);
+    const G = (xe, ye) => edge(xe, ye, 39.3467, 11.1351, 1.7);
+    const code = `--pk: $(8 * ${G('ix', '(iy - 1)')} + 4 * ${H('ix', 'iy')} + 2 * ${G('ix', 'iy')} + ${H('(ix - 1)', 'iy')});`;
     return {
       host: `${PIPE.host('po', 17)} ${PIPE.host('pi', 4)}`,
-      rule: `${SHIFT} ${SEED} ${POS} ${H('r', 'ix', 'iy')} ${H('l', '(ix - 1)', 'iy')} ${G('b', 'ix', 'iy')} ${G('t', 'ix', '(iy - 1)')} --pj: $(8 * pt + 4 * pr + 2 * pb); --pk: $(pj + pl); --pipe: ${sheetInk(c, 1, 2)}; ${F} { ${B(`inset: 0; background: @p(@var(--pipe)); ${msk('@var(--po$(pk))')}`)} ${A(
+      rule: `${SHIFT} ${SEED} ${POS} ${code} --pipe: ${sheetInk(c, 1, 2)}; ${F} { ${B(`inset: 0; background: @p(@var(--pipe)); ${msk('@var(--po$(pk))')}`)} ${A(
         `inset: 0; background: @p(var(--color3), var(--color4)); ${msk('@var(--pi$(pk))')}`
       )} }${TR}`,
     };
@@ -986,30 +987,30 @@ add(
 const LP = (() => {
   const J = 0.56;
   // Each corner's nudge is a hash of its place: the fraction of a big
-  // multiple of a sine. The sine's argument is linear in the corner's column
-  // and row, so a cell works out its own once (--hu, --hv, one per axis) and
-  // reaches its four corners by a fixed offset. A corner coordinate is then
-  // one short $() whose text is the same in every cell, stored in percent of
+  // multiple of a sine, whose argument is linear in the corner's column and
+  // row, so a cell reaches its four corners by a fixed offset from its own.
+  // A corner coordinate is one $() whose text is the same in every cell
+  // (css-doodle parses it once for the sheet), stored in percent of
   // the doubled box the facets are drawn in. Corners on the sheet's edge only
   // slide along it. The polygons read the stored values back with @var(),
   // which the browser resolves.
   const AX = [12.9898, 78.233];
   const AY = [39.3467, 11.1351];
   const off = (co, di, dj) => r2(-(co[0] * di + co[1] * dj) * 10000) / 10000;
+  const base = (co, k) => `ix * ${co[0]} + iy * ${co[1]} + s${k === 1 ? '' : ` * ${k}`}`;
   // in units of 1/5000 of the box, so the whole sum is one short line
-  const at = (base, hv, co, di, dj) => {
+  const at = (b0, hv, co, di, dj) => {
     const o = off(co, di, dj);
     const arg = o ? `${hv} ${o < 0 ? '-' : '+'} ${Math.abs(o)}` : hv;
-    return `$(round(${(base + 0.5) * 5000 - (J / 2) * 5000} + ${J * 5000} * (abs(sin(${arg})) * 43758.5453 % 1)) / 100)%`;
+    return `$(round(${(b0 + 0.5) * 5000 - (J / 2) * 5000} + ${J * 5000} * (abs(sin(${arg})) * 43758.5453 % 1)) / 100)%`;
   };
   // a corner as one variable holding both coordinates; `fix` pins either to the sheet's edge
   const corner = (name, di, dj, u, v, fix = {}) =>
-    `--p${name}: ${fix.x ?? at(u, 'hu', AX, di, dj)} ${fix.y ?? at(v, 'hv', AY, di, dj)};`;
+    `--p${name}: ${fix.x ?? at(u, base(AX, 1), AX, di, dj)} ${fix.y ?? at(v, base(AY, 1.3), AY, di, dj)};`;
   const C = { a: [1, 1, 0, 0], b: [0, 1, 1, 0], c: [0, 0, 1, 1], d: [1, 0, 0, 1] };
   const pin = (name, fix) => corner(name, ...C[name], fix);
   const vars = [
     POS,
-    `--hu: $(ix * ${AX[0]} + iy * ${AX[1]} + s); --hv: $(ix * ${AY[0]} + iy * ${AY[1]} + s * 1.3);`,
     ...Object.keys(C).map((n) => pin(n)),
     // corners on the sheet's edge only slide along it: the outer columns and rows put theirs back
     `@x(1) { ${pin('a', { x: '25%' })} ${pin('d', { x: '25%' })} }`,
@@ -1305,12 +1306,16 @@ add(
 // level draws hills inside the land.
 const AUTO = (() => {
   // the field at a grid corner, computed once per corner and shared by both levels
-  const field = (i, j) =>
-    `$(round((sin(${i} * 1.13 + ${j} * 0.47 + s) + sin(${j} * 1.05 - ${i} * 0.41 + 1.7 * s) + 0.7 * sin((${i} - ${j}) * 0.83 + 2.3 * s)) * 10000) / 10000)`;
-  const fields = `${POS} --fa: ${field('(ix - 1)', '(iy - 1)')}; --fb: ${field('ix', '(iy - 1)')}; --fc: ${field('ix', 'iy')}; --fd: ${field('(ix - 1)', 'iy')};`;
-  const bit = (f, t) => `max(0, min(1, floor(${f} - ${t} + 1)))`;
-  /** The level's four corners as one number, 8 a + 4 b + 2 c + d. */
-  const code = (p, t) => `--${p}k: $(8 * ${bit('fa', t)} + 4 * ${bit('fb', t)} + 2 * ${bit('fc', t)} + ${bit('fd', t)});`;
+  // the field at a grid corner, a sum of three sines across the sheet
+  const field = (i, j) => `(sin(${i} * 1.13 + ${j} * 0.47 + s) + sin(${j} * 1.05 - ${i} * 0.41 + 1.7 * s) + 0.7 * sin((${i} - ${j}) * 0.83 + 2.3 * s))`;
+  const bit = (i, j, t) => `max(0, min(1, floor(${field(i, j)} - ${t} + 1)))`;
+  /**
+   * The level's four corners as one number, 8 a + 4 b + 2 c + d, in one $()
+   * over the cell's variables, so its text is the same in every cell and
+   * css-doodle parses it once.
+   */
+  const code = (p, t) =>
+    `--${p}k: $(8 * ${bit('(ix - 1)', '(iy - 1)', t)} + 4 * ${bit('ix', '(iy - 1)', t)} + 2 * ${bit('ix', 'iy', t)} + ${bit('(ix - 1)', 'iy', t)});`;
   const shapes = [
     cornerDisc('50%', '0 0'),
     cornerDisc('50%', '100% 0'),
@@ -1332,7 +1337,7 @@ const AUTO = (() => {
     const list = shapes.filter((_, i) => on[i]);
     return hostList(`am${k}`, list.length ? list : [EMPTY]);
   }).join(' ');
-  return { vars: `${fields} ${code('l', 0.15)} ${code('h', 1.05)}`, host };
+  return { vars: `${POS} ${code('l', 0.15)} ${code('h', 1.05)}`, host };
 })();
 add(
   'Autotile',
