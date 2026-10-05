@@ -681,7 +681,10 @@ add(
 // tiling, and at full length pairs of oblongs in a basketweave; each cell
 // uses its own length, so the pieces still meet wherever the sweep is.
 const CM = (() => {
-  const sweep = (xe, ye) => `@calc(max(0.02, min(0.98, 1.15 * ((${xe} - 0.5) / @X + (${ye} - 0.5) / @Y) / 2 - 0.05)))`;
+  // Every number here is a $() over the cell's own variables (ix, iy, the
+  // sheet size, the sweep), so its text is the same in every cell and
+  // css-doodle parses it once for the whole sheet.
+  const sweep = (dx, dy) => `$(max(0.02, min(0.98, 1.15 * ((ix - ${0.5 - dx}) / mx + (iy - ${0.5 - dy}) / my) / 2 - 0.05)))`;
   // the pentagon across the right edge, own bar length `a`, neighbor's `b`
   const right = (q, a, b) => {
     const h = (n, sign) => L(0.5, n, sign * 0.5);
@@ -692,26 +695,48 @@ const CM = (() => {
   const swap = (pts) => pts.map(([u, v]) => [v, u]);
   const shiftBy = (pts, du, dv) => pts.map(([u, v]) => [ladd(u, lin(du)), ladd(v, lin(dv))]);
   const k = 0.9;
-  const write = (main, extra, flag) => {
-    const a = lshrink(main, k);
-    // the extra outline collapses onto the main one's first point unless the flag is set
-    const b = lshrink(extra, k).map(([u, v]) => [ladd(a[0][0], lflag(ladd(u, lscale(a[0][0], -1)), flag)), ladd(a[0][1], lflag(ladd(v, lscale(a[0][1], -1)), flag))]);
-    return `polygon(${slit(a, b).map((p) => lpt(p, 3)).join(', ')})`;
+  // cell units to percent of the three-cell box
+  const box = (e) => lscale(ladd(e, lin(1)), 100 / 3);
+  const bare = (e) => {
+    const parts = Object.entries(e.terms).filter(([, v]) => r2(v) !== 0);
+    return `${r2(e.c)}${parts.map(([n, v]) => `${v < 0 ? ' - ' : ' + '}${Math.abs(r2(v))} * ${n}`).join('')}`;
   };
-  const vars = `--fx: @calc(${FIRST_X}); --fy: @calc(${FIRST_Y}); --ca: ${sweep('@x', '@y')}; --cr: ${sweep('(@x + 1)', '@y')}; --cl: ${sweep('(@x - 1)', '@y')}; --cd: ${sweep('@x', '(@y + 1)')}; --cu: ${sweep('@x', '(@y - 1)')};`;
-  const rightPoly = (q) => write(right(q, 'ca', 'cr'), shiftBy(right(1 - q, 'cl', 'ca'), -1, 0), 'fx');
-  const bottomPoly = (q) => write(swap(right(1 - q, 'ca', 'cd')), shiftBy(swap(right(q, 'cu', 'ca')), 0, -1), 'fy');
-  return {
-    vars,
-    right: `@match((x + y) % 2 == 0, ${rightPoly(0)}, ${rightPoly(1)})`,
-    bottom: `@match((x + y) % 2 == 0, ${bottomPoly(0)}, ${bottomPoly(1)})`,
+  /** One coordinate for both parities: the q = 0 figure plus q times the change to the q = 1 one. */
+  const coord = (e0, e1) => {
+    const d = ladd(box(e1), lscale(box(e0), -1));
+    const hasD = r2(d.c) !== 0 || Object.values(d.terms).some((v) => r2(v) !== 0);
+    return `$(round((${bare(box(e0))}${hasD ? ` + q * (${bare(d)})` : ''}) * 100) / 100)%`;
   };
+  /** Declarations for a figure's points, --<name>x0.., and the polygon text reading them back. */
+  const points = (name, fig0, fig1) => {
+    const a0 = lshrink(fig0, k);
+    const a1 = lshrink(fig1, k);
+    const decl = a0.map((p, i) => `--${name}x${i}: ${coord(p[0], a1[i][0])}; --${name}y${i}: ${coord(p[1], a1[i][1])};`).join(' ');
+    const pts = a0.map((_, i) => `@var(--${name}x${i}) @var(--${name}y${i})`);
+    return { decl, pts };
+  };
+  const loop = (pts) => [...pts, pts[0]];
+  const rMain = points('r', right(0, 'ca', 'cr'), right(1, 'ca', 'cr'));
+  const rExtra = points('re', shiftBy(right(1, 'cl', 'ca'), -1, 0), shiftBy(right(0, 'cl', 'ca'), -1, 0));
+  const bMain = points('b', swap(right(1, 'ca', 'cd')), swap(right(0, 'ca', 'cd')));
+  const bExtra = points('be', shiftBy(swap(right(0, 'cu', 'ca')), 0, -1), shiftBy(swap(right(1, 'cu', 'ca')), 0, -1));
+  const vars = [
+    '--ix: @x; --iy: @y; --mx: @X; --my: @Y; --q: $(0 + (ix + iy) % 2);',
+    `--ca: ${sweep(0, 0)}; --cr: ${sweep(1, 0)}; --cl: ${sweep(-1, 0)}; --cd: ${sweep(0, 1)}; --cu: ${sweep(0, -1)};`,
+    rMain.decl,
+    bMain.decl,
+    `--rp: polygon(${rMain.pts.join(', ')}); --bp: polygon(${bMain.pts.join(', ')});`,
+    // the first column and row also draw the pentagons across their outer edges
+    `@x(1) { ${rExtra.decl} --rp: polygon(${[...loop(rMain.pts), ...loop(rExtra.pts)].join(', ')}); }`,
+    `@y(1) { ${bExtra.decl} --bp: polygon(${[...loop(bMain.pts), ...loop(bExtra.pts)].join(', ')}); }`,
+  ].join(' ');
+  return { vars };
 })();
 add(
   'Cairo Morph',
   'A tiling that changes as it crosses the sheet: diamonds in one corner open into Cairo pentagons and then flatten into a basketweave of oblongs in the opposite corner.',
   (c) => ({
-    rule: `${SHIFT} ${CM.vars} ${F} { ${B(`${spanBox(3)} background: ${ink(c)}; ${cp(CM.right)}`)} ${A(`${spanBox(3)} background: ${ink(c)}; ${cp(CM.bottom)}`)} }${TR}`,
+    rule: `${SHIFT} ${CM.vars} ${F} { ${B(`${spanBox(3)} background: ${ink(c)}; ${cp('@var(--rp)')}`)} ${A(`${spanBox(3)} background: ${ink(c)}; ${cp('@var(--bp)')}`)} }${TR}`,
   }),
   {
     pal: 34,

@@ -481,15 +481,15 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
   // cell. Each cell works out its axial coordinates (q, r) and its class g
   // once, then the offset (dq, dr) from a petal to its flower's center (zero
   // off the flowers), and from the center's lattice coordinates the flower's
-  // number 0-3, which picks one of four sheet-wide inks. (A $() expression
-  // that starts with '(' and ends with ')' loses its outer parentheses as if
-  // they were one group, so each sum of tests is written 1 * (...) + ...)
+  // number 0-3, which picks one of four sheet-wide inks. (A sum of bare
+  // comparisons, (g == 1) + (g == 4), comes out wrong inside $(), so each
+  // test is a match() that yields the number itself.)
   const cell = [
     '--q: @calc(@x - 1 - floor((@y - 1) / 2));',
     '--r: @calc(@y - 1);',
     '--g: $(((q - 3 * r) % 13 + 13) % 13);',
-    '--dq: $(1 * (g == 1) + 1 * (g == 4) - 1 * (g == 12) - 1 * (g == 9));',
-    '--dr: $(1 * (g == 10) + 1 * (g == 9) - 1 * (g == 3) - 1 * (g == 4));',
+    '--dq: $(match(g == 1, 1, 0) + match(g == 4, 1, 0) + match(g == 12, -1, 0) + match(g == 9, -1, 0));',
+    '--dr: $(match(g == 10, 1, 0) + match(g == 9, 1, 0) + match(g == 3, -1, 0) + match(g == 4, -1, 0));',
     '--n: $((((4 * (q - dq) + r - dr) / 13 * 2 + (3 * (r - dr) - q + dq) / 13 * 3) % 4 + 4) % 4);',
   ].join(' ');
   const fill =

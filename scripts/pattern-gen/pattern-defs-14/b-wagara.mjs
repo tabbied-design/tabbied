@@ -902,49 +902,43 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
   // cell is a crooked quadrilateral; each is split corner to corner along a
   // random diagonal and both halves pulled in a little, leaving the cracks.
   //
-  // css-doodle evaluates only what needs the cell's place: one hash per
-  // corner coordinate, fract(sin(12.9898 i + 78.233 j + k) * 437.5453), read
-  // from one sum per cell, and whether a corner lies on the sheet's border
-  // (it then only slides along it). Everything after that, the corners in
-  // percent of the pseudo-element's box (1.6 cells wide, from 0.3 cells
-  // out), the third corner of each triangle and each triangle's middle, is
-  // plain CSS calc() over those properties, which the browser resolves.
-  const A0 = 0.26;
-  const decl = [
-    '--s: @p(0, 1);',
-    '--u: @calc(@x * 12.9898 + @y * 78.233);',
-    '--k0: @calc(min(1, @x - 1));',
-    '--k1: @calc(min(1, @X - @x));',
-    '--l0: @calc(min(1, @y - 1));',
-    '--l1: @calc(min(1, @Y - @y));',
-  ];
+  // css-doodle evaluates only the hashes, one per corner coordinate,
+  // fract(sin(12.9898 i + 78.233 j + k) * 437.5453), read off one sum per
+  // cell. The rest is plain CSS calc() over those properties, which the
+  // browser resolves: each corner in percent of the pseudo-element's box
+  // (1.6 cells wide, from 0.3 cells out), the corner opposite the split, and
+  // each triangle's middle. A corner on the sheet's border only slides along
+  // it, set by the edge selectors.
+  const V = (name) => `@var(--${name})`;
+  const decl = ['--s: @p(0, 1);', '--u: @calc(@x * 12.9898 + @y * 78.233);'];
   const corners = [
-    ['a', -1, -1, 0, 0, 'k0', 'l0'],
-    ['b', 0, -1, 1, 0, 'k1', 'l0'],
-    ['c', 0, 0, 1, 1, 'k1', 'l1'],
-    ['d', -1, 0, 0, 1, 'k0', 'l1'],
+    ['a', -1, -1, 0, 0],
+    ['b', 0, -1, 1, 0],
+    ['c', 0, 0, 1, 1],
+    ['d', -1, 0, 0, 1],
   ];
-  for (const [n, di, dj, ox, oy, kx, ky] of corners) {
-    for (const [axis, k, o, kk] of [['x', 1.7, ox, kx], ['y', 9.1, oy, ky]]) {
+  // A corner sits at 18.75% or 81.25% and moves up to 16.25% either way.
+  for (const [n, di, dj, ox, oy] of corners) {
+    for (const [axis, k, o] of [['x', 1.7, ox], ['y', 9.1, oy]]) {
       const shift = +(di * 12.9898 + dj * 78.233 + k).toFixed(4);
       decl.push(`--h${n}${axis}: @calc((sin($(u) + ${shift}) * 437.5453 % 1 + 1) % 1);`);
-      decl.push(`--${n}${axis}: calc((${18.75 + 62.5 * o} + ${62.5 * A0} * @var(--${kk}) * (2 * @var(--h${n}${axis}) - 1)) * 1%);`);
+      decl.push(`--${n}${axis}: calc((${2.5 + 62.5 * o} + 32.5 * ${V(`h${n}${axis}`)}) * 1%);`);
     }
   }
-  // The corner opposite the split, and each triangle's middle.
-  const V = (name) => `@var(--${name})`;
   for (const axis of ['x', 'y']) {
     decl.push(`--m${axis}: calc(${V(`c${axis}`)} + ${V('s')} * (${V(`d${axis}`)} - ${V(`c${axis}`)}));`);
     decl.push(`--n${axis}: calc(${V(`a${axis}`)} + ${V('s')} * (${V(`b${axis}`)} - ${V(`a${axis}`)}));`);
     decl.push(`--o${axis}: calc((${V(`a${axis}`)} + ${V(`b${axis}`)} + ${V(`m${axis}`)}) / 3);`);
     decl.push(`--q${axis}: calc((${V(`n${axis}`)} + ${V(`c${axis}`)} + ${V(`d${axis}`)}) / 3);`);
   }
-  const vars = decl.join(' ');
+  const edges =
+    '@x(1) { --ax: 18.75%; --dx: 18.75%; } @y(1) { --ay: 18.75%; --by: 18.75%; } @match(x == X) { --bx: 81.25%; --cx: 81.25%; } @match(y == Y) { --cy: 81.25%; --dy: 81.25%; }';
+  const vars = `${decl.join(' ')} ${edges}`;
   const tri = (pts, o) =>
     `${cp(`polygon(${pts.map((p) => `${V(`${p}x`)} ${V(`${p}y`)}`).join(', ')})`)} ${tfo(`${V(`${o}x`)} ${V(`${o}y`)}`)} ${tf('scale(0.9)')}`;
   const t1 = tri(['a', 'b', 'm'], 'o');
   const t2 = tri(['n', 'c', 'd'], 'q');
-  const box = 'left: -30%; top: -30%; width: 160%; height: 160%;';
+  const box = 'inset: -30%;';
   add(
     'Ice Crack',
     'Cracked ice: a crooked web of shards in pale glazes, every shard split once more and the cracks between them left open.',
