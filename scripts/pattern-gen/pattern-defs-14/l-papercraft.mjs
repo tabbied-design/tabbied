@@ -1,5 +1,30 @@
 // L. Papercraft - paper folded and cut, patchwork blocks, stitching, bunting and rosettes.
-import { section, F, TR, ink, cp, msk, mskI, B, A, noise, fx, fy } from './shared.mjs';
+//
+//   paper      Paper Planes, Folding Fan, Paper Snowflake, Doily, Slit Lattice,
+//              Paper Scraps, Paper Sea, Paper Chain, Paper Dolls
+//   patchwork  Barn Raising, Flower Garden, Dresden Plate, Cathedral Window,
+//              Sawtooth Star, Flying Geese, Irish Chain, Crazy Quilt
+//   stitches   Granny Square, Blanket Stitch, Rickrack, Fishbone
+//   party      Pennant String, Rosette, Washi Tape, Sticker Sheet
+//
+// Things learned on the way, for whoever extends this file:
+//
+//   * Outlines (leaves, flakes, dolls, hexagons, frames with slits) are
+//     polygons worked out here and set once on the host, read with @var().
+//   * A sized background layer (background-size smaller than the box) is
+//     snapped to whole pixels on screen and not in the SVG export, so blocks
+//     of rectangles are drawn as hard-stop bands across the whole box, or as
+//     polygons, instead.
+//   * Two conic wedges side by side export with a hairline between them; a
+//     pie of fabrics is drawn as every other wedge over the disc's own color.
+//   * The SVG export paints cells in document order whatever their z-index,
+//     so anything that reaches into a neighbor is drawn so that the cell
+//     painted later is the one on top.
+//   * At frequency 1 the gate still leaves out about one cell in a thousand.
+//     The sea's layers and the rickrack draw a cell's worth more than their
+//     own, so a neighbor covers the gap; the quilts paint their ground (the
+//     muslin, the sashing) outside the gate where it is a separate fabric.
+import { section, F, TR, ink, cp, msk, B, A, noise } from './shared.mjs';
 
 const { add, all } = section('L. Papercraft');
 
@@ -54,7 +79,7 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
   return `conic-gradient(from ${from}deg at ${at}, ${stops.join(', ')})`;
 };
 
-// -- paper, folded and cut -----------------------------------------------------
+// -- paper, folded and cut ----------------------------------------------------
 
 {
   // A dart seen from above: the near wing and the far wing share the fold
@@ -85,8 +110,8 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
 
 {
   // An open hand fan: ten pleats over 140 degrees, the mountain folds poking
-  // past the rim, a dark wash on every other pleat, the sticks showing below
-  // the leaf and a rivet at the pivot.
+  // past the rim, a dark wash on every other pleat, and the wooden guard
+  // showing below the leaf.
   const cx = 50;
   const cy = 86;
   const R = 58;
@@ -104,11 +129,6 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
   const leaf = P([...outer, ...inner]);
   const whole = P([...outer, [cx, cy + 4]]);
   const at = `${cx}% ${cy}%`;
-  const sticks = [];
-  for (let i = 0; i <= N; i++) {
-    const a = step * i;
-    sticks.push(`var(--color1) ${n2(a - 1.6)}deg ${n2(a + 1.6)}deg, transparent ${n2(a + 1.6)}deg ${n2(a + step - 1.6)}deg`);
-  }
   const shade = [];
   for (let i = 0; i < N; i++) {
     const a = step * i;
@@ -116,19 +136,18 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
   }
   add(
     'Folding Fan',
-    'Open paper hand fans tossed at angles, each leaf folded into ten pleats with every other one in shadow, the sticks and rivet showing below.',
+    'Open paper hand fans tossed at angles, each leaf folded into ten pleats with every other one in shadow, the wooden guard showing below.',
     (c) => ({
       host: `--leaf: ${leaf}; --fan: ${whole};
-        --sticks: radial-gradient(circle at ${at}, var(--color1) 0 3%, transparent 3%), conic-gradient(from ${-half - 1.6}deg at ${at}, ${sticks.join(', ')}, transparent ${n2(2 * half + 1.6)}deg);
         --pleats: conic-gradient(from ${-half}deg at ${at}, ${shade.join(', ')}, transparent ${2 * half}deg);`,
-      rule: `${F} { background: @var(--sticks); ${clipBy('fan')}
+      rule: `${F} { background: var(--color1); ${clipBy('fan')}
         ${xf(`translate(@r(-8, 8)%, @r(-2, 14)%) rotate(@r(-30, 30)deg) scale(@r(1.05, 1.3))`)}
         ${B(`inset: 0; background: ${ink(c, 2)}; ${clipBy('leaf')}`)}
-        ${A(`inset: 0; background: var(--color1); opacity: 0.24; ${clipBy('leaf')} ${maskBy('pleats')}`)}
+        ${A(`inset: 0; background: var(--color1); opacity: 0.3; ${clipBy('leaf')} ${maskBy('pleats')}`)}
       }${TR}`,
     }),
     {
-      palette: ['#F3EDE2', '#4A2C21', '#1F6F78', '#C0392B', '#D99A2B', '#2E3F6E', '#E58F8F'],
+      palette: ['#F3EDE2', '#7A4A2E', '#1F6F78', '#C0392B', '#D99A2B', '#2E3F6E', '#E58F8F'],
       grid: '6x9',
       tg: '5x5',
       meta: { tags: ['radial', 'semicircles', 'stripes'], mood: ['elegant', 'festive'], density: 'medium', goodFor: ['wallpaper', 'packaging', 'textile'] },
@@ -176,40 +195,254 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
   );
 }
 
-// -- patchwork -------------------------------------------------------------------
+{
+  // A paper doily: a scalloped round, an eyelet punched in every scallop, a
+  // ring of larger holes inside that, and a second paper rosette laid on the
+  // middle with its own hole.
+  const outline = [];
+  for (let d = 0; d < 360; d += 1.5) {
+    const r = 39 + 8 * Math.sqrt(Math.abs(Math.cos(rad(8 * d))));
+    outline.push(polar(50, 50, r, d));
+  }
+  const bore = (r, at) => `radial-gradient(${r}% ${r}% at ${at}, transparent 100%, #000 100%)`;
+  const holes = [];
+  for (let k = 0; k < 16; k++) {
+    const [x, y] = polar(50, 50, 39.5, k * 22.5);
+    holes.push(bore(2.4, `${n2(x)}% ${n2(y)}%`));
+  }
+  for (let k = 0; k < 12; k++) {
+    const [x, y] = polar(50, 50, 27, k * 30 + 15);
+    holes.push(bore(4.2, `${n2(x)}% ${n2(y)}%`));
+  }
+  const rosette = [];
+  for (let d = 0; d < 360; d += 3) rosette.push(polar(50, 50, 10 + 8 * Math.abs(Math.cos(rad(4 * d))), d));
+  add(
+    'Doily',
+    'Round paper doilies with scalloped edges, an eyelet punched in every scallop and a ring of holes inside, each with a smaller paper rosette laid on its middle.',
+    (c) => ({
+      host: `--lace: ${P(outline)}; --holes: ${holes.join(', ')}; --rosette: ${P(rosette)};`,
+      rule: `${F} { ${xf('rotate(@r(0, 22.5)deg) scale(1.08)')}
+        ${B(`inset: 0; background: ${ink(c)}; ${clipBy('lace')} ${maskAllOf('holes')}`)}
+        ${A(`inset: 0; background: ${ink(c)}; ${clipBy('rosette')} ${msk(bore(3.2, '50% 50%'))}`)}
+      }${TR}`,
+    }),
+    {
+      palette: ['#9E4A57', '#FBF3E8', '#F3DCC4', '#F4C7CC', '#E9B44C'],
+      grid: '6x9',
+      tg: '5x5',
+      meta: { tags: ['scallops', 'circles', 'dots', 'radial'], mood: ['elegant', 'retro'], density: 'medium', goodFor: ['wallpaper', 'packaging', 'card-texture'] },
+    }
+  );
+}
 
 {
-  // Log cabin: a center square and three rounds of logs laid round it, the
-  // two sides added last in light fabrics and the other two in dark. Turned
-  // by quadrant and by the parity of the distance from the middle, the
-  // blocks build concentric light and dark diamonds: barn raising.
-  const u = 12.5;
-  const g = 0.4;
-  const layers = [];
-  for (let k = 3; k >= 1; k--) {
-    const lo = 4 - (k + 1);
-    const hi = 4 + (k + 1);
-    const ilo = 4 - k;
-    const ihi = 4 + k;
-    const L = k % 2 ? '--l1' : '--l2';
-    const D = k % 2 ? '--d1' : '--d2';
-    const log = (color, x0, y0, x1, y1) => rect(color, x0 * u + g, y0 * u + g, (x1 - x0) * u - 2 * g, (y1 - y0) * u - 2 * g);
-    layers.push(log(`@var(${L})`, lo, lo, ihi, ilo));
-    layers.push(log(`@var(${L === '--l1' ? '--l2' : '--l1'})`, ihi, lo, hi, ihi));
-    layers.push(log(`@var(${D})`, ilo, ihi, hi, hi));
-    layers.push(log(`@var(${D === '--d1' ? '--d2' : '--d1'})`, lo, ilo, ilo, hi));
-  }
-  const q = 'match(@dx >= 0, 1, 0)';
-  const s = 'match(@dy >= 0, 1, 0)';
-  const turn = `@calc(90 * (1 + ${q} + ${s} * (3 - 2 * ${q})) + 180 * ((floor(abs(@dx)) + floor(abs(@dy))) % 2))deg`;
+  // Kirigami: rows of slits cut half a pitch out of step, the sheet pulled
+  // open so each slit gapes into a diamond. Every cell owns the halves of
+  // four diamonds on its edges; a diamond's height is worked out from its own
+  // place on the sheet, so the two cells that share it agree. The sheet gapes
+  // widest round a point drawn once per sheet and stays nearly shut away from it.
+  const a = 38;
+  const open = (px, py) =>
+    `@calc(1.5 + 30 * pow(max(0, cos(min(1.5708, 1.5708 * sqrt(pow((${px}) - $(cx) * @X, 2) + pow((${py}) - $(cy) * @Y, 2)) / (0.6 * max(@X, @Y))))), 2))`;
+  const tb = open('@x - 0.5', '@y - 1');
+  const bb = open('@x - 0.5', '@y');
+  const lb = open('@x - 1', '@y - 0.5');
+  const rb = open('@x', '@y - 0.5');
+  add(
+    'Slit Lattice',
+    'A sheet of paper cut with staggered rows of slits and pulled open, the slits gaping into diamonds that are widest round one point and close up to thin slits away from it.',
+    (c) => ({
+      rule: `--k: ${constant(c)}; --cx: @pd(@p(0.3, 0.38, 0.46, 0.54, 0.62, 0.7)); --cy: @pd(@p(0.3, 0.38, 0.46, 0.54, 0.62, 0.7)); ${F} { --t: ${tb}; --b: ${bb}; --l: ${lb}; --r: ${rb};
+        background: ${paint('k')}; ${xf('scale(1.012)')}
+        ${cp(`polygon(0% 0%, ${50 - a}% 0%, 50% $(t)%, ${50 + a}% 0%, 100% 0%, 100% $(50 - r)%, ${100 - a}% 50%, 100% $(50 + r)%, 100% 100%, ${50 + a}% 100%, 50% $(100 - b)%, ${50 - a}% 100%, 0% 100%, 0% $(50 + l)%, ${a}% 50%, 0% $(50 - l)%)`)}
+      }${TR}`,
+    }),
+    {
+      pal: 21,
+      grid: '8x12',
+      tg: '10x10',
+      meta: { tags: ['diamonds', 'lattice', 'grid'], mood: ['technical', 'bold'], density: 'dense', goodFor: ['hero-background', 'poster', 'wallpaper'] },
+    }
+  );
+}
+
+{
+  // Torn paper scraps: a ragged quadrilateral per cell, its edge torn at
+  // random, the white core of the paper showing round a colored face, and a
+  // ruled, squared or dotted print on some of them. Laid in reading order,
+  // each scrap overlaps the ones before it.
+  const j = (v, d) => `@calc(${v} + @ri(-${d}, ${d}))%`;
+  const side = (x0, y0, x1, y1, n, d) => {
+    const out = [];
+    for (let i = 1; i < n; i++) {
+      const t = i / n;
+      const x = x0 + (x1 - x0) * t;
+      const y = y0 + (y1 - y0) * t;
+      out.push(x0 === x1 ? `${j(x, d)} ${n2(y)}%` : `${n2(x)}% ${j(y, d)}`);
+    }
+    return out;
+  };
+  const corner = (x, y) => `${j(x, 5)} ${j(y, 5)}`;
+  const pts = [
+    corner(8, 8), ...side(8, 8, 92, 8, 7, 3),
+    corner(92, 8), ...side(92, 8, 92, 92, 7, 3),
+    corner(92, 92), ...side(92, 92, 8, 92, 7, 3),
+    corner(8, 92), ...side(8, 92, 8, 8, 7, 3),
+  ];
+  const lines = 'repeating-linear-gradient(180deg, transparent 0 11%, var(--color1) 11% 13.5%)';
+  const grid = 'repeating-linear-gradient(90deg, transparent 0 11%, var(--color1) 11% 13%), repeating-linear-gradient(180deg, transparent 0 11%, var(--color1) 11% 13%)';
+  const dots = 'radial-gradient(circle at 50% 50%, var(--color1) 0 22%, transparent 22%) 0 0 / 14% 14%';
+  add(
+    'Paper Scraps',
+    'A collage of torn paper scraps laid over one another at angles, each with a ragged white torn edge, some ruled, squared or dotted like pages from a notebook.',
+    (c) => ({
+      host: `--lines: ${lines}; --grid: ${grid}; --dots: ${dots};`,
+      rule: `${F} { background: var(--color1); ${cp(`polygon(${pts.join(', ')})`)}
+        ${xf(`translate(@r(-14, 14)%, @r(-14, 14)%) rotate(@r(-40, 40)deg) scale(@r(1.15, 1.45))`)}
+        ${B(`inset: 11%; background: ${ink(c, 2)};`)}
+        ${A(`inset: 11%; background: @p(@var(--lines), @var(--grid), @var(--dots), none, none); opacity: 0.45;`)}
+      }${TR}`,
+    }),
+    {
+      palette: ['#2B2D42', '#FBF7EF', '#E63946', '#F4A261', '#2A9D8F', '#A8DADC', '#E9C46A'],
+      grid: '6x9',
+      tg: '5x5',
+      meta: { tags: ['squares', 'mosaic', 'lines', 'dots'], mood: ['playful', 'organic'], density: 'dense', goodFor: ['poster', 'packaging', 'card-texture'] },
+    }
+  );
+}
+
+{
+  // Cut-paper sea: one layer of paper per row, its top edge a wave that runs
+  // the whole width of the sheet, each layer laid over the one behind with a
+  // thin shadow along its edge. The wave is worked out from the cell's place
+  // on the sheet, so the edge runs on unbroken from cell to cell; each cell
+  // draws its own stretch and the one to its left, so a cell the frequency
+  // gate leaves out is covered by its neighbor. The wave's two phases are
+  // drawn once per sheet, so a reseed rolls the swell along.
+  const wave = (t, dy) =>
+    `@calc(round(100 * (50 + 42 - ${dy} + 26 * sin(6.2832 * (@x - 1 + ${t}) / 4.6 + 1.9 * @y + $(ph)) + 10 * sin(6.2832 * (@x - 1 + ${t}) / 2.2 - 1.3 * @y + $(pk))) / 3) / 100)%`;
+  const n = 12;
+  const edge = (dy) =>
+    Array.from({ length: n + 1 }, (_, i) => `${n2((100 * i) / n)}% ${wave(n2((2 * i) / n - 1), dy)}`).join(', ');
+  const tone = '1 + floor(min(0.999, (@y - 1) / @Y) * 5)';
+  const box = 'left: -100%; width: 200%; top: -50%; height: 300%;';
+  add(
+    'Paper Sea',
+    'A sea cut from layers of paper, one wave-edged sheet per row from pale at the top to deep at the bottom, each laid over the one behind with a thin shadow along its edge.',
+    (c) => ({
+      rule: `--ph: @pd(@p(0, 0.8, 1.6, 2.4, 3.2, 4, 4.8, 5.6)); --pk: @pd(@p(0, 0.8, 1.6, 2.4, 3.2, 4, 4.8, 5.6)); ${F} {
+        --w: @match(${tone} == 1, var(--color1), ${tone} == 2, var(--color2), ${tone} == 3, var(--color3), ${tone} == 4, var(--color4), var(--color5));
+        ${B(`${box} background: var(--color5); opacity: 0.3; ${cp(`polygon(${edge(5)}, 100% 100%, 0% 100%)`)}`)}
+        ${A(`${box} background: ${paint('w')}; ${cp(`polygon(${edge(0)}, 100% 100%, 0% 100%)`)}`)}
+      }${TR}`,
+    }),
+    {
+      palette: ['#FDF6E9', '#BFE3E8', '#7CC3CF', '#3E8EA8', '#1F5F82', '#0E3352'],
+      grid: '6x9',
+      tg: '6x6',
+      meta: { tags: ['waves', 'stripes', 'curves'], mood: ['calm', 'organic'], density: 'dense', goodFor: ['hero-background', 'wallpaper', 'poster'] },
+    }
+  );
+}
+
+{
+  // Paper chains hanging in columns: a loop seen face on in every cell and
+  // a loop seen edge on threading it to the one above. The edge-on loop is
+  // drawn first, so the loop below passes in front of it and the loop above
+  // (painted earlier) behind it.
+  const ring = (t) => msk(`radial-gradient(closest-side, transparent ${t}%, #000 ${t}%)`);
+  add(
+    'Paper Chain',
+    'Paper chains hanging in columns, the links in mixed colors, each face-on loop threaded through a narrow edge-on loop to the next.',
+    (c) => ({
+      rule: `${F} { ${xf(`translateX(@calc(7 * sin(@y * 0.7 + @x * 2.3))%)`)}
+        ${B(`left: 41%; width: 18%; top: -30%; height: 60%; border-radius: 50%; background: ${ink(c)}; ${ring(56)}`)}
+        ${A(`left: 17%; width: 66%; top: 8%; height: 84%; border-radius: 50%; background: ${ink(c)}; ${ring(74)}`)}
+      }${TR}`,
+    }),
+    {
+      palette: ['#FBF5EA', '#E94F37', '#F6AE2D', '#33658A', '#86BBD8', '#7FB069', '#B5838D'],
+      grid: '6x9',
+      tg: '6x6',
+      meta: { tags: ['rings', 'ovals', 'stripes'], mood: ['festive', 'playful'], density: 'medium', goodFor: ['packaging', 'wallpaper', 'section-divider'] },
+    }
+  );
+}
+
+{
+  // A row of paper dolls cut from one folded strip: hands joined at the cell
+  // edges, a girl in a flared skirt or a boy in trousers in every cell (the
+  // two outlines share a point count, so a reseed morphs one into the other).
+  // Each row is cut from a sheet in one of the sheet-wide colors.
+  const half = (body) => {
+    const head = [];
+    for (let d = 0; d <= 150; d += 30) head.push(polar(50, 16, 11, d));
+    return [...head, [53.5, 28], [62, 31], [100, 31], [100, 39], [66, 39], ...body];
+  };
+  const girl = half([[63, 44], [79, 79], [60, 79], [60, 93], [66, 95], [66, 99], [53, 99], [53, 81], [50, 81]]);
+  const boy = half([[64, 46], [64, 64], [63, 64], [62, 93], [66, 95], [66, 99], [53, 99], [52, 66], [50, 66]]);
+  const whole = (pts) => P([...pts, ...pts.slice(1, -1).reverse().map(([x, y]) => [100 - x, y])]);
+  add(
+    'Paper Dolls',
+    'Chains of paper dolls holding hands across the sheet, girls in flared skirts and boys in trousers, each row cut from one sheet of colored paper.',
+    (c) => ({
+      host: `--girl: ${whole(girl)}; --boy: ${whole(boy)};`,
+      rule: `--k0: ${constant(c, 1, 2)}; --k1: ${constant(c, 3, 4)}; --k2: ${constant(c, 5, 5)};
+        ${F} { --d: @match(y % 3 == 0, @var(--k0), y % 3 == 1, @var(--k1), @var(--k2));
+        ${B(`inset: 4% 0 0 0; background: ${paint('d')}; ${cp('@p(@var(--girl), @var(--boy))')}`)}
+      }${TR}`,
+    }),
+    {
+      pal: 28,
+      grid: '6x9',
+      tg: '6x6',
+      meta: { tags: ['stripes', 'grid', 'curves'], mood: ['playful', 'retro'], density: 'medium', goodFor: ['packaging', 'section-divider', 'wallpaper'] },
+    }
+  );
+}
+
+// -- patchwork ----------------------------------------------------------------
+
+{
+  // Log cabin: a center square and four rounds of logs round it, light on
+  // the top and right, dark on the bottom and left. The logs are hard-stop
+  // bands across the whole block (rows on the cell for the top and bottom,
+  // columns on a bow-tie of the left and right quarters), so every edge is a
+  // plain gradient stop; the ends meet in a miter. Turned by quadrant and by
+  // the parity of the distance from the middle, the blocks build concentric
+  // light and dark diamonds: barn raising.
+  const u = 10;
+  const k = 4;
+  const bands = (angle, near, far) => {
+    const stops = [];
+    near.forEach((v, i) => stops.push(`@var(${v}) ${i * u}% ${(i + 1) * u}%`));
+    stops.push(`transparent ${k * u}% ${100 - k * u}%`);
+    far.forEach((v, i) => stops.push(`@var(${v}) ${100 - (k - i) * u}% ${100 - (k - i - 1) * u}%`));
+    return `linear-gradient(${angle}, ${stops.join(', ')})`;
+  };
+  // outermost round first on the near side, innermost first on the far side
+  const rows = bands('180deg', ['--ly', '--lx', '--ly', '--lx'], ['--dy', '--dx', '--dy', '--dx']);
+  const cols = bands('90deg', ['--dx', '--dy', '--dx', '--dy'], ['--lx', '--ly', '--lx', '--ly']);
+  // the middle sits on a block corner even when the grid is odd, so the
+  // diamonds stay whole (half a block off center rather than split)
+  const dx = '(@x - floor(@X / 2) - 0.5)';
+  const dy = '(@y - floor(@Y / 2) - 0.5)';
+  const q = `match(${dx} > 0, 1, 0)`;
+  const sy = `match(${dy} > 0, 1, 0)`;
+  const turn = `@calc(90 * (1 + ${q} + ${sy} * (3 - 2 * ${q})) + 180 * ((floor(abs(${dx})) + floor(abs(${dy}))) % 2))deg`;
   add(
     'Barn Raising',
-    'Log cabin quilt blocks, each a red center wrapped in rounds of light and dark logs, turned so the halves build concentric diamonds out from the middle.',
+    'Log cabin quilt blocks, each a bright center framed by rounds of light and dark logs, turned so the light and dark halves build concentric diamonds out from the middle.',
     (c) => ({
-      rule: `${F} { --l1: @p(var(--color3), var(--color4)); --l2: @p(var(--color3), var(--color4)); --d1: @p(var(--color1), var(--color2)); --d2: @p(var(--color1), var(--color2));
-        background: ${layers.join(', ')};
-        ${xf(`rotate(${turn})`)}
-        ${A(`left: ${37.5 + g}%; top: ${37.5 + g}%; width: ${25 - 2 * g}%; height: ${25 - 2 * g}%; background: @p(var(--color5), var(--color6));`)}
+      host: `--bowtie: ${P([[0, 0], [50, 50], [100, 0], [100, 100], [50, 50], [0, 100]])};`,
+      rule: `${F} { --li: @p(0, 1); --di: @p(0, 1);
+        --lx: @match($(li) == 0, var(--color3), var(--color4)); --ly: @match($(li) == 0, var(--color4), var(--color3));
+        --dx: @match($(di) == 0, var(--color1), var(--color2)); --dy: @match($(di) == 0, var(--color2), var(--color1));
+        background: ${rows};
+        ${xf(`rotate(${turn}) scale(1.012)`)}
+        ${B(`left: ${k * u}%; top: ${k * u}%; width: ${100 - 2 * k * u}%; height: ${100 - 2 * k * u}%; background: @p(var(--color5), var(--color6));`)}
+        ${A(`inset: 0; background: ${cols}; ${clipBy('bowtie')}`)}
       }${TR}`,
     }),
     {
@@ -273,72 +506,35 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
 }
 
 {
-  // A paper doily: a scalloped round, an eyelet punched in every scallop, a
-  // ring of larger holes inside that, and a second paper rosette laid on the
-  // middle with its own hole.
-  const outline = [];
-  for (let d = 0; d < 360; d += 1.5) {
-    const r = 39 + 8 * Math.sqrt(Math.abs(Math.cos(rad(8 * d))));
-    outline.push(polar(50, 50, r, d));
-  }
-  const bore = (r, at) => `radial-gradient(${r}% ${r}% at ${at}, transparent 100%, #000 100%)`;
-  const holes = [];
-  for (let k = 0; k < 16; k++) {
-    const [x, y] = polar(50, 50, 39.5, k * 22.5);
-    holes.push(bore(2.4, `${n2(x)}% ${n2(y)}%`));
-  }
-  for (let k = 0; k < 12; k++) {
-    const [x, y] = polar(50, 50, 27, k * 30 + 15);
-    holes.push(bore(4.2, `${n2(x)}% ${n2(y)}%`));
-  }
-  const rosette = [];
-  for (let d = 0; d < 360; d += 3) rosette.push(polar(50, 50, 10 + 8 * Math.abs(Math.cos(rad(4 * d))), d));
-  add(
-    'Doily',
-    'Round paper doilies with scalloped edges, an eyelet punched in every scallop and a ring of holes inside, each with a smaller paper rosette laid on its middle.',
-    (c) => ({
-      host: `--lace: ${P(outline)}; --holes: ${holes.join(', ')}; --rosette: ${P(rosette)};`,
-      rule: `${F} { ${xf('rotate(@r(0, 22.5)deg) scale(1.08)')}
-        ${B(`inset: 0; background: ${ink(c)}; ${clipBy('lace')} ${maskAllOf('holes')}`)}
-        ${A(`inset: 0; background: ${ink(c)}; ${clipBy('rosette')} ${msk(bore(3.2, '50% 50%'))}`)}
-      }${TR}`,
-    }),
-    {
-      palette: ['#9E4A57', '#FBF3E8', '#F3DCC4', '#F4C7CC', '#E9B44C'],
-      grid: '6x9',
-      tg: '5x5',
-      meta: { tags: ['scallops', 'circles', 'dots', 'radial'], mood: ['elegant', 'retro'], density: 'medium', goodFor: ['wallpaper', 'packaging', 'card-texture'] },
-    }
-  );
-}
-
-{
   // Dresden plate: twelve pointed blades round a center circle, the blades
-  // dealt from four fabrics in turn.
+  // dealt from four fabrics in turn, the odd ones from one pair of inks and
+  // the even ones from another, so two neighbors never share a fabric. The
+  // first fabric is the plate's own color, under wedges of the other three.
   const blades = [];
   for (let j = 0; j < 12; j++) {
     const a = j * 30;
     blades.push(polar(50, 50, 40, a), polar(50, 50, 45.5, a + 8), polar(50, 50, 49, a + 15), polar(50, 50, 45.5, a + 22));
   }
   const fabric = ['--b1', '--b2', '--b3', '--b4'];
+  const band = (angle) => `linear-gradient(${angle}, var(--color2) 0 2.5%, transparent 2.5% 97.5%, var(--color2) 97.5%)`;
+  const sash = `${band('90deg')}, ${band('180deg')}, var(--color1)`;
   const sectors = [];
   for (let j = 0; j < 12; j++) {
-    sectors.push(`@var(${fabric[j % 4]}) ${j * 30}deg ${(j + 1) * 30}deg`);
+    sectors.push(`${j % 4 ? `@var(${fabric[j % 4]})` : 'transparent'} ${j * 30}deg ${(j + 1) * 30}deg`);
   }
   add(
     'Dresden Plate',
     'Dresden plate quilt blocks: twelve pointed blades in four alternating fabrics fanned round a plain center circle.',
     (c) => ({
       host: `--plate: ${P(blades)};`,
-      rule: `background: linear-gradient(var(--color1), var(--color1)) 50% 50% / 95% 95% no-repeat;
-        ${F} { --b1: ${ink(c, 2)}; --b2: ${ink(c, 2)}; --b3: ${ink(c, 2)}; --b4: ${ink(c, 2)};
-        ${B(`inset: 2%; background: conic-gradient(${sectors.join(', ')}); ${clipBy('plate')} ${xf('rotate(@r(0, 30)deg)')}`)}
-        ${A(`left: 35%; top: 35%; width: 30%; height: 30%; border-radius: 50%; background: ${ink(c, 2)};`)}
+      rule: `background: ${sash}; ${F} { --b1: @p(var(--color3), var(--color4)); --b3: @p(var(--color3), var(--color4)); --b2: @p(var(--color5), var(--color6)); --b4: @p(var(--color5), var(--color6));
+        ${B(`inset: 2%; background: conic-gradient(${sectors.join(', ')}), @var(--b1); ${clipBy('plate')} ${xf('rotate(@r(0, 30)deg)')}`)}
+        ${A(`left: 35%; top: 35%; width: 30%; height: 30%; border-radius: 50%; background: ${ink(c, 3)};`)}
       }${TR}`,
     }),
     {
-      palette: ['#2F3E46', '#F3EBDD', '#C8553D', '#E9B44C', '#4F8A8B', '#B56576', '#6B8F71'],
-      grid: '6x9',
+      palette: ['#2F3E46', '#F3EBDD', '#3B4A52', '#C8553D', '#E9B44C', '#4F8A8B', '#B56576'],
+      grid: '4x6',
       tg: '5x5',
       meta: { tags: ['radial', 'stars', 'circles', 'triangles'], mood: ['retro', 'festive', 'playful'], density: 'medium', goodFor: ['textile', 'packaging', 'wallpaper'] },
     }
@@ -418,7 +614,7 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
     (c) => ({
       host: `--goose: ${goose};`,
       rule: `background: linear-gradient(90deg, var(--color1) 0 8%, transparent 8% 92%, var(--color1) 92%);
-        ${xf('rotate(@calc(180 * (@x % 2))deg)')} ${F} {
+        ${xf('rotate(@calc(180 * (@x % 2))deg) scale(1.012)')} ${F} {
         ${B(`left: 10%; width: 80%; top: 0; height: 50%; background: ${ink(c, 2)}; ${clipBy('goose')}`)}
         ${A(`left: 10%; width: 80%; top: 50%; height: 50%; background: ${ink(c, 2)}; ${clipBy('goose')}`)}
       }${TR}`,
@@ -475,7 +671,7 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
       host: `--edges: ${edges}; --fly: ${fly};`,
       rule: `background: @var(--edges); ${F} { --a: @r(6, 94); --b: @r(6, 94);
         background: @var(--edges), ${ink(c, 2)};
-        ${xf('rotate(@p(0deg, 90deg, 180deg, 270deg))')}
+        ${xf('rotate(@p(0deg, 90deg, 180deg, 270deg)) scale(1.012)')}
         ${B(`inset: 0; background: @var(--edges), ${ink(c, 2)}; ${cp('polygon($(a)% 0%, 100% 0%, 100% 100%, $(b)% 100%)')}`)}
         ${A(`left: $((a + b) / 2)%; top: 50%; width: $(sqrt(10000 + (b - a) * (b - a)))%; height: 12%; background: @var(--fly); ${xf('translate(-50%, -50%) rotate($(atan2(100, b - a) * 57.29578)deg)')}`)}
       }${TR}`,
@@ -489,251 +685,59 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
   );
 }
 
-// -- more paper ----------------------------------------------------------------
+// -- stitches and yarn --------------------------------------------------------
 
 {
-  // Kirigami: rows of slits cut half a pitch out of step, the sheet pulled
-  // open so each slit gapes into a diamond. Every cell owns the halves of
-  // four diamonds on its edges; a diamond's height is worked out from its own
-  // place on the sheet, so the two cells that share it agree. The sheet gapes
-  // widest round a point drawn once per sheet and stays nearly shut away from it.
-  const a = 38;
-  const open = (px, py) =>
-    `@calc(1.5 + 30 * pow(max(0, cos(min(1.5708, 1.5708 * sqrt(pow((${px}) - $(cx) * @X, 2) + pow((${py}) - $(cy) * @Y, 2)) / (0.6 * max(@X, @Y))))), 2))`;
-  const tb = open('@x - 0.5', '@y - 1');
-  const bb = open('@x - 0.5', '@y');
-  const lb = open('@x - 1', '@y - 0.5');
-  const rb = open('@x', '@y - 0.5');
-  add(
-    'Slit Lattice',
-    'A sheet of paper cut with staggered rows of slits and pulled open, the slits gaping into diamonds that are widest round one point and close up to thin slits away from it.',
-    (c) => ({
-      rule: `--k: ${constant(c)}; --cx: @pd(@p(0.3, 0.38, 0.46, 0.54, 0.62, 0.7)); --cy: @pd(@p(0.3, 0.38, 0.46, 0.54, 0.62, 0.7)); ${F} { --t: ${tb}; --b: ${bb}; --l: ${lb}; --r: ${rb};
-        background: ${paint('k')};
-        ${cp(`polygon(0% 0%, ${50 - a}% 0%, 50% $(t)%, ${50 + a}% 0%, 100% 0%, 100% $(50 - r)%, ${100 - a}% 50%, 100% $(50 + r)%, 100% 100%, ${50 + a}% 100%, 50% $(100 - b)%, ${50 - a}% 100%, 0% 100%, 0% $(50 + l)%, ${a}% 50%, 0% $(50 - l)%)`)}
-      }${TR}`,
-    }),
-    {
-      pal: 21,
-      grid: '8x12',
-      tg: '10x10',
-      meta: { tags: ['diamonds', 'lattice', 'grid'], mood: ['technical', 'bold'], density: 'dense', goodFor: ['hero-background', 'poster', 'wallpaper'] },
+  // A granny square: a ring of yarn at the middle, then two square rounds of
+  // treble clusters, every cluster three posts, a gap at each corner and
+  // between the clusters. A round is a box whose middle is masked out (two
+  // hard bands, added) and whose outline is a square notched with the slits
+  // between posts and clusters and with its corners cut away, worked out once
+  // on the host. The outer round is the same black on every square.
+  const frame = (f, clusters) => {
+    const g = 5;
+    const span = 100 - 2 * g;
+    const cuts = [];
+    for (let k = 0; k < clusters; k++) {
+      const a = g + (span * k) / clusters;
+      const len = span / clusters;
+      // the gap between clusters goes right through; the two between the
+      // three posts of a cluster are shallow nicks in the top of it
+      if (k > 0) cuts.push([a, 4.4, f + 6]);
+      cuts.push([a + len / 3, 1.6, f * 0.28], [a + (2 * len) / 3, 1.6, f * 0.28]);
     }
-  );
-}
-
-{
-  // Torn paper scraps: a ragged quadrilateral per cell, its edge torn at
-  // random, the white core of the paper showing round a colored face, and a
-  // ruled, squared or dotted print on some of them. Laid in reading order,
-  // each scrap overlaps the ones before it.
-  const j = (v, d) => `@calc(${v} + @r(-${d}, ${d}))%`;
-  const side = (x0, y0, x1, y1, n, d) => {
-    const out = [];
-    for (let i = 1; i < n; i++) {
-      const t = i / n;
-      const x = x0 + (x1 - x0) * t;
-      const y = y0 + (y1 - y0) * t;
-      out.push(x0 === x1 ? `${j(x, d)} ${n2(y)}%` : `${n2(x)}% ${j(y, d)}`);
-    }
-    return out;
+    // one side, left to right along x at y = 0, then a mitred gap at the
+    // corner closing to a point at the inner corner of the round
+    const side = [[g, 0]];
+    for (const [x, w, d] of cuts) side.push([x - w / 2, 0], [x - w / 2, d], [x + w / 2, d], [x + w / 2, 0]);
+    side.push([100 - g, 0], [100 - f, f]);
+    const turn = (pts, k) =>
+      pts.map(([x, y]) => {
+        for (let i = 0; i < k; i++) [x, y] = [100 - y, x];
+        return [x, y];
+      });
+    const pts = [];
+    for (let k = 0; k < 4; k++) pts.push(...turn(side, k));
+    const hole = (angle) => `linear-gradient(${angle}, #000 0 ${n2(f)}%, transparent ${n2(f)}% ${n2(100 - f)}%, #000 ${n2(100 - f)}%)`;
+    return { clip: P(pts), mask: `${hole('90deg')}, ${hole('180deg')}` };
   };
-  const corner = (x, y) => `${j(x, 5)} ${j(y, 5)}`;
-  const pts = [
-    corner(8, 8), ...side(8, 8, 92, 8, 7, 2.6),
-    corner(92, 8), ...side(92, 8, 92, 92, 7, 2.6),
-    corner(92, 92), ...side(92, 92, 8, 92, 7, 2.6),
-    corner(8, 92), ...side(8, 92, 8, 8, 7, 2.6),
-  ];
-  const lines = 'repeating-linear-gradient(180deg, transparent 0 11%, var(--color1) 11% 13.5%)';
-  const grid = 'repeating-linear-gradient(90deg, transparent 0 11%, var(--color1) 11% 13%), repeating-linear-gradient(180deg, transparent 0 11%, var(--color1) 11% 13%)';
-  const dots = 'radial-gradient(circle at 50% 50%, var(--color1) 0 22%, transparent 22%) 0 0 / 14% 14%';
-  add(
-    'Paper Scraps',
-    'A collage of torn paper scraps laid over one another at angles, each with a ragged white torn edge, some ruled, squared or dotted like pages from a notebook.',
-    (c) => ({
-      host: `--lines: ${lines}; --grid: ${grid}; --dots: ${dots};`,
-      rule: `${F} { background: var(--color1); ${cp(`polygon(${pts.join(', ')})`)}
-        ${xf(`translate(@r(-14, 14)%, @r(-14, 14)%) rotate(@r(-40, 40)deg) scale(@r(1.15, 1.45))`)}
-        ${B(`inset: 11%; background: ${ink(c, 2)};`)}
-        ${A(`inset: 11%; background: @p(@var(--lines), @var(--grid), @var(--dots), none, none); opacity: 0.45;`)}
-      }${TR}`,
-    }),
-    {
-      palette: ['#2B2D42', '#FBF7EF', '#E63946', '#F4A261', '#2A9D8F', '#A8DADC', '#E9C46A'],
-      grid: '6x9',
-      tg: '5x5',
-      meta: { tags: ['squares', 'mosaic', 'lines', 'dots'], mood: ['playful', 'organic'], density: 'dense', goodFor: ['poster', 'packaging', 'card-texture'] },
-    }
-  );
-}
-
-{
-  // Cut-paper sea: one layer of paper per row, its top edge a wave that runs
-  // the whole width of the sheet, each layer laid over the one behind with a
-  // thin shadow along its edge. The wave is worked out from the cell's place
-  // on the sheet, so the edge runs on unbroken from cell to cell; each cell
-  // draws its own stretch and the one to its left, so a cell the frequency
-  // gate leaves out is covered by its neighbor. The wave's two phases are
-  // drawn once per sheet, so a reseed rolls the swell along.
-  const wave = (t) =>
-    `@calc((50 + 42 + 26 * sin(6.2832 * (@x - 1 + ${t}) / 4.6 + 1.9 * @y + $(ph)) + 10 * sin(6.2832 * (@x - 1 + ${t}) / 2.2 - 1.3 * @y + $(pk))) / 3)`;
-  const n = 12;
-  const ys = [];
-  for (let i = 0; i <= n; i++) ys.push(`--y${i}: ${wave(n2((2 * i) / n - 1))};`);
-  const edge = (dy) =>
-    Array.from({ length: n + 1 }, (_, i) => `${n2((100 * i) / n)}% calc(@var(--y${i}) * 1% - ${n2(dy / 3)}%)`).join(', ');
-  const tone = '1 + floor(min(0.999, (@y - 1) / @Y) * 5)';
-  const box = 'left: -100%; width: 200%; top: -50%; height: 300%;';
-  add(
-    'Paper Sea',
-    'A sea cut from layers of paper, one wave-edged sheet per row from pale at the top to deep at the bottom, each laid over the one behind with a thin shadow along its edge.',
-    (c) => ({
-      rule: `--ph: @pd(@p(0, 0.8, 1.6, 2.4, 3.2, 4, 4.8, 5.6)); --pk: @pd(@p(0, 0.8, 1.6, 2.4, 3.2, 4, 4.8, 5.6)); ${F} { ${ys.join(' ')}
-        --w: @match(${tone} == 1, var(--color1), ${tone} == 2, var(--color2), ${tone} == 3, var(--color3), ${tone} == 4, var(--color4), var(--color5));
-        ${B(`${box} background: var(--color5); opacity: 0.3; ${cp(`polygon(${edge(5)}, 100% 100%, 0% 100%)`)}`)}
-        ${A(`${box} background: ${paint('w')}; ${cp(`polygon(${edge(0)}, 100% 100%, 0% 100%)`)}`)}
-      }${TR}`,
-    }),
-    {
-      palette: ['#FDF6E9', '#BFE3E8', '#7CC3CF', '#3E8EA8', '#1F5F82', '#0E3352'],
-      grid: '6x9',
-      tg: '6x6',
-      meta: { tags: ['waves', 'stripes', 'curves'], mood: ['calm', 'organic'], density: 'dense', goodFor: ['hero-background', 'wallpaper', 'poster'] },
-    }
-  );
-}
-
-{
-  // Paper chains hanging in columns: a loop seen face on in every cell and
-  // a loop seen edge on threading it to the one above. The edge-on loop is
-  // drawn first, so the loop below passes in front of it and the loop above
-  // (painted earlier) behind it.
-  const ring = (t) => msk(`radial-gradient(closest-side, transparent ${t}%, #000 ${t}%)`);
-  add(
-    'Paper Chain',
-    'Paper chains hanging in columns, the links in mixed colors, each face-on loop threaded through a narrow edge-on loop to the next.',
-    (c) => ({
-      rule: `${F} { ${xf(`translateX(@calc(7 * sin(@y * 0.7 + @x * 2.3))%)`)}
-        ${B(`left: 41%; width: 18%; top: -30%; height: 60%; border-radius: 50%; background: ${ink(c)}; ${ring(56)}`)}
-        ${A(`left: 17%; width: 66%; top: 8%; height: 84%; border-radius: 50%; background: ${ink(c)}; ${ring(74)}`)}
-      }${TR}`,
-    }),
-    {
-      palette: ['#FBF5EA', '#E94F37', '#F6AE2D', '#33658A', '#86BBD8', '#7FB069', '#B5838D'],
-      grid: '6x9',
-      tg: '6x6',
-      meta: { tags: ['rings', 'ovals', 'stripes'], mood: ['festive', 'playful'], density: 'medium', goodFor: ['packaging', 'wallpaper', 'section-divider'] },
-    }
-  );
-}
-
-{
-  // A row of paper dolls cut from one folded strip: hands joined at the cell
-  // edges, a girl in a flared skirt or a boy in trousers in every cell (the
-  // two outlines share a point count, so a reseed morphs one into the other).
-  // Each row is cut from a sheet in one of the sheet-wide colors.
-  const half = (body) => {
-    const head = [];
-    for (let d = 0; d <= 150; d += 30) head.push(polar(50, 16, 11, d));
-    return [...head, [53.5, 28], [62, 31], [100, 31], [100, 39], [66, 39], ...body];
-  };
-  const girl = half([[63, 44], [79, 79], [60, 79], [60, 93], [66, 95], [66, 99], [53, 99], [53, 81], [50, 81]]);
-  const boy = half([[64, 46], [64, 64], [63, 64], [62, 93], [66, 95], [66, 99], [53, 99], [52, 66], [50, 66]]);
-  const whole = (pts) => P([...pts, ...pts.slice(1, -1).reverse().map(([x, y]) => [100 - x, y])]);
-  add(
-    'Paper Dolls',
-    'Chains of paper dolls holding hands across the sheet, girls in flared skirts and boys in trousers, each row cut from one sheet of colored paper.',
-    (c) => ({
-      host: `--girl: ${whole(girl)}; --boy: ${whole(boy)};`,
-      rule: `--k0: ${constant(c, 1, 2)}; --k1: ${constant(c, 3, 4)}; --k2: ${constant(c, 5, 5)};
-        ${F} { --d: @match(y % 3 == 0, @var(--k0), y % 3 == 1, @var(--k1), @var(--k2));
-        ${B(`inset: 4% 0 0 0; background: ${paint('d')}; ${cp('@p(@var(--girl), @var(--boy))')}`)}
-      }${TR}`,
-    }),
-    {
-      pal: 28,
-      grid: '6x9',
-      tg: '6x6',
-      meta: { tags: ['stripes', 'grid', 'curves'], mood: ['playful', 'retro'], density: 'medium', goodFor: ['packaging', 'section-divider', 'wallpaper'] },
-    }
-  );
-}
-
-// -- stitches and yarn ---------------------------------------------------------
-
-{
-  // A granny square: three rounds of treble clusters round a center hole,
-  // every cluster three posts, a gap at each corner and between clusters.
-  // The two inner rounds are masks of small rectangles (worked out once, on
-  // the host) over their own yarn color; the outer round, the same black on
-  // every square as it usually is, is painted straight onto the cell.
-  const posts = (x0, y0, x1, y1, vertical) => {
-    const out = [];
-    const gap = 0.9;
-    if (vertical) {
-      const w = (x1 - x0 - 2 * gap) / 3;
-      for (let i = 0; i < 3; i++) out.push([x0 + i * (w + gap), y0, w, y1 - y0]);
-    } else {
-      const h = (y1 - y0 - 2 * gap) / 3;
-      for (let i = 0; i < 3; i++) out.push([x0, y0 + i * (h + gap), x1 - x0, h]);
-    }
-    return out;
-  };
-  const round = (lo, hi, n, color) => {
-    const rects = [];
-    const cg = 3;
-    const sg = 2.4;
-    const span = 100 - 2 * lo - 2 * cg;
-    const len = (span - (n - 1) * sg) / n;
-    for (let i = 0; i < n; i++) {
-      const a = lo + cg + i * (len + sg);
-      rects.push(...posts(a, lo, a + len, hi, true));
-      rects.push(...posts(a, 100 - hi, a + len, 100 - lo, true));
-      rects.push(...posts(lo, a, hi, a + len, false));
-      rects.push(...posts(100 - hi, a, 100 - lo, a + len, false));
-    }
-    return rects.map(([x, y, w, h]) => rect(color, x, y, w, h)).join(', ');
-  };
+  const outer = frame((12 / 90) * 100, 3);
+  const inner = frame((10.5 / 61) * 100, 2);
   add(
     'Granny Square',
-    'Crocheted granny squares: two bright rounds round a small center hole and a black round outside them, every round worked in clusters of three posts with gaps at the corners.',
+    'Crocheted granny squares: a ring of yarn round a small center hole, then a bright round and a black round of three-post clusters, with gaps between the clusters and at the corners.',
     (c) => ({
-      host: `--r1: ${round(33, 42, 1, '#000')}; --r2: ${round(20, 30.5, 2, '#000')}; --r3: ${round(5, 17.5, 3, 'var(--color1)')};`,
-      rule: `${F} { background: @var(--r3);
-        ${B(`inset: 0; background: ${ink(c, 2)}; ${maskBy('r2')}`)}
-        ${A(`inset: 0; background: ${ink(c, 2)}; ${maskBy('r1')}`)}
+      host: `--oc: ${outer.clip}; --om: ${outer.mask}; --ic: ${inner.clip}; --im: ${inner.mask};`,
+      rule: `${F} { --c1: ${ink(c, 2)}; background: radial-gradient(closest-side, transparent 0 14%, @var(--c1) 14% 31%, transparent 31%);
+        ${B(`left: 19.5%; top: 19.5%; width: 61%; height: 61%; background: ${ink(c, 2)}; ${clipBy('ic')} ${maskBy('im')}`)}
+        ${A(`left: 5%; top: 5%; width: 90%; height: 90%; background: var(--color1); ${clipBy('oc')} ${maskBy('om')}`)}
       }${TR}`,
     }),
     {
       palette: ['#EFE6D2', '#26211E', '#E4572E', '#F3A712', '#29A19C', '#A23B72', '#4D9DE0'],
-      grid: '6x9',
+      grid: '4x6',
       tg: '5x5',
-      meta: { tags: ['squares', 'concentric', 'grid', 'blocks'], mood: ['retro', 'playful'], density: 'medium', goodFor: ['textile', 'packaging', 'wallpaper'] },
-    }
-  );
-}
-
-{
-  // Yo-yos: circles of fabric gathered at the middle, the gathers shading
-  // alternate wedges round a small puckered hole, some cut from a dotted print.
-  add(
-    'Yo Yo Quilt',
-    'A yo-yo quilt: gathered fabric circles in rows, each puckered into soft folds round a small hole at its middle, some plain and some dotted.',
-    (c) => ({
-      host: `--print: radial-gradient(circle at 50% 50%, var(--color1) 0 20%, transparent 20%) 0 0 / 16.66% 16.66%;
-        --gather: ${spokes(14, 360 / 28)}, radial-gradient(closest-side, #000 14%, transparent 70%);
-        --hole: radial-gradient(closest-side, transparent 9%, #000 9%);`,
-      rule: `${F} { border-radius: 50%; background: @p(@var(--print), none, none), ${ink(c, 2)}; ${maskBy('hole')} ${xf('scale(0.94) rotate(@r(0, 30)deg)')}
-        ${B(`inset: 0; border-radius: 50%; background: var(--color1); opacity: 0.32; ${maskAllOf('gather')}`)}
-        ${A(`inset: 36%; border-radius: 50%; background: var(--color1); opacity: 0.4; ${msk('radial-gradient(closest-side, transparent 30%, #000 30% 70%, transparent 100%)')}`)}
-      }${TR}`,
-    }),
-    {
-      palette: ['#F4EFE6', '#3D2C2E', '#D96C75', '#F2A65A', '#6FA3B8', '#8DB07A', '#E9D985'],
-      grid: '6x9',
-      tg: '6x6',
-      meta: { tags: ['circles', 'radial', 'dots', 'grid'], mood: ['retro', 'playful', 'calm'], density: 'medium', goodFor: ['textile', 'wallpaper', 'packaging'] },
+      meta: { tags: ['squares', 'concentric', 'grid', 'rings'], mood: ['retro', 'playful'], density: 'medium', goodFor: ['textile', 'packaging', 'wallpaper'] },
     }
   );
 }
@@ -781,16 +785,27 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
   // running stitch sewn down its middle. The braid is two periods tall and
   // slides by a whole number of quarter periods per column, so every column
   // keeps its own phase and a reseed slides them.
+  // The braid's middle line, in cell units over a box two cells tall, and
+  // the ribbon laid along it at an even width (offset along the normal), so
+  // the peaks round off the way woven rickrack does.
   const band = (amp, w, periods) => {
-    const n = 24 * periods;
+    const n = 40 * periods;
+    const mid = (t) => {
+      const sn = Math.sin(2 * Math.PI * periods * t);
+      return [50 + amp * Math.sign(sn) * Math.abs(sn) ** 0.6, 200 * t];
+    };
     const left = [];
     const right = [];
     for (let i = 0; i <= n; i++) {
       const t = i / n;
-      const sn = Math.sin(2 * Math.PI * periods * t);
-      const cx = 50 + amp * Math.sign(sn) * Math.abs(sn) ** 0.6;
-      left.push([cx - w, t * 100]);
-      right.push([cx + w, t * 100]);
+      const [x, y] = mid(t);
+      const [x1, y1] = mid(Math.min(1, t + 1e-4));
+      const [x0, y0] = mid(Math.max(0, t - 1e-4));
+      const len = Math.hypot(x1 - x0, y1 - y0);
+      const nx = (y1 - y0) / len;
+      const ny = -(x1 - x0) / len;
+      left.push([x - w * nx, (y - w * ny) / 2]);
+      right.push([x + w * nx, (y + w * ny) / 2]);
     }
     return P([...left, ...right.reverse()]);
   };
@@ -798,7 +813,7 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
     'Rickrack',
     'Columns of wavy rickrack braid in bright colors, each sewn down its middle with a dashed running stitch.',
     (c) => ({
-      host: `--rick: ${band(18, 17, 2)}; --seam: ${band(18, 1.8, 2)};`,
+      host: `--rick: ${band(17, 12, 2)}; --seam: ${band(17, 1.4, 2)};`,
       rule: `--k: ${byColumn(c, 2, c - 1)}; --ph: @pd(@m(@X, @p(0%, 12.5%, 25%, 37.5%))); ${F} {
         ${B(`left: 0; right: 0; top: -100%; height: 200%; background: ${paint('k')}; ${clipBy('rick')} ${xf('translateY(@var(--ph))')}`)}
         ${A(`left: 0; right: 0; top: -100%; height: 200%; background: var(--color1); ${clipBy('seam')} ${msk('repeating-linear-gradient(180deg, #000 0 3%, transparent 3% 5%)')} ${xf('translateY(@var(--ph))')}`)}
@@ -856,13 +871,15 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
   );
 }
 
-// -- party -----------------------------------------------------------------------
+// -- party trimmings ----------------------------------------------------------
 
 {
   // Bunting: a string drooping across the whole width of the sheet in every
   // row, the drop worked out from the cell's place so the string runs on
   // unbroken from cell to cell, and a flag hung from it in each cell, either
   // a pennant or a swallowtail (same point count, so a reseed morphs them).
+  // The string is drawn outside the frequency gate: thinning takes flags
+  // off the string, never the string itself.
   const sag = (f) => `(10 + (36 + 22 * ((@y % 3) / 2)) * 4 * (${f}) * (1 - (${f})))`;
   const yl = sag('(@x - 1) / @X');
   const yr = sag('@x / @X');
@@ -873,9 +890,10 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
     'Strings of party bunting drooping across the sheet row under row, hung with bright pennants and swallowtail flags.',
     (c) => ({
       host: `--pennant: ${pennant}; --swallow: ${swallow};`,
-      rule: `${F} { --l: @calc(${yl}); --r: @calc(${yr});
-        ${B(`left: 8%; width: 84%; top: $((l + r) / 2)%; height: 82%; background: ${ink(c, 2)}; ${cp('@p(@var(--pennant), @var(--swallow))')} ${tfo('50% 0')} ${xf('rotate($(atan2(r - l, 100) * 57.29578)deg)')}`)}
+      rule: `--l: @calc(${yl}); --r: @calc(${yr});
         ${A(`left: 0; top: calc($(l) * 1% - 1.2%); width: $(sqrt(10000 + (r - l) * (r - l)))%; height: 2.4%; background: var(--color1); ${tfo('0 50%')} ${xf('rotate($(atan2(r - l, 100) * 57.29578)deg)')}`)}
+        ${F} {
+        ${B(`left: 8%; width: 84%; top: $((l + r) / 2)%; height: 82%; background: ${ink(c, 2)}; ${cp('@p(@var(--pennant), @var(--swallow))')} ${tfo('50% 0')} ${xf('rotate($(atan2(r - l, 100) * 57.29578)deg)')}`)}
       }${TR}`,
     }),
     {
@@ -895,21 +913,26 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
   const edge = [];
   for (let i = 0; i < 32; i++) edge.push(polar(50, 50, i % 2 ? 44 : 49, i * 11.25));
   const tails = P([[44, 30], [56, 30], [80, 100], [70, 92], [62, 104], [50, 52], [38, 104], [30, 92], [20, 100]]);
+  // the two pleat colors are always different inks, and only every other
+  // pleat is a wedge, over the disc's own color: two wedges side by side
+  // export with a hairline between them
+  const pick = (idx) => `@match(${[0, 1, 2, 3].map((k) => `${idx} == ${k}, var(--color${k + 2})`).join(', ')}, var(--color6))`;
   const pleats = [];
-  for (let i = 0; i < 16; i++) pleats.push(`@var(${i % 2 ? '--q' : '--p'}) ${n2(i * 22.5 - 5.625)}deg ${n2((i + 1) * 22.5 - 5.625)}deg`);
+  for (let i = 0; i < 16; i++) pleats.push(`${i % 2 ? '@var(--q)' : 'transparent'} ${n2(i * 22.5)}deg ${n2((i + 1) * 22.5)}deg`);
   add(
     'Rosette',
     'Prize rosettes in rows: discs of sixteen pleats in two colors with pointed edges, a button at the middle and two swallowtail ribbons hanging below.',
     (c) => ({
       host: `--edge: ${P(edge)}; --tails: ${tails};`,
-      rule: `${F} { --p: ${ink(c, 2)}; --q: ${ink(c, 2)}; ${xf('rotate(@r(-10, 10)deg)')}
+      rule: `${F} { --pi: @p(0, 1, 2, 3, 4); --qd: @p(1, 2, 3, 4);
+        --p: ${pick('$(pi)')}; --q: ${pick('($(pi) + $(qd)) % 5')}; ${xf('rotate(@r(-10, 10)deg)')}
         ${B(`left: 10%; width: 80%; top: 22%; height: 96%; background: ${paint('p')}; ${clipBy('tails')}`)}
-        ${A(`left: 8%; width: 84%; top: 0; height: 84%; background: radial-gradient(closest-side, var(--color1) 0 30%, transparent 30% 35%, @var(--q) 35% 40%, transparent 40%), conic-gradient(from -5.625deg, ${pleats.join(', ')}); ${clipBy('edge')}`)}
+        ${A(`left: 8%; width: 84%; top: 0; height: 84%; background: radial-gradient(closest-side, var(--color1) 0 30%, transparent 30% 35%, @var(--q) 35% 40%, transparent 40%), conic-gradient(from -5.625deg, ${pleats.join(', ')}), @var(--p); ${clipBy('edge')}`)}
       }${TR}`,
     }),
     {
       palette: ['#F6F1E7', '#F2C14E', '#1D4E89', '#C1121F', '#2A7F62', '#6A4C93', '#F28C28'],
-      grid: '6x9',
+      grid: '4x6',
       tg: '5x5',
       meta: { tags: ['radial', 'circles', 'triangles', 'stars'], mood: ['festive', 'retro'], density: 'medium', goodFor: ['packaging', 'poster', 'wallpaper'] },
     }
