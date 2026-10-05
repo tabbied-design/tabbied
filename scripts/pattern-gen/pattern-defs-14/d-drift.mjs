@@ -251,7 +251,7 @@ add(
 
 add(
   'Overcast',
-  'A halftone of cloud: discs swelling and shrinking with a smooth field, the largest merging into banks and the cores of them palest.',
+  'A halftone of cloud: discs swelling and shrinking with a smooth field, crowding into pale banks and thinning to specks where the sky clears.',
   (c) => ({
     rule: `${F} { ${nv('n', -0.2, 1.2, 1.5)} ${A(`inset: -30%; background: @match($(n) > 0.62, @p(var(--color1)), $(n) > 0.32, @p(var(--color2)), @p(var(--color3))); ${cp('circle(@calc(3 + 29 * max(0, min(1, $(n))))% at 50% 50%)')}`)} }${TR}`,
   }),
