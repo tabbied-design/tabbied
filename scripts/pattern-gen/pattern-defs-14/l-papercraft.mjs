@@ -327,17 +327,10 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
   const k1 = 6.2832 / 4.6;
   const k2 = 6.2832 / 2.2;
   const f6 = (v) => Math.round(v * 1e6) / 1e6;
-  // css-doodle re-reads every function argument character by character in
-  // every cell, so the thirteen height expressions are kept short: no spaces,
-  // and the per-sample phase offsets live on the host as --sN / --tN.
-  const offsets = Array.from({ length: n + 1 }, (_, i) => {
+  const edge = Array.from({ length: n + 1 }, (_, i) => {
     const t = (2 * i) / n - 1;
-    return `--s${i}: ${f6(k1 * t)}; --t${i}: ${f6(k2 * t)};`;
-  }).join(' ');
-  const edge = Array.from(
-    { length: n + 1 },
-    (_, i) => `${n2((100 * i) / n)}% $(round(2100+1300*sin(a+s${i})+500*sin(b+t${i}))/100)%`
-  ).join(', ');
+    return `${n2((100 * i) / n)}% $(round(2100+1300*sin(${f6(k1 * t)}+a)+500*sin(${f6(k2 * t)}+b))/100)%`;
+  }).join(', ');
   const tone = '1 + floor(min(0.999, (@y - 1) / @Y) * 5)';
   // The shadow is the same outline lifted by a twentieth of a cell.
   const box = (top) => `left: -100%; width: 200%; top: ${top}%; height: 200%;`;
@@ -345,7 +338,6 @@ const spokes = (n, on, { at = '50% 50%', from = 0, inv = false } = {}) => {
     'Paper Sea',
     'A sea cut from layers of paper, one wave-edged sheet per row from pale at the top to deep at the bottom, each laid over the one behind with a thin shadow along its edge.',
     (c) => ({
-      host: offsets,
       rule: `--ph: @pd(@p(0, 0.8, 1.6, 2.4, 3.2, 4, 4.8, 5.6)); --pk: @pd(@p(0, 0.8, 1.6, 2.4, 3.2, 4, 4.8, 5.6)); ${F} {
         --a: @calc(${f6(k1)} * (@x - 1) + 1.9 * @y + $(ph)); --b: @calc(${f6(k2)} * (@x - 1) - 1.3 * @y + $(pk));
         --t: @calc(${tone});

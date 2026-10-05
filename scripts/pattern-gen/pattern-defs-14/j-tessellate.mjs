@@ -987,22 +987,34 @@ add(
 // smooth noise field, the halves a step apart so the facets show.
 const LP = (() => {
   const J = 0.56;
-  // A corner's place, each in one $() over the cell's variables (so the text
-  // is the same in every cell): the hash of the corner, the nudge it gives,
-  // and the result in percent of the doubled box the facets are drawn in.
-  // Corners on the sheet's edge only slide along it. The polygons read the
-  // stored percentages back with @var(), which the browser resolves.
-  const fr = (i, j, a, b, k) => `(sin(${i} * ${a} + ${j} * ${b} + s * ${k}) * 43758.5453 - floor(sin(${i} * ${a} + ${j} * ${b} + s * ${k}) * 43758.5453))`;
-  const at = (name, axis, base, hash, edge) =>
-    `--${name}${axis}: $(round((${base} + (${J} * ${hash} - ${J / 2}) * ${edge} + 0.5) * 5000) / 100)%;`;
-  const corner = (name, i, j, u, v) =>
-    `${at(name, 'x', u, fr(i, j, 12.9898, 78.233, 1), `min(1, ${i}) * min(1, mx - ${i})`)} ${at(name, 'y', v, fr(i, j, 39.3467, 11.1351, 1.3), `min(1, ${j}) * min(1, my - ${j})`)}`;
+  // Each corner's nudge is a hash of its place: the fraction of a big
+  // multiple of a sine. The sine's argument is linear in the corner's column
+  // and row, so a cell works out its own once (--hu, --hv, one per axis) and
+  // reaches its four corners by a fixed offset. A corner coordinate is then
+  // one short $() whose text is the same in every cell, stored in percent of
+  // the doubled box the facets are drawn in. Corners on the sheet's edge only
+  // slide along it. The polygons read the stored values back with @var(),
+  // which the browser resolves.
+  const AX = [12.9898, 78.233];
+  const AY = [39.3467, 11.1351];
+  const off = (co, di, dj) => r2(-(co[0] * di + co[1] * dj) * 10000) / 10000;
+  const at = (name, axis, base, hv, co, di, dj, edge) => {
+    const o = off(co, di, dj);
+    const arg = o ? `${hv} ${o < 0 ? '-' : '+'} ${Math.abs(o)}` : hv;
+    return `--${name}${axis}: $(round((${base} + (${J} * ((sin(${arg}) * 43758.5453 % 1 + 1) % 1) - ${J / 2}) * ${edge} + 0.5) * 5000) / 100)%;`;
+  };
+  const corner = (name, di, dj, u, v) => {
+    const i = di ? '(ix - 1)' : 'ix';
+    const j = dj ? '(iy - 1)' : 'iy';
+    return `${at(name, 'x', u, 'hu', AX, di, dj, `min(1, ${i}) * min(1, mx - ${i})`)} ${at(name, 'y', v, 'hv', AY, di, dj, `min(1, ${j}) * min(1, my - ${j})`)}`;
+  };
   const vars = [
     POS,
-    corner('a', '(ix - 1)', '(iy - 1)', 0, 0),
-    corner('b', 'ix', '(iy - 1)', 1, 0),
-    corner('c', 'ix', 'iy', 1, 1),
-    corner('d', '(ix - 1)', 'iy', 0, 1),
+    `--hu: $(ix * ${AX[0]} + iy * ${AX[1]} + s); --hv: $(ix * ${AY[0]} + iy * ${AY[1]} + s * 1.3);`,
+    corner('a', 1, 1, 0, 0),
+    corner('b', 0, 1, 1, 0),
+    corner('c', 0, 0, 1, 1),
+    corner('d', 1, 0, 0, 1),
   ].join(' ');
   const P = (n) => `@var(--${n}x) @var(--${n}y)`;
   const quad = `polygon(${P('a')}, ${P('b')}, ${P('c')}, ${P('d')})`;
