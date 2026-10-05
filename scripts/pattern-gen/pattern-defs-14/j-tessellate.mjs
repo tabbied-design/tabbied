@@ -999,23 +999,22 @@ const LP = (() => {
   const AY = [39.3467, 11.1351];
   const off = (co, di, dj) => r2(-(co[0] * di + co[1] * dj) * 10000) / 10000;
   // in units of 1/5000 of the box, so the whole sum is one short line
-  const at = (name, axis, base, hv, co, di, dj, edge) => {
+  const at = (name, axis, base, hv, co, di, dj) => {
     const o = off(co, di, dj);
     const arg = o ? `${hv} ${o < 0 ? '-' : '+'} ${Math.abs(o)}` : hv;
-    return `--${name}${axis}: $(round(${(base + 0.5) * 5000} + (${J * 5000} * ((sin(${arg}) * 43758.5453 % 1 + 1) % 1) - ${(J / 2) * 5000}) * ${edge}) / 100)%;`;
+    return `--${name}${axis}: $(round(${(base + 0.5) * 5000 - (J / 2) * 5000} + ${J * 5000} * ((sin(${arg}) * 43758.5453 % 1 + 1) % 1)) / 100)%;`;
   };
-  // whether a corner may move along each axis: not if it sits on the sheet's edge
-  const flags = '--e0: $(min(1, ix - 1)); --e1: $(min(1, mx - ix)); --f0: $(min(1, iy - 1)); --f1: $(min(1, my - iy));';
-  const corner = (name, di, dj, u, v) =>
-    `${at(name, 'x', u, 'hu', AX, di, dj, di ? 'e0' : 'e1')} ${at(name, 'y', v, 'hv', AY, di, dj, dj ? 'f0' : 'f1')}`;
+  const corner = (name, di, dj, u, v) => `${at(name, 'x', u, 'hu', AX, di, dj)} ${at(name, 'y', v, 'hv', AY, di, dj)}`;
   const vars = [
     POS,
-    flags,
     `--hu: $(ix * ${AX[0]} + iy * ${AX[1]} + s); --hv: $(ix * ${AY[0]} + iy * ${AY[1]} + s * 1.3);`,
     corner('a', 1, 1, 0, 0),
     corner('b', 0, 1, 1, 0),
     corner('c', 0, 0, 1, 1),
     corner('d', 1, 0, 0, 1),
+    // corners on the sheet's edge only slide along it: the outer column and row put theirs back
+    '@x(1) { --ax: 25%; --dx: 25%; } @match(x == X) { --bx: 75%; --cx: 75%; }',
+    '@y(1) { --ay: 25%; --by: 25%; } @match(y == Y) { --cy: 75%; --dy: 75%; }',
   ].join(' ');
   const P = (n) => `@var(--${n}x) @var(--${n}y)`;
   const quad = `polygon(${P('a')}, ${P('b')}, ${P('c')}, ${P('d')})`;
