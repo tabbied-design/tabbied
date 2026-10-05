@@ -799,10 +799,11 @@ const SG_Y = [
 const SG_HOST = [0, 1, 2].map((j) => `--p${j}: @r(0, 6.283);`).join(' ');
 const n4 = (v) => +v.toFixed(4);
 // Each band's two sine phases at the cell's right edge (--fj, --gj), from the
-// cell's column and row and the band's rolled phase; a sample i quarters in
-// from the left steps back from there by a constant.
-const SG_BASES = [0, 1, 2]
-  .map((j) => `--f${j}: $(@x*${SG_W[0][j]}+@y*${SG_Y[0][j]}+p${j}); --g${j}: $(@x*${SG_W[1][j]}+@y*${SG_Y[1][j]}+p${j}*1.7);`)
+// cell's column and row (--X, --Y, so every expression is the same text in
+// every cell and css-doodle reads it once) and the band's rolled phase; a
+// sample i thirds in from the left steps back from there by a constant.
+const SG_BASES = '--X: @x; --Y: @y; ' + [0, 1, 2]
+  .map((j) => `--f${j}: $(X*${SG_W[0][j]}+Y*${SG_Y[0][j]}+p${j}); --g${j}: $(X*${SG_W[1][j]}+Y*${SG_Y[1][j]}+p${j}*1.7);`)
   .join(' ');
 const sgThick = (j, i) => {
   const A = SG_AMP[j];
