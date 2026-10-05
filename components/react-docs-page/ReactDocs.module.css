@@ -101,6 +101,7 @@
 }
 
 .chipLink {
+  gap: 8px;
   color: var(--h-ink);
   transition: border-color 150ms ease;
 }
@@ -210,6 +211,14 @@
 .article a:hover {
   color: var(--h-teal);
   text-decoration-color: currentColor;
+}
+
+/* A mark in front of a link's name inside a sentence (GitHub's), sat on the
+   text's baseline rather than the line box's. */
+.inlineMark {
+  display: inline-block;
+  margin-right: 5px;
+  vertical-align: -2px;
 }
 
 /* Every section after the first opens under a hairline, with its index above
@@ -946,6 +955,57 @@ code.entryName {
 .namesTable td code {
   white-space: nowrap;
   font-size: 12px;
+}
+
+/* The Concepts page's examples: a row of setups over the code panel, set
+   like the heading's chips, the chosen one filled. On a phone the row wraps
+   rather than scrolling, so every setup is in sight. */
+.setupTabs {
+  margin-top: 24px;
+}
+
+.setupTabList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.setupTab {
+  flex: none;
+  height: 30px;
+  padding: 0 12px;
+  font: 400 11px var(--h-mono);
+  color: var(--h-ink-dim);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background-color: transparent;
+  border: 1px solid oklch(0 0 0 / 0.14);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease;
+}
+
+.setupTab:hover {
+  color: var(--h-ink);
+  border-color: var(--h-ink);
+}
+
+.setupTab[aria-selected='true'] {
+  color: var(--h-paper);
+  background-color: var(--h-ink);
+  border-color: var(--h-ink);
+}
+
+.setupTab:focus-visible {
+  outline: 2px solid var(--h-teal);
+  outline-offset: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .setupTab {
+    transition: none;
+  }
 }
 
 /* ---- The Developers page (DocsShell layout="wide") ---- */

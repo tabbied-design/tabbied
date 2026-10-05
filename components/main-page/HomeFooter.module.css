@@ -4,9 +4,11 @@
   border-top: 1px solid var(--h-rule);
 }
 
+/* Four columns: the name and the contact lines, Product, and the docs over
+   the last two. */
 .grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
   gap: 32px;
   max-width: var(--h-max);
   margin: 0 auto;
@@ -54,20 +56,36 @@
   color: var(--h-fg);
 }
 
-/* The Developers list in two columns, read down, so it is not three times
-   as long as the Product list beside it. The rows are set inline, from the
-   number of links. */
-.linksTwo {
+/* The docs take two of the grid's columns, and their list is set in those
+   two, read down, so it is not three times as long as the Product list
+   beside it. Subgrid keeps both on the footer's own tracks. The rows are set
+   inline, from the number of links. */
+.developers {
   display: grid;
-  grid-auto-flow: column;
-  gap: 0 28px;
-  justify-content: start;
+  grid-column: span 2;
+  grid-template-columns: subgrid;
+  align-content: start;
 }
 
+.developers > * {
+  grid-column: 1 / -1;
+}
+
+.developerLinks {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-auto-flow: column;
+}
+
+/* Under the blurb, in the first column. */
 .contact {
-  margin: 0;
+  margin-top: 20px;
   font: 400 14px / 1.9 var(--h-sans);
   color: oklch(0.88 0.01 260);
+}
+
+.contact p {
+  margin: 0;
 }
 
 /* The contact links sit inside a sentence ("Built by Sy & Park"), so unlike
@@ -89,6 +107,7 @@
 
 .bottom {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   max-width: var(--h-max);
   margin: 0 auto;
@@ -112,11 +131,27 @@
   text-decoration: underline;
 }
 
-/* The copyright and the two legal pages, in one run along the bottom bar. */
+/* GitHub, the copyright and the two legal pages, in one run along the
+   bottom bar, centered on one line: the links carry a padding the copyright
+   does not, and stretched to the run's height their text sat 4px below it. */
 .legal {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 8px 20px;
+}
+
+/* The mark is the whole label, so its target is 24px square (WCAG 2.2),
+   pulled back by its own inset so the glyph lines up with the column edge. */
+.legal .github {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-left: -3px;
+  padding: 0;
+  color: oklch(0.78 0.01 260);
 }
 
 .legal a {
@@ -132,10 +167,16 @@
   text-decoration: underline;
 }
 
+/* Two columns on a phone: the name and Product each take a row, and the
+   docs keep their two columns. */
 @media (max-width: 767.98px) {
   .grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px 24px;
+  }
+
+  .grid > :not(.developers) {
+    grid-column: 1 / -1;
   }
 
   .bottom {
