@@ -999,27 +999,32 @@ const LP = (() => {
   const AY = [39.3467, 11.1351];
   const off = (co, di, dj) => r2(-(co[0] * di + co[1] * dj) * 10000) / 10000;
   // in units of 1/5000 of the box, so the whole sum is one short line
-  const at = (name, axis, base, hv, co, di, dj) => {
+  const at = (base, hv, co, di, dj) => {
     const o = off(co, di, dj);
     const arg = o ? `${hv} ${o < 0 ? '-' : '+'} ${Math.abs(o)}` : hv;
-    return `--${name}${axis}: $(round(${(base + 0.5) * 5000 - (J / 2) * 5000} + ${J * 5000} * ((sin(${arg}) * 43758.5453 % 1 + 1) % 1)) / 100)%;`;
+    return `$(round(${(base + 0.5) * 5000 - (J / 2) * 5000} + ${J * 5000} * ((sin(${arg}) * 43758.5453 % 1 + 1) % 1)) / 100)%`;
   };
-  const corner = (name, di, dj, u, v) => `${at(name, 'x', u, 'hu', AX, di, dj)} ${at(name, 'y', v, 'hv', AY, di, dj)}`;
+  // a corner as one variable holding both coordinates; `fix` pins either to the sheet's edge
+  const corner = (name, di, dj, u, v, fix = {}) =>
+    `--p${name}: ${fix.x ?? at(u, 'hu', AX, di, dj)} ${fix.y ?? at(v, 'hv', AY, di, dj)};`;
+  const C = { a: [1, 1, 0, 0], b: [0, 1, 1, 0], c: [0, 0, 1, 1], d: [1, 0, 0, 1] };
+  const pin = (name, fix) => corner(name, ...C[name], fix);
   const vars = [
     POS,
     `--hu: $(ix * ${AX[0]} + iy * ${AX[1]} + s); --hv: $(ix * ${AY[0]} + iy * ${AY[1]} + s * 1.3);`,
-    corner('a', 1, 1, 0, 0),
-    corner('b', 0, 1, 1, 0),
-    corner('c', 0, 0, 1, 1),
-    corner('d', 1, 0, 0, 1),
-    // corners on the sheet's edge only slide along it: the outer column and row put theirs back
-    '@x(1) { --ax: 25%; --dx: 25%; } @match(x == X) { --bx: 75%; --cx: 75%; }',
-    '@y(1) { --ay: 25%; --by: 25%; } @match(y == Y) { --cy: 75%; --dy: 75%; }',
+    ...Object.keys(C).map((n) => pin(n)),
+    // corners on the sheet's edge only slide along it: the outer columns and rows put theirs back
+    `@x(1) { ${pin('a', { x: '25%' })} ${pin('d', { x: '25%' })} }`,
+    `@match(x == X) { ${pin('b', { x: '75%' })} ${pin('c', { x: '75%' })} }`,
+    `@y(1) { ${pin('a', { y: '25%' })} ${pin('b', { y: '25%' })} }`,
+    `@match(y == Y) { ${pin('c', { y: '75%' })} ${pin('d', { y: '75%' })} }`,
+    `@match(x == 1 && y == 1) { --pa: 25% 25%; } @match(x == X && y == 1) { --pb: 75% 25%; }`,
+    `@match(x == X && y == Y) { --pc: 75% 75%; } @match(x == 1 && y == Y) { --pd: 25% 75%; }`,
+    // split along a-c, or along b-d
+    '--quad: polygon(@var(--pa), @var(--pb), @var(--pc), @var(--pd)); --tri: polygon(@var(--pa), @var(--pb), @p(@var(--pc), @var(--pd)));',
   ].join(' ');
-  const P = (n) => `@var(--${n}x) @var(--${n}y)`;
-  const quad = `polygon(${P('a')}, ${P('b')}, ${P('c')}, ${P('d')})`;
-  // split along a-c, or along b-d
-  const tri = `--tri: polygon(${P('a')}, ${P('b')}, @p(${P('c')}, ${P('d')}));`;
+  const quad = '@var(--quad)';
+  const tri = '';
   return { vars, quad, tri };
 })();
 add(
@@ -1030,7 +1035,7 @@ add(
     const band = `@p(@var(--color$(1 + min(4, max(0, floor((n + @p(-0.12, -0.06, 0, 0.06, 0.12)) * 5))))))`;
     return {
       rule: `${SEED} ${LP.vars} --n: ${noise(-0.6, 1.6, 1.1)}; ${F} { ${B(`left: -50%; top: -50%; width: 200%; height: 200%; background: ${band}; ${cp(LP.quad)}`)} ${A(
-        `left: -50%; top: -50%; width: 200%; height: 200%; background: ${band}; ${LP.tri} ${cp('@var(--tri)')}`
+        `left: -50%; top: -50%; width: 200%; height: 200%; background: ${band}; ${cp('@var(--tri)')}`
       )} }${TR}`,
     };
   },
