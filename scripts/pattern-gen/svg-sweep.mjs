@@ -201,14 +201,52 @@ const compare = async ({ slug, shotUrl, tolerance, keepImages }) => {
   return out;
 };
 
+const paintedState = (page) =>
+  page.evaluate(() => {
+    const parts = [];
+    for (const el of document.querySelectorAll('css-doodle')) {
+      for (const cell of el.shadowRoot?.querySelectorAll('cssd-cell') ?? []) {
+        for (const pseudo of [null, '::before', '::after']) {
+          const s = getComputedStyle(cell, pseudo);
+          parts.push(s.backgroundColor, s.transform, s.opacity, s.borderTopColor);
+        }
+      }
+    }
+    return parts.join('|');
+  });
+
+const settleCells = async (page, { tries = 12, gap = 250 } = {}) => {
+  let previous = await paintedState(page);
+  for (let i = 0; i < tries; i++) {
+    await page.waitForTimeout(gap);
+    const next = await paintedState(page);
+    if (next === previous) return;
+    previous = next;
+  }
+};
+
+const readPattern = (slug) =>
+  JSON.parse(readFileSync(path.join(PATTERNS_DIR, `${slug}.json`), 'utf-8'));
+
 /**
  * Sweeps a batch's definitions. Exits the process non-zero on any failure, so
  * a per-batch script is just `runSvgSweep({ defs, label })`.
  *
+ * `load` reads a design by slug (the pattern JSON on disk by default), so an
+ * authoring tool can sweep definitions that have not been written out yet.
+ * With `exit: false` the failures are returned instead of ending the process.
+ *
  * @param {{defs: Array<{slug: string, thumb: {grid: string}}>, label: string,
- *          artifactsPrefix?: string}} options
+ *          artifactsPrefix?: string, load?: (slug: string) => object,
+ *          exit?: boolean}} options
  */
-export async function runSvgSweep({ defs, label, artifactsPrefix = 'tabbied-svg' }) {
+export async function runSvgSweep({
+  defs,
+  label,
+  artifactsPrefix = 'tabbied-svg',
+  load = readPattern,
+  exit = true,
+}) {
   const cssDoodle = readFileSync(
     path.join(ROOT, 'node_modules/css-doodle/css-doodle.min.js'),
     'utf-8'
@@ -231,14 +269,16 @@ export async function runSvgSweep({ defs, label, artifactsPrefix = 'tabbied-svg'
     ? process.env.SLUGS.split(',').map((s) => s.trim())
     : defs.map((d) => d.slug);
 
-  const known = new Set(
-    readdirSync(PATTERNS_DIR)
-      .filter((f) => f.endsWith('.json'))
-      .map((f) => f.replace(/\.json$/, ''))
-  );
-  for (const slug of slugs) {
-    if (!known.has(slug)) {
-      throw new Error(`no pattern JSON for ${slug} - run the generator first`);
+  if (load === readPattern) {
+    const known = new Set(
+      readdirSync(PATTERNS_DIR)
+        .filter((f) => f.endsWith('.json'))
+        .map((f) => f.replace(/\.json$/, ''))
+    );
+    for (const slug of slugs) {
+      if (!known.has(slug)) {
+        throw new Error(`no pattern JSON for ${slug} - run the generator first`);
+      }
     }
   }
 
@@ -276,9 +316,7 @@ export async function runSvgSweep({ defs, label, artifactsPrefix = 'tabbied-svg'
     for (let i = 0; i < slugs.length; i += PER_PAGE) {
       const chunk = slugs.slice(i, i + PER_PAGE);
       const blocks = chunk.map((slug) => {
-        const pattern = JSON.parse(
-          readFileSync(path.join(PATTERNS_DIR, `${slug}.json`), 'utf-8')
-        );
+        const pattern = load(slug);
         return {
           slug,
           ...buildSource(pattern, {
@@ -290,6 +328,10 @@ export async function runSvgSweep({ defs, label, artifactsPrefix = 'tabbied-svg'
       pageErrors.length = 0;
       await page.setContent(buildPage(blocks, seed, cssDoodle), { waitUntil: 'load' });
       await page.waitForTimeout(1100); // let the first-draw transitions settle
+      // On a loaded machine the first draw can still be easing after the
+      // fixed wait, and a screenshot taken mid-transition reads as a parity
+      // failure. Wait until two reads of every cell's paint agree.
+      await settleCells(page);
       const shot = await page.screenshot();
       const shotUrl = `data:image/png;base64,${shot.toString('base64')}`;
       await page.addScriptTag({ content: converter });
@@ -350,9 +392,11 @@ export async function runSvgSweep({ defs, label, artifactsPrefix = 'tabbied-svg'
   if (failures.length) {
     console.log(`\nFAILURES (${failures.length}), artifacts in ${ARTIFACTS}:`);
     for (const f of failures) console.log(`  ${f.slug} [${f.seed}] -> ${f.problem}`);
-    process.exit(1);
+    if (exit) process.exit(1);
+    return failures;
   }
   console.log(
     `\nall ${slugs.length} ${label} patterns export as native SVG with no warnings and match their live render (${checked} checks)`
   );
+  return failures;
 }
