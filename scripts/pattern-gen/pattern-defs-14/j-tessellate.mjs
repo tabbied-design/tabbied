@@ -150,6 +150,22 @@ const flagPoly = (variant, flags, map) => {
   return `polygon(${pts.join(', ')})`;
 };
 
+/**
+ * The same, worked out on the host instead: one fixed polygon per
+ * combination of the binary `flags`, named --<name>0, --<name>1, ... (flag i
+ * adds 2^i), with a cell-level number that picks its own. The cell then
+ * computes one small @calc rather than one per coordinate.
+ */
+const hostPolys = (name, variant, flags, map) => {
+  const host = [];
+  for (let t = 0; t < 1 << flags.length; t++) {
+    const bits = flags.map((_, i) => (t >> i) & 1);
+    host.push(`--${name}${t}: polygon(${variant(bits).map(map).map(([x, y]) => `${r2(x)}% ${r2(y)}%`).join(', ')});`);
+  }
+  const key = flags.length ? `--${name}k: @calc(0${flags.map((f, i) => ` + ${1 << i} * ${f}`).join('')});` : '';
+  return { host: host.join(' '), key, clip: flags.length ? `@var(--${name}$(${name}k))` : `@var(--${name}0)` };
+};
+
 /** A box `span` cells wide centered on the cell, and cell units mapped into it. */
 const spanBox = (span) => {
   const o = ((span - 1) / 2) * 100;
@@ -638,28 +654,17 @@ add(
   'Cairo',
   'The Cairo pentagonal tiling: house-shaped pentagons in pairs, each pair turned a right angle from its neighbors, laid with thin grout lines.',
   (c) => {
-    const right = (e) =>
-      flagPoly(
-        ([q, ex]) => {
-          const a = insetPoly(cairoRight(q), CAIRO_G);
-          const bRaw = insetPoly(shift(cairoRight(1 - q), -1, 0), CAIRO_G);
-          return slit(a, ex ? bRaw : bRaw.map(() => a[0]));
-        },
-        [Q, e],
-        inSpan(3)
-      );
-    const bottom = (e) =>
-      flagPoly(
-        ([q, ex]) => {
-          const a = insetPoly(cairoBottom(q), CAIRO_G);
-          const bRaw = insetPoly(shift(cairoBottom(1 - q), 0, -1), CAIRO_G);
-          return slit(a, ex ? bRaw : bRaw.map(() => a[0]));
-        },
-        [Q, e],
-        inSpan(3)
-      );
+    // the pentagon across one edge, and for the first column (row) the one across the outer edge too
+    const pair = (fig, du, dv) => ([q, ex]) => {
+      const a = insetPoly(fig(q), CAIRO_G);
+      const b = insetPoly(shift(fig(1 - q), du, dv), CAIRO_G);
+      return slit(a, ex ? b : b.map(() => a[0]));
+    };
+    const right = hostPolys('cr', pair(cairoRight, -1, 0), [Q, FIRST_X], inSpan(3));
+    const bottom = hostPolys('cb', pair(cairoBottom, 0, -1), [Q, FIRST_Y], inSpan(3));
     return {
-      rule: `${SHIFT} ${F} { ${B(`${spanBox(3)} background: ${ink(c)}; ${cp(right(FIRST_X))}`)} ${A(`${spanBox(3)} background: ${ink(c)}; ${cp(bottom(FIRST_Y))}`)} }${TR}`,
+      host: `${right.host} ${bottom.host}`,
+      rule: `${SHIFT} ${right.key} ${bottom.key} ${F} { ${B(`${spanBox(3)} background: ${ink(c)}; ${cp(right.clip)}`)} ${A(`${spanBox(3)} background: ${ink(c)}; ${cp(bottom.clip)}`)} }${TR}`,
     };
   },
   {
@@ -771,8 +776,9 @@ add(
   'The snub square tiling: squares tipped alternately left and right, with pairs of equilateral triangles filling the gaps between them.',
   (c) => {
     const g = 0.018;
-    const square = flagPoly(([q]) => insetPoly(SNUB.square(q), g), [Q], inSpan(3));
-    const tris = flagPoly(
+    const square = hostPolys('ss', ([q]) => insetPoly(SNUB.square(q), g), [Q], inSpan(3));
+    const tris = hostPolys(
+      'st',
       ([q, ex, ey]) => {
         const r = insetPoly(SNUB.right(q), g);
         const b = insetPoly(SNUB.bottom(q), g);
@@ -784,7 +790,8 @@ add(
       inSpan(3)
     );
     return {
-      rule: `${SHIFT} ${F} { ${B(`${spanBox(3)} background: @p(var(--color1), var(--color2)); ${cp(square)}`)} ${A(`${spanBox(3)} background: @p(var(--color3), var(--color4), var(--color5)); ${cp(tris)}`)} }${TR}`,
+      host: `${square.host} ${tris.host}`,
+      rule: `${SHIFT} ${square.key} ${tris.key} ${F} { ${B(`${spanBox(3)} background: @p(var(--color1), var(--color2)); ${cp(square.clip)}`)} ${A(`${spanBox(3)} background: @p(var(--color3), var(--color4), var(--color5)); ${cp(tris.clip)}`)} }${TR}`,
     };
   },
   {

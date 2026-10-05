@@ -88,16 +88,17 @@ const stripeL = (angle, on, period, inv = false) =>
 const once = (e, places = 2) => `$(round((${e}) * ${10 ** places}) / ${10 ** places})`;
 
 /**
- * A warped checker column's stripes, from the cell's two-column repeat `L`
- * (percent) and the phase `ph` (0-1) it starts at. Ink where floor(W) is
- * even; the repeat starts at 0 whatever the phase, so the stripes meet the
- * next cell.
+ * A warped checker column, as stripes whose stops the cell works out once:
+ * `--<v>a`, `--<v>b`, `--<v>c` and `--<v>l` (percent) for axis v. The ink is
+ * where floor(W) is even; the other parity is the same stops with the ink
+ * and the gap swapped. The repeat starts at 0 whatever the phase, so the
+ * stripes meet the next cell.
  */
-const warpV = (angle, L, ph) => {
-  const a = once(`max(0, 0.5 - ${ph}) * ${L}`);
-  const b = once(`(1 - ${ph}) * ${L}`);
-  const c = once(`min(1, 1.5 - ${ph}) * ${L}`);
-  return `repeating-linear-gradient(${angle}, #000 0 ${a}%, transparent ${a}% ${b}%, #000 ${b}% ${c}%, transparent ${c}% $(${L})%)`;
+const warpStops = (v, L, ph) =>
+  `--${v}a: ${once(`max(0, 0.5 - ${ph}) * ${L}`)}%; --${v}b: ${once(`(1 - ${ph}) * ${L}`)}%; --${v}c: ${once(`min(1, 1.5 - ${ph}) * ${L}`)}%; --${v}l: $(${L})%;`;
+const warpV = (angle, v, inv = false) => {
+  const [on, off] = inv ? ['transparent', '#000'] : ['#000', 'transparent'];
+  return `repeating-linear-gradient(${angle}, ${on} 0 @var(--${v}a), ${off} @var(--${v}a) @var(--${v}b), ${on} @var(--${v}b) @var(--${v}c), ${off} @var(--${v}c) @var(--${v}l))`;
 };
 /** A smooth monotone warp of 0-1 onto 0-1, dense around t0 when a > 0. */
 const warp = (t, a, t0 = 0.5) => `((${t}) + ${a} * sin(2 * PI * ((${t}) - (${t0}))) / (2 * PI))`;
@@ -187,18 +188,16 @@ add(
   'A checkerboard swelling toward the middle of the sheet as if seen through a lens, its squares shrinking toward every edge.',
   () => {
     // Per cell, once: the warped coordinate at both edges (ax, bx), the
-    // two-column repeat (lx) and the phase the cell starts at (kx; jx for the
-    // other parity), the same down the rows, and from those the four stripe
-    // layers. The layers are kept on the cell and read by both pseudos with
-    // @var, so the prefixed and plain mask share one evaluation.
+    // two-column repeat (lx) and the phase the cell starts at (kx), the same
+    // down the rows, and from those the stripes' stops, which the masks read
+    // with @var.
     const W = (t, n) => `(1.2 * ${n} * ${warp(t, -0.72)})`;
     const axis = (v, edge0, edge1, n) =>
-      `--a${v}: ${once(W(edge0, n), 4)}; --b${v}: ${once(W(edge1, n), 4)}; --l${v}: ${once(`200 / (b${v} - a${v})`)}; --k${v}: ${once(`a${v} / 2 - floor(a${v} / 2)`, 4)}; --j${v}: ${once(`k${v} + 0.5 - floor(k${v} + 0.5)`, 4)};`;
-    const layers = `--sk: ${warpV('90deg', 'lx', 'kx')}; --sj: ${warpV('90deg', 'lx', 'jx')}; --tk: ${warpV('180deg', 'ly', 'ky')}; --tj: ${warpV('180deg', 'ly', 'jy')};`;
-    const vars = `${axis('x', '(@x - 1) / @X', '@x / @X', '@X')} ${axis('y', '(@y - 1) / @Y', '@y / @Y', '@Y')} ${layers}`;
+      `--a${v}: ${once(W(edge0, n), 4)}; --b${v}: ${once(W(edge1, n), 4)}; --l${v}: ${once(`200 / (b${v} - a${v})`)}; --k${v}: ${once(`a${v} / 2 - floor(a${v} / 2)`, 4)}; ${warpStops(`s${v}`, `l${v}`, `k${v}`)}`;
+    const vars = `${axis('x', '(@x - 1) / @X', '@x / @X', '@X')} ${axis('y', '(@y - 1) / @Y', '@y / @Y', '@Y')}`;
     return {
-      rule: `${vars} ${F} { ${B(`inset: 0; background: ${pick(1, 1, 2)}; ${mskI('@var(--sk)', '@var(--tj)')}`)} ${A(
-        `inset: 0; background: @lp(); ${mskI('@var(--sj)', '@var(--tk)')}`
+      rule: `${vars} ${F} { ${B(`inset: 0; background: ${pick(1, 1, 2)}; ${mskI(warpV('90deg', 'sx'), warpV('180deg', 'sy', true))}`)} ${A(
+        `inset: 0; background: @lp(); ${mskI(warpV('90deg', 'sx', true), warpV('180deg', 'sy'))}`
       )} }${TR}`,
     };
   },
