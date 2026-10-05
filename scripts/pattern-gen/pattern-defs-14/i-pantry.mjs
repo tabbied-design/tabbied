@@ -900,8 +900,8 @@ const WEDGE = (() => {
   };
 })();
 const cheeseHoles = Array.from(
-  { length: 5 },
-  () => 'radial-gradient(circle at @r(12%, 76%) @r(50%, 92%), transparent @r(3.5%, 8.5%), #000 0)'
+  { length: 4 },
+  () => 'radial-gradient(circle at @r(12%, 76%) @r(52%, 92%), transparent @r(5%, 11%), #000 0)'
 ).join(', ');
 
 add(
@@ -1016,38 +1016,35 @@ add(
   }
 );
 
-// Cocktail Olives: a pick with a ball on its end skewering three stuffed
-// olives. The pimentos are the cell's own background, under the pick and
-// the olives, so the pick runs through them and only their caps show.
+// Cocktail Olives: a pick with a ball on its end through three stuffed
+// olives, each with its red pimento showing at one end. The pick is the
+// cell's own background (a bar and a ball), so it shows only between and
+// beyond the olives it runs through.
 const OLIVE = (() => {
-  const xs = [34, 57, 80];
-  const olives = xs.map((x) => ellipsePts(x, 50, 11.4, 9, 36));
-  const pick = [strokePts([[7, 50], [97, 50]], 1.3, 4), circlePts(7, 50, 5, 20)];
-  const pim = xs
-    .map((x) => {
-      const cx = x - 10.6;
-      const r = pct((4 / Math.hypot(Math.max(cx, 100 - cx), 50)) * 100);
-      return `radial-gradient(circle at ${cx}% 50%, @var(--pim) 0 ${r}, transparent ${r})`;
-    })
-    .join(', ');
-  return { olives: polyOf(compound(olives)), pick: polyOf(compound(pick)), pim };
+  const xs = [32, 56, 80];
+  const olives = xs.map((x) => ellipsePts(x, 50, 10, 8.4, 36));
+  const pim = xs.map((x) => dotL(x + 7.2, 50, 8)).join(', ');
+  const far = Math.hypot(94, 50);
+  const r = pct((4.6 / far) * 100);
+  const pick = `radial-gradient(circle at 6% 50%, @var(--pk) 0 ${r}, transparent ${r}), linear-gradient(180deg, transparent 48.6%, @var(--pk) 48.6% 51.4%, transparent 51.4%) 60% 0 / 90% 100% no-repeat`;
+  return { olives: polyOf(compound(olives)), pim, pick };
 })();
 
 add(
   'Cocktail Olives',
-  'Cocktail picks at every angle, each skewering three stuffed olives with the red pimento showing at their ends.',
+  'Cocktail picks at every angle, each run through three green or black olives with the red pimento showing at the end of every one.',
   () => ({
-    host: `--olives: ${OLIVE.olives}; --pick: ${OLIVE.pick};`,
+    host: `--olives: ${OLIVE.olives}; --pim: ${OLIVE.pim};`,
     rule: `${F} {
-      --pim: ${inkOf(4, 5)};
+      --pk: ${inkOf(3, 6)};
       transform: translate(@r(-6%, 6%), @r(-6%, 6%)) rotate(@r(0deg, 360deg)) scale(@r(1, 1.15)); z-index: @ri(1, 9);
-      background: ${OLIVE.pim};
-      ${B(`inset: 0; background: ${inkOf(3, 6)}; ${clip('@var(--pick)')}`)}
-      ${A(`inset: 0; background: ${inkOf(1, 2)}; ${clip('@var(--olives)')}`)}
+      background: ${OLIVE.pick};
+      ${B(`inset: 0; background: ${inkOf(1, 2)}; ${clip('@var(--olives)')}`)}
+      ${A(`inset: 0; background: ${inkOf(4, 5)}; ${maskV('@var(--pim)')}`)}
     }${TR}`,
   }),
   {
-    palette: ['#F1E9D8', '#6B8E23', '#3D4A1F', '#C9A227', '#D62828', '#F77F00', '#2B2D42'],
+    palette: ['#F1E9D8', '#6B8E23', '#36402A', '#C9A227', '#D62828', '#F25C3B', '#2B2D42'],
     grid: '5x7',
     freq: 1,
     tg: '5x5',

@@ -229,66 +229,60 @@ add(
 );
 
 // -- K5 Raffle ---------------------------------------------------------------
-// The cell's own mask bites the notches and punches the tear line, and clips
-// both pseudo-elements with it: the ticket body and the star printed on it.
+// A ticket is two cells, the ticket and its stub, so its color is rolled per
+// pair (a hash of the pair's place and a once-per-drawing seed). The cell's
+// own mask bites the notch at the ticket's end and punches the tear line on
+// the stub, and clips both pseudo-elements with it.
+const TICKET = blockHash('floor((@x - 1) / 2)', '@y');
+const TICKET2 = `(abs(sin(floor((@x - 1) / 2) * 39.346 + @y * 11.135 + s) * 24634.6345) % 1)`;
 const RAFFLE = [
-  'radial-gradient(circle at 0% 50%, transparent 12%, #000 12%)',
-  'radial-gradient(circle at 100% 50%, transparent 12%, #000 12%)',
-  'radial-gradient(circle at 70% 50%, transparent 2.6%, #000 2.6%) 0 0 / 100% 10%',
+  'radial-gradient(circle at @match(x % 2 == 1, 0%, 100%) 50%, transparent 11%, #000 11%)',
+  'radial-gradient(circle at 7% 50%, transparent @match(x % 2 == 1, 0%, 2.4%), #000 @match(x % 2 == 1, 0%, 2.4%)) 0 0 / 100% 9.09%',
 ].join(', ');
 
 add(
   'Raffle',
-  'Rolls of raffle tickets end to end, every ticket in its own color with round notches at the joins, a perforated tear line and a printed star.',
+  'Rows of raffle tickets end to end, each ticket and its stub in one color, round notches at the joins, a perforated tear line, and a star on every ticket.',
   (c) => ({
     host: '--star: @shape(star);',
-    rule: `${F} { --a: @p(0, 1, 2, 3, 4); --b: @p(1, 2, 3, 4); ${mskI(RAFFLE)} ${B(`left: 0; right: 0; top: 21%; bottom: 21%; background: ${inkAt('$(a)', 5)};`)} ${A(`left: 22%; top: 34%; width: 30%; height: 32%; background: ${inkAt('$((a + b) % 5)', 5)}; ${cp('@var(--star)')} ${tf('rotate(@r(-20deg, 20deg))')}`)} }${TR}`,
+    rule: `--s: @once(@r(0, 100)); ${F} { --a: $(floor(${TICKET} * 5)); --b: $(1 + floor(${TICKET2} * 4)); ${mskI(RAFFLE)} ${B(`left: 0; right: 0; top: 17%; bottom: 17%; background: ${inkAt('$(a)', 5)};`)} ${A(`left: @match(x % 2 == 1, 30%, 40%); top: @match(x % 2 == 1, 28%, 40%); width: @match(x % 2 == 1, 44%, 20%); height: @match(x % 2 == 1, 44%, 20%); background: ${inkAt('$((a + b) % 5)', 5)}; ${cp('@match(x % 2 == 1, @var(--star), circle(50% at 50% 50%))')} ${tf('rotate(@r(-24deg, 24deg))')}`)} }${TR}`,
   }),
   {
     pal: 20,
-    grid: '4x8',
-    tg: '5x5',
+    grid: '6x9',
+    tg: '6x6',
     meta: { tags: ['stripes', 'stars', 'semicircles'], mood: ['playful', 'festive', 'retro'], density: 'medium', goodFor: ['packaging', 'poster', 'section-divider'] },
   }
 );
 
 // -- K6 Paper Tape -------------------------------------------------------------
-// Five-hole tape: three data tracks above the feed holes and two below. The
-// tape's mask is a grid of every possible hole, filled back in column by
-// column where a rolled bit says no hole; the feed holes are bitten by the
-// cell's own mask, which clips the tape inside it.
-const TAPE_ROWS = 6;
-const tapeCol = (pos) => {
-  const stops = [];
-  for (let r = 0; r < TAPE_ROWS; r++) {
-    const a = ((r * 100) / TAPE_ROWS).toFixed(2);
-    const b = (((r + 1) * 100) / TAPE_ROWS).toFixed(2);
-    const col = r === 3 ? '#000' : '@p(#000, #000, transparent)';
-    stops.push(`${col} ${a}% ${b}%`);
-  }
-  return `linear-gradient(180deg, ${stops.join(', ')}) ${pos} 0 / 50% 100% no-repeat`;
+// Five-hole tape, two rows of cells to a strip: three data tracks in the upper
+// cell, the feed track and two more data tracks in the lower. The tape's mask
+// is a grid of every possible hole, filled back in column by column where a
+// rolled bit says no hole; the feed holes are bitten by the lower cell's own
+// mask, which clips the tape inside it.
+const tapeCol = (k) => {
+  const stops = [0, 1, 2].map((r) => {
+    const a = ((r * 100) / 3).toFixed(2);
+    const b = (((r + 1) * 100) / 3).toFixed(2);
+    const bit = r === 0 ? '@match(y % 2 == 0, #000, @p(#000, #000, transparent))' : '@p(#000, #000, transparent)';
+    return `${bit} ${a}% ${b}%`;
+  });
+  return `linear-gradient(180deg, ${stops.join(', ')}) ${pct((k * 100) / 3)} 0 / 25% 100% no-repeat`;
 };
-const TAPE_HOLES = `radial-gradient(circle closest-side, transparent 60%, #000 60%) 0 0 / 50% ${(100 / TAPE_ROWS).toFixed(3)}%`;
-// the feed track, in cell coordinates: the tape runs 16-84%, row 3 of 6
-const FEED = (() => {
-  const top = 16 + (68 * 3) / TAPE_ROWS;
-  const h = 68 / TAPE_ROWS;
-  return [
-    `linear-gradient(180deg, #000 0 ${pct(top)}, transparent ${pct(top)} ${pct(top + h)}, #000 ${pct(top + h)})`,
-    `radial-gradient(circle closest-side, transparent 34%, #000 34%) 0 ${pct((top / (100 - h)) * 100)} / 50% ${pct(h)} repeat-x`,
-  ].join(', ');
-})();
+const TAPE_HOLES = 'radial-gradient(circle closest-side, transparent 72%, #000 72%) 0 0 / 25% 33.333%';
+const FEED = 'radial-gradient(circle at 50% 16.6%, transparent 4.2%, #000 4.2%) 0 0 / 25% 100%';
 
 add(
   'Paper Tape',
-  'Strips of punched paper tape in pastel colors, one strip to a row, with a line of small feed holes and big data holes punched at random above and below it.',
+  'Strips of punched paper tape in pastel colors, each two rows deep, with a line of small feed holes and big data holes punched at random above and below it.',
   (c) => ({
     host: `--feed: ${FEED};`,
-    rule: `${F} { ${msk('@var(--feed)')} ${B(`left: 0; right: 0; top: 16%; bottom: 16%; background: ${inkAt('y % 4', 4)}; mask: ${TAPE_HOLES}, ${tapeCol('0%')}, ${tapeCol('100%')};`)} }${TR}`,
+    rule: `${F} { ${msk('@match(y % 2 == 0, @var(--feed), none)')} ${B(`left: 0; right: 0; top: @match(y % 2 == 1, 14%, -0.6%); bottom: @match(y % 2 == 1, -0.6%, 14%); background: ${inkAt('floor((y - 1) / 2) % 4', 4)}; mask: ${TAPE_HOLES}, ${[0, 1, 2, 3].map(tapeCol).join(', ')};`)} }${TR}`,
   }),
   {
     palette: ['#23262C', '#F2D16B', '#EBA6B4', '#A6D6C8', '#F3EAD6'],
-    grid: '6x9',
+    grid: '6x10',
     tg: '6x6',
     meta: { tags: ['stripes', 'dots', 'circles'], mood: ['retro', 'technical'], density: 'medium', goodFor: ['section-divider', 'textile', 'card-texture'] },
   }
@@ -395,14 +389,14 @@ add(
 // -- K11 Bar Chart -------------------------------------------------------------
 // Three series as grouped bars over a baseline, every series' height a smooth
 // field of its own, so each one trends across the row while the others wander.
-const barH = (k) => `$(max(7, min(80, h${k})))`;
-const barPosY = (k) => `$((89.5 - max(7, min(80, h${k}))) / (100 - max(7, min(80, h${k}))) * 100)%`;
+const barH = (k) => `$(max(8, min(84, h${k})))`;
+const barPosY = (k) => `$((89.5 - max(8, min(84, h${k}))) / (100 - max(8, min(84, h${k}))) * 100)%`;
 
 add(
   'Bar Chart',
   'Rows of grouped bar charts, three bars to a group in three inks standing on a ruled baseline, each series rising and falling in a smooth trend across the sheet.',
   (c) => ({
-    rule: `${F} { --h1: @calc(${noise(-25, 120, 1.6)} + @r(-6, 6)); --h2: @calc(${noise(-25, 120, 1.4)} + @r(-6, 6)); --h3: @calc(${noise(-25, 120, 1.8)} + @r(-6, 6)); background: linear-gradient(var(--color4), var(--color4)) 0 90% / 100% 2.6% no-repeat, linear-gradient(@p(var(--color1)), var(--color1)) 15.79% ${barPosY(1)} / 21% ${barH(1)}% no-repeat; ${B(`left: 39.5%; width: 21%; bottom: 10.5%; height: ${barH(2)}%; background: @p(var(--color2));`)} ${A(`left: 64%; width: 21%; bottom: 10.5%; height: ${barH(3)}%; background: @p(var(--color3));`)} }${TR}`,
+    rule: `${F} { --h1: @calc(${noise(-15, 135, 1.6)} + @r(-6, 6)); --h2: @calc(${noise(-15, 135, 1.4)} + @r(-6, 6)); --h3: @calc(${noise(-15, 135, 1.8)} + @r(-6, 6)); background: linear-gradient(var(--color4), var(--color4)) 0 90% / 100% 2.6% no-repeat, linear-gradient(@p(var(--color1)), var(--color1)) 10.81% ${barPosY(1)} / 26% ${barH(1)}% no-repeat; ${B(`left: 37%; width: 26%; bottom: 10.5%; height: ${barH(2)}%; background: @p(var(--color2));`)} ${A(`left: 66%; width: 26%; bottom: 10.5%; height: ${barH(3)}%; background: @p(var(--color3));`)} }${TR}`,
   }),
   {
     palette: ['#F6F2E9', '#E4572E', '#29335C', '#F3A712', '#8C8A84'],
@@ -432,13 +426,13 @@ add(
 // -- K13 Equalizer -------------------------------------------------------------
 // One meter to a cell: a column of dim segments, lit from the bottom to a level
 // that follows a smooth spectrum across the row, green, then amber, then red.
-const EQ_SEG = 'repeating-linear-gradient(180deg, transparent 0 1.6%, #000 1.6% 10.9%, transparent 10.9% 12.5%)';
+const EQ_SEG = 'repeating-linear-gradient(180deg, transparent 0 1.8%, #000 1.8% 10.7%, transparent 10.7% 12.5%)';
 
 add(
   'Equalizer',
   'A wall of graphic equalizer meters, each a column of square segments lit green, then amber, then red to a level that rises and falls across the spectrum.',
   (c) => ({
-    rule: `${F} { --n: @calc(${noise(-3, 12, 1.5)} + @r(-1.2, 1.2)); ${B(`left: 19%; right: 19%; top: 0; bottom: 0; background: @p(var(--color4)); ${msk(EQ_SEG)}`)} ${A(`left: 19%; right: 19%; top: 0; bottom: 0; background: linear-gradient(0deg, var(--color1) 0 50%, var(--color2) 50% 75%, var(--color3) 75%); ${msk(EQ_SEG)} ${cp('inset($(12.5 * (8 - max(1, min(8, round(n)))))% 0% 0% 0%)')}`)} }${TR}`,
+    rule: `${F} { --n: @calc(${noise(-1, 14, 1.5)} + @r(-1.2, 1.2)); ${B(`left: 19%; right: 19%; top: 4%; bottom: 8%; background: @p(var(--color4)); ${msk(EQ_SEG)}`)} ${A(`left: 19%; right: 19%; top: 4%; bottom: 8%; background: linear-gradient(0deg, var(--color1) 0 50%, var(--color2) 50% 75%, var(--color3) 75%); ${msk(EQ_SEG)} ${cp('inset($(12.5 * (8 - max(1, min(8, round(n)))))% 0% 0% 0%)')}`)} }${TR}`,
   }),
   {
     palette: ['#0F1218', '#3DDC97', '#F5D547', '#FF5E57', '#283140'],
@@ -459,7 +453,7 @@ const BEATS = [
   [[-20, 60], [16, 60], [24, 36], [33, 84], [42, 52], [50, 60], [62, 60], [68, 54], [74, 52], [80, 56], [86, 60], [120, 60]],
 ];
 const beatPoly = (pts) =>
-  P(stroke(pts, 2.6).map(([x, y]) => [((x + 20) / 140) * 100, y]));
+  P(stroke(pts, 3.2).map(([x, y]) => [((x + 20) / 140) * 100, y]));
 const ECG_GRID = [
   'repeating-linear-gradient(90deg, #000 0 1.2%, transparent 1.2% 20%)',
   'repeating-linear-gradient(180deg, #000 0 1.2%, transparent 1.2% 20%)',
@@ -538,7 +532,7 @@ add(
 
 // -- K17 Lissajous -------------------------------------------------------------
 const LISSA = [
-  [1, 2, Math.PI / 4],
+  [1, 2, Math.PI / 8],
   [3, 2, Math.PI / 2],
   [3, 4, Math.PI / 4],
   [5, 4, Math.PI / 2],
@@ -566,13 +560,13 @@ add(
 const candle = (k) =>
   `polygon(46% $(c${k} - h${k} - u${k})%, 54% $(c${k} - h${k} - u${k})%, 54% $(c${k} - h${k})%, 84% $(c${k} - h${k})%, 84% $(c${k} + h${k})%, 54% $(c${k} + h${k})%, 54% $(c${k} + h${k} + d${k})%, 46% $(c${k} + h${k} + d${k})%, 46% $(c${k} + h${k})%, 16% $(c${k} + h${k})%, 16% $(c${k} - h${k})%, 46% $(c${k} - h${k})%)`;
 const candleVars = (k) =>
-  `--c${k}: $(max(28, min(72, m)) + @r(-10, 10)); --h${k}: @r(3, 12); --u${k}: @r(2, 12); --d${k}: @r(2, 12);`;
+  `--c${k}: $(max(30, min(70, m)) + @r(-9, 9)); --h${k}: @r(5, 15); --u${k}: @r(3, 12); --d${k}: @r(3, 12);`;
 
 add(
   'Candlestick',
   'Rows of candlestick charts on a dark screen: teal and red bodies with thin wicks above and below, drifting up and down with a smooth trend.',
   (c) => ({
-    rule: `${F} { --m: ${noise(-10, 110, 1.6)}; ${candleVars(1)} ${candleVars(2)} background: repeating-linear-gradient(180deg, transparent 0 24%, var(--color3) 24% 25%); ${B(`left: 8%; width: 38%; top: 0; bottom: 0; background: @p(var(--color1), var(--color2)); ${cp(candle(1))}`)} ${A(`left: 54%; width: 38%; top: 0; bottom: 0; background: @p(var(--color1), var(--color2)); ${cp(candle(2))}`)} }${TR}`,
+    rule: `${F} { --m: ${noise(-30, 130, 1.6)}; ${candleVars(1)} ${candleVars(2)} background: repeating-linear-gradient(180deg, transparent 0 24%, var(--color3) 24% 25%); ${B(`left: 8%; width: 38%; top: 0; bottom: 0; background: @p(var(--color1), var(--color2)); ${cp(candle(1))}`)} ${A(`left: 54%; width: 38%; top: 0; bottom: 0; background: @p(var(--color1), var(--color2)); ${cp(candle(2))}`)} }${TR}`,
   }),
   {
     palette: ['#0E1621', '#2BC4A0', '#F2545B', '#26384A'],
@@ -594,6 +588,9 @@ const CROP = (() => {
       L.push(`linear-gradient(#000, #000) ${pct(((x - t / 2) / (100 - t)) * 100)} ${pct((oy[0] / (100 - 11)) * 100)} / ${t}% 11% no-repeat`);
     }
   }
+  for (const at of ['0% 0%', '100% 0%', '0% 100%', '100% 100%']) {
+    L.push(`radial-gradient(7% 7% at ${at}, transparent 62%, #000 62% 84%, transparent 84%)`);
+  }
   return L.join(', ');
 })();
 const CARDS = [
@@ -601,15 +598,15 @@ const CARDS = [
   'radial-gradient(circle at 74% 30%, transparent 17%, #000 17%)',
   'linear-gradient(180deg, #000 0 56%, transparent 56% 70%, #000 70%)',
   'linear-gradient(90deg, #000 0 38%, transparent 38%), radial-gradient(circle at 72% 50%, #000 22%, transparent 22%)',
-  'linear-gradient(135deg, #000 0 50%, transparent 50%)',
+  'conic-gradient(from 45deg, #000 0 180deg, transparent 180deg)',
 ];
 
 add(
   'Imposition',
-  'A press sheet of printed cards before trimming: bold modernist cards in four inks, each with crop marks at its corners in the gutters.',
+  'A press sheet of printed cards before trimming: bold modernist cards in four inks, crop marks at every corner and a small register ring where the gutters cross.',
   (c) => ({
     host: `--crop: ${CROP}; ${CARDS.map((m, i) => `--m${i}: ${m};`).join(' ')}`,
-    rule: `${F} { ${B(`inset: 0; background: @p(var(--color1)); ${msk('@var(--crop)')}`)} ${A(`inset: 17%; background: ${ink(c, 2)}; ${msk(`@p(${CARDS.map((_, i) => `@var(--m${i})`).join(', ')})`)} ${tf('rotate(@p(0deg, 90deg, 180deg, 270deg))')}`)} }${TR}`,
+    rule: `${F} { ${B(`inset: 0; background: @p(var(--color2)); ${msk('@var(--crop)')}`)} ${A(`inset: 17%; background: @p(var(--color1), var(--color3), var(--color4), var(--color5)); ${msk(`@p(${CARDS.map((_, i) => `@var(--m${i})`).join(', ')})`)} ${tf('rotate(@p(0deg, 90deg, 180deg, 270deg))')}`)} }${TR}`,
   }),
   {
     pal: 4,
