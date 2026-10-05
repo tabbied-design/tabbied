@@ -241,10 +241,15 @@ JSON 404); auth, generations, media, and the AI gateway land with the bindings
 they need. See `agent-outputs/20260827-studio-ai-plan.md`.
 
 The export is inside the platform limits - roughly 17,000 files against a
-20,000 free-plan ceiling, largest file 3.0 MB against 25 MiB - but both are
-counted per Worker *version*, and the headroom is now about 3,000 files.
-Every pattern costs seven: its page and four RSC payloads, its preview and its
-share card, so batch 14's 300 designs added about 2,100. Don't treat that file count as stable:
+ceiling of 20,000 per Worker version on Workers Free (100,000 on Workers Paid,
+with wrangler 4.34 or later), largest file 3.0 MB against 25 MiB - but both
+are counted per Worker *version*, and on the free plan the headroom is now
+about 3,000 files. Every pattern costs seven: its page and four RSC payloads,
+its preview and its share card, so batch 14's 300 designs added about 2,100.
+The Worker script is separate and small: about 3.4 MiB uncompressed (620 KiB
+gzipped, `npx wrangler deploy --dry-run --outdir <dir>`) against a 64 MiB
+limit that, since September 2026, is the only size check on any plan; no
+pattern data is in it. Don't treat that file count as stable:
 most of it is per-route RSC payloads, and a Next minor can move it a lot (16.3
 cut ~1,400 files off 16.2's output without changing a page). What is stable is
 `public/downloads/`, a flat 6,450 files for 277 sites (the artwork ones ship
