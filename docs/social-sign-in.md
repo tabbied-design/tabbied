@@ -31,7 +31,10 @@ previews need no address of their own (see "Preview deployments" below).
    that: every sign-in, a preview's included, returns to the exact callback.
 4. Leave **Enable Device Flow** off. It is for a CLI or a TV that shows a code
    to type in at github.com; sign-in here is a browser redirect.
-5. Generate a client secret and copy it at once; GitHub shows it one time.
+5. Leave **Expire user access tokens** on. The token is used once, to read the
+   profile, and the copy better-auth keeps in `account` then lapses in hours
+   rather than never; better-auth reads the refresh token and expiry it adds.
+6. Generate a client secret and copy it at once; GitHub shows it one time.
 
 better-auth asks for `read:user` and `user:email`, which an OAuth App grants
 with no further setup. It reads the address from `/user/emails` when the
@@ -78,7 +81,9 @@ curl https://tabbied.com/api/auth-providers
 ```
 
 `wrangler secret put` deploys a version carrying the secret, so the buttons
-appear on the next page load. Locally, the same four names go in `.dev.vars`,
+appear on the next page load. The dashboard does the same: Workers & Pages,
+the `tabbied` Worker, Settings, Variables and Secrets, Add, with the type
+**Secret** (never Text), then Deploy. Locally, the same four names go in `.dev.vars`,
 and `wrangler dev` reads that file only when it starts. With the localhost URIs
 on the production apps, that puts the production client secrets on the
 machine; an app of each kind kept for development, with only the localhost URI,
