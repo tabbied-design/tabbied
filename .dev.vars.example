@@ -43,7 +43,8 @@ PUBLIC_ORIGIN=http://localhost:8787
 
 # Social sign-in (docs/social-sign-in.md). A provider is on only with both of
 # its pair. Register http://localhost:8787/api/auth/callback/<provider> with
-# it: a GitHub OAuth App takes one callback, so local development has its own.
+# the app beside the production URI, or on an app kept for development, which
+# keeps the production secrets off this machine.
 # GITHUB_CLIENT_ID=
 # GITHUB_CLIENT_SECRET=
 # GOOGLE_CLIENT_ID=

@@ -23,11 +23,15 @@ previews need no address of their own (see "Preview deployments" below).
 1. Create an OAuth App (not a GitHub App): under the `tabbied-design`
    organization's settings, Developer settings, OAuth Apps, so the consent
    screen names the organization rather than a person.
-2. Homepage URL `https://tabbied.com`; Authorization callback URL
-   `https://tabbied.com/api/auth/callback/github`.
-3. Generate a client secret and copy it at once; GitHub shows it one time.
-4. Create a second OAuth App for local development with the localhost
-   callback. An OAuth App takes exactly one callback URL.
+2. Homepage URL `https://tabbied.com`, and both redirect URIs from the table
+   above (an OAuth App takes up to ten), so one app serves production and
+   local development alike.
+3. Leave **Allow wildcard matching** off on both. It would let GitHub send
+   codes to any subdomain or deeper path of the URI, and nothing here needs
+   that: every sign-in, a preview's included, returns to the exact callback.
+4. Leave **Enable Device Flow** off. It is for a CLI or a TV that shows a code
+   to type in at github.com; sign-in here is a browser redirect.
+5. Generate a client secret and copy it at once; GitHub shows it one time.
 
 better-auth asks for `read:user` and `user:email`, which an OAuth App grants
 with no further setup. It reads the address from `/user/emails` when the
@@ -47,8 +51,7 @@ Platform (formerly the OAuth consent screen):
 3. **Data access**: nothing to add. better-auth asks for `openid`, `email`
    and `profile`, which need no review.
 4. **Clients**: a Web application client with both redirect URIs from the
-   table above. Unlike GitHub, one client takes several, so it serves
-   production and local development alike.
+   table above, so it too serves production and local development alike.
 
 ## Settings
 
@@ -75,9 +78,11 @@ curl https://tabbied.com/api/auth-providers
 ```
 
 `wrangler secret put` deploys a version carrying the secret, so the buttons
-appear on the next page load. Locally, the same four names go in `.dev.vars`
-(the development GitHub App's pair), and `wrangler dev` reads that file only
-when it starts.
+appear on the next page load. Locally, the same four names go in `.dev.vars`,
+and `wrangler dev` reads that file only when it starts. With the localhost URIs
+on the production apps, that puts the production client secrets on the
+machine; an app of each kind kept for development, with only the localhost URI,
+keeps them off it.
 
 ## Preview deployments
 
@@ -124,9 +129,9 @@ with GitHub faked at the fetch boundary.
 The provider's error, or the `error=` better-auth puts on `/api/auth/error`:
 
 - **`redirect_uri_mismatch`** (Google) or "The redirect_uri is not associated
-  with this application" (GitHub): the registered callback differs from the
-  table above by a scheme, a port or a trailing slash, or local development
-  is using the production GitHub App.
+  with this application" (GitHub): no URI registered with the app matches the
+  table above exactly (a scheme, a port or a trailing slash), or the app in
+  use has only the other environment's URI.
 - **Access blocked** (Google): the app is still in Testing.
 - **`account_not_linked`**: an account with that address already exists and
   is not linked. better-auth links a provider to an existing account only
