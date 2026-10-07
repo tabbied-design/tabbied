@@ -10,7 +10,13 @@ import {
   categorySlug,
   type TemplateCategory,
 } from 'lib/templateCategories';
-import { paginationWindow } from 'lib/pagination';
+import {
+  paginationWindow,
+  PAGER_SLOTS,
+  PAGER_SLOTS_NARROW,
+  PAGER_WIDE_QUERY,
+} from 'lib/pagination';
+import useMediaQuery from 'lib/useMediaQuery';
 import { matchesQuery, templateKeywords } from 'lib/catalogSearch';
 import Toaster from 'components/Toaster';
 import { chosenOf, customizeHref, type MyTemplatesState } from 'lib/myTemplates';
@@ -310,6 +316,8 @@ export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
   // number) shows the last page rather than an empty grid.
   const pageCount = Math.max(1, Math.ceil(matching.length / PER_PAGE));
   const current = Math.min(page, pageCount);
+  // Narrow until mounted, so the prerendered pager fits a phone.
+  const widePager = useMediaQuery(PAGER_WIDE_QUERY);
   const shown = matching.slice((current - 1) * PER_PAGE, current * PER_PAGE);
   const here = galleryHref(active, current, query);
 
@@ -391,7 +399,11 @@ export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
           and a crawler can follow; a plain click stays in the page. */}
       {pageCount > 1 ? (
         <nav className={s.pagination} aria-label="Pages">
-          {paginationWindow(current, pageCount).map((p, index) =>
+          {paginationWindow(
+            current,
+            pageCount,
+            widePager ? PAGER_SLOTS : PAGER_SLOTS_NARROW
+          ).map((p, index) =>
             p === null ? (
               <span key={`gap-${index}`} className={s.pageGap} aria-hidden="true">
                 ...
