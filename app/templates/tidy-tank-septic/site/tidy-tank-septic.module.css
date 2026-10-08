@@ -1,0 +1,1087 @@
+/* ==========================================================================
+   TIDY TANK SEPTIC - pumping, inspections and repairs, Harlow Valley
+   The page is a service log card. Manila stock, black type, a condensed
+   sans for the headings you read from across the yard and a typewriter
+   face for the entries a tech writes in. The hero lays one tank's log card
+   over a cross-section of the ground; the gully is that ground, blocks of
+   soil with a V worn up into them where the water finds its way down. It
+   comes back as the drain field between the sections and the ground line
+   at the foot. The one loud thing is the do-not-flush notice, set dark
+   inside a strip of hazard tape.
+   ========================================================================== */
+
+.page {
+  --manila: #e9dfc6;
+  --ink: #1f2420;
+  --hivis: #e0662a;
+  --olive: #6b7046;
+  --loam: #7c5b3e;
+  --stone: #b8ab8d;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --head: 'Oswald', 'Arial Narrow', 'Helvetica Neue', sans-serif;
+  --sans: 'Public Sans', 'Helvetica Neue', Arial, sans-serif;
+  --type: 'Courier Prime', 'Courier New', Courier, monospace;
+
+  /* Plain fallbacks; the block below derives them from each surface. */
+  --text: var(--ink);
+  --on-ink: var(--manila);
+  --on-hivis: var(--ink);
+  --stock: color-mix(in oklab, var(--manila) 90%, var(--stone));
+
+  /* Everything else is mixed from the roles. */
+  --muted: color-mix(in oklab, var(--text) 74%, var(--manila));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 50%, transparent);
+  --well: color-mix(in oklab, var(--manila) 88%, var(--stone));
+  --shadow: color-mix(in oklab, var(--ink) 40%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  background: var(--manila);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the lightness of each surface, tinted toward the
+       ink, so the copy reads on whatever card stock a palette brings. */
+    --text: color-mix(in oklab, oklch(from var(--manila) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--ink));
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--ink));
+    --on-hivis: oklch(from var(--hivis) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    /* The log card is the manila a shade lighter and less yellow. */
+    --stock: oklch(from var(--manila) clamp(0, l + 0.04, 1) calc(c * 0.55) h);
+    --shadow: oklch(from var(--manila) calc(l * 0.3) c h / 0.45);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--head);
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.7rem var(--gut);
+  background: var(--manila);
+  border-bottom: 3px solid var(--text);
+}
+
+.brand {
+  display: grid;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--head);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.brandSub {
+  margin-top: 0.1rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  padding: 0.25rem 0;
+  font-family: var(--head);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barCall {
+  display: grid;
+  padding: 0.45rem 1rem;
+  line-height: 1.15;
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.barCallLabel {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.barCallNumber {
+  font-family: var(--head);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--manila);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.2rem, 5vw, 4rem) var(--gut) clamp(1rem, 3vw, 2rem);
+}
+
+.kicker {
+  margin: 0 0 1.2rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  font-size: clamp(3.2rem, 6.4vw, 6rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+/* The last line is underlined in the truck's orange, like a marker line
+   under a finished job. */
+.heroTitle span {
+  text-decoration: underline;
+  text-decoration-color: var(--hivis);
+  text-decoration-thickness: 0.1em;
+  text-underline-offset: 0.05em;
+  text-decoration-skip-ink: none;
+}
+
+.heroLead {
+  max-width: 33rem;
+  margin: 1.5rem 0 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.9rem;
+}
+
+.button,
+.ghost,
+.submit {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-family: var(--head);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.button {
+  background: var(--hivis);
+  color: var(--on-hivis);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--hivis) 85%, var(--ink));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ghost:hover {
+  background: var(--well);
+}
+
+.creds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+  list-style: none;
+  margin: 2.2rem 0 0;
+  padding: 1rem 0 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.creds li {
+  position: relative;
+  padding-left: 1.1rem;
+}
+
+.creds li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--text);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+/* The ground: soil in section, with the log card laid on it. */
+.heroGround {
+  position: relative;
+  min-height: clamp(30rem, 44vw, 38rem);
+  display: grid;
+  align-items: center;
+}
+
+.soil {
+  position: absolute;
+  inset: 0 0 0 12%;
+  overflow: hidden;
+  border-top: 6px solid var(--olive);
+}
+
+.card {
+  position: relative;
+  width: min(100%, 27rem);
+  margin: 2rem 0;
+  padding: 1.3rem 1.4rem 1.5rem;
+  background:
+    linear-gradient(var(--hivis), var(--hivis)) 0 3.6rem / 100% 2px no-repeat,
+    var(--stock);
+  box-shadow: 10px 12px 0 var(--shadow);
+  transform: rotate(-2deg);
+}
+
+.cardHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  height: 2.2rem;
+  margin-bottom: 0.9rem;
+}
+
+.cardTitle {
+  margin: 0;
+  font-family: var(--head);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.cardNo {
+  margin: 0;
+  font-family: var(--type);
+  font-size: 0.85rem;
+}
+
+.cardFacts {
+  margin: 0 0 0.8rem;
+  font-size: 0.85rem;
+}
+
+.cardFacts div {
+  display: grid;
+  grid-template-columns: 4.6rem minmax(0, 1fr);
+  gap: 0.6rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.cardFacts dt {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cardFacts dd {
+  margin: 0;
+  font-family: var(--type);
+}
+
+.log {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+
+.log th {
+  padding: 0.4rem 0.35rem 0.3rem 0;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-align: left;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--text);
+}
+
+.log td {
+  padding: 0.45rem 0.35rem 0.45rem 0;
+  font-family: var(--type);
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule);
+}
+
+.log td:first-child {
+  white-space: nowrap;
+}
+
+.nextDue {
+  display: inline-block;
+  margin: 1.1rem 0 0;
+  padding: 0.35rem 0.8rem;
+  font-family: var(--head);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 3px double var(--text);
+  transform: rotate(-4deg);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 0.4rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(1.8rem, 4vw, 2.8rem);
+  padding-bottom: 1.2rem;
+  border-bottom: 3px solid var(--text);
+}
+
+.secLabel {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: var(--type);
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.secTitle {
+  font-size: clamp(2.6rem, 5.4vw, 4.6rem);
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.secNote {
+  max-width: 36rem;
+  margin: 0;
+  font-size: 1.02rem;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+/* ---------------------------------------------------------------- intervals */
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.intervals {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: separate;
+  border-spacing: 6px;
+  margin: 0 -6px;
+}
+
+.intervals thead th {
+  padding: 0.5rem;
+  font-family: var(--head);
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: center;
+  border-bottom: 2px solid var(--text);
+}
+
+.intervals .corner {
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.intervals tbody th {
+  padding: 0.8rem 0.6rem 0.8rem 0;
+  font-family: var(--head);
+  font-size: 1.35rem;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.intervals td {
+  padding: 0.75rem 0.4rem;
+  font-family: var(--head);
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-weight: 600;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  background: var(--well);
+}
+
+.intervals td.short {
+  background: var(--manila);
+  box-shadow: inset 0 0 0 3px var(--text);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.legend p {
+  margin: 0;
+}
+
+.legendShort {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.legendShort::before {
+  content: '';
+  width: 1.1rem;
+  height: 1.1rem;
+  box-shadow: inset 0 0 0 3px var(--text);
+}
+
+/* --------------------------------------------------- the drain field band */
+
+.field {
+  position: relative;
+  height: clamp(120px, 13vw, 190px);
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  overflow: hidden;
+  border-top: 6px solid var(--olive);
+}
+
+/* -------------------------------------------------------------- inspections */
+
+.inspectGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.25fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.inspectIntro {
+  display: grid;
+  gap: 1rem;
+}
+
+.priceTag {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 0.8rem;
+  padding: 1rem 1.2rem;
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.priceBig {
+  margin: 0;
+  font-family: var(--head);
+  font-size: 3.4rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.priceSmall {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+/* The report form: a box per check, ticked. */
+.report {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--stock);
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.reportItem {
+  position: relative;
+  padding: 1.3rem 1.3rem 1.4rem 3.6rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.reportItem:nth-child(odd) {
+  border-right: 1px solid var(--rule-strong);
+}
+
+.reportItem:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+.reportItem::before {
+  content: '\2713';
+  position: absolute;
+  left: 1.2rem;
+  top: 1.35rem;
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.reportTitle {
+  font-size: 1.4rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.reportText {
+  margin: 0.4rem 0 0;
+  font-size: 0.94rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------- do not flush */
+
+/* A dark notice between two strips of hazard tape. */
+.flush {
+  position: relative;
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.flush::before,
+.flush::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 18px;
+  background: repeating-linear-gradient(-45deg, var(--hivis) 0 18px, var(--ink) 18px 36px);
+}
+
+.flush::before {
+  top: 0;
+}
+
+.flush::after {
+  bottom: 0;
+}
+
+.flushInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 8vw, 6.5rem) var(--gut);
+}
+
+.flush .secLabel {
+  margin-bottom: 0.6rem;
+}
+
+.flushTitle {
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.flushNote {
+  margin: 1.1rem 0 0;
+  font-size: 1rem;
+}
+
+.fineTitle {
+  margin-top: 2rem;
+  font-size: 1.4rem;
+  text-transform: uppercase;
+}
+
+.fine {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fine li {
+  position: relative;
+  padding: 0.45rem 0 0.45rem 1.8rem;
+  font-size: 0.96rem;
+  border-top: 1px solid color-mix(in oklab, var(--on-ink) 26%, transparent);
+}
+
+.fine li::before {
+  content: '';
+  position: absolute;
+  left: 0.2rem;
+  top: 0.95rem;
+  width: 0.8rem;
+  height: 0.45rem;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+}
+
+.never {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: never;
+}
+
+.neverItem {
+  position: relative;
+  padding: 1rem 0 1rem 3.4rem;
+  border-top: 1px solid color-mix(in oklab, var(--on-ink) 26%, transparent);
+  counter-increment: never;
+}
+
+.neverItem::before {
+  content: counter(never, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.85rem;
+  font-family: var(--head);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.neverWhat {
+  font-size: 1.3rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.neverWhy {
+  margin: 0.3rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------------------- prices */
+
+.pricesGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.pricesGrid .secTitle {
+  margin: 0.4rem 0 1rem;
+}
+
+.townsTitle {
+  margin-top: 2rem;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+}
+
+.towns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0.7rem 0 0;
+  padding: 0;
+}
+
+.towns li {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  border: 1.5px solid var(--rule-strong);
+}
+
+.rates {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--stock);
+  box-shadow: inset 0 0 0 2px var(--text), 8px 8px 0 var(--shadow);
+}
+
+.rates th,
+.rates td {
+  padding: 0.9rem 1.2rem;
+  border-bottom: 1px dashed var(--rule-strong);
+}
+
+.rates tr:last-child th,
+.rates tr:last-child td {
+  border-bottom: 0;
+}
+
+.rates th {
+  font-weight: 500;
+  text-align: left;
+}
+
+.rates td {
+  font-family: var(--head);
+  font-size: 1.35rem;
+  font-weight: 700;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------- book */
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+  padding-top: 2rem;
+  border-top: 3px solid var(--text);
+}
+
+.bookInfo .secTitle {
+  margin: 0.4rem 0 1rem;
+}
+
+.yard {
+  margin: 1.8rem 0 0.6rem;
+  font-family: var(--type);
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.contactLine {
+  margin: 0 0 0.3rem;
+  font-family: var(--head);
+  font-size: 1.5rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.hours {
+  margin: 1.4rem 0 0;
+  font-size: 0.94rem;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.hours dt {
+  font-weight: 600;
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--stock);
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.field2 {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field2 label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.field2 input,
+.field2 select,
+.field2 textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.65rem 0.75rem;
+  font-family: var(--type);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--manila);
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 0;
+}
+
+.field2 textarea {
+  resize: vertical;
+}
+
+.field2 input:focus-visible,
+.field2 select:focus-visible,
+.field2 textarea:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 0;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  color: var(--on-hivis);
+  background: var(--hivis);
+  border: 0;
+  box-shadow: 4px 4px 0 var(--ink);
+  cursor: pointer;
+}
+
+.formNote {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.groundLine {
+  position: relative;
+  height: clamp(72px, 7vw, 108px);
+  overflow: hidden;
+  background: var(--manila);
+  border-top: 6px solid var(--olive);
+}
+
+.footInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 2rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 2.8rem;
+}
+
+.footName {
+  flex-basis: 100%;
+  margin: 0 0 0.3rem;
+  font-family: var(--head);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.footText {
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.footText a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1000px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .secHead,
+  .inspectGrid,
+  .flushInner,
+  .pricesGrid,
+  .bookGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroGround {
+    min-height: 0;
+    padding: 2.5rem 0;
+  }
+
+  .soil {
+    inset: 0;
+  }
+
+  .card {
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 680px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .heroGround {
+    padding: 2rem 0.8rem;
+  }
+
+  .card {
+    padding: 1.1rem 1rem 1.3rem;
+    transform: rotate(-1deg);
+  }
+
+  .log td:nth-child(2) {
+    font-size: 0.8rem;
+  }
+
+  .report,
+  .never,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .reportItem:nth-child(odd) {
+    border-right: 0;
+  }
+
+  .reportItem:nth-last-child(2) {
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  .intervals {
+    min-width: 0;
+    border-spacing: 3px;
+    margin: 0 -3px;
+  }
+
+  .intervals thead th {
+    padding: 0.4rem 0.1rem;
+    font-size: 1.15rem;
+  }
+
+  .intervals tbody th {
+    padding-right: 0.3rem;
+    font-size: 0.95rem;
+    white-space: normal;
+  }
+
+  .intervals td {
+    padding: 0.55rem 0.1rem;
+    font-size: 1.05rem;
+  }
+
+  .rates th,
+  .rates td {
+    padding: 0.8rem 0.9rem;
+  }
+
+  .rates td {
+    font-size: 1.15rem;
+  }
+}

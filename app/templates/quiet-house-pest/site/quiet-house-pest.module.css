@@ -1,0 +1,997 @@
+.page {
+  --paper: #f4f1e4;
+  --forest: #1f3d2b;
+  --signal: #e8b51e;
+  --rust: #c4502a;
+  --moss: #6f8f4e;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --slab: 'Bitter', 'Rockwell', 'Georgia', serif;
+  --sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--forest);
+  --on-forest: var(--paper);
+  --on-signal: var(--forest);
+  --on-rust: var(--paper);
+  --on-moss: var(--paper);
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--paper));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 45%, transparent);
+  --card: color-mix(in oklab, var(--paper) 95%, var(--forest));
+  --tint: color-mix(in oklab, var(--paper) 86%, var(--moss));
+  --forest-muted: color-mix(in oklab, var(--on-forest) 78%, var(--forest));
+  --forest-rule: color-mix(in oklab, var(--on-forest) 24%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--forest));
+    --on-forest: color-mix(in oklab, oklch(from var(--forest) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--forest));
+    --on-signal: oklch(from var(--signal) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-rust: oklch(from var(--rust) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-moss: oklch(from var(--moss) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--slab);
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--paper);
+  border-bottom: 2px solid var(--text);
+}
+
+/* The mark: one fan of spray, thrown up from a nozzle. */
+.brand {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 0.6rem;
+  align-items: center;
+  justify-content: start;
+  line-height: 1;
+}
+
+.brand::before {
+  content: '';
+  grid-row: 1 / 3;
+  width: 2.3rem;
+  height: 2.3rem;
+  background: conic-gradient(from 312deg at 50% 100%, var(--rust) 0 96deg, transparent 96deg 360deg);
+  border-bottom: 3px solid var(--text);
+}
+
+.brandName {
+  font-family: var(--slab);
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.brandSub {
+  margin-top: 0.15rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.2rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--rust);
+}
+
+.barCall {
+  padding: 0.55rem 1.1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: var(--signal);
+  color: var(--on-signal);
+  border: 2px solid var(--text);
+  border-radius: 4px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--paper);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) clamp(2rem, 4vw, 3rem);
+}
+
+.kicker {
+  display: inline-block;
+  margin: 0 0 1.4rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1.5px solid var(--text);
+  border-radius: 999px;
+}
+
+.heroTitle {
+  font-size: clamp(2.9rem, 5.8vw, 5.2rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.heroTitle em {
+  font-style: italic;
+  font-weight: 500;
+  box-shadow: inset 0 -0.28em 0 color-mix(in oklab, var(--signal) 70%, var(--paper));
+}
+
+.heroLead {
+  max-width: 33rem;
+  margin: 1.6rem 0 0;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid var(--text);
+  border-radius: 4px;
+}
+
+.button {
+  background: var(--forest);
+  color: var(--on-forest);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--forest) 84%, var(--text));
+}
+
+.ghost:hover {
+  background: var(--tint);
+}
+
+.heroFacts {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 33rem;
+  margin: 2.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.heroFacts li {
+  position: relative;
+  padding-left: 1.8rem;
+  font-weight: 600;
+}
+
+.heroFacts li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.3rem;
+  width: 1rem;
+  height: 1rem;
+  background: conic-gradient(from 312deg at 50% 100%, var(--moss) 0 96deg, transparent 96deg 360deg);
+}
+
+/* The loupe: a lens full of pattern, a handle, and the specimen label. */
+.loupe {
+  position: relative;
+  width: min(100%, 36rem);
+  aspect-ratio: 1 / 1;
+  justify-self: center;
+}
+
+.lens {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 4%;
+  width: 80%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--forest);
+  border: clamp(0.7rem, 1.6vw, 1.1rem) solid var(--text);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 4px color-mix(in oklab, var(--paper) 40%, transparent);
+}
+
+.lensField {
+  position: absolute;
+  inset: 0;
+}
+
+.handle {
+  position: absolute;
+  left: -2%;
+  top: calc(66% - clamp(0.8rem, 1.5vw, 1.2rem));
+  width: 34%;
+  height: clamp(1.6rem, 3vw, 2.4rem);
+  background: var(--text);
+  border-radius: 999px;
+  transform: rotate(-45deg);
+  transform-origin: 100% 50%;
+}
+
+.label {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 0;
+  width: min(18rem, 62%);
+  padding: 1rem 1.2rem 1.1rem;
+  background: var(--paper);
+  border: 2px solid var(--text);
+  box-shadow: 6px 6px 0 color-mix(in oklab, var(--text) 85%, transparent);
+}
+
+.labelNo {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.labelName {
+  margin: 0.25rem 0 0;
+  font-family: var(--slab);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.labelLatin {
+  margin: 0.1rem 0 0;
+  font-family: var(--slab);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.labelNote {
+  margin: 0.6rem 0 0;
+  padding-top: 0.6rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  border-top: 1px dashed var(--rule-strong);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas:
+    'no note'
+    'title note';
+  gap: 0.4rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 2.8rem);
+  padding-bottom: 1.4rem;
+  border-bottom: 2px solid var(--text);
+}
+
+.secNo {
+  grid-area: no;
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.secTitle {
+  grid-area: title;
+  font-size: clamp(2.2rem, 4.4vw, 3.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+}
+
+.secNote {
+  grid-area: note;
+  margin: 0;
+  max-width: 34rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- chart */
+
+.chart {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16.5rem, 1fr));
+  gap: 1.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.1rem 1.2rem;
+  background: var(--card);
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 6px;
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.cardNo {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.level {
+  padding: 0.18rem 0.6rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 999px;
+}
+
+.low {
+  background: var(--moss);
+  color: var(--on-moss);
+}
+
+.mid {
+  background: var(--signal);
+  color: var(--on-signal);
+}
+
+.high {
+  background: var(--rust);
+  color: var(--on-rust);
+}
+
+.seen {
+  margin: 0.9rem 0 0;
+  padding-left: 0.8rem;
+  font-family: var(--slab);
+  font-size: 1.02rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.35;
+  border-left: 3px solid var(--signal);
+}
+
+.cardName {
+  margin-top: 1rem;
+  font-size: 1.45rem;
+  line-height: 1.1;
+}
+
+.latin {
+  margin: 0.1rem 0 0;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.facts {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0.9rem 0 0;
+  padding-top: 0.8rem;
+  border-top: 1px dashed var(--rule-strong);
+}
+
+.facts dt {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.facts dd {
+  margin: 0.05rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+/* --------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 15rem;
+  margin-top: clamp(4rem, 8vw, 6rem);
+  padding: 3rem var(--gut);
+  background: var(--forest);
+}
+
+.bandField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.bandNote {
+  position: relative;
+  max-width: 34rem;
+  margin: 0;
+  padding: 1.1rem 1.6rem;
+  font-family: var(--slab);
+  font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  background: var(--paper);
+  color: var(--text);
+  border: 2px solid var(--text);
+  border-radius: 6px;
+}
+
+/* -------------------------------------------------------------------- plans */
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.plan {
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.5rem 1.5rem;
+  background: var(--card);
+  border: 2px solid var(--text);
+  border-radius: 6px;
+}
+
+.pick {
+  background: var(--forest);
+  color: var(--on-forest);
+  border-color: var(--forest);
+}
+
+.planName {
+  font-size: 1.55rem;
+  line-height: 1.1;
+}
+
+.planPrice {
+  margin: 1.1rem 0 0;
+  font-family: var(--slab);
+  font-size: 3.4rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.planPer {
+  margin: 0.3rem 0 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.planLead {
+  margin: 1.1rem 0 0;
+  padding-top: 1rem;
+  font-weight: 600;
+  border-top: 1px solid var(--rule);
+}
+
+.planCovers {
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+}
+
+.planNote {
+  margin: auto 0 0;
+  padding-top: 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.pick .planLead {
+  border-top-color: var(--forest-rule);
+}
+
+.pick .planCovers {
+  color: var(--forest-muted);
+}
+
+.pick .planNote {
+  color: var(--on-forest);
+}
+
+.plansFoot {
+  margin: 1.4rem 0 0;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- year */
+
+.year {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 2px solid var(--text);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.season {
+  position: relative;
+  padding: 1.4rem 1.4rem 1.6rem;
+  background: var(--card);
+}
+
+.season + .season {
+  border-left: 2px solid var(--text);
+}
+
+.season::before {
+  content: '';
+  display: block;
+  width: 2.6rem;
+  height: 2.6rem;
+  margin-bottom: 1rem;
+  background: conic-gradient(from 312deg at 50% 100%, var(--season, var(--moss)) 0 96deg, transparent 96deg 360deg);
+  border-bottom: 3px solid var(--text);
+}
+
+.season:nth-child(2) {
+  --season: var(--signal);
+}
+
+.season:nth-child(3) {
+  --season: var(--rust);
+}
+
+.season:nth-child(4) {
+  --season: var(--forest);
+}
+
+.seasonName {
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.seasonMonths {
+  margin: 0.2rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.seasonText {
+  margin: 0.9rem 0 0;
+  font-size: 0.98rem;
+}
+
+/* --------------------------------------------------------------------- safe */
+
+.safe {
+  margin-top: clamp(4rem, 8vw, 6rem);
+  background: var(--tint);
+  border-top: 2px solid var(--text);
+  border-bottom: 2px solid var(--text);
+}
+
+.safeInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 1.5rem clamp(2rem, 5vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 5rem) var(--gut);
+}
+
+.safeHead {
+  grid-row: 1 / 3;
+}
+
+.safeTitle {
+  font-size: clamp(2.1rem, 4vw, 3.2rem);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+}
+
+.safeLead {
+  margin: 1.1rem 0 0;
+  max-width: 30rem;
+  font-size: 1.1rem;
+}
+
+.safeField {
+  position: relative;
+  height: 15rem;
+  margin-top: 2rem;
+  overflow: hidden;
+  background: var(--forest);
+  border: 2px solid var(--text);
+  border-radius: 6px;
+}
+
+.safeSteps {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: safe;
+}
+
+.safeSteps li {
+  position: relative;
+  padding: 1.2rem 1.4rem 1.3rem 4.2rem;
+  background: var(--paper);
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 6px;
+  counter-increment: safe;
+}
+
+.safeSteps li::before {
+  content: counter(safe);
+  position: absolute;
+  left: 1.2rem;
+  top: 1.15rem;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  font-weight: 600;
+  background: var(--moss);
+  color: var(--on-moss);
+  border-radius: 50%;
+}
+
+.safeStep {
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+.safeText {
+  margin: 0.4rem 0 0;
+}
+
+.safeNote {
+  margin: 0;
+  padding: 1rem 1.2rem;
+  font-weight: 600;
+  border-left: 4px solid var(--rust);
+  background: var(--paper);
+}
+
+/* --------------------------------------------------------------------- book */
+
+.book {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 2.5rem clamp(2rem, 5vw, 5rem);
+  align-items: start;
+  padding-bottom: clamp(4rem, 8vw, 6rem);
+}
+
+.book .secNote {
+  margin-top: 1rem;
+}
+
+.details,
+.hours {
+  margin: 1.8rem 0 0;
+}
+
+.details div,
+.hours div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours div {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.details dt,
+.hours dt {
+  font-weight: 600;
+}
+
+.details dd,
+.hours dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.details a {
+  border-bottom: 2px solid var(--signal);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--card);
+  border: 2px solid var(--text);
+  border-radius: 6px;
+  box-shadow: 8px 8px 0 color-mix(in oklab, var(--text) 85%, transparent);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--paper);
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 4px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.9rem 1.6rem;
+  font: inherit;
+  font-weight: 600;
+  background: var(--signal);
+  color: var(--on-signal);
+  border: 2px solid var(--text);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--forest);
+  color: var(--on-forest);
+}
+
+.footField {
+  position: relative;
+  height: 7rem;
+  overflow: hidden;
+  background: var(--paper);
+  border-top: 2px solid var(--text);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: 0.6rem 3rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+}
+
+.footName {
+  grid-row: 1 / 3;
+  margin: 0;
+  font-family: var(--slab);
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.footText {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--forest-muted);
+}
+
+.footText a {
+  color: var(--on-forest);
+  border-bottom: 2px solid var(--signal);
+}
+
+/* -------------------------------------------------------------- breakpoints */
+
+@media (max-width: 1100px) {
+  .year {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .season + .season {
+    border-left: 0;
+  }
+
+  .season:nth-child(even) {
+    border-left: 2px solid var(--text);
+  }
+
+  .season:nth-child(n + 3) {
+    border-top: 2px solid var(--text);
+  }
+}
+
+@media (max-width: 900px) {
+  .nav,
+  .barCall {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .hero,
+  .safeInner,
+  .book {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .safeHead {
+    grid-row: auto;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'no'
+      'title'
+      'note';
+  }
+
+  .plans {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footName {
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .year {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .season:nth-child(even) {
+    border-left: 0;
+  }
+
+  .season + .season {
+    border-top: 2px solid var(--text);
+  }
+
+  .label {
+    width: 70%;
+  }
+
+  .labelNote {
+    display: none;
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .safeSteps li {
+    padding-left: 3.6rem;
+  }
+
+  .safeSteps li::before {
+    left: 0.9rem;
+  }
+}

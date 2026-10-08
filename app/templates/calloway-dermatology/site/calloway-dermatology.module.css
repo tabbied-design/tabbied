@@ -1,0 +1,950 @@
+/* ==========================================================================
+   CALLOWAY DERMATOLOGY - skin checks, medical and cosmetic dermatology
+   A clinic that explains itself: a soft porcelain ground, deep plum for the
+   type, a warm serif for the headings and a clean sans for reading. The
+   page is a skin-check guide. The mercerised dots stand in for skin seen
+   close up: a fine field behind the hero, a lens laid over it showing the
+   same dots magnified, a band before the doctors and the footer's edge.
+   The moles in the ABCDE guide are drawn in CSS from the same roles.
+   ========================================================================== */
+
+.page {
+  --porcelain: #f6efea; /* role 0: the page ground */
+  --plum: #3a1d35;
+  --rose: #b84a68;
+  --apricot: #e8a07a;
+  --petal: #f0c6c2;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --serif: 'Young Serif', 'Georgia', serif;
+  --sans: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--plum);
+  --on-plum: var(--porcelain);
+  --on-rose: var(--porcelain);
+  --on-petal: var(--plum);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--porcelain);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by each surface's lightness, tinted toward the plum:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--porcelain) clamp(0, (0.62 - l) * 1000, 1) 0 0) 78%, var(--plum));
+    --on-plum: color-mix(in oklab, oklch(from var(--plum) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--plum));
+    --on-rose: oklch(from var(--rose) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-petal: color-mix(in oklab, oklch(from var(--petal) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--petal));
+  }
+}
+
+/* Derived surfaces and inks, resolved once the text inks are known. */
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--porcelain));
+  --rule: color-mix(in oklab, var(--text) 15%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 38%, transparent);
+  --panel: color-mix(in oklab, var(--porcelain) 78%, var(--petal));
+  --skin: color-mix(in oklab, var(--porcelain) 55%, var(--petal));
+  --mole: color-mix(in oklab, var(--plum) 72%, var(--apricot));
+  --plum-muted: color-mix(in oklab, var(--on-plum) 76%, var(--plum));
+  --plum-rule: color-mix(in oklab, var(--on-plum) 22%, transparent);
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.9rem var(--gut);
+  background: var(--porcelain);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+/* A small lens: a dot in a ring. */
+.brandDot {
+  width: 1.7rem;
+  height: 1.7rem;
+  border: 2px solid var(--plum);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--rose) 0 0.32rem, transparent 0.34rem);
+}
+
+.brandText {
+  display: grid;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+}
+
+.brandSub {
+  margin-top: 0.2rem;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2.1rem);
+}
+
+.nav a {
+  padding: 0.25rem 0;
+  font-size: 0.93rem;
+  font-weight: 500;
+  border-bottom: 1.5px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barBook {
+  padding: 0.6rem 1.1rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  background: var(--rose);
+  color: var(--on-rose);
+  border-radius: 999px;
+}
+
+.barBook:hover {
+  background: color-mix(in oklab, var(--rose) 85%, var(--plum));
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--porcelain);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  background: var(--plum);
+}
+
+.heroField {
+  position: absolute;
+  inset: 0;
+}
+
+.heroInner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  min-height: min(44rem, calc(100svh - 4.5rem));
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut);
+}
+
+.heroCard {
+  padding: clamp(1.8rem, 4vw, 3.2rem);
+  background: var(--porcelain);
+  border-radius: 2px 2rem 2px 2px;
+}
+
+.kicker {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  margin-top: 1rem;
+  font-size: clamp(2.6rem, 5vw, 4.3rem);
+  line-height: 1.04;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: normal;
+  color: var(--rose);
+}
+
+.heroLead {
+  max-width: 32rem;
+  margin-top: 1.3rem;
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.8rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.8rem 1.35rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--plum);
+  color: var(--on-plum);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--plum) 85%, var(--rose));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1.5px var(--text);
+}
+
+.ghost:hover {
+  background: var(--panel);
+}
+
+/* The lens: a ring of porcelain over the field, the dots inside drawn at
+   two and a half times the size, and a handle. */
+.lensWrap {
+  position: relative;
+  justify-self: center;
+  width: min(29rem, 100%);
+  aspect-ratio: 1;
+}
+
+.lens {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--plum);
+  border: 14px solid var(--porcelain);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--plum), 0 24px 60px -24px var(--plum);
+}
+
+.lensWrap::after {
+  content: '';
+  position: absolute;
+  top: 87%;
+  left: 83%;
+  width: 24%;
+  height: 7%;
+  background: var(--porcelain);
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px var(--plum);
+  transform: rotate(45deg);
+  transform-origin: 0 50%;
+}
+
+/* ---------------------------------------------------------------- the facts */
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2rem var(--gut);
+  list-style: none;
+  border-bottom: 1px solid var(--rule);
+}
+
+.facts li {
+  display: grid;
+  gap: 0.15rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--apricot);
+}
+
+.facts strong {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 400;
+}
+
+.facts span {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------- shared heads */
+
+.eyebrow {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.sectionTitle {
+  font-size: clamp(2.1rem, 4vw, 3.3rem);
+}
+
+.eyebrow + .sectionTitle {
+  margin-top: 0.7rem;
+}
+
+.sectionLead {
+  max-width: 38rem;
+  margin-top: 1rem;
+  font-size: 1.06rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- abcde */
+
+.check {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.checkHead {
+  max-width: 44rem;
+}
+
+.legend {
+  margin-top: 2.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.letters {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1.4rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.letter {
+  padding-top: 1rem;
+  border-top: 1.5px solid var(--text);
+}
+
+.letterBig {
+  font-family: var(--serif);
+  font-size: 4.4rem;
+  line-height: 1;
+  color: var(--rose);
+}
+
+.letterWord {
+  margin-top: 0.4rem;
+  font-size: 1.4rem;
+}
+
+.letterBody {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* Two moles on a patch of skin: usually fine on the left, worth a look on
+   the right. */
+.swatch {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 6.5rem;
+  margin-top: 1rem;
+  background: var(--skin);
+  border-radius: 6px;
+}
+
+.swatch span {
+  position: relative;
+  display: block;
+  width: 2.1rem;
+  height: 2.1rem;
+  background: var(--mole);
+  border-radius: 50%;
+}
+
+.asym .worry {
+  width: 3rem;
+  height: 2.2rem;
+  border-radius: 64% 36% 72% 28% / 42% 66% 34% 58%;
+}
+
+.border .worry {
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 0;
+  clip-path: polygon(50% 0, 63% 12%, 82% 6%, 86% 30%, 100% 44%, 88% 62%, 95% 86%, 70% 86%, 55% 100%, 40% 88%, 16% 96%, 13% 72%, 0 58%, 10% 38%, 4% 14%, 28% 12%);
+}
+
+.color .worry {
+  width: 2.6rem;
+  height: 2.5rem;
+  border-radius: 55% 45% 50% 50%;
+  background: radial-gradient(circle at 38% 40%, var(--plum) 0 26%, var(--rose) 28% 50%, var(--apricot) 52% 68%, var(--mole) 70%);
+}
+
+.diameter .fine {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.diameter .worry {
+  width: 3.1rem;
+  height: 3.1rem;
+}
+
+/* A six-millimeter rule under the large one. */
+.diameter .worry::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -0.75rem;
+  left: 0;
+  height: 0.4rem;
+  border: 1.5px solid var(--text);
+  border-top: 0;
+}
+
+.evolve .worry {
+  width: 2.4rem;
+  height: 2.2rem;
+  border-radius: 48% 52% 60% 40%;
+  outline: 1.5px dashed var(--mole);
+  outline-offset: 7px;
+}
+
+.checkNote {
+  max-width: 40rem;
+  margin-top: 2.6rem;
+  padding: 1.1rem 1.4rem;
+  font-size: 1rem;
+  background: var(--panel);
+  border-left: 4px solid var(--rose);
+}
+
+/* --------------------------------------------------------------- conditions */
+
+.conditions {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut);
+}
+
+.condHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem 3rem;
+  align-items: end;
+}
+
+.condHead .sectionLead {
+  margin-top: 0;
+}
+
+.condList {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2rem 1.6rem;
+  margin: 2.6rem 0 0;
+}
+
+.cond {
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.cond dt {
+  font-family: var(--serif);
+  font-size: 1.22rem;
+  line-height: 1.2;
+}
+
+.cond dd {
+  margin: 0.45rem 0 0;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- services */
+
+.services {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(4rem, 7vw, 6rem);
+}
+
+.serviceCols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  margin-top: 2.2rem;
+}
+
+.medical,
+.cosmetic {
+  padding: clamp(1.6rem, 4vw, 3rem);
+}
+
+.medical {
+  background: var(--panel);
+  border-radius: 1.5rem 0 0 1.5rem;
+}
+
+.cosmetic {
+  background: var(--plum);
+  color: var(--on-plum);
+  border-radius: 0 1.5rem 1.5rem 0;
+}
+
+.colTitle {
+  font-size: 2rem;
+}
+
+.colNote {
+  max-width: 28rem;
+  margin-top: 0.7rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.colNoteOn {
+  max-width: 28rem;
+  margin-top: 0.7rem;
+  font-size: 0.95rem;
+  color: var(--plum-muted);
+}
+
+.serviceList,
+.serviceListOn {
+  margin: 1.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.serviceList li,
+.serviceListOn li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  font-size: 1rem;
+}
+
+.serviceList li {
+  border-top: 1px solid var(--rule);
+}
+
+.serviceListOn li {
+  border-top: 1px solid var(--plum-rule);
+}
+
+.serviceMeta {
+  font-size: 0.9rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.serviceMetaOn {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 17rem;
+  padding: 3rem var(--gut);
+  background: var(--plum);
+}
+
+.bandField {
+  position: absolute;
+  inset: 0;
+}
+
+.bandCard {
+  position: relative;
+  max-width: 36rem;
+  padding: 1.6rem 2rem;
+  font-family: var(--serif);
+  font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+  line-height: 1.35;
+  text-align: center;
+  background: var(--porcelain);
+  border-radius: 999px;
+}
+
+/* ------------------------------------------------------------------ doctors */
+
+.doctors {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut) clamp(2rem, 4vw, 3rem);
+}
+
+.people {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  margin: 2.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.person {
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.initials {
+  display: grid;
+  place-items: center;
+  width: 4.2rem;
+  height: 4.2rem;
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  background: var(--petal);
+  color: var(--on-petal);
+  border-radius: 50%;
+}
+
+.personName {
+  margin-top: 1rem;
+  font-size: 1.45rem;
+}
+
+.personRole {
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.personNote {
+  margin-top: 0.8rem;
+  font-size: 0.97rem;
+}
+
+/* --------------------------------------------------------------------- book */
+
+.book {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(4rem, 8vw, 6rem);
+}
+
+.visits {
+  width: 100%;
+  margin-top: 1.8rem;
+  border-collapse: collapse;
+}
+
+.visits th,
+.visits td {
+  padding: 0.85rem 0.8rem 0.85rem 0;
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: 1px solid var(--rule);
+}
+
+.visits th {
+  font-weight: 600;
+}
+
+.visitTime {
+  font-family: var(--serif);
+  white-space: nowrap;
+}
+
+.visitNote {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.contactList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.3rem 2rem;
+  margin: 2.2rem 0 0;
+}
+
+.contactList dt {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contactList dd {
+  margin: 0.25rem 0 0;
+}
+
+.contactList dd a {
+  font-weight: 600;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  align-self: start;
+  padding: clamp(1.5rem, 3.5vw, 2.6rem);
+  background: var(--panel);
+  border-radius: 1.5rem;
+}
+
+.formTitle {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field span {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--porcelain);
+  border: 1px solid var(--rule-strong);
+  border-radius: 0.6rem;
+}
+
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--text);
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.85rem 1.5rem;
+  font: inherit;
+  font-weight: 600;
+  background: var(--plum);
+  color: var(--on-plum);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.formNote {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footField {
+  position: relative;
+  height: 5rem;
+  background: var(--plum);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.8rem 2.5rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 1.8rem var(--gut) 2.4rem;
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+}
+
+.footLine {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.footLine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .letters {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 2.4rem;
+  }
+
+  .condList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .heroInner,
+  .condHead,
+  .serviceCols,
+  .book {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lensWrap {
+    width: min(20rem, 80%);
+    margin-bottom: 2rem;
+  }
+
+  .medical {
+    border-radius: 1.5rem 1.5rem 0 0;
+  }
+
+  .cosmetic {
+    border-radius: 0 0 1.5rem 1.5rem;
+  }
+
+  .people {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .barBook {
+    display: none;
+  }
+
+  .facts,
+  .letters,
+  .condList,
+  .contactList,
+  .formRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .facts {
+    gap: 1rem;
+  }
+
+  .bandCard {
+    border-radius: 1.5rem;
+  }
+
+  .visits th,
+  .visits td {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+
+  .visits tr {
+    display: block;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+}

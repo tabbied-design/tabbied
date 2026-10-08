@@ -1,0 +1,897 @@
+.page {
+  --paper: #faf6ef;
+  --indigo: #2c3550;
+  --cerulean: #3a7fb0;
+  --sienna: #d48c3a;
+  --rose: #c55470;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 76rem;
+  --serif: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  --sans: 'Karla', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--indigo);
+  --on-indigo: var(--paper);
+
+  --muted: color-mix(in oklab, var(--text) 72%, var(--paper));
+  --rule: color-mix(in oklab, var(--text) 15%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 38%, transparent);
+  --wash: color-mix(in oklab, var(--paper) 92%, var(--cerulean));
+  --board: color-mix(in oklab, var(--paper) 82%, var(--sienna));
+  --tin: color-mix(in oklab, var(--paper) 90%, var(--indigo));
+  --indigo-muted: color-mix(in oklab, var(--on-indigo) 76%, var(--indigo));
+  --indigo-rule: color-mix(in oklab, var(--on-indigo) 22%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  line-height: 1.65;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--indigo));
+    --on-indigo: color-mix(in oklab, oklch(from var(--indigo) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--indigo));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+/* The four pigments, used by the pans, the class strokes and nothing else. */
+.pb {
+  --tone: var(--cerulean);
+}
+
+.ps {
+  --tone: var(--sienna);
+}
+
+.pr {
+  --tone: var(--rose);
+}
+
+.pi {
+  --tone: var(--indigo);
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.9rem var(--gut);
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.brandSub {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.98rem;
+  padding: 0.2rem 0;
+  border-bottom: 1px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--paper);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(2.5rem, 5vw, 4rem);
+}
+
+.kicker {
+  margin: 0 0 1.2rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(3.3rem, 6.6vw, 6.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+}
+
+.heroTitle em {
+  font-style: italic;
+}
+
+.heroLead {
+  max-width: 32rem;
+  margin: 1.6rem 0 0;
+  font-size: 1.14rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--indigo);
+  color: var(--on-indigo);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--indigo) 84%, var(--text));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1.5px var(--rule-strong);
+}
+
+.ghost:hover {
+  background: var(--wash);
+}
+
+/* The painting board: kraft-colored, with the sheet taped down to it. */
+.board {
+  position: relative;
+  padding: clamp(1.2rem, 3vw, 2.2rem);
+  background: var(--board);
+  border-radius: 3px;
+}
+
+.sheet {
+  position: relative;
+  aspect-ratio: 1.2 / 1;
+  overflow: hidden;
+  background: var(--paper);
+  clip-path: polygon(0.0% 0.5%, 4.2% 0.2%, 8.3% 1.0%, 12.5% 0.1%, 16.7% 0.9%, 20.8% 0.6%, 25.0% 0.1%, 29.2% 0.8%, 33.3% 0.1%, 37.5% 0.7%, 41.7% 0.1%, 45.8% 0.1%, 50.0% 0.7%, 54.2% 1.3%, 58.3% 0.2%, 62.5% 0.4%, 66.7% 1.0%, 70.8% 1.5%, 75.0% 0.9%, 79.2% 0.6%, 83.3% 1.6%, 87.5% 0.1%, 91.7% 1.4%, 95.8% 0.5%, 99.8% 0.0%, 99.8% 4.2%, 99.6% 8.3%, 98.9% 12.5%, 99.7% 16.7%, 99.2% 20.8%, 99.1% 25.0%, 99.5% 29.2%, 99.2% 33.3%, 99.9% 37.5%, 99.9% 41.7%, 99.7% 45.8%, 99.0% 50.0%, 99.4% 54.2%, 99.6% 58.3%, 99.2% 62.5%, 99.4% 66.7%, 99.6% 70.8%, 98.9% 75.0%, 99.0% 79.2%, 99.7% 83.3%, 99.2% 87.5%, 99.3% 91.7%, 98.8% 95.8%, 100.0% 98.8%, 95.8% 99.5%, 91.7% 98.4%, 87.5% 99.8%, 83.3% 99.3%, 79.2% 98.8%, 75.0% 99.8%, 70.8% 99.2%, 66.7% 99.9%, 62.5% 98.9%, 58.3% 98.8%, 54.2% 99.1%, 50.0% 98.6%, 45.8% 99.5%, 41.7% 98.9%, 37.5% 99.0%, 33.3% 99.1%, 29.2% 99.3%, 25.0% 98.7%, 20.8% 98.5%, 16.7% 99.2%, 12.5% 98.9%, 8.3% 99.9%, 4.2% 98.9%, 0.9% 100.0%, 1.4% 95.8%, 1.2% 91.7%, 0.4% 87.5%, 0.5% 83.3%, 0.9% 79.2%, 0.0% 75.0%, 0.6% 70.8%, 0.2% 66.7%, 0.2% 62.5%, 0.1% 58.3%, 1.1% 54.2%, 0.2% 50.0%, 0.3% 45.8%, 0.5% 41.7%, 1.2% 37.5%, 0.1% 33.3%, 0.6% 29.2%, 0.8% 25.0%, 1.2% 20.8%, 1.1% 16.7%, 1.2% 12.5%, 0.4% 8.3%, 0.6% 4.2%);
+}
+
+/* The wash, inside the sheet's margins, its edges left soft and uneven
+   where the water stopped. */
+.sheetWash {
+  position: absolute;
+  inset: 3% 3% 4% 3%;
+  overflow: hidden;
+  -webkit-mask-image:
+    radial-gradient(ellipse 60% 62% at 46% 46%, black 72%, transparent 100%),
+    radial-gradient(ellipse 36% 40% at 66% 62%, black 50%, transparent 100%);
+  mask-image:
+    radial-gradient(ellipse 60% 62% at 46% 46%, black 72%, transparent 100%),
+    radial-gradient(ellipse 36% 40% at 66% 62%, black 50%, transparent 100%);
+}
+
+.tape {
+  position: absolute;
+  width: 6.5rem;
+  height: 1.7rem;
+  background: color-mix(in oklab, var(--paper) 62%, var(--sienna));
+  opacity: 0.9;
+}
+
+.tapeA {
+  left: 0.4rem;
+  top: 1rem;
+  transform: rotate(-38deg);
+}
+
+.tapeB {
+  right: 0.4rem;
+  top: 1rem;
+  transform: rotate(36deg);
+}
+
+.sheetCaption {
+  margin: 0.9rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  font-style: italic;
+  text-align: right;
+}
+
+/* ------------------------------------------------------------- the palette
+   A paint tin of four pans, each a link to its part of the page. */
+
+.palette {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.6rem, 1.6vw, 1.2rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  background: var(--tin);
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+}
+
+.pan {
+  display: grid;
+  align-content: start;
+  gap: 0.1rem;
+  padding: 0.7rem 0.7rem 0.9rem;
+  background: var(--paper);
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.well {
+  display: block;
+  height: clamp(4rem, 8vw, 6rem);
+  margin-bottom: 0.6rem;
+  border-radius: 9px;
+  background:
+    radial-gradient(ellipse 70% 60% at 32% 30%, color-mix(in oklab, var(--tone) 45%, var(--paper)), transparent 70%),
+    radial-gradient(ellipse 60% 70% at 75% 80%, color-mix(in oklab, var(--tone) 80%, var(--indigo)), transparent 75%),
+    var(--tone);
+}
+
+.pigment {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-style: italic;
+  line-height: 1.15;
+}
+
+.part {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.pan:hover .pigment {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 2.8rem);
+}
+
+.secTitle {
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
+  line-height: 1;
+}
+
+.secNote {
+  margin: 0;
+  max-width: 36rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ classes */
+
+.classGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.6fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.classes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.course {
+  padding: 1.3rem 1.4rem 1.5rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+}
+
+/* A single brush stroke of the class's pigment. */
+.stroke {
+  display: block;
+  width: 62%;
+  height: 0.85rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, var(--tone), color-mix(in oklab, var(--tone) 55%, var(--paper)) 85%, transparent);
+  border-radius: 40% 70% 60% 30% / 60% 40% 70% 50%;
+}
+
+.courseHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.courseName {
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.coursePrice {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.courseWhen {
+  margin: 0.4rem 0 0;
+  font-weight: 600;
+}
+
+.courseLength {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.courseAbout {
+  margin: 0.7rem 0 0;
+  font-size: 0.98rem;
+}
+
+.kit {
+  padding: 1.4rem 1.4rem 1.5rem;
+  background: var(--wash);
+  border-radius: 6px;
+}
+
+.kitTitle {
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.kitList {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kitList li {
+  padding-bottom: 0.5rem;
+  font-size: 0.96rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.kitNote {
+  margin: 1rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 1.35;
+}
+
+/* ------------------------------------------------------------------- prints */
+
+.prints {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.2rem, 3vw, 2.4rem);
+}
+
+.print {
+  margin: 0;
+}
+
+/* The mat: a wide paper border, a hairline bevel, a soft shadow. */
+.mat {
+  padding: clamp(1rem, 2.4vw, 1.8rem);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  box-shadow: 0 24px 40px -30px color-mix(in oklab, var(--indigo) 60%, transparent);
+}
+
+.printField {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--rule-strong);
+}
+
+.printCaption {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 1rem;
+  margin-top: 1rem;
+}
+
+.printTitle {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.printMeta {
+  grid-row: 2;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.printPrice {
+  grid-row: 1 / 3;
+  grid-column: 2;
+  align-self: center;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------- commissions */
+
+.commission {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.commission .secNote {
+  margin-top: 1.2rem;
+}
+
+.prices {
+  margin: 1.8rem 0 0;
+}
+
+.prices div {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.prices dt {
+  flex: 1;
+}
+
+.prices dd {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.steps {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.step {
+  position: relative;
+  padding: 1.1rem 0 1.2rem 4.2rem;
+  border-top: 1px solid var(--rule);
+  counter-increment: step;
+}
+
+.step:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.step::before {
+  content: counter(step);
+  position: absolute;
+  left: 0.4rem;
+  top: 0.4rem;
+  font-family: var(--serif);
+  font-size: 3rem;
+  font-style: italic;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.stepTitle {
+  font-size: 1.55rem;
+  line-height: 1.15;
+}
+
+.stepText {
+  margin: 0.3rem 0 0;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ holiday */
+
+.holiday {
+  margin-top: clamp(4.5rem, 8vw, 6.5rem);
+  background: var(--indigo);
+  color: var(--on-indigo);
+}
+
+.holidayInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2.5rem clamp(2rem, 6vw, 6rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut);
+}
+
+.holidayKicker {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--indigo-muted);
+}
+
+.holidayTitle {
+  margin-top: 0.8rem;
+  font-size: clamp(2.5rem, 4.6vw, 3.9rem);
+  line-height: 1;
+}
+
+.holidayLead {
+  margin: 1.2rem 0 0;
+  max-width: 32rem;
+  color: var(--indigo-muted);
+}
+
+.holidayField {
+  position: relative;
+  aspect-ratio: 1.5 / 1;
+  margin-top: 2rem;
+  overflow: hidden;
+  background: var(--paper);
+  border: clamp(0.6rem, 1.4vw, 1rem) solid var(--paper);
+  border-radius: 2px;
+}
+
+.days {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.days li {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--indigo-rule);
+}
+
+.days li:first-child {
+  border-top: 1px solid var(--indigo-rule);
+}
+
+.dayName {
+  font-size: 1.4rem;
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.dayPlan {
+  margin: 0;
+  font-size: 0.98rem;
+}
+
+.holidayPrices {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.holidayPrices dt {
+  font-size: 0.86rem;
+  color: var(--indigo-muted);
+}
+
+.holidayPrices dd {
+  margin: 0.2rem 0 0;
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.holidayNote {
+  margin: 1.6rem 0 0;
+  font-size: 0.95rem;
+  color: var(--indigo-muted);
+}
+
+/* ------------------------------------------------------------------ contact */
+
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 2.5rem clamp(2rem, 5vw, 5rem);
+  align-items: start;
+  padding-bottom: clamp(4.5rem, 8vw, 6.5rem);
+}
+
+.contact .secNote {
+  margin-top: 1.2rem;
+}
+
+.details {
+  margin: 1.8rem 0 0;
+}
+
+.details div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.details dt {
+  font-weight: 600;
+}
+
+.details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.details a {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--wash);
+  border-radius: 6px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.85rem 1.8rem;
+  font: inherit;
+  font-weight: 600;
+  background: var(--indigo);
+  color: var(--on-indigo);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--paper);
+}
+
+.footField {
+  position: relative;
+  height: 9rem;
+  overflow: hidden;
+  background: var(--paper);
+  -webkit-mask-image: linear-gradient(180deg, transparent, black 45%);
+  mask-image: linear-gradient(180deg, transparent, black 45%);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: 0.5rem 3rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+}
+
+.footName {
+  grid-row: 1 / 3;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.footText {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.footText a {
+  color: var(--text);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+/* -------------------------------------------------------------- breakpoints */
+
+@media (max-width: 1100px) {
+  .classGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .hero,
+  .secHead,
+  .commission,
+  .holidayInner,
+  .contact {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .palette {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0 var(--gut);
+  }
+
+  .prints {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footName {
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .classes,
+  .prints,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .days li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  .holidayPrices {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tape {
+    width: 4.5rem;
+    height: 1.3rem;
+  }
+
+  .brand {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+}

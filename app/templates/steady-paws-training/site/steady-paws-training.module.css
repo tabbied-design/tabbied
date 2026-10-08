@@ -1,0 +1,929 @@
+/* ==========================================================================
+   STEADY PAWS DOG TRAINING - a fenced field by the river
+   Pale turf, pine green, an orange cone, a blue tunnel and a yellow
+   contact-zone flag: the colours of an agility course. Rubik, round and
+   heavy, for the signs; Nunito for everything said to a dog owner. The
+   layout idea is the course map: the hero is the field from above, the
+   hairpin pattern laid out as hurdles with a dashed route running through
+   four numbered pins, and the page below walks the same route, station by
+   station along a dashed line, to the finish where you book.
+   ========================================================================== */
+
+.page {
+  --turf: #eef2e1;
+  --pine: #1f3a2b;
+  --cone: #e0652a;
+  --tunnel: #2b63b0;
+  --flag: #f2c53d;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --rail: max(var(--gut), calc((100% - var(--max)) / 2));
+  --display: 'Rubik', 'Arial Rounded MT Bold', Arial, sans-serif;
+  --sans: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--pine);
+  --on-pine: var(--turf);
+  --on-cone: var(--pine);
+  --on-tunnel: var(--turf);
+  --on-flag: var(--pine);
+
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  background: var(--turf);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--turf) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--pine));
+    --on-pine: color-mix(in oklab, oklch(from var(--pine) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--pine));
+    --on-cone: oklch(from var(--cone) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-tunnel: oklch(from var(--tunnel) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-flag: oklch(from var(--flag) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 76%, var(--turf));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 40%, transparent);
+  --card: color-mix(in oklab, var(--turf) 70%, var(--on-pine));
+  --grass: color-mix(in oklab, var(--turf) 84%, var(--pine));
+  --pine-muted: color-mix(in oklab, var(--on-pine) 76%, var(--pine));
+  --pine-rule: color-mix(in oklab, var(--on-pine) 26%, transparent);
+  --pine-card: color-mix(in oklab, var(--pine) 88%, var(--on-pine));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.page :where(p, ul, ol, dl, dd) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--turf);
+  border-bottom: 3px solid var(--pine);
+}
+
+.brand {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 0.6rem;
+  align-items: center;
+  line-height: 1.05;
+}
+
+/* One hurdle of the hairpin, as the mark. */
+.brandMark {
+  grid-row: 1 / span 2;
+  width: 2rem;
+  height: 2rem;
+  background: var(--cone);
+  border-radius: 0.3rem;
+  clip-path: polygon(10% 10%, 90% 10%, 90% 46%, 34% 46%, 34% 56%, 90% 56%, 90% 90%, 10% 90%, 10% 56%, 66% 56%, 66% 46%, 10% 46%);
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.brandSub {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.9rem, 2vw, 1.8rem);
+}
+
+.nav a {
+  padding: 0.3rem 0;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-bottom: 3px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--cone);
+}
+
+.barCall {
+  padding: 0.55rem 1.05rem;
+  font-family: var(--display);
+  font-size: 0.92rem;
+  font-weight: 700;
+  background: var(--pine);
+  color: var(--on-pine);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--turf);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.kicker {
+  display: inline-block;
+  margin-bottom: 1.1rem;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--flag);
+  color: var(--on-flag);
+  border-radius: 999px;
+}
+
+.heroTitle {
+  font-size: clamp(2.5rem, 4.3vw, 3.85rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.heroTitle span {
+  display: block;
+  font-weight: 500;
+}
+
+.heroLead {
+  max-width: 33rem;
+  margin-top: 1.4rem;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.9rem;
+}
+
+.button,
+.ghost {
+  padding: 0.85rem 1.35rem;
+  font-family: var(--display);
+  font-weight: 700;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--cone);
+  color: var(--on-cone);
+}
+
+.ghost {
+  border: 2.5px solid var(--pine);
+}
+
+.heroBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+  margin-top: 2rem;
+}
+
+.heroBadges li {
+  position: relative;
+  padding-left: 1.2rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.heroBadges li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.35em;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: var(--tunnel);
+}
+
+/* The course map: the field, the route, the pins. */
+.map {
+  position: relative;
+  aspect-ratio: 6 / 5;
+  background: var(--grass);
+  border: 3px solid var(--pine);
+  border-radius: 1.6rem;
+  overflow: hidden;
+}
+
+.mapField {
+  position: absolute;
+  inset: 0;
+}
+
+.route {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.route path {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.routeUnder {
+  stroke: var(--turf);
+  stroke-width: 14;
+}
+
+.routeLine {
+  stroke: var(--pine);
+  stroke-width: 4;
+  stroke-dasharray: 12 9;
+}
+
+.mapStart,
+.mapFinish {
+  position: absolute;
+  padding: 0.2rem 0.7rem;
+  font-family: var(--display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--pine);
+  color: var(--on-pine);
+  border-radius: 999px;
+}
+
+.mapStart {
+  left: 3%;
+  bottom: 3%;
+}
+
+.mapFinish {
+  right: 3%;
+  top: 3%;
+}
+
+.pin {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  translate: -1.5rem -50%;
+}
+
+.pinNo {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  background: var(--cone);
+  color: var(--on-cone);
+  border: 3px solid var(--pine);
+  border-radius: 50%;
+}
+
+.pinLabel {
+  padding: 0.25rem 0.65rem;
+  font-family: var(--display);
+  font-size: 0.86rem;
+  font-weight: 700;
+  white-space: nowrap;
+  background: var(--turf);
+  color: var(--text);
+  border: 2px solid var(--pine);
+  border-radius: 0.5rem;
+}
+
+.pin:hover .pinLabel {
+  background: var(--flag);
+  color: var(--on-flag);
+}
+
+.pin1 { left: 14%; top: 78%; }
+.pin2 { left: 34%; top: 30%; }
+.pin3 { left: 62%; top: 60%; }
+
+.pin4 {
+  left: 86%;
+  top: 22%;
+  flex-direction: row-reverse;
+  translate: calc(-100% + 1.5rem) -50%;
+}
+
+/* ------------------------------------------------------------------ stations */
+
+.station {
+  position: relative;
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--rail) clamp(3.5rem, 7vw, 5.5rem) calc(var(--rail) + 5rem);
+}
+
+/* The route, carried down the page. */
+.station::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--rail) + 1.45rem);
+  border-left: 4px dashed var(--rule-strong);
+}
+
+.stationNo {
+  position: absolute;
+  left: var(--rail);
+  top: clamp(3.2rem, 6.6vw, 5.2rem);
+  display: grid;
+  place-items: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  font-family: var(--display);
+  font-size: 1.45rem;
+  font-weight: 800;
+  background: var(--cone);
+  color: var(--on-cone);
+  border: 3px solid var(--pine);
+  border-radius: 50%;
+}
+
+.stationHead {
+  display: grid;
+  gap: 0.8rem;
+  max-width: 44rem;
+}
+
+.stationKicker {
+  font-family: var(--display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stationTitle {
+  font-size: clamp(2.1rem, 4vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+}
+
+.stationLead {
+  font-size: 1.06rem;
+  color: var(--muted);
+}
+
+/* Station 1: the classes. */
+.classes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+}
+
+.classCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.5rem;
+  background: var(--card);
+  border: 2.5px solid var(--pine);
+  border-radius: 1.2rem;
+}
+
+.classAge {
+  align-self: flex-start;
+  padding: 0.15rem 0.65rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: var(--tunnel);
+  color: var(--on-tunnel);
+  border-radius: 999px;
+}
+
+.className {
+  font-size: 1.45rem;
+  line-height: 1.1;
+}
+
+.classBody {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.classFacts {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: auto;
+  padding-top: 0.8rem;
+  border-top: 2px dashed var(--rule-strong);
+}
+
+.classFacts div {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: 0.6rem;
+  font-size: 0.9rem;
+}
+
+.classFacts dt {
+  font-weight: 700;
+}
+
+/* Station 2: packages, like numbered bibs. */
+.packages {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+}
+
+.package {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  padding: 1.5rem;
+  background: var(--card);
+  border-top: 8px solid var(--flag);
+  border-radius: 0.6rem;
+}
+
+.packageName {
+  font-size: 1.2rem;
+}
+
+.packagePrice {
+  font-family: var(--display);
+  font-size: 2.3rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.packageNote {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.packageItems {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.7rem;
+}
+
+.packageItems li {
+  position: relative;
+  padding-left: 1.2rem;
+  font-size: 0.93rem;
+}
+
+.packageItems li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--cone);
+}
+
+/* Station 3: the dark stretch of the course. */
+.stationDark {
+  background: var(--pine);
+  color: var(--on-pine);
+}
+
+.stationDark::before {
+  border-left-color: var(--pine-rule);
+}
+
+.stationDark .stationKicker,
+.stationDark .stationLead {
+  color: var(--pine-muted);
+}
+
+.stationDark .stationNo {
+  border-color: var(--on-pine);
+}
+
+.behaviorGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.helpsTitle {
+  margin-top: 0.8rem;
+  font-size: 1.15rem;
+}
+
+.helps {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.helps li {
+  position: relative;
+  padding-left: 1.3rem;
+  font-size: 0.96rem;
+}
+
+.helps li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  width: 0.65rem;
+  height: 0.65rem;
+  background: var(--flag);
+  border-radius: 2px;
+}
+
+.vetNote {
+  margin-top: 0.6rem;
+  padding: 0.9rem 1.1rem;
+  font-size: 0.92rem;
+  background: var(--pine-card);
+  border-radius: 0.6rem;
+}
+
+.steps {
+  display: grid;
+  gap: 1rem;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  column-gap: 1rem;
+  padding: 1.2rem 1.3rem;
+  background: var(--pine-card);
+  border-radius: 1rem;
+}
+
+.stepNo {
+  grid-row: 1 / span 2;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-family: var(--display);
+  font-weight: 800;
+  background: var(--flag);
+  color: var(--on-flag);
+  border-radius: 50%;
+}
+
+.stepTitle {
+  font-size: 1.2rem;
+}
+
+.stepBody {
+  margin-top: 0.2rem;
+  font-size: 0.93rem;
+  color: var(--pine-muted);
+}
+
+/* The open field between stations. */
+.field {
+  position: relative;
+  height: clamp(7rem, 12vw, 10rem);
+  background: var(--pine);
+  border-bottom: 6px solid var(--flag);
+}
+
+/* Station 4: the principles. */
+.principles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+  counter-reset: rule;
+}
+
+.principle {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  padding: 1.4rem 1.3rem;
+  background: var(--card);
+  border-left: 6px solid var(--tunnel);
+  border-radius: 0.4rem 1rem 1rem 0.4rem;
+}
+
+.principleTitle {
+  font-size: 1.2rem;
+  line-height: 1.15;
+}
+
+.principleBody {
+  font-size: 0.93rem;
+  color: var(--muted);
+}
+
+/* Station 5: the finish. */
+.stationFinish::before {
+  bottom: auto;
+  height: 6rem;
+}
+
+.stationFinish .stationNo {
+  background: var(--flag);
+  color: var(--on-flag);
+}
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.address {
+  margin-top: 1.3rem;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.addressNote {
+  margin-top: 0.5rem;
+  color: var(--muted);
+}
+
+.hours {
+  display: grid;
+  margin: 1.4rem 0;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 2px dashed var(--rule);
+}
+
+.hours dt {
+  font-weight: 700;
+}
+
+.hours dd {
+  text-align: right;
+  color: var(--muted);
+}
+
+.contactLine {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 2;
+}
+
+.contactLine a {
+  border-bottom: 3px solid var(--cone);
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--card);
+  border: 2.5px solid var(--pine);
+  border-radius: 1.4rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.formField {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.formField label {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.formField input,
+.formField select,
+.formField textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--turf);
+  border: 2px solid var(--rule-strong);
+  border-radius: 0.7rem;
+}
+
+.formField textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  background: var(--cone);
+  color: var(--on-cone);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.formNote {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--pine);
+  color: var(--on-pine);
+}
+
+.fence {
+  position: relative;
+  height: 4.25rem;
+}
+
+.footInner {
+  display: grid;
+  gap: 0.45rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.footText {
+  max-width: 44rem;
+  font-size: 0.92rem;
+  color: var(--pine-muted);
+}
+
+.footText a {
+  color: var(--on-pine);
+  border-bottom: 1px solid currentColor;
+}
+
+/* -------------------------------------------------------------- breakpoints */
+
+@media (max-width: 1100px) {
+  .principles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .classes,
+  .packages {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 920px) {
+  .nav,
+  .barCall {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .hero,
+  .behaviorGrid,
+  .bookGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .station {
+    padding-left: calc(var(--rail) + 3.4rem);
+  }
+
+  .station::before {
+    left: calc(var(--rail) + 1rem);
+  }
+
+  .stationNo {
+    width: 2.4rem;
+    height: 2.4rem;
+    font-size: 1.1rem;
+  }
+
+  .principles,
+  .formRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pinNo {
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1rem;
+  }
+
+  .pin {
+    translate: -1.1rem -50%;
+  }
+
+  .pin4 {
+    translate: calc(-100% + 1.1rem) -50%;
+  }
+
+  .pinLabel {
+    font-size: 0.72rem;
+    padding: 0.15rem 0.45rem;
+  }
+
+  .mapStart,
+  .mapFinish {
+    font-size: 0.68rem;
+  }
+
+  .step {
+    padding: 1rem;
+    column-gap: 0.8rem;
+  }
+}

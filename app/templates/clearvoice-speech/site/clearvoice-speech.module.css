@@ -1,0 +1,934 @@
+/* ==========================================================================
+   CLEARVOICE SPEECH THERAPY - speech-language pathologists
+   Everything on the page speaks in one shape: lobeform's leaf, three
+   corners round and one square, which is a speech bubble with its tail
+   tucked in. Services are two conversations (children on the left, adults
+   on the right), the sounds-by-age chart is a staircase of bubbles, and
+   the pattern itself is the big bubble in the hero. Warm cream and a deep
+   plum, with a playground of brights kept for fills and the pattern. A
+   friendly grotesque for headings and Atkinson Hyperlegible, a face drawn
+   for low vision, for everything you read.
+   ========================================================================== */
+
+.page {
+  --cream: #fbf6ef;
+  --plum: #2d2350;
+  --coral: #ef6f57;
+  --teal: #2a9d8f;
+  --butter: #f4c95d;
+  --sky: #9cc5ef;
+
+  --text: var(--plum);
+  --on-plum: var(--cream);
+  --on-coral: var(--plum);
+  --on-teal: var(--cream);
+  --on-butter: var(--plum);
+  --on-sky: var(--plum);
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 76rem;
+  --r: 1.6rem;
+  --display: 'Bricolage Grotesque', 'Trebuchet MS', sans-serif;
+  --sans: 'Atkinson Hyperlegible', 'Verdana', sans-serif;
+
+  font-family: var(--sans);
+  font-size: 1.06rem;
+  line-height: 1.6;
+  background: var(--cream);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--cream) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--plum));
+    --on-plum: color-mix(in oklab, oklch(from var(--plum) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--plum));
+    --on-coral: oklch(from var(--coral) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-teal: oklch(from var(--teal) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-butter: oklch(from var(--butter) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-sky: oklch(from var(--sky) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--cream));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 40%, transparent);
+  --tint-sky: color-mix(in oklab, var(--cream) 80%, var(--sky));
+  --tint-coral: color-mix(in oklab, var(--cream) 84%, var(--coral));
+  --tint-teal: color-mix(in oklab, var(--cream) 85%, var(--teal));
+  --tint-butter: color-mix(in oklab, var(--cream) 76%, var(--butter));
+  --plum-muted: color-mix(in oklab, var(--on-plum) 78%, var(--plum));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, h4, p) {
+  margin: 0;
+}
+
+.page :where(h1, h2, h3, h4) {
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--cream);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  justify-self: start;
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 0.65rem;
+  align-items: center;
+  line-height: 1;
+}
+
+.brandMark {
+  grid-row: 1 / span 2;
+  width: 2.1rem;
+  height: 2.1rem;
+  background: var(--coral);
+  border-radius: 50% 50% 50% 0;
+  box-shadow: inset -0.55rem -0.55rem 0 0 var(--butter);
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.brandSub {
+  margin-top: 0.15rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.8rem, 1.8vw, 1.6rem);
+}
+
+.nav a {
+  font-size: 0.95rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+}
+
+.nav a:hover {
+  background: var(--tint-butter);
+}
+
+.barBook {
+  padding: 0.65rem 1.15rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  background: var(--plum);
+  color: var(--on-plum);
+  border-radius: var(--r) var(--r) var(--r) 0;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--cream);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 5.5rem) var(--gut) clamp(3.5rem, 7vw, 6rem);
+}
+
+.kicker {
+  display: inline-block;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: var(--tint-butter);
+  border-radius: var(--r) var(--r) var(--r) 0;
+}
+
+.heroTitle {
+  margin-top: 1.4rem;
+  font-size: clamp(3.2rem, 7vw, 6.2rem);
+  font-weight: 700;
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.heroLead {
+  max-width: 33rem;
+  margin-top: 1.5rem;
+  font-size: 1.15rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.95rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: var(--r) var(--r) var(--r) 0;
+}
+
+.button {
+  background: var(--plum);
+  color: var(--on-plum);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--plum) 84%, var(--coral));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ghost:hover {
+  background: var(--tint-sky);
+}
+
+.heroArt {
+  position: relative;
+  width: min(100%, 34rem);
+  justify-self: end;
+  padding: 1.5rem 0 2.5rem 1.5rem;
+}
+
+.heroBubble {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50% 50% 50% 0;
+  background: var(--plum);
+}
+
+.saySmall,
+.sayLarge {
+  position: absolute;
+  padding: 0.9rem 1.2rem;
+  box-shadow: 0 0 0 5px var(--cream);
+}
+
+.saySmall {
+  top: 0;
+  left: 0;
+  background: var(--cream);
+  color: var(--text);
+  border: 2px solid var(--text);
+  border-radius: var(--r) var(--r) var(--r) 0;
+}
+
+.sayLarge {
+  right: -0.5rem;
+  bottom: 0.5rem;
+  max-width: 15rem;
+  background: var(--butter);
+  color: var(--on-butter);
+  border-radius: var(--r) var(--r) 0 var(--r);
+}
+
+.sayLabel {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.sayText {
+  font-size: 0.98rem;
+  line-height: 1.4;
+}
+
+.sayFigure {
+  font-family: var(--display);
+  font-size: 2.3rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+/* ---------------------------------------------------------------- sections */
+
+.sec {
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.sec > * {
+  max-width: var(--max);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tinted {
+  background: var(--tint-sky);
+}
+
+.head {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.head > * {
+  max-width: 42rem;
+}
+
+.title {
+  font-size: clamp(2.4rem, 4.6vw, 3.8rem);
+  line-height: 1;
+}
+
+.note {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+/* Who we help: two threads of bubbles. */
+
+.threads {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 4rem);
+}
+
+.threadTitle {
+  display: inline-block;
+  margin-bottom: 1.2rem;
+  padding: 0.45rem 1.1rem;
+  font-size: 1.15rem;
+  background: var(--coral);
+  color: var(--on-coral);
+  border-radius: var(--r) var(--r) var(--r) 0;
+}
+
+.threadRight {
+  text-align: right;
+}
+
+.threadRight .threadTitle {
+  background: var(--teal);
+  color: var(--on-teal);
+  border-radius: var(--r) var(--r) 0 var(--r);
+}
+
+.bubbles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.9rem;
+  text-align: left;
+}
+
+.bubble {
+  width: 88%;
+  padding: 1.2rem 1.4rem 1.3rem;
+  background: var(--tint-coral);
+  border-radius: var(--r) var(--r) var(--r) 0;
+}
+
+.bubble:nth-child(even) {
+  margin-left: 12%;
+  background: var(--tint-butter);
+}
+
+.threadRight .bubble {
+  margin-left: 12%;
+  background: var(--tint-teal);
+  border-radius: var(--r) var(--r) 0 var(--r);
+}
+
+.threadRight .bubble:nth-child(even) {
+  margin-left: 0;
+  background: var(--tint-sky);
+}
+
+.bubbleTitle {
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+.bubbleText {
+  margin-top: 0.45rem;
+  color: var(--muted);
+}
+
+.bubbleAges {
+  margin-top: 0.6rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+/* Sounds by age: a staircase of bubbles, later sounds further right. */
+
+.soundsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.chartNote {
+  margin-top: 1.4rem;
+  padding: 0.9rem 1.2rem;
+  font-weight: 700;
+  background: var(--cream);
+  border-radius: var(--r) var(--r) var(--r) 0;
+}
+
+.chart {
+  list-style: none;
+  margin: 0;
+  padding: 1.4rem clamp(1rem, 3vw, 2rem);
+  background: var(--cream);
+  border-radius: 2.4rem 2.4rem 2.4rem 0;
+}
+
+.chartRow {
+  display: grid;
+  grid-template-columns: 4.2rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 0.85rem 0;
+}
+
+.chartRow + .chartRow {
+  border-top: 1.5px dashed var(--rule-strong);
+}
+
+.chartAge {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.chartRow:nth-child(2) .chips { padding-left: 8%; }
+.chartRow:nth-child(3) .chips { padding-left: 16%; }
+.chartRow:nth-child(4) .chips { padding-left: 24%; }
+.chartRow:nth-child(5) .chips { padding-left: 32%; }
+
+.chip {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  font-family: var(--display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+  background: var(--chip);
+  color: var(--on-chip);
+  border-radius: 50% 50% 50% 0;
+}
+
+.plum { --chip: var(--plum); --on-chip: var(--on-plum); }
+.teal { --chip: var(--teal); --on-chip: var(--on-teal); }
+.coral { --chip: var(--coral); --on-chip: var(--on-coral); }
+.butter { --chip: var(--butter); --on-chip: var(--on-butter); }
+.sky { --chip: var(--sky); --on-chip: var(--on-sky); }
+
+/* First visit */
+
+.steps {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.step {
+  padding: 1.4rem 1.3rem 1.6rem;
+  border: 2px solid var(--text);
+  border-radius: var(--r) var(--r) var(--r) 0;
+}
+
+.stepNo {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  background: var(--plum);
+  color: var(--on-plum);
+  border-radius: 50% 50% 50% 0;
+}
+
+.stepTitle {
+  margin-top: 1rem;
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+.stepText {
+  margin-top: 0.5rem;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+/* Teletherapy: the dark room with the screen in it. */
+
+.tele {
+  background: var(--plum);
+  color: var(--on-plum);
+}
+
+.teleInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.teleScreen {
+  padding: 0.9rem 0.9rem 0;
+  background: color-mix(in oklab, var(--plum) 80%, var(--on-plum));
+  border-radius: 1.4rem 1.4rem 1.4rem 0;
+}
+
+.teleField {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 0.8rem;
+  background: var(--plum);
+}
+
+.teleCaption {
+  padding: 0.7rem 0.3rem 0.8rem;
+  font-size: 0.86rem;
+  text-align: center;
+}
+
+.teleTitle {
+  font-size: clamp(2.2rem, 4vw, 3.3rem);
+  line-height: 1.02;
+}
+
+.teleLead {
+  margin-top: 1.1rem;
+  font-size: 1.1rem;
+  color: var(--plum-muted);
+}
+
+.kitTitle {
+  margin-top: 1.8rem;
+  font-size: 1.2rem;
+}
+
+.kit {
+  list-style: none;
+  margin: 0.7rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.kit li {
+  position: relative;
+  padding-left: 1.8rem;
+}
+
+.kit li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.35rem;
+  width: 1rem;
+  height: 1rem;
+  background: var(--butter);
+  border-radius: 50% 50% 50% 0;
+}
+
+/* Fees and insurance */
+
+.feesGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.fees {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.fees th,
+.fees td {
+  padding: 0.95rem 0.6rem;
+  text-align: left;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.fees thead th {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--text);
+}
+
+.fees tbody th {
+  font-weight: 700;
+}
+
+.fees td {
+  color: var(--muted);
+}
+
+.fees td:last-child,
+.fees thead th:last-child {
+  text-align: right;
+}
+
+.fees td:last-child {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.insurance {
+  padding: clamp(1.4rem, 3vw, 2rem);
+  background: var(--tint-butter);
+  border-radius: 2rem 2rem 0 2rem;
+}
+
+.insTitle {
+  font-size: 1.25rem;
+}
+
+.insTitle + .insList,
+.insTitle + .people {
+  margin-top: 0.8rem;
+}
+
+.insNote + .insTitle {
+  margin-top: 1.8rem;
+}
+
+.insList {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.insList li {
+  padding: 0.3rem 0.8rem;
+  font-size: 0.9rem;
+  background: var(--cream);
+  border-radius: 1rem 1rem 1rem 0;
+}
+
+.insNote {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.people {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.personName {
+  font-weight: 700;
+}
+
+.personRole,
+.personNote {
+  font-size: 0.92rem;
+}
+
+.personNote {
+  color: var(--muted);
+}
+
+/* Contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.contactList {
+  display: grid;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.contactList dt {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contactList dd {
+  margin: 0.1rem 0 0;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--cream);
+  border-radius: 2rem 2rem 2rem 0;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.9rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--cream);
+  border: 2px solid var(--rule-strong);
+  border-radius: 0.8rem;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.95rem 1.6rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--on-plum);
+  background: var(--plum);
+  border: 0;
+  border-radius: var(--r) var(--r) var(--r) 0;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--plum) 84%, var(--coral));
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--plum);
+  color: var(--on-plum);
+}
+
+.footLobes {
+  position: relative;
+  height: 80px;
+  overflow: hidden;
+  background: var(--plum);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) auto;
+  gap: 1rem 2.5rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 2.8rem;
+  font-size: 0.94rem;
+  color: var(--plum-muted);
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--on-plum);
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1120px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .soundsGrid,
+  .teleInner,
+  .feesGrid,
+  .contactGrid,
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    justify-self: center;
+  }
+}
+
+@media (max-width: 680px) {
+  .barBook {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .threads,
+  .steps,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    padding: 1.2rem 0 2rem 0.6rem;
+  }
+
+  .sayLarge {
+    right: 0;
+    max-width: 12rem;
+  }
+
+  .sayFigure {
+    font-size: 1.8rem;
+  }
+
+  .chartRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .chartRow:nth-child(n) .chips {
+    padding-left: 0;
+  }
+
+  .chip {
+    width: 2.7rem;
+    height: 2.7rem;
+    font-size: 1.1rem;
+  }
+}

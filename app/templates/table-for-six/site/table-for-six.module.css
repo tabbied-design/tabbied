@@ -1,0 +1,890 @@
+/* ==========================================================================
+   TABLE FOR SIX - private chef
+   A dinner laid on a tiled table. The ground is a deep bottle-green
+   cloth, the menus are cream cards set down on it, and tesserae is the
+   mosaic tabletop the first card rests on. The sections are the courses
+   of an evening: the autumn card itself, dinner parties, weekly meals,
+   every diet at one table, and how to book. An old-style garamond for the
+   menu and a geometric sans for the small print.
+   ========================================================================== */
+
+.page {
+  --cloth: #1f2b26;
+  --card: #f3ebdc;
+  --paprika: #c8553d;
+  --saffron: #e3a73e;
+  --herb: #8aa37b;
+
+  --text: var(--card);
+  --on-card: var(--cloth);
+  --on-paprika: var(--card);
+  --on-saffron: var(--cloth);
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 74rem;
+  --serif: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  --sans: 'Jost', 'Futura', 'Helvetica Neue', Arial, sans-serif;
+
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  line-height: 1.65;
+  background: var(--cloth);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--cloth) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--card));
+    --on-card: color-mix(in oklab, oklch(from var(--card) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--card));
+    --on-paprika: oklch(from var(--paprika) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-saffron: oklch(from var(--saffron) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+/* Each surface names its own text, muted text and rules. */
+.page {
+  --fg: var(--text);
+  --muted: color-mix(in oklab, var(--text) 74%, var(--cloth));
+  --rule: color-mix(in oklab, var(--text) 22%, transparent);
+}
+
+.paper,
+.heroCard,
+.menuCard,
+.plan,
+.form {
+  --fg: var(--on-card);
+  --muted: color-mix(in oklab, var(--on-card) 72%, var(--card));
+  --rule: color-mix(in oklab, var(--on-card) 24%, transparent);
+  background: var(--card);
+  color: var(--on-card);
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, blockquote) {
+  margin: 0;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--serif);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+/* Prices, times and counts in lining figures; the old-style ones the
+   garamond sets by default sink below the line at display sizes. */
+.heroFacts dd,
+.time,
+.planPrice,
+.prepPrice,
+.menuPrice,
+.bookNo,
+.contactList dd {
+  font-variant-numeric: lining-nums;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--cloth);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  justify-self: start;
+  display: grid;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.brandSub {
+  margin-top: 0.25rem;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.9rem, 2vw, 1.9rem);
+}
+
+.nav a {
+  font-size: 0.86rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--saffron);
+}
+
+.barBook {
+  padding: 0.6rem 1.15rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--card);
+  color: var(--on-card);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--cloth);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  display: grid;
+  align-items: center;
+  min-height: clamp(36rem, 58vw, 50rem);
+  padding: clamp(3rem, 7vw, 6rem) var(--gut);
+}
+
+.tabletop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.heroCard {
+  position: relative;
+  width: min(100%, 40rem);
+  margin-left: max(0px, calc((100% - var(--max)) / 2));
+  padding: clamp(2rem, 5vw, 3.6rem);
+  text-align: center;
+  outline: 1px solid var(--rule);
+  outline-offset: -14px;
+  box-shadow: 0 30px 60px -30px color-mix(in oklab, var(--cloth) 80%, transparent);
+}
+
+.cardTop {
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  margin-top: 1.2rem;
+  font-size: clamp(2.9rem, 5.8vw, 5rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: italic;
+}
+
+.heroLead {
+  max-width: 30rem;
+  margin: 1.4rem auto 0;
+  font-size: 1.06rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.8rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.button {
+  background: var(--cloth);
+  color: var(--text);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--cloth) 85%, var(--paprika));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1px var(--fg);
+}
+
+.ghost:hover {
+  background: color-mix(in oklab, var(--card) 90%, var(--saffron));
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 2.2rem 0 0;
+  padding-top: 1.3rem;
+  border-top: 1px solid var(--rule);
+}
+
+.heroFacts div {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.heroFacts dt {
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 2.1rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+/* -------------------------------------------------------- the autumn card */
+
+.menuSec {
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.menuCard {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: clamp(2.2rem, 5vw, 4rem) clamp(1.4rem, 5vw, 4rem);
+  text-align: center;
+  outline: 1px solid var(--rule);
+  outline-offset: -14px;
+}
+
+.season {
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.menuTitle {
+  margin-top: 0.6rem;
+  font-size: clamp(2.6rem, 5vw, 3.8rem);
+  font-style: italic;
+  line-height: 1;
+}
+
+.menuIntro {
+  max-width: 28rem;
+  margin: 1rem auto 0;
+  color: var(--muted);
+}
+
+.course {
+  margin-top: 2.2rem;
+}
+
+.courseName {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.courseName::before,
+.courseName::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--paprika);
+}
+
+.dishes {
+  list-style: none;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.dishes li {
+  display: grid;
+}
+
+.dish {
+  font-family: var(--serif);
+  font-size: 1.55rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.dishNote {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.menuPrice {
+  margin-top: 2.6rem;
+  padding-top: 1.4rem;
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-weight: 600;
+  border-top: 1px solid var(--rule);
+}
+
+.menuSmall {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.strip {
+  position: relative;
+  height: clamp(90px, 10vw, 140px);
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------- sections */
+
+.sec {
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.sec > * {
+  max-width: var(--max);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.secHead {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead > * {
+  max-width: 40rem;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.label::before {
+  content: '';
+  width: 2.2rem;
+  height: 1px;
+  background: var(--saffron);
+}
+
+.title {
+  margin-top: 0.8rem;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1;
+}
+
+.note {
+  margin-top: 1rem;
+  font-size: 1.06rem;
+  color: var(--muted);
+}
+
+/* Dinner parties: the evening on the left, the three ways on the right. */
+
+.dinnerGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.evening {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+
+.evening li {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1.1rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.time {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.timeText {
+  color: var(--muted);
+}
+
+.dinnerPlans {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.plan {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 1rem;
+  padding: 1.3rem 1.5rem;
+}
+
+.planName {
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.planPrice {
+  grid-column: 2;
+  grid-row: 1;
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  font-weight: 600;
+  line-height: 1;
+  text-align: right;
+}
+
+.planPer {
+  grid-column: 2;
+  grid-row: 2;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: right;
+  color: var(--muted);
+}
+
+.planNote {
+  grid-column: 1;
+  grid-row: 2 / span 2;
+  margin-top: 0.4rem;
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+/* Meal prep, on the cream. */
+
+.prep {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 2px solid var(--fg);
+}
+
+.prepItem {
+  padding: 1.6rem 1.6rem 1.8rem;
+}
+
+.prepItem:first-child {
+  padding-left: 0;
+}
+
+.prepItem + .prepItem {
+  border-left: 1px solid var(--rule);
+}
+
+.prepPlan {
+  font-size: 1.75rem;
+  line-height: 1.1;
+}
+
+.prepPrice {
+  margin-top: 0.5rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.prepNote {
+  margin-top: 0.7rem;
+  color: var(--muted);
+}
+
+.prepSmall {
+  margin-top: 1.8rem;
+  padding-top: 1.2rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+  border-top: 1px solid var(--rule);
+}
+
+/* Dietary needs */
+
+.dietGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.diets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+  margin: 0;
+}
+
+.diet {
+  padding: 1rem 0 1.1rem;
+  border-top: 1px solid var(--rule);
+}
+
+.diet dt {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.diet dd {
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* Booking, on the cream. */
+
+.booking {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.bookStep {
+  padding-top: 1rem;
+  border-top: 2px solid var(--fg);
+}
+
+.bookNo {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 600;
+  border-radius: 50%;
+  background: var(--paprika);
+  color: var(--on-paprika);
+}
+
+.bookTitle {
+  margin-top: 0.9rem;
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.bookText {
+  margin-top: 0.5rem;
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+.chefNote {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding: 1.6rem 0 0;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+}
+
+.chefNote p {
+  max-width: 40rem;
+  margin: 0 auto;
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  font-style: italic;
+  line-height: 1.3;
+}
+
+.chefNote cite {
+  display: block;
+  margin-top: 0.9rem;
+  font-size: 0.8rem;
+  font-style: normal;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.contactList {
+  display: grid;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.contactList dt {
+  font-size: 0.74rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contactList dd {
+  margin: 0.1rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+  padding: clamp(1.6rem, 4vw, 2.6rem);
+  outline: 1px solid var(--rule);
+  outline-offset: -10px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.2rem;
+  font: inherit;
+  color: var(--fg);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--on-card) 50%, transparent);
+  border-radius: 0;
+}
+
+.field select {
+  background: var(--card);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: 0.4rem;
+  padding: 0.9rem 1.5rem;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: var(--cloth);
+  border: 0;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--cloth) 85%, var(--paprika));
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  border-top: 1px solid var(--rule);
+}
+
+.border {
+  position: relative;
+  height: 72px;
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) auto;
+  gap: 1rem 2.5rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2rem var(--gut) 2.6rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  font-style: italic;
+  color: var(--text);
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .booking {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 2rem;
+  }
+}
+
+@media (max-width: 860px) {
+  .dinnerGrid,
+  .dietGrid,
+  .contactGrid,
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .prep {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .prepItem,
+  .prepItem:first-child {
+    padding: 1.4rem 0;
+  }
+
+  .prepItem + .prepItem {
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+}
+
+@media (max-width: 620px) {
+  .barBook {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .hero {
+    padding: 4.5rem 1.4rem;
+  }
+
+  .heroFacts dd {
+    font-size: 1.6rem;
+  }
+
+  .diets,
+  .booking,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plan {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .planPrice,
+  .planPer,
+  .planNote {
+    grid-column: 1;
+    grid-row: auto;
+    text-align: left;
+  }
+
+  .planPrice {
+    margin-top: 0.4rem;
+  }
+}

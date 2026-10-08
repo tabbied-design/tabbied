@@ -1,0 +1,951 @@
+/* ==========================================================================
+   WITHY ISLAND COTTAGE - a riverside holiday cottage for four
+   Linen pages, willow green, river blue, reed gold, moss and a door-paint
+   rose. Cormorant Garamond for the titles, Mulish to read, Caveat for what
+   guests wrote by hand. The page is the guest book: it lies open on a
+   willow-green cloth in the hero, and each section after it is a page with
+   a folio. The eyot, an islet held between two banks, is the island: the
+   plate in the book, the river map, the band of banks and the footer.
+   ========================================================================== */
+
+.page {
+  --linen: #f3eee0;
+  --willow: #2f4a3a;
+  --river: #5b8c99;
+  --reed: #c2a75a;
+  --moss: #8aa37c;
+  --rose: #b0603f;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 76rem;
+  --serif: 'Cormorant Garamond', 'Garamond', 'Times New Roman', serif;
+  --sans: 'Mulish', 'Helvetica Neue', Arial, sans-serif;
+  --hand: 'Caveat', 'Bradley Hand', cursive;
+
+  --text: var(--willow);
+  --on-willow: var(--linen);
+  --on-river: var(--linen);
+  --on-rose: var(--linen);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.65;
+  background: var(--linen);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--linen) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--willow));
+    --on-willow: color-mix(in oklab, oklch(from var(--willow) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--willow));
+    --on-river: oklch(from var(--river) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-rose: oklch(from var(--rose) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 72%, var(--linen));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 40%, transparent);
+  --leaf: color-mix(in oklab, var(--linen) 86%, var(--moss));
+  --straw: color-mix(in oklab, var(--linen) 84%, var(--reed));
+  --shade: color-mix(in oklab, var(--willow) 22%, transparent);
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--linen);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.brand {
+  display: grid;
+  gap: 0.3rem;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.brandSub {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.9rem, 1.8vw, 1.8rem);
+}
+
+.nav a {
+  padding: 0.2rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-bottom: 1px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  font-weight: 600;
+  --template-menu-bg: var(--linen);
+}
+
+/* --------------------------------------------------------------------- hero
+   The book, open on its cloth. Two linen pages, a crease between them and
+   the edges of the pages underneath showing along the foot. */
+
+.hero {
+  padding: clamp(2rem, 4.5vw, 3.6rem) var(--gut) clamp(3rem, 6vw, 4.6rem);
+  background: var(--willow);
+  color: var(--on-willow);
+}
+
+.book {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  max-width: var(--max);
+  margin: 0 auto;
+  background: var(--linen);
+  color: var(--text);
+  border-radius: 6px;
+  box-shadow:
+    0 3px 0 -1px var(--straw),
+    0 6px 0 -2px var(--linen),
+    0 9px 0 -3px var(--straw),
+    0 30px 60px -30px color-mix(in oklab, var(--willow) 60%, black);
+}
+
+/* The crease down the middle, shaded on both sides. */
+.book::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 4rem;
+  margin-left: -2rem;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--shade) 48%, color-mix(in oklab, var(--willow) 34%, transparent) 50%, var(--shade) 52%, transparent);
+}
+
+.leftPage,
+.rightPage {
+  position: relative;
+  padding: clamp(2rem, 4.5vw, 4rem) clamp(1.6rem, 4vw, 4rem);
+}
+
+.leftPage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.kicker {
+  margin: 0 0 1.4rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.9rem, 5vw, 4.7rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.heroTitle em {
+  display: block;
+  margin-top: 0.3rem;
+  font-style: italic;
+  color: var(--rose);
+}
+
+.heroLead {
+  max-width: 30rem;
+  margin: 1.5rem 0 0;
+  font-size: 1.06rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.8rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.8rem 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--willow);
+  color: var(--on-willow);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--willow) 85%, var(--linen));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1.5px var(--text);
+}
+
+.ghost:hover {
+  background: var(--leaf);
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+  margin: 2rem 0 0;
+  padding: 1.1rem 0 0;
+  list-style: none;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-style: italic;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.rightPage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* The plate: a print tipped into the book, held by four paper corners. */
+.plate {
+  position: relative;
+  aspect-ratio: 1 / 0.92;
+  background: var(--river);
+  box-shadow: 0 0 0 10px var(--linen), 0 0 0 11px var(--rule-strong);
+  margin: 11px;
+}
+
+.plateField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.plate::before,
+.plate::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  width: 2.4rem;
+  height: 2.4rem;
+  background: var(--straw);
+}
+
+.plate::before {
+  top: -11px;
+  left: -11px;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.plate::after {
+  right: -11px;
+  bottom: -11px;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+.plateCaption {
+  margin: 1.6rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  text-align: center;
+  color: var(--muted);
+}
+
+.signature {
+  margin: 0.6rem 0 0;
+  font-family: var(--hand);
+  font-size: 1.9rem;
+  font-weight: 500;
+  line-height: 1.1;
+  text-align: right;
+  transform: rotate(-3deg);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.4rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+/* The folio: the page number, set like a book's. */
+.folio {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0 0 0.4rem;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.folio::after {
+  content: '';
+  flex: 1;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.secTitle {
+  font-size: clamp(2.5rem, 4.6vw, 3.9rem);
+  line-height: 1.02;
+}
+
+.secNote {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- rooms */
+
+.rooms {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.4rem, 3vw, 2.6rem) clamp(1.4rem, 3vw, 3rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.room {
+  padding-top: 1.1rem;
+  border-top: 3px double var(--rule-strong);
+}
+
+.roomName {
+  font-size: 1.9rem;
+  line-height: 1.1;
+}
+
+.roomSleeps {
+  margin: 0.2rem 0 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.roomText {
+  margin: 0.7rem 0 0;
+  font-size: 0.96rem;
+}
+
+/* ------------------------------------------------------------------- river */
+
+.riverGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.mapBox {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--river);
+  border-radius: 4px;
+}
+
+.mapField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.pins {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pins li {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  background: var(--rose);
+  color: var(--on-rose);
+  border: 3px solid var(--linen);
+  border-radius: 50% 50% 50% 0;
+  box-shadow: 0 6px 14px -6px color-mix(in oklab, var(--willow) 70%, transparent);
+}
+
+.pin1 {
+  top: 58%;
+  left: 18%;
+}
+
+.pin2 {
+  top: 22%;
+  left: 64%;
+}
+
+.pin3 {
+  top: 70%;
+  left: 72%;
+}
+
+.pin4 {
+  top: 34%;
+  left: 30%;
+}
+
+.riverLead {
+  margin: 1rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  line-height: 1.35;
+}
+
+.spots {
+  margin: 1.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.spots li {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  column-gap: 1rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.spotNo {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  border: 1.5px solid var(--text);
+  border-radius: 50% 50% 50% 0;
+}
+
+.spotName {
+  font-size: 1.45rem;
+  line-height: 1.15;
+}
+
+.spotNote {
+  margin: 0.2rem 0 0;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ availability */
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 0.95fr);
+  gap: clamp(1.2rem, 2.6vw, 2.4rem);
+  align-items: start;
+}
+
+.monthName {
+  margin-bottom: 0.7rem;
+  font-size: 1.65rem;
+  line-height: 1.1;
+}
+
+.weekdays,
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 3px;
+}
+
+.weekdays span {
+  padding-bottom: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--muted);
+}
+
+.days span {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  font-size: 0.86rem;
+  border-radius: 3px;
+}
+
+.free {
+  font-weight: 700;
+  background: color-mix(in oklab, var(--linen) 70%, var(--moss));
+}
+
+.booked {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.rates {
+  padding: 1.4rem 1.4rem 1.2rem;
+  background: var(--straw);
+  border-radius: 4px;
+}
+
+.ratesTitle {
+  font-size: 1.65rem;
+  line-height: 1.1;
+}
+
+.rateList {
+  margin: 0.8rem 0 0;
+}
+
+.rateList div {
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.rateList dt {
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.rateList dd {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.ratesNote {
+  margin: 0.8rem 0 0;
+  font-size: 0.84rem;
+}
+
+/* -------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(100px, 11vw, 150px);
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  overflow: hidden;
+  background: var(--willow);
+}
+
+/* ------------------------------------------------------------------- rules */
+
+.rulesGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.rulesGrid .secTitle {
+  margin-bottom: 1rem;
+}
+
+/* The card pinned inside the boathouse door. */
+.rules {
+  position: relative;
+  margin: 0;
+  padding: clamp(1.4rem, 3vw, 2.4rem) clamp(1.4rem, 3vw, 2.4rem) clamp(1rem, 2vw, 1.6rem);
+  list-style: none;
+  counter-reset: rule;
+  background: var(--straw);
+  border-radius: 2px;
+  transform: rotate(-0.6deg);
+  box-shadow: 0 18px 30px -22px color-mix(in oklab, var(--willow) 70%, transparent);
+}
+
+.rules::before {
+  content: '';
+  position: absolute;
+  top: -0.6rem;
+  left: 50%;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-left: -0.6rem;
+  background: var(--rose);
+  border-radius: 50%;
+}
+
+.rules li {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  gap: 0.6rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--rule);
+  counter-increment: rule;
+}
+
+.rules li:last-child {
+  border-bottom: 0;
+}
+
+.rules li::before {
+  content: counter(rule, upper-roman) '.';
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* ------------------------------------------------------------------ routes */
+
+.routes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.4rem, 3vw, 3rem);
+}
+
+.route {
+  padding-top: 1rem;
+  border-top: 3px double var(--rule-strong);
+}
+
+.routeHow {
+  font-size: 1.8rem;
+  font-style: italic;
+  line-height: 1.1;
+}
+
+.routeText {
+  margin: 0.6rem 0 0;
+  font-size: 0.96rem;
+}
+
+/* --------------------------------------------------------------- guestbook */
+
+.entriesTitle {
+  font-size: clamp(2rem, 3.6vw, 2.8rem);
+  font-style: italic;
+  line-height: 1.05;
+  text-align: center;
+}
+
+.entries {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.2rem, 2.6vw, 2.2rem);
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A page of the book: ruled lines behind the handwriting. */
+.entry {
+  position: relative;
+  padding: 1.4rem 1.5rem 1.2rem;
+  background: var(--linen);
+  border: 1px solid var(--rule-strong);
+  box-shadow: 4px 4px 0 var(--leaf);
+}
+
+.entry::before {
+  content: '';
+  position: absolute;
+  inset: 1.4rem 1.5rem 3.6rem;
+  pointer-events: none;
+  background: repeating-linear-gradient(180deg, transparent 0 calc(2.2rem - 1px), var(--rule) calc(2.2rem - 1px) 2.2rem);
+}
+
+.entryText {
+  position: relative;
+  margin: 0;
+  font-family: var(--hand);
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 2.2rem;
+}
+
+.entryWho {
+  position: relative;
+  margin: 1rem 0 0;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.entryWhen {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- book */
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.bookInfo .secNote {
+  margin-top: 1rem;
+}
+
+.contactList {
+  margin: 1.8rem 0 0;
+}
+
+.contactList div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.contactList dt {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.contactList dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.contactList a {
+  font-weight: 700;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+  background: var(--leaf);
+  border-radius: 6px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.field input,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--linen);
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.85rem 1.6rem;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--on-willow);
+  background: var(--willow);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--willow);
+  color: var(--on-willow);
+}
+
+.footField {
+  position: relative;
+  height: 84px;
+  overflow: hidden;
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2rem var(--gut) 3rem;
+  font-size: 0.88rem;
+}
+
+.footInner p {
+  margin: 0.3rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.7rem;
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-style: italic;
+  line-height: 1.1;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .calendarGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1080px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .book,
+  .riverGrid,
+  .rulesGrid,
+  .bookGrid,
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .book::after {
+    display: none;
+  }
+
+  .rightPage {
+    padding-top: 0;
+  }
+
+  .rooms,
+  .routes,
+  .entries {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .rooms,
+  .routes,
+  .entries,
+  .calendarGrid,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .brandName {
+    font-size: 1.4rem;
+  }
+
+  .contactList div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}

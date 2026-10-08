@@ -1,0 +1,1073 @@
+/* ==========================================================================
+   SCRAP & PASTE - collage artist and art teacher, Bindery Row
+   A studio wall: kraft paper, plum board, and poster colors in fuchsia,
+   lagoon and marigold, with white paper for every label and card. Gloock
+   for the headings, Figtree for the rest. The paper scraps are the work
+   itself: a board taped up in the hero, six framed pieces in a salon
+   hang, the box of a client's paper beside the commissions and the strip
+   along the footer. Everything pinned to the wall sits a little crooked.
+   ========================================================================== */
+
+.page {
+  --kraft: #e9dcc3; /* role 0: the studio wall */
+  --plum: #2b2133;
+  --fuchsia: #d63d6f;
+  --lagoon: #1f8f8a;
+  --marigold: #f0a830;
+  --paper: #fbf7ee;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --display: 'Gloock', 'Georgia', serif;
+  --body: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--plum);
+  --on-plum: var(--paper);
+  --on-paper: var(--plum);
+  --on-fuchsia: var(--paper);
+  --on-lagoon: var(--paper);
+  --on-marigold: var(--plum);
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--kraft));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 42%, transparent);
+  --tape: color-mix(in oklab, var(--paper) 62%, transparent);
+  --shadow: color-mix(in oklab, var(--plum) 40%, transparent);
+  --tint: color-mix(in oklab, var(--kraft) 84%, var(--lagoon));
+
+  font-family: var(--body);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--kraft);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--kraft) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--plum));
+    --on-plum: color-mix(in oklab, oklch(from var(--plum) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--plum));
+    --on-paper: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 82%, var(--plum));
+    --on-fuchsia: oklch(from var(--fuchsia) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-lagoon: oklch(from var(--lagoon) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-marigold: oklch(from var(--marigold) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--kraft);
+  border-bottom: 2px dashed var(--rule-strong);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.75rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.brandSub {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.2rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barCta {
+  padding: 0.6rem 1.1rem;
+  font-size: 0.92rem;
+  font-weight: 800;
+  background: var(--plum);
+  color: var(--on-plum);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--kraft);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(4rem, 7vw, 6rem);
+}
+
+.kicker {
+  margin: 0 0 1.3rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(3.2rem, 6vw, 5.6rem);
+  line-height: 0.98;
+}
+
+/* The second line, on a torn strip of fuchsia paper. */
+.heroTitle span {
+  display: inline-block;
+  margin-top: 0.12em;
+  padding: 0.04em 0.28em 0.12em;
+  white-space: nowrap;
+  background: var(--fuchsia);
+  color: var(--on-fuchsia);
+  transform: rotate(-2deg);
+  clip-path: polygon(
+    0% 6%, 6% 0%, 14% 5%, 23% 1%, 33% 4%, 44% 0%, 55% 5%, 66% 1%, 77% 4%,
+    88% 0%, 100% 5%, 98% 50%, 100% 95%, 90% 100%, 79% 96%, 68% 100%, 57% 95%,
+    46% 100%, 35% 96%, 24% 100%, 13% 95%, 4% 100%, 1% 52%
+  );
+}
+
+.heroLead {
+  max-width: 33rem;
+  margin: 1.8rem 0 0;
+  font-size: 1.15rem;
+  line-height: 1.65;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2.1rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.9rem 1.5rem;
+  font-size: 1.02rem;
+  font-weight: 800;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--plum);
+  color: var(--on-plum);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--plum) 84%, var(--kraft));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ghost:hover {
+  background: var(--tint);
+}
+
+/* The board, taped to the wall at two corners, with the show card pinned
+   over its lower edge. */
+.heroArt {
+  position: relative;
+  width: min(100%, 36rem);
+  justify-self: end;
+}
+
+.board {
+  position: relative;
+  height: clamp(30rem, 44vw, 38rem);
+  overflow: hidden;
+  background: var(--plum);
+  transform: rotate(2deg);
+  box-shadow: 0 30px 50px -30px var(--shadow);
+}
+
+.heroArt::before,
+.heroArt::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  width: 7.5rem;
+  height: 2rem;
+  background: var(--tape);
+  box-shadow: 0 1px 2px var(--rule);
+}
+
+.heroArt::before {
+  top: -0.6rem;
+  left: -1.6rem;
+  transform: rotate(-32deg);
+}
+
+.heroArt::after {
+  top: 0.4rem;
+  right: -2.2rem;
+  transform: rotate(38deg);
+}
+
+.showCard {
+  position: absolute;
+  z-index: 3;
+  left: -2.5rem;
+  bottom: -2.2rem;
+  width: min(18rem, 70%);
+  padding: 1.3rem 1.4rem 1.2rem;
+  background: var(--paper);
+  color: var(--on-paper);
+  transform: rotate(-3deg);
+  box-shadow: 0 16px 30px -18px var(--shadow);
+}
+
+.showKicker {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.showTitle {
+  margin: 0.2rem 0 0;
+  font-family: var(--display);
+  font-size: 2.1rem;
+  line-height: 1;
+}
+
+.showText {
+  margin: 0.5rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+/* ---------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2.2rem, 5vw, 3.5rem);
+}
+
+.secTitle {
+  font-size: clamp(2.5rem, 5vw, 4.3rem);
+  line-height: 1;
+}
+
+.secNote {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------- the wall */
+
+.wall {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 3.2rem 2.2rem;
+  align-items: start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.work {
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+}
+
+.tall,
+.square {
+  grid-column: span 3;
+}
+
+.wide {
+  grid-column: span 6;
+}
+
+.work:nth-child(2) {
+  margin-top: 3rem;
+}
+
+.work:nth-child(3) {
+  margin-top: 1.2rem;
+}
+
+.work:nth-child(4) {
+  margin-top: 0.8rem;
+}
+
+.work:nth-child(5) {
+  margin-top: 2.6rem;
+}
+
+/* A frame: plum moulding, a white mat, the collage inside. */
+.frame {
+  padding: clamp(0.8rem, 1.6vw, 1.3rem);
+  background: var(--paper);
+  box-shadow: 0 0 0 clamp(6px, 0.8vw, 10px) var(--plum), 0 26px 40px -24px var(--shadow);
+}
+
+.workField {
+  position: relative;
+  overflow: hidden;
+  background: var(--plum);
+}
+
+.tall .workField {
+  aspect-ratio: 4 / 5;
+}
+
+.square .workField {
+  aspect-ratio: 1 / 1;
+}
+
+.wide .workField {
+  aspect-ratio: 3 / 2;
+}
+
+.workLabel {
+  padding-left: 0.9rem;
+  border-left: 3px solid var(--text);
+}
+
+.workTitle {
+  font-size: 1.45rem;
+  line-height: 1.1;
+}
+
+.workMeta,
+.workMade {
+  margin: 0.15rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.workMade {
+  font-style: italic;
+}
+
+.workPrice {
+  margin: 0.35rem 0 0;
+  font-weight: 800;
+}
+
+/* ---------------------------------------------------------------- classes */
+
+.classes {
+  background: var(--plum);
+  color: var(--on-plum);
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.classesInner {
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.classes .secNote {
+  color: color-mix(in oklab, var(--on-plum) 82%, var(--plum));
+}
+
+/* The wall calendar: white paper, a month of squares. */
+.calendar {
+  padding: clamp(1rem, 3vw, 2rem);
+  background: var(--paper);
+  color: var(--on-paper);
+  transform: rotate(-0.5deg);
+  box-shadow: 0 24px 40px -26px var(--shadow);
+}
+
+.month {
+  margin: 0 0 1rem;
+  font-family: var(--display);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  line-height: 1;
+}
+
+.weekdays,
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.weekdays span {
+  padding: 0 0 0.5rem 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.days {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid var(--on-paper);
+  border-left: 1px solid color-mix(in oklab, var(--on-paper) 25%, transparent);
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-height: 7rem;
+  padding: 0.45rem 0.45rem 0.6rem;
+  border-right: 1px solid color-mix(in oklab, var(--on-paper) 25%, transparent);
+  border-bottom: 1px solid color-mix(in oklab, var(--on-paper) 25%, transparent);
+}
+
+.spill {
+  background: color-mix(in oklab, var(--paper) 90%, var(--on-paper));
+}
+
+.spill .dayNo {
+  color: color-mix(in oklab, var(--on-paper) 72%, var(--paper));
+}
+
+.dayNo {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.dayName {
+  display: none;
+}
+
+.dayNote {
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+.chip {
+  display: block;
+  padding: 0.25rem 0.45rem 0.3rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.25;
+  border-radius: 3px;
+}
+
+.kids {
+  background: var(--marigold);
+  color: var(--on-marigold);
+}
+
+.teens {
+  background: var(--fuchsia);
+  color: var(--on-fuchsia);
+}
+
+.adults {
+  background: var(--lagoon);
+  color: var(--on-lagoon);
+}
+
+.family {
+  background: var(--plum);
+  color: var(--on-plum);
+}
+
+.classList {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.classCard {
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem 1.3rem 1.3rem;
+  background: var(--paper);
+  color: var(--on-paper);
+  border-top: 10px solid var(--tag);
+}
+
+.kidsCard {
+  --tag: var(--marigold);
+  transform: rotate(-1deg);
+}
+
+.teensCard {
+  --tag: var(--fuchsia);
+  transform: rotate(0.8deg);
+}
+
+.adultsCard {
+  --tag: var(--lagoon);
+  transform: rotate(-0.4deg);
+}
+
+.familyCard {
+  --tag: var(--kraft);
+  transform: rotate(1deg);
+}
+
+.className {
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+.classWhen {
+  margin: 0.4rem 0 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.classWhat {
+  margin: 0.7rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.classPrice {
+  margin: auto 0 0;
+  padding-top: 1rem;
+  font-weight: 800;
+}
+
+/* ------------------------------------------------------------ commissions */
+
+.commGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.boxWrap {
+  position: relative;
+  padding-top: 1.5rem;
+}
+
+/* An open box of paper: the scraps inside, a lid edge above. */
+.box {
+  position: relative;
+  aspect-ratio: 1 / 1.1;
+  overflow: hidden;
+  background: var(--plum);
+  border: 14px solid color-mix(in oklab, var(--kraft) 70%, var(--plum));
+  border-top-width: 22px;
+}
+
+.boxLabel {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin: 0;
+  padding: 0.5rem 1.2rem;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  white-space: nowrap;
+  background: var(--paper);
+  color: var(--on-paper);
+  transform: translateX(-50%) rotate(-2deg);
+  box-shadow: 0 8px 18px -12px var(--shadow);
+}
+
+.commLead {
+  max-width: 36rem;
+  margin: 1.3rem 0 0;
+  font-size: 1.1rem;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.8rem 2rem;
+  margin: 2.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  column-gap: 0.9rem;
+}
+
+.stepNo {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  background: var(--fuchsia);
+  color: var(--on-fuchsia);
+  border-radius: 50%;
+}
+
+.stepTitle {
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+.stepBody {
+  margin: 0.35rem 0 0;
+  font-size: 0.96rem;
+}
+
+.sizes {
+  width: 100%;
+  max-width: 30rem;
+  margin-top: 2.6rem;
+  border-collapse: collapse;
+}
+
+.sizesCaption {
+  padding-bottom: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--text);
+}
+
+.sizes th,
+.sizes td {
+  padding: 0.65rem 0;
+  border-bottom: 1px dashed var(--rule-strong);
+}
+
+.sizes th {
+  font-weight: 400;
+  text-align: left;
+}
+
+.sizes td {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  text-align: right;
+}
+
+/* ----------------------------------------------------------------- visit */
+
+.visit {
+  background: var(--tint);
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.visitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.visitLead {
+  max-width: 30rem;
+  margin: 1.2rem 0 0;
+  font-size: 1.08rem;
+}
+
+.details {
+  margin: 1.8rem 0 0;
+  border-top: 2px solid var(--text);
+}
+
+.details div {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px dashed var(--rule-strong);
+}
+
+.details dt {
+  font-weight: 800;
+}
+
+.details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.details a:hover {
+  text-decoration: underline;
+}
+
+.form {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  padding: clamp(1.6rem, 4vw, 2.6rem);
+  background: var(--paper);
+  color: var(--on-paper);
+  transform: rotate(0.8deg);
+  box-shadow: 0 24px 44px -26px var(--shadow);
+}
+
+.form::before {
+  content: '';
+  position: absolute;
+  top: -0.9rem;
+  left: 50%;
+  width: 8rem;
+  height: 1.8rem;
+  margin-left: -4rem;
+  background: var(--tape);
+  transform: rotate(-3deg);
+}
+
+.formTitle {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: var(--display);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field label,
+.field legend {
+  padding: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.field input[type='text'],
+.field input[type='email'],
+.field textarea {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+  color: var(--on-paper);
+  background: transparent;
+  border: 2px solid color-mix(in oklab, var(--on-paper) 40%, transparent);
+  border-radius: 4px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--on-paper);
+  outline-offset: 1px;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.pick {
+  position: relative;
+}
+
+.pick input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.pick label {
+  display: inline-block;
+  padding: 0.45rem 0.9rem;
+  font-weight: 600;
+  border: 2px solid color-mix(in oklab, var(--on-paper) 40%, transparent);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.pick input:checked + label {
+  background: var(--plum);
+  border-color: var(--plum);
+  color: var(--on-plum);
+}
+
+.pick input:focus-visible + label {
+  outline: 2px solid var(--on-paper);
+  outline-offset: 2px;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.9rem 1.6rem;
+  font: inherit;
+  font-weight: 800;
+  color: var(--on-plum);
+  background: var(--plum);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--plum) 84%, var(--kraft));
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--plum);
+  color: var(--on-plum);
+}
+
+.footStrip {
+  position: relative;
+  height: clamp(4.5rem, 8vw, 6rem);
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem 3rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2rem var(--gut) 2.6rem;
+}
+
+.footName {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.7rem;
+}
+
+.footSmall {
+  margin: 0;
+  font-size: 0.92rem;
+  color: color-mix(in oklab, var(--on-plum) 84%, var(--plum));
+}
+
+.footSmall a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .classList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chip {
+    font-size: 0.68rem;
+  }
+}
+
+@media (max-width: 920px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .secHead,
+  .commGrid,
+  .visitGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    justify-self: center;
+    width: min(100%, 30rem);
+    margin-bottom: 2rem;
+  }
+
+  .showCard {
+    left: -0.5rem;
+  }
+
+  .tall,
+  .square {
+    grid-column: span 6;
+  }
+
+  .wide {
+    grid-column: span 12;
+  }
+
+  .work:nth-child(n) {
+    margin-top: 0;
+  }
+
+  .boxWrap {
+    max-width: 26rem;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .weekdays {
+    display: none;
+  }
+
+  .days {
+    grid-template-columns: minmax(0, 1fr);
+    border-left: 0;
+  }
+
+  .day {
+    display: grid;
+    grid-template-columns: 2.4rem 3rem minmax(0, 1fr);
+    align-items: center;
+    gap: 0.3rem 0.6rem;
+    min-height: 0;
+    padding: 0.6rem 0.2rem;
+    border-right: 0;
+  }
+
+  .dayName {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .chip,
+  .dayNote {
+    grid-column: 3;
+  }
+
+  .empty,
+  .spill {
+    display: none;
+  }
+
+  .calendar {
+    transform: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .barCta,
+  .brandSub {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .board {
+    height: 26rem;
+  }
+
+  .tall,
+  .square,
+  .wide {
+    grid-column: span 12;
+  }
+
+  .classList,
+  .steps,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .details div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}

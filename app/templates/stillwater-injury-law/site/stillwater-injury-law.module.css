@@ -1,0 +1,1071 @@
+/* ==========================================================================
+   STILLWATER INJURY LAW - a small personal injury firm, Harbor Row
+   Oxblood and brass on case-file paper. Libre Caslon is the contract and
+   the headlines; Atkinson Hyperlegible, drawn for low-vision readers, is
+   everything a client has to read, since a client may be reading it from a
+   hospital bed. The layout idea is plain words: the fee agreement printed
+   with a translation in its margin, a glovebox checklist, and the claim as
+   a road from the first call to the check. The overbar is the firm's mark:
+   it papers the case file in the hero, runs as a band, edges the footer.
+   ========================================================================== */
+
+.page {
+  --paper: #f6f1e7;
+  --ink: #241a1e;
+  --oxblood: #8a2c35;
+  --brass: #c99a2e;
+  --fawn: #dcc9a8;
+  --slate: #5d6f80;
+
+  --gut: clamp(1rem, 4vw, 3.25rem);
+  --max: 80rem;
+  --serif: 'Libre Caslon Text', 'Georgia', serif;
+  --sans: 'Atkinson Hyperlegible', 'Verdana', sans-serif;
+
+  --text: var(--ink);
+  --on-ink: var(--paper);
+  --on-oxblood: var(--paper);
+  --on-brass: var(--ink);
+  --on-slate: var(--paper);
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--ink));
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--ink));
+    --on-oxblood: oklch(from var(--oxblood) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-brass: oklch(from var(--brass) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-slate: oklch(from var(--slate) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--paper));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 40%, transparent);
+  --panel: color-mix(in oklab, var(--paper) 86%, var(--fawn));
+  --panel-deep: color-mix(in oklab, var(--paper) 72%, var(--fawn));
+  --ink-muted: color-mix(in oklab, var(--on-ink) 76%, var(--ink));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.brandSub {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.9rem, 1.7vw, 1.8rem);
+}
+
+.nav a {
+  padding: 0.25rem 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--oxblood);
+}
+
+.barCall {
+  padding: 0.6rem 1.05rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  background: var(--oxblood);
+  color: var(--on-oxblood);
+  border-radius: 3px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--paper);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.kicker {
+  margin: 0 0 1.4rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.8rem, 6.2vw, 5.6rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: italic;
+  color: var(--oxblood);
+}
+
+.heroLead {
+  max-width: 33rem;
+  margin: 1.7rem 0 0;
+  font-size: 1.15rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2.1rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.9rem 1.45rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 3px;
+}
+
+.button {
+  background: var(--oxblood);
+  color: var(--on-oxblood);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--oxblood) 84%, var(--ink));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ghost:hover {
+  background: var(--panel);
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  max-width: 33rem;
+  margin: 2.8rem 0 0;
+}
+
+.heroFacts div {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  padding-top: 0.8rem;
+  border-top: 2px solid var(--text);
+}
+
+.heroFacts dt {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 2.3rem;
+  line-height: 1.15;
+}
+
+/* The case file: a folder tab over a dark sheet papered with the overbar,
+   and the review card clipped across its lower corner. */
+.heroFile {
+  position: relative;
+  padding-top: 2.3rem;
+  margin-bottom: 2rem;
+}
+
+.fileTab {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  height: 2.4rem;
+  padding: 0 1.4rem;
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-style: italic;
+  background: var(--ink);
+  color: var(--on-ink);
+  border-radius: 8px 8px 0 0;
+}
+
+.fileField {
+  position: relative;
+  height: clamp(26rem, 46vw, 38rem);
+  overflow: hidden;
+  background: var(--ink);
+  border-radius: 0 10px 10px 10px;
+  box-shadow: 14px 14px 0 0 var(--panel-deep);
+}
+
+.fileCard {
+  position: absolute;
+  left: -2.5rem;
+  bottom: -2rem;
+  z-index: 2;
+  width: min(20rem, 82%);
+  padding: 1.4rem 1.5rem 1.3rem;
+  background: var(--paper);
+  border-top: 6px solid var(--oxblood);
+  box-shadow: 0 18px 40px -18px color-mix(in oklab, var(--ink) 60%, transparent);
+}
+
+.fileCardLabel {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.fileCardPhone {
+  margin: 0.35rem 0 0;
+  font-family: var(--serif);
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.fileCardNote {
+  margin: 0.6rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1rem 3rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--text);
+}
+
+.secNo {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 2.6rem;
+  font-style: italic;
+  line-height: 1;
+  color: var(--oxblood);
+}
+
+.secTitle {
+  font-size: clamp(2.1rem, 4vw, 3.3rem);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+.secNote {
+  margin: 0;
+  font-size: 1.02rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------- the fee
+   Each clause a row: the contract in small italic serif, and the plain words
+   beside it, large, behind an oxblood rule. */
+
+.clauses {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.clause {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 1rem 3rem;
+  padding: 1.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.clauseNo {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 0.25rem;
+}
+
+.clauseLegal {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 0.92rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.clausePlain {
+  margin: 0;
+  padding-left: 1.3rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.4;
+  border-left: 4px solid var(--oxblood);
+}
+
+.worked {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 2rem 4rem;
+  align-items: center;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding: clamp(1.6rem, 4vw, 2.8rem);
+  background: var(--panel);
+  border-radius: 6px;
+}
+
+.workedTitle {
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+  line-height: 1.1;
+}
+
+.workedNote {
+  margin: 0.8rem 0 0;
+  color: var(--muted);
+}
+
+.ledger {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.ledger th,
+.ledger td {
+  padding: 0.7rem 0;
+  border-bottom: 1px dashed var(--rule-strong);
+}
+
+.ledger th {
+  text-align: left;
+  font-weight: 400;
+}
+
+.ledger td {
+  text-align: right;
+  font-weight: 700;
+  white-space: nowrap;
+  padding-left: 1rem;
+}
+
+.ledgerTotal th,
+.ledgerTotal td {
+  padding-top: 1rem;
+  border-top: 3px double var(--text);
+  border-bottom: 0;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(100px, 11vw, 150px);
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  overflow: hidden;
+  background: var(--ink);
+}
+
+/* -------------------------------------------------------- the checklist
+   A glovebox card: a dashed cut line, two columns of tick boxes. */
+
+.afterGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+  gap: 2.5rem clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.afterIntro .secNo {
+  margin-bottom: 1rem;
+}
+
+.afterIntro .secNote {
+  margin-top: 1.2rem;
+}
+
+.afterCall {
+  margin: 1.8rem 0 0;
+}
+
+.afterCall a {
+  display: inline-block;
+  padding: 0.75rem 1.1rem;
+  font-weight: 700;
+  background: var(--ink);
+  color: var(--on-ink);
+  border-radius: 3px;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 2.5rem;
+  padding: clamp(1.5rem, 3.5vw, 2.5rem);
+  background: var(--panel);
+  border: 2px dashed var(--rule-strong);
+  border-radius: 14px;
+}
+
+.cardTitle {
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  font-size: 1.45rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.checks {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checks li {
+  position: relative;
+  padding-left: 2.1rem;
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.checks li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.15rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 2px solid var(--text);
+  border-radius: 2px;
+  background: var(--paper);
+}
+
+.cardFoot {
+  grid-column: 1 / -1;
+  margin: 0.4rem 0 0;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- the claim
+   The dark section: a road of six stops with a brass line through them. */
+
+.claim {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.claimInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut);
+}
+
+.claimHead {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1rem 3rem;
+  align-items: end;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.claimHead .secNo {
+  color: var(--on-ink);
+}
+
+.claimTitle {
+  font-size: clamp(2.1rem, 4vw, 3.3rem);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+.claimNote {
+  margin: 0;
+  color: var(--ink-muted);
+}
+
+.steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The road, under the markers. */
+.steps::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0.55rem;
+  height: 4px;
+  background: var(--brass);
+  border-radius: 2px;
+}
+
+.step {
+  position: relative;
+  padding-top: 2.4rem;
+}
+
+.step::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: inset 0 0 0 4px var(--brass);
+}
+
+.stepWhen {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.stepWhat {
+  margin-top: 0.4rem;
+  font-size: 1.45rem;
+  line-height: 1.15;
+}
+
+.stepText {
+  margin: 0.6rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+
+/* ------------------------------------------------------------------ cases */
+
+.casesGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: 3rem clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.casesGrid .secNo {
+  margin-bottom: 1rem;
+}
+
+.areas {
+  margin: 2rem 0 0;
+}
+
+.areas div {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 0.4rem 2rem;
+  padding: 1.15rem 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.areas div:last-child {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.areas dt {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  line-height: 1.25;
+}
+
+.areas dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.results {
+  padding: clamp(1.6rem, 3.5vw, 2.6rem);
+  background: var(--oxblood);
+  color: var(--on-oxblood);
+  border-radius: 6px;
+}
+
+.resultsTitle {
+  font-size: 1.6rem;
+  font-style: italic;
+}
+
+.resultList {
+  margin: 1.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.resultList li {
+  display: grid;
+  gap: 0.15rem;
+  padding: 1rem 0;
+  border-top: 1px solid color-mix(in oklab, var(--on-oxblood) 35%, transparent);
+}
+
+.resultList strong {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 3.4vw, 2.6rem);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.resultList span {
+  font-size: 0.95rem;
+}
+
+.resultsNote {
+  margin: 1rem 0 0;
+  padding-top: 1rem;
+  font-size: 0.85rem;
+  font-style: italic;
+  border-top: 1px solid color-mix(in oklab, var(--on-oxblood) 35%, transparent);
+}
+
+/* ---------------------------------------------------------------- lawyers */
+
+.lawyers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lawyer {
+  padding: 1.8rem 1.6rem;
+  background: var(--panel);
+  border-radius: 6px;
+}
+
+.monogram {
+  display: inline-grid;
+  place-items: center;
+  width: 3.6rem;
+  height: 3.6rem;
+  margin-bottom: 1.2rem;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  border-radius: 50%;
+  background: var(--brass);
+  color: var(--on-brass);
+}
+
+.lawyerName {
+  font-size: 1.55rem;
+  line-height: 1.15;
+}
+
+.lawyerRole {
+  margin: 0.3rem 0 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.lawyerNote {
+  margin: 0.9rem 0 0;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 3rem clamp(2rem, 6vw, 6rem);
+  align-items: start;
+  padding-bottom: clamp(4rem, 8vw, 6.5rem);
+}
+
+.contactGrid .secNo {
+  margin-bottom: 1rem;
+}
+
+.contactGrid .secNote {
+  margin-top: 1.2rem;
+}
+
+.hours {
+  margin: 2rem 0 0;
+}
+
+.hours div {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.hours dt {
+  font-weight: 700;
+}
+
+.hours dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.address {
+  margin: 1.6rem 0 0.3rem;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+}
+
+.contactLine {
+  margin: 0.2rem 0 0;
+  font-weight: 700;
+}
+
+.contactLine a {
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.contactLine a:hover {
+  border-bottom-color: var(--oxblood);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  padding: clamp(1.4rem, 3.5vw, 2.4rem);
+  background: var(--panel);
+  border-top: 6px solid var(--oxblood);
+  border-radius: 0 0 6px 6px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--paper);
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 3px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.95rem 1.6rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--on-oxblood);
+  background: var(--oxblood);
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--oxblood) 84%, var(--ink));
+}
+
+.formNote {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.footField {
+  position: relative;
+  height: clamp(110px, 12vw, 170px);
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  gap: 0.4rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+  font-size: 0.92rem;
+}
+
+.footInner p {
+  margin: 0;
+  color: var(--ink-muted);
+}
+
+.footInner a {
+  border-bottom: 1px solid currentColor;
+}
+
+.footInner .footName {
+  margin-bottom: 0.4rem;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  color: var(--on-ink);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .barCall {
+    justify-self: end;
+  }
+
+  .steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 2.6rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .afterGrid,
+  .casesGrid,
+  .contactGrid,
+  .worked {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroFile {
+    margin: 0 0 2.5rem 0;
+  }
+
+  .fileCard {
+    left: 1rem;
+  }
+
+  .secHead,
+  .claimHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .clause {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  .lawyers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .brandSub {
+    font-size: 1rem;
+  }
+
+  .heroFacts {
+    gap: 0.8rem;
+  }
+
+  .heroFacts dd {
+    font-size: 1.8rem;
+  }
+
+  .fileField {
+    height: 22rem;
+    box-shadow: 8px 8px 0 0 var(--panel-deep);
+  }
+
+  .fileCard {
+    left: 0.75rem;
+    right: 0.75rem;
+    width: auto;
+    bottom: -2.5rem;
+  }
+
+  .card,
+  .form,
+  .areas div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+    padding-left: 2rem;
+    row-gap: 1.8rem;
+  }
+
+  .steps::before {
+    left: 0.45rem;
+    right: auto;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    height: auto;
+  }
+
+  .step {
+    padding-top: 0;
+  }
+
+  .step::before {
+    left: -2rem;
+    top: 0.2rem;
+  }
+}

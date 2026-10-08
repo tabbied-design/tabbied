@@ -1,0 +1,1133 @@
+.page {
+  --linen: #f3ece0;
+  --walnut: #2e241e;
+  --oak: #b06f37;
+  --terra: #c25a3a;
+  --sage: #7f9471;
+  --honey: #e3b35f;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --display: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+  --sans: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--walnut);
+  --on-walnut: var(--linen);
+  --on-oak: var(--linen);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--linen);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   UNDERFOOT FLOORING - installers, Mill Lane
+   Linen walls and walnut type, a chunky grotesque for the counter signs and
+   a plain sans for the small print. The layout idea is the showroom: the
+   hero is a room with the floor going back to the horizon, the materials
+   are a binder of divider tabs, the steps are marked along a tape measure.
+   Fustian, the hard rib, is the floor in every place it appears: the room,
+   the five swatches, the threshold strip and the footer.
+   ========================================================================== */
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--linen) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--walnut));
+    --on-walnut: color-mix(in oklab, oklch(from var(--walnut) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--walnut));
+    --on-oak: oklch(from var(--oak) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--linen));
+  --rule: color-mix(in oklab, var(--text) 18%, var(--linen));
+  --rule-strong: color-mix(in oklab, var(--text) 40%, var(--linen));
+  --card: color-mix(in oklab, var(--linen) 90%, var(--honey));
+  --card-sage: color-mix(in oklab, var(--linen) 88%, var(--sage));
+  --page-sheet: color-mix(in oklab, var(--linen) 94%, var(--walnut));
+  --on-walnut-muted: color-mix(in oklab, var(--on-walnut) 78%, var(--walnut));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, dl, dd, ul, ol) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--display);
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--linen);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Three boards of a floor, staggered. */
+.brandMark {
+  width: 1.9rem;
+  height: 1.5rem;
+  background:
+    linear-gradient(var(--oak) 0 0) 0 0 / 70% 30% no-repeat,
+    linear-gradient(var(--walnut) 0 0) 100% 50% / 80% 30% no-repeat,
+    linear-gradient(var(--terra) 0 0) 20% 100% / 60% 30% no-repeat;
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  padding: 0.3rem 0;
+  font-size: 0.94rem;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--oak);
+}
+
+.barCall {
+  padding: 0.6rem 1.15rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--walnut);
+  color: var(--on-walnut);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--linen);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-rows: auto auto minmax(15rem, 1fr);
+  min-height: clamp(42rem, calc(100vh - 4.2rem), 54rem);
+}
+
+.wall {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2rem;
+  align-items: end;
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) clamp(2rem, 4vw, 3rem);
+}
+
+.kicker {
+  margin-bottom: 1.1rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  max-width: 15ch;
+  font-size: clamp(2.8rem, 6.4vw, 5.6rem);
+  font-weight: 800;
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+}
+
+.heroTitle span {
+  font-weight: 400;
+  font-style: italic;
+}
+
+.heroLead {
+  max-width: 36rem;
+  margin-top: 1.4rem;
+  font-size: 1.12rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.8rem;
+}
+
+.button,
+.ghost {
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+  padding: 0 1.4rem;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--walnut);
+  color: var(--on-walnut);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--walnut) 84%, var(--oak));
+}
+
+.ghost {
+  border: 1.5px solid var(--rule-strong);
+}
+
+.ghost:hover {
+  background: var(--card);
+}
+
+/* A price tag hung from a nail in the wall, string hole and all. */
+.tag {
+  position: relative;
+  align-self: start;
+  width: 15.5rem;
+  margin: 5.5rem 2rem 0 0;
+  padding: 1.6rem 1.2rem 1.1rem;
+  background: var(--card);
+  border: 1px solid var(--rule-strong);
+  border-radius: 0.4rem;
+  transform: rotate(-3deg);
+  box-shadow: 0 14px 28px -18px color-mix(in oklab, var(--walnut) 60%, transparent);
+}
+
+.tag::before {
+  content: '';
+  position: absolute;
+  top: 0.55rem;
+  left: 50%;
+  width: 0.6rem;
+  height: 0.6rem;
+  margin-left: -0.3rem;
+  border-radius: 50%;
+  background: var(--linen);
+  border: 1px solid var(--rule-strong);
+}
+
+.tag::after {
+  content: '';
+  position: absolute;
+  bottom: calc(100% - 0.85rem);
+  left: 50%;
+  width: 4.5rem;
+  height: 5rem;
+  margin-left: -2.25rem;
+  background:
+    radial-gradient(circle at 50% 0.3rem, var(--walnut) 0 0.3rem, transparent 0.32rem),
+    linear-gradient(to top right, transparent calc(50% - 0.6px), var(--rule-strong) calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px)) 0 0.3rem / 50% calc(100% - 0.3rem) no-repeat,
+    linear-gradient(to top left, transparent calc(50% - 0.6px), var(--rule-strong) calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px)) 100% 0.3rem / 50% calc(100% - 0.3rem) no-repeat;
+}
+
+.tagLabel {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tagName {
+  margin-top: 0.3rem;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.tagPrice {
+  margin-top: 0.6rem;
+  padding-top: 0.5rem;
+  font-weight: 600;
+  border-top: 1px dashed var(--rule-strong);
+}
+
+.skirting {
+  height: 1.1rem;
+  background: var(--walnut);
+  box-shadow: inset 0 0.25rem 0 color-mix(in oklab, var(--walnut) 70%, var(--oak));
+}
+
+/* The floor: a plane hinged at the skirting and tipped back, so it runs
+   away to the wall and widens toward the viewer. */
+.floor {
+  position: relative;
+  overflow: hidden;
+  perspective: 760px;
+  perspective-origin: 50% 0;
+  background: var(--oak);
+}
+
+.floorPlane {
+  position: absolute;
+  top: 0;
+  left: -12%;
+  width: 124%;
+  height: 34rem;
+  transform-origin: 50% 0;
+  transform: rotateX(62deg);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  max-width: 46rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.eyebrow,
+.eyebrowDark {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.9rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.eyebrow::before,
+.eyebrowDark::before {
+  content: '';
+  width: 2.2rem;
+  height: 0.3rem;
+  background: var(--oak);
+}
+
+.eyebrowDark {
+  color: var(--on-walnut-muted);
+}
+
+.eyebrowDark::before {
+  background: var(--honey);
+}
+
+.secTitle {
+  font-size: clamp(2.1rem, 4.2vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.secNote {
+  max-width: 40rem;
+  margin-top: 1rem;
+  font-size: 1.06rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- sample book */
+
+.tabIndex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 4rem;
+}
+
+.tabIndex a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 0.95rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+}
+
+.tabIndex a::before {
+  content: '';
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--sw);
+  box-shadow: 0 0 0 1px var(--rule-strong);
+}
+
+.tabIndex a:hover {
+  background: var(--card);
+}
+
+.book {
+  display: grid;
+  gap: 3.6rem;
+}
+
+/* Each material is a page in the binder; its tab sticks up from the top
+   edge, one step further along than the page before. */
+.oak,
+.dot_oak {
+  --sw: var(--honey);
+}
+
+.engineered,
+.dot_engineered {
+  --sw: var(--oak);
+}
+
+.vinyl,
+.dot_vinyl {
+  --sw: var(--sage);
+}
+
+.carpet,
+.dot_carpet {
+  --sw: var(--terra);
+}
+
+.tile,
+.dot_tile {
+  --sw: color-mix(in oklab, var(--linen) 62%, var(--walnut));
+}
+
+.sample {
+  --on-sw: var(--walnut);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.5fr);
+  scroll-margin-top: 7rem;
+  background: var(--page-sheet);
+  border: 1px solid var(--rule);
+  border-radius: 0 0.6rem 0.6rem 0.6rem;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .sample {
+    --on-sw: oklch(from var(--sw) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.tab {
+  position: absolute;
+  bottom: 100%;
+  left: -1px;
+  min-width: 11rem;
+  padding: 0.55rem 1.2rem 0.45rem;
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.3;
+  background: var(--sw);
+  color: var(--on-sw);
+  border-radius: 0.6rem 0.6rem 0 0;
+}
+
+.sample:nth-child(2) .tab {
+  left: 18%;
+}
+
+.sample:nth-child(3) .tab {
+  left: 36%;
+}
+
+.sample:nth-child(4) .tab {
+  left: 54%;
+}
+
+.sample:nth-child(5) .tab {
+  left: 72%;
+}
+
+.sample:nth-child(n + 2) {
+  border-radius: 0.6rem;
+}
+
+.swatch {
+  position: relative;
+  min-height: 19rem;
+  overflow: hidden;
+  background: var(--sw);
+  border-radius: 0 0 0 0.6rem;
+}
+
+.sample:nth-child(n + 2) .swatch {
+  border-radius: 0.6rem 0 0 0.6rem;
+}
+
+.sampleBody {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    'price pitch'
+    'per pitch'
+    'specs specs';
+  column-gap: 2rem;
+  align-content: start;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+}
+
+.price {
+  grid-area: price;
+  font-family: var(--display);
+  font-size: clamp(2.2rem, 3.6vw, 3rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.per {
+  grid-area: per;
+  margin-top: 0.3rem;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.pitch {
+  grid-area: pitch;
+  max-width: 34rem;
+  font-size: 1.04rem;
+}
+
+.specs {
+  grid-area: specs;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.6rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.specs dt {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.specs dd {
+  margin-top: 0.2rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* ---------------------------------------------------------- measure (dark) */
+
+.measure {
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+  background: var(--walnut);
+  color: var(--on-walnut);
+}
+
+.measureInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut);
+}
+
+.measure .secTitle {
+  color: var(--on-walnut);
+}
+
+.measure .eyebrow {
+  color: var(--on-walnut-muted);
+}
+
+.measure .eyebrow::before {
+  background: var(--honey);
+}
+
+/* A tape measure: inch ticks, a longer one every foot. */
+.tape {
+  height: 2.6rem;
+  border-radius: 0.3rem;
+  background:
+    repeating-linear-gradient(90deg, var(--walnut) 0 2px, transparent 2px 120px) 0 0 / 100% 100%,
+    repeating-linear-gradient(90deg, var(--walnut) 0 1px, transparent 1px 10px) 0 0 / 100% 45%,
+    var(--honey);
+  background-repeat: no-repeat;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.2rem, 3vw, 2.4rem);
+}
+
+.step {
+  position: relative;
+  padding-top: 1.6rem;
+}
+
+.step::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 1.1rem;
+  background: var(--honey);
+}
+
+.stepNo {
+  display: block;
+  font-family: var(--display);
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.stepTitle {
+  margin-top: 0.7rem;
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.stepWhen {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid color-mix(in oklab, var(--on-walnut) 40%, var(--walnut));
+  border-radius: 999px;
+}
+
+.stepText {
+  margin-top: 0.8rem;
+  font-size: 0.97rem;
+  color: var(--on-walnut-muted);
+}
+
+/* ------------------------------------------------------------------ prices */
+
+.priceGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.jobs {
+  border-top: 2px solid var(--text);
+}
+
+.job {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'room cost'
+    'what cost';
+  column-gap: 1.5rem;
+  padding: 1.05rem 0;
+  border-bottom: 1px dashed var(--rule-strong);
+}
+
+.jobRoom {
+  grid-area: room;
+  font-family: var(--display);
+  font-size: 1.22rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.jobWhat {
+  grid-area: what;
+  color: var(--muted);
+}
+
+.jobCost {
+  grid-area: cost;
+  align-self: center;
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.included {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.6rem 1.7rem 1.8rem;
+  background: var(--card-sage);
+  border-radius: 0.6rem;
+}
+
+.includedTitle {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.includedTitle + .includedTitle,
+.includedList + .includedTitle {
+  margin-top: 0.8rem;
+}
+
+.includedList {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.includedList li {
+  display: grid;
+  grid-template-columns: 1.3rem minmax(0, 1fr);
+  gap: 0.5rem;
+  line-height: 1.45;
+}
+
+.includedList li::before {
+  content: '\2713';
+  font-weight: 600;
+}
+
+.extras {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.extras div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.extras dd {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- threshold */
+
+.threshold {
+  position: relative;
+  height: clamp(5rem, 9vw, 7rem);
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  overflow: hidden;
+  background: var(--walnut);
+  border-top: 0.45rem solid var(--oak);
+  border-bottom: 0.45rem solid var(--oak);
+}
+
+/* --------------------------------------------------------------- aftercare */
+
+.careGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.5fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.careHead {
+  position: sticky;
+  top: 6rem;
+}
+
+.warranty {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.55rem 1.1rem;
+  font-weight: 600;
+  background: var(--oak);
+  color: var(--on-oak);
+  border-radius: 999px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  padding: 1.4rem 1.5rem 1.5rem;
+  background: var(--card);
+  border-top: 0.4rem solid var(--oak);
+  border-radius: 0 0 0.6rem 0.6rem;
+}
+
+.card:nth-child(2) {
+  border-top-color: var(--sage);
+}
+
+.card:nth-child(3) {
+  border-top-color: var(--terra);
+}
+
+.card:nth-child(4) {
+  border-top-color: var(--walnut);
+}
+
+.cardTitle {
+  font-size: 1.22rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.cardText {
+  margin-top: 0.6rem;
+  font-size: 0.97rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- showroom */
+
+.showroom {
+  padding: clamp(4rem, 8vw, 6.5rem) 0;
+}
+
+.showroomInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: clamp(1.2rem, 3vw, 2rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+.visit {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  padding: clamp(1.6rem, 3vw, 2.4rem);
+  background: var(--walnut);
+  color: var(--on-walnut);
+  border-radius: 0.8rem;
+}
+
+.visitTitle {
+  margin-bottom: 0.8rem;
+  font-size: clamp(1.9rem, 3.4vw, 2.7rem);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+}
+
+.visitLine {
+  color: var(--on-walnut-muted);
+}
+
+.visitLink {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.visitLink a:hover {
+  text-decoration: underline;
+}
+
+.hours {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 1.1rem;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in oklab, var(--on-walnut) 28%, var(--walnut));
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.hours dt {
+  color: var(--on-walnut-muted);
+}
+
+.hours dd {
+  text-align: right;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+  align-content: start;
+  padding: clamp(1.6rem, 3vw, 2.4rem);
+  background: var(--page-sheet);
+  border: 1px solid var(--rule);
+  border-radius: 0.8rem;
+}
+
+.formTitle {
+  grid-column: 1 / -1;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.65rem 0.8rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--linen);
+  border: 1px solid var(--rule-strong);
+  border-radius: 0.4rem;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  min-height: 3rem;
+  padding: 0 1.6rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--on-walnut);
+  background: var(--walnut);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.formNote {
+  align-self: center;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--walnut);
+  color: var(--on-walnut);
+}
+
+.footFloor {
+  position: relative;
+  height: clamp(5rem, 9vw, 7rem);
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
+  gap: 1rem 2.5rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2rem var(--gut) 2.4rem;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.footText {
+  font-size: 0.92rem;
+  color: var(--on-walnut-muted);
+}
+
+.footText a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .specs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .wall {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tag {
+    justify-self: start;
+  }
+
+  .sample {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .swatch,
+  .sample:nth-child(n + 2) .swatch {
+    min-height: 11rem;
+    border-radius: 0;
+  }
+
+  .priceGrid,
+  .careGrid,
+  .showroomInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .careHead {
+    position: static;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .hero {
+    min-height: 0;
+    grid-template-rows: auto auto 14rem;
+  }
+
+  .floorPlane {
+    height: 22rem;
+  }
+
+  .tag {
+    display: none;
+  }
+
+  .book {
+    gap: 3.4rem;
+  }
+
+  /* On a phone the tabs line up on the left, one per page. */
+  .sample .tab,
+  .sample:nth-child(n) .tab {
+    left: -1px;
+    min-width: 0;
+  }
+
+  .sample {
+    border-radius: 0 0.6rem 0.6rem 0.6rem;
+  }
+
+  .sampleBody {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'price'
+      'per'
+      'pitch'
+      'specs';
+  }
+
+  .pitch {
+    margin-top: 1rem;
+  }
+
+  .specs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .steps,
+  .cards,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tape {
+    height: 1.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .button,
+  .ghost,
+  .tabIndex a {
+    transition: background-color 150ms ease;
+  }
+}

@@ -1,0 +1,1010 @@
+.page {
+  --night: #0e0d24;
+  --star: #f3eee2;
+  --haze: #5b4d9c;
+  --gold: #f0c26a;
+  --frost: #a3c0f0;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --serif: 'Instrument Serif', 'Times New Roman', serif;
+  --sans: 'Manrope', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--star);
+  --on-gold: var(--night);
+  --on-star: var(--night);
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--night));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 40%, transparent);
+  --panel: color-mix(in oklab, var(--night) 91%, var(--star));
+  --moon-dark: color-mix(in oklab, var(--night) 80%, var(--star));
+  --dusk: color-mix(in oklab, var(--night) 72%, var(--haze));
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--night);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* White or black by the ground's lightness, tinted toward starlight: on
+   this page the copy is starlight on the night, and it follows whatever
+   ground a palette brings. */
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--night) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--star));
+    --on-gold: oklch(from var(--gold) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-star: color-mix(in oklab, oklch(from var(--star) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--star));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--night);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+/* A waxing crescent, drawn by a shadow. */
+.brandMoon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  box-shadow: inset -7px 2px 0 0 var(--gold);
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barCta {
+  padding: 0.55rem 1.1rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--on-gold);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--night);
+}
+
+/* --------------------------------------------------------------------- hero
+   The sky, a ridge cut against it, and the copy standing on the ridge. */
+
+.hero {
+  position: relative;
+}
+
+.sky {
+  position: relative;
+  height: clamp(22rem, 34vw, 31rem);
+  overflow: hidden;
+  background: linear-gradient(to bottom, var(--night), var(--dusk));
+}
+
+.ridge {
+  position: relative;
+  z-index: 1;
+  height: clamp(5rem, 10vw, 9.5rem);
+  margin-top: calc(-1 * clamp(5rem, 10vw, 9.5rem));
+  background: var(--night);
+  clip-path: polygon(0 62%, 5% 46%, 9% 54%, 16% 20%, 19% 27%, 22% 24%, 27% 40%, 33% 58%, 41% 42%, 49% 64%, 56% 48%, 61% 56%, 66% 30%, 69% 4%, 72% 14%, 74% 11%, 78% 30%, 85% 48%, 92% 34%, 100% 52%, 100% 100%, 0 100%);
+}
+
+.heroBody {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(0.5rem, 1.5vw, 1.2rem) var(--gut) clamp(3.5rem, 7vw, 5.5rem);
+  background: var(--night);
+}
+
+.kicker {
+  margin: 0 0 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 6.2vw, 6rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+}
+
+.heroTitle em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.heroLead {
+  max-width: 36rem;
+  margin: 1.4rem 0 0;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.9rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--gold);
+  color: var(--on-gold);
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+}
+
+.ghost:hover {
+  background: var(--panel);
+}
+
+.ticket {
+  position: relative;
+  padding: 1.4rem 1.4rem 1.2rem;
+  background: var(--panel);
+  border-radius: 6px;
+  border-left: 3px dashed var(--rule-strong);
+}
+
+.ticketLabel {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ticketDate {
+  margin: 0.4rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  line-height: 1.05;
+}
+
+.ticketTheme {
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+}
+
+.ticketFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin: 1.1rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+
+.ticketFacts dt {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ticketFacts dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secTitle {
+  font-family: var(--serif);
+  font-size: clamp(2.6rem, 5vw, 4.4rem);
+  line-height: 1;
+}
+
+.secTitle em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.secNote {
+  margin: 0;
+  font-size: 1.02rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- lunar month */
+
+.moon {
+  display: block;
+  flex: none;
+  width: 1em;
+  height: 1em;
+  font-size: 3rem;
+  border-radius: 50%;
+  background: var(--star);
+}
+
+.full {
+  box-shadow: 0 0 22px color-mix(in oklab, var(--star) 35%, transparent);
+}
+
+.gibbousWane {
+  box-shadow: inset -0.24em 0 0 0 var(--moon-dark);
+}
+
+.quarterWane {
+  box-shadow: inset -0.5em 0 0 0 var(--moon-dark);
+}
+
+.crescentWane {
+  box-shadow: inset -0.8em 0 0 0 var(--moon-dark);
+}
+
+.newMoon {
+  background: var(--moon-dark);
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+}
+
+.crescentWax {
+  box-shadow: inset 0.8em 0 0 0 var(--moon-dark);
+}
+
+.quarterWax {
+  box-shadow: inset 0.5em 0 0 0 var(--moon-dark);
+}
+
+.gibbousWax {
+  box-shadow: inset 0.24em 0 0 0 var(--moon-dark);
+}
+
+.lunarWrap {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.lunar {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.lunarStep {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.8rem;
+  padding: 1.4rem 0.4rem 1.2rem;
+  text-align: center;
+}
+
+.lunarStep:nth-child(4),
+.lunarStep:nth-child(5),
+.lunarStep:nth-child(6) {
+  background: var(--panel);
+}
+
+.lunarLabel {
+  font-size: 0.82rem;
+  line-height: 1.3;
+  color: var(--muted);
+}
+
+.darkWeek {
+  width: 37.5%;
+  margin: 0 0 0 37.5%;
+  padding-top: 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-align: center;
+  text-transform: uppercase;
+  border-top: 2px solid var(--gold);
+}
+
+.workshops {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.workshop {
+  display: grid;
+  grid-template-columns: 2.2rem minmax(10rem, 0.8fr) minmax(0, 1.8fr) 7.5rem 7.5rem;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rowMoon {
+  font-size: 1.6rem;
+}
+
+.wDates {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+.wTheme {
+  font-size: 1.08rem;
+  font-weight: 600;
+}
+
+.wNote {
+  margin: 0.2rem 0 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.wSeats {
+  margin: 0;
+  justify-self: start;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+}
+
+.wPrice {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.calFoot {
+  margin: 1.4rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------- a night out */
+
+.nightGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 6vw, 6rem);
+}
+
+.nightIntro {
+  position: sticky;
+  top: 6rem;
+  align-self: start;
+}
+
+.nightIntro .secNote {
+  margin-top: 1.4rem;
+}
+
+/* The night darkening down the line: gold dusk to violet to the cold blue
+   of the small hours. */
+.timeline {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 0.6rem;
+  bottom: 0.6rem;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--gold), var(--haze) 45%, var(--frost));
+}
+
+.tStep {
+  position: relative;
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  column-gap: 1.2rem;
+  padding: 0 0 1.8rem 2.4rem;
+}
+
+.tStep::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45rem;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--night);
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.tTime {
+  grid-row: span 2;
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.tTitle {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  line-height: 1.05;
+}
+
+.tText {
+  margin: 0.35rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- gear */
+
+.gear {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(0, 0.9fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: start;
+}
+
+.gearHead {
+  padding-bottom: 0.6rem;
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.gearList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gearList li {
+  position: relative;
+  padding: 0.7rem 0 0.7rem 2rem;
+  font-size: 0.97rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.gearList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.95rem;
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1.5px var(--text);
+}
+
+.settings {
+  margin: 0;
+  padding: 1.4rem;
+  background: var(--panel);
+  border-radius: 6px;
+}
+
+.settings div + div {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+}
+
+.settings dt {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.settings dd {
+  margin: 0.25rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  line-height: 1.15;
+}
+
+/* ------------------------------------------------------------------ prints */
+
+.prints {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.6rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.print {
+  display: flex;
+  flex-direction: column;
+}
+
+/* A frame in the haze, a pale mat, the print inside. */
+.frame {
+  padding: clamp(1rem, 2vw, 1.6rem);
+  margin-bottom: 1.1rem;
+  background: var(--star);
+  box-shadow:
+    0 0 0 0.55rem color-mix(in oklab, var(--haze) 55%, var(--night)),
+    0 24px 40px -24px color-mix(in oklab, var(--night) 90%, transparent);
+  margin-top: 0.55rem;
+  margin-left: 0.55rem;
+  margin-right: 0.55rem;
+}
+
+.printSky {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: linear-gradient(to bottom, var(--night), var(--dusk));
+}
+
+.printTitle {
+  margin-top: 0.6rem;
+  font-family: var(--serif);
+  font-size: 1.75rem;
+  line-height: 1.05;
+}
+
+.printWhere {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.printSizes {
+  margin: 0.6rem 0 0;
+  padding-top: 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-top: 1px solid var(--rule);
+}
+
+/* -------------------------------------------------------------------- book */
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.bookGrid .secNote {
+  margin-top: 1.2rem;
+}
+
+.faq {
+  margin: 2rem 0 0;
+}
+
+.faqItem {
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.faqItem dt {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+.faqItem dd {
+  margin: 0.3rem 0 0;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+.contact {
+  margin: 1.4rem 0 0;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.contact div {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.45rem 0;
+}
+
+.contact dt {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contact dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.contact a {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--panel);
+  border-radius: 8px;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field label,
+.field legend {
+  padding: 0;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.field input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.85rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--night);
+  border: 1px solid var(--rule-strong);
+  border-radius: 6px;
+}
+
+.field input:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.picks input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.picks label {
+  padding: 0.45rem 0.9rem;
+  font-weight: 500;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.picks input:checked + label {
+  background: var(--gold);
+  color: var(--on-gold);
+  border-color: var(--gold);
+}
+
+.picks input:focus-visible + label {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.85rem 1.6rem;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--on-gold);
+  background: var(--gold);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--night);
+}
+
+.footSky {
+  position: relative;
+  height: clamp(140px, 14vw, 200px);
+  overflow: hidden;
+  background: linear-gradient(to top, var(--dusk), var(--night));
+}
+
+.footInner {
+  display: grid;
+  gap: 0.3rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+  font-size: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+
+.footName {
+  margin: 0 0 0.4rem;
+  font-family: var(--serif);
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.footLine {
+  max-width: 42rem;
+  margin: 0;
+  color: var(--muted);
+}
+
+.footLine a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1060px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .heroBody,
+  .secHead,
+  .nightGrid,
+  .bookGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ticket {
+    max-width: 28rem;
+  }
+
+  .nightIntro {
+    position: static;
+  }
+
+  .workshop {
+    grid-template-columns: 2.2rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      'moon dates seats'
+      'moon body body'
+      'moon price price';
+    row-gap: 0.4rem;
+    align-items: start;
+  }
+
+  .rowMoon {
+    grid-area: moon;
+  }
+
+  .wDates {
+    grid-area: dates;
+  }
+
+  .wBody {
+    grid-area: body;
+  }
+
+  .wSeats {
+    grid-area: seats;
+  }
+
+  .wPrice {
+    grid-area: price;
+    text-align: left;
+  }
+
+  .gear {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .settings {
+    grid-column: 1 / -1;
+  }
+
+  .prints {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .barCta {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .brandName {
+    font-size: 1.3rem;
+  }
+
+  .lunar {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .moon {
+    font-size: 2.2rem;
+  }
+
+  .rowMoon {
+    font-size: 1.4rem;
+  }
+
+  .darkWeek {
+    width: auto;
+    margin: 0;
+    text-align: left;
+    border-top: 0;
+  }
+
+  .darkWeek::before {
+    content: '';
+    display: inline-block;
+    width: 0.9rem;
+    height: 0.9rem;
+    margin-right: 0.5rem;
+    vertical-align: -0.1rem;
+    background: var(--panel);
+    box-shadow: inset 0 0 0 1px var(--rule-strong);
+  }
+
+  .workshop {
+    grid-template-columns: 1.8rem minmax(0, 1fr);
+    grid-template-areas:
+      'moon dates'
+      'moon body'
+      'moon seats'
+      'moon price';
+    gap: 0.4rem 1rem;
+  }
+
+  .tStep {
+    grid-template-columns: minmax(0, 1fr);
+    padding-left: 2rem;
+  }
+
+  .tTime {
+    grid-row: auto;
+  }
+
+  .gear,
+  .prints,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}

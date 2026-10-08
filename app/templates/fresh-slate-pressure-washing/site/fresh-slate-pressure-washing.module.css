@@ -1,0 +1,1082 @@
+/* ==========================================================================
+   FRESH SLATE - pressure and soft washing, Harlow Valley
+   Every surface on the page is half done. The hero is a driveway split down
+   the middle, the grime on one side and the page's own clean ground on the
+   other; each price card is a test patch, half washed; a clean stripe runs
+   through a band of dirt the way a surface cleaner's first pass does. A
+   tall condensed grotesque for the signage, its plain cousin to read. The
+   sandfield is the grime and nothing else.
+   ========================================================================== */
+
+.page {
+  --clean: #f2f5f3;
+  --ink: #10232e;
+  --spray: #1f86c4;
+  --moss: #5e6b44;
+  --silt: #8b7658;
+
+  --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --sans: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --bar-h: 4.25rem;
+
+  --text: var(--ink);
+  --on-ink: var(--clean);
+  --on-spray: var(--clean);
+  --on-moss: var(--clean);
+
+  --muted: color-mix(in oklab, var(--text) 72%, var(--clean));
+  --rule: color-mix(in oklab, var(--text) 20%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 80%, transparent);
+  --tint: color-mix(in oklab, var(--clean) 86%, var(--spray));
+  --wet: color-mix(in oklab, var(--silt) 72%, var(--moss));
+
+  font-family: var(--sans);
+  font-size: 1.04rem;
+  line-height: 1.6;
+  background: var(--clean);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--clean) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--ink));
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--ink));
+    --on-spray: oklch(from var(--spray) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-moss: oklch(from var(--moss) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, ul, ol, dl, dd) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--display);
+  font-weight: 800;
+  line-height: 0.95;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  min-height: var(--bar-h);
+  padding: 0 var(--gut);
+  background: var(--clean);
+  color: var(--text);
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+/* A tile, dirty on the left, a pass of the wand, clean on the right. */
+.brandMark {
+  width: 1.9rem;
+  height: 1.9rem;
+  flex: none;
+  border: 2px solid var(--rule-strong);
+  background: linear-gradient(90deg, var(--moss) 0 46%, var(--spray) 46% 60%, transparent 60%);
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2.2rem);
+}
+
+.nav a {
+  padding: 0.3rem 0;
+  font-family: var(--display);
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-bottom: 3px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--spray);
+}
+
+.barCall {
+  padding: 0.55rem 1.1rem;
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--spray);
+  color: var(--on-spray);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--clean);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: min(calc(100vh - var(--bar-h)), 56rem);
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.dirty {
+  position: relative;
+  min-height: 24rem;
+  overflow: hidden;
+  background: var(--wet);
+}
+
+.grime {
+  position: absolute;
+  inset: 0;
+}
+
+.before,
+.after {
+  position: absolute;
+  top: 1.5rem;
+  z-index: 2;
+  padding: 0.35rem 0.8rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.before {
+  left: var(--gut);
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.after {
+  right: var(--gut);
+  border: 2px solid var(--rule-strong);
+  background: var(--clean);
+}
+
+.washed {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: clamp(5rem, 8vw, 6rem) var(--gut) clamp(3rem, 6vw, 5rem) clamp(2.5rem, 5vw, 5rem);
+  background: var(--clean);
+}
+
+/* The edge of the wand's last pass, where the grime stops. */
+.washed::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -0.25rem;
+  width: 0.5rem;
+  background: var(--spray);
+}
+
+.heroText {
+  max-width: 36rem;
+}
+
+.kicker {
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  margin-top: 0.9rem;
+  font-size: clamp(3.3rem, 6.6vw, 6.6rem);
+  line-height: 0.88;
+  letter-spacing: -0.005em;
+}
+
+.heroTitle span {
+  display: block;
+  color: var(--spray);
+}
+
+.heroLead {
+  margin-top: 1.6rem;
+  max-width: 32rem;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--on-ink);
+  border: 0;
+  cursor: pointer;
+}
+
+.ghost {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.85rem 1.4rem;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 2px solid var(--rule-strong);
+}
+
+.button:hover,
+.ghost:hover {
+  transform: translateY(-1px);
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin-top: 2.6rem;
+}
+
+.heroFacts div {
+  padding-top: 0.7rem;
+  border-top: 2px solid var(--rule-strong);
+}
+
+.heroFacts dt {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.heroFacts dd {
+  margin-top: 0.2rem;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1rem clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secTitle {
+  font-size: clamp(2.6rem, 5vw, 4.4rem);
+}
+
+.secNote {
+  max-width: 34rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- prices */
+
+.surfaces {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.surface {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid var(--rule-strong);
+  background: var(--clean);
+}
+
+/* The test patch: grime on the left, the washed square on the right with
+   the price in it. */
+.patch {
+  position: relative;
+  height: 10.5rem;
+  overflow: hidden;
+  background: var(--wet);
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.patchGrime {
+  position: absolute;
+  inset: 0;
+}
+
+.patchPrice {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 52%;
+  font-family: var(--display);
+  font-size: 3.2rem;
+  font-weight: 800;
+  line-height: 1;
+  background: var(--clean);
+  border-left: 0.4rem solid var(--spray);
+}
+
+.surfaceBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  flex: 1;
+  padding: 1.2rem 1.3rem 1.4rem;
+}
+
+.surfaceName {
+  font-size: 2rem;
+}
+
+.surfaceSize {
+  font-weight: 600;
+}
+
+.surfaceMethod {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.2rem;
+}
+
+.surfaceMethod span {
+  padding: 0.15rem 0.55rem;
+  font-family: var(--display);
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--tint);
+}
+
+.surfaceNote {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  font-size: 0.94rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.bundles {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.5rem 3rem;
+  align-items: start;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--rule-strong);
+}
+
+.bundlesTitle {
+  font-size: 2rem;
+}
+
+.bundleList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.bundleList li {
+  display: grid;
+  gap: 0.25rem;
+  padding-left: 1rem;
+  border-left: 0.35rem solid var(--spray);
+}
+
+.bundleList strong {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.bundleList span {
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+.bundleList em {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-style: normal;
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------- soft wash */
+
+.soft {
+  background: var(--ink);
+  color: var(--on-ink);
+  --muted: color-mix(in oklab, var(--on-ink) 76%, var(--ink));
+  --rule: color-mix(in oklab, var(--on-ink) 24%, transparent);
+  --rule-strong: color-mix(in oklab, var(--on-ink) 70%, transparent);
+}
+
+.softInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.softHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  grid-template-areas:
+    'eyebrow eyebrow'
+    'title lead';
+  gap: 1rem clamp(2rem, 5vw, 5rem);
+  align-items: end;
+}
+
+.eyebrow {
+  grid-area: eyebrow;
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.softTitle {
+  grid-area: title;
+  font-size: clamp(2.4rem, 4.6vw, 4rem);
+}
+
+.softLead {
+  grid-area: lead;
+  max-width: 32rem;
+  color: var(--muted);
+}
+
+.softGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.gaugeTitle,
+.tankTitle {
+  font-size: 1.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.bars {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.barRow {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr) 5.5rem;
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.barName {
+  font-size: 0.95rem;
+}
+
+.barTrack {
+  position: relative;
+  height: 0.85rem;
+  background: color-mix(in oklab, var(--on-ink) 14%, var(--ink));
+}
+
+.barFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--spray);
+}
+
+.w0 { width: 3%; }
+.w1 { width: 4%; }
+.w2 { width: 10%; }
+.w3 { width: 17%; }
+.w4 { width: 83%; }
+.w5 { width: 100%; }
+
+.barValue {
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.tableWrap {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.compare {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.compare th,
+.compare td {
+  padding: 0.8rem 0.9rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule);
+}
+
+.compare thead th {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.compare tbody th {
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.compare td {
+  font-size: 0.97rem;
+  line-height: 1.45;
+}
+
+.tank {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding-top: 2rem;
+  border-top: 2px solid var(--rule-strong);
+}
+
+.tankList {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.tankList dt {
+  font-family: var(--display);
+  font-size: 2.3rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.tankList dd {
+  margin-top: 0.4rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------- the first pass */
+
+.strip {
+  position: relative;
+  height: clamp(8rem, 13vw, 11rem);
+  overflow: hidden;
+  background: var(--wet);
+}
+
+.strip::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  left: -5%;
+  right: -5%;
+  top: 36%;
+  height: 30%;
+  background: var(--clean);
+  border-top: 0.35rem solid var(--spray);
+  border-bottom: 0.35rem solid var(--spray);
+  transform: rotate(-3deg);
+}
+
+/* -------------------------------------------------------------------- steps */
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.step {
+  padding-top: 1rem;
+  border-top: 0.4rem solid var(--spray);
+}
+
+.stepNo {
+  font-family: var(--display);
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.stepTitle {
+  margin-top: 0.6rem;
+  font-size: 1.55rem;
+}
+
+.stepText {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------------- faq */
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.hours {
+  margin-top: 2rem;
+  border-top: 2px solid var(--rule-strong);
+}
+
+.hours div {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dt {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hours dd {
+  color: var(--muted);
+}
+
+.faqList {
+  border-top: 2px solid var(--rule-strong);
+}
+
+.faq {
+  border-bottom: 1px solid var(--rule);
+}
+
+.faq summary {
+  position: relative;
+  padding: 1.15rem 2.5rem 1.15rem 0;
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.15;
+  text-transform: uppercase;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  position: absolute;
+  right: 0.2rem;
+  top: 0.95rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.faq[open] summary::after {
+  content: '\2212';
+}
+
+.faq p {
+  max-width: 40rem;
+  padding: 0 0 1.3rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- book */
+
+.book {
+  position: relative;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+  background: var(--tint);
+  border-top: 2px solid var(--rule-strong);
+}
+
+.bookField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.bookCard {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background: var(--clean);
+  border: 2px solid var(--rule-strong);
+}
+
+.bookLead {
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+.contactList {
+  margin-top: 1.8rem;
+  border-top: 2px solid var(--rule-strong);
+}
+
+.contactList div {
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.contactList dt {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contactList dd {
+  font-size: 1.1rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.field span,
+.choices legend {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--clean);
+  border: 2px solid var(--rule-strong);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: 3px solid var(--spray);
+  outline-offset: 0;
+}
+
+.choices {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem 1rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.choices legend {
+  margin-bottom: 0.4rem;
+  padding: 0;
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+
+.choice input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--ink);
+}
+
+.form .button {
+  justify-self: start;
+  margin-top: 0.3rem;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--ink);
+  color: var(--on-ink);
+  --muted: color-mix(in oklab, var(--on-ink) 76%, var(--ink));
+}
+
+.footerInner {
+  display: grid;
+  gap: 0.45rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 3rem var(--gut);
+}
+
+.footerName {
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.footerLine {
+  max-width: 44rem;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+.footerCredit {
+  margin-top: 0.5rem;
+  font-size: 0.94rem;
+}
+
+.footerCredit a {
+  border-bottom: 2px solid currentColor;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .bundles {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 920px) {
+  .nav,
+  .barCall {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dirty {
+    min-height: 15rem;
+  }
+
+  .washed {
+    padding: 4.5rem var(--gut) 3.5rem;
+  }
+
+  .washed::before {
+    top: -0.25rem;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: 0.5rem;
+  }
+
+  .after {
+    top: 1.4rem;
+  }
+
+  .secHead,
+  .softHead,
+  .softGrid,
+  .faqGrid,
+  .bookCard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .softHead {
+    grid-template-areas:
+      'eyebrow'
+      'title'
+      'lead';
+  }
+
+  .surfaces,
+  .bundleList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tankList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .surfaces,
+  .bundleList,
+  .steps,
+  .heroFacts,
+  .formRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroFacts {
+    gap: 0.9rem;
+  }
+
+  .choices {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .barRow {
+    grid-template-columns: 6.5rem minmax(0, 1fr) 4.6rem;
+    gap: 0.6rem;
+  }
+
+  .compare th,
+  .compare td {
+    padding: 0.7rem 0.5rem;
+  }
+
+  .compare thead th {
+    font-size: 1.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .button,
+  .ghost {
+    transition: transform 120ms ease;
+  }
+}

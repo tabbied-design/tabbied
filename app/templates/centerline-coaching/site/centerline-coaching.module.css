@@ -1,0 +1,873 @@
+/* ==========================================================================
+   CENTERLINE COACHING - life coach
+   A squared spiral toward the center. The hero is one turn of it: five
+   blocks laid clockwise (the words, the coils, a question, more coils)
+   closing in on the way in. Below, every section is a ring inside the
+   last, and the rings' rules draw a single unbroken squared spiral down
+   the page: across the top, down the right, back along the bottom, up the
+   left and into the next ring, until the discovery call sits at the
+   center on a field of spiralblock's coils. Lilac mist and deep indigo,
+   persimmon for the one thing to press; a squared grotesque for the
+   headings and a reading serif for the reflective copy.
+   ========================================================================== */
+
+.page {
+  --lilac: #ebe5f2;
+  --indigo: #261f4a;
+  --persimmon: #e2603a;
+  --gold: #e9b44c;
+  --sage: #7fa38b;
+  --violet: #8a76c4;
+
+  --text: var(--indigo);
+  --on-indigo: var(--lilac);
+  --on-persimmon: var(--indigo);
+  --on-gold: var(--indigo);
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --gap: clamp(0.55rem, 2.6vw, 2.4rem);
+  --bw: 3px;
+  --grot: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --serif: 'Source Serif 4', 'Georgia', serif;
+
+  font-family: var(--serif);
+  font-size: 1.06rem;
+  line-height: 1.65;
+  background: var(--lilac);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--lilac) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--indigo));
+    --on-indigo: color-mix(in oklab, oklch(from var(--indigo) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--indigo));
+    --on-persimmon: oklch(from var(--persimmon) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-gold: oklch(from var(--gold) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--lilac));
+  --rule: color-mix(in oklab, var(--text) 20%, transparent);
+  --line: var(--indigo);
+  --panel: color-mix(in oklab, var(--lilac) 82%, var(--violet));
+  --indigo-muted: color-mix(in oklab, var(--on-indigo) 76%, var(--indigo));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p) {
+  margin: 0;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--grot);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--lilac);
+  border-bottom: var(--bw) solid var(--line);
+}
+
+.brand {
+  justify-self: start;
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 0.65rem;
+  align-items: center;
+  line-height: 1;
+}
+
+/* A squared spiral in three nested frames, open at the top left. */
+.brandMark {
+  grid-row: 1 / span 2;
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid var(--line);
+  border-left-color: transparent;
+  box-shadow: inset 0 0 0 4px var(--lilac), inset 0 0 0 7px var(--persimmon);
+}
+
+.brandName {
+  font-family: var(--grot);
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.brandSub {
+  margin-top: 0.15rem;
+  font-family: var(--grot);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.9rem, 2vw, 1.9rem);
+}
+
+.nav a {
+  font-family: var(--grot);
+  font-size: 0.92rem;
+  font-weight: 500;
+  padding: 0.25rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--persimmon);
+}
+
+.barCall {
+  padding: 0.6rem 1.1rem;
+  font-family: var(--grot);
+  font-size: 0.88rem;
+  font-weight: 700;
+  background: var(--persimmon);
+  color: var(--on-persimmon);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--lilac);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.42fr) minmax(0, 0.58fr);
+  grid-template-rows: minmax(0, 1.15fr) minmax(0, 0.5fr) minmax(0, 0.75fr);
+  grid-template-areas:
+    'a b b'
+    'a e c'
+    'a d c';
+  gap: 12px;
+  height: clamp(36rem, 48vw, 44rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2rem, 4vw, 3.5rem) var(--gut);
+}
+
+.heroText {
+  grid-area: a;
+  align-self: center;
+  padding-right: clamp(1rem, 3vw, 3rem);
+}
+
+.kicker {
+  font-family: var(--grot);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  margin-top: 1.1rem;
+  font-size: clamp(3rem, 6vw, 5.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+
+.heroTitle em {
+  display: block;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+
+.heroLead {
+  max-width: 33rem;
+  margin-top: 1.5rem;
+  font-size: 1.12rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.35rem;
+  font-family: var(--grot);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.button {
+  background: var(--indigo);
+  color: var(--on-indigo);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--indigo) 84%, var(--persimmon));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 var(--bw) var(--line);
+}
+
+.ghost:hover {
+  background: var(--panel);
+}
+
+.cellB,
+.cellD {
+  position: relative;
+  overflow: hidden;
+  border: var(--bw) solid var(--line);
+}
+
+.cellB {
+  grid-area: b;
+  background: var(--lilac);
+}
+
+.cellD {
+  grid-area: d;
+  background: var(--indigo);
+}
+
+.cellC {
+  grid-area: c;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(1rem, 2vw, 1.6rem);
+  background: var(--indigo);
+  color: var(--on-indigo);
+}
+
+.cLabel {
+  font-family: var(--grot);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--indigo-muted);
+}
+
+.cQuestion {
+  font-family: var(--serif);
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
+  font-style: italic;
+  line-height: 1.25;
+}
+
+.cellE {
+  grid-area: e;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.8rem 1rem;
+  background: var(--persimmon);
+  color: var(--on-persimmon);
+}
+
+.cellE:hover {
+  background: color-mix(in oklab, var(--persimmon) 86%, var(--indigo));
+}
+
+.eLabel {
+  font-family: var(--grot);
+  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.eText {
+  font-size: 0.92rem;
+}
+
+/* -------------------------------------------------------------- the spiral
+   Each ring has a rule on its top, right and bottom. Its left side is
+   drawn by the ring inside it (::before), from that ring's top down to
+   this ring's bottom, and the inner ring's top rule reaches back across
+   the gap to meet it (::after). Together the rules make one squared
+   spiral, open at the top left where it starts. */
+
+.spiral,
+.ring {
+  position: relative;
+  border: var(--bw) solid var(--line);
+  border-left: 0;
+  padding: 0 var(--gap) var(--gap);
+}
+
+.spiral {
+  margin: clamp(1rem, 3vw, 2rem) max(var(--gut), calc((100% - var(--max)) / 2)) clamp(4rem, 8vw, 6rem);
+}
+
+.spiral::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: calc(-1 * var(--bw) - 5.5px);
+  width: 14px;
+  height: 14px;
+  background: var(--persimmon);
+}
+
+.ring {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.ring::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--gap));
+  top: calc(-1 * var(--bw));
+  bottom: calc(-2 * var(--bw) - var(--gap));
+  width: var(--bw);
+  background: var(--line);
+}
+
+.ring::after {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--gap));
+  top: calc(-1 * var(--bw));
+  width: var(--gap);
+  height: var(--bw);
+  background: var(--line);
+}
+
+.turn {
+  padding: clamp(2.2rem, 5vw, 3.6rem) clamp(0.4rem, 2vw, 1.6rem) 0;
+}
+
+.center > .turn {
+  padding-bottom: clamp(0.6rem, 2vw, 1.6rem);
+}
+
+.turnNo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--grot);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.turnNo::before {
+  content: '';
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--persimmon);
+}
+
+.title {
+  margin-top: 0.8rem;
+  max-width: 44rem;
+  font-size: clamp(2.2rem, 4.4vw, 3.6rem);
+  line-height: 1;
+}
+
+.note {
+  max-width: 42rem;
+  margin-top: 1rem;
+  font-size: 1.08rem;
+  color: var(--muted);
+}
+
+/* Turn 1: is and is not. */
+
+.isGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  margin-top: clamp(1.8rem, 4vw, 2.8rem);
+}
+
+.isHead {
+  padding-bottom: 0.7rem;
+  font-size: 1.4rem;
+  border-bottom: var(--bw) solid var(--line);
+}
+
+.isList {
+  margin: 0;
+}
+
+.isList div {
+  position: relative;
+  padding: 1rem 0 1rem 2.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.isList div::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.25rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  background: var(--sage);
+}
+
+.isNot .isList div::before {
+  background:
+    linear-gradient(45deg, transparent 42%, var(--persimmon) 42%, var(--persimmon) 58%, transparent 58%),
+    linear-gradient(-45deg, transparent 42%, var(--persimmon) 42%, var(--persimmon) 58%, transparent 58%);
+}
+
+.isList dt {
+  font-family: var(--grot);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.isList dd {
+  margin: 0.2rem 0 0;
+  color: var(--muted);
+}
+
+/* Turn 2: programs. */
+
+.programs {
+  list-style: none;
+  margin: clamp(1.8rem, 4vw, 2.8rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.program {
+  --fg: var(--text);
+  --fg-muted: var(--muted);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.4rem 1.6rem;
+  border: var(--bw) solid var(--line);
+}
+
+.program:nth-child(2) {
+  --fg: var(--on-indigo);
+  --fg-muted: var(--indigo-muted);
+  background: var(--indigo);
+  color: var(--on-indigo);
+}
+
+.progLength {
+  font-family: var(--grot);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.progName {
+  margin-top: 0.5rem;
+  font-size: 1.7rem;
+  line-height: 1.05;
+}
+
+.progPrice {
+  margin-top: 0.8rem;
+  font-family: var(--grot);
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.progText {
+  margin-top: 0.9rem;
+  color: var(--fg-muted);
+}
+
+.progIncludes {
+  list-style: none;
+  margin: 1.1rem 0 0;
+  padding: 0.9rem 0 0;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.94rem;
+  border-top: 1px solid color-mix(in oklab, var(--fg) 25%, transparent);
+}
+
+.progIncludes li {
+  position: relative;
+  padding-left: 1.2rem;
+}
+
+.progIncludes li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--gold);
+}
+
+/* Turn 3: the steps, their markers shrinking toward the center. */
+
+.steps {
+  list-style: none;
+  margin: clamp(1.8rem, 4vw, 2.8rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+.step {
+  display: grid;
+  grid-template-rows: 3.4rem auto 1fr;
+}
+
+.stepNo {
+  display: grid;
+  place-items: center;
+  align-self: end;
+  width: var(--size);
+  height: var(--size);
+  font-family: var(--grot);
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: var(--indigo);
+  color: var(--on-indigo);
+}
+
+.step:nth-child(1) { --size: 3.4rem; }
+.step:nth-child(2) { --size: 2.9rem; }
+.step:nth-child(3) { --size: 2.4rem; }
+.step:nth-child(4) { --size: 1.9rem; }
+
+.step:nth-child(4) .stepNo {
+  background: var(--persimmon);
+  color: var(--on-persimmon);
+}
+
+.stepTitle {
+  margin-top: 1rem;
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+
+.stepText {
+  margin-top: 0.5rem;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+/* Turn 4: the coach. */
+
+.coachGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.coachLead {
+  max-width: 40rem;
+  margin-top: 1.1rem;
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+.coachText {
+  max-width: 40rem;
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+.facts {
+  margin: 0.4rem 0 0;
+  padding: 0.4rem 1.3rem;
+  background: var(--panel);
+}
+
+.facts div {
+  padding: 0.85rem 0;
+}
+
+.facts div + div {
+  border-top: 1px solid var(--rule);
+}
+
+.facts dt {
+  font-family: var(--grot);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.facts dd {
+  margin: 0.1rem 0 0;
+  font-family: var(--grot);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* The center: the call, on a field of coils. */
+
+.callGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+  margin-top: 0.5rem;
+}
+
+.contactList {
+  display: grid;
+  gap: 1rem;
+  margin: 1.8rem 0 0;
+}
+
+.contactList dt {
+  font-family: var(--grot);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contactList dd {
+  margin: 0.1rem 0 0;
+  font-family: var(--grot);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.callField {
+  position: relative;
+  padding: clamp(1.4rem, 4vw, 3rem);
+  border: var(--bw) solid var(--line);
+  background: var(--indigo);
+}
+
+.coreCoils {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.form {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  background: var(--lilac);
+  border: var(--bw) solid var(--line);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-family: var(--grot);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--lilac);
+  border: 2px solid var(--line);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.9rem 1.5rem;
+  font-family: var(--grot);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--on-persimmon);
+  background: var(--persimmon);
+  border: 0;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--persimmon) 86%, var(--indigo));
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--indigo);
+  color: var(--on-indigo);
+}
+
+.footCoils {
+  position: relative;
+  height: 64px;
+  overflow: hidden;
+  background: var(--indigo);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) auto;
+  gap: 1rem 2.5rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2rem var(--gut) 2.6rem;
+  font-size: 0.94rem;
+  color: var(--indigo-muted);
+}
+
+.footName {
+  font-family: var(--grot);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--on-indigo);
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1120px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    height: auto;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto 15rem 7rem 11rem;
+    grid-template-areas:
+      'a a'
+      'b b'
+      'e c'
+      'd c';
+  }
+
+  .heroText {
+    padding: 0 0 1.5rem;
+  }
+
+  .programs,
+  .coachGrid,
+  .callGrid,
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .page {
+    --bw: 2px;
+    --gap: 0.4rem;
+  }
+
+  .turn {
+    padding-left: 0.35rem;
+    padding-right: 0.35rem;
+  }
+
+  .callField {
+    padding: 0.75rem;
+  }
+
+  .form {
+    padding: 1rem;
+  }
+
+  .contactList dd {
+    font-size: 1.05rem;
+  }
+
+  .isGrid,
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .step {
+    grid-template-rows: auto auto auto;
+  }
+}

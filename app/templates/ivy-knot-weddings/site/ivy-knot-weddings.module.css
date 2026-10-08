@@ -1,0 +1,879 @@
+/* ==========================================================================
+   IVY & KNOT - wedding photography, Larkfield
+   The page is set like the stationery of a wedding: centered, symmetrical,
+   an invitation card laid on a knotwork runner in the hero, the order of
+   the day as a timeline down the middle of the page, roman numerals for
+   the booking steps. Cormorant Garamond for everything said aloud, Jost in
+   spaced capitals for the small print. The knotwork is the studio's name
+   drawn, and every gallery panel is one wedding's colorway of it.
+   ========================================================================== */
+
+.page {
+  --ivory: #f6f0e6;
+  --ivy: #1e3a2f;
+  --blush: #d9a294;
+  --gold: #b08a4a;
+
+  --text: var(--ivy);
+  --on-ivy: var(--ivory);
+  --on-blush: var(--ivy);
+  --on-gold: var(--ivy);
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 76rem;
+  --serif: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  --sans: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.65;
+  background: var(--ivory);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--ivory) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--ivy));
+    --on-ivy: color-mix(in oklab, oklch(from var(--ivy) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--ivy));
+    --on-blush: oklch(from var(--blush) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-gold: oklch(from var(--gold) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--ivory));
+  --hair: color-mix(in oklab, var(--gold) 60%, var(--ivory));
+  --rule: color-mix(in oklab, var(--text) 16%, var(--ivory));
+  --panel: color-mix(in oklab, var(--ivory) 90%, var(--blush));
+  --paper-deep: color-mix(in oklab, var(--ivory) 86%, var(--gold));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+.page :where(h1, h2) em {
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--ivory);
+  border-bottom: 1px solid var(--hair);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--gold);
+}
+
+.brand {
+  display: grid;
+  justify-items: center;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0.01em;
+}
+
+.brandSub {
+  margin-top: 0.3rem;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.barEnd {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.barDate {
+  padding: 0.6rem 1.1rem;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  background: var(--ivy);
+  color: var(--on-ivy);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--ivory);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(38rem, 62vw, 52rem);
+  padding: clamp(3rem, 7vw, 5.5rem) var(--gut);
+  overflow: hidden;
+}
+
+.heroField {
+  position: absolute;
+  inset: 0;
+  background: var(--ivy);
+}
+
+/* The invitation: a card with a gold hairline set in from its edge. */
+.invite {
+  position: relative;
+  z-index: 1;
+  width: min(44rem, 100%);
+  padding: clamp(2.6rem, 6vw, 4.4rem) clamp(1.6rem, 5vw, 4.4rem);
+  text-align: center;
+  background: var(--ivory);
+  box-shadow:
+    inset 0 0 0 12px var(--ivory),
+    inset 0 0 0 13px var(--hair),
+    0 30px 60px -30px color-mix(in oklab, var(--ivy) 70%, transparent);
+}
+
+.inviteKicker {
+  margin: 0 0 1.4rem;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(3rem, 6.4vw, 5.4rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+}
+
+.heroTitle em {
+  display: block;
+}
+
+.heroLead {
+  max-width: 30rem;
+  margin: 1.5rem auto 0;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.button {
+  background: var(--ivy);
+  color: var(--on-ivy);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--ivy) 84%, var(--gold));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1px var(--text);
+}
+
+.ghost:hover {
+  background: var(--panel);
+}
+
+.inviteFacts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem 1.6rem;
+  margin: 2.2rem 0 0;
+  padding: 1.3rem 0 0;
+  list-style: none;
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  font-style: italic;
+  border-top: 1px solid var(--hair);
+}
+
+.inviteFacts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.inviteFacts li + li::before {
+  content: '';
+  width: 0.4rem;
+  height: 0.4rem;
+  background: var(--gold);
+  transform: rotate(45deg);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut) 0;
+  scroll-margin-top: 5rem;
+}
+
+.secHead {
+  max-width: 44rem;
+  margin: 0 auto clamp(2.4rem, 5vw, 3.6rem);
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 0.9rem;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.secTitle {
+  font-size: clamp(2.4rem, 5vw, 3.9rem);
+  line-height: 1.02;
+}
+
+.secTitle em {
+  display: block;
+}
+
+.secNote {
+  max-width: 36rem;
+  margin: 1.1rem auto 0;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- the day */
+
+.timeline {
+  position: relative;
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  width: 1px;
+  background: var(--hair);
+}
+
+.moment {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7rem minmax(0, 1fr);
+  align-items: start;
+  padding: 0.6rem 0;
+}
+
+.momentTime {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: center;
+  z-index: 1;
+  padding: 0.2rem 0.8rem;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.3;
+  background: var(--ivory);
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+}
+
+.momentBody {
+  grid-row: 1;
+  padding-top: 0.1rem;
+}
+
+.moment:nth-child(odd) .momentBody {
+  grid-column: 3;
+}
+
+.moment:nth-child(even) .momentBody {
+  grid-column: 1;
+  text-align: right;
+}
+
+.momentTitle {
+  font-size: 1.7rem;
+  line-height: 1.15;
+}
+
+.momentNote {
+  max-width: 24rem;
+  margin: 0.25rem 0 0.8rem;
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+.moment:nth-child(even) .momentNote {
+  margin-left: auto;
+}
+
+/* --------------------------------------------------------------- packages */
+
+.packages {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+  align-items: stretch;
+}
+
+.pack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.4rem 1.6rem 2rem;
+  text-align: center;
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px var(--hair);
+}
+
+.packPick {
+  background: var(--ivy);
+  color: var(--on-ivy);
+  box-shadow: none;
+}
+
+.packName {
+  font-size: 2rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.packHours {
+  margin: 0.5rem 0 0;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.packPrice {
+  margin: 1.3rem 0 1.2rem;
+  font-family: var(--serif);
+  font-size: 3.4rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.packItems {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.95rem;
+}
+
+.packItems li {
+  padding: 0.55rem 0;
+  border-top: 1px solid color-mix(in oklab, currentColor 18%, transparent);
+}
+
+.packNote {
+  margin: 1.6rem auto 0;
+  max-width: 40rem;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------- galleries */
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 20rem;
+  gap: clamp(1rem, 2.2vw, 1.8rem);
+}
+
+.frame {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-height: 0;
+}
+
+.frame:nth-child(1) {
+  grid-row: span 2;
+}
+
+.frame:nth-child(4) {
+  grid-column: span 2;
+}
+
+.frame:nth-child(5) {
+  grid-column: span 2;
+}
+
+.panel {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--hair);
+}
+
+.ivy {
+  background: var(--ivy);
+}
+
+.blush {
+  background: var(--blush);
+}
+
+.gold {
+  background: var(--gold);
+}
+
+.paper {
+  background: var(--paper-deep);
+}
+
+.caption {
+  display: grid;
+  gap: 0.1rem;
+  padding-top: 0.6rem;
+}
+
+.couple {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.place {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(20rem, 32vw, 26rem);
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+  padding: 3rem var(--gut);
+  overflow: hidden;
+}
+
+.bandField {
+  position: absolute;
+  inset: 0;
+  background: var(--ivy);
+}
+
+.quote {
+  position: relative;
+  z-index: 1;
+  width: min(40rem, 100%);
+  margin: 0;
+  padding: clamp(1.8rem, 4vw, 2.8rem);
+  text-align: center;
+  background: var(--ivory);
+  box-shadow: inset 0 0 0 10px var(--ivory), inset 0 0 0 11px var(--hair);
+}
+
+.quote blockquote {
+  margin: 0;
+}
+
+.quote blockquote p {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.quote figcaption {
+  margin-top: 1rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- booking */
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.stepNo {
+  display: grid;
+  place-items: center;
+  width: 3.6rem;
+  height: 3.6rem;
+  margin-bottom: 1rem;
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 600;
+  border: 1px solid var(--hair);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 4px var(--ivory), inset 0 0 0 5px var(--hair);
+}
+
+.stepTitle {
+  font-size: 1.55rem;
+  line-height: 1.15;
+}
+
+.stepText {
+  margin: 0.45rem 0 0;
+  font-size: 0.93rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+  padding-top: 3rem;
+  border-top: 1px solid var(--hair);
+}
+
+.contactText .secNote {
+  margin-left: 0;
+}
+
+.studio {
+  margin: 2rem 0 0;
+}
+
+.studio div {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.studio dt {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding-top: 0.2rem;
+}
+
+.studio dd {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  overflow-wrap: anywhere;
+}
+
+.studio a {
+  border-bottom: 1px solid var(--hair);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  padding: clamp(1.6rem, 3.5vw, 2.6rem);
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px var(--hair);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--ivory);
+  border: 1px solid var(--hair);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.9rem 1.5rem;
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--on-ivy);
+  background: var(--ivy);
+  border: 0;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+  background: var(--ivy);
+  color: var(--on-ivy);
+  text-align: center;
+}
+
+.footEdge {
+  position: relative;
+  height: 72px;
+  overflow: hidden;
+}
+
+.footInner {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+  font-size: 0.9rem;
+}
+
+.footInner p {
+  margin: 0.3rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.8rem;
+  font-family: var(--serif);
+  font-size: 2.3rem;
+  font-style: italic;
+  line-height: 1;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1080px) {
+  .steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 2.4rem;
+  }
+}
+
+@media (max-width: 920px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .brand {
+    justify-items: start;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .packages,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 16rem;
+  }
+
+  .frame:nth-child(1) {
+    grid-row: span 1;
+    grid-column: span 2;
+  }
+
+  .frame:nth-child(4) {
+    grid-column: span 1;
+  }
+
+  .frame:nth-child(5) {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 680px) {
+  .barDate {
+    display: none;
+  }
+
+  .brandName {
+    font-size: 1.7rem;
+  }
+
+  .inviteFacts {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .inviteFacts li + li::before {
+    display: none;
+  }
+
+  .timeline::before {
+    left: 0.6rem;
+  }
+
+  .moment {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0 0 0.4rem 2rem;
+  }
+
+  .momentTime {
+    grid-column: 1;
+    justify-self: start;
+    margin-left: -1.4rem;
+  }
+
+  .moment:nth-child(odd) .momentBody,
+  .moment:nth-child(even) .momentBody {
+    grid-column: 1;
+    grid-row: 2;
+    text-align: left;
+    padding-top: 0.5rem;
+  }
+
+  .moment:nth-child(even) .momentNote {
+    margin-left: 0;
+  }
+
+  .gallery {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: 15rem;
+  }
+
+  .frame:nth-child(n) {
+    grid-column: span 1;
+  }
+
+  .steps,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .studio div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}

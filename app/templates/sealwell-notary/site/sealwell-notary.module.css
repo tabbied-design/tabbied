@@ -1,0 +1,1219 @@
+.page {
+  --paper: #f5f0e3;
+  --navy: #1c2b4a;
+  --wax: #8c2232;
+  --gold: #b08a3e;
+  --steel: #6d7f99;
+
+  --text: var(--navy);
+  --on-navy: var(--paper);
+  --on-wax: var(--paper);
+
+  --display: 'Cinzel', 'Trajan Pro', Georgia, serif;
+  --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 76rem;
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--paper));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 42%, transparent);
+  --foil: color-mix(in oklab, var(--gold) 82%, var(--navy));
+  --tint: color-mix(in oklab, var(--paper) 90%, var(--steel));
+  --wash: color-mix(in oklab, var(--paper) 95%, var(--gold));
+  --shadow: color-mix(in oklab, var(--navy) 28%, transparent);
+  --on-navy-soft: color-mix(in oklab, var(--on-navy) 80%, var(--navy));
+
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--navy));
+    --on-navy: color-mix(in oklab, oklch(from var(--navy) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--navy));
+    --on-wax: oklch(from var(--wax) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--paper);
+  border-bottom: 3px double var(--foil);
+}
+
+.brand {
+  display: grid;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.brandSub {
+  margin-top: 0.3rem;
+  font-size: 0.74rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 1.9rem);
+}
+
+.nav a {
+  padding: 0.3rem 0;
+  font-family: var(--display);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-bottom: 1px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barCall {
+  padding: 0.6rem 1.05rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+  background: var(--navy);
+  color: var(--on-navy);
+  border-radius: 2px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--paper);
+}
+
+/* --------------------------------------------------------------------- hero
+   The lace is the security paper. The certificate sits on it, and the seal
+   is pressed across the certificate's right edge. */
+
+.hero {
+  position: relative;
+  padding: clamp(2.5rem, 4.5vw, 4rem) var(--gut) clamp(3.5rem, 6vw, 5rem);
+  background: var(--tint);
+  border-bottom: 1px solid var(--rule);
+}
+
+.heroLace {
+  position: absolute;
+  inset: 0;
+}
+
+.heroInner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 23rem;
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.certificate {
+  position: relative;
+  grid-column: 1;
+  grid-row: 1;
+  margin-right: -6rem;
+  padding: clamp(2rem, 3.6vw, 3rem) 8.5rem clamp(2rem, 3.2vw, 2.6rem) clamp(1.6rem, 4vw, 3.6rem);
+  background: var(--paper);
+  border: 7px double var(--foil);
+  box-shadow: 0 40px 70px -40px var(--shadow);
+}
+
+.certificate::before {
+  content: '';
+  position: absolute;
+  inset: 0.55rem;
+  border: 1px solid color-mix(in oklab, var(--foil) 70%, transparent);
+  pointer-events: none;
+}
+
+.certKicker {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: var(--display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.certKicker::after {
+  content: '';
+  flex: 0 1 8rem;
+  height: 1px;
+  background: var(--foil);
+}
+
+.heroTitle {
+  margin-top: 1.4rem;
+  font-family: var(--display);
+  font-size: clamp(2.3rem, 4.2vw, 3.7rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+}
+
+.heroTitle em {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: var(--serif);
+  font-size: 0.92em;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--wax);
+}
+
+.heroLead {
+  max-width: 39rem;
+  margin-top: 1.5rem;
+  font-size: 1.14rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost,
+.submit {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.95rem 1.5rem;
+  font-family: var(--display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-radius: 2px;
+}
+
+.button {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.ghost {
+  border: 1px solid var(--rule-strong);
+}
+
+.button:hover,
+.ghost:hover {
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--foil) 45%, transparent);
+}
+
+.certFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1.6rem 2rem;
+  margin-top: 2.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+}
+
+.certFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, auto));
+  justify-content: start;
+  gap: 0 2rem;
+}
+
+.certFacts dt {
+  font-family: var(--display);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.certFacts dd {
+  margin-top: 0.2rem;
+  font-size: 1.12rem;
+  font-weight: 600;
+}
+
+.signature {
+  width: min(100%, 13.5rem);
+}
+
+.signName {
+  padding: 0 0.3rem 0.2rem;
+  font-size: 1.7rem;
+  font-style: italic;
+  line-height: 1.1;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.signRole {
+  margin-top: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+/* The seal: foil starburst cut from the lace, a wax face, two ribbon tails. */
+
+.seal {
+  position: relative;
+  z-index: 2;
+  grid-column: 2;
+  grid-row: 1;
+  width: 23rem;
+  aspect-ratio: 1;
+  filter: drop-shadow(0 18px 18px var(--shadow));
+}
+
+.sealFoil {
+  position: absolute;
+  inset: 0;
+  background: var(--wax);
+  clip-path: polygon(50.00% 0.00%, 54.05% 3.68%, 58.68% 0.76%, 62.04% 5.08%, 67.10% 3.02%, 69.65% 7.86%, 75.00% 6.70%, 76.67% 11.91%, 82.14% 11.70%, 82.88% 17.12%, 88.30% 17.86%, 88.09% 23.33%, 93.30% 25.00%, 92.14% 30.35%, 96.98% 32.90%, 94.92% 37.96%, 99.24% 41.32%, 96.32% 45.95%, 100.00% 50.00%, 96.32% 54.05%, 99.24% 58.68%, 94.92% 62.04%, 96.98% 67.10%, 92.14% 69.65%, 93.30% 75.00%, 88.09% 76.67%, 88.30% 82.14%, 82.88% 82.88%, 82.14% 88.30%, 76.67% 88.09%, 75.00% 93.30%, 69.65% 92.14%, 67.10% 96.98%, 62.04% 94.92%, 58.68% 99.24%, 54.05% 96.32%, 50.00% 100.00%, 45.95% 96.32%, 41.32% 99.24%, 37.96% 94.92%, 32.90% 96.98%, 30.35% 92.14%, 25.00% 93.30%, 23.33% 88.09%, 17.86% 88.30%, 17.12% 82.88%, 11.70% 82.14%, 11.91% 76.67%, 6.70% 75.00%, 7.86% 69.65%, 3.02% 67.10%, 5.08% 62.04%, 0.76% 58.68%, 3.68% 54.05%, 0.00% 50.00%, 3.68% 45.95%, 0.76% 41.32%, 5.08% 37.96%, 3.02% 32.90%, 7.86% 30.35%, 6.70% 25.00%, 11.91% 23.33%, 11.70% 17.86%, 17.12% 17.12%, 17.86% 11.70%, 23.33% 11.91%, 25.00% 6.70%, 30.35% 7.86%, 32.90% 3.02%, 37.96% 5.08%, 41.32% 0.76%, 45.95% 3.68%);
+}
+
+.sealFace {
+  position: absolute;
+  inset: 19%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  text-align: center;
+  background: var(--wax);
+  color: var(--on-wax);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 0.35rem var(--wax),
+    0 0 0 0.45rem color-mix(in oklab, var(--on-wax) 70%, var(--wax)),
+    inset 0 0 0 0.5rem var(--wax),
+    inset 0 0 0 0.6rem color-mix(in oklab, var(--on-wax) 70%, var(--wax));
+}
+
+.sealSmall {
+  font-family: var(--display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.sealName {
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.05em;
+}
+
+.sealYear {
+  margin-top: 0.2rem;
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+.tailLeft,
+.tailRight {
+  position: absolute;
+  z-index: -1;
+  top: 70%;
+  width: 3.6rem;
+  height: 9.5rem;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 84%, 0 100%);
+}
+
+.tailLeft {
+  left: 31%;
+  background: var(--wax);
+  transform: rotate(16deg);
+}
+
+.tailRight {
+  left: 52%;
+  background: var(--navy);
+  transform: rotate(-14deg);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  max-width: 46rem;
+  margin-bottom: 2.6rem;
+}
+
+.eyebrow {
+  font-family: var(--display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.secTitle {
+  margin-top: 0.6rem;
+  font-family: var(--display);
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  font-weight: 500;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.secNote {
+  margin-top: 1rem;
+  max-width: 40rem;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- fees */
+
+.feeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.feeCard {
+  padding: 1.8rem 2rem 2rem;
+  background: var(--wash);
+  border: 1px solid var(--rule);
+  border-top: 4px double var(--foil);
+}
+
+.feeTitle {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.feeList {
+  margin-top: 1rem;
+}
+
+.feeList div {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px dotted var(--rule-strong);
+}
+
+.feeList dt {
+  flex: 1;
+}
+
+.feeList dd {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.example {
+  margin-top: 1.4rem;
+  padding: 1rem 1.2rem;
+  background: var(--paper);
+  border-left: 3px solid var(--wax);
+}
+
+.exampleHead {
+  font-family: var(--display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.exampleText {
+  margin-top: 0.3rem;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+.packages {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.package {
+  padding: 1.8rem 1.8rem 2rem;
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.packName {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.packPrice {
+  margin-top: 0.4rem;
+  font-size: 1.9rem;
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.packNote {
+  margin-top: 0.8rem;
+  font-size: 0.98rem;
+  color: var(--on-navy-soft);
+}
+
+/* -------------------------------------------------------------------- zones */
+
+.zones {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+  background: var(--tint);
+  border-block: 1px solid var(--rule);
+}
+
+.zonesInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5.5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.rings {
+  position: relative;
+  width: min(100%, 31rem);
+  aspect-ratio: 1;
+  justify-self: center;
+}
+
+.ringLace {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--paper);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--rule-strong);
+}
+
+.ringTwo,
+.ringOne {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.ringTwo {
+  inset: 16%;
+  background: var(--wash);
+  box-shadow:
+    0 0 0 6px var(--paper),
+    0 0 0 7px var(--rule-strong);
+}
+
+.ringOne {
+  inset: 32%;
+  background: var(--navy);
+  box-shadow:
+    0 0 0 6px var(--paper),
+    0 0 0 7px var(--rule-strong);
+}
+
+.ringTag {
+  position: absolute;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  background: var(--paper);
+  border: 2px solid var(--foil);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.tagOne {
+  top: 50%;
+}
+
+.tagTwo {
+  top: 24%;
+}
+
+.tagThree {
+  top: 8%;
+}
+
+.zoneList {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.zone {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+  gap: 0.2rem 1.2rem;
+  align-items: baseline;
+  padding: 1.1rem 1.3rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+}
+
+.zoneName {
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.zoneReach {
+  color: var(--muted);
+}
+
+.zoneFee {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.zoneTowns {
+  grid-column: 2 / -1;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.beyond {
+  margin-top: 1.2rem;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- bring */
+
+.bringGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.checkCard {
+  padding: 2rem;
+  border: 1px solid var(--rule-strong);
+}
+
+.checkTitle {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.checks {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+.checks li {
+  position: relative;
+  padding-left: 2.6rem;
+}
+
+.checks li::before {
+  content: '\2713';
+  position: absolute;
+  top: 0.1rem;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--navy);
+  border: 1.5px solid var(--foil);
+}
+
+.crosses li::before {
+  content: '\2715';
+  color: var(--wax);
+}
+
+.noId {
+  margin-top: 1.6rem;
+  padding: 1rem 1.2rem;
+  background: var(--tint);
+}
+
+.noIdHead {
+  font-weight: 600;
+}
+
+.noIdText {
+  margin-top: 0.3rem;
+  font-size: 0.98rem;
+}
+
+/* ---------------------------------------------------------------- apostille */
+
+.apostille {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  padding-bottom: clamp(3.5rem, 7vw, 5.5rem);
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.ribbon {
+  position: relative;
+  height: 4.5rem;
+  border-bottom: 3px double color-mix(in oklab, var(--on-navy) 40%, var(--navy));
+}
+
+.apostilleInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 2.5rem clamp(2rem, 6vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 0;
+}
+
+.apostilleEyebrow {
+  font-family: var(--display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--on-navy-soft);
+}
+
+.apostilleTitle {
+  margin-top: 0.6rem;
+  font-family: var(--display);
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  font-weight: 500;
+  line-height: 1.12;
+}
+
+.apostilleLead {
+  margin-top: 1.1rem;
+  font-size: 1.1rem;
+  color: var(--on-navy-soft);
+}
+
+.apostillePrice {
+  margin-top: 1.6rem;
+  padding: 1rem 1.2rem;
+  font-weight: 600;
+  border: 1px solid color-mix(in oklab, var(--on-navy) 35%, transparent);
+}
+
+.steps {
+  display: grid;
+  gap: 0;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) auto;
+  gap: 0.2rem 1.2rem;
+  padding: 1.3rem 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--on-navy) 22%, transparent);
+}
+
+.step:first-child {
+  padding-top: 0.3rem;
+}
+
+.stepNo {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-family: var(--display);
+  font-weight: 700;
+  border: 1.5px solid color-mix(in oklab, var(--on-navy) 60%, transparent);
+  border-radius: 50%;
+}
+
+.stepTitle {
+  font-family: var(--display);
+  font-size: 1.12rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.stepText {
+  grid-column: 2;
+  font-size: 0.98rem;
+  color: var(--on-navy-soft);
+}
+
+.stepTime {
+  grid-column: 3;
+  grid-row: 1;
+  font-size: 0.9rem;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.legalize {
+  grid-column: 2;
+  font-size: 0.98rem;
+  font-style: italic;
+  color: var(--on-navy-soft);
+}
+
+/* ---------------------------------------------------------------------- faq */
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  gap: 2rem clamp(2rem, 6vw, 5rem);
+}
+
+.faqList {
+  border-top: 1px solid var(--rule-strong);
+}
+
+.faq {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.faq summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  font-family: var(--display);
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.faq[open] summary::after {
+  content: '\2212';
+}
+
+.faq p {
+  max-width: 44rem;
+  padding-bottom: 1.3rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- book */
+
+.book {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 2.5rem clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.contact,
+.hours {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+}
+
+.contact div,
+.hours div {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.contact dt,
+.hours dt {
+  font-family: var(--display);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 0.2rem;
+}
+
+.contact dd {
+  font-weight: 600;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+  background: var(--wash);
+  border: 7px double var(--foil);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label,
+.fieldset legend {
+  font-family: var(--display);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-radius: 2px;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.fieldset legend {
+  margin-bottom: 0.5rem;
+  padding: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pick {
+  position: relative;
+}
+
+.pick input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pick label {
+  display: inline-block;
+  padding: 0.5rem 0.9rem;
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.pick input:checked + label {
+  background: var(--navy);
+  color: var(--on-navy);
+  border-color: var(--navy);
+}
+
+.pick input:focus-visible + label {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  background: var(--wax);
+  color: var(--on-wax);
+  border: 0;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--paper);
+  border-top: 7px double var(--foil);
+}
+
+.footLace {
+  position: relative;
+  height: 6rem;
+  background: var(--tint);
+  border-bottom: 1px solid var(--rule);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.6rem 2.5rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 2.6rem;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.footText {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.footText a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .heroInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .seal {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: end;
+    width: 15rem;
+    margin: 0 1.5rem -6rem 0;
+  }
+
+  .certificate {
+    grid-row: 2;
+    margin-right: 0;
+    padding-top: 5rem;
+    padding-right: clamp(1.6rem, 4vw, 3.6rem);
+  }
+
+  .tailLeft,
+  .tailRight {
+    width: 2.6rem;
+    height: 6rem;
+  }
+}
+
+@media (max-width: 1080px) {
+  .nav {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+}
+
+@media (max-width: 900px) {
+  .feeGrid,
+  .bringGrid,
+  .zonesInner,
+  .apostilleInner,
+  .faqGrid,
+  .bookGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .packages {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .legalize {
+    grid-column: 1;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .seal {
+    width: 11.5rem;
+    margin-right: 0.5rem;
+    margin-bottom: -4.5rem;
+  }
+
+  .sealName {
+    font-size: 1.15rem;
+  }
+
+  .sealSmall {
+    display: none;
+  }
+
+  .sealYear {
+    font-size: 0.72rem;
+  }
+
+  .certKicker::after {
+    display: none;
+  }
+
+  .certificate {
+    padding-top: 6.5rem;
+    border-width: 5px;
+  }
+
+  .tailLeft,
+  .tailRight {
+    width: 2.2rem;
+    height: 4.2rem;
+  }
+
+  .certFacts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.8rem;
+  }
+
+  .feeCard,
+  .checkCard {
+    padding: 1.4rem 1.2rem;
+  }
+
+  .zone {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .zoneReach {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .zoneTowns {
+    grid-column: 1 / -1;
+  }
+
+  .step {
+    grid-template-columns: 2.8rem minmax(0, 1fr);
+  }
+
+  .stepTime {
+    grid-column: 2;
+    grid-row: auto;
+  }
+
+  .contact div,
+  .hours div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+    border-width: 5px;
+  }
+}

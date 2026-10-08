@@ -1,0 +1,942 @@
+/* ==========================================================================
+   TOM ASHWELL - picture-book author and illustrator, Gullhaven
+   The page is a picture book. The hero is an open spread on a sea-tinted
+   table, the words on the left page and the sea at sunset bleeding off the
+   right; school visits are a second spread with page numbers in the
+   corners; the books stand as covers whose lower halves are the sea; the
+   activity sheets are printed pages with a corner folded. Young Serif for
+   the titles, Nunito, round and friendly, for reading aloud.
+   ========================================================================== */
+
+.page {
+  --cream: #fbf3e2;
+  --navy: #1c2a4a;
+  --sun: #f4a53a;
+  --coral: #e0654b;
+  --sea: #2f8a9e;
+  --foam: #bfe2df;
+
+  --text: var(--navy);
+  --on-navy: var(--cream);
+  --on-sun: var(--navy);
+  --on-coral: var(--navy);
+  --on-sea: var(--cream);
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --display: 'Young Serif', 'Georgia', serif;
+  --body: 'Nunito', 'Trebuchet MS', sans-serif;
+
+  font-family: var(--body);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  background: var(--cream);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--cream) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--navy));
+    --on-navy: color-mix(in oklab, oklch(from var(--navy) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--navy));
+    --on-sun: oklch(from var(--sun) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-coral: oklch(from var(--coral) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-sea: oklch(from var(--sea) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--cream));
+  --rule: color-mix(in oklab, var(--text) 16%, var(--cream));
+  --rule-strong: color-mix(in oklab, var(--text) 40%, var(--cream));
+  --table: color-mix(in oklab, var(--cream) 84%, var(--sea));
+  --leaf: color-mix(in oklab, var(--cream) 93%, var(--sun));
+  --gutter: color-mix(in oklab, var(--navy) 22%, transparent);
+  --lift: 0 2px 0 color-mix(in oklab, var(--navy) 12%, transparent), 0 26px 50px -30px color-mix(in oklab, var(--navy) 60%, transparent);
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--cream);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.brandSub {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.2rem 0;
+  border-bottom: 3px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--sun);
+}
+
+.barBook {
+  padding: 0.55rem 1.1rem;
+  font-size: 0.92rem;
+  font-weight: 800;
+  background: var(--navy);
+  color: var(--on-navy);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  font-weight: 600;
+  --template-menu-bg: var(--cream);
+}
+
+/* ------------------------------------------------------------ hero spread */
+
+.hero {
+  padding: clamp(2rem, 5vw, 4rem) var(--gut) clamp(2.5rem, 5vw, 4rem);
+  background: var(--table);
+}
+
+.spread {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  max-width: var(--max);
+  min-height: clamp(34rem, 46vw, 42rem);
+  margin: 0 auto;
+  border-radius: 6px;
+  box-shadow: var(--lift);
+}
+
+.leftPage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(2.4rem, 5vw, 4.5rem) clamp(2rem, 5vw, 4.5rem) clamp(3.5rem, 6vw, 5rem);
+  background: var(--cream);
+  border-radius: 6px 0 0 6px;
+  box-shadow: inset -40px 0 40px -40px var(--gutter);
+}
+
+.kicker {
+  margin: 0 0 1.2rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.7rem, 5vw, 4.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+}
+
+.heroTitle span {
+  text-decoration: underline wavy var(--sea);
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.18em;
+}
+
+.heroLead {
+  max-width: 30rem;
+  margin: 1.5rem 0 0;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.8rem 1.35rem;
+  font-size: 0.98rem;
+  font-weight: 800;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--coral);
+  color: var(--on-coral);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--coral) 85%, var(--navy));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ghost:hover {
+  background: var(--leaf);
+}
+
+.folio {
+  position: absolute;
+  left: clamp(2rem, 5vw, 4.5rem);
+  bottom: 1.3rem;
+  margin: 0;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.folioRight {
+  left: auto;
+  right: clamp(1.5rem, 4vw, 3rem);
+}
+
+.rightPage {
+  position: relative;
+  overflow: hidden;
+  background: var(--cream);
+  border-radius: 0 6px 6px 0;
+}
+
+.sunsetField {
+  position: absolute;
+  inset: 0;
+}
+
+.rightPage::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: 2;
+  width: 40px;
+  pointer-events: none;
+  background: linear-gradient(90deg, var(--gutter), transparent);
+}
+
+/* A paper boat: a sail and a hull, riding the second wave. */
+.boat {
+  position: absolute;
+  z-index: 1;
+  left: 40%;
+  top: 22%;
+  width: 6.5rem;
+  height: 6rem;
+}
+
+.boat::before {
+  content: '';
+  position: absolute;
+  left: 18%;
+  top: 0;
+  width: 64%;
+  height: 72%;
+  background: var(--cream);
+  clip-path: polygon(48% 0, 100% 100%, 0 100%);
+}
+
+.boat::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 30%;
+  background: var(--navy);
+  clip-path: polygon(0 0, 100% 0, 82% 100%, 18% 100%);
+}
+
+.plate {
+  position: absolute;
+  z-index: 3;
+  right: 1.2rem;
+  bottom: 1.2rem;
+  max-width: calc(100% - 2.4rem);
+  margin: 0;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: var(--cream);
+  border-radius: 999px;
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut) 0;
+  scroll-margin-top: 4.5rem;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secTitle {
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  line-height: 1.02;
+}
+
+.secNote {
+  max-width: 36rem;
+  margin: 0;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- the books */
+
+.books {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.4rem, 3vw, 2.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.book {
+  display: flex;
+  flex-direction: column;
+}
+
+.cover {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 4 / 5;
+  padding: 1.4rem 1.3rem;
+  overflow: hidden;
+  border-radius: 3px 10px 10px 3px;
+  box-shadow: inset 7px 0 0 color-mix(in oklab, var(--navy) 18%, transparent), var(--lift);
+}
+
+.navy {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.sun {
+  background: var(--sun);
+  color: var(--on-sun);
+}
+
+.sea {
+  background: var(--sea);
+  color: var(--on-sea);
+}
+
+.coral {
+  background: var(--coral);
+  color: var(--on-coral);
+}
+
+.coverTitle {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.coverAuthor {
+  position: relative;
+  z-index: 1;
+  margin: 0.5rem 0 0;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.coverSea {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 50%;
+}
+
+.bookTitle {
+  margin-top: 1.2rem;
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+.bookMeta {
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.bookBlurb {
+  margin: 0.6rem 0 0;
+  font-size: 0.96rem;
+}
+
+.bookNote {
+  align-self: flex-start;
+  margin: 0.8rem 0 0;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  background: var(--leaf);
+  border-radius: 999px;
+}
+
+/* ---------------------------------------------------------- visits spread */
+
+.visitSpread {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  border-radius: 6px;
+  box-shadow: var(--lift);
+}
+
+.visitPage {
+  position: relative;
+  padding: clamp(2rem, 4vw, 3.2rem) clamp(1.5rem, 4vw, 3.2rem) clamp(3.5rem, 5vw, 4.2rem);
+  background: var(--leaf);
+}
+
+.visitPage:first-child {
+  border-radius: 6px 0 0 6px;
+  box-shadow: inset -40px 0 40px -40px var(--gutter);
+}
+
+.visitPage:last-child {
+  border-radius: 0 6px 6px 0;
+  box-shadow: inset 40px 0 40px -40px var(--gutter);
+}
+
+.pageHead {
+  margin-bottom: 1.2rem;
+  font-size: 1.7rem;
+  line-height: 1.15;
+}
+
+.visits {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 1rem;
+  padding: 1rem 0;
+  border-top: 2px dashed var(--rule-strong);
+}
+
+.visitName {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.visitPrice {
+  grid-row: span 2;
+  margin: 0;
+  font-family: var(--display);
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.visitWhat {
+  margin: 0.25rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 2.8rem minmax(0, 1fr);
+  column-gap: 1rem;
+  padding: 0.85rem 0;
+}
+
+.stepNo {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  background: var(--sun);
+  color: var(--on-sun);
+  border-radius: 50%;
+}
+
+.stepTitle {
+  margin: 0.2rem 0 0;
+  font-size: 1.12rem;
+  font-weight: 800;
+}
+
+.stepText {
+  margin: 0.2rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(220px, 24vw, 320px);
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+  overflow: hidden;
+}
+
+.bandField {
+  position: absolute;
+  inset: 0;
+}
+
+.bandCard {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 1.2rem;
+  width: min(36rem, calc(100% - 2 * var(--gut)));
+  margin: 0;
+  padding: 0.8rem 1.3rem;
+  font-family: var(--display);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  line-height: 1.3;
+  text-align: center;
+  background: var(--cream);
+  border-radius: 999px;
+  box-shadow: var(--lift);
+  transform: translateX(-50%);
+}
+
+/* --------------------------------------------------------- activity sheets */
+
+.sheets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 1.8rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A printed page with its top corner folded down. */
+.sheet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.9rem 1.5rem 1.4rem;
+  background: var(--leaf);
+  clip-path: polygon(0 0, calc(100% - 2.2rem) 0, 100% 2.2rem, 100% 100%, 0 100%);
+  border-top: 8px solid var(--sea);
+}
+
+.sheet:nth-child(3n + 2) {
+  border-top-color: var(--sun);
+}
+
+.sheet:nth-child(3n) {
+  border-top-color: var(--coral);
+}
+
+.sheet::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2.2rem;
+  height: 2.2rem;
+  background: color-mix(in oklab, var(--leaf) 70%, var(--navy));
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+
+.sheetTitle {
+  padding-right: 1.5rem;
+  font-size: 1.4rem;
+  line-height: 1.15;
+}
+
+.sheetAges {
+  margin: 0.6rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.sheetWhat {
+  flex: 1;
+  margin: 0.2rem 0 1rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.sheetLink {
+  margin: 0;
+  font-weight: 800;
+}
+
+.sheetLink a {
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.sheetLink a:hover {
+  border-bottom-color: currentColor;
+}
+
+/* ------------------------------------------------------------------- about */
+
+.about {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.aboutText {
+  max-width: 38rem;
+  margin: 1.1rem 0 0;
+  font-size: 1.1rem;
+}
+
+.facts {
+  display: grid;
+  gap: 0.8rem;
+  margin: 0;
+}
+
+.facts div {
+  padding: 1rem 1.2rem;
+  background: var(--leaf);
+  border-radius: 14px;
+}
+
+.facts dt {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.facts dd {
+  margin: 0.15rem 0 0;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  line-height: 1.3;
+}
+
+/* ----------------------------------------------------------------- contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+  padding-top: 3rem;
+  border-top: 2px dashed var(--rule-strong);
+}
+
+.contactGrid .secNote {
+  margin-top: 1rem;
+}
+
+.studio {
+  margin: 1.8rem 0 0;
+}
+
+.studio div {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.studio dt {
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.studio dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.studio a {
+  font-weight: 600;
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--leaf);
+  border-radius: 18px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.field input,
+.field select,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.85rem;
+  font-family: var(--body);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--cream);
+  border: 2px solid var(--rule-strong);
+  border-radius: 10px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--body);
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--on-navy);
+  background: var(--navy);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.footSea {
+  position: relative;
+  height: 120px;
+  overflow: hidden;
+  background: var(--cream);
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2rem var(--gut) 2.8rem;
+  font-size: 0.92rem;
+}
+
+.footInner p {
+  margin: 0.3rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.7rem;
+  font-family: var(--display);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .books {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cover {
+    aspect-ratio: 5 / 4;
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .spread,
+  .visitSpread {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .leftPage {
+    border-radius: 6px 6px 0 0;
+    box-shadow: inset 0 -40px 40px -40px var(--gutter);
+  }
+
+  .rightPage {
+    min-height: 22rem;
+    border-radius: 0 0 6px 6px;
+  }
+
+  .rightPage::after {
+    display: none;
+  }
+
+  .visitPage:first-child,
+  .visitPage:last-child {
+    border-radius: 6px;
+    box-shadow: none;
+  }
+
+  .visitPage:first-child {
+    border-radius: 6px 6px 0 0;
+    border-bottom: 2px dashed var(--rule-strong);
+  }
+
+  .visitPage:last-child {
+    border-radius: 0 0 6px 6px;
+  }
+
+  .secHead,
+  .about,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sheets {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .barBook {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .brandSub {
+    display: none;
+  }
+
+  .hero {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .books,
+  .sheets,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cover {
+    aspect-ratio: 4 / 3;
+  }
+
+  .boat {
+    width: 5rem;
+    height: 4.6rem;
+  }
+
+  .studio div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}

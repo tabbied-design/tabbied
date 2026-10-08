@@ -1,0 +1,1125 @@
+.page {
+  --stone: #eeefe9;
+  --slate: #1d2a33;
+  --brass: #b98a2e;
+  --teal: #2f6b66;
+  --clay: #b0532f;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --serif: 'DM Serif Display', 'Georgia', serif;
+  --sans: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'DM Mono', 'Menlo', monospace;
+
+  --text: var(--slate);
+  --on-slate: var(--stone);
+  --on-brass: var(--slate);
+  --on-teal: var(--stone);
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--stone));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 42%, transparent);
+  --sheet: color-mix(in oklab, var(--stone) 93%, var(--slate));
+  --sheet-head: color-mix(in oklab, var(--stone) 86%, var(--brass));
+  --slate-muted: color-mix(in oklab, var(--on-slate) 76%, var(--slate));
+  --slate-rule: color-mix(in oklab, var(--on-slate) 22%, transparent);
+  --slate-card: color-mix(in oklab, var(--slate) 90%, var(--on-slate));
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--stone);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--stone) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--slate));
+    --on-slate: color-mix(in oklab, oklch(from var(--slate) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--slate));
+    --on-brass: oklch(from var(--brass) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-teal: oklch(from var(--teal) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.num {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--stone);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  column-gap: 0.65rem;
+  align-items: center;
+  justify-content: start;
+  line-height: 1;
+}
+
+/* A spirit level's bubble on its beam, over a small wedge. */
+.brandMark {
+  grid-row: 1 / 3;
+  position: relative;
+  width: 2.1rem;
+  height: 2.1rem;
+}
+
+.brandMark::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0.55rem;
+  height: 0.32rem;
+  background: var(--text);
+  border-radius: 2px;
+}
+
+.brandMark::after {
+  content: '';
+  position: absolute;
+  left: 0.55rem;
+  right: 0.55rem;
+  top: 0.95rem;
+  bottom: 0.15rem;
+  background: var(--brass);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  letter-spacing: -0.005em;
+}
+
+.brandSub {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 400;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.9rem, 1.7vw, 1.6rem);
+}
+
+.nav a {
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 0.25rem 0;
+  border-bottom: 1.5px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barCall {
+  padding: 0.55rem 1.05rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 400;
+  background: var(--slate);
+  color: var(--on-slate);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--stone);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) clamp(1rem, 3vw, 2rem);
+}
+
+.kicker {
+  margin: 0 0 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(3rem, 6.4vw, 5.6rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.heroTitle em {
+  font-style: italic;
+  display: inline-block;
+  padding-bottom: 0.08em;
+  border-bottom: 0.08em solid var(--brass);
+}
+
+.heroLead {
+  max-width: 34rem;
+  margin: 1.8rem 0 0;
+  font-size: 1.12rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2.1rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.9rem 1.45rem;
+  font-size: 0.96rem;
+  font-weight: 700;
+  border-radius: 3px;
+}
+
+.button {
+  background: var(--slate);
+  color: var(--on-slate);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--slate) 84%, var(--text));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1.5px var(--text);
+}
+
+.ghost:hover {
+  background: var(--sheet);
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  max-width: 34rem;
+  margin: 2.8rem 0 0;
+}
+
+.heroFacts div {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  padding-top: 0.8rem;
+  border-top: 2px solid var(--text);
+}
+
+.heroFacts dt {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 2.1rem;
+  line-height: 1.15;
+}
+
+.heroPanel {
+  position: relative;
+  padding-bottom: 2.5rem;
+}
+
+.heroField {
+  position: relative;
+  aspect-ratio: 1 / 1.04;
+  overflow: hidden;
+  background: var(--slate);
+  border-radius: 4px;
+}
+
+/* The week's best rate, pinned to the panel's lower edge like a tag. */
+.ticket {
+  position: absolute;
+  left: -1.5rem;
+  bottom: 0;
+  width: min(19rem, 80%);
+  padding: 1.2rem 1.4rem 1.1rem;
+  background: var(--stone);
+  color: var(--text);
+  border: 1px solid var(--rule-strong);
+  border-top: 6px solid var(--brass);
+  box-shadow: 0 22px 40px -26px color-mix(in oklab, var(--slate) 70%, transparent);
+}
+
+.ticketLabel {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ticketRate {
+  margin: 0.3rem 0 0;
+  font-family: var(--serif);
+  font-size: 3.3rem;
+  line-height: 1;
+}
+
+.ticketApr {
+  margin: 0.45rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+}
+
+.ticketNote {
+  margin: 0.7rem 0 0;
+  padding-top: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  border-top: 1px solid var(--rule);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 2.8rem);
+}
+
+.secTitle {
+  font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.secNote {
+  margin: 0;
+  max-width: 36rem;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------- rate sheet */
+
+.sheet {
+  background: var(--sheet);
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+}
+
+.sheetHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.2rem 2rem;
+  padding: 1.4rem clamp(1rem, 3vw, 2rem);
+  background: var(--sheet-head);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.sheetNo {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.sheetDate {
+  margin: 0.2rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.scenario {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.8rem;
+  margin: 0;
+}
+
+.scenario dt {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.scenario dd {
+  margin: 0.1rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.92rem;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.rates,
+.lenders {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.rates th,
+.rates td,
+.lenders th,
+.lenders td {
+  padding: 0.85rem clamp(0.8rem, 2vw, 1.4rem);
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rates thead th,
+.lenders thead th {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1.5px solid var(--rule-strong);
+}
+
+.rates tbody th {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.rates tbody td:nth-child(2) {
+  font-size: 1.08rem;
+  font-weight: 400;
+}
+
+.rates tbody tr:first-child {
+  background: color-mix(in oklab, var(--sheet) 82%, var(--brass));
+}
+
+.rates tbody tr:hover,
+.lenders tbody tr:hover {
+  background: color-mix(in oklab, var(--sheet) 88%, var(--teal));
+}
+
+.sheetFoot {
+  margin: 0;
+  padding: 1rem clamp(1rem, 3vw, 2rem) 1.2rem;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- path */
+
+.path {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--slate);
+  color: var(--on-slate);
+}
+
+.pathInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut);
+}
+
+.pathHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: 2.6rem;
+}
+
+.pathTitle {
+  font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+  line-height: 1.05;
+}
+
+.pathNote {
+  margin: 0;
+  color: var(--slate-muted);
+}
+
+.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 8.5rem 3rem minmax(0, 1fr) minmax(0, 19rem);
+  grid-template-areas:
+    'when no title bring'
+    'when no text bring';
+  column-gap: 1.4rem;
+  padding: 1.3rem 0;
+  border-top: 1px solid var(--slate-rule);
+}
+
+.step:last-child {
+  border-bottom: 1px solid var(--slate-rule);
+}
+
+/* The rail the numbers ride on: one level line, drawn down the list. */
+.step::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(8.5rem + 1.4rem + 1.5rem - 1px);
+  width: 2px;
+  background: var(--slate-rule);
+}
+
+.stepNo {
+  grid-area: no;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  font-family: var(--mono);
+  font-weight: 400;
+  background: var(--brass);
+  color: var(--on-brass);
+  border-radius: 50%;
+}
+
+.stepWhen {
+  grid-area: when;
+  margin: 0.7rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.84rem;
+  letter-spacing: 0.04em;
+  color: var(--slate-muted);
+}
+
+.stepTitle {
+  grid-area: title;
+  margin-top: 0.35rem;
+  font-size: 1.65rem;
+  line-height: 1.15;
+}
+
+.stepText {
+  grid-area: text;
+  margin: 0.4rem 0 0;
+  max-width: 38rem;
+  color: var(--slate-muted);
+}
+
+.stepBring {
+  grid-area: bring;
+  align-self: start;
+  margin: 0.4rem 0 0;
+  padding: 0.8rem 1rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  background: var(--slate-card);
+  border-left: 3px solid var(--brass);
+}
+
+.stepBring::before {
+  content: 'Bring: ';
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------ affordability */
+
+.afford {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.balance {
+  display: grid;
+  justify-items: center;
+  padding: 2.2rem clamp(1rem, 3vw, 2rem) 2rem;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+}
+
+.pans {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 6vw, 5rem);
+  width: 100%;
+}
+
+.pan {
+  padding: 1rem 1.1rem;
+  text-align: center;
+  background: var(--stone);
+  border: 1px solid var(--rule-strong);
+  border-bottom: 0;
+}
+
+.panLabel {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.panFigure {
+  margin: 0.2rem 0 0;
+  font-family: var(--serif);
+  font-size: clamp(2rem, 3.6vw, 2.8rem);
+  line-height: 1.1;
+}
+
+.panNote {
+  margin: 0.2rem 0 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.beam {
+  width: 104%;
+  height: 0.75rem;
+  background: var(--text);
+  border-radius: 2px;
+}
+
+/* The fulcrum itself: a wedge cut out of the pattern, holding the beam. */
+.fulcrumField {
+  position: relative;
+  width: min(21rem, 74%);
+  aspect-ratio: 1.2 / 1;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--stone) 80%, var(--brass));
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.ratios {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+  width: 100%;
+  padding-top: 1.2rem;
+  border-top: 3px solid var(--text);
+}
+
+.ratio {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0;
+}
+
+.ratio strong {
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.ratio span {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.ledgerWrap {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.ledgerTitle {
+  font-size: 1.6rem;
+}
+
+.ledger {
+  margin: 0 0 1.2rem;
+}
+
+.ledger div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px dotted var(--rule-strong);
+}
+
+.ledger dt {
+  flex: 1;
+  font-size: 0.95rem;
+}
+
+.ledger dd {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.98rem;
+  white-space: nowrap;
+}
+
+.ledger .ledgerTotal {
+  border-bottom: 0;
+  border-top: 2px solid var(--text);
+  margin-top: 0.15rem;
+  padding-top: 0.7rem;
+}
+
+.ledgerTotal dt {
+  font-weight: 700;
+}
+
+.ledgerTotal dd {
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.ledgerNote {
+  margin: 0;
+  padding: 1rem 1.2rem;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  line-height: 1.35;
+  background: var(--sheet-head);
+  border-left: 4px solid var(--teal);
+}
+
+/* ------------------------------------------------------------------ lenders */
+
+.lenders {
+  border-top: 1.5px solid var(--rule-strong);
+}
+
+.lenders tbody th {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.lenders td {
+  font-size: 0.92rem;
+}
+
+.paid {
+  display: grid;
+  grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
+  gap: 1rem 3rem;
+  margin-top: 2rem;
+  padding: 1.5rem clamp(1rem, 3vw, 2rem);
+  background: var(--sheet);
+  border-left: 4px solid var(--brass);
+}
+
+.paidTitle {
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.paidText {
+  margin: 0;
+  max-width: 44rem;
+}
+
+/* ---------------------------------------------------------------- questions */
+
+.qaGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 2rem 4rem;
+  align-items: start;
+}
+
+.qa {
+  border-top: 1.5px solid var(--rule-strong);
+}
+
+.q {
+  border-bottom: 1px solid var(--rule);
+}
+
+.q summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 0;
+  font-size: 1.08rem;
+  font-weight: 500;
+  cursor: pointer;
+  list-style: none;
+}
+
+.q summary::-webkit-details-marker {
+  display: none;
+}
+
+.q summary::after {
+  content: '+';
+  font-family: var(--mono);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.q[open] summary::after {
+  content: '-';
+}
+
+.q p {
+  margin: 0 0 1.2rem;
+  max-width: 40rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ contact */
+
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 2.5rem clamp(2rem, 5vw, 5rem);
+  align-items: start;
+  padding-bottom: clamp(4rem, 8vw, 6.5rem);
+}
+
+.contactInfo .secNote {
+  margin-top: 1rem;
+}
+
+.details,
+.hours {
+  margin: 2rem 0 0;
+}
+
+.details div,
+.hours div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours div {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.details dt,
+.hours dt {
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.details dd,
+.hours dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.hours dd {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+.details a {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--sheet);
+  border: 1px solid var(--rule-strong);
+  border-top: 6px solid var(--slate);
+  border-radius: 4px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 0.96rem;
+  color: var(--text);
+  background: var(--stone);
+  border: 1px solid var(--rule-strong);
+  border-radius: 3px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.9rem 1.5rem;
+  font: inherit;
+  font-weight: 700;
+  background: var(--slate);
+  color: var(--on-slate);
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.formNote {
+  align-self: center;
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--slate);
+  color: var(--on-slate);
+}
+
+.footField {
+  position: relative;
+  height: 9rem;
+  overflow: hidden;
+  background: var(--slate);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 0.5rem 3rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.5rem var(--gut) 3rem;
+}
+
+.footName {
+  grid-row: 1 / 4;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.footText {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--slate-muted);
+}
+
+.footText a {
+  color: var(--on-slate);
+  border-bottom: 1px solid var(--slate-rule);
+}
+
+/* -------------------------------------------------------------- breakpoints */
+
+@media (max-width: 1100px) {
+  .step {
+    grid-template-columns: 3rem minmax(0, 1fr);
+    grid-template-areas:
+      'no when'
+      'no title'
+      'no text'
+      'no bring';
+  }
+
+  .step::before {
+    left: calc(1.5rem - 1px);
+  }
+
+  .stepWhen {
+    margin-top: 0.2rem;
+  }
+
+  .stepBring {
+    margin-top: 0.8rem;
+    max-width: 38rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .nav,
+  .barCall {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroPanel {
+    width: min(100%, 36rem);
+    justify-self: center;
+  }
+
+  .ticket {
+    left: 1rem;
+  }
+
+  .secHead,
+  .pathHead,
+  .afford,
+  .qaGrid,
+  .contact {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .paid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footName {
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .heroFacts {
+    gap: 0.8rem;
+  }
+
+  .heroFacts dd {
+    font-size: 1.55rem;
+  }
+
+  .heroField {
+    aspect-ratio: 1 / 1.1;
+  }
+
+  .ticket {
+    position: relative;
+    left: auto;
+    width: auto;
+    margin: -3rem 1rem 0;
+  }
+
+  .heroPanel {
+    padding-bottom: 0;
+  }
+
+  .rates,
+  .lenders {
+    min-width: 40rem;
+  }
+
+  .pans {
+    gap: 0.8rem;
+  }
+
+  .ratios {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footField {
+    height: 6rem;
+  }
+}

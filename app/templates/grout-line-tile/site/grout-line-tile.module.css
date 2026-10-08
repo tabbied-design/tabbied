@@ -1,0 +1,1057 @@
+/* ==========================================================================
+   GROUT LINE TILE CO. - tile installer, Kiln Lane
+   A tile layout planner. The hero is a plan sheet on graph paper: a shower
+   wall drawn in subway tile, dimensioned, with a niche and a drafting title
+   block. Below it, sample boards for four ways of laying the same tile, a
+   grout test (one wall, three joint colors), a per-square-foot price list,
+   and the six steps of a job laid as tiles in running bond. A sturdy
+   grotesque (Archivo) for the trade, a plain mono (IBM Plex Mono) for
+   every measurement.
+   ========================================================================== */
+
+.page {
+  --porcelain: #f3f1ec;
+  --bottle: #14302b;
+  --glaze: #2e7563;
+  --celadon: #a8cfc0;
+  --ivory: #e6dcc4;
+  --spacer: #c45f35;
+
+  --text: var(--bottle);
+  --on-bottle: var(--porcelain);
+  --on-glaze: var(--porcelain);
+  --on-celadon: var(--bottle);
+  --on-ivory: var(--bottle);
+  --on-spacer: var(--porcelain);
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  --muted: color-mix(in oklab, var(--text) 72%, var(--porcelain));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 45%, transparent);
+  --sheet: color-mix(in oklab, var(--porcelain) 92%, var(--celadon));
+  --grid: color-mix(in oklab, var(--glaze) 14%, transparent);
+  --grid-major: color-mix(in oklab, var(--glaze) 26%, transparent);
+  --grout-light: color-mix(in oklab, var(--porcelain) 88%, var(--bottle));
+  --grout-mid: color-mix(in oklab, var(--porcelain) 52%, var(--bottle));
+  --wash: color-mix(in oklab, var(--porcelain) 86%, var(--celadon));
+  --card: color-mix(in oklab, var(--porcelain) 96%, var(--text));
+  --dark-muted: color-mix(in oklab, var(--on-bottle) 76%, var(--bottle));
+  --dark-rule: color-mix(in oklab, var(--on-bottle) 24%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--porcelain);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--porcelain) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--bottle));
+    --on-bottle: color-mix(in oklab, oklch(from var(--bottle) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--bottle));
+    --on-glaze: oklch(from var(--glaze) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-celadon: oklch(from var(--celadon) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-ivory: oklch(from var(--ivory) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-spacer: oklch(from var(--spacer) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, ul, ol, dl, dd, figure) {
+  margin: 0;
+}
+
+.page :where(h1, h2, h3) {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--porcelain);
+  border-bottom: 2px solid var(--text);
+}
+
+.brand {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+  align-items: center;
+  column-gap: 0.75rem;
+  line-height: 1;
+}
+
+.brandMark {
+  grid-row: span 2;
+  width: 2.4rem;
+  height: 1.7rem;
+  background:
+    linear-gradient(var(--porcelain) 0 0) 0 50% / 100% 2px no-repeat,
+    linear-gradient(var(--porcelain) 0 0) 50% 0 / 2px 50% no-repeat,
+    linear-gradient(var(--porcelain) 0 0) 25% 100% / 2px 50% no-repeat,
+    linear-gradient(var(--porcelain) 0 0) 75% 100% / 2px 50% no-repeat,
+    var(--glaze);
+  border-radius: 2px;
+}
+
+.brandName {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.brandSub {
+  margin-top: 0.15rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  padding: 0.3rem 0;
+  font-size: 0.92rem;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--spacer);
+}
+
+.barPhone {
+  padding: 0.55rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  font-weight: 500;
+  background: var(--bottle);
+  color: var(--on-bottle);
+  border-radius: 3px;
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--porcelain);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.kicker {
+  margin-bottom: 1.3rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.6rem, 4.8vw, 4.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+
+.heroTitle span {
+  text-decoration: underline;
+  text-decoration-color: var(--spacer);
+  text-decoration-thickness: 0.12em;
+  text-underline-offset: 0.14em;
+  text-decoration-skip-ink: none;
+}
+
+.heroLead {
+  max-width: 32rem;
+  margin-top: 1.6rem;
+  font-size: 1.14rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost,
+.submit {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.85rem 1.3rem;
+  font: inherit;
+  font-size: 0.98rem;
+  font-weight: 700;
+  border-radius: 3px;
+}
+
+.button,
+.submit {
+  background: var(--glaze);
+  color: var(--on-glaze);
+  border: 0;
+  box-shadow: inset 0 -3px 0 color-mix(in oklab, var(--bottle) 40%, transparent);
+}
+
+.ghost {
+  border: 2px solid var(--text);
+}
+
+.button:hover,
+.submit:hover {
+  background: var(--bottle);
+  color: var(--on-bottle);
+}
+
+.specs {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 2.2rem;
+  padding: 0;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+}
+
+.specs li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.specs li::before {
+  content: '';
+  flex: none;
+  width: 1.2rem;
+  height: 0.6rem;
+  background: var(--celadon);
+  box-shadow: inset 0 -2px 0 color-mix(in oklab, var(--bottle) 35%, transparent);
+  border-radius: 1px;
+}
+
+/* The plan sheet: graph paper, a dimensioned wall, a title block. */
+
+.sheet {
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 4px;
+  background-color: var(--sheet);
+  background-image:
+    linear-gradient(var(--grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+  box-shadow: 0 30px 50px -40px color-mix(in oklab, var(--bottle) 60%, transparent);
+}
+
+.drawing {
+  position: relative;
+  padding: 3.2rem 2.2rem 2.2rem 4.4rem;
+}
+
+.drawing::before,
+.drawing::after {
+  content: '';
+  position: absolute;
+  border-color: var(--rule-strong);
+  border-style: solid;
+}
+
+.drawing::before {
+  top: 1.75rem;
+  left: 4.4rem;
+  right: 2.2rem;
+  height: 10px;
+  border-width: 0 1px;
+  background: linear-gradient(var(--rule-strong) 0 0) 50% 50% / 100% 1px no-repeat;
+}
+
+.drawing::after {
+  top: 3.2rem;
+  bottom: 2.2rem;
+  left: 2.3rem;
+  width: 10px;
+  border-width: 1px 0;
+  background: linear-gradient(var(--rule-strong) 0 0) 50% 50% / 1px 100% no-repeat;
+}
+
+.dimTop,
+.dimSide,
+.calloutNiche,
+.calloutEdge {
+  position: absolute;
+  z-index: 2;
+  padding: 0.1rem 0.45rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  background: var(--porcelain);
+  white-space: nowrap;
+}
+
+.dimTop {
+  top: 1.35rem;
+  left: calc(50% + 1.1rem);
+  transform: translateX(-50%);
+}
+
+.dimSide {
+  top: 50%;
+  left: 2.65rem;
+  transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+.wall {
+  position: relative;
+  height: clamp(300px, 30vw, 400px);
+  background: var(--grout-light);
+  outline: 2px solid var(--text);
+  outline-offset: 0;
+}
+
+.niche {
+  position: absolute;
+  z-index: 1;
+  top: 34%;
+  right: 22%;
+  width: 22%;
+  height: 22%;
+  background: var(--ivory);
+  border: 2px solid var(--text);
+  box-shadow: inset 6px 6px 0 color-mix(in oklab, var(--bottle) 22%, transparent);
+}
+
+.calloutNiche {
+  top: calc(56% + 0.9rem);
+  right: calc(22% + 0.2rem);
+  border: 1px solid var(--rule-strong);
+}
+
+.calloutEdge {
+  bottom: 3.3rem;
+  left: 5rem;
+  border: 1px solid var(--rule-strong);
+}
+
+.titleBlock {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr);
+  margin: 0 2.2rem 2.2rem 4.4rem;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  line-height: 1.35;
+  background: var(--porcelain);
+  border: 1.5px solid var(--text);
+}
+
+.sheetNo {
+  display: flex;
+  align-items: flex-end;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-right: 1.5px solid var(--text);
+}
+
+.sheetSpecs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.sheetSpecs div {
+  padding: 0.45rem 0.6rem;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.sheetSpecs dt {
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut);
+}
+
+.secHead {
+  max-width: 44rem;
+  margin-bottom: clamp(2.2rem, 4vw, 3rem);
+}
+
+.label {
+  margin-bottom: 0.8rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.secTitle {
+  font-size: clamp(2rem, 3.6vw, 3.1rem);
+  line-height: 1.04;
+}
+
+.secNote {
+  margin-top: 1rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ layouts */
+
+.boards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.4rem;
+  padding: 0;
+  list-style: none;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  padding: 0.8rem 0.8rem 1.2rem;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+}
+
+.sample {
+  position: relative;
+  height: 210px;
+  margin-bottom: 1.1rem;
+  overflow: hidden;
+  background-color: var(--grout-light);
+  border: 1.5px solid var(--text);
+  border-radius: 2px;
+}
+
+.stack,
+.vertical {
+  background-image:
+    linear-gradient(90deg, var(--grout-light) 0 2px, transparent 2px),
+    linear-gradient(var(--grout-light) 0 2px, transparent 2px),
+    linear-gradient(color-mix(in oklab, var(--porcelain) 55%, transparent) 0, transparent 30% 72%, color-mix(in oklab, var(--bottle) 26%, transparent) 100%);
+}
+
+.stack {
+  background-color: var(--celadon);
+  background-size: 52px 26px;
+}
+
+.vertical {
+  background-color: var(--glaze);
+  background-size: 26px 52px;
+}
+
+.boardName {
+  padding: 0 0.3rem;
+  font-size: 1.3rem;
+  line-height: 1.15;
+}
+
+.boardNote {
+  flex: 1;
+  margin-top: 0.5rem;
+  padding: 0 0.3rem;
+  font-size: 0.96rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.boardFacts {
+  margin: 1rem 0.3rem 0;
+  border-top: 1.5px solid var(--text);
+}
+
+.boardFacts div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.8rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.boardFacts dt {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.boardFacts dd {
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------------------- grout */
+
+.grout {
+  background: var(--wash);
+  border-block: 1px solid var(--rule);
+}
+
+.groutInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut);
+}
+
+.tests {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.4rem;
+}
+
+.test {
+  display: flex;
+  flex-direction: column;
+}
+
+.testWall {
+  position: relative;
+  height: clamp(220px, 24vw, 320px);
+  border: 1.5px solid var(--text);
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  overflow: hidden;
+}
+
+.light {
+  background: var(--grout-light);
+}
+
+.mid {
+  background: var(--grout-mid);
+}
+
+.dark {
+  background: var(--bottle);
+}
+
+.testCard {
+  flex: 1;
+  padding: 1.1rem 1.2rem 1.3rem;
+  background: var(--porcelain);
+  border: 1.5px solid var(--text);
+  border-radius: 0 0 3px 3px;
+}
+
+.testName {
+  font-size: 1.3rem;
+}
+
+.testNote {
+  margin-top: 0.4rem;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- prices */
+
+.priceGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.minimum {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 2rem;
+  padding: 1.2rem 1.4rem;
+  background: var(--bottle);
+  color: var(--on-bottle);
+  border-radius: 4px;
+}
+
+.minimumFigure {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.minimumText {
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.prices {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+.prices thead th {
+  padding: 0 0.8rem 0.7rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: right;
+  color: var(--muted);
+  border-bottom: 2px solid var(--text);
+}
+
+.prices thead th:first-child {
+  padding-left: 0;
+  text-align: left;
+}
+
+.prices tbody th {
+  padding: 0.85rem 0.8rem 0.85rem 0;
+  font-weight: 600;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+}
+
+.prices tbody td {
+  padding: 0.85rem 0.8rem;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  text-align: right;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--rule);
+}
+
+.prices tbody td:nth-child(3) {
+  font-weight: 500;
+  background: var(--wash);
+}
+
+.extrasTitle {
+  margin-top: 2.4rem;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+}
+
+.extras {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+  margin-top: 0.6rem;
+}
+
+.extras div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  font-size: 0.96rem;
+  border-bottom: 1px dashed var(--rule-strong);
+}
+
+.extras dd {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ process */
+
+.process {
+  background: var(--grout-mid);
+}
+
+.processInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut);
+}
+
+.process .secHead {
+  padding: 1.2rem 1.4rem;
+  background: var(--porcelain);
+  border-radius: 3px;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  grid-column: span 2;
+  padding: 1.3rem 1.3rem 1.5rem;
+  background: var(--glaze);
+  color: var(--on-glaze);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 3px 0 color-mix(in oklab, var(--on-glaze) 22%, transparent),
+    inset 0 -5px 0 color-mix(in oklab, var(--bottle) 30%, transparent);
+}
+
+.step:nth-child(4) {
+  grid-column: 2 / span 2;
+}
+
+.step:nth-child(2),
+.step:nth-child(6) {
+  background: var(--celadon);
+  color: var(--on-celadon);
+}
+
+.step:nth-child(3),
+.step:nth-child(4) {
+  background: var(--ivory);
+  color: var(--on-ivory);
+}
+
+.stepNo {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.stepTitle {
+  margin-top: 0.6rem;
+  font-size: 1.4rem;
+  line-height: 1.1;
+}
+
+.stepText {
+  margin-top: 0.6rem;
+  font-size: 0.97rem;
+  line-height: 1.55;
+}
+
+/* ----------------------------------------------------------------- estimate */
+
+.estimateGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.contactCard {
+  margin-top: 2rem;
+  padding: 1.4rem 1.5rem;
+  background: var(--card);
+  border: 1.5px solid var(--text);
+  border-radius: 4px;
+}
+
+.contactHead {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.address {
+  margin-top: 0.4rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.contactLine {
+  margin-top: 0.5rem;
+  font-family: var(--mono);
+  font-size: 1rem;
+}
+
+.contactLine a {
+  border-bottom: 1.5px solid var(--spacer);
+}
+
+.hours {
+  margin-top: 1.2rem;
+  border-top: 1.5px solid var(--text);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dd {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  background: var(--wash);
+  border: 1.5px solid var(--text);
+  border-radius: 4px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--porcelain);
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 3px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--bottle);
+  color: var(--on-bottle);
+}
+
+.footWall {
+  position: relative;
+  height: 150px;
+  background: var(--grout-light);
+  border-bottom: 10px solid var(--ivory);
+}
+
+.footInner {
+  display: grid;
+  gap: 0.5rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+  font-size: 0.95rem;
+  color: var(--dark-muted);
+}
+
+.footName {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--on-bottle);
+}
+
+.footInner a {
+  color: var(--on-bottle);
+  border-bottom: 1px solid currentColor;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .boards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .priceGrid,
+  .estimateGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .step,
+  .step:nth-child(4) {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .tests {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .boards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .drawing {
+    padding: 2.8rem 1rem 1.2rem 3rem;
+  }
+
+  .drawing::before {
+    top: 1.4rem;
+    left: 3rem;
+    right: 1rem;
+  }
+
+  .drawing::after {
+    top: 2.8rem;
+    bottom: 1.2rem;
+    left: 1.5rem;
+  }
+
+  .dimTop {
+    top: 1rem;
+    left: calc(50% + 1rem);
+  }
+
+  .dimSide {
+    left: 1.85rem;
+  }
+
+  .calloutEdge {
+    left: 3.6rem;
+    bottom: 2rem;
+  }
+
+  .calloutNiche {
+    right: 0.6rem;
+    white-space: normal;
+    max-width: 11rem;
+  }
+
+  .titleBlock {
+    grid-template-columns: minmax(0, 1fr);
+    margin: 0 1rem 1.2rem;
+  }
+
+  .sheetNo {
+    border-right: 0;
+    border-bottom: 1.5px solid var(--text);
+  }
+
+  .sheetSpecs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .extras {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .barPhone {
+    display: none;
+  }
+
+  .prices tbody td:nth-child(2),
+  .prices thead th:nth-child(2) {
+    display: none;
+  }
+}

@@ -1,0 +1,1134 @@
+.page {
+  --plaster: #ece5da;
+  --umber: #2c2420;
+  --walnut: #6b4630;
+  --oak: #c4935a;
+  --honey: #e0bd85;
+  --olive: #77795a;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 82rem;
+  --serif: 'Cormorant', 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Jost', 'Futura', 'Century Gothic', sans-serif;
+
+  --text: var(--umber);
+  --on-umber: var(--plaster);
+  --on-walnut: var(--plaster);
+  --on-olive: var(--plaster);
+  --on-oak: var(--umber);
+  --on-honey: var(--umber);
+  --sheet: var(--plaster);
+
+  --muted: color-mix(in oklab, var(--text) 72%, var(--plaster));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 45%, transparent);
+  --cork: color-mix(in oklab, var(--plaster) 84%, var(--oak));
+  --umber-muted: color-mix(in oklab, var(--on-umber) 78%, var(--umber));
+  --umber-rule: color-mix(in oklab, var(--on-umber) 24%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  background: var(--plaster);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Copy takes black or white from the surface under it, tinted toward the
+   page's ink. The sheet (tags, cards, the form) is the plaster pushed away
+   from the middle: paler on a light ground, deeper on a dark one. */
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--plaster) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--umber));
+    --on-umber: color-mix(in oklab, oklch(from var(--umber) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--umber));
+    --on-walnut: oklch(from var(--walnut) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-olive: oklch(from var(--olive) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-oak: oklch(from var(--oak) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-honey: oklch(from var(--honey) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --sheet: color-mix(in oklab, var(--plaster) 50%, oklch(from var(--plaster) clamp(0, (l - 0.62) * 1000, 1) 0 0));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.9rem var(--gut);
+  background: var(--plaster);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.brandSub {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.4vw, 2.4rem);
+}
+
+.nav a {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barCta {
+  padding: 0.6rem 1.1rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  box-shadow: inset 0 0 0 1px var(--text);
+}
+
+.barCta:hover {
+  background: var(--umber);
+  color: var(--on-umber);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--plaster);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.kicker {
+  margin: 0 0 1.5rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(3.2rem, 6.4vw, 6.2rem);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+}
+
+.heroTitle em {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.heroLead {
+  max-width: 30rem;
+  margin: 1.8rem 0 0;
+  font-size: 1.08rem;
+  font-weight: 300;
+  line-height: 1.7;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.4rem;
+  margin-top: 2.2rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.95rem 1.5rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  background: var(--umber);
+  color: var(--on-umber);
+}
+
+.button:hover {
+  background: var(--walnut);
+  color: var(--on-walnut);
+}
+
+.textLink {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-style: italic;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+/* The sample board: a cork ground with the samples pinned to it. */
+.board {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-rows: repeat(6, minmax(0, 1fr));
+  gap: clamp(0.7rem, 1.4vw, 1.1rem);
+  height: clamp(34rem, 46vw, 42rem);
+  padding: clamp(1rem, 2vw, 1.6rem);
+  background: var(--cork);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.boardFloor {
+  grid-area: 1 / 1 / 5 / 4;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--sheet);
+  padding: 0.6rem 0.6rem 0;
+  box-shadow: 0 16px 30px -22px color-mix(in oklab, var(--umber) 80%, transparent);
+  transform: rotate(-1deg);
+}
+
+.boardFloor::before,
+.note::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: -0.35rem;
+  left: 50%;
+  width: 0.8rem;
+  height: 0.8rem;
+  margin-left: -0.4rem;
+  border-radius: 50%;
+  background: var(--walnut);
+  box-shadow: 0 2px 3px color-mix(in oklab, var(--umber) 50%, transparent);
+}
+
+.floorSample {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  background: var(--umber);
+}
+
+.tag {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0.55rem 0.2rem 0.6rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+.tagNo {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.chips {
+  grid-area: 1 / 4 / 3 / 7;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.chip {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0.6rem 0.6rem 0.55rem;
+  box-shadow: 0 12px 20px -16px color-mix(in oklab, var(--umber) 80%, transparent);
+}
+
+.chip:nth-child(2) {
+  transform: translateY(0.6rem) rotate(1.5deg);
+}
+
+.chipOlive {
+  background: var(--olive);
+  color: var(--on-olive);
+}
+
+.chipWalnut {
+  background: var(--walnut);
+  color: var(--on-walnut);
+}
+
+.chipHoney {
+  background: var(--honey);
+  color: var(--on-honey);
+}
+
+.chipName {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.chipUse {
+  margin-top: 0.15rem;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Woven linen: a fine warp and weft drawn in the oak over the honey. */
+.linen {
+  background:
+    repeating-linear-gradient(0deg, color-mix(in oklab, var(--oak) 42%, transparent) 0 1.5px, transparent 1.5px 3px),
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--walnut) 20%, transparent) 0 1px, transparent 1px 2.5px),
+    repeating-linear-gradient(90deg, transparent 0 37px, color-mix(in oklab, var(--walnut) 14%, transparent) 37px 39px, transparent 39px 61px),
+    color-mix(in oklab, var(--honey) 60%, var(--plaster));
+}
+
+.board .linen {
+  grid-area: 3 / 4 / 5 / 6;
+  transform: rotate(2deg);
+  box-shadow: 0 14px 24px -18px color-mix(in oklab, var(--umber) 80%, transparent);
+}
+
+/* Unlacquered brass: a knob on a backplate. */
+.brass {
+  background:
+    radial-gradient(circle at 38% 34%, var(--honey) 0 12%, var(--oak) 30%, var(--walnut) 58%, transparent 60%),
+    color-mix(in oklab, var(--oak) 55%, var(--walnut));
+}
+
+.board .brass {
+  grid-area: 3 / 6 / 5 / 7;
+  background:
+    radial-gradient(circle at 46% 46%, var(--honey) 0 6%, var(--oak) 18%, var(--walnut) 34%, transparent 36%),
+    linear-gradient(90deg, transparent 18%, color-mix(in oklab, var(--oak) 70%, var(--walnut)) 18% 82%, transparent 82%);
+  border-radius: 999px;
+}
+
+/* Terrazzo: chips of the page's own inks set in a pale binder. */
+.stone {
+  background:
+    radial-gradient(circle at 22% 30%, var(--walnut) 0 3px, transparent 3.5px) 0 0 / 46px 38px,
+    radial-gradient(circle at 70% 64%, var(--oak) 0 4.5px, transparent 5px) 0 0 / 58px 46px,
+    radial-gradient(circle at 42% 84%, var(--olive) 0 2.5px, transparent 3px) 0 0 / 34px 30px,
+    radial-gradient(ellipse 6px 3.5px at 82% 18%, var(--umber) 0 90%, transparent 100%) 0 0 / 64px 52px,
+    radial-gradient(circle at 10% 70%, var(--honey) 0 5px, transparent 5.5px) 0 0 / 70px 58px,
+    color-mix(in oklab, var(--plaster) 76%, var(--honey));
+}
+
+.board .stone {
+  grid-area: 5 / 1 / 7 / 3;
+  transform: rotate(-2deg);
+  box-shadow: 0 14px 24px -18px color-mix(in oklab, var(--umber) 80%, transparent);
+}
+
+.note {
+  grid-area: 5 / 3 / 7 / 7;
+  position: relative;
+  align-self: center;
+  margin: 0 0.4rem;
+  padding: 1.1rem 1.2rem;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-style: italic;
+  line-height: 1.3;
+  background: var(--sheet);
+  box-shadow: 0 14px 24px -18px color-mix(in oklab, var(--umber) 80%, transparent);
+  transform: rotate(1.2deg);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 7rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.5rem 3rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3.2rem);
+  padding-bottom: 1.4rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.secNo {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 2.6rem;
+  font-style: italic;
+  line-height: 1;
+}
+
+.secTitle {
+  font-size: clamp(2.4rem, 4.4vw, 3.8rem);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.secNote {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- finishes */
+
+.finishes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 3vw, 2.8rem) clamp(1.2rem, 2.4vw, 2.2rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.finish {
+  display: flex;
+  flex-direction: column;
+}
+
+.swatch,
+.swatchFloor {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  margin-bottom: 1.1rem;
+  overflow: hidden;
+}
+
+.swatchFloor {
+  background: var(--umber);
+}
+
+.plaster {
+  background:
+    radial-gradient(ellipse at 30% 30%, color-mix(in oklab, var(--honey) 35%, transparent), transparent 55%),
+    radial-gradient(ellipse at 75% 70%, color-mix(in oklab, var(--oak) 22%, transparent), transparent 50%),
+    color-mix(in oklab, var(--plaster) 80%, var(--honey));
+}
+
+.paint {
+  background: linear-gradient(90deg, var(--olive) 0 25%, var(--walnut) 25% 50%, var(--oak) 50% 75%, var(--honey) 75%);
+}
+
+.finishGroup {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.finishName {
+  margin-top: 0.3rem;
+  font-size: 1.65rem;
+  line-height: 1.1;
+}
+
+.finishSpec {
+  flex: 1;
+  margin: 0.6rem 0 0.8rem;
+  font-size: 0.95rem;
+  font-weight: 300;
+}
+
+.finishWhere {
+  margin: 0;
+  padding-top: 0.6rem;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-style: italic;
+  border-top: 1px solid var(--rule);
+}
+
+/* -------------------------------------------------------------------- rooms */
+
+.rooms {
+  margin-top: clamp(4rem, 8vw, 7rem);
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+  background: var(--umber);
+  color: var(--on-umber);
+}
+
+.roomsInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.roomsHead {
+  align-self: end;
+}
+
+.roomsHead .secNo {
+  margin-bottom: 1rem;
+}
+
+.roomsNote {
+  margin: 1.2rem 0 0;
+  font-weight: 300;
+  color: var(--umber-muted);
+}
+
+/* A room in elevation: an olive wall with an arched window and a shelf,
+   and the parquet laid toward you in perspective. */
+.elevation {
+  display: grid;
+  grid-template-rows: minmax(0, 1.5fr) minmax(0, 1fr);
+  height: clamp(20rem, 32vw, 27rem);
+  overflow: hidden;
+}
+
+.wall {
+  position: relative;
+  background: var(--olive);
+}
+
+.arch {
+  position: absolute;
+  left: 14%;
+  bottom: 0;
+  width: 22%;
+  height: 74%;
+  background: color-mix(in oklab, var(--honey) 70%, var(--plaster));
+  border: 0.55rem solid var(--walnut);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+}
+
+.shelf {
+  position: absolute;
+  right: 12%;
+  top: 38%;
+  width: 34%;
+  height: 0.5rem;
+  background: var(--walnut);
+  box-shadow:
+    1.5rem -2.2rem 0 -0.1rem var(--honey),
+    5rem -1.4rem 0 0 var(--oak);
+}
+
+.floorView {
+  position: relative;
+  overflow: hidden;
+  perspective: 640px;
+  perspective-origin: 50% 0;
+  border-top: 0.6rem solid var(--walnut);
+}
+
+.floorPlane {
+  position: absolute;
+  left: -40%;
+  right: -40%;
+  top: 0;
+  height: 320%;
+  overflow: hidden;
+  background: var(--umber);
+  transform-origin: 50% 0;
+  transform: rotateX(64deg);
+}
+
+.panels {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.4rem, 3vw, 2.6rem);
+  list-style: none;
+  margin: clamp(1rem, 2vw, 1.5rem) 0 0;
+  padding: 0;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--umber-rule);
+}
+
+.panelNo {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--umber-muted);
+}
+
+.panelTitle {
+  margin-top: 0.3rem;
+  font-size: 1.8rem;
+  line-height: 1.05;
+}
+
+.panelBrief {
+  flex: 1;
+  margin: 0.7rem 0 1rem;
+  font-size: 0.95rem;
+  font-weight: 300;
+}
+
+.panelFacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.panelFacts dt {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--umber-muted);
+}
+
+.panelFacts dd {
+  margin: 0.2rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+}
+
+/* --------------------------------------------------------------- fee ladder
+   Five treads rising left to right, each a material darker than the one
+   before: honey, oak, olive, walnut, umber. */
+
+.ladder {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: end;
+  gap: clamp(0.6rem, 1.2vw, 1rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rung {
+  display: flex;
+  flex-direction: column;
+}
+
+.rungTread {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.2rem 1.1rem 1.1rem;
+}
+
+.rung:nth-child(1) .rungTread {
+  min-height: 9rem;
+  background: var(--honey);
+  color: var(--on-honey);
+}
+
+.rung:nth-child(2) .rungTread {
+  min-height: 12rem;
+  background: var(--oak);
+  color: var(--on-oak);
+}
+
+.rung:nth-child(3) .rungTread {
+  min-height: 15rem;
+  background: var(--olive);
+  color: var(--on-olive);
+}
+
+.rung:nth-child(4) .rungTread {
+  min-height: 18rem;
+  background: var(--walnut);
+  color: var(--on-walnut);
+}
+
+.rung:nth-child(5) .rungTread {
+  min-height: 21rem;
+  background: var(--umber);
+  color: var(--on-umber);
+}
+
+.rungName {
+  font-size: 1.45rem;
+  line-height: 1.05;
+}
+
+.rungPrice {
+  margin: 0.7rem 0 0;
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 2.6vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.rungUnit {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.rungNote {
+  min-height: 6.5rem;
+  margin: 0;
+  padding: 0.9rem 0.2rem 0;
+  font-size: 0.9rem;
+  font-weight: 300;
+  border-top: 1px solid var(--rule-strong);
+}
+
+/* ------------------------------------------------------------------ process */
+
+.processGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.processGrid .secTitle {
+  margin-top: 0.8rem;
+}
+
+.processGrid .secNote {
+  margin-top: 1.2rem;
+}
+
+.process {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.processStep {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  column-gap: 1rem;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.processStep:first-child {
+  padding-top: 0;
+}
+
+.processNo {
+  grid-row: span 2;
+  font-family: var(--serif);
+  font-size: 2.6rem;
+  font-style: italic;
+  line-height: 0.9;
+}
+
+.processTitle {
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.processText {
+  margin: 0.3rem 0 0;
+  font-weight: 300;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- studio */
+
+.studio {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.studioInfo .secTitle {
+  margin-top: 0.8rem;
+}
+
+.studioInfo .secNote {
+  margin-top: 1.2rem;
+}
+
+.contact {
+  margin: 2rem 0 0;
+}
+
+.contact div {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.contact dt {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contact dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.contact a {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+  background: var(--sheet);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.formTitle {
+  grid-column: 1 / -1;
+  font-size: 2rem;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field label,
+.field legend {
+  padding: 0;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.6rem 0;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule-strong);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 0;
+  border-bottom-color: var(--text);
+  box-shadow: 0 1px 0 var(--text);
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.picks input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.picks label {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  border: 1px solid var(--rule-strong);
+  cursor: pointer;
+}
+
+.picks input:checked + label {
+  background: var(--umber);
+  color: var(--on-umber);
+  border-color: var(--umber);
+}
+
+.picks input:focus-visible + label {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.95rem 1.6rem;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--on-umber);
+  background: var(--umber);
+  border: 0;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: var(--walnut);
+  color: var(--on-walnut);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 7rem);
+  background: var(--umber);
+  color: var(--on-umber);
+}
+
+.threshold {
+  position: relative;
+  height: 96px;
+  overflow: hidden;
+  background: var(--walnut);
+}
+
+.footInner {
+  display: grid;
+  gap: 0.3rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.6rem var(--gut) 3rem;
+  font-size: 0.9rem;
+  font-weight: 300;
+}
+
+.footName {
+  margin: 0 0 0.5rem;
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.footLine {
+  max-width: 42rem;
+  margin: 0;
+  color: var(--umber-muted);
+}
+
+.footLine a {
+  color: var(--on-umber);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .roomsInner,
+  .processGrid,
+  .studio {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secHead {
+    grid-template-columns: 4rem minmax(0, 1fr);
+  }
+
+  .secHead .secNote {
+    grid-column: 2;
+  }
+
+  .finishes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ladder {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .rung {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  }
+
+  .rung .rungTread {
+    min-height: 0;
+  }
+
+  .rung:nth-child(n) .rungTread {
+    min-height: 0;
+  }
+
+  .rungNote {
+    min-height: 0;
+    padding: 1.1rem 0 1.1rem 1.2rem;
+    border-top: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+}
+
+@media (max-width: 720px) {
+  .barCta {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+    grid-auto-rows: auto;
+    height: auto;
+  }
+
+  .boardFloor {
+    grid-area: auto / 1 / auto / 3;
+    aspect-ratio: 1;
+  }
+
+  .chips {
+    grid-area: auto / 1 / auto / 3;
+    min-height: 7.5rem;
+  }
+
+  .board .linen,
+  .board .brass,
+  .board .stone {
+    grid-area: auto;
+    min-height: 7rem;
+  }
+
+  .board .stone {
+    grid-column: 1 / 3;
+  }
+
+  .note {
+    grid-area: auto / 1 / auto / 3;
+    margin: 0.4rem 0;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secHead .secNote {
+    grid-column: auto;
+  }
+
+  .finishes,
+  .panels,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rung {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rungNote {
+    padding: 0.8rem 0 1.4rem;
+    border-bottom: 0;
+  }
+
+  .contact div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}

@@ -1,0 +1,1060 @@
+/* ==========================================================================
+   WINGS & HEM - theatre costume design, builds and rentals
+   The house lights are down. The hero is a stage: a proscenium arch with a
+   scalloped valance and the house curtain tied back either side, the thread
+   wall behind as the backdrop, and the program held up in front of it. The
+   work is a real costume plot typed on cream paper, the credits read like a
+   program, the rental stock hangs as tags on a rail. Bodoni for the bill,
+   Jost for reading, Courier for the production paperwork.
+   ========================================================================== */
+
+.page {
+  --stage: #1e1716; /* role 0: the dark house, the page ground */
+  --cream: #f1e6d2;
+  --scarlet: #d4483a;
+  --gold: #e2a73a;
+  --sage: #7fa886;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --display: 'Bodoni Moda', 'Didot', 'Georgia', serif;
+  --sans: 'Jost', 'Futura', 'Helvetica Neue', Arial, sans-serif;
+  --type: 'Courier Prime', 'Courier New', monospace;
+
+  --text: var(--cream);
+  --on-cream: var(--stage);
+  --on-scarlet: var(--cream);
+  --on-gold: var(--stage);
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--stage));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 42%, transparent);
+  --panel: color-mix(in oklab, var(--stage) 90%, var(--cream));
+  --cream-muted: color-mix(in oklab, var(--on-cream) 76%, var(--cream));
+  --cream-rule: color-mix(in oklab, var(--on-cream) 22%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1.04rem;
+  line-height: 1.6;
+  background: var(--stage);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--stage) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--cream));
+    --on-cream: color-mix(in oklab, oklch(from var(--cream) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--cream));
+    --on-scarlet: oklch(from var(--scarlet) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-gold: oklch(from var(--gold) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.9rem var(--gut);
+  background: var(--stage);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: grid;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.brandSub {
+  margin-top: 0.3rem;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2.2rem);
+}
+
+.nav a {
+  padding: 0.25rem 0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-bottom: 1px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--stage);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: 88rem;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 3vw, 2.5rem) var(--gut) 0;
+}
+
+/* The proscenium: an arch, gold-edged, the thread wall as the backdrop. */
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(560px, 50vw, 680px);
+  padding: 5rem 1rem 4.5rem;
+  overflow: hidden;
+  border-radius: 50% 50% 0 0 / 9rem 9rem 0 0;
+  box-shadow:
+    inset 0 0 0 0.6rem var(--gold),
+    inset 0 0 0 0.85rem var(--stage);
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0.85rem 0.85rem 2.6rem;
+  overflow: hidden;
+  border-radius: 50% 50% 0 0 / 8.2rem 8.2rem 0 0;
+}
+
+/* The valance: scalloped swags of curtain across the top of the arch. */
+.stage::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 4.2rem;
+  background:
+    radial-gradient(circle at 50% 0, var(--scarlet) 2.6rem, transparent calc(2.6rem + 1px)) 0 1.4rem / 5.4rem 2.8rem repeat-x,
+    linear-gradient(var(--scarlet), var(--scarlet)) top / 100% 1.6rem no-repeat;
+  clip-path: inset(0.85rem 0.85rem 0 0.85rem round 50% 50% 0 0 / 8.2rem 8.2rem 0 0);
+}
+
+/* The stage floor, and its gold edge. */
+.stage::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2.6rem;
+  background:
+    linear-gradient(var(--gold), var(--gold)) top / 100% 4px no-repeat,
+    repeating-linear-gradient(90deg, transparent 0 5.5rem, color-mix(in oklab, var(--cream) 14%, transparent) 5.5rem calc(5.5rem + 1px)),
+    color-mix(in oklab, var(--stage) 80%, var(--gold));
+}
+
+.curtainLeft,
+.curtainRight {
+  position: absolute;
+  z-index: 1;
+  top: 0.85rem;
+  bottom: 2.6rem;
+  width: 19%;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      var(--scarlet) 0 12px,
+      color-mix(in oklab, var(--scarlet) 68%, var(--stage)) 20px,
+      var(--scarlet) 28px
+    );
+}
+
+.curtainLeft {
+  left: 0.85rem;
+  clip-path: polygon(0 0, 100% 0, 94% 18%, 72% 40%, 46% 56%, 54% 70%, 76% 100%, 0 100%);
+}
+
+.curtainRight {
+  right: 0.85rem;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 24% 100%, 46% 70%, 54% 56%, 28% 40%, 6% 18%);
+}
+
+/* The program, held up in front of the backdrop. */
+.program {
+  position: relative;
+  z-index: 3;
+  width: min(100%, 36rem);
+  padding: clamp(1.8rem, 4vw, 2.8rem) clamp(1.4rem, 4vw, 2.8rem);
+  text-align: center;
+  background: var(--cream);
+  color: var(--on-cream);
+  box-shadow:
+    inset 0 0 0 0.45rem var(--cream),
+    inset 0 0 0 0.55rem var(--cream-rule),
+    0 30px 60px -30px color-mix(in oklab, var(--stage) 80%, transparent);
+}
+
+.programKicker {
+  margin: 0 0 1rem;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--cream-muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.8rem, 5.4vw, 4.8rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.heroLead {
+  max-width: 28rem;
+  margin: 1.3rem auto 0;
+  font-size: 1.04rem;
+  line-height: 1.6;
+  color: var(--cream-muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-top: 1.7rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.8rem 1.3rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.button {
+  background: var(--scarlet);
+  color: var(--on-scarlet);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--scarlet) 84%, var(--on-cream));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1.5px var(--on-cream);
+}
+
+.ghost:hover {
+  background: color-mix(in oklab, var(--cream) 88%, var(--on-cream));
+}
+
+.signature {
+  margin: 1.5rem 0 0;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--cream-muted);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem 2rem;
+  margin: 0;
+  padding: 1.6rem 0 0;
+}
+
+.facts div {
+  display: flex;
+  flex-direction: column-reverse;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.facts dt {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.facts dd {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 2.6rem;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas:
+    'kicker kicker'
+    'title note';
+  gap: 0.6rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secKicker {
+  grid-area: kicker;
+  margin: 0;
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.secTitle {
+  grid-area: title;
+  font-size: clamp(2.5rem, 5vw, 4.2rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.secNote {
+  grid-area: note;
+  max-width: 34rem;
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ costume plot
+   Typed on cream paper, with a ruled grid like the sheet pinned up in the
+   wardrobe room. */
+
+.sheet {
+  padding: clamp(1.2rem, 3vw, 2.4rem);
+  background: var(--cream);
+  color: var(--on-cream);
+  font-family: var(--type);
+  box-shadow: 0 30px 60px -36px color-mix(in oklab, var(--stage) 80%, var(--cream));
+}
+
+.sheetHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--on-cream);
+}
+
+.sheetShow {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.sheetMeta {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--cream-muted);
+}
+
+.plotWrap {
+  overflow-x: auto;
+}
+
+.plot {
+  width: 100%;
+  min-width: 58rem;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+.plot th,
+.plot td {
+  padding: 0.75rem 0.6rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--cream-rule);
+  border-left: 1px solid var(--cream-rule);
+}
+
+.plot thead th {
+  padding-top: 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-bottom: 2px solid var(--on-cream);
+}
+
+.plot th:first-child {
+  width: 9rem;
+  padding-left: 0;
+  border-left: 0;
+}
+
+.plotWho {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.plotActor {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--cream-muted);
+}
+
+.plot .off {
+  background: repeating-linear-gradient(135deg, transparent 0 7px, var(--cream-rule) 7px 8px);
+}
+
+/* A quick change: the cell tinted, a scarlet corner flag. */
+.plot .qc {
+  position: relative;
+  font-weight: 700;
+  background: color-mix(in oklab, var(--cream) 82%, var(--scarlet));
+}
+
+.plot .qc::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-top: 0.9rem solid var(--scarlet);
+  border-left: 0.9rem solid transparent;
+}
+
+.plotKey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.8rem;
+  list-style: none;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  font-size: 0.82rem;
+}
+
+.plotKey li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.plotKey li::before {
+  content: '';
+  flex: none;
+  width: 1.4rem;
+  height: 1rem;
+  box-shadow: inset 0 0 0 1px var(--cream-rule);
+}
+
+.keyQc::before {
+  background:
+    linear-gradient(225deg, var(--scarlet) 0 0.45rem, transparent 0.45rem),
+    color-mix(in oklab, var(--cream) 82%, var(--scarlet));
+}
+
+.keyOff::before {
+  background: repeating-linear-gradient(135deg, transparent 0 4px, var(--cream-rule) 4px 5px);
+}
+
+/* --------------------------------------------------------------- selvedge */
+
+.selvedge {
+  position: relative;
+  height: clamp(110px, 11vw, 150px);
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+  overflow: hidden;
+  border-block: 4px solid var(--gold);
+}
+
+/* ---------------------------------------------------------------- credits */
+
+.credits {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.6rem clamp(1.5rem, 3vw, 3rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.credit {
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.creditYear {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 2.6rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--gold);
+}
+
+.creditTitle {
+  margin-top: 0.6rem;
+  font-size: 1.75rem;
+  font-style: italic;
+  line-height: 1.1;
+}
+
+.creditCompany {
+  margin: 0.6rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.creditCount {
+  margin: 0.2rem 0 0;
+  font-family: var(--type);
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.creditNote {
+  margin: 0.7rem 0 0;
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- rail
+   A gold rail, and the stock hanging from it on luggage tags. */
+
+.rail {
+  position: relative;
+  padding-top: 2.6rem;
+}
+
+.rail::before {
+  content: '';
+  position: absolute;
+  left: -0.5rem;
+  right: -0.5rem;
+  top: 0.6rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--gold);
+}
+
+.tags {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1.2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tag {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 15rem;
+  padding: 2.4rem 1rem 1.2rem;
+  background: var(--cream);
+  color: var(--on-cream);
+  clip-path: polygon(22% 0, 78% 0, 100% 10%, 100% 100%, 0 100%, 0 10%);
+  transform-origin: 50% -2rem;
+}
+
+.tag:nth-child(odd) {
+  transform: rotate(-1.6deg);
+}
+
+.tag:nth-child(even) {
+  transform: rotate(1.2deg);
+}
+
+/* The eyelet. */
+.tag::before {
+  content: '';
+  position: absolute;
+  top: 0.8rem;
+  left: 50%;
+  width: 0.8rem;
+  height: 0.8rem;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: var(--stage);
+  box-shadow: 0 0 0 3px var(--gold);
+}
+
+.tagEra {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.tagCount {
+  margin: 0.5rem 0 0;
+  font-family: var(--type);
+  font-size: 0.82rem;
+  color: var(--cream-muted);
+}
+
+.tagPrice {
+  margin: auto 0 0;
+  padding-top: 1rem;
+  font-family: var(--display);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1;
+  border-top: 1px dashed var(--cream-rule);
+}
+
+.tagPer {
+  margin: 0.2rem 0 0;
+  font-size: 0.8rem;
+  color: var(--cream-muted);
+}
+
+.railNote {
+  max-width: 40rem;
+  margin: 2.2rem 0 0;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------- workshop */
+
+.workGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.3fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.workIntro > *,
+.door > * {
+  grid-area: auto;
+}
+
+.workIntro .secTitle,
+.door .secTitle {
+  margin-top: 0.6rem;
+}
+
+.workIntro .secNote {
+  margin-top: 1.2rem;
+}
+
+.spools {
+  position: relative;
+  height: 20rem;
+  margin-top: 1.6rem;
+  overflow: hidden;
+  border-radius: 0.4rem;
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.services {
+  margin: 0;
+}
+
+.services div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 2rem;
+  padding: 1.3rem 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.services div:last-child {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.services dt {
+  font-family: var(--display);
+  font-size: 1.55rem;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.serviceWhat {
+  grid-column: 1;
+  margin: 0.35rem 0 0;
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+.servicePrice {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  align-self: start;
+  margin: 0.3rem 0 0;
+  font-family: var(--type);
+  font-size: 0.95rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.door .secNote {
+  margin: 1.2rem 0 1.6rem;
+}
+
+.address {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.addressNote {
+  margin: 0.4rem 0 0.6rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.contactLine {
+  margin: 0.3rem 0 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.contactLine a {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.hours {
+  max-width: 26rem;
+  margin: 1rem 0 0;
+  font-size: 0.95rem;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.hours dt {
+  font-weight: 500;
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+  color: var(--muted);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--panel);
+  border-top: 4px solid var(--gold);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field label,
+.field legend {
+  padding: 0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--stage);
+  border: 1px solid var(--rule-strong);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.picks input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.picks label {
+  padding: 0.45rem 0.95rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  background: var(--stage);
+  border: 1px solid var(--rule-strong);
+  cursor: pointer;
+}
+
+.picks input:checked + label {
+  background: var(--cream);
+  color: var(--on-cream);
+  border-color: var(--cream);
+}
+
+.picks input:focus-visible + label {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.9rem 1.5rem;
+  font-family: var(--sans);
+  font-size: 0.84rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-scarlet);
+  background: var(--scarlet);
+  border: 0;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--scarlet) 84%, var(--stage));
+}
+
+/* ------------------------------------------------------------------ footer
+   The house curtain, down. */
+
+.footer {
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+  background: var(--scarlet);
+  color: var(--on-scarlet);
+}
+
+.footThreads {
+  position: relative;
+  height: 80px;
+  overflow: hidden;
+  background: var(--stage);
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+  font-size: 0.94rem;
+}
+
+.footInner p {
+  margin: 0.35rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.8rem;
+  font-family: var(--display);
+  font-size: 2.2rem;
+  font-style: italic;
+  line-height: 1.1;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .tags {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 3.4rem;
+  }
+
+  .credits {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'kicker'
+      'title'
+      'note';
+  }
+
+  .workGrid,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .curtainLeft,
+  .curtainRight {
+    width: 14%;
+  }
+}
+
+@media (max-width: 720px) {
+  .stage {
+    padding: 9rem 1.9rem 5.4rem;
+    border-radius: 50% 50% 0 0 / 5rem 5rem 0 0;
+  }
+
+  .backdrop {
+    border-radius: 50% 50% 0 0 / 4.4rem 4.4rem 0 0;
+  }
+
+  .stage::before {
+    height: 3.6rem;
+    clip-path: inset(0.85rem 0.85rem 0 0.85rem round 50% 50% 0 0 / 4.4rem 4.4rem 0 0);
+  }
+
+  .curtainLeft,
+  .curtainRight {
+    width: 9%;
+  }
+
+  .credits,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tags {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .services div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .servicePrice {
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: 0.5rem;
+    text-align: left;
+  }
+
+  .facts dd {
+    font-size: 2.1rem;
+  }
+}

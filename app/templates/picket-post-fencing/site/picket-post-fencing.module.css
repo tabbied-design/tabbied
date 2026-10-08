@@ -1,0 +1,1160 @@
+/* ==========================================================================
+   PICKET & POST FENCING - fence builders, Ridgeway
+   The layout is the yard-sign catalog: every style drawn in CSS against a
+   strip of sky and lawn, priced by the linear foot in big condensed
+   numerals, the way a contractor writes it on the side of a truck. Paint
+   white ground, slate ink, cedar for the wood, lawn green and a pale sky.
+   Barlow Condensed for the lettering, Barlow for reading. The slit lattice
+   is the trellis: the panel between the hero's posts, a band of slate
+   lattice against the sky, and a white lattice trim over the footer.
+   ========================================================================== */
+
+.page {
+  --paint: #f4f5f0;
+  --slate: #1f2a30;
+  --cedar: #b4602e;
+  --lawn: #3e7a4a;
+  --sky: #a9cbe3;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --cond: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --sans: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--slate);
+  --on-slate: var(--paint);
+  --on-cedar: var(--paint);
+  --on-lawn: var(--paint);
+
+  font-family: var(--sans);
+  font-size: 1.04rem;
+  line-height: 1.55;
+  background: var(--paint);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--paint) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--slate));
+    --on-slate: color-mix(in oklab, oklch(from var(--slate) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--slate));
+    --on-cedar: oklch(from var(--cedar) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-lawn: oklch(from var(--lawn) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--paint));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 45%, transparent);
+  --card: color-mix(in oklab, var(--paint) 90%, var(--sky));
+  --sky-hi: color-mix(in oklab, var(--sky) 72%, var(--paint));
+  --sky-lo: color-mix(in oklab, var(--sky) 30%, var(--paint));
+  --wood-dark: color-mix(in oklab, var(--cedar) 74%, var(--slate));
+  --input: color-mix(in oklab, var(--paint) 70%, var(--card));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--cond);
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.7rem var(--gut);
+  background: var(--paint);
+  box-shadow: 0 1px 0 var(--rule-strong);
+}
+
+.brand {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.6rem;
+}
+
+/* Three pickets, cut by a mask. */
+.brandMark {
+  width: 1.55rem;
+  height: 1.9rem;
+  background: repeating-linear-gradient(90deg, var(--cedar) 0 6px, transparent 6px 9.5px);
+  -webkit-mask: conic-gradient(from 135deg at 3px 0, black 90deg, transparent 0) 0 0 / 9.5px 100%;
+  mask: conic-gradient(from 135deg at 3px 0, black 90deg, transparent 0) 0 0 / 9.5px 100%;
+  border-bottom: 3px solid var(--text);
+}
+
+.brandName {
+  font-family: var(--cond);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  padding: 0.3rem 0;
+  font-family: var(--cond);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barCall {
+  padding: 0.55rem 1rem;
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  background: var(--slate);
+  color: var(--on-slate);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--paint);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut);
+}
+
+.kicker {
+  margin: 0 0 1rem;
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(3.4rem, 7.5vw, 6.6rem);
+  line-height: 0.92;
+}
+
+.heroTitle span {
+  display: block;
+  color: var(--cedar);
+}
+
+.heroLead {
+  max-width: 32rem;
+  margin: 1.5rem 0 0;
+  font-size: 1.14rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.75rem 1.35rem;
+  font-family: var(--cond);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.button {
+  background: var(--cedar);
+  color: var(--on-cedar);
+}
+
+.button:hover {
+  background: var(--slate);
+  color: var(--on-slate);
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ghost:hover {
+  background: var(--card);
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  max-width: 32rem;
+  margin: 2.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.heroFacts li {
+  display: grid;
+  gap: 0.2rem;
+  padding-top: 0.6rem;
+  border-top: 3px solid var(--text);
+}
+
+.heroFacts strong {
+  font-family: var(--cond);
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.heroFacts span {
+  font-size: 0.86rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+/* The fence section: sky behind, lawn under, two capped posts, a top rail,
+   the trellis panel between them and a board at the foot. */
+.fence {
+  position: relative;
+  height: clamp(24rem, 42vw, 35rem);
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--sky-hi), var(--sky-lo) 82%);
+}
+
+.fence::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 9%;
+  background: var(--lawn);
+}
+
+.postLeft,
+.postRight {
+  position: absolute;
+  z-index: 2;
+  top: 9%;
+  bottom: 7%;
+  width: 7%;
+  background: var(--wood-dark);
+}
+
+.postLeft {
+  left: 7%;
+}
+
+.postRight {
+  right: 7%;
+}
+
+.postLeft::before,
+.postRight::before {
+  content: '';
+  position: absolute;
+  left: -18%;
+  right: -18%;
+  top: -5%;
+  height: 6%;
+  background: var(--slate);
+  clip-path: polygon(50% 0, 100% 70%, 100% 100%, 0 100%, 0 70%);
+}
+
+.topRail {
+  position: absolute;
+  z-index: 1;
+  left: 9%;
+  right: 9%;
+  top: 15%;
+  height: 4%;
+  background: var(--wood-dark);
+}
+
+.panel {
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  top: 19%;
+  bottom: 26%;
+}
+
+.kick {
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  top: 74%;
+  bottom: 7%;
+  background: repeating-linear-gradient(90deg, var(--cedar) 0 30px, var(--wood-dark) 30px 32px);
+  box-shadow: inset 0 4px 0 var(--wood-dark);
+}
+
+/* The price tag, hung from the top rail on a string. */
+.tag {
+  position: absolute;
+  z-index: 3;
+  top: 22%;
+  right: 17%;
+  width: min(15rem, 46%);
+  padding: 0.8rem 1rem;
+  background: var(--paint);
+  border: 2px solid var(--text);
+  transform: rotate(-3deg);
+  box-shadow: 4px 5px 0 var(--rule-strong);
+}
+
+.tag::before {
+  content: '';
+  position: absolute;
+  top: -1.9rem;
+  left: 50%;
+  width: 2px;
+  height: 1.9rem;
+  background: var(--text);
+}
+
+.tagName {
+  margin: 0;
+  font-family: var(--cond);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.tagPrice {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: 2.4rem;
+}
+
+.secTitle {
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  line-height: 0.95;
+}
+
+.secNote {
+  margin: 0;
+  max-width: 36rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ catalog */
+
+.styles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.4rem clamp(1.2rem, 2.5vw, 2rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.style {
+  display: flex;
+  flex-direction: column;
+}
+
+.drawing {
+  position: relative;
+  height: 11.5rem;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--sky-hi), var(--sky-lo));
+}
+
+.drawing::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.1rem;
+  background: var(--lawn);
+}
+
+.draw {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 1.1rem;
+}
+
+.picket {
+  height: 62%;
+  background:
+    linear-gradient(var(--wood-dark) 0 0) 0 38% / 100% 7px no-repeat,
+    linear-gradient(var(--wood-dark) 0 0) 0 82% / 100% 7px no-repeat,
+    repeating-linear-gradient(90deg, var(--paint) 0 18px, transparent 18px 28px);
+  -webkit-mask: conic-gradient(from 135deg at 9px 0, black 90deg, transparent 0) 0 0 / 28px 100%;
+  mask: conic-gradient(from 135deg at 9px 0, black 90deg, transparent 0) 0 0 / 28px 100%;
+}
+
+.privacy {
+  height: 80%;
+  background: repeating-linear-gradient(90deg, var(--cedar) 0 26px, var(--wood-dark) 26px 28px);
+  border-top: 7px solid var(--wood-dark);
+}
+
+.lattice {
+  height: 82%;
+  background:
+    linear-gradient(var(--wood-dark) 0 0) 0 25% / 100% 6px no-repeat,
+    repeating-linear-gradient(45deg, var(--cedar) 0 3px, transparent 3px 14px) top / 100% 25% no-repeat,
+    repeating-linear-gradient(-45deg, var(--cedar) 0 3px, transparent 3px 14px) top / 100% 25% no-repeat,
+    repeating-linear-gradient(90deg, var(--cedar) 0 26px, var(--wood-dark) 26px 28px) bottom / 100% 74% no-repeat;
+  border-top: 6px solid var(--wood-dark);
+}
+
+.rail {
+  height: 52%;
+  background:
+    repeating-linear-gradient(90deg, var(--wood-dark) 0 13px, transparent 13px 104px),
+    linear-gradient(var(--cedar) 0 0) 0 16% / 100% 11% no-repeat,
+    linear-gradient(var(--cedar) 0 0) 0 60% / 100% 11% no-repeat;
+}
+
+.slat {
+  height: 78%;
+  background: repeating-linear-gradient(180deg, var(--slate) 0 13px, transparent 13px 18px);
+  border-left: 10px solid var(--slate);
+  border-right: 10px solid var(--slate);
+}
+
+.metal {
+  height: 60%;
+  background:
+    linear-gradient(var(--slate) 0 0) 0 8% / 100% 5px no-repeat,
+    linear-gradient(var(--slate) 0 0) 0 88% / 100% 5px no-repeat,
+    repeating-linear-gradient(90deg, var(--slate) 0 4px, transparent 4px 20px);
+  border-left: 10px solid var(--slate);
+  border-right: 10px solid var(--slate);
+}
+
+.styleHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 3px solid var(--text);
+}
+
+.styleName {
+  font-size: 1.9rem;
+}
+
+.stylePrice {
+  margin: 0;
+  font-family: var(--cond);
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.styleUnit {
+  margin: 0;
+  font-size: 0.82rem;
+  text-align: right;
+  color: var(--muted);
+}
+
+.styleFacts {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.8rem;
+  margin: 0.7rem 0 0;
+}
+
+.styleFacts dt {
+  font-family: var(--cond);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.styleFacts dd {
+  margin: 0;
+  font-size: 0.94rem;
+}
+
+.styleNote {
+  margin: 0.7rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.gates {
+  margin: 2.4rem 0 0;
+  padding: 1rem 1.2rem;
+  font-weight: 600;
+  background: var(--card);
+  border-left: 6px solid var(--cedar);
+}
+
+/* The slate lattice against the sky, full width. */
+.band {
+  position: relative;
+  height: 7.5rem;
+  margin-top: clamp(3.5rem, 7vw, 6rem);
+  background: linear-gradient(180deg, var(--sky-hi), var(--sky-lo));
+  border-bottom: 1rem solid var(--lawn);
+}
+
+/* ----------------------------------------------------------------- estimate */
+
+.estimate {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.estimate .secNote {
+  margin-top: 1rem;
+}
+
+.planWrap {
+  padding-top: 0.6rem;
+}
+
+/* The yard from above: fence on three sides, the house closing the fourth. */
+.plan {
+  position: relative;
+  aspect-ratio: 1.1;
+  margin: 1.4rem;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 22px, color-mix(in oklab, var(--lawn) 10%, transparent) 22px 44px),
+    color-mix(in oklab, var(--lawn) 20%, var(--paint));
+  border: 7px solid var(--cedar);
+  border-bottom: 0;
+}
+
+.plan::before {
+  content: '';
+  position: absolute;
+  right: -7px;
+  bottom: 26%;
+  width: 7px;
+  height: 11%;
+  background: var(--paint);
+}
+
+.house {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: 0;
+  height: 26%;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  font-family: var(--cond);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--slate);
+  color: var(--on-slate);
+}
+
+.dim,
+.gateMark {
+  position: absolute;
+  margin: 0;
+  padding: 0.15rem 0.5rem;
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 600;
+  background: var(--paint);
+  border: 1.5px solid var(--text);
+}
+
+.dimLeft {
+  top: 42%;
+  left: -1.7rem;
+  transform: rotate(-90deg);
+}
+
+.dimBack {
+  top: -1.35rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dimRight {
+  top: 30%;
+  right: -1.7rem;
+  transform: rotate(90deg);
+}
+
+.gateMark {
+  right: 1rem;
+  bottom: 28%;
+}
+
+.planCaption {
+  margin: 0.4rem 1.4rem 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.quoteTable {
+  width: 100%;
+  margin-top: 1.8rem;
+  border-collapse: collapse;
+}
+
+.quoteTable th,
+.quoteTable td {
+  padding: 0.75rem 0;
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.quoteTable th {
+  font-weight: 400;
+  padding-right: 1rem;
+}
+
+.quoteTable td {
+  font-family: var(--cond);
+  font-size: 1.35rem;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.quoteTable tfoot th,
+.quoteTable tfoot td {
+  border-bottom: 0;
+  border-top: 3px solid var(--text);
+}
+
+.quoteTable tfoot th {
+  font-weight: 600;
+}
+
+.quoteTable tfoot td {
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+.terms {
+  margin: 0.8rem 0 0;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ process
+   Five posts on a rail: the rail is the list's top edge, each step hangs
+   from its post. */
+
+.steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1.6rem;
+  margin: 0;
+  padding: 3.2rem 0 0;
+  list-style: none;
+}
+
+.steps::before {
+  content: '';
+  position: absolute;
+  top: 1.6rem;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: var(--cedar);
+}
+
+.step {
+  position: relative;
+}
+
+.step::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: -3.2rem;
+  left: 0;
+  width: 18px;
+  height: 3rem;
+  background: var(--wood-dark);
+  clip-path: polygon(50% 0, 100% 22%, 100% 100%, 0 100%, 0 22%);
+}
+
+.stepNo {
+  display: inline-block;
+  margin-top: 0.6rem;
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stepTitle {
+  margin-top: 0.3rem;
+  font-size: 1.75rem;
+}
+
+.stepText {
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- materials */
+
+.materials {
+  --rule-on: color-mix(in oklab, var(--on-slate) 24%, transparent);
+  --muted-on: color-mix(in oklab, var(--on-slate) 76%, var(--slate));
+
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--slate);
+  color: var(--on-slate);
+}
+
+.materialsInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut);
+}
+
+.materialsNote {
+  margin: 1rem 0 0;
+  color: var(--muted-on);
+}
+
+.promises {
+  margin: 1.6rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.promises li {
+  position: relative;
+  padding: 0.55rem 0 0.55rem 1.7rem;
+  border-top: 1px solid var(--rule-on);
+}
+
+.promises li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.95rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  background: var(--cedar);
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.matTable {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: collapse;
+}
+
+.matTable th,
+.matTable td {
+  padding: 0.85rem 0.8rem 0.85rem 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule-on);
+}
+
+.matTable thead th {
+  font-family: var(--cond);
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 3px solid var(--on-slate);
+}
+
+.matTable tbody th {
+  font-family: var(--cond);
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+/* -------------------------------------------------------------------- quote */
+
+.quoteGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 5rem);
+}
+
+.quoteGrid .secNote {
+  margin-top: 1rem;
+}
+
+.address {
+  display: grid;
+  margin-top: 1.8rem;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.contactLine {
+  margin: 0.4rem 0 0;
+  font-family: var(--cond);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.contactLine a {
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.hours {
+  margin: 1.6rem 0 0;
+  border-top: 3px solid var(--text);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  align-content: start;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  background: var(--card);
+  border-top: 8px solid var(--cedar);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field > label,
+.fieldset legend {
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--paint);
+  border: 2px solid var(--rule-strong);
+  border-radius: 0;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.fieldset legend {
+  margin-bottom: 0.4rem;
+  padding: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pick {
+  position: relative;
+  cursor: pointer;
+}
+
+.pick input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.pick span {
+  display: inline-block;
+  padding: 0.4rem 0.85rem;
+  background: var(--paint);
+  border: 2px solid var(--rule-strong);
+}
+
+.pick input:checked + span {
+  background: var(--slate);
+  color: var(--on-slate);
+  border-color: var(--slate);
+}
+
+.pick input:focus-visible + span {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.8rem 1.6rem;
+  font-family: var(--cond);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  background: var(--cedar);
+  color: var(--on-cedar);
+  border: 0;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: var(--slate);
+  color: var(--on-slate);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 6rem);
+  background: var(--slate);
+  color: var(--on-slate);
+}
+
+.footLattice {
+  position: relative;
+  height: 4.5rem;
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
+  gap: 1rem 3rem;
+  align-items: baseline;
+  padding: 2rem var(--gut) 2.6rem;
+  font-size: 0.92rem;
+}
+
+.footInner p {
+  margin: 0;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footName {
+  font-family: var(--cond);
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* -------------------------------------------------------------- breakpoints */
+
+@media (max-width: 1080px) {
+  .hero,
+  .estimate,
+  .materialsInner,
+  .quoteGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .styles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 4.5rem;
+  }
+
+  /* Wrapped, every step carries its own length of rail. */
+  .steps::before {
+    display: none;
+  }
+
+  .step::after {
+    content: '';
+    position: absolute;
+    top: -1.6rem;
+    left: 0;
+    right: -1.6rem;
+    height: 10px;
+    background: var(--cedar);
+  }
+
+  .planWrap {
+    max-width: 34rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .barCall {
+    display: none;
+  }
+
+  .heroFacts {
+    gap: 0.8rem;
+  }
+
+  .heroFacts strong {
+    font-size: 1.6rem;
+  }
+
+  .styles,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 4rem;
+  }
+
+  .tag {
+    right: 15%;
+    width: 60%;
+  }
+
+  .matTable {
+    min-width: 0;
+    font-size: 0.86rem;
+  }
+
+  .matTable tbody th {
+    font-size: 1.05rem;
+  }
+}

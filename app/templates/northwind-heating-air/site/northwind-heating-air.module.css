@@ -1,0 +1,1079 @@
+/* ==========================================================================
+   NORTHWIND HEATING & AIR - furnaces, heat pumps and cooling, Lakeshore County
+   Frost white and duct navy, with one cool blue and one furnace ember, and
+   ice and amber for the air itself. Barlow Condensed is the thermostat and
+   the van lettering; Barlow is everything else. The layout idea is the
+   thermostat and the airflow diagram: the hero is a dial on the seam
+   between cool air and warm, the services follow the air through the house
+   as a duct, and the year is a checklist in four seasons. The jetstream is
+   the air: both halves of the hero, the duct, the footer.
+   ========================================================================== */
+
+.page {
+  --frost: #eef3f5;
+  --duct: #10293a;
+  --blue: #2a77ad;
+  --ember: #cc4a2c;
+  --ice: #9fd0e3;
+  --amber: #f2b63c;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 82rem;
+  --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --sans: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--duct);
+  --on-duct: var(--frost);
+  --on-blue: var(--frost);
+  --on-ember: var(--frost);
+  --on-amber: var(--duct);
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  background: var(--frost);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--frost) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--duct));
+    --on-duct: color-mix(in oklab, oklch(from var(--duct) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--duct));
+    --on-blue: oklch(from var(--blue) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-ember: oklch(from var(--ember) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-amber: oklch(from var(--amber) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--frost));
+  --rule: color-mix(in oklab, var(--text) 15%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 38%, transparent);
+  --card: color-mix(in oklab, var(--frost) 88%, var(--ice));
+  --card-deep: color-mix(in oklab, var(--frost) 78%, var(--ice));
+  --duct-muted: color-mix(in oklab, var(--on-duct) 76%, var(--duct));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem var(--gut);
+  background: var(--frost);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.brand {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 0.65rem;
+  align-items: center;
+  line-height: 1;
+}
+
+/* A little dial: the cool half and the warm half. */
+.brandMark {
+  grid-row: span 2;
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 50%;
+  border: 5px solid var(--blue);
+  border-right-color: var(--ember);
+  border-top-color: var(--ember);
+  transform: rotate(45deg);
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.brandSub {
+  margin-top: 0.15rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.9rem, 1.8vw, 1.9rem);
+}
+
+.nav a {
+  padding: 0.25rem 0;
+  font-family: var(--display);
+  font-size: 1.12rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barBook {
+  padding: 0.6rem 1.2rem;
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--ember);
+  color: var(--on-ember);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--frost);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 4.5vw, 3.5rem) var(--gut) 0;
+}
+
+.heroTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: 1.5rem clamp(2rem, 4vw, 4rem);
+  align-items: end;
+  margin-bottom: clamp(1.8rem, 3vw, 2.6rem);
+}
+
+.kicker {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(3rem, 6.2vw, 5.7rem);
+  font-weight: 700;
+  line-height: 0.94;
+  letter-spacing: -0.005em;
+}
+
+.heroTitle span {
+  display: block;
+  color: var(--blue);
+}
+
+.heroLead {
+  margin: 0;
+  font-size: 1.12rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.75rem 1.4rem;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--ember);
+  color: var(--on-ember);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--ember) 85%, var(--duct));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ghost:hover {
+  background: var(--card);
+}
+
+/* The panel: cool air on the left, warm on the right, a frost seam between
+   them and the thermostat on the seam. */
+.panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  height: clamp(22rem, 33vw, 30rem);
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.coolField,
+.heatField {
+  position: relative;
+  overflow: hidden;
+  background: var(--duct);
+}
+
+.chip {
+  position: absolute;
+  z-index: 2;
+  margin: 0;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--frost);
+  color: var(--text);
+  border-radius: 999px;
+}
+
+.chipCool {
+  top: 1.2rem;
+  left: 1.2rem;
+}
+
+.chipHeat {
+  right: 1.2rem;
+  bottom: 1.2rem;
+}
+
+.chipCool::before,
+.chipHeat::before {
+  content: '';
+  display: inline-block;
+  width: 0.6rem;
+  height: 0.6rem;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+}
+
+.chipCool::before {
+  background: var(--blue);
+}
+
+.chipHeat::before {
+  background: var(--ember);
+}
+
+.stat {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  width: clamp(14rem, 21vw, 18.5rem);
+  aspect-ratio: 1;
+  text-align: center;
+  background: var(--frost);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 24px 50px -24px color-mix(in oklab, var(--duct) 80%, transparent);
+}
+
+/* The dial's ring: blue on the cool side, ember on the warm. */
+.stat::before {
+  content: '';
+  position: absolute;
+  inset: -16px;
+  z-index: -1;
+  border-radius: 50%;
+  border: 9px solid var(--blue);
+  border-top-color: var(--ember);
+  border-right-color: var(--ember);
+  transform: rotate(45deg);
+}
+
+.statLabel {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.statTemp {
+  position: relative;
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(5rem, 8vw, 7rem);
+  font-weight: 600;
+  line-height: 0.95;
+}
+
+.statTemp::after {
+  content: '\00B0';
+  position: absolute;
+  top: 0.05em;
+  left: 100%;
+  font-size: 0.45em;
+}
+
+.statModes {
+  display: flex;
+  gap: 0.4rem;
+  margin: 0.6rem 0 0;
+}
+
+.modeHeat,
+.modeCool {
+  padding: 0.2rem 0.65rem;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 999px;
+}
+
+.modeHeat {
+  background: var(--ember);
+  color: var(--on-ember);
+}
+
+.modeCool {
+  box-shadow: inset 0 0 0 1.5px var(--rule-strong);
+}
+
+.statInside {
+  margin: 0.55rem 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 8vw, 7rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 0.8rem clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead .tag {
+  grid-column: 1 / -1;
+}
+
+.tag {
+  justify-self: start;
+  display: inline-block;
+  margin: 0;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1.5px var(--rule-strong);
+}
+
+.secTitle {
+  font-size: clamp(2.4rem, 4.6vw, 4rem);
+  font-weight: 700;
+  line-height: 0.98;
+}
+
+.secNote {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- airflow
+   A duct of moving air with an arrowhead, and six numbered stops below. */
+
+.duct {
+  position: relative;
+  height: clamp(84px, 9vw, 120px);
+  overflow: hidden;
+  background: var(--duct);
+  border-radius: 999px 0 0 999px;
+  clip-path: polygon(0 0, calc(100% - 64px) 0, 100% 50%, calc(100% - 64px) 100%, 0 100%);
+}
+
+.stations {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin: 0;
+  padding: 0 64px 0 0;
+  list-style: none;
+  counter-reset: station;
+}
+
+.station {
+  position: relative;
+  padding-top: 3.6rem;
+  counter-increment: station;
+}
+
+/* The tap off the duct, and the stop's number on it. */
+.station::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 1.05rem;
+  width: 3px;
+  height: 1.4rem;
+  background: var(--rule-strong);
+}
+
+.station::after {
+  content: counter(station, decimal-leading-zero);
+  position: absolute;
+  top: 1.2rem;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 50%;
+  background: var(--duct);
+  color: var(--on-duct);
+}
+
+.stationName {
+  font-size: 1.45rem;
+  line-height: 1.05;
+}
+
+.stationNote {
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- plan */
+
+.planGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 2.5rem clamp(2rem, 6vw, 6rem);
+  align-items: center;
+}
+
+.planCard {
+  padding: clamp(1.8rem, 4vw, 3rem);
+  background: var(--duct);
+  color: var(--on-duct);
+  border-radius: 24px;
+}
+
+.planTag {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--duct-muted);
+}
+
+.planTitle {
+  margin-top: 0.4rem;
+  font-size: clamp(2.4rem, 4vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.planPrice {
+  margin: 1.4rem 0 0;
+  font-family: var(--display);
+  font-size: clamp(4.5rem, 8vw, 6rem);
+  font-weight: 600;
+  line-height: 0.9;
+}
+
+.planPer {
+  margin: 0.4rem 0 0;
+  color: var(--duct-muted);
+}
+
+.planList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem 1.4rem;
+  margin: 1.8rem 0 0;
+  padding: 1.4rem 0 0;
+  list-style: none;
+  border-top: 1px solid color-mix(in oklab, var(--on-duct) 25%, transparent);
+}
+
+.planList li {
+  position: relative;
+  padding-left: 1.6rem;
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.planList li::before {
+  content: '\2713';
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: 600;
+  color: var(--ice);
+}
+
+.planButton {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--amber);
+  color: var(--on-amber);
+  border-radius: 999px;
+}
+
+.planSide .tag {
+  margin-bottom: 1.2rem;
+}
+
+.planSideTitle {
+  margin-bottom: 1.2rem;
+  font-size: clamp(2.2rem, 3.8vw, 3.3rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.planFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 2.2rem 0 0;
+}
+
+.planFacts div {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  padding: 1rem 1.1rem;
+  background: var(--card);
+  border-radius: 14px;
+}
+
+.planFacts dt {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.planFacts dd {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 2.1rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+/* ---------------------------------------------------------------- seasons */
+
+.seasons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.season {
+  padding: 1.5rem 1.4rem 1.6rem;
+  background: var(--card);
+  border-top: 10px solid var(--blue);
+  border-radius: 6px 6px 18px 18px;
+}
+
+.spring {
+  border-top-color: var(--ice);
+}
+
+.summer {
+  border-top-color: var(--amber);
+}
+
+.fall {
+  border-top-color: var(--ember);
+}
+
+.winter {
+  border-top-color: var(--blue);
+}
+
+.seasonName {
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.seasonMonths {
+  margin: 0.25rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.seasonWho {
+  margin: 1.2rem 0 0.4rem;
+  padding-bottom: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.seasonList {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.seasonList li {
+  position: relative;
+  padding-left: 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.seasonList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.25rem;
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 1.5px solid var(--text);
+  border-radius: 3px;
+}
+
+/* --------------------------------------------------------------- services */
+
+.boards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.4rem;
+}
+
+.board {
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--card);
+  border-radius: 20px;
+}
+
+.boardTitle {
+  margin-bottom: 0.6rem;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.prices {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.prices li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.1rem 1.2rem;
+  padding: 0.95rem 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.priceName {
+  font-weight: 600;
+}
+
+.priceNote {
+  grid-row: 2;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.priceValue {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  align-self: center;
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- rebates */
+
+.rebates {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rebate {
+  padding: 1.5rem 1.4rem 1.6rem;
+  background: var(--blue);
+  color: var(--on-blue);
+  border-radius: 20px;
+}
+
+.rebateAmount {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(3rem, 5vw, 4.2rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.rebateFrom {
+  margin: 0.8rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.rebateWhat {
+  margin: 0.3rem 0 0;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.rebateNote {
+  max-width: 44rem;
+  margin: 1.4rem 0 0;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 3rem clamp(2rem, 6vw, 6rem);
+  align-items: start;
+  padding-bottom: clamp(4.5rem, 8vw, 7rem);
+}
+
+.contactInfo .tag {
+  margin-bottom: 1.2rem;
+}
+
+.contactInfo .secNote {
+  margin-top: 1rem;
+}
+
+.bigLine {
+  margin: 1.8rem 0 0;
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 4vw, 3.2rem);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.contactLine {
+  margin: 0.6rem 0 0;
+  font-weight: 600;
+}
+
+.contactLine a {
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.address {
+  margin: 0.4rem 0 0;
+}
+
+.hours {
+  margin: 1.6rem 0 0;
+}
+
+.hours div {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.hours dt {
+  font-weight: 600;
+}
+
+.hours dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.area {
+  margin: 1.4rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  padding: clamp(1.4rem, 3.5vw, 2.4rem);
+  background: var(--card);
+  border-radius: 24px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--frost);
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 10px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.75rem 1.6rem;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--on-ember);
+  background: var(--ember);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.formNote {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--duct);
+  color: var(--on-duct);
+}
+
+.footField {
+  position: relative;
+  height: clamp(120px, 13vw, 180px);
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  gap: 0.35rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 3rem;
+  font-size: 0.92rem;
+}
+
+.footInner p {
+  margin: 0;
+  color: var(--duct-muted);
+}
+
+.footInner a {
+  border-bottom: 1px solid currentColor;
+}
+
+.footInner .footName {
+  margin-bottom: 0.4rem;
+  font-family: var(--display);
+  font-size: 1.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--on-duct);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1120px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .stations {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 2rem;
+  }
+
+  .seasons,
+  .rebates {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .heroTop,
+  .secHead,
+  .planGrid,
+  .boards,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stations {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-right: 0;
+  }
+
+  .planSide {
+    order: -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .barBook {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .panel {
+    height: 25rem;
+    border-radius: 18px;
+  }
+
+  .stat {
+    width: 12.5rem;
+  }
+
+  .statTemp {
+    font-size: 4.4rem;
+  }
+
+  .chip {
+    font-size: 0.78rem;
+  }
+
+  .chipCool {
+    top: 0.8rem;
+    left: 0.8rem;
+  }
+
+  .chipHeat {
+    right: 0.8rem;
+    bottom: 0.8rem;
+  }
+
+  .seasons,
+  .rebates,
+  .form,
+  .planList,
+  .planFacts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hours div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .stations {
+    column-gap: 1rem;
+  }
+
+  .stationName {
+    font-size: 1.25rem;
+  }
+}

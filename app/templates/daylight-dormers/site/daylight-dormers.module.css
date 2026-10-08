@@ -1,0 +1,1042 @@
+/* ==========================================================================
+   DAYLIGHT DORMERS - roof windows and rooflights, fitted in a day
+   A clear morning: sky white, slate, a roof-window blue, sunlight and the
+   zinc of a flashing kit. Red Hat Display for the headings, Red Hat Text to
+   read, Red Hat Mono for every dimension, as on a drawing. The layout idea
+   is the section drawing: the hero cuts through a loft, the roof a thick
+   band of lucarne slopes with one window in it and the light falling
+   through onto the floor. The sizes are drawn to scale, the two roof types
+   get their own small sections, and the install day is a ruled timeline.
+   ========================================================================== */
+
+.page {
+  --sky: #eef3f6;
+  --slate: #15212e;
+  --blue: #3a78b5;
+  --sun: #f0b13c;
+  --zinc: #8a9aa7;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --display: 'Red Hat Display', 'Helvetica Neue', Arial, sans-serif;
+  --sans: 'Red Hat Text', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'Red Hat Mono', 'Courier New', monospace;
+  --cm: 0.12rem;
+
+  --text: var(--slate);
+  --on-slate: var(--sky);
+  --on-blue: var(--sky);
+  --on-sun: var(--slate);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--sky);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--sky) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--slate));
+    --on-slate: color-mix(in oklab, oklch(from var(--slate) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--slate));
+    --on-blue: oklch(from var(--blue) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-sun: oklch(from var(--sun) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 76%, var(--sky));
+  --rule: color-mix(in oklab, var(--text) 15%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 38%, transparent);
+  --card: color-mix(in oklab, var(--sky) 86%, var(--on-slate));
+  --interior: color-mix(in oklab, var(--sky) 88%, var(--zinc));
+  --light: color-mix(in oklab, var(--sky) 55%, var(--sun));
+  --glass: color-mix(in oklab, var(--sky) 72%, var(--blue));
+  --slate-muted: color-mix(in oklab, var(--on-slate) 74%, var(--slate));
+  --slate-rule: color-mix(in oklab, var(--on-slate) 22%, transparent);
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.page :where(p, ul, ol, dl, dd, figure) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--sky);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+/* A slope with its window: the lucarne in one mark. */
+.brandMark {
+  position: relative;
+  width: 2.2rem;
+  height: 1.7rem;
+  background: var(--slate);
+  clip-path: polygon(0 100%, 0 62%, 100% 0, 100% 100%);
+}
+
+.brandMark::after {
+  content: '';
+  position: absolute;
+  left: 46%;
+  top: 46%;
+  width: 22%;
+  height: 30%;
+  background: var(--sun);
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  padding: 0.25rem 0;
+  font-size: 0.93rem;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--blue);
+}
+
+.barCall {
+  padding: 0.55rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  font-weight: 500;
+  background: var(--slate);
+  color: var(--on-slate);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--sky);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.kicker {
+  margin-bottom: 1.2rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.7rem, 5.4vw, 4.8rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.heroTitle em {
+  font-style: normal;
+  font-weight: 500;
+}
+
+.heroLead {
+  max-width: 33rem;
+  margin-top: 1.5rem;
+  font-size: 1.1rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  padding: 0.85rem 1.3rem;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--blue);
+  color: var(--on-blue);
+}
+
+.ghost {
+  border: 1.5px solid var(--rule-strong);
+}
+
+.heroFacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem 2.5rem;
+  margin-top: 2.4rem;
+}
+
+.heroFacts div {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.heroFacts dt {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  font-family: var(--display);
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+/* The section drawing. Every part is a full-size layer cut to its shape,
+   in one coordinate system: the roof's top edge runs from (0, 40%) to
+   (100%, -4%), its underside from (0, 82%) to (100%, 38%), and the window
+   sits in it between 36% and 52% across. */
+.drawing {
+  position: relative;
+  aspect-ratio: 10 / 9;
+  background: var(--sky);
+  border: 1px solid var(--rule-strong);
+  border-radius: 0.3rem;
+  overflow: hidden;
+}
+
+.room,
+.beam,
+.roof,
+.glass {
+  position: absolute;
+  inset: 0;
+}
+
+.room {
+  background: var(--interior);
+  clip-path: polygon(0 82%, 100% 38%, 100% 100%, 0 100%);
+}
+
+.beam {
+  background: var(--light);
+  clip-path: polygon(36% 24.2%, 52% 17.1%, 52% 59.1%, 82% 96%, 60% 96%, 36% 66.2%);
+}
+
+.roof {
+  background: var(--slate);
+  clip-path: polygon(0 40%, 100% -4%, 100% 38%, 0 82%);
+}
+
+.glass {
+  background: var(--blue);
+  clip-path: polygon(34.5% 23.2%, 53.5% 14.8%, 53.5% 18.8%, 34.5% 27.2%);
+}
+
+.sun {
+  position: absolute;
+  left: 6%;
+  top: 5%;
+  width: 13%;
+  aspect-ratio: 1;
+  background: var(--sun);
+  border-radius: 50%;
+}
+
+.floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4%;
+  background: var(--slate);
+}
+
+.dim {
+  position: absolute;
+  padding: 0.25rem 0.55rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  white-space: nowrap;
+  background: var(--slate);
+  color: var(--on-slate);
+  border-radius: 0.2rem;
+}
+
+.dimPitch {
+  left: 4%;
+  top: 25%;
+}
+
+.dimWindow {
+  left: 38%;
+  top: 4%;
+}
+
+.dimFloor {
+  right: 3%;
+  bottom: 9%;
+}
+
+.caption {
+  position: absolute;
+  left: 3%;
+  bottom: 9%;
+  max-width: 13rem;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  background: var(--sky);
+  color: var(--text);
+  border-radius: 0.2rem;
+}
+
+/* ------------------------------------------------------------ plain sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+  border-top: 1px solid var(--rule);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.5rem 2rem;
+  align-items: start;
+}
+
+.secNo {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding-top: 0.5rem;
+  color: var(--muted);
+}
+
+.secTitle {
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  line-height: 1.04;
+}
+
+.secNote {
+  font-size: 1.04rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- the sizes */
+
+.scale {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1.5rem 2rem;
+  margin: 3rem 0 2.5rem 6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--text);
+}
+
+.scaleItem {
+  display: grid;
+  justify-items: start;
+  gap: 0.2rem;
+}
+
+.pane {
+  display: block;
+  margin-bottom: 0.5rem;
+  background: var(--glass);
+  border: 0.3rem solid var(--slate);
+  box-shadow: inset 0 0 0 0.25rem var(--sky);
+}
+
+.sizeS1 { width: calc(55 * var(--cm)); height: calc(78 * var(--cm)); }
+.sizeS2 { width: calc(55 * var(--cm)); height: calc(98 * var(--cm)); }
+.sizeM1 { width: calc(78 * var(--cm)); height: calc(98 * var(--cm)); }
+.sizeM2 { width: calc(78 * var(--cm)); height: calc(118 * var(--cm)); background: var(--light); }
+.sizeM3 { width: calc(78 * var(--cm)); height: calc(140 * var(--cm)); }
+.sizeL1 { width: calc(114 * var(--cm)); height: calc(118 * var(--cm)); }
+
+.scaleCode {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.scaleSize {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.tableWrap {
+  margin-left: 6rem;
+  overflow-x: auto;
+}
+
+.sizes {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.97rem;
+}
+
+.sizes thead th {
+  padding: 0 1rem 0.7rem 0;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.sizes tbody th,
+.sizes td {
+  padding: 0.85rem 1rem 0.85rem 0;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+}
+
+.sizes tbody th {
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.mono {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.price {
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.sizes thead th:last-child {
+  text-align: right;
+  padding-right: 0;
+}
+
+.sizes td:last-child {
+  text-align: right;
+  padding-right: 0;
+}
+
+.tableNote {
+  margin: 1.2rem 0 0 6rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------- pitched/flat */
+
+.roofs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+  margin: 3rem 0 0 6rem;
+}
+
+.roofCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--card);
+  border-radius: 0.4rem;
+}
+
+/* Two small sections, drawn in CSS like the hero's big one. */
+.mini {
+  position: relative;
+  height: 10rem;
+  margin-bottom: 0.8rem;
+  background: var(--sky);
+  border: 1px solid var(--rule);
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.mini span {
+  position: absolute;
+  inset: 0;
+}
+
+.miniSlope {
+  background: var(--slate);
+  clip-path: polygon(0 78%, 100% 12%, 100% 30%, 0 96%);
+}
+
+.mini .miniPane,
+.mini .miniKerb {
+  z-index: 1;
+  background: var(--blue);
+}
+
+.miniPane {
+  clip-path: polygon(43% 47.5%, 61% 35.5%, 61% 39.5%, 43% 51.5%);
+}
+
+.miniPitched .miniRay {
+  background: var(--light);
+  clip-path: polygon(44% 49%, 60% 38.4%, 60% 56.4%, 74% 100%, 52% 100%, 44% 67%);
+}
+
+.miniDeck {
+  background: var(--slate);
+  clip-path: polygon(0 52%, 36% 52%, 36% 33%, 64% 33%, 64% 52%, 100% 52%, 100% 66%, 0 66%);
+}
+
+.miniKerb {
+  clip-path: polygon(34% 28%, 66% 28%, 66% 33%, 34% 33%);
+}
+
+.miniFlat .miniRay {
+  background: var(--light);
+  clip-path: polygon(40% 33%, 60% 33%, 60% 66%, 68% 100%, 32% 100%, 40% 66%);
+}
+
+.roofTitle {
+  font-size: 1.6rem;
+}
+
+.roofSub {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.roofList {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.6rem 0 1rem;
+}
+
+.roofList li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 0.96rem;
+  line-height: 1.45;
+}
+
+.roofList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.35em;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--blue);
+  clip-path: polygon(0 100%, 0 55%, 100% 10%, 100% 100%);
+}
+
+.roofPrice {
+  margin-top: auto;
+  padding-top: 0.9rem;
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  border-top: 1px solid var(--rule-strong);
+}
+
+/* ------------------------------------------------------------------ rooftops */
+
+.rooftops {
+  position: relative;
+  height: clamp(7rem, 12vw, 10rem);
+}
+
+/* ------------------------------------------------------------------- the day */
+
+.day {
+  background: var(--slate);
+  color: var(--on-slate);
+}
+
+.dayInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut);
+}
+
+.dayHead {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.5rem 2rem;
+}
+
+.dayHead .secNo {
+  color: var(--slate-muted);
+}
+
+.dayTitle {
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  line-height: 1.04;
+}
+
+.dayLead {
+  font-size: 1.04rem;
+  color: var(--slate-muted);
+}
+
+.ruler {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  margin: 3rem 0 0 6rem;
+  border-bottom: 2px solid var(--sun);
+}
+
+.ruler li {
+  padding: 0 0 0.4rem 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--slate-muted);
+  border-left: 1px solid var(--slate-rule);
+}
+
+.hours {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2rem 1.5rem;
+  margin: 2rem 0 0 6rem;
+}
+
+.hour {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--slate-rule);
+}
+
+.hourTime {
+  font-family: var(--mono);
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.hourTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.hourBody {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--slate-muted);
+}
+
+/* ----------------------------------------------------------------- questions */
+
+.faqGrid {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.faqGrid .secHead {
+  grid-template-columns: 4rem minmax(0, 1fr);
+}
+
+.faqs {
+  margin-left: 6rem;
+  border-top: 2px solid var(--text);
+}
+
+.faq {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.faq summary {
+  position: relative;
+  padding: 1.15rem 2.5rem 1.15rem 0;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  position: absolute;
+  right: 0.3rem;
+  top: 0.95rem;
+  font-family: var(--mono);
+  font-size: 1.4rem;
+  font-weight: 400;
+}
+
+.faq[open] summary::after {
+  content: '-';
+}
+
+.faq p {
+  max-width: 46rem;
+  padding: 0 0 1.3rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- survey */
+
+.surveyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.surveyInfo {
+  display: grid;
+  gap: 1rem;
+}
+
+.contact {
+  display: grid;
+  margin-top: 1rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.contact div {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.contact dt {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  padding-top: 0.15rem;
+  color: var(--muted);
+}
+
+.contact dd {
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.contact dd a {
+  border-bottom: 2px solid var(--blue);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--card);
+  border-radius: 0.4rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--sky);
+  border: 1px solid var(--rule-strong);
+  border-radius: 0.3rem;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.85rem 1.4rem;
+  font: inherit;
+  font-weight: 600;
+  background: var(--blue);
+  color: var(--on-blue);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.formNote {
+  grid-column: 1 / -1;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--slate);
+  color: var(--on-slate);
+}
+
+.footEaves {
+  position: relative;
+  height: 4.25rem;
+}
+
+.footInner {
+  display: grid;
+  gap: 0.45rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.footText {
+  max-width: 44rem;
+  font-size: 0.92rem;
+  color: var(--slate-muted);
+}
+
+.footText a {
+  color: var(--on-slate);
+  border-bottom: 1px solid currentColor;
+}
+
+/* -------------------------------------------------------------- breakpoints */
+
+@media (max-width: 1080px) {
+  .hours {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .nav,
+  .barCall {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .hero,
+  .surveyGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secHead,
+  .dayHead,
+  .faqGrid .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .scale,
+  .tableWrap,
+  .tableNote,
+  .roofs,
+  .ruler,
+  .hours,
+  .faqs {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    --cm: 0.075rem;
+  }
+
+  .roofs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .scale {
+    gap: 1rem 1.1rem;
+  }
+
+  .scaleCode {
+    font-size: 1rem;
+  }
+
+  .ruler li:nth-child(even) {
+    color: transparent;
+  }
+
+  .hours {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  .sizes thead {
+    display: none;
+  }
+
+  .sizes,
+  .sizes tbody,
+  .sizes tr {
+    display: block;
+  }
+
+  .sizes tr {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr) auto;
+    gap: 0.1rem 0.8rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .sizes tbody th,
+  .sizes td {
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .sizes tbody th {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .sizes td:nth-of-type(1) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .sizes td:nth-of-type(2) {
+    grid-column: 2 / -1;
+    grid-row: 2;
+  }
+
+  .sizes td:nth-of-type(3) {
+    display: none;
+  }
+
+  .sizes td:nth-of-type(4) {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .dimPitch {
+    display: none;
+  }
+
+  .dim {
+    font-size: 0.66rem;
+  }
+
+  .caption {
+    display: none;
+  }
+}

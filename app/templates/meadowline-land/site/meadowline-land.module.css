@@ -1,0 +1,1140 @@
+/* ==========================================================================
+   MEADOWLINE LAND & FARM - farm, pasture and acreage brokers
+   The layout is the land listing sheet: a ruled card with the parcel drawn
+   in grass, its survey lines over it and the numbers under it in a typed
+   table. Hay paper, field green ink, a surveyor's rust for the boundary
+   and wheat in the grass. Zilla Slab is the feed-store lettering, Karla
+   reads closely, and IBM Plex Mono types the legal descriptions. The
+   windrow is the only ornament: the featured quarter, each listing's
+   outline, the township under the plat and the verge above the footer.
+   ========================================================================== */
+
+.page {
+  --hay: #f3eddc;
+  --field: #24382b;
+  --rust: #b0502a;
+  --wheat: #c99a32;
+  --sage: #71844f;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 82rem;
+  --slab: 'Zilla Slab', 'Rockwell', 'Georgia', serif;
+  --sans: 'Karla', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  --text: var(--field);
+  --on-field: var(--hay);
+  --on-rust: var(--hay);
+  --on-wheat: var(--field);
+
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  background: var(--hay);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--hay) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--field));
+    --on-field: color-mix(in oklab, oklch(from var(--field) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--field));
+    --on-rust: oklch(from var(--rust) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-wheat: oklch(from var(--wheat) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--hay));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 50%, transparent);
+  --card: color-mix(in oklab, var(--hay) 93%, var(--wheat));
+  --sold: color-mix(in oklab, var(--hay) 78%, var(--wheat));
+  --input: color-mix(in oklab, var(--hay) 82%, var(--on-field));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--slab);
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem var(--gut);
+  background: var(--hay);
+  border-bottom: 2px solid var(--text);
+}
+
+.brand {
+  display: grid;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--slab);
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.brandSub {
+  margin-top: 0.25rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  padding: 0.3rem 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barCall {
+  padding: 0.6rem 1.05rem;
+  font-family: var(--mono);
+  font-size: 0.84rem;
+  font-weight: 400;
+  background: var(--field);
+  color: var(--on-field);
+  border-radius: 2px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--hay);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.kicker {
+  margin: 0 0 1.2rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.7rem, 5.6vw, 4.9rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--rust);
+}
+
+.heroLead {
+  max-width: 33rem;
+  margin: 1.5rem 0 0;
+  font-size: 1.12rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-weight: 600;
+  border-radius: 2px;
+}
+
+.button {
+  background: var(--field);
+  color: var(--on-field);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--field) 82%, var(--text));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ghost:hover {
+  background: var(--card);
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 33rem;
+  margin: 2.5rem 0 0;
+}
+
+.heroFacts div {
+  display: flex;
+  flex-direction: column-reverse;
+  padding-top: 0.7rem;
+  border-top: 2px solid var(--text);
+}
+
+.heroFacts dt {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  margin: 0;
+  font-family: var(--slab);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+/* The listing sheet: a ruled card, the parcel drawn in grass. */
+.sheet {
+  background: var(--card);
+  border: 2px solid var(--text);
+  box-shadow: 10px 10px 0 var(--rule);
+}
+
+.sheetHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--text);
+}
+
+.sheetField {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--hay);
+  border-bottom: 2px solid var(--text);
+}
+
+.sheetGrass {
+  position: absolute;
+  inset: 0;
+}
+
+/* The quarter lines of the section, survey-thin. */
+.quarters {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1px), var(--rule-strong) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+    linear-gradient(180deg, transparent calc(50% - 1px), var(--rule-strong) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px));
+}
+
+/* The quarter for sale, staked out in the surveyor's rust. */
+.parcelLine {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  right: 0;
+  bottom: 0;
+  margin: 0.5rem;
+  border: 3px dashed var(--rust);
+  background: color-mix(in oklab, var(--rust) 10%, transparent);
+}
+
+.parcelLine::before,
+.parcelLine::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--rust);
+  border: 2px solid var(--hay);
+}
+
+.parcelLine::before {
+  top: -8px;
+  left: -8px;
+}
+
+.parcelLine::after {
+  right: -8px;
+  bottom: -8px;
+}
+
+.fieldTag {
+  position: absolute;
+  right: 1.6rem;
+  bottom: 1.6rem;
+  margin: 0;
+  padding: 0.4rem 0.7rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 400;
+  background: var(--hay);
+  border: 2px solid var(--text);
+}
+
+.northTag {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  margin: 0;
+  font-family: var(--slab);
+  font-weight: 700;
+  background: var(--hay);
+  border: 2px solid var(--text);
+  border-radius: 50%;
+}
+
+.northTag::before {
+  content: '';
+  position: absolute;
+  top: -0.7rem;
+  left: 50%;
+  border: 0.4rem solid transparent;
+  border-bottom: 0.55rem solid var(--text);
+  transform: translateX(-50%);
+}
+
+.sheetSpecs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+}
+
+.sheetSpecs div {
+  padding: 0.75rem 1rem;
+  border-left: 1px solid var(--rule-strong);
+}
+
+.sheetSpecs div:first-child {
+  border-left: 0;
+}
+
+.sheetSpecs dt {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.sheetSpecs dd {
+  margin: 0.15rem 0 0;
+  font-family: var(--slab);
+  font-size: 1.08rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1rem 2.5rem;
+  align-items: end;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 2px solid var(--text);
+}
+
+.secNo {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+}
+
+.secTitle {
+  font-size: clamp(2rem, 3.8vw, 3.1rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+
+.secNote {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- listings */
+
+.parcels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.parcel {
+  display: flex;
+  flex-direction: column;
+}
+
+.parcelTop {
+  position: relative;
+  height: 13.5rem;
+  margin-bottom: 1.2rem;
+  background: var(--card);
+  border: 2px solid var(--text);
+}
+
+.outline {
+  position: absolute;
+  inset: 0.9rem;
+  background: color-mix(in oklab, var(--hay) 72%, var(--sage));
+}
+
+.quarter {
+  clip-path: polygon(14% 6%, 86% 6%, 86% 94%, 14% 94%);
+}
+
+.ell {
+  clip-path: polygon(8% 6%, 58% 6%, 58% 48%, 92% 48%, 92% 94%, 8% 94%);
+}
+
+.creek {
+  clip-path: polygon(6% 10%, 22% 4%, 38% 12%, 54% 6%, 70% 14%, 84% 8%, 94% 16%, 94% 94%, 6% 94%);
+}
+
+.status {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  padding: 0.25rem 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--field);
+  color: var(--on-field);
+}
+
+.parcelName {
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.legal {
+  margin: 0.35rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.parcelPrice {
+  display: grid;
+  grid-template-columns: 0.8fr 1fr 1.2fr;
+  margin: 1rem 0 0;
+  border-top: 2px solid var(--text);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.parcelPrice div {
+  padding: 0.55rem 0.6rem 0.55rem 0;
+}
+
+.parcelPrice div + div {
+  padding-left: 0.7rem;
+  border-left: 1px solid var(--rule);
+}
+
+.parcelPrice dt {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.parcelPrice dd {
+  margin: 0;
+  font-family: var(--slab);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.specs {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.specs th,
+.specs td {
+  padding: 0.5rem 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule);
+}
+
+.specs th {
+  width: 6.2rem;
+  padding-right: 0.8rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- plat */
+
+.platGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--text);
+}
+
+.platText .secTitle {
+  margin-top: 0.8rem;
+}
+
+.platText .secNote {
+  margin-top: 1rem;
+}
+
+.platSub {
+  margin-top: 2rem;
+  font-size: 1.25rem;
+}
+
+.readList {
+  margin: 0.8rem 0 0;
+  padding-left: 1.3rem;
+}
+
+.readList li {
+  margin-bottom: 0.45rem;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.6rem;
+  margin: 1.8rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9rem;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.key {
+  width: 1.2rem;
+  height: 1.2rem;
+  background: var(--hay);
+  border: 1.5px solid var(--text);
+}
+
+.keyOpen {
+  background: repeating-linear-gradient(115deg, var(--sage) 0 2px, var(--hay) 2px 5px);
+}
+
+.keySold {
+  background: var(--sold);
+}
+
+.platWrap {
+  width: min(100%, 36rem);
+  justify-self: end;
+}
+
+.plat {
+  position: relative;
+  aspect-ratio: 1;
+  background: var(--hay);
+  border: 3px solid var(--text);
+}
+
+.platGrass {
+  position: absolute;
+  inset: 0;
+}
+
+.township {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-rows: repeat(6, minmax(0, 1fr));
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.township li {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0.35rem;
+  background: var(--hay);
+  box-shadow: inset 0 0 0 0.5px var(--rule-strong);
+}
+
+.township .open {
+  background: transparent;
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.township .sold {
+  background: var(--sold);
+}
+
+.secNum {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  line-height: 1;
+}
+
+.open .secNum {
+  padding: 0.2rem 0.3rem;
+  background: var(--hay);
+  border: 1.5px solid var(--text);
+}
+
+.secMark {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.open .secMark {
+  padding: 0.2rem 0.3rem;
+  background: var(--field);
+  color: var(--on-field);
+}
+
+.platScale {
+  margin: 0.6rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  color: var(--muted);
+  text-align: right;
+}
+
+/* ---------------------------------------------------------------- questions */
+
+.questions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.2rem clamp(1.5rem, 3vw, 3rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: q;
+}
+
+.questions li {
+  position: relative;
+  padding: 1.1rem 0 0 3.4rem;
+  border-top: 1px solid var(--rule-strong);
+  counter-increment: q;
+}
+
+.questions li::before {
+  content: counter(q);
+  position: absolute;
+  top: 0.75rem;
+  left: 0;
+  font-family: var(--slab);
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--rust);
+}
+
+.qTitle {
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+
+.qText {
+  margin: 0.45rem 0 0;
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ selling */
+
+.selling {
+  --rule-on: color-mix(in oklab, var(--on-field) 26%, transparent);
+  --muted-on: color-mix(in oklab, var(--on-field) 76%, var(--field));
+
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--field);
+  color: var(--on-field);
+}
+
+.sellingInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut);
+}
+
+.sellingHead .secTitle {
+  margin-top: 0.8rem;
+}
+
+.sellingNote {
+  margin: 1rem 0 0;
+  color: var(--muted-on);
+}
+
+.fees {
+  width: 100%;
+  margin-top: 2rem;
+  border-collapse: collapse;
+}
+
+.feesCap {
+  padding-bottom: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.fees th,
+.fees td {
+  padding: 0.65rem 0;
+  text-align: left;
+  border-top: 1px solid var(--rule-on);
+}
+
+.fees th {
+  font-weight: 400;
+}
+
+.fees td {
+  font-family: var(--slab);
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-align: right;
+}
+
+.steps {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 0.2rem 1.2rem;
+  padding: 1.4rem 0;
+  border-top: 1px solid var(--rule-on);
+}
+
+.steps li:first-child {
+  border-top: 0;
+  padding-top: 0.4rem;
+}
+
+.stepNo {
+  grid-row: span 2;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding-top: 0.35rem;
+}
+
+.stepTitle {
+  font-size: 1.45rem;
+  line-height: 1.2;
+}
+
+.stepText {
+  margin: 0;
+  color: var(--muted-on);
+}
+
+/* ------------------------------------------------------------------ contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--text);
+}
+
+.contactGrid .secTitle {
+  margin-top: 0.8rem;
+}
+
+.address {
+  display: grid;
+  margin-top: 1.8rem;
+  font-family: var(--slab);
+  font-size: 1.35rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.contactLine {
+  margin: 0.5rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.98rem;
+}
+
+.contactLine a {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.hours {
+  margin: 1.6rem 0 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.brokers {
+  margin: 1.4rem 0 0;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  align-content: start;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  background: var(--card);
+  border: 2px solid var(--text);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label,
+.fieldset legend {
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--input);
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 0;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.fieldset legend {
+  margin-bottom: 0.4rem;
+  padding: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.picks input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.picks label {
+  padding: 0.45rem 0.9rem;
+  font-weight: 400;
+  border: 1.5px solid var(--rule-strong);
+  cursor: pointer;
+}
+
+.picks input:checked + label {
+  background: var(--field);
+  color: var(--on-field);
+  border-color: var(--field);
+}
+
+.picks input:focus-visible + label {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.9rem 1.6rem;
+  font: inherit;
+  font-weight: 600;
+  background: var(--rust);
+  color: var(--on-rust);
+  border: 0;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--rust) 84%, var(--text));
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 6rem);
+}
+
+/* The verge: grass rooted on the footer's edge. */
+.footGrass {
+  position: relative;
+  height: 8.5rem;
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
+  gap: 1rem 3rem;
+  align-items: baseline;
+  padding: 2.2rem var(--gut) 2.6rem;
+  font-size: 0.92rem;
+  background: var(--field);
+  color: var(--on-field);
+}
+
+.footInner p {
+  margin: 0;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footName {
+  font-family: var(--slab);
+  font-size: 1.45rem;
+  font-weight: 700;
+}
+
+/* -------------------------------------------------------------- breakpoints */
+
+@media (max-width: 1080px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sheet {
+    max-width: 44rem;
+  }
+
+  .parcels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .questions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .platGrid,
+  .sellingInner,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .platWrap {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 860px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .heroFacts dd {
+    font-size: 1.6rem;
+  }
+
+  .sheetSpecs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sheetSpecs div:nth-child(3) {
+    border-left: 0;
+  }
+
+  .sheetSpecs div:nth-child(n + 3) {
+    border-top: 1px solid var(--rule-strong);
+  }
+
+  .parcels,
+  .questions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secMark {
+    display: none;
+  }
+
+  .fieldTag {
+    right: 1rem;
+    bottom: 1rem;
+    font-size: 0.72rem;
+  }
+}

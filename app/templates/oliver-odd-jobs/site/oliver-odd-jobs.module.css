@@ -1,0 +1,1028 @@
+/* ==========================================================================
+   OLIVER ODD JOBS - handyman, Ashgrove
+   The fridge door: enamel mint, navy ink, and magnets in tomato, mustard,
+   cobalt and leaf. Bricolage Grotesque for the shouting, Atkinson
+   Hyperlegible for prices and small print, Caveat for anything written on
+   a note. The chip pattern is the door covered in magnets; paper notes
+   (job tickets, coupons, thank-you notes, the booking slip) are pinned
+   over the mint. A note is the ground lifted toward paper, so it stays a
+   note on any palette, and its text is read off the note itself.
+   ========================================================================== */
+
+.page {
+  --mint: #d6e8de; /* role 0: the fridge enamel */
+  --navy: #1d2a44;
+  --tomato: #d9472b;
+  --mustard: #f0b23a;
+  --cobalt: #2f62b0;
+  --leaf: #5e9a5a;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --display: 'Bricolage Grotesque', 'Arial Black', sans-serif;
+  --body: 'Atkinson Hyperlegible', 'Helvetica Neue', Arial, sans-serif;
+  --hand: 'Caveat', 'Comic Sans MS', cursive;
+
+  --text: var(--navy);
+  --note: var(--mint);
+  --on-note: var(--navy);
+  --on-navy: var(--mint);
+  --on-tomato: var(--mint);
+  --on-cobalt: var(--mint);
+  --on-mustard: var(--navy);
+  --on-leaf: var(--mint);
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--mint));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 45%, transparent);
+  --shadow: color-mix(in oklab, var(--navy) 38%, transparent);
+
+  font-family: var(--body);
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--mint);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--mint) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--navy));
+    /* Paper: the ground lifted most of the way to white, and its own ink. */
+    --note: oklch(from var(--mint) calc(l + (1 - l) * 0.72) calc(c * 0.4) h);
+    --on-note: color-mix(in oklab, oklch(from var(--note) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--navy));
+    --on-navy: color-mix(in oklab, oklch(from var(--navy) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--navy));
+    --on-tomato: oklch(from var(--tomato) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-cobalt: oklch(from var(--cobalt) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-mustard: oklch(from var(--mustard) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-leaf: oklch(from var(--leaf) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem var(--gut);
+  background: var(--mint);
+  border-bottom: 2px solid var(--text);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.brandChip {
+  width: 1.7rem;
+  height: 1.7rem;
+  background: var(--tomato);
+  clip-path: polygon(34% 0, 100% 0, 100% 66%, 66% 100%, 0 100%, 0 34%);
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.9rem, 1.8vw, 1.8rem);
+}
+
+.nav a {
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.2rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barCall {
+  padding: 0.55rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: var(--navy);
+  color: var(--on-navy);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--mint);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4.5rem) var(--gut) clamp(3.5rem, 6vw, 5.5rem);
+}
+
+.kicker {
+  display: inline-block;
+  margin: 0 0 1.4rem;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.heroTitle {
+  font-size: clamp(3rem, 6.4vw, 6.1rem);
+  line-height: 0.94;
+  letter-spacing: -0.035em;
+}
+
+.heroTitle span {
+  display: block;
+  color: var(--tomato);
+}
+
+.heroLead {
+  max-width: 32rem;
+  margin: 1.6rem 0 0;
+  font-size: 1.15rem;
+  line-height: 1.6;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.9rem 1.5rem;
+  font-size: 1.02rem;
+  font-weight: 700;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--navy) 82%, var(--mint));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ghost:hover {
+  background: color-mix(in oklab, var(--mint) 85%, var(--navy));
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+  margin: 2.2rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.badges li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.badges li::before {
+  content: '';
+  width: 0.8rem;
+  height: 0.8rem;
+  background: var(--leaf);
+  clip-path: polygon(34% 0, 100% 0, 100% 66%, 66% 100%, 0 100%, 0 34%);
+}
+
+/* The fridge: a two-door enamel front of magnets, a handle, and the list
+   stuck to it with one more magnet. */
+.fridge {
+  position: relative;
+  width: min(100%, 34rem);
+  justify-self: end;
+}
+
+.door {
+  position: relative;
+  height: clamp(30rem, 46vw, 40rem);
+  overflow: hidden;
+  border-radius: 2.2rem 2.2rem 1.2rem 1.2rem;
+  box-shadow: 0 0 0 3px var(--navy), 0 30px 60px -36px var(--shadow);
+}
+
+/* The freezer seam and the handle, drawn over the door. */
+.fridge::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  top: 31%;
+  height: 10px;
+  background: var(--navy);
+}
+
+.fridge::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  right: 1.4rem;
+  top: 36%;
+  width: 14px;
+  height: 24%;
+  background: var(--navy);
+  border-radius: 999px;
+  box-shadow: 0 0 0 4px var(--mint);
+}
+
+.list {
+  position: absolute;
+  z-index: 3;
+  left: -3.5rem;
+  bottom: 2.2rem;
+  width: min(19.5rem, 74%);
+  padding: 1.9rem 1.5rem 1.2rem;
+  background: var(--note);
+  color: var(--on-note);
+  transform: rotate(-3deg);
+  box-shadow: 0 18px 40px -20px var(--shadow);
+}
+
+/* The magnet holding the list up. */
+.list::before {
+  content: '';
+  position: absolute;
+  top: -0.9rem;
+  left: 50%;
+  width: 2rem;
+  height: 2rem;
+  margin-left: -1rem;
+  background: var(--tomato);
+  border-radius: 50%;
+  box-shadow: 0 4px 8px -3px var(--shadow);
+}
+
+.listTitle {
+  margin: 0;
+  font-family: var(--hand);
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.listItems {
+  margin: 0.6rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--hand);
+  font-size: 1.45rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.listItems li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.35rem 0 0.25rem;
+  border-bottom: 1px solid color-mix(in oklab, var(--on-note) 22%, transparent);
+}
+
+.done .listTask {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.listPrice {
+  font-weight: 700;
+}
+
+.listFoot {
+  margin: 0.7rem 0 0;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+/* ---------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(1.8rem, 4vw, 3rem);
+}
+
+.secTitle {
+  font-size: clamp(2.3rem, 4.8vw, 4rem);
+  line-height: 0.98;
+}
+
+.secNote {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------- job board */
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ticket {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.2rem 1.1rem;
+  background: var(--note);
+  color: var(--on-note);
+  border-radius: 4px;
+  box-shadow: 0 12px 24px -18px var(--shadow);
+}
+
+.ticket::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 7px;
+  background: var(--tone);
+  border-radius: 4px 4px 0 0;
+}
+
+.tomato {
+  --tone: var(--tomato);
+}
+
+.cobalt {
+  --tone: var(--cobalt);
+}
+
+.mustard {
+  --tone: var(--mustard);
+}
+
+.leaf {
+  --tone: var(--leaf);
+}
+
+.ticket:nth-child(4n + 2) {
+  transform: rotate(0.8deg);
+}
+
+.ticket:nth-child(4n + 3) {
+  transform: rotate(-0.6deg);
+}
+
+.ticketKind {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--on-note) 74%, var(--note));
+}
+
+.ticketTask {
+  margin-top: 0.3rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.12;
+}
+
+.ticketNote {
+  margin: 0.5rem 0 1rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.ticketTime {
+  margin: auto 0 0;
+  padding-top: 0.6rem;
+  font-size: 0.84rem;
+  color: color-mix(in oklab, var(--on-note) 74%, var(--note));
+  border-top: 1px dashed color-mix(in oklab, var(--on-note) 35%, transparent);
+}
+
+.ticketPrice {
+  position: absolute;
+  right: 1.1rem;
+  bottom: 0.65rem;
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* --------------------------------------------------------- magnet strip */
+
+.strip {
+  position: relative;
+  height: clamp(4rem, 7vw, 6rem);
+  overflow: hidden;
+  border-top: 3px solid var(--navy);
+  border-bottom: 3px solid var(--navy);
+}
+
+/* ----------------------------------------------------------------- coupons */
+
+.coupons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.coupon {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  background: var(--note);
+  color: var(--on-note);
+  border: 2px dashed color-mix(in oklab, var(--on-note) 55%, transparent);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.coupon:nth-child(2) {
+  transform: translateY(-0.8rem);
+  border-style: solid;
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px var(--navy);
+}
+
+.stub {
+  position: relative;
+  min-height: 15rem;
+  border-right: 2px dashed color-mix(in oklab, var(--on-note) 55%, transparent);
+}
+
+.couponBody {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.4rem 1.6rem;
+}
+
+.couponName {
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.couponPrice {
+  margin: 0.4rem 0 0;
+  font-family: var(--display);
+  font-size: clamp(3rem, 5vw, 4.2rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.couponSpan {
+  margin: 0.4rem 0 0;
+  font-weight: 700;
+}
+
+.couponUse {
+  margin: 0.6rem 0 0;
+  font-size: 0.95rem;
+  color: color-mix(in oklab, var(--on-note) 78%, var(--note));
+}
+
+.fine {
+  max-width: 44rem;
+  margin: 1.8rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- steps */
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.step {
+  padding-top: 1.2rem;
+  border-top: 2px solid var(--text);
+}
+
+.magnet {
+  display: grid;
+  place-items: center;
+  width: 3.3rem;
+  height: 3.3rem;
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  border-radius: 50%;
+  background: var(--mag);
+  color: var(--on-mag);
+  box-shadow: 0 6px 12px -6px var(--shadow);
+}
+
+.step:nth-child(1) {
+  --mag: var(--tomato);
+  --on-mag: var(--on-tomato);
+}
+
+.step:nth-child(2) {
+  --mag: var(--cobalt);
+  --on-mag: var(--on-cobalt);
+}
+
+.step:nth-child(3) {
+  --mag: var(--mustard);
+  --on-mag: var(--on-mustard);
+}
+
+.step:nth-child(4) {
+  --mag: var(--leaf);
+  --on-mag: var(--on-leaf);
+}
+
+.stepTitle {
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.stepBody {
+  margin: 0.4rem 0 0;
+}
+
+.notes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.6rem;
+  margin: clamp(3rem, 6vw, 4.5rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.note {
+  padding: 1.6rem 1.5rem 1.3rem;
+  background: var(--note);
+  color: var(--on-note);
+  box-shadow: 0 14px 28px -20px var(--shadow);
+}
+
+.note:nth-child(1) {
+  transform: rotate(-1.6deg);
+}
+
+.note:nth-child(2) {
+  transform: rotate(1.2deg);
+}
+
+.note:nth-child(3) {
+  transform: rotate(-0.6deg);
+}
+
+.noteQuote {
+  margin: 0;
+  font-family: var(--hand);
+  font-size: 1.65rem;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.noteWho {
+  margin: 0.8rem 0 0;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------- wont */
+
+.wont {
+  background: var(--navy);
+  color: var(--on-navy);
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+}
+
+.wontInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.wontTitle {
+  font-size: clamp(2.3rem, 4.8vw, 4rem);
+  line-height: 0.98;
+}
+
+.wontNote {
+  margin: 1.2rem 0 0;
+  font-size: 1.05rem;
+  color: color-mix(in oklab, var(--on-navy) 82%, var(--navy));
+}
+
+.wontChips {
+  position: relative;
+  height: 15rem;
+  margin-top: 2.2rem;
+  overflow: hidden;
+  border-radius: 1.2rem;
+}
+
+.wontList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wontList li {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1.05rem 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--on-navy) 26%, transparent);
+}
+
+.wontList li:first-child {
+  border-top: 1px solid color-mix(in oklab, var(--on-navy) 26%, transparent);
+}
+
+.wontJob {
+  font-family: var(--display);
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.wontJob::before {
+  content: '\2715';
+  display: inline-grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  margin-right: 0.7rem;
+  font-family: var(--body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  vertical-align: 0.15em;
+  background: var(--tomato);
+  color: var(--on-tomato);
+  border-radius: 50%;
+}
+
+.wontInstead {
+  padding-left: 2.3rem;
+  font-size: 1rem;
+  color: color-mix(in oklab, var(--on-navy) 82%, var(--navy));
+}
+
+/* -------------------------------------------------------------------- book */
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.bookLead {
+  max-width: 30rem;
+  margin: 1.2rem 0 0;
+  font-size: 1.08rem;
+}
+
+.bigPhone {
+  margin: 1.6rem 0 0;
+  font-family: var(--display);
+  font-size: clamp(2.2rem, 4.6vw, 3.6rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.bigPhone a {
+  border-bottom: 4px solid var(--tomato);
+}
+
+.details,
+.hours {
+  margin: 2rem 0 0;
+}
+
+.details div,
+.hours div {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.details dt,
+.hours dt {
+  font-weight: 700;
+}
+
+.details dd,
+.hours dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.details a:hover {
+  text-decoration: underline;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  padding: clamp(1.4rem, 4vw, 2.4rem);
+  background: var(--note);
+  color: var(--on-note);
+  transform: rotate(0.6deg);
+  box-shadow: 0 24px 48px -28px var(--shadow);
+}
+
+.formTitle {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: var(--hand);
+  font-size: 2.3rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+  color: var(--on-note);
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid color-mix(in oklab, var(--on-note) 55%, transparent);
+  border-radius: 0;
+}
+
+.field textarea {
+  border: 2px solid color-mix(in oklab, var(--on-note) 30%, transparent);
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--on-note);
+  outline-offset: 2px;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.9rem 1.6rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--on-navy);
+  background: var(--navy);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--navy) 82%, var(--mint));
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.footChips {
+  position: relative;
+  height: clamp(3.5rem, 6vw, 4.5rem);
+  overflow: hidden;
+  background: var(--mint);
+  border-bottom: 3px solid var(--navy);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem 3rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 2.6rem;
+}
+
+.footName {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.footSmall {
+  margin: 0;
+  font-size: 0.92rem;
+  color: color-mix(in oklab, var(--on-navy) 84%, var(--navy));
+}
+
+.footSmall a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .board {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ticket:nth-child(n) {
+    transform: none;
+  }
+}
+
+@media (max-width: 1000px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .secHead,
+  .wontInner,
+  .bookGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fridge {
+    justify-self: center;
+    width: min(100%, 30rem);
+  }
+
+  .list {
+    left: -1rem;
+  }
+
+  .coupons {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 34rem;
+  }
+
+  .coupon:nth-child(2) {
+    transform: none;
+  }
+
+  .stub {
+    min-height: 11rem;
+  }
+
+  .steps,
+  .notes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .board {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .door {
+    height: 35rem;
+  }
+
+  .list {
+    left: 0.6rem;
+    bottom: 1.4rem;
+    width: calc(100% - 1.2rem);
+  }
+
+  .steps,
+  .notes,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .note:nth-child(n),
+  .form {
+    transform: none;
+  }
+
+  .details div,
+  .hours div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}

@@ -1,0 +1,1126 @@
+/* ==========================================================================
+   PATCH DAY IT - IT support for small offices
+   The page is a status page and a ticket queue, in the dark the way a
+   monitoring screen is. A strip under the bar says what is up; the hero is
+   a rack of notch tiles with a terminal reading out the week; then uptime
+   strips per service, plans per seat, response times as a table, coverage
+   as four tickets, and the morning's queue with its state chips. Space
+   Grotesk for the voice, JetBrains Mono for every id, time and label.
+   ========================================================================== */
+
+.page {
+  --night: #12161c;
+  --chalk: #e6ebf0;
+  --signal: #3ccf7e;
+  --amber: #f2a93b;
+  --steel: #56657a;
+
+  --text: var(--chalk);
+  --on-chalk: var(--night);
+  --on-signal: var(--night);
+  --on-amber: var(--night);
+  --on-steel: var(--chalk);
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --sans: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'JetBrains Mono', 'Menlo', monospace;
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--night);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--night) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--chalk));
+    --on-chalk: color-mix(in oklab, oklch(from var(--chalk) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--chalk));
+    --on-signal: oklch(from var(--signal) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-amber: oklch(from var(--amber) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-steel: oklch(from var(--steel) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--night));
+  --rule: color-mix(in oklab, var(--text) 14%, var(--night));
+  --rule-strong: color-mix(in oklab, var(--text) 34%, var(--night));
+  --panel: color-mix(in oklab, var(--night) 91%, var(--chalk));
+  --well: color-mix(in oklab, var(--night) 95%, var(--chalk));
+  --ok-tint: color-mix(in oklab, var(--night) 86%, var(--signal));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--night);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* The mark: a square tile with its corner bitten, the notch itself. */
+.brandMark {
+  width: 1.35rem;
+  height: 1.35rem;
+  background: var(--amber);
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 55% 45%, 55% 100%, 0 100%);
+}
+
+.brandName {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  padding: 0.25rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--signal);
+}
+
+.barTicket {
+  padding: 0.55rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  background: var(--chalk);
+  color: var(--on-chalk);
+  border-radius: 4px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  font-family: var(--mono);
+  --template-menu-bg: var(--night);
+}
+
+/* ------------------------------------------------------------ status strip */
+
+.statusStrip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 2rem;
+  padding: 0.7rem var(--gut);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  background: var(--ok-tint);
+  border-bottom: 1px solid var(--rule);
+}
+
+.statusStrip p {
+  margin: 0;
+}
+
+.statusOk {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 700;
+}
+
+.statusOk::before {
+  content: '';
+  width: 0.6rem;
+  height: 0.6rem;
+  background: var(--signal);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--signal) 30%, transparent);
+}
+
+.statusMeta {
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: stretch;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) 0;
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.prompt {
+  margin: 0 0 1.3rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.prompt::before {
+  content: '$ ';
+}
+
+.heroTitle {
+  font-size: clamp(2.8rem, 6vw, 5.2rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.heroTitle span {
+  text-decoration: underline;
+  text-decoration-color: var(--signal);
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.12em;
+}
+
+.heroLead {
+  max-width: 34rem;
+  margin: 1.6rem 0 0;
+  font-size: 1.12rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.3rem;
+  font-family: var(--mono);
+  font-size: 0.88rem;
+  font-weight: 500;
+  border-radius: 4px;
+}
+
+.button {
+  background: var(--signal);
+  color: var(--on-signal);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--signal) 85%, var(--chalk));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+}
+
+.ghost:hover {
+  background: var(--panel);
+}
+
+.heroStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 34rem;
+  margin: 2.6rem 0 0;
+}
+
+.heroStats div {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  padding: 0.8rem 0 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.heroStats dt {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.heroStats dd {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+/* The rack: the notch field in a framed bay, the week read out on a
+   terminal card bolted to its lower edge. */
+.heroRack {
+  position: relative;
+  min-height: 34rem;
+  padding: 0.6rem;
+  background: var(--well);
+  border: 1px solid var(--rule-strong);
+  border-radius: 8px;
+}
+
+.rackField {
+  position: absolute;
+  inset: 0.6rem;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.terminal {
+  position: absolute;
+  left: 1.6rem;
+  right: 1.6rem;
+  bottom: 1.6rem;
+  max-width: 24rem;
+  padding: 1rem 1.2rem 1.1rem;
+  font-family: var(--mono);
+  font-size: 0.84rem;
+  background: var(--night);
+  border: 1px solid var(--rule-strong);
+  border-radius: 6px;
+  box-shadow: 0 20px 40px -20px color-mix(in oklab, var(--night) 80%, transparent);
+}
+
+.termHead {
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.55rem;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule);
+}
+
+.termHead::before {
+  content: '$ ';
+}
+
+.termLines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.termLines li {
+  padding: 0.12rem 0;
+}
+
+.termLines li::before {
+  content: 'ok';
+  display: inline-block;
+  width: 2.2rem;
+  margin-right: 0.6rem;
+  font-weight: 700;
+  text-align: center;
+  background: var(--signal);
+  color: var(--on-signal);
+  border-radius: 3px;
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut) 0;
+  scroll-margin-top: 4rem;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.6rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(1.8rem, 4vw, 2.8rem);
+}
+
+.secTag {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.secTitle {
+  font-size: clamp(2.1rem, 4.4vw, 3.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+
+.secNote {
+  max-width: 35rem;
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ status */
+
+.services {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.service {
+  display: grid;
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) 5.5rem 7rem;
+  align-items: center;
+  gap: 1rem 1.6rem;
+  padding: 1.05rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.serviceName {
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.serviceNote {
+  margin: 0.1rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+/* Ninety thin bars, one per day; the bad day is marked in amber. */
+.strip {
+  position: relative;
+  display: block;
+  height: 2rem;
+  background: repeating-linear-gradient(90deg, var(--signal) 0 4px, transparent 4px 7px);
+  border-radius: 2px;
+}
+
+.incident {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 6px;
+  background: var(--amber);
+  border-radius: 2px;
+}
+
+.serviceUp {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: right;
+}
+
+.serviceState {
+  justify-self: end;
+  margin: 0;
+  padding: 0.2rem 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+}
+
+.stripKey {
+  margin: 0.9rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- plans */
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.plan {
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.5rem 1.4rem;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+}
+
+.planPick {
+  background: var(--chalk);
+  color: var(--on-chalk);
+  border-color: var(--chalk);
+}
+
+.planName {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.planPrice {
+  margin: 1rem 0 0;
+  font-size: 3.4rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.planPer {
+  margin: 0.3rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+
+.planWho {
+  margin: 1rem 0 0;
+  font-size: 0.96rem;
+}
+
+.planItems {
+  flex: 1;
+  margin: 1.2rem 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.93rem;
+}
+
+.planItems li {
+  display: grid;
+  grid-template-columns: 1.3rem minmax(0, 1fr);
+  padding: 0.45rem 0;
+  border-top: 1px solid color-mix(in oklab, currentColor 16%, transparent);
+}
+
+.planItems li::before {
+  content: '+';
+  font-family: var(--mono);
+  font-weight: 700;
+}
+
+.planReply {
+  margin: 0;
+  padding-top: 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  border-top: 2px solid currentColor;
+}
+
+/* ---------------------------------------------------------------- response */
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.response {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.response th,
+.response td {
+  padding: 1.1rem 1.2rem 1.1rem 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule);
+}
+
+.response thead th {
+  padding-top: 0;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.response tbody th {
+  width: 18rem;
+  font-weight: 500;
+}
+
+.pri {
+  display: inline-block;
+  min-width: 2.4rem;
+  margin-right: 0.8rem;
+  padding: 0.1rem 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: center;
+  border: 1px solid var(--rule-strong);
+  border-radius: 3px;
+}
+
+.response tr:first-child .pri {
+  background: var(--amber);
+  color: var(--on-amber);
+  border-color: var(--amber);
+}
+
+.priName {
+  font-size: 1.1rem;
+}
+
+.looks {
+  max-width: 30rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.time,
+.fixed {
+  font-family: var(--mono);
+  font-size: 0.92rem;
+  white-space: nowrap;
+}
+
+.time {
+  font-weight: 700;
+}
+
+/* ---------------------------------------------------------------- coverage */
+
+.coverage {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.4rem);
+}
+
+.cover {
+  display: flex;
+  flex-direction: column;
+  padding: 1.3rem 1.3rem 1.2rem;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--signal);
+  border-radius: 4px;
+}
+
+.coverCode {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.coverTitle {
+  margin-top: 0.3rem;
+  font-size: 1.6rem;
+  letter-spacing: -0.03em;
+}
+
+.coverItems {
+  flex: 1;
+  margin: 0.9rem 0 1rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.92rem;
+}
+
+.coverItems li {
+  padding: 0.4rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.coverNot {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(170px, 18vw, 250px);
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+  overflow: hidden;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.bandField {
+  position: absolute;
+  inset: 0;
+}
+
+.bandCard {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(40rem, calc(100% - 2 * var(--gut)));
+  margin: 0;
+  padding: 1rem 1.3rem;
+  font-family: var(--mono);
+  font-size: 0.92rem;
+  text-align: center;
+  background: var(--night);
+  border: 1px solid var(--rule-strong);
+  border-radius: 6px;
+  transform: translate(-50%, -50%);
+}
+
+/* ------------------------------------------------------------------- queue */
+
+.queue {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.ticket {
+  display: grid;
+  grid-template-columns: 4rem 2.6rem minmax(0, 1fr) 11rem 5rem 4.5rem 8.5rem;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.ticketId {
+  color: var(--muted);
+}
+
+.ticketPri {
+  font-weight: 700;
+}
+
+.ticketTitle {
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.ticketClient,
+.ticketAge {
+  color: var(--muted);
+}
+
+.chip {
+  justify-self: end;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+  border-radius: 999px;
+}
+
+.working {
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+}
+
+.scheduled {
+  background: var(--steel);
+  color: var(--on-steel);
+}
+
+.waiting {
+  background: var(--amber);
+  color: var(--on-amber);
+}
+
+.resolved {
+  background: var(--signal);
+  color: var(--on-signal);
+}
+
+/* ----------------------------------------------------------------- contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.contactGrid .secTag {
+  margin-bottom: 0.6rem;
+}
+
+.contactGrid .secNote {
+  margin-top: 1rem;
+}
+
+.office {
+  margin: 2rem 0 0;
+}
+
+.office div {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.office dt {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.office dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.office a {
+  font-weight: 500;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.field input,
+.field select,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--night);
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.85rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--on-signal);
+  background: var(--signal);
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.formNote {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+  background: var(--chalk);
+  color: var(--on-chalk);
+}
+
+.footField {
+  position: relative;
+  height: 68px;
+  overflow: hidden;
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 2.8rem;
+  font-size: 0.9rem;
+}
+
+.footInner p {
+  margin: 0.3rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.7rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1140px) {
+  .coverage {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ticket {
+    grid-template-columns: 4rem 2.6rem minmax(0, 1fr) 8.5rem;
+    grid-template-areas:
+      'id pri title chip'
+      '. . meta meta';
+    row-gap: 0.2rem;
+  }
+
+  .ticketId {
+    grid-area: id;
+  }
+
+  .ticketPri {
+    grid-area: pri;
+  }
+
+  .ticketTitle {
+    grid-area: title;
+  }
+
+  .chip {
+    grid-area: chip;
+  }
+
+  .ticketClient,
+  .ticketTech,
+  .ticketAge {
+    grid-row: 2;
+    font-size: 0.76rem;
+    color: var(--muted);
+  }
+
+  .ticketClient {
+    grid-column: 3;
+  }
+
+  .ticketTech,
+  .ticketAge {
+    display: none;
+  }
+}
+
+@media (max-width: 920px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .secHead,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroRack {
+    min-height: 24rem;
+  }
+
+  .plans {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .service {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'head state'
+      'strip strip'
+      'up up';
+  }
+
+  .serviceHead {
+    grid-area: head;
+  }
+
+  .strip {
+    grid-area: strip;
+  }
+
+  .serviceUp {
+    grid-area: up;
+    margin-top: -0.6rem;
+    font-size: 0.8rem;
+    text-align: left;
+  }
+
+  .serviceState {
+    grid-area: state;
+  }
+}
+
+@media (max-width: 640px) {
+  .barTicket {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .statusStrip .statusMeta:last-child {
+    display: none;
+  }
+
+  .heroStats dd {
+    font-size: 1.5rem;
+  }
+
+  .coverage,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .terminal {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+  .office div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  .response thead {
+    display: none;
+  }
+
+  .response,
+  .response tbody,
+  .response tr,
+  .response th,
+  .response td {
+    display: block;
+  }
+
+  .response tr {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .response th,
+  .response td {
+    padding: 0.15rem 0;
+    border: 0;
+  }
+
+  .response tbody th {
+    width: auto;
+  }
+
+  .time::before {
+    content: 'First reply: ';
+    font-weight: 400;
+  }
+
+  .fixed::before {
+    content: 'Fixed by: ';
+  }
+
+  .time,
+  .fixed {
+    white-space: normal;
+  }
+
+  .ticket {
+    grid-template-columns: 3.4rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      'id title title'
+      'pri meta chip';
+    gap: 0.35rem 0.7rem;
+  }
+
+  .ticketClient {
+    grid-area: meta;
+  }
+
+  .chip {
+    justify-self: end;
+  }
+}

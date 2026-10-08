@@ -1,0 +1,879 @@
+/* ==========================================================================
+   ARCH & AISLE - wedding planning studio, Orchard Hill
+   Everything is an arch. The hero is a tall arched window filled with
+   bluff's half-rounds; the planning checklist counts down in months under
+   arched cards; an arcade of windows crosses the page; the three levels of
+   planning stand as three arches with the middle one lit; the day itself is
+   an evening band with its own window. A soft, high-contrast garamond for
+   the headings and a geometric sans for the practical words.
+   ========================================================================== */
+
+.page {
+  --blush: #f7e9df;
+  --plum: #3d1f3a;
+  --terra: #c65b43;
+  --sage: #879a76;
+  --gold: #dba54a;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 76rem;
+  --serif: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  --sans: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+  --round: 100vmax 100vmax 0 0;
+
+  --text: var(--plum);
+  --on-plum: var(--blush);
+  --on-terra: var(--blush);
+
+  /* Derived surfaces and inks. */
+  --muted: color-mix(in oklab, var(--text) 74%, var(--blush));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 42%, transparent);
+  --tint: color-mix(in oklab, var(--blush) 88%, var(--sage));
+  --card: color-mix(in oklab, var(--blush) 93%, var(--gold));
+  --plum-muted: color-mix(in oklab, var(--on-plum) 76%, var(--plum));
+  --plum-rule: color-mix(in oklab, var(--on-plum) 20%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  background: var(--blush);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--blush) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--plum));
+    --on-plum: color-mix(in oklab, oklch(from var(--plum) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--plum));
+    --on-terra: oklch(from var(--terra) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.page :where(p, ul, ol, dl, dd, blockquote) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--blush);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: grid;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.85rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.brandSub {
+  margin-top: 0.15rem;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  padding: 0.25rem 0;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-bottom: 1px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barButton {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--plum);
+  color: var(--on-plum);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--blush);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: end;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4.5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.heroText {
+  padding-bottom: clamp(0rem, 3vw, 2.5rem);
+}
+
+.kicker {
+  margin-bottom: 1.4rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(3.4rem, 7.6vw, 7rem);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: italic;
+  color: var(--terra);
+}
+
+.heroLead {
+  max-width: 34rem;
+  margin-top: 1.8rem;
+  font-size: 1.12rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--plum);
+  color: var(--on-plum);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--plum) 84%, var(--text));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1px var(--text);
+}
+
+.ghost:hover {
+  background: var(--card);
+}
+
+.heroNote {
+  margin-top: 1.6rem;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-style: italic;
+}
+
+.heroArch {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+}
+
+/* The window: a semicircle on a tall rectangle, with a fine double frame. */
+.windowField {
+  position: relative;
+  width: 100%;
+  max-width: 28rem;
+  aspect-ratio: 3 / 4.3;
+  overflow: hidden;
+  border-radius: var(--round);
+  box-shadow:
+    0 0 0 10px var(--blush),
+    0 0 0 11px var(--plum);
+}
+
+.archCaption {
+  margin-top: 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: 2.8rem;
+}
+
+.secTitle {
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+}
+
+.secTitle em {
+  font-style: italic;
+  color: var(--terra);
+}
+
+.secNote {
+  max-width: 34rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- checklist */
+
+.stages {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  padding: 2.4rem 1.1rem 1.4rem;
+  text-align: center;
+  background: var(--blush);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--round);
+}
+
+.stageWhen {
+  font-family: var(--serif);
+  font-size: 4.2rem;
+  font-weight: 500;
+  line-height: 0.9;
+  color: var(--terra);
+}
+
+.stageUnit {
+  margin-top: 0.4rem;
+  padding-bottom: 1rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule);
+}
+
+.tasks {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.tasks li {
+  position: relative;
+  padding-left: 1.5rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+/* A small empty box to tick. */
+.tasks li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.22rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 1.25px solid var(--rule-strong);
+  border-radius: 2px;
+}
+
+/* ----------------------------------------------------------------- arcade */
+
+/* An arcade of windows: the band is masked into arches with a gap between
+   each, so the pattern shows through them like a garden through a loggia. */
+.arcade {
+  --arch: 7.5rem;
+  --gap: 1.4rem;
+  position: relative;
+  height: clamp(12rem, 18vw, 16rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  -webkit-mask:
+    radial-gradient(circle calc(var(--arch) / 2) at 50% calc(var(--arch) / 2), black 98%, transparent 100%) 50% 0 / calc(var(--arch) + var(--gap)) var(--arch) repeat-x,
+    linear-gradient(90deg, transparent calc(var(--gap) / 2), black calc(var(--gap) / 2) calc(var(--arch) + var(--gap) / 2), transparent calc(var(--arch) + var(--gap) / 2)) 50% calc(var(--arch) / 2) / calc(var(--arch) + var(--gap)) 100% repeat-x;
+  mask:
+    radial-gradient(circle calc(var(--arch) / 2) at 50% calc(var(--arch) / 2), black 98%, transparent 100%) 50% 0 / calc(var(--arch) + var(--gap)) var(--arch) repeat-x,
+    linear-gradient(90deg, transparent calc(var(--gap) / 2), black calc(var(--gap) / 2) calc(var(--arch) + var(--gap) / 2), transparent calc(var(--arch) + var(--gap) / 2)) 50% calc(var(--arch) / 2) / calc(var(--arch) + var(--gap)) 100% repeat-x;
+  background: var(--card);
+}
+
+/* ------------------------------------------------------------------ levels */
+
+.levels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.4rem;
+  align-items: stretch;
+}
+
+.level {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  /* The arch is a semicircle as wide as the card, so the first line has
+     to start a quarter of the width down to clear the curve. */
+  padding: max(3.4rem, 23%) clamp(1.4rem, 2.6vw, 2.2rem) 2rem;
+  text-align: center;
+  background: var(--card);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--round);
+}
+
+.levelPick {
+  background: var(--plum);
+  color: var(--on-plum);
+  border-color: var(--plum);
+}
+
+.levelName {
+  font-size: 2rem;
+}
+
+.levelPrice {
+  font-family: var(--serif);
+  font-size: 2.8rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.levelFit {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-style: italic;
+  line-height: 1.35;
+}
+
+.levelItems {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+  padding-top: 1.1rem;
+  text-align: left;
+  border-top: 1px solid var(--rule);
+}
+
+.levelPick .levelItems {
+  border-top-color: var(--plum-rule);
+}
+
+.levelItems li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 0.95rem;
+}
+
+.levelItems li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border: 1.25px solid currentColor;
+  border-radius: 50% 50% 0 0;
+}
+
+.levelsNote {
+  margin-top: 1.6rem;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- day */
+
+.daySec {
+  background: var(--plum);
+  color: var(--on-plum);
+}
+
+.dayInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 3rem 5rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+}
+
+.dayHead {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.dayTitle {
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
+  line-height: 0.98;
+}
+
+.dayTitle em {
+  font-style: italic;
+}
+
+.dayNote {
+  max-width: 28rem;
+  color: var(--plum-muted);
+}
+
+.dayArch {
+  position: relative;
+  width: min(100%, 20rem);
+  aspect-ratio: 3 / 4;
+  margin-top: 1rem;
+  overflow: hidden;
+  border-radius: var(--round);
+  box-shadow:
+    0 0 0 8px var(--plum),
+    0 0 0 9px var(--plum-muted);
+}
+
+.timeline {
+  display: grid;
+  border-top: 1px solid var(--plum-rule);
+}
+
+.slot {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  grid-template-areas:
+    'time what'
+    'time note';
+  gap: 0.1rem 1.6rem;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid var(--plum-rule);
+}
+
+.slotTime {
+  grid-area: time;
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1;
+  font-variant-numeric: lining-nums;
+}
+
+.slotWhat {
+  grid-area: what;
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.slotNote {
+  grid-area: note;
+  font-size: 0.94rem;
+  color: var(--plum-muted);
+}
+
+/* ----------------------------------------------------------------- vendors */
+
+.vendorGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 3rem 5rem;
+  align-items: start;
+}
+
+.vendorGrid .secNote {
+  margin-top: 1.2rem;
+}
+
+.quote {
+  margin-top: 2.2rem;
+  padding: 1.6rem 1.8rem;
+  background: var(--card);
+  border-left: 3px solid var(--terra);
+}
+
+.quote p {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-style: italic;
+  line-height: 1.35;
+}
+
+.quote cite {
+  display: block;
+  margin-top: 0.9rem;
+  font-size: 0.78rem;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.vendors {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--text);
+}
+
+.vendor {
+  display: grid;
+  gap: 0.2rem;
+  align-content: start;
+  padding: 1.1rem 1rem 1.2rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.vendor:nth-child(even) {
+  padding-left: 1.4rem;
+  border-left: 1px solid var(--rule);
+}
+
+.vendor dt {
+  margin-bottom: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.vendor dd {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  line-height: 1.25;
+}
+
+/* ----------------------------------------------------------------- contact */
+
+.contactSec {
+  background: var(--tint);
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 3rem 5rem;
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+}
+
+.contactInfo {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.details {
+  display: grid;
+  margin-top: 0.6rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.details div {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.details dt {
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 0.2rem;
+}
+
+.details dd {
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.details a {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--blush);
+  border-radius: 1.2rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.65rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--rule-strong);
+  border-radius: 0.6rem;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.85rem 1.6rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: var(--terra);
+  color: var(--on-terra);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  background: var(--plum);
+  color: var(--on-plum);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 11rem;
+  gap: 2rem 4rem;
+  align-items: end;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 3rem var(--gut) 0;
+}
+
+.footText {
+  display: grid;
+  gap: 0.5rem;
+  padding-bottom: 3rem;
+  font-size: 0.95rem;
+  color: var(--plum-muted);
+}
+
+.footText a {
+  border-bottom: 1px solid currentColor;
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--on-plum);
+}
+
+.footArch {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: var(--round);
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .stages {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .barButton {
+    justify-self: end;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .secHead,
+  .dayInner,
+  .vendorGrid,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArch {
+    order: -1;
+  }
+
+  .windowField {
+    max-width: 20rem;
+  }
+
+  .levels {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 30rem;
+    margin: 0 auto;
+  }
+
+  .dayArch {
+    width: min(100%, 12rem);
+    margin-top: 0.4rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .barButton {
+    display: none;
+  }
+
+  .stages,
+  .vendors,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .vendor:nth-child(even) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .arcade {
+    --arch: 5rem;
+    --gap: 1rem;
+  }
+
+  .slot {
+    grid-template-columns: 4.2rem minmax(0, 1fr);
+    gap: 0.1rem 1rem;
+  }
+
+  .slotTime {
+    font-size: 1.6rem;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr) 6rem;
+    gap: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .button,
+  .ghost,
+  .nav a {
+    transition: background-color 150ms ease, border-color 150ms ease;
+  }
+}

@@ -1,0 +1,866 @@
+.page {
+  --slate: #1f2d2b;
+  --chalk: #ecebe2;
+  --yellow: #f0cf62;
+  --pink: #ec8f8a;
+  --blue: #8cc3e6;
+
+  --text: var(--chalk);
+  --on-yellow: var(--slate);
+
+  --stix: 'STIX Two Text', 'Cambria', Georgia, serif;
+  --mono: 'IBM Plex Mono', 'Menlo', 'Consolas', monospace;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--slate));
+  --rule: color-mix(in oklab, var(--text) 22%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 45%, transparent);
+  --panel: color-mix(in oklab, var(--slate) 90%, var(--chalk));
+  --dust: color-mix(in oklab, var(--slate) 94%, var(--blue));
+
+  font-family: var(--stix);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  background: var(--slate);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--slate) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--chalk));
+    --on-yellow: oklch(from var(--yellow) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.page :where(h1, h2, h3) {
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.9rem var(--gut);
+  background: var(--slate);
+  border-bottom: 2px dashed var(--rule-strong);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+}
+
+.brandName {
+  font-size: 1.85rem;
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.brandSub {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2.2rem);
+}
+
+.nav a {
+  padding: 0.25rem 0;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  border-bottom: 1.5px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.nav a:last-child {
+  padding: 0.5rem 1rem;
+  background: var(--yellow);
+  color: var(--on-yellow);
+  border: 0;
+  border-radius: 3px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  font-family: var(--mono);
+  --template-menu-bg: var(--slate);
+}
+
+/* --------------------------------------------------------------------- hero
+   Theorem, the start of its proof, and Figure 1 chalked beside it. */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(2rem, 6vw, 5.5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) clamp(3.5rem, 7vw, 5rem);
+}
+
+.label {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  margin-top: 1.1rem;
+  font-size: clamp(2.5rem, 4.4vw, 3.9rem);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+.heroTitle em {
+  display: block;
+  margin-top: 0.2rem;
+  font-style: italic;
+  color: var(--yellow);
+}
+
+.proofMark {
+  margin-top: 1.8rem;
+  font-size: 1.25rem;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.heroLead {
+  max-width: 34rem;
+  margin-top: 0.4rem;
+  font-size: 1.16rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2.2rem;
+}
+
+.button,
+.ghost,
+.submit {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.9rem 1.35rem;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  font-weight: 500;
+  border-radius: 3px;
+}
+
+.button,
+.submit {
+  background: var(--yellow);
+  color: var(--on-yellow);
+  border: 0;
+}
+
+.ghost {
+  border: 1.5px dashed var(--rule-strong);
+}
+
+.button:hover,
+.ghost:hover,
+.submit:hover {
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--yellow) 35%, transparent);
+}
+
+.figure {
+  justify-self: end;
+  width: min(100%, 34rem);
+}
+
+.tiling {
+  position: relative;
+  aspect-ratio: 1;
+  border: 2px solid var(--rule-strong);
+}
+
+.figCaption {
+  margin-top: 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 5.5rem) var(--gut) 0;
+}
+
+.secHead {
+  max-width: 44rem;
+  margin-bottom: 2.4rem;
+}
+
+.secTitle {
+  margin-top: 0.7rem;
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  line-height: 1.12;
+}
+
+.secTitle em {
+  font-style: italic;
+  color: var(--blue);
+}
+
+.secLead {
+  max-width: 38rem;
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- levels */
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.levels {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.levels thead th {
+  padding: 0 1rem 0.7rem 0;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.levels thead th:last-child {
+  text-align: right;
+}
+
+.levels tbody th,
+.levels tbody td {
+  padding: 1rem 1rem 1rem 0;
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: 1.5px dashed var(--rule);
+}
+
+.levels tbody th {
+  font-size: 1.18rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.who {
+  font-family: var(--mono);
+  font-size: 0.84rem;
+  white-space: nowrap;
+  color: var(--muted);
+}
+
+.rate {
+  font-size: 1.4rem;
+  text-align: right;
+}
+
+.levels tbody td.rate {
+  padding-right: 0;
+  text-align: right;
+}
+
+/* ----------------------------------------------------------------- sessions */
+
+.sessions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.3rem;
+}
+
+.session {
+  padding: 1.7rem 1.8rem 1.9rem;
+  border: 1.5px dashed var(--rule-strong);
+  border-radius: 4px;
+}
+
+.caseNo {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.sessionName {
+  margin-top: 0.5rem;
+  font-size: 1.75rem;
+  font-style: italic;
+  line-height: 1.15;
+}
+
+.sessionLength {
+  margin-top: 0.2rem;
+  font-family: var(--mono);
+  font-size: 0.84rem;
+}
+
+.sessionText {
+  margin-top: 0.8rem;
+  font-size: 1.04rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- figure 2 */
+
+.band {
+  margin-top: clamp(4rem, 8vw, 5.5rem);
+}
+
+.bandTiling {
+  position: relative;
+  height: clamp(9rem, 14vw, 12rem);
+  border-block: 2px solid var(--rule-strong);
+}
+
+.bandCaption {
+  max-width: var(--max);
+  margin: 0.8rem auto 0;
+  padding: 0 var(--gut);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- method */
+
+.methodGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 2rem clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.tutor {
+  margin-top: 2.2rem;
+  padding: 1.4rem 1.6rem;
+  background: var(--panel);
+  border-left: 3px solid var(--blue);
+}
+
+.tutorName {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.tutorText {
+  margin-top: 0.3rem;
+  font-size: 1rem;
+}
+
+.proof {
+  width: 100%;
+  border-collapse: collapse;
+  counter-reset: proofstep;
+}
+
+.proof thead th {
+  padding: 0 1rem 0.7rem 0;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.proof thead th + th {
+  padding-left: 1.3rem;
+}
+
+.proof tbody tr {
+  counter-increment: proofstep;
+}
+
+.proof tbody th,
+.proof tbody td {
+  padding: 1.05rem 1rem 1.05rem 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1.5px dashed var(--rule);
+}
+
+.proof tbody th {
+  position: relative;
+  width: 52%;
+  padding-left: 2.2rem;
+  font-size: 1.12rem;
+  font-weight: 400;
+}
+
+.proof tbody th::before {
+  content: counter(proofstep) '.';
+  position: absolute;
+  top: 1.25rem;
+  left: 0;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.proof tbody td {
+  padding-left: 1.3rem;
+  font-style: italic;
+  color: var(--muted);
+  border-left: 1.5px solid var(--rule-strong);
+}
+
+.proof tbody tr:last-child th {
+  font-weight: 600;
+}
+
+.proof tbody tr:last-child th::after {
+  content: '\220E';
+  margin-left: 0.5rem;
+}
+
+/* ---------------------------------------------------------------- corollary */
+
+.freeSec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 5.5rem) var(--gut) 0;
+}
+
+.corollary {
+  position: relative;
+  padding: clamp(2rem, 5vw, 4rem);
+}
+
+.frame {
+  position: absolute;
+  inset: 0;
+}
+
+.corollaryCard {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: clamp(1.8rem, 4vw, 2.8rem) clamp(1.3rem, 4vw, 3rem);
+  text-align: center;
+  background: var(--slate);
+  border: 2px solid var(--rule-strong);
+}
+
+.corollaryTitle {
+  margin-top: 0.8rem;
+  font-size: clamp(2rem, 3.8vw, 3.1rem);
+  line-height: 1.1;
+}
+
+.corollaryTitle em {
+  font-style: italic;
+  color: var(--yellow);
+}
+
+.corollaryText {
+  max-width: 34rem;
+  margin: 1rem 0 1.8rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ remarks */
+
+.remarks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.8rem clamp(2rem, 5vw, 4rem);
+  counter-reset: remark;
+}
+
+.remark {
+  padding-top: 1rem;
+  border-top: 1.5px dashed var(--rule-strong);
+  counter-increment: remark;
+}
+
+.remark dt {
+  font-size: 1.22rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.remark dt::before {
+  content: 'Remark ' counter(remark) '. ';
+  display: block;
+  margin-bottom: 0.3rem;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.remark dd {
+  margin-top: 0.45rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- book */
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 2.5rem clamp(2rem, 6vw, 5rem);
+  align-items: start;
+  padding-bottom: clamp(4rem, 8vw, 5.5rem);
+}
+
+.contact {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 2rem;
+  padding-top: 1.2rem;
+  border-top: 1.5px dashed var(--rule-strong);
+}
+
+.contact div {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.contact dt {
+  padding-top: 0.2rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.qed {
+  margin-top: 2.4rem;
+  font-size: 1.4rem;
+  font-style: italic;
+  text-align: right;
+}
+
+.qed::after {
+  content: '\220E';
+  margin-left: 0.6rem;
+  font-style: normal;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.15rem 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+  background: var(--panel);
+  border: 1.5px dashed var(--rule-strong);
+  border-radius: 4px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label,
+.fieldset legend {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+  font-size: 1.02rem;
+  color: var(--text);
+  background: var(--slate);
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 3px;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.fieldset legend {
+  margin-bottom: 0.5rem;
+  padding: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.pick {
+  position: relative;
+}
+
+.pick input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pick label {
+  display: inline-block;
+  padding: 0.35rem 0.8rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  background: var(--slate);
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.pick input:checked + label {
+  background: var(--yellow);
+  color: var(--on-yellow);
+  border-color: var(--yellow);
+}
+
+.pick input:focus-visible + label {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  border-top: 2px dashed var(--rule-strong);
+}
+
+.footTiling {
+  position: relative;
+  height: 5rem;
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.6rem 2.5rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 2.6rem;
+}
+
+.footName {
+  font-size: 1.25rem;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.footText {
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+.footText a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .methodGrid,
+  .bookGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .figure {
+    justify-self: start;
+  }
+
+  .sessions,
+  .remarks {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .brandSub {
+    display: none;
+  }
+
+  .levels thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .levels,
+  .levels tbody,
+  .levels tr,
+  .levels tbody th,
+  .levels tbody td {
+    display: block;
+  }
+
+  .levels tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.15rem 1rem;
+    padding: 1rem 0;
+    border-bottom: 1.5px dashed var(--rule);
+  }
+
+  .levels tbody th,
+  .levels tbody td {
+    padding: 0;
+    border: 0;
+  }
+
+  .levels tbody th {
+    white-space: normal;
+  }
+
+  .levels tbody td:nth-child(2) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .levels tbody td.who {
+    grid-row: 3;
+  }
+
+  .levels tbody td.rate {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .proof tbody th,
+  .proof tbody td {
+    display: block;
+    width: auto;
+    border-left: 0;
+  }
+
+  .proof tbody th {
+    padding-bottom: 0.2rem;
+    border-bottom: 0;
+  }
+
+  .proof tbody td {
+    padding: 0 0 1rem 2.2rem;
+  }
+
+  .proof thead th + th {
+    display: none;
+  }
+
+  .contact div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

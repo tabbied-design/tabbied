@@ -1,0 +1,1284 @@
+/* ==========================================================================
+   FLAGSTONE & FERN - patios, paths and driveways
+   A garden plan on pale sand. The hero is a drawing at 1:50: the house wall,
+   a patio of crazy paving with its dimensions, the lawn. The surfaces are a
+   merchant's sample board with four stones screwed to it and a spec card
+   under each; prices are a size-by-surface table and a worked receipt; the
+   week on site is five cross-sections, the layers building up day by day.
+   Chunky grotesque for the headings, a public-sign sans for the reading.
+   ========================================================================== */
+
+.page {
+  --sand: #f2ede1; /* role 0: the page ground, and the mortar in the joints */
+  --fern: #24392c;
+  --clay: #bf6440;
+  --ochre: #d6b273;
+  --slate: #66706b;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --display: 'Bricolage Grotesque', 'Arial Black', sans-serif;
+  --sans: 'Public Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--fern);
+  --on-fern: var(--sand);
+  --on-clay: var(--sand);
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--sand));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 42%, transparent);
+  --panel: color-mix(in oklab, var(--sand) 90%, var(--slate));
+  --paper: color-mix(in oklab, var(--sand) 90%, var(--ochre));
+  --fern-muted: color-mix(in oklab, var(--on-fern) 78%, var(--fern));
+  --fern-rule: color-mix(in oklab, var(--on-fern) 22%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--sand);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--sand) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--fern));
+    --on-fern: color-mix(in oklab, oklch(from var(--fern) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--fern));
+    --on-clay: oklch(from var(--clay) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--sand);
+  border-bottom: 2px solid var(--text);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+/* Three broken flags, fitted together. */
+.brandMark {
+  width: 1.9rem;
+  height: 1.9rem;
+  background:
+    conic-gradient(from 20deg at 42% 58%, var(--clay) 0 110deg, var(--ochre) 0 230deg, var(--fern) 0);
+  clip-path: polygon(6% 4%, 96% 10%, 92% 94%, 4% 90%);
+  border-radius: 3px;
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  padding: 0.25rem 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barButton {
+  padding: 0.6rem 1.1rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  background: var(--fern);
+  color: var(--on-fern);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--sand);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.kicker {
+  margin: 0 0 1.3rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(3rem, 6.2vw, 5.8rem);
+  font-weight: 800;
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+}
+
+.heroTitle em {
+  display: block;
+  margin-top: 0.12em;
+  font-style: normal;
+  font-weight: 700;
+  color: var(--clay);
+}
+
+.heroLead {
+  max-width: 33rem;
+  margin: 1.6rem 0 0;
+  font-size: 1.12rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-size: 0.98rem;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--fern);
+  color: var(--on-fern);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--fern) 84%, var(--text));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ghost:hover {
+  background: var(--panel);
+}
+
+.promises {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.6rem;
+  list-style: none;
+  margin: 2.2rem 0 0;
+  padding: 1.1rem 0 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.promises li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+/* A drawn tick, not a glyph. */
+.promises li::before {
+  content: '';
+  position: absolute;
+  left: 0.15rem;
+  top: 0.32rem;
+  width: 0.45rem;
+  height: 0.8rem;
+  border-right: 2.5px solid var(--text);
+  border-bottom: 2.5px solid var(--text);
+  transform: rotate(40deg);
+}
+
+/* The plan: a sheet of squared paper with the house wall across the top,
+   the patio below it, dimension lines, and the lawn. */
+.plan {
+  margin: 0;
+  justify-self: center;
+  width: min(100%, 38rem);
+}
+
+.planTitle {
+  margin: 0 0 0.6rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.planSheet {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  grid-template-rows: auto auto auto auto;
+  padding: 0 1.2rem 1.2rem 0.4rem;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(90deg, color-mix(in oklab, var(--text) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in oklab, var(--text) 7%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+  border: 1.5px solid var(--rule-strong);
+}
+
+.house {
+  grid-column: 2;
+  grid-row: 1;
+  display: block;
+  padding: 0.55rem 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-align: center;
+  text-transform: uppercase;
+  background: var(--fern);
+  color: var(--on-fern);
+}
+
+/* The door: an opening in the house wall, its frame drawn either side. */
+.door {
+  grid-column: 2;
+  grid-row: 1;
+  z-index: 2;
+  justify-self: start;
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  margin-left: 16%;
+  width: 4.4rem;
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: var(--paper);
+  border-inline: 4px solid var(--fern);
+}
+
+.patio {
+  grid-column: 2;
+  grid-row: 2;
+  position: relative;
+  aspect-ratio: 6 / 4.2;
+  overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 100% 64%, 98.5% 76%, 94% 86%, 86% 94%, 76% 98.5%, 64% 100%, 0 100%);
+}
+
+/* Dimension lines: a hairline with end ticks, the figure on a chip of
+   paper in the middle of it. */
+.dimLength {
+  grid-column: 2;
+  grid-row: 3;
+  display: flex;
+  justify-content: center;
+  margin-top: 0.8rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.6;
+  border-inline: 1.5px solid var(--text);
+  background:
+    linear-gradient(var(--paper), var(--paper)) center / 4.2rem 100% no-repeat,
+    linear-gradient(var(--text), var(--text)) center / 100% 1.5px no-repeat;
+}
+
+.dimDepth {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.6;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  border-inline: 1.5px solid var(--text);
+  background:
+    linear-gradient(var(--paper), var(--paper)) center / 100% 4.2rem no-repeat,
+    linear-gradient(var(--text), var(--text)) center / 1.5px 100% no-repeat;
+}
+
+.lawn {
+  grid-column: 2;
+  grid-row: 4;
+  display: block;
+  margin-top: 0.8rem;
+  padding: 0.9rem 0 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-align: center;
+  text-transform: uppercase;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 9px, color-mix(in oklab, var(--fern) 55%, var(--sand)) 9px 11px) top / 100% 0.6rem no-repeat,
+    var(--paper);
+}
+
+.planCaption {
+  margin-top: 0.9rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem 2.5rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 1.3rem;
+  border-bottom: 2px solid var(--text);
+}
+
+.secNo {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 3.4rem;
+  font-weight: 800;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: var(--clay);
+}
+
+.secTitle {
+  font-size: clamp(2.2rem, 4.4vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.secNote {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------- sample board */
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.8rem, 2vw, 1.6rem);
+  padding: clamp(1rem, 2.4vw, 1.8rem);
+  background: var(--fern);
+  color: var(--on-fern);
+  border-radius: 6px;
+}
+
+.sample {
+  margin: 0;
+}
+
+.swatch {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--sand);
+  box-shadow: 0 10px 18px -12px color-mix(in oklab, var(--fern) 70%, var(--text));
+}
+
+/* Four screws hold each sample to the board. */
+.swatch::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  --screw: radial-gradient(circle, var(--sand) 0 3px, var(--fern) 3.5px 5px, transparent 5.5px);
+  background:
+    var(--screw) 0.6rem 0.6rem / 12px 12px no-repeat,
+    var(--screw) calc(100% - 0.6rem) 0.6rem / 12px 12px no-repeat,
+    var(--screw) 0.6rem calc(100% - 0.6rem) / 12px 12px no-repeat,
+    var(--screw) calc(100% - 0.6rem) calc(100% - 0.6rem) / 12px 12px no-repeat;
+}
+
+/* Sandstone flags at random: nine riven slabs on a six-by-six grid. */
+.flags {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-rows: repeat(6, minmax(0, 1fr));
+  gap: 5px;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.flags span {
+  background: var(--ochre);
+  border-radius: 1px;
+}
+
+.flags span:nth-child(1) { grid-area: 1 / 1 / 3 / 4; }
+.flags span:nth-child(2) { grid-area: 1 / 4 / 3 / 6; background: color-mix(in oklab, var(--ochre) 82%, var(--clay)); }
+.flags span:nth-child(3) { grid-area: 1 / 6 / 4 / 7; background: color-mix(in oklab, var(--ochre) 80%, var(--slate)); }
+.flags span:nth-child(4) { grid-area: 3 / 1 / 5 / 3; background: color-mix(in oklab, var(--ochre) 75%, var(--sand)); }
+.flags span:nth-child(5) { grid-area: 3 / 3 / 4 / 6; background: color-mix(in oklab, var(--ochre) 86%, var(--clay)); }
+.flags span:nth-child(6) { grid-area: 4 / 3 / 7 / 5; }
+.flags span:nth-child(7) { grid-area: 4 / 5 / 6 / 7; background: color-mix(in oklab, var(--ochre) 78%, var(--sand)); }
+.flags span:nth-child(8) { grid-area: 5 / 1 / 7 / 3; background: color-mix(in oklab, var(--ochre) 84%, var(--slate)); }
+.flags span:nth-child(9) { grid-area: 6 / 5 / 7 / 7; background: color-mix(in oklab, var(--ochre) 80%, var(--clay)); }
+
+.setts {
+  background: color-mix(in oklab, var(--fern) 70%, var(--slate));
+}
+
+/* Resin bound: stone chips of every color in a clear binder. */
+.resin {
+  background:
+    radial-gradient(circle at 30% 40%, var(--clay) 0 1.6px, transparent 2.2px) 0 0 / 9px 11px,
+    radial-gradient(circle at 60% 70%, var(--slate) 0 1.8px, transparent 2.4px) 3px 5px / 11px 8px,
+    radial-gradient(circle at 50% 50%, var(--fern) 0 1.2px, transparent 1.8px) 5px 2px / 13px 10px,
+    radial-gradient(circle at 40% 60%, var(--sand) 0 1.5px, transparent 2px) 1px 7px / 7px 9px,
+    color-mix(in oklab, var(--ochre) 78%, var(--sand));
+}
+
+.sampleName {
+  margin-top: 0.75rem;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.surfaces {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.8rem, 2vw, 1.6rem);
+  list-style: none;
+  margin: clamp(1rem, 2vw, 1.6rem) 0 0;
+  padding: 0 clamp(1rem, 2.4vw, 1.8rem);
+}
+
+.surface {
+  display: flex;
+  flex-direction: column;
+}
+
+.surfaceLetter {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  margin: 0 0 0.8rem;
+  font-family: var(--display);
+  font-weight: 800;
+  border: 2px solid var(--text);
+  border-radius: 50%;
+}
+
+.surfaceName {
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.surfaceLine {
+  margin: 0.4rem 0 0;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+.rate {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  padding: 0.8rem 0;
+  border-block: 1px solid var(--rule-strong);
+}
+
+.rateFig {
+  font-family: var(--display);
+  font-size: 2.3rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.rateUnit {
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.specs {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.specs div {
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.specs dt {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.specs dd {
+  margin: 0.1rem 0 0;
+}
+
+/* -------------------------------------------------------------------- path
+   A garden path of crazy paving across the page, with ragged edges where
+   the stones meet the lawn. */
+
+.path {
+  position: relative;
+  height: clamp(120px, 13vw, 180px);
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  overflow: hidden;
+  clip-path: polygon(0 10%, 7% 4%, 18% 9%, 31% 1%, 46% 7%, 60% 0, 74% 8%, 87% 2%, 100% 8%, 100% 92%, 90% 98%, 76% 91%, 61% 100%, 45% 93%, 30% 99%, 15% 92%, 0 97%);
+}
+
+/* ------------------------------------------------------------------ prices */
+
+.priceGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.tableWrap {
+  min-width: 0;
+}
+
+.prices {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.prices th,
+.prices td {
+  padding: 1rem 0.7rem;
+  text-align: right;
+  border-bottom: 1px solid var(--rule);
+}
+
+.prices thead th {
+  padding-top: 0;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--text);
+}
+
+.prices thead th:first-child,
+.prices tbody th {
+  padding-left: 0;
+  text-align: left;
+}
+
+.prices tbody th {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.prices tbody tr:hover td,
+.prices tbody tr:hover th {
+  background: var(--panel);
+}
+
+.tableNote {
+  max-width: 40rem;
+  margin: 1.2rem 0 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.receipt {
+  padding: 1.6rem 1.5rem 1.4rem;
+  background: var(--paper);
+  border-top: 6px solid var(--clay);
+  border-bottom: 2px dashed var(--rule-strong);
+}
+
+.receiptHead {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.receiptTitle {
+  margin-top: 0.3rem;
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.receiptLines {
+  list-style: none;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  font-size: 0.92rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.receiptLines li,
+.receiptTotal {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px dotted var(--rule-strong);
+}
+
+.receiptLines li span:last-child,
+.receiptTotal span:last-child {
+  flex: none;
+  text-align: right;
+}
+
+.receiptTotal {
+  margin: 0;
+  padding-top: 0.9rem;
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  border-bottom: 0;
+}
+
+.receiptNote {
+  margin: 0.4rem 0 0;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- the week */
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(0.8rem, 1.6vw, 1.4rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dayCard {
+  display: flex;
+  flex-direction: column;
+}
+
+/* The cross-section: subsoil at the bottom, then base, bed and stone, each
+   shown only once its day has come. */
+.xsec {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 8.5rem;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  background: var(--panel);
+  border-bottom: 3px solid var(--text);
+}
+
+/* The finished level, dashed across every day so the dig reads as a dig. */
+.xsec::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% - 6rem - 3px);
+  border-top: 1.5px dashed var(--rule-strong);
+}
+
+.xsec span {
+  display: block;
+  flex: none;
+  visibility: hidden;
+}
+
+.lStone {
+  height: 1.1rem;
+  background:
+    linear-gradient(90deg, transparent 0 calc(100% - 3px), var(--panel) calc(100% - 3px)) 0 0 / 2.6rem 100%,
+    var(--clay);
+}
+
+.lBed {
+  height: 0.6rem;
+  background: color-mix(in oklab, var(--slate) 45%, var(--sand));
+}
+
+.lBase {
+  height: 1.9rem;
+  background:
+    radial-gradient(circle, var(--slate) 0 2px, transparent 2.5px) 0 0 / 9px 8px,
+    radial-gradient(circle, var(--fern) 0 1.5px, transparent 2px) 4px 4px / 9px 8px,
+    color-mix(in oklab, var(--ochre) 60%, var(--sand));
+}
+
+.lSoil {
+  height: 2.4rem;
+  background:
+    repeating-linear-gradient(135deg, transparent 0 6px, color-mix(in oklab, var(--sand) 30%, transparent) 6px 7.5px),
+    color-mix(in oklab, var(--clay) 45%, var(--fern));
+}
+
+.stage1 .lSoil,
+.stage2 .lSoil,
+.stage2 .lBase,
+.stage3 .xsec span,
+.stage4 .xsec span,
+.stage5 .xsec span {
+  visibility: visible;
+}
+
+/* Wednesday's stone is laid but not pointed: the joints are still open. */
+.stage3 .lStone {
+  background:
+    linear-gradient(90deg, transparent 0 calc(100% - 5px), var(--panel) calc(100% - 5px)) 0 0 / 2.6rem 100%,
+    var(--clay);
+}
+
+/* Thursday adds the step at the edge. */
+.stage4 .xsec::after,
+.stage5 .xsec::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 18%;
+  height: 4.4rem;
+  background: var(--slate);
+  border-left: 3px solid var(--panel);
+}
+
+/* Friday: joints full, flush with the stone. */
+.stage5 .lStone {
+  background:
+    linear-gradient(90deg, transparent 0 calc(100% - 3px), color-mix(in oklab, var(--slate) 45%, var(--sand)) calc(100% - 3px)) 0 0 / 2.6rem 100%,
+    var(--clay);
+}
+
+.dayName {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.dayTitle {
+  margin-top: 0.2rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.dayText {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.6rem;
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--rule);
+  font-size: 0.86rem;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legend li::before {
+  content: '';
+  width: 1.1rem;
+  height: 0.8rem;
+  border-radius: 2px;
+}
+
+.keyStone::before {
+  background: var(--clay);
+}
+
+.keyBed::before {
+  background: color-mix(in oklab, var(--slate) 45%, var(--sand));
+}
+
+.keyBase::before {
+  background: color-mix(in oklab, var(--ochre) 60%, var(--sand));
+}
+
+.keySoil::before {
+  background: color-mix(in oklab, var(--clay) 45%, var(--fern));
+}
+
+/* --------------------------------------------------------------- questions */
+
+.qaGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+  padding-top: 1.6rem;
+  border-top: 2px solid var(--text);
+}
+
+.qaIntro .secTitle {
+  margin-top: 1rem;
+}
+
+.qaIntro .secNote {
+  margin-top: 1rem;
+}
+
+.qa {
+  margin: 0;
+}
+
+.qa div {
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.qa div:first-child {
+  padding-top: 0;
+}
+
+.qa dt {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.qa dd {
+  margin: 0.4rem 0 0;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- visit */
+
+.visit {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--fern);
+  color: var(--on-fern);
+}
+
+.visitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut);
+}
+
+.visitTitle {
+  font-size: clamp(2.3rem, 4.6vw, 3.8rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.visitLead {
+  max-width: 30rem;
+  margin: 1.1rem 0 1.6rem;
+  font-size: 1.05rem;
+  color: var(--fern-muted);
+}
+
+.yard {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.visitLine {
+  margin: 0.7rem 0 0;
+  font-size: 1.08rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.visitLine + .visitLine {
+  margin-top: 0.25rem;
+}
+
+.visitLine a {
+  border-bottom: 1.5px solid var(--fern-rule);
+}
+
+.hours {
+  max-width: 26rem;
+  margin: 1.6rem 0 0;
+  font-size: 0.92rem;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--fern-rule);
+}
+
+.hours dt {
+  font-weight: 600;
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+  color: var(--fern-muted);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--sand);
+  color: var(--text);
+  border-radius: 6px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field label,
+.field legend {
+  padding: 0;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.field input,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.picks input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.picks label {
+  padding: 0.45rem 0.95rem;
+  font-weight: 500;
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.picks input:checked + label {
+  background: var(--fern);
+  color: var(--on-fern);
+  border-color: var(--fern);
+}
+
+.picks input:focus-visible + label {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.9rem 1.5rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--on-fern);
+  background: var(--fern);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--fern) 84%, var(--text));
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  background: var(--fern);
+  color: var(--on-fern);
+}
+
+.footPaving {
+  position: relative;
+  height: 84px;
+  overflow: hidden;
+  background: var(--sand);
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+  font-size: 0.9rem;
+}
+
+.footInner p {
+  margin: 0.35rem 0 0;
+  color: var(--fern-muted);
+}
+
+.footer .footName {
+  margin: 0 0 0.8rem;
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--on-fern);
+}
+
+.footInner a {
+  color: var(--on-fern);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .days {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 2rem;
+  }
+}
+
+@media (max-width: 980px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .priceGrid,
+  .qaGrid,
+  .visitGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secHead {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .secHead .secNote {
+    grid-column: 1 / -1;
+  }
+
+  .board,
+  .surfaces {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .surfaces {
+    row-gap: 2.2rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .barButton {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .days {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .xsec {
+    height: 7rem;
+  }
+
+  .surfaces {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0;
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secNo {
+    font-size: 2.6rem;
+  }
+
+  .prices {
+    font-size: 0.86rem;
+  }
+
+  .prices th,
+  .prices td {
+    padding: 0.8rem 0.3rem;
+  }
+
+  .prices tbody th {
+    font-size: 0.98rem;
+  }
+
+  .prices thead th {
+    letter-spacing: 0.02em;
+  }
+
+  .planSheet {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    padding-right: 0.8rem;
+  }
+
+  .door {
+    width: 3.4rem;
+    font-size: 0.58rem;
+  }
+}

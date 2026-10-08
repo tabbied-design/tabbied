@@ -1,0 +1,1168 @@
+/* ==========================================================================
+   NEXT TURN - career change coaching
+   Asphalt and slate roads on sage country, lane-line yellow and a traffic
+   cone orange. Overpass, drawn from the highway sign alphabet, does all the
+   talking; Overpass Mono is the mile markers. The layout idea is the route
+   map: the hero is a road map running off the page with an exit sign at
+   its corner, the six stages of a change are stops on a road that goes out
+   and comes back, and the interview practice is the drive at night. The
+   racetrack is the roads: the map, a band of traffic and the footer.
+   ========================================================================== */
+
+.page {
+  --sage: #e7ead9;
+  --asphalt: #23292f;
+  --slate: #3e4a63;
+  --lane: #f2c230;
+  --cone: #e06a3a;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --sans: 'Overpass', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'Overpass Mono', 'Courier New', monospace;
+
+  --text: var(--asphalt);
+  --on-asphalt: var(--sage);
+  --on-slate: var(--sage);
+  --on-lane: var(--asphalt);
+  --on-cone: var(--asphalt);
+  --lift: var(--sage);
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  background: var(--sage);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--sage) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--asphalt));
+    --on-asphalt: color-mix(in oklab, oklch(from var(--asphalt) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--asphalt));
+    --on-slate: color-mix(in oklab, oklch(from var(--slate) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--slate));
+    --on-lane: oklch(from var(--lane) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-cone: oklch(from var(--cone) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    /* A card lifted off the ground: the ground mixed away from the text,
+       toward white on a light ground and toward black on a dark one. */
+    --lift: color-mix(in oklab, var(--sage) 58%, oklch(from var(--sage) clamp(0, (l - 0.62) * 1000, 1) 0 0));
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--sage));
+  --rule: color-mix(in oklab, var(--text) 15%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 38%, transparent);
+  --terrain: color-mix(in oklab, var(--sage) 86%, var(--slate));
+  --asphalt-muted: color-mix(in oklab, var(--on-asphalt) 76%, var(--asphalt));
+  --slate-muted: color-mix(in oklab, var(--on-slate) 80%, var(--slate));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--sage);
+  border-bottom: 2px solid var(--text);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* A diamond road sign. */
+.brandSign {
+  width: 1.55rem;
+  height: 1.55rem;
+  margin: 0 0.2rem;
+  background: var(--lane);
+  border: 3px solid var(--asphalt);
+  border-radius: 4px;
+  transform: rotate(45deg);
+}
+
+.brandName {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  padding: 0.25rem 0;
+  font-size: 0.98rem;
+  font-weight: 600;
+  border-bottom: 3px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--lane);
+}
+
+.barCall {
+  padding: 0.55rem 1.1rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  background: var(--lane);
+  color: var(--on-lane);
+  border: 2px solid var(--asphalt);
+  border-radius: 8px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--sage);
+}
+
+/* --------------------------------------------------------------------- hero
+   Text on the left inside the page's measure, the map bleeding off to the
+   right edge of the window. */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  min-height: clamp(38rem, 50vw, 48rem);
+}
+
+.heroText {
+  align-self: center;
+  padding: clamp(3rem, 6vw, 5rem) clamp(2rem, 4vw, 4rem) clamp(3rem, 6vw, 5rem) max(var(--gut), calc((100vw - var(--max)) / 2 + var(--gut)));
+}
+
+.kicker {
+  display: inline-block;
+  margin: 0 0 1.3rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.8rem, 5.4vw, 4.9rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.heroTitle span {
+  color: var(--slate);
+}
+
+.heroLead {
+  max-width: 34rem;
+  margin: 1.5rem 0 0;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.8rem 1.35rem;
+  font-size: 1rem;
+  font-weight: 800;
+  border-radius: 8px;
+}
+
+.button {
+  background: var(--lane);
+  color: var(--on-lane);
+  border: 2px solid var(--asphalt);
+  box-shadow: 4px 4px 0 var(--asphalt);
+}
+
+.button:hover {
+  box-shadow: 2px 2px 0 var(--asphalt);
+}
+
+.ghost {
+  border: 2px solid var(--text);
+}
+
+.ghost:hover {
+  background: var(--lift);
+}
+
+/* The odometer: three readings in mono digits. */
+.odometer {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 34rem;
+  margin: 2.6rem 0 0;
+  border-top: 2px solid var(--text);
+}
+
+.odometer div {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  padding: 0.8rem 1rem 0 0;
+}
+
+.odometer dt {
+  font-size: 0.85rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.odometer dd {
+  margin: 0 0 0.2rem;
+  font-family: var(--mono);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.heroMap {
+  position: relative;
+  min-height: 30rem;
+}
+
+.mapField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--terrain);
+  border-radius: 0 0 0 36px;
+}
+
+/* The exit sign: a slate board with its inset border, the exit tab on top
+   and two posts underneath. */
+.sign {
+  position: absolute;
+  z-index: 2;
+  top: clamp(4.5rem, 8vw, 6.5rem);
+  left: clamp(1.5rem, 4vw, 4rem);
+  min-width: 17rem;
+  padding: 1.5rem 2rem 1.3rem;
+  background: var(--slate);
+  color: var(--on-slate);
+  border-radius: 14px;
+  outline: 3px solid var(--on-slate);
+  outline-offset: -10px;
+  box-shadow: 0 22px 40px -22px color-mix(in oklab, var(--asphalt) 80%, transparent);
+}
+
+.sign::before,
+.sign::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 100%;
+  width: 12px;
+  height: clamp(6rem, 12vw, 11rem);
+  background: var(--asphalt);
+}
+
+.sign::before {
+  left: 24%;
+}
+
+.sign::after {
+  right: 24%;
+}
+
+.signExit {
+  position: absolute;
+  top: -2.2rem;
+  right: 1.4rem;
+  margin: 0;
+  padding: 0.35rem 0.9rem 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--slate);
+  color: var(--on-slate);
+  border-radius: 8px 8px 0 0;
+}
+
+.signName {
+  margin: 0;
+  font-size: clamp(2.2rem, 3.4vw, 3rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.signSub {
+  margin: 0.35rem 0 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.signMiles {
+  margin: 0.9rem 0 0;
+  padding-top: 0.7rem;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-top: 2px solid var(--slate-muted);
+}
+
+/* You are here: a cone-colored pin and its label. */
+.here {
+  position: absolute;
+  z-index: 2;
+  right: clamp(1.5rem, 6vw, 6rem);
+  bottom: clamp(2rem, 5vw, 4rem);
+  margin: 0;
+  padding: 0.5rem 1rem 0.45rem 2.4rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: var(--sage);
+  border: 2px solid var(--asphalt);
+  border-radius: 999px;
+}
+
+.here::before {
+  content: '';
+  position: absolute;
+  left: 0.7rem;
+  top: 50%;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin-top: -0.55rem;
+  border-radius: 50%;
+  background: var(--cone);
+  box-shadow: 0 0 0 3px var(--asphalt);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 8vw, 7rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: 0.9rem clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.secHead .label {
+  grid-column: 1 / -1;
+}
+
+.label {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.label::before {
+  content: '';
+  display: inline-block;
+  width: 1.6rem;
+  height: 4px;
+  margin-right: 0.6rem;
+  vertical-align: middle;
+  background: var(--lane);
+  box-shadow: 0 0 0 1px var(--asphalt);
+}
+
+.secTitle {
+  font-size: clamp(2.3rem, 4.4vw, 3.7rem);
+  line-height: 1.02;
+}
+
+.secNote {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ route
+   The road leaves from the first stop, runs right, turns, and comes back
+   under the second row to the sixth. The first row's cards hang below the
+   road, the second row's stand on it. */
+
+.route {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4.5rem 2.5rem;
+  margin: 0;
+  padding: 0 5rem 0 0;
+  list-style: none;
+}
+
+.route::before,
+.route::after {
+  content: '';
+  position: absolute;
+  border-left: 0;
+}
+
+.route::before {
+  top: calc(1.4rem - 13px);
+  bottom: calc(1.4rem - 13px);
+  left: 1.4rem;
+  right: 0;
+  border: 26px solid var(--asphalt);
+  border-left: 0;
+  border-radius: 0 110px 110px 0;
+}
+
+.route::after {
+  top: calc(1.4rem - 1.5px);
+  bottom: calc(1.4rem - 1.5px);
+  left: 1.4rem;
+  right: 11.5px;
+  border: 3px dashed var(--lane);
+  border-left: 0;
+  border-radius: 0 97px 97px 0;
+}
+
+.stop {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.stop:nth-child(4) {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.stop:nth-child(5) {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.stop:nth-child(6) {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.stop:nth-child(n + 4) {
+  flex-direction: column-reverse;
+}
+
+.stopPin {
+  display: block;
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--asphalt) 0 26%, var(--cone) 28%);
+  box-shadow: 0 0 0 4px var(--asphalt);
+}
+
+.stopCard {
+  flex: 1;
+  padding: 1.4rem 1.5rem 1.5rem;
+  background: var(--lift);
+  border: 2px solid var(--asphalt);
+  border-radius: 14px;
+}
+
+.stopMile {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stopName {
+  margin-top: 0.3rem;
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.stopText {
+  margin: 0.5rem 0 0;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- traffic */
+
+.traffic {
+  position: relative;
+  height: clamp(110px, 12vw, 160px);
+  margin-top: clamp(4.5rem, 8vw, 7rem);
+  overflow: hidden;
+  background: var(--terrain);
+  border-top: 2px solid var(--asphalt);
+  border-bottom: 2px solid var(--asphalt);
+}
+
+/* --------------------------------------------------------------- packages */
+
+.packages {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.4rem;
+  align-items: stretch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.package {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.5rem, 3vw, 2.2rem);
+  background: var(--lift);
+  border: 2px solid var(--asphalt);
+  border-radius: 16px;
+}
+
+.pick {
+  background: var(--slate);
+  color: var(--on-slate);
+  border-color: var(--slate);
+  box-shadow: 6px 6px 0 var(--asphalt);
+}
+
+.packageName {
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.packagePrice {
+  margin: 1rem 0 0;
+  font-family: var(--mono);
+  font-size: clamp(2.4rem, 4vw, 3.2rem);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.packagePer {
+  margin: 0.4rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.packageBest {
+  margin: 1.1rem 0 0;
+  padding-top: 1rem;
+  font-weight: 600;
+  line-height: 1.45;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.packageItems {
+  display: grid;
+  gap: 0.45rem;
+  margin: 1rem 0 1.6rem;
+  padding: 0;
+  list-style: none;
+}
+
+.packageItems li {
+  position: relative;
+  padding-left: 1.6rem;
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.packageItems li::before {
+  content: '\2713';
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: 800;
+}
+
+.packageLink {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 0.6rem 1.1rem;
+  font-weight: 800;
+  border: 2px solid currentColor;
+  border-radius: 8px;
+}
+
+.pick .packagePer {
+  color: var(--slate-muted);
+}
+
+.pick .packageBest {
+  border-top-color: color-mix(in oklab, var(--on-slate) 35%, transparent);
+}
+
+.pick .packageLink {
+  background: var(--lane);
+  color: var(--on-lane);
+  border-color: var(--lane);
+}
+
+/* --------------------------------------------------------------- resumes */
+
+.rewrites {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.rewrite {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 0.6rem 2.5rem;
+  align-items: center;
+  padding: 1.3rem 1.6rem;
+  background: var(--lift);
+  border-radius: 14px;
+}
+
+.before,
+.after {
+  position: relative;
+  margin: 0;
+  padding-top: 1.35rem;
+}
+
+/* Absolutely placed, so the strike through the old line skips its label. */
+.before::before,
+.after::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.before::before {
+  content: 'Before';
+}
+
+.after::before {
+  content: 'After';
+}
+
+.before {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--cone);
+  text-decoration-thickness: 2px;
+}
+
+.after {
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.services {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.4rem;
+  margin: 2.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.services li {
+  display: grid;
+  gap: 0.2rem;
+  padding-top: 1rem;
+  border-top: 4px solid var(--text);
+}
+
+.serviceName {
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.serviceNote {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.servicePrice {
+  margin-top: 0.4rem;
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------ interviews
+   The night drive: asphalt from edge to edge. */
+
+.dark {
+  margin-top: clamp(4.5rem, 8vw, 7rem);
+  background: var(--asphalt);
+  color: var(--on-asphalt);
+}
+
+.darkInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 3rem clamp(2rem, 6vw, 6rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 8vw, 6.5rem) var(--gut);
+}
+
+.darkLabel {
+  margin: 0 0 1rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--asphalt-muted);
+}
+
+.darkTitle {
+  font-size: clamp(2.3rem, 4.2vw, 3.5rem);
+  line-height: 1.04;
+}
+
+.darkNote {
+  margin: 1.3rem 0 0;
+  color: var(--asphalt-muted);
+}
+
+.darkPrice {
+  display: inline-block;
+  margin: 1.8rem 0 0;
+  padding: 0.6rem 1.1rem;
+  font-family: var(--mono);
+  font-size: 1.4rem;
+  font-weight: 600;
+  border: 2px dashed var(--asphalt-muted);
+  border-radius: 10px;
+}
+
+.qTitle {
+  margin-bottom: 0.9rem;
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
+}
+
+.qTitle:not(:first-child) {
+  margin-top: 2.4rem;
+}
+
+.questions {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: q;
+}
+
+.questions li {
+  position: relative;
+  padding: 0.75rem 0 0.75rem 2.8rem;
+  border-top: 1px solid color-mix(in oklab, var(--on-asphalt) 22%, transparent);
+  counter-increment: q;
+}
+
+.questions li::before {
+  content: counter(q, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.8rem;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--asphalt-muted);
+}
+
+.trips {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trips li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid color-mix(in oklab, var(--on-asphalt) 30%, transparent);
+  border-radius: 10px;
+}
+
+.tripFrom {
+  color: var(--asphalt-muted);
+}
+
+.tripTo {
+  font-weight: 800;
+}
+
+.tripTo::before {
+  content: '\2192';
+  margin-right: 0.6rem;
+  font-weight: 400;
+}
+
+.tripTime {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--asphalt-muted);
+}
+
+/* ---------------------------------------------------------------- contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 3rem clamp(2rem, 6vw, 6rem);
+  align-items: start;
+  padding-bottom: clamp(4.5rem, 8vw, 7rem);
+}
+
+.contactGrid .secTitle {
+  margin-top: 1rem;
+}
+
+.contactGrid .secNote {
+  margin-top: 1.2rem;
+}
+
+.coach {
+  margin: 1.6rem 0 0;
+  font-style: italic;
+}
+
+.contactLine {
+  margin: 0.6rem 0 0;
+  font-weight: 800;
+}
+
+.contactLine a {
+  border-bottom: 3px solid var(--lane);
+}
+
+.address {
+  margin: 1rem 0 0;
+  color: var(--muted);
+}
+
+.hours {
+  margin: 1.4rem 0 0;
+}
+
+.hours div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.hours dt {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding-top: 0.15rem;
+}
+
+.hours dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  padding: clamp(1.4rem, 3.5vw, 2.4rem);
+  background: var(--lift);
+  border: 2px solid var(--asphalt);
+  border-radius: 16px;
+  box-shadow: 8px 8px 0 var(--asphalt);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--sage);
+  border: 2px solid var(--rule-strong);
+  border-radius: 8px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.8rem 1.5rem;
+  font: inherit;
+  font-weight: 800;
+  color: var(--on-lane);
+  background: var(--lane);
+  border: 2px solid var(--asphalt);
+  border-radius: 8px;
+  box-shadow: 4px 4px 0 var(--asphalt);
+  cursor: pointer;
+}
+
+.formNote {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--asphalt);
+  color: var(--on-asphalt);
+}
+
+.footField {
+  position: relative;
+  height: clamp(110px, 12vw, 160px);
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  gap: 0.35rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 3rem;
+  font-size: 0.95rem;
+}
+
+.footInner p {
+  margin: 0;
+  color: var(--asphalt-muted);
+}
+
+.footInner a {
+  border-bottom: 1px solid currentColor;
+}
+
+.footInner .footName {
+  margin-bottom: 0.3rem;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--on-asphalt);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1060px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .packages,
+  .services {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .package {
+    max-width: 36rem;
+  }
+}
+
+/* Below this the road runs straight down the left, one stop under the next. */
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroText {
+    padding-left: var(--gut);
+    padding-right: var(--gut);
+  }
+
+  .heroMap {
+    min-height: 26rem;
+    margin: 0 var(--gut);
+  }
+
+  .mapField {
+    border-radius: 24px;
+  }
+
+  .secHead,
+  .darkInner,
+  .contactGrid,
+  .rewrite {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .route {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.6rem;
+    padding: 0;
+  }
+
+  .stop,
+  .stop:nth-child(n + 4) {
+    grid-column: auto;
+    grid-row: auto;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .route::before {
+    top: 0;
+    bottom: 0;
+    left: calc(1.4rem - 13px);
+    right: auto;
+    width: 26px;
+    border: 0;
+    border-radius: 13px;
+    background: var(--asphalt);
+  }
+
+  .route::after {
+    top: 0.8rem;
+    bottom: 0.8rem;
+    left: calc(1.4rem - 1.5px);
+    right: auto;
+    width: 0;
+    border: 0;
+    border-left: 3px dashed var(--lane);
+    border-radius: 0;
+  }
+
+  .stopPin {
+    flex: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .odometer dd {
+    font-size: 1.5rem;
+  }
+
+  .sign {
+    left: 1rem;
+    right: 1rem;
+    min-width: 0;
+  }
+
+  .here {
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+    box-shadow: 5px 5px 0 var(--asphalt);
+  }
+
+  .trips li {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .tripTo {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .tripTime {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+  }
+
+  .hours div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}

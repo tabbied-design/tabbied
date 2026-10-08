@@ -1,0 +1,807 @@
+/* ==========================================================================
+   QUIET HOUR MEDITATION - a small room on Alder Lane
+   Night blue, moonlight, a candle and the dusk between them. Cormorant
+   Garamond, light and wide-set, for the headings; Jost for the timetable
+   and the small print. The layout idea is one focal point: everything sits
+   on a single centre line under a round window of the float, its disc of
+   upright lines hovering over the level ones. The week is a quiet
+   timetable, the course eight phases of a moon, and the free first sit
+   waits by a smaller circle of the same lines.
+   ========================================================================== */
+
+.page {
+  --night: #1c2030;
+  --moon: #ebe5d6;
+  --candle: #d4a05a;
+  --dusk: #5f6f95;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 74rem;
+  --serif: 'Cormorant Garamond', 'Georgia', serif;
+  --sans: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--moon);
+  --on-candle: var(--night);
+  --on-moon: var(--night);
+
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  font-weight: 400;
+  line-height: 1.7;
+  background: var(--night);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--night) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--moon));
+    --on-candle: oklch(from var(--candle) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-moon: color-mix(in oklab, oklch(from var(--moon) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--moon));
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--night));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 34%, transparent);
+  --panel: color-mix(in oklab, var(--night) 90%, var(--dusk));
+  --card: color-mix(in oklab, var(--night) 92%, var(--text));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.page :where(p, ul, ol, dl, dd) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.9rem var(--gut);
+  background: var(--night);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.brandDot {
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  background: var(--candle);
+  box-shadow: 0 0 0 4px var(--night), 0 0 0 5px var(--candle);
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  padding: 0.2rem 0;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barButton {
+  padding: 0.5rem 1.1rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--night);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  justify-items: center;
+  gap: clamp(2rem, 4vw, 3.2rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 4vw, 3.2rem) var(--gut) clamp(4rem, 8vw, 6.5rem);
+  text-align: center;
+}
+
+/* The round window. */
+.halo {
+  position: relative;
+  width: min(28rem, 80vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px var(--rule-strong), 0 0 0 1.2rem var(--night), 0 0 0 calc(1.2rem + 1px) var(--rule);
+}
+
+.heroText {
+  display: grid;
+  justify-items: center;
+  gap: 1.3rem;
+  max-width: 44rem;
+}
+
+.kicker {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.8rem, 5.4vw, 4.6rem);
+  font-weight: 400;
+  line-height: 1.02;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: italic;
+  color: var(--text);
+}
+
+.heroLead {
+  max-width: 36rem;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.8rem 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--candle);
+  color: var(--on-candle);
+}
+
+.ghost {
+  border: 1px solid var(--rule-strong);
+}
+
+/* ------------------------------------------------------------ plain sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.secHead {
+  display: grid;
+  justify-items: center;
+  gap: 0.9rem;
+  max-width: 40rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.secMark {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.secTitle {
+  font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.secNote {
+  font-weight: 300;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ the week */
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  margin-top: 3rem;
+  border-top: 1px solid var(--rule-strong);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.day {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding: 1.2rem 0.9rem 1.6rem;
+}
+
+.day + .day {
+  border-left: 1px solid var(--rule);
+}
+
+.dayName {
+  font-size: 1.35rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.slots {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.slot {
+  display: grid;
+  gap: 0.05rem;
+  padding: 0.75rem 0.8rem;
+  background: var(--card);
+  border-radius: 0.5rem;
+}
+
+.slotTime {
+  font-size: 1.05rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.slotName {
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.slotLength {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.prices {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 52rem;
+  margin: 2.5rem auto 0;
+  text-align: center;
+}
+
+.priceItem {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.priceItem dt {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.priceFig {
+  font-family: var(--serif);
+  font-size: 2.6rem;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.priceNote {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- the course */
+
+.course {
+  background: var(--panel);
+}
+
+.courseInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.courseHead {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 1rem;
+}
+
+.courseFacts {
+  display: grid;
+  gap: 0.6rem;
+  width: 100%;
+  margin: 0.6rem 0 0.8rem;
+}
+
+.courseFacts div {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--rule);
+}
+
+.courseFacts dt {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.weeks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 2.5rem;
+}
+
+.weekItem {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  column-gap: 1rem;
+  align-items: start;
+}
+
+/* Eight phases: the circle fills by an eighth a week. */
+.moon {
+  grid-row: 1 / span 3;
+  width: 2.4rem;
+  height: 2.4rem;
+  margin-top: 0.2rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--moon);
+  background: linear-gradient(90deg, var(--moon) var(--fill), transparent var(--fill));
+}
+
+.w1 { --fill: 12.5%; }
+.w2 { --fill: 25%; }
+.w3 { --fill: 37.5%; }
+.w4 { --fill: 50%; }
+.w5 { --fill: 62.5%; }
+.w6 { --fill: 75%; }
+.w7 { --fill: 87.5%; }
+.w8 { --fill: 100%; }
+
+.weekNo {
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.weekTitle {
+  font-size: 1.55rem;
+  line-height: 1.15;
+}
+
+.weekBody {
+  margin-top: 0.3rem;
+  font-size: 0.94rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- horizon */
+
+.horizon {
+  position: relative;
+  height: clamp(9rem, 18vw, 15rem);
+}
+
+/* ------------------------------------------------------------------ retreats */
+
+.retreats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.retreat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  background: var(--card);
+  border-radius: 1.2rem;
+}
+
+.retreatKind {
+  align-self: flex-start;
+  padding: 0.15rem 0.7rem;
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--moon);
+  color: var(--on-moon);
+  border-radius: 999px;
+}
+
+.retreatTitle {
+  font-size: 1.9rem;
+  line-height: 1.1;
+}
+
+.retreatBody {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: var(--muted);
+}
+
+.retreatFacts {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+}
+
+.retreatFacts div {
+  display: grid;
+  grid-template-columns: 4.2rem minmax(0, 1fr);
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.retreatFacts dt {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 0.1rem;
+}
+
+/* ---------------------------------------------------------------- first sit */
+
+.first {
+  padding: 0 var(--gut);
+}
+
+.firstInner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 3.5rem);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px 2rem 2rem 999px;
+}
+
+.firstCircle {
+  position: relative;
+  width: clamp(12rem, 24vw, 18rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.firstText {
+  display: grid;
+  justify-items: start;
+  gap: 0.9rem;
+}
+
+.firstTitle {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.firstLead {
+  font-weight: 300;
+  color: var(--muted);
+}
+
+.expect {
+  display: grid;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.expect li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.expect li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--candle);
+}
+
+/* -------------------------------------------------------------------- visit */
+
+.visitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.visitInfo {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.address {
+  margin-top: 0.6rem;
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  line-height: 1.2;
+}
+
+.addressNote {
+  font-weight: 300;
+  color: var(--muted);
+}
+
+.hours {
+  display: grid;
+  margin: 0.6rem 0;
+}
+
+.hours div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dt {
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 0.15rem;
+}
+
+.contactLine {
+  font-size: 1.1rem;
+}
+
+.contactLine a {
+  border-bottom: 1px solid var(--candle);
+}
+
+.teacher {
+  margin-top: 0.8rem;
+  padding: 1rem 1.2rem;
+  font-size: 0.92rem;
+  font-weight: 300;
+  background: var(--card);
+  border-radius: 0.8rem;
+}
+
+.form {
+  display: grid;
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--card);
+  border-radius: 1.2rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--night);
+  border: 1px solid var(--rule-strong);
+  border-radius: 0.6rem;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.8rem 1.6rem;
+  font: inherit;
+  font-weight: 500;
+  background: var(--candle);
+  color: var(--on-candle);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.formNote {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- footer */
+
+.footer {
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+  padding: 3rem var(--gut) 3.5rem;
+  text-align: center;
+  border-top: 1px solid var(--rule);
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  line-height: 1.2;
+}
+
+.footText {
+  max-width: 40rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.footText a {
+  border-bottom: 1px solid currentColor;
+}
+
+/* -------------------------------------------------------------- breakpoints */
+
+@media (max-width: 1080px) {
+  .week {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-bottom: 0;
+  }
+
+  .day {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .day + .day {
+    border-left: 0;
+  }
+
+  .retreats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .nav,
+  .barButton {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .courseInner,
+  .visitGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .firstInner {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    border-radius: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .week {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .day {
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    padding: 1rem 0;
+  }
+
+  .dayName {
+    text-align: left;
+    font-size: 1.25rem;
+  }
+
+  .prices {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .weeks {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .halo {
+    box-shadow: 0 0 0 1px var(--rule-strong);
+  }
+}

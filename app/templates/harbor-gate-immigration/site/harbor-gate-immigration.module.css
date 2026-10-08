@@ -1,0 +1,1191 @@
+/* ==========================================================================
+   HARBOR GATE IMMIGRATION LAW - four attorneys, Pier Street
+   The page is a terminal. A departures board lists every route the firm
+   files, with an honest wait and a flat fee; the four practice areas are
+   gates; the languages arrive on an arrivals board; booking is a boarding
+   pass with a stub. Condensed signage type for the board and the headings,
+   a plain sans to read, a mono for the numbers that flip. The globe is the
+   only ornament: in the hero, on the horizon, on the stub and in the foot.
+   ========================================================================== */
+
+.page {
+  --paper: #f2efe6;
+  --navy: #13243f;
+  --amber: #f0b429;
+  --harbor: #2f6f9f;
+  --sky: #9cc3e0;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --sans: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+  --text: var(--navy);
+  --on-navy: var(--paper);
+  --on-amber: var(--navy);
+  --on-harbor: var(--paper);
+
+  /* Derived surfaces and inks. */
+  --muted: color-mix(in oklab, var(--text) 74%, var(--paper));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 42%, transparent);
+  --tint: color-mix(in oklab, var(--paper) 86%, var(--sky));
+  --card: color-mix(in oklab, var(--paper) 94%, var(--sky));
+  --navy-muted: color-mix(in oklab, var(--on-navy) 74%, var(--navy));
+  --navy-rule: color-mix(in oklab, var(--on-navy) 16%, transparent);
+  --tile: color-mix(in oklab, var(--navy) 86%, var(--on-navy));
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--navy));
+    --on-navy: color-mix(in oklab, oklch(from var(--navy) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--navy));
+    --on-amber: oklch(from var(--amber) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-harbor: oklch(from var(--harbor) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 700;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.page :where(p, ul, ol, dl, dd, figure) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem var(--gut);
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: grid;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.brandSub {
+  margin-top: 0.2rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  padding: 0.3rem 0;
+  font-family: var(--display);
+  font-size: 1.08rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barCall {
+  padding: 0.55rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: var(--navy);
+  color: var(--on-navy);
+  border-radius: 4px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--paper);
+  font-family: var(--display);
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.kicker {
+  margin-bottom: 1.2rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(3.4rem, 7.4vw, 6.6rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: normal;
+  color: var(--harbor);
+}
+
+.heroLead {
+  max-width: 35rem;
+  margin-top: 1.6rem;
+  font-size: 1.18rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 4px;
+}
+
+.button {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--navy) 84%, var(--text));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ghost:hover {
+  background: var(--tint);
+}
+
+/* The facts as split flaps: dark tiles, a hinge across the middle. */
+.flaps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.6rem;
+  margin-top: 2.6rem;
+}
+
+.flaps div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.45rem;
+}
+
+.flaps dt {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.flaps dd {
+  position: relative;
+  align-self: flex-start;
+  padding: 0.35rem 0.6rem;
+  font-family: var(--mono);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.08em;
+  background: var(--navy);
+  color: var(--on-navy);
+  border-radius: 4px;
+}
+
+.flaps dd,
+.flap,
+.gateLetter {
+  isolation: isolate;
+}
+
+/* The hinge sits behind the characters, as on a real flap. */
+.flaps dd::after,
+.flap::after,
+.gateLetter::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  top: calc(50% - 1px);
+  height: 2px;
+  background: color-mix(in oklab, var(--navy) 70%, var(--on-navy));
+}
+
+.heroGlobe {
+  position: relative;
+  width: 100%;
+  max-width: 36rem;
+  justify-self: end;
+}
+
+.globeField {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.nowCard {
+  position: absolute;
+  left: -1.5rem;
+  bottom: 1.5rem;
+  display: grid;
+  gap: 0.3rem;
+  max-width: 17rem;
+  padding: 1rem 1.15rem 1.1rem;
+  background: var(--navy);
+  color: var(--on-navy);
+  border-radius: 6px;
+  box-shadow: 0 18px 40px -22px color-mix(in oklab, var(--navy) 80%, transparent);
+}
+
+.nowLabel {
+  justify-self: start;
+  padding: 0.18rem 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--amber);
+  color: var(--on-amber);
+  border-radius: 3px;
+}
+
+.nowRoute {
+  margin-top: 0.3rem;
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.nowMeta {
+  font-size: 0.88rem;
+  color: var(--navy-muted);
+}
+
+/* ---------------------------------------------------------- departures board */
+
+.board {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.boardInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut);
+}
+
+.boardHead {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: end;
+  gap: 0.4rem 1.4rem;
+  margin-bottom: 2.2rem;
+}
+
+.boardTitle {
+  font-size: clamp(3rem, 7vw, 5.6rem);
+  font-weight: 700;
+  line-height: 0.85;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.boardSub {
+  font-family: var(--display);
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--navy-muted);
+}
+
+.boardNote {
+  justify-self: end;
+  max-width: 30rem;
+  font-size: 0.95rem;
+  color: var(--navy-muted);
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+.table th,
+.table td {
+  padding: 0.8rem 0.9rem 0.8rem 0;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--navy-rule);
+}
+
+.table thead th {
+  padding-bottom: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--navy-muted);
+  border-bottom: 2px solid color-mix(in oklab, var(--on-navy) 40%, transparent);
+}
+
+.route {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--navy-muted);
+  white-space: nowrap;
+}
+
+.dest {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.mono {
+  font-family: var(--mono);
+  font-size: 0.88rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.gateCell {
+  width: 4rem;
+}
+
+.flap {
+  position: relative;
+  display: inline-block;
+  min-width: 2.8rem;
+  padding: 0.3rem 0.45rem;
+  font-family: var(--mono);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: center;
+  background: var(--tile);
+  color: var(--on-navy);
+  border-radius: 3px;
+}
+
+.flap::after {
+  background: var(--navy);
+}
+
+.status {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border-radius: 3px;
+}
+
+.boarding {
+  background: var(--amber);
+  color: var(--on-amber);
+}
+
+.ontime {
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--on-navy) 55%, transparent);
+}
+
+.held {
+  background: var(--paper);
+  color: var(--text);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec,
+.secTint {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+}
+
+.secTint {
+  max-width: none;
+  background: var(--tint);
+  padding-left: max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  padding-right: max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: 2.6rem;
+}
+
+.secTitle {
+  font-size: clamp(2.4rem, 4.6vw, 3.8rem);
+  font-weight: 700;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.secNote {
+  max-width: 38rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- gates */
+
+.gates {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.gate {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.4rem 1.3rem 1.5rem;
+  background: var(--card);
+  border-top: 4px solid var(--navy);
+  border-radius: 0 0 6px 6px;
+}
+
+.gateLetter {
+  position: relative;
+  align-self: flex-start;
+  min-width: 3.4rem;
+  padding: 0.2rem 0.6rem;
+  font-family: var(--mono);
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
+  background: var(--navy);
+  color: var(--on-navy);
+  border-radius: 4px;
+}
+
+.gateName {
+  margin-top: 0.3rem;
+  font-size: 1.85rem;
+  text-transform: uppercase;
+}
+
+.gateWho {
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+.steps {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.3rem 0 0.2rem;
+  counter-reset: step;
+}
+
+.steps li {
+  position: relative;
+  padding: 0.45rem 0 0 2rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-top: 1px solid var(--rule);
+  counter-increment: step;
+}
+
+.steps li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.bringLabel {
+  margin-top: auto;
+  padding-top: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.bring {
+  font-size: 0.92rem;
+  font-style: italic;
+}
+
+/* ------------------------------------------------------------- horizon band */
+
+.horizon {
+  position: relative;
+  height: clamp(14rem, 26vw, 22rem);
+  overflow: hidden;
+  background: var(--tint);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* ---------------------------------------------------------------- languages */
+
+.langGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 2.5rem 4rem;
+  align-items: start;
+}
+
+.langGrid .secNote {
+  margin-top: 1.2rem;
+}
+
+.langs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 2px solid var(--text);
+}
+
+.lang {
+  display: grid;
+  grid-template-columns: minmax(7rem, auto) minmax(0, 1fr);
+  grid-template-areas:
+    'hello name'
+    'hello who';
+  align-items: baseline;
+  gap: 0 1rem;
+  padding: 0.9rem 1rem 0.9rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.lang:nth-child(odd) {
+  border-right: 1px solid var(--rule);
+}
+
+.lang:nth-child(even) {
+  padding-left: 1.2rem;
+}
+
+.hello {
+  grid-area: hello;
+  align-self: center;
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.langName {
+  grid-area: name;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.langWho {
+  grid-area: who;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- attorneys */
+
+.attorneys {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.attorney {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.4rem;
+  background: var(--paper);
+  border-radius: 6px;
+}
+
+.mono2 {
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  margin-bottom: 0.4rem;
+  font-family: var(--display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: var(--harbor);
+  color: var(--on-harbor);
+  border-radius: 50%;
+}
+
+.attName {
+  font-size: 1.6rem;
+  text-transform: uppercase;
+}
+
+.attRole {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.attFocus {
+  font-size: 0.95rem;
+}
+
+.attFacts {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: auto;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule);
+}
+
+.attFacts div {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 0.5rem;
+  font-size: 0.88rem;
+}
+
+.attFacts dt {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ boarding pass */
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.pass {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 13rem;
+  background: var(--card);
+  border: 1.5px solid var(--text);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+  padding: 1.6rem 1.8rem 1.8rem;
+}
+
+.passHead {
+  grid-column: 1 / -1;
+  padding-bottom: 0.7rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px dashed var(--rule-strong);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.7rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.85rem 1.4rem;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--navy);
+  color: var(--on-navy);
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.formNote {
+  align-self: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.stub {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(12rem, 1fr);
+  border-left: 2px dashed var(--rule-strong);
+}
+
+.stubText {
+  display: grid;
+  gap: 0.1rem;
+  padding: 1.6rem 1.3rem 1.2rem;
+  background: var(--card);
+}
+
+.stubLabel {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stubBig {
+  margin-bottom: 0.6rem;
+  font-family: var(--display);
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stubGlobe {
+  position: relative;
+  overflow: hidden;
+}
+
+.visit {
+  display: grid;
+  gap: 0.6rem;
+  padding-top: 0.4rem;
+}
+
+.visitTitle {
+  font-size: 1.9rem;
+  text-transform: uppercase;
+}
+
+.address {
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.addressNote {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.hours {
+  display: grid;
+  margin: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dt {
+  font-weight: 500;
+}
+
+.hours dd {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  text-align: right;
+}
+
+.contact a {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 15rem;
+  gap: 2rem 4rem;
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 3rem var(--gut);
+}
+
+.footText {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 40rem;
+  font-size: 0.95rem;
+  color: var(--navy-muted);
+}
+
+.footText a {
+  border-bottom: 1px solid currentColor;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--on-navy);
+}
+
+.footGlobe {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .gates,
+  .attorneys {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bookGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .langGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 940px) {
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .barCall {
+    justify-self: end;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroGlobe {
+    justify-self: center;
+    max-width: 30rem;
+  }
+
+  .nowCard {
+    left: 0;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .boardHead {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .boardNote {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  /* The board becomes one card per route. */
+  .table thead {
+    display: none;
+  }
+
+  .table,
+  .table tbody,
+  .table tr {
+    display: block;
+  }
+
+  .table tr {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    gap: 0.4rem 1.2rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--navy-rule);
+  }
+
+  .table th,
+  .table td {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+
+  .table .route {
+    grid-column: 1 / 3;
+    grid-row: 1;
+  }
+
+  .table .dest {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .table .gateCell {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+    width: auto;
+  }
+
+  .table .mono {
+    grid-row: 3;
+    font-size: 0.8rem;
+  }
+
+  .table td:last-child {
+    grid-column: 1 / -1;
+    grid-row: 4;
+  }
+}
+
+@media (max-width: 640px) {
+  .barCall {
+    display: none;
+  }
+
+  .gates,
+  .attorneys,
+  .langs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lang:nth-child(odd) {
+    border-right: 0;
+  }
+
+  .lang:nth-child(even) {
+    padding-left: 0;
+  }
+
+  .pass {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 1.3rem;
+  }
+
+  .stub {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: none;
+    border-left: 0;
+    border-top: 2px dashed var(--rule-strong);
+  }
+
+  .stubGlobe {
+    min-height: 10rem;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footGlobe {
+    max-width: 12rem;
+  }
+
+  .nowCard {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    max-width: none;
+    margin-top: -2rem;
+  }
+
+  .flaps {
+    gap: 1.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .button,
+  .ghost,
+  .nav a {
+    transition: background-color 150ms ease, border-color 150ms ease;
+  }
+}

@@ -1,0 +1,1354 @@
+.page {
+  --paper: #eaf0e8;
+  --ink: #18302a;
+  --ledger: #2f5f9e;
+  --minus: #b2483a;
+  --mint: #8cb8a0;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, 'Courier New', monospace;
+
+  --text: var(--ink);
+  --on-ink: var(--paper);
+  --on-ledger: var(--paper);
+  --on-minus: var(--paper);
+  --on-mint: var(--ink);
+  --sheet: var(--paper);
+
+  --muted: color-mix(in oklab, var(--text) 72%, var(--paper));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 50%, transparent);
+  --tint: color-mix(in oklab, var(--paper) 84%, var(--mint));
+  --ink-muted: color-mix(in oklab, var(--on-ink) 80%, var(--ink));
+  --ink-rule: color-mix(in oklab, var(--on-ink) 22%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Black or white by the surface's lightness, tinted toward its ink, so the
+   copy reads on whatever ground a palette brings. The sheet is the paper
+   pushed further from the middle: whiter on a light ground, deeper on a
+   dark one, the way a stub sits on its check. */
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--ink));
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--ink));
+    --on-ledger: oklch(from var(--ledger) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-minus: oklch(from var(--minus) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-mint: oklch(from var(--mint) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --sheet: color-mix(in oklab, var(--paper) 45%, oklch(from var(--paper) clamp(0, (l - 0.62) * 1000, 1) 0 0));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, h4) {
+  margin: 0;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem var(--gut);
+  background: var(--paper);
+  border-bottom: 3px double var(--rule-strong);
+}
+
+.brand {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 0.65rem;
+  align-items: center;
+  line-height: 1;
+}
+
+/* The plumb bob: a string and a weight. */
+.bob {
+  grid-row: span 2;
+  position: relative;
+  width: 16px;
+  height: 30px;
+}
+
+.bob::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 0;
+  width: 2px;
+  height: 12px;
+  background: var(--text);
+}
+
+.bob::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 16px;
+  height: 19px;
+  background: var(--ledger);
+  clip-path: polygon(0 0, 100% 0, 100% 30%, 50% 100%, 0 30%);
+}
+
+.brandName {
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.brandSub {
+  margin-top: 0.2rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.9rem, 1.8vw, 1.8rem);
+}
+
+.nav a {
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.25rem 0;
+  border-bottom: 1.5px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barCall {
+  padding: 0.5rem 0.95rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--ink);
+  color: var(--on-ink);
+  border-radius: 3px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--paper);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  min-height: min(56rem, calc(100vh - 4rem));
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(3rem, 7vw, 6rem) clamp(1.5rem, 4vw, 4rem) clamp(3rem, 6vw, 5rem) max(var(--gut), calc((100vw - var(--max)) / 2 + var(--gut)));
+}
+
+.kicker {
+  margin: 0 0 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.9rem, 5.6vw, 5.4rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.heroLead {
+  max-width: 33rem;
+  margin: 1.6rem 0 0;
+  font-size: 1.12rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.35rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 3px;
+}
+
+.button {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--ink) 84%, var(--text));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1.5px var(--text);
+}
+
+.ghost:hover {
+  background: var(--tint);
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 33rem;
+  margin: 2.6rem 0 0;
+}
+
+.heroFacts div {
+  display: flex;
+  flex-direction: column-reverse;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.heroFacts dt {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+/* The security print, edge to edge, with the stub laid on it. */
+.heroArt {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: clamp(2.5rem, 5vw, 4.5rem) clamp(1.5rem, 4vw, 4rem);
+  border-left: 1px solid var(--rule-strong);
+}
+
+.heroField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.stub {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 29rem);
+  margin: 0;
+  padding: 1.5rem 1.4rem 1.2rem;
+  background: var(--sheet);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  box-shadow: 0 1px 0 var(--rule), 0 22px 46px -26px color-mix(in oklab, var(--ink) 70%, transparent);
+  transform: rotate(-1.5deg);
+  /* A torn perforation along the top edge. */
+  -webkit-mask: radial-gradient(circle 5px at 50% 0, transparent 96%, black) 0 0 / 16px 100% repeat-x;
+  mask: radial-gradient(circle 5px at 50% 0, transparent 96%, black) 0 0 / 16px 100% repeat-x;
+}
+
+.stubHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0.2rem 0 0;
+  padding: 0.55rem 0.7rem;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.stubMeta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.stubMeta div {
+  padding: 0.6rem 0.7rem;
+}
+
+.stubMeta div + div {
+  border-left: 1px solid var(--rule);
+}
+
+.stubMeta dt {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stubMeta dd {
+  margin: 0.1rem 0 0;
+  font-weight: 600;
+}
+
+.stubTable {
+  width: 100%;
+  margin-top: 0.4rem;
+  border-collapse: collapse;
+}
+
+.stubTable th,
+.stubTable td {
+  padding: 0.3rem 0.7rem;
+  text-align: right;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.stubTable th:first-child {
+  text-align: left;
+  white-space: normal;
+}
+
+.stubTable thead th {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule);
+}
+
+.stubSplit th {
+  padding-top: 0.75rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule);
+}
+
+.minus {
+  font-weight: 500;
+}
+
+.net {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin: 0.8rem 0 0;
+  padding: 0.7rem 0.7rem 0;
+  border-top: 3px double var(--text);
+}
+
+.net span {
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.net strong {
+  font-family: var(--sans);
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.stubCaption {
+  margin-top: 0.6rem;
+  padding: 0 0.7rem;
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 0.6rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 1.3rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.secCode {
+  grid-column: 1 / -1;
+  margin: 0 0 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.secTitle {
+  font-size: clamp(2rem, 3.8vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+}
+
+.secNote {
+  margin: 0;
+  font-size: 1.02rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------- earnings / deductions */
+
+.ledger {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  background: var(--sheet);
+  border: 1.5px solid var(--text);
+}
+
+.ledgerCol + .ledgerCol {
+  border-left: 1.5px solid var(--text);
+}
+
+.ledgerHead {
+  padding: 0.75rem 1.2rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid var(--text);
+}
+
+.lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.line {
+  display: grid;
+  grid-template-columns: 3.4rem minmax(0, 1fr) auto;
+  grid-template-areas:
+    'code body when'
+    'code body price';
+  gap: 0.15rem 1rem;
+  padding: 1rem 1.2rem;
+  border-top: 1px dashed var(--rule-strong);
+}
+
+.line:first-child {
+  border-top: 0;
+}
+
+.code {
+  grid-area: code;
+  align-self: start;
+  padding: 0.25rem 0;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: center;
+  border: 1.5px solid var(--ledger);
+  border-radius: 2px;
+}
+
+.codeMinus {
+  border-color: var(--minus);
+}
+
+.lineBody {
+  grid-area: body;
+}
+
+.lineName {
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.lineWhat {
+  margin: 0.25rem 0 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.lineWhen {
+  grid-area: when;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  text-align: right;
+  color: var(--muted);
+}
+
+.linePrice {
+  grid-area: price;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.netRow {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem 2.5rem;
+  align-items: baseline;
+  padding: 1.3rem 1.2rem;
+  background: var(--ledger);
+  color: var(--on-ledger);
+}
+
+.netLabel {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.netValue {
+  margin: 0;
+  font-size: clamp(1.3rem, 2.2vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+/* --------------------------------------------------------------- perforation */
+
+.perforation {
+  position: relative;
+  height: clamp(88px, 9vw, 128px);
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  border-top: 2px dashed var(--rule-strong);
+  border-bottom: 2px dashed var(--rule-strong);
+}
+
+.perforation::after {
+  content: '\2702';
+  position: absolute;
+  z-index: 1;
+  top: -0.85rem;
+  left: var(--gut);
+  padding: 0 0.4rem;
+  font-size: 1.3rem;
+  line-height: 1.2;
+  background: var(--paper);
+  color: var(--text);
+}
+
+/* ------------------------------------------------------------------ calendar */
+
+.calendar {
+  padding: clamp(4rem, 8vw, 6rem) var(--gut);
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.calendarInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 2.2fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.calendar .secCode,
+.calNote {
+  color: var(--ink-muted);
+}
+
+.calNote {
+  margin: 1rem 0 0;
+  font-size: 1rem;
+}
+
+.legend {
+  display: grid;
+  gap: 0.7rem;
+  list-style: none;
+  margin: 1.8rem 0 0;
+  padding: 0;
+  font-size: 0.9rem;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.dot {
+  flex: none;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.months {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.2rem, 2.5vw, 2rem);
+}
+
+.monthName {
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--ink-rule);
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.2rem;
+}
+
+.weekday {
+  padding-bottom: 0.3rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-align: center;
+  color: var(--ink-muted);
+}
+
+.day,
+.blank {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+.day.pay,
+.dot.pay {
+  background: var(--mint);
+  color: var(--on-mint);
+  font-weight: 600;
+  border-radius: 50%;
+}
+
+.day.cutoff,
+.dot.cutoff {
+  box-shadow: inset 0 0 0 1.5px var(--on-ink);
+  border-radius: 50%;
+}
+
+.day.file,
+.dot.file {
+  background: var(--paper);
+  color: var(--text);
+  font-weight: 600;
+  border-radius: 2px;
+}
+
+.day.closed {
+  color: var(--ink-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+}
+
+.monthNotes {
+  display: grid;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0.8rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: var(--ink-muted);
+  border-top: 1px dashed var(--ink-rule);
+}
+
+.dot.closed {
+  background: linear-gradient(135deg, transparent 44%, var(--on-ink) 44% 56%, transparent 56%);
+}
+
+.run {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem;
+  list-style: none;
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: clamp(3rem, 6vw, 4.5rem) auto 0;
+  padding: 0;
+}
+
+.runStep {
+  padding-top: 1rem;
+  border-top: 1.5px solid var(--ink-rule);
+}
+
+.runWhen {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.runWhat {
+  margin-top: 0.35rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.runDetail {
+  margin: 0.35rem 0 0;
+  font-size: 0.92rem;
+  color: var(--ink-muted);
+}
+
+/* ------------------------------------------------------------------- pricing */
+
+.pricing {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.2rem);
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.plan {
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.5rem 1.5rem;
+  background: var(--sheet);
+  border: 1.5px solid var(--text);
+}
+
+.planPick {
+  background: var(--ink);
+  color: var(--on-ink);
+  border-color: var(--ink);
+}
+
+.planName {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.planPrice {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 1.1rem 0 0;
+}
+
+.planPer {
+  font-size: 3.6rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.planUnit {
+  max-width: 7rem;
+  font-size: 0.86rem;
+  line-height: 1.25;
+}
+
+.planBase {
+  margin: 0.5rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  font-weight: 500;
+}
+
+.planLine {
+  margin: 1rem 0 0;
+  padding-top: 0.9rem;
+  font-size: 0.95rem;
+  border-top: 1px solid currentColor;
+}
+
+.matrixWrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  background: var(--sheet);
+  border: 1.5px solid var(--text);
+}
+
+.matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+}
+
+.matrixCaption {
+  padding: 0.85rem 1.2rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-align: left;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid var(--text);
+}
+
+.matrix th,
+.matrix td {
+  padding: 0.75rem 1.2rem;
+  text-align: right;
+  border-bottom: 1px dashed var(--rule-strong);
+}
+
+.matrix thead th {
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.matrix th:first-child {
+  text-align: left;
+}
+
+.matrix tbody tr:last-child th,
+.matrix tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.matrix tbody th {
+  font-weight: 600;
+}
+
+.matrixField {
+  position: relative;
+  min-height: 15rem;
+  overflow: hidden;
+  border-left: 1.5px solid var(--text);
+}
+
+/* ------------------------------------------------------------------ switching */
+
+.switchGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.switchGrid .secNote {
+  margin-top: 1rem;
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  column-gap: 1rem;
+  padding: 1.2rem 0;
+  border-top: 1px dashed var(--rule-strong);
+}
+
+.step:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.stepNo {
+  grid-row: span 2;
+  font-family: var(--mono);
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.stepTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.stepText {
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- HR desk */
+
+.hrPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  padding: clamp(1.8rem, 4vw, 3rem);
+  background: var(--tint);
+  border-left: 6px solid var(--ledger);
+}
+
+.hrNote {
+  margin: 1rem 0 0;
+  color: var(--muted);
+}
+
+.desk {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.4rem 2rem;
+  margin: 0;
+}
+
+.deskItem {
+  padding-top: 0.8rem;
+  border-top: 1.5px solid var(--text);
+}
+
+.deskItem dt {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.deskItem dd {
+  margin: 0.25rem 0 0;
+  font-size: 0.93rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.contactGrid .secNote {
+  margin-top: 1rem;
+}
+
+.office {
+  margin: 2rem 0 0;
+  font-size: 0.95rem;
+}
+
+.office div {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-top: 1px dashed var(--rule-strong);
+}
+
+.office dt {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.office dd {
+  margin: 0;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.office a {
+  border-bottom: 1.5px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  padding: 0 clamp(1.2rem, 3vw, 2rem) clamp(1.4rem, 3vw, 2rem);
+  background: var(--sheet);
+  border: 1.5px solid var(--text);
+}
+
+.formHead {
+  grid-column: 1 / -1;
+  margin: 0 calc(-1 * clamp(1.2rem, 3vw, 2rem)) 0.3rem;
+  padding: 0.7rem clamp(1.2rem, 3vw, 2rem);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid var(--text);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field label,
+.field legend {
+  padding: 0;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.65rem 0.75rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--paper);
+  border: 0;
+  border-bottom: 1.5px solid var(--text);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+
+.picks input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.picks label {
+  padding: 0.45rem 0.85rem;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  letter-spacing: 0;
+  text-transform: none;
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.picks input:checked + label {
+  background: var(--ink);
+  color: var(--on-ink);
+  border-color: var(--ink);
+}
+
+.picks input:focus-visible + label {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--on-ink);
+  background: var(--ink);
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--ink) 84%, var(--text));
+}
+
+/* -------------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.footField {
+  position: relative;
+  height: 84px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--ink-rule);
+}
+
+.footInner {
+  display: grid;
+  gap: 0.35rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+  font-size: 0.88rem;
+}
+
+.footName {
+  margin: 0 0 0.5rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.footLine {
+  max-width: 44rem;
+  margin: 0;
+  color: var(--ink-muted);
+}
+
+.footLine a {
+  color: var(--on-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .months {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .run {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1060px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .heroText {
+    padding: clamp(2.5rem, 7vw, 4rem) var(--gut);
+  }
+
+  .heroArt {
+    border-left: 0;
+    border-top: 1px solid var(--rule-strong);
+  }
+
+  .secHead,
+  .calendarInner,
+  .switchGrid,
+  .hrPanel,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ledger {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ledgerCol + .ledgerCol {
+    border-left: 0;
+    border-top: 1.5px solid var(--text);
+  }
+
+  .plans {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .matrixWrap {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .matrixField {
+    min-height: 7rem;
+    border-left: 0;
+    border-top: 1.5px solid var(--text);
+  }
+}
+
+@media (max-width: 720px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .stub {
+    transform: none;
+    font-size: 0.76rem;
+  }
+
+  .stubTable th,
+  .stubTable td {
+    padding: 0.28rem 0.4rem;
+  }
+
+  .net strong {
+    font-size: 1.5rem;
+  }
+
+  .heroFacts dd {
+    font-size: 1.55rem;
+  }
+
+  .line {
+    grid-template-columns: 3rem minmax(0, 1fr);
+    grid-template-areas:
+      'code body'
+      'code when'
+      'code price';
+  }
+
+  .lineWhen,
+  .linePrice {
+    text-align: left;
+  }
+
+  .netRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .months,
+  .run,
+  .desk,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .month {
+    max-width: 22rem;
+  }
+
+  .matrix {
+    font-size: 0.8rem;
+  }
+
+  .matrix th,
+  .matrix td {
+    padding: 0.65rem 0.5rem;
+  }
+
+  .office div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}

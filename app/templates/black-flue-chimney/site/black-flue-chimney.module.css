@@ -1,0 +1,1419 @@
+/* ==========================================================================
+   BLACK FLUE CHIMNEY SWEEPS - Kiln Lane, Harrow Mill
+   A sweep's certificate on a sooty ground. The hero is the certificate
+   itself, a cream sheet laid on a frame of hit-and-miss brickwork. The
+   inspection levels are drawn as a chimney in section, the masonry built
+   from the same brick screen, with callouts saying which level reaches each
+   part. The year is a booking calendar of bars, a row of stacks stands over
+   the safety checklist, and the footer is one last course of brick. Zilla
+   Slab for the signwriting, Barlow for reading, Barlow Condensed for labels.
+   ========================================================================== */
+
+.page {
+  --soot: #1d1a18;
+  --bone: #efe5d3;
+  --brick: #b4482f;
+  --ember: #e3934a;
+  --rust: #7e3424;
+  --sand: #d9b48a;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --slab: 'Zilla Slab', 'Rockwell', Georgia, serif;
+  --sans: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+  --cond: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+
+  /* Plain fallbacks; the block below derives them from the surfaces. */
+  --text: var(--bone);
+  --on-bone: var(--soot);
+  --on-brick: var(--bone);
+  --on-ember: var(--soot);
+
+  --muted: color-mix(in oklab, var(--text) 76%, var(--soot));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 40%, transparent);
+  --panel: color-mix(in oklab, var(--soot) 91%, var(--bone));
+  --bone-muted: color-mix(in oklab, var(--on-bone) 76%, var(--bone));
+  --bone-rule: color-mix(in oklab, var(--on-bone) 24%, transparent);
+  --field: color-mix(in oklab, var(--bone) 92%, var(--on-bone));
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  background: var(--soot);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* White or black by the lightness of each surface, tinted toward the
+       ink that would sit on it, so the copy reads on any ground. */
+    --text: color-mix(in oklab, oklch(from var(--soot) clamp(0, (0.62 - l) * 1000, 1) 0 0) 82%, var(--bone));
+    --on-bone: color-mix(in oklab, oklch(from var(--bone) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--soot));
+    --on-brick: oklch(from var(--brick) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-ember: oklch(from var(--ember) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--slab);
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--soot);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  display: grid;
+  line-height: 1;
+}
+
+.markName {
+  font-family: var(--slab);
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.markSub {
+  margin-top: 0.25rem;
+  font-family: var(--cond);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.25rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barCall {
+  padding: 0.55rem 1rem;
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: var(--brick);
+  color: var(--on-brick);
+  border-radius: 3px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--soot);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gut) clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.kicker {
+  margin: 0 0 1rem;
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.9rem, 5.6vw, 5rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--ember);
+}
+
+.heroLead {
+  max-width: 34rem;
+  margin: 1.5rem 0 0;
+  font-size: 1.18rem;
+  line-height: 1.6;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-family: var(--cond);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 3px;
+}
+
+.button {
+  background: var(--brick);
+  color: var(--on-brick);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--brick) 85%, var(--text));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 2px var(--rule-strong);
+}
+
+.ghost:hover {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 34rem;
+  margin: 2.6rem 0 0;
+}
+
+.heroFacts div {
+  display: flex;
+  flex-direction: column-reverse;
+  padding-top: 0.7rem;
+  border-top: 2px solid var(--rule-strong);
+}
+
+.heroFacts dt {
+  font-family: var(--cond);
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  margin: 0;
+  font-family: var(--slab);
+  font-size: 2.3rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+/* The certificate, laid on a frame of brick screen. */
+.certFrame {
+  position: relative;
+  padding: clamp(1.6rem, 3.5vw, 2.8rem);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.certBricks {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.cert {
+  position: relative;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--bone);
+  color: var(--on-bone);
+  border-radius: 2px;
+  transform: rotate(-1.2deg);
+  box-shadow:
+    inset 0 0 0 6px var(--bone),
+    inset 0 0 0 7px var(--bone-rule),
+    inset 0 0 0 10px var(--bone),
+    inset 0 0 0 11px var(--bone-rule),
+    0 18px 30px -18px var(--soot);
+}
+
+.certNo {
+  margin: 0;
+  font-family: var(--cond);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--bone-muted);
+}
+
+.certTitle {
+  margin: 0.6rem 0 0;
+  font-family: var(--slab);
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.certIntro {
+  max-width: 26rem;
+  margin: 0.7rem auto 1.3rem;
+  font-size: 0.95rem;
+  text-align: center;
+  color: var(--bone-muted);
+}
+
+.certRows {
+  margin: 0;
+}
+
+.certRows div {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--bone-rule);
+}
+
+.certRows dt {
+  font-family: var(--cond);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bone-muted);
+}
+
+.certRows dd {
+  margin: 0;
+  font-family: var(--slab);
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.certFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+.certSign {
+  margin: 0;
+  padding-top: 0.4rem;
+  min-width: 12rem;
+  font-family: var(--slab);
+  font-size: 1.1rem;
+  font-style: italic;
+  border-top: 1px solid var(--on-bone);
+}
+
+.certStamp {
+  display: grid;
+  place-items: center;
+  flex: none;
+  box-sizing: border-box;
+  width: 6.2rem;
+  height: 6.2rem;
+  padding: 0.9rem;
+  margin: -0.5rem 0 -0.5rem;
+  font-family: var(--cond);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: 0.1em;
+  text-align: center;
+  text-transform: uppercase;
+  background: var(--brick);
+  color: var(--on-brick);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 4px var(--brick), inset 0 0 0 5.5px var(--on-brick);
+  transform: rotate(-14deg);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: 0.6rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 1.4rem;
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.secHead .kicker {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.secTitle {
+  font-size: clamp(2.1rem, 4vw, 3.3rem);
+  line-height: 1.05;
+}
+
+.secNote {
+  max-width: 34rem;
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- levels */
+
+.levels,
+.seasons,
+.safety {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut) 0;
+}
+
+.levelsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.section {
+  position: sticky;
+  top: 6.5rem;
+  margin: 0;
+}
+
+/* The chimney in section: masonry of brick screen, the flue and firebox
+   cut out of it in soot, a sand hearth, and leaders out to the labels. */
+.chimney {
+  position: relative;
+  width: min(100%, 33rem);
+  height: 41rem;
+}
+
+.masonry,
+.flue {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 1.4rem;
+  width: 17rem;
+}
+
+.masonry {
+  overflow: hidden;
+  clip-path: polygon(24% 2%, 76% 2%, 76% 6%, 70% 6%, 70% 50%, 100% 62%, 100% 100%, 0% 100%, 0% 62%, 30% 50%, 30% 6%, 24% 6%);
+}
+
+.flue {
+  background: var(--soot);
+  clip-path: polygon(44% 0%, 56% 0%, 56% 54%, 70% 63%, 58% 73%, 80% 75%, 80% 100%, 20% 100%, 20% 75%, 42% 73%, 30% 63%, 44% 54%);
+}
+
+/* Two logs and a small fire in the grate. */
+.flue::before,
+.flue::after {
+  content: '';
+  position: absolute;
+  left: 30%;
+  right: 30%;
+}
+
+.flue::before {
+  bottom: 0;
+  height: 3%;
+  background: var(--rust);
+  border-radius: 999px;
+}
+
+.flue::after {
+  bottom: 3%;
+  height: 9%;
+  background: var(--ember);
+  clip-path: polygon(0% 100%, 12% 30%, 24% 70%, 38% 0%, 52% 60%, 66% 15%, 80% 65%, 92% 35%, 100% 100%);
+}
+
+.hearth {
+  position: absolute;
+  left: -0.8rem;
+  bottom: 0;
+  width: 19rem;
+  height: 1.4rem;
+  background: var(--sand);
+  border-radius: 2px;
+}
+
+.parts {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.parts li {
+  position: absolute;
+  left: 19.5rem;
+  right: 0;
+  display: grid;
+  gap: 0.1rem;
+}
+
+.parts li::before,
+.parts li::after {
+  content: '';
+  position: absolute;
+  top: 0.72rem;
+}
+
+.parts li::before {
+  right: calc(100% + 0.5rem);
+  width: var(--lead);
+  border-top: 1.5px solid var(--sand);
+}
+
+.parts li::after {
+  right: calc(100% + 0.5rem + var(--lead) - 0.3rem);
+  width: 0.6rem;
+  height: 0.6rem;
+  margin-top: -0.3rem;
+  background: var(--sand);
+  border-radius: 50%;
+}
+
+.partCap {
+  top: 0.4%;
+  --lead: 6.2rem;
+}
+
+.partFlue {
+  top: 24%;
+  --lead: 10.6rem;
+}
+
+.partChamber {
+  top: 54%;
+  --lead: 10.6rem;
+}
+
+.partDamper {
+  top: 67.5%;
+  --lead: 10.6rem;
+}
+
+.partFirebox {
+  top: 84%;
+  --lead: 10.6rem;
+}
+
+.partName {
+  font-family: var(--slab);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.partNote {
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.sectionCaption {
+  margin-top: 1rem;
+  font-family: var(--slab);
+  font-size: 0.98rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.levelCards {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.levelCard {
+  padding: 1.4rem 1.5rem 1.2rem;
+  background: var(--panel);
+  border-left: 4px solid var(--brick);
+  border-radius: 3px;
+}
+
+.levelTop {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.1rem;
+  align-items: start;
+}
+
+.levelNo {
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  font-family: var(--slab);
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1;
+  background: var(--ember);
+  color: var(--on-ember);
+  border-radius: 3px;
+}
+
+.levelName {
+  font-size: 1.55rem;
+  line-height: 1.15;
+}
+
+.levelWhen {
+  margin: 0.35rem 0 0;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+.levelChecks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.3rem 1.4rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.levelChecks li {
+  position: relative;
+  padding-left: 1.2rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.levelChecks li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--sand);
+}
+
+.levelFoot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.4rem 1rem;
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule);
+}
+
+.levelTime {
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.levelPrice {
+  font-family: var(--slab);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------ seasons */
+
+.year {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.season {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.4rem 1.6rem;
+  border-left: 1px solid var(--rule);
+}
+
+.season:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.season:last-child {
+  padding-right: 0;
+}
+
+.seasonName {
+  font-size: 1.8rem;
+  line-height: 1.1;
+}
+
+.seasonRange {
+  margin: 0.2rem 0 1.2rem;
+  font-family: var(--cond);
+  font-size: 0.98rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.months {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.month {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.barTrack {
+  position: relative;
+  display: block;
+  height: 8.5rem;
+  margin-bottom: 0.4rem;
+  background: var(--panel);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.barTrack::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--h);
+  background: var(--ember);
+}
+
+.d1 {
+  --h: 22%;
+}
+
+.d2 {
+  --h: 46%;
+}
+
+.d3 {
+  --h: 74%;
+}
+
+.d4 {
+  --h: 100%;
+}
+
+.d4::before {
+  background: var(--brick);
+}
+
+.monthName {
+  font-family: var(--slab);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.monthAhead {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.seasonNote {
+  margin: 1.2rem 0 0;
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.legend {
+  margin: 1rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- roofline
+   Four stacks with corbelled caps on a roof ridge, clipped from one field
+   of brick, with clay pots on two of them. */
+
+.roofline {
+  position: relative;
+  height: clamp(170px, 18vw, 250px);
+  margin-top: clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.stacks {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  clip-path: polygon(0% 100%, 0% 78%, 5% 78%, 5% 30%, 4.4% 30%, 4.4% 23%, 13.6% 23%, 13.6% 30%, 13% 30%, 13% 78%, 31% 78%, 31% 48%, 30.4% 48%, 30.4% 41%, 36.6% 41%, 36.6% 48%, 36% 48%, 36% 78%, 57% 78%, 57% 16%, 56.4% 16%, 56.4% 9%, 67.6% 9%, 67.6% 16%, 67% 16%, 67% 78%, 85% 78%, 85% 38%, 84.4% 38%, 84.4% 31%, 90.6% 31%, 90.6% 38%, 90% 38%, 90% 78%, 100% 78%, 100% 100%);
+}
+
+.roofline::before,
+.roofline::after {
+  content: '';
+  position: absolute;
+  height: 9%;
+  background: var(--brick);
+  clip-path: polygon(0% 100%, 6% 0%, 40% 0%, 46% 100%, 54% 100%, 60% 0%, 94% 0%, 100% 100%);
+}
+
+.roofline::before {
+  left: 5.6%;
+  width: 7.4%;
+  top: 14%;
+}
+
+.roofline::after {
+  left: 58%;
+  width: 8.2%;
+  top: 0;
+}
+
+/* ------------------------------------------------------------------- safety */
+
+.safety {
+  padding-top: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.safetyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+.checkTitle {
+  margin-bottom: 0.8rem;
+  font-size: 1.45rem;
+  line-height: 1.15;
+}
+
+.checks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checks li {
+  position: relative;
+  padding: 0.75rem 0 0.75rem 2.2rem;
+  font-size: 1.02rem;
+  line-height: 1.45;
+  border-top: 1px solid var(--rule);
+}
+
+.checks li:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.checks li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.82rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 2px solid var(--sand);
+  border-radius: 2px;
+}
+
+.warning {
+  padding: 1.5rem 1.5rem 1.6rem;
+  background: var(--brick);
+  color: var(--on-brick);
+  border-radius: 3px;
+}
+
+.warningTitle {
+  font-size: 1.5rem;
+  line-height: 1.15;
+}
+
+.warningList {
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.warningList li {
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  line-height: 1.4;
+  border-top: 1px solid color-mix(in oklab, var(--on-brick) 30%, transparent);
+}
+
+.warningDo {
+  margin: 1rem 0 0;
+  font-weight: 600;
+}
+
+.warningLine {
+  margin: 0.4rem 0 0;
+  font-family: var(--slab);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.warningLine a {
+  border-bottom: 2px solid color-mix(in oklab, var(--on-brick) 50%, transparent);
+}
+
+/* ------------------------------------------------------------------- prices */
+
+.prices {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut) 0;
+}
+
+.pricesGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+  padding-top: 2rem;
+  border-top: 2px solid var(--rule-strong);
+}
+
+.pricesGrid .secNote {
+  margin-top: 1.2rem;
+}
+
+.priceTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.priceTable thead th {
+  padding: 0 0 0.6rem;
+  font-family: var(--cond);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--text);
+}
+
+.priceTable thead th:last-child,
+.priceTable td {
+  text-align: right;
+}
+
+.priceTable tbody th,
+.priceTable td {
+  padding: 0.85rem 0;
+  vertical-align: baseline;
+  border-bottom: 1px solid var(--rule);
+}
+
+.priceTable tbody th {
+  font-weight: 400;
+  text-align: left;
+}
+
+.priceWork,
+.priceNote {
+  display: block;
+}
+
+.priceWork {
+  font-family: var(--slab);
+  font-size: 1.22rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.priceNote {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.priceTable td {
+  padding-left: 1rem;
+  font-family: var(--slab);
+  font-size: 1.4rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------- book */
+
+.book {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut) 0;
+}
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+  padding-top: 2rem;
+  border-top: 2px solid var(--rule-strong);
+}
+
+.bookInfo .secNote {
+  margin-top: 1rem;
+}
+
+.bookPhone {
+  margin: 1.8rem 0 0;
+  font-family: var(--slab);
+  font-size: clamp(2.2rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.bookMail {
+  margin: 0.6rem 0 0;
+  font-size: 1.1rem;
+  overflow-wrap: anywhere;
+}
+
+.bookMail a,
+.bookPhone a {
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.bookYard {
+  margin: 0.6rem 0 0;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+.hours {
+  margin: 1.8rem 0 0;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.hours dt {
+  color: var(--muted);
+}
+
+.hours dd {
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--bone);
+  color: var(--on-bone);
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 6px var(--bone), inset 0 0 0 7px var(--bone-rule);
+}
+
+.formTitle {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: var(--slab);
+  font-size: 1.8rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label,
+.fieldset legend {
+  padding: 0;
+  font-family: var(--cond);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.65rem 0.75rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--on-bone);
+  background: var(--field);
+  border: 0;
+  border-bottom: 2px solid var(--on-bone);
+  border-radius: 2px 2px 0 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--on-bone);
+  outline-offset: 0;
+}
+
+.fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.picks input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.picks label {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.98rem;
+  background: var(--field);
+  border: 1.5px solid var(--bone-rule);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.picks input:checked + label {
+  background: var(--on-bone);
+  color: var(--bone);
+  border-color: var(--on-bone);
+}
+
+.picks input:focus-visible + label {
+  outline: 2px solid var(--on-bone);
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--cond);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--on-brick);
+  background: var(--brick);
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--brick) 85%, var(--on-bone));
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 6rem);
+  background: var(--panel);
+}
+
+.course {
+  position: relative;
+  height: 108px;
+  overflow: hidden;
+  background: var(--soot);
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 2.8rem;
+  font-size: 0.98rem;
+}
+
+.footInner p {
+  margin: 0.3rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.7rem;
+  font-family: var(--slab);
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1120px) {
+  .year {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .season:nth-child(3) {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .season:nth-child(2) {
+    padding-right: 0;
+  }
+
+  .season:nth-child(n + 3) {
+    border-top: 1px solid var(--rule);
+  }
+
+  .safetyGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .warning {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 980px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .levelsGrid,
+  .pricesGrid,
+  .bookGrid,
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .certFrame {
+    max-width: 36rem;
+  }
+
+  .chimney {
+    margin: 0 auto;
+  }
+
+  .section {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .markName {
+    font-size: 1.4rem;
+  }
+
+  .heroFacts dd {
+    font-size: 1.8rem;
+  }
+
+  .cert {
+    transform: none;
+  }
+
+  .certRows div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  .certStamp {
+    width: 5rem;
+    height: 5rem;
+    font-size: 0.8rem;
+  }
+
+  .chimney {
+    width: 100%;
+    height: auto;
+    padding-top: 30rem;
+  }
+
+  .masonry,
+  .flue {
+    left: 50%;
+    bottom: auto;
+    height: 28.6rem;
+    margin-left: -8.5rem;
+  }
+
+  .hearth {
+    left: 50%;
+    bottom: auto;
+    top: 28.6rem;
+    margin-left: -9.5rem;
+  }
+
+  .parts {
+    position: static;
+    display: grid;
+    gap: 0.8rem;
+    padding-top: 1rem;
+  }
+
+  .parts li {
+    position: static;
+    padding-left: 1.2rem;
+    border-left: 3px solid var(--sand);
+  }
+
+  .parts li::before,
+  .parts li::after {
+    display: none;
+  }
+
+  .levelChecks,
+  .year,
+  .safetyGrid,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .season,
+  .season:nth-child(2),
+  .season:nth-child(3) {
+    padding: 1.4rem 0;
+    border-left: 0;
+  }
+
+  .season + .season {
+    border-top: 1px solid var(--rule);
+  }
+
+  .barTrack {
+    height: 5.5rem;
+  }
+
+  .roofline::before {
+    top: 15%;
+  }
+}

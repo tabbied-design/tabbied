@@ -1,0 +1,1032 @@
+/* ==========================================================================
+   SPOT & STROLL - dog walking and pet sitting, Elm Park
+   The layout is the walker's week: a paw print the size of the hero, this
+   week's slots as a timetable of open, one-left and full, the services
+   with their prices in big spots, and the neighborhood drawn as a street
+   map with the circle we walk inside. Butter ground, collar navy, tomato,
+   teal and marigold. Fredoka is round and friendly, Nunito reads easily.
+   The polka dots fill the paw, run as a band before the map and line the
+   footer.
+   ========================================================================== */
+
+.page {
+  --butter: #fff2d4;
+  --navy: #20264a;
+  --tomato: #e4523b;
+  --teal: #1f9a8a;
+  --marigold: #f2a93b;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --round: 'Fredoka', 'Trebuchet MS', sans-serif;
+  --sans: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--navy);
+  --on-navy: var(--butter);
+  --on-tomato: var(--butter);
+  --on-teal: var(--butter);
+  --on-marigold: var(--navy);
+
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  background: var(--butter);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--butter) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--navy));
+    --on-navy: color-mix(in oklab, oklch(from var(--navy) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--navy));
+    --on-tomato: oklch(from var(--tomato) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-teal: oklch(from var(--teal) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-marigold: oklch(from var(--marigold) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--butter));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 45%, transparent);
+  --card: color-mix(in oklab, var(--butter) 86%, var(--marigold));
+  --full: color-mix(in oklab, var(--butter) 80%, var(--tomato));
+  --street: color-mix(in oklab, var(--butter) 84%, var(--navy));
+  --block: color-mix(in oklab, var(--butter) 92%, var(--navy));
+  --water: color-mix(in oklab, var(--teal) 50%, var(--butter));
+  --grass: color-mix(in oklab, var(--teal) 30%, var(--butter));
+  --input: color-mix(in oklab, var(--butter) 55%, var(--card));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2.5px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--round);
+  font-weight: 600;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem var(--gut);
+  background: var(--butter);
+  border-bottom: 2.5px solid var(--text);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+/* Two spots, one a little higher than the other. */
+.brandDots {
+  width: 2.1rem;
+  height: 1.6rem;
+  background:
+    radial-gradient(circle at 28% 62%, var(--tomato) 0 0.45rem, transparent 0.5rem),
+    radial-gradient(circle at 74% 36%, var(--teal) 0 0.45rem, transparent 0.5rem);
+}
+
+.brandName {
+  font-family: var(--round);
+  font-size: 1.65rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.9rem, 1.8vw, 1.8rem);
+}
+
+.nav a {
+  padding: 0.3rem 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-bottom: 2.5px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barCall {
+  padding: 0.55rem 1.1rem;
+  font-weight: 700;
+  font-size: 0.92rem;
+  background: var(--navy);
+  color: var(--on-navy);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--butter);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.kicker {
+  display: inline-block;
+  margin: 0 0 1.2rem;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  background: var(--card);
+  border-radius: 999px;
+}
+
+.heroTitle {
+  font-size: clamp(3rem, 5.8vw, 5.3rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+}
+
+.heroTitle span {
+  display: block;
+  color: var(--tomato);
+}
+
+.heroLead {
+  max-width: 32rem;
+  margin: 1.5rem 0 0;
+  font-size: 1.15rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--round);
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--tomato);
+  color: var(--on-tomato);
+  box-shadow: 0 4px 0 var(--text);
+}
+
+.button:hover {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 2.5px var(--text);
+}
+
+.ghost:hover {
+  background: var(--card);
+}
+
+.heroTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+  margin: 2.2rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.heroTags li {
+  position: relative;
+  padding-left: 1.1rem;
+}
+
+.heroTags li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45rem;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  background: var(--teal);
+}
+
+/* The paw: a pad and four toes, five ellipses added together in a mask. */
+.pawWrap {
+  justify-self: center;
+  width: min(100%, 33rem);
+}
+
+.paw {
+  position: relative;
+  aspect-ratio: 1 / 0.98;
+  -webkit-mask:
+    radial-gradient(closest-side, black 97%, transparent) 50% 100% / 60% 52% no-repeat,
+    radial-gradient(closest-side, black 97%, transparent) 0% 52% / 24% 31% no-repeat,
+    radial-gradient(closest-side, black 97%, transparent) 30% 4% / 25% 33% no-repeat,
+    radial-gradient(closest-side, black 97%, transparent) 70% 4% / 25% 33% no-repeat,
+    radial-gradient(closest-side, black 97%, transparent) 100% 52% / 24% 31% no-repeat;
+  mask:
+    radial-gradient(closest-side, black 97%, transparent) 50% 100% / 60% 52% no-repeat,
+    radial-gradient(closest-side, black 97%, transparent) 0% 52% / 24% 31% no-repeat,
+    radial-gradient(closest-side, black 97%, transparent) 30% 4% / 25% 33% no-repeat,
+    radial-gradient(closest-side, black 97%, transparent) 70% 4% / 25% 33% no-repeat,
+    radial-gradient(closest-side, black 97%, transparent) 100% 52% / 24% 31% no-repeat;
+}
+
+.pawNote {
+  margin: 1.2rem 0 0;
+  font-family: var(--round);
+  font-size: 1.15rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: 2.4rem;
+}
+
+.secTitle {
+  font-size: clamp(2.3rem, 4.6vw, 3.7rem);
+}
+
+.secNote {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- schedule */
+
+.tableWrap {
+  padding: clamp(0.8rem, 2vw, 1.5rem);
+  background: var(--card);
+  border: 2.5px solid var(--text);
+  border-radius: 1.6rem;
+}
+
+.schedule {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0.45rem;
+  table-layout: fixed;
+}
+
+.caption {
+  padding: 0.2rem 0.45rem 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: left;
+  color: var(--muted);
+}
+
+.schedule thead th {
+  padding-bottom: 0.2rem;
+  font-family: var(--round);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.slotHead {
+  width: 13rem;
+  text-align: left;
+}
+
+.slot {
+  display: grid;
+  padding-right: 0.6rem;
+  text-align: left;
+  font-weight: 400;
+}
+
+.slotName {
+  font-family: var(--round);
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.slotTime {
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.slotKind {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.schedule td {
+  text-align: center;
+}
+
+.cellDay {
+  display: none;
+}
+
+.cell {
+  display: block;
+  padding: 0.6rem 0.3rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 999px;
+}
+
+.open {
+  background: var(--teal);
+  color: var(--on-teal);
+}
+
+.one {
+  background: var(--marigold);
+  color: var(--on-marigold);
+}
+
+.full {
+  background: var(--full);
+  text-decoration: line-through;
+}
+
+.none {
+  color: var(--muted);
+  box-shadow: inset 0 0 0 1.5px var(--rule);
+}
+
+/* ----------------------------------------------------------------- services */
+
+.services {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.service {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.4rem 1.6rem;
+  background: var(--card);
+  border: 2.5px solid var(--text);
+  border-radius: 1.6rem;
+  box-shadow: 6px 6px 0 var(--text);
+}
+
+/* The price sits in a spot. */
+.price {
+  display: grid;
+  place-content: center;
+  width: 6.4rem;
+  height: 6.4rem;
+  margin: 0 0 1rem;
+  text-align: center;
+  background: var(--tomato);
+  color: var(--on-tomato);
+  border-radius: 50%;
+}
+
+.service:nth-child(2) .price {
+  background: var(--teal);
+  color: var(--on-teal);
+}
+
+.service:nth-child(3) .price {
+  background: var(--marigold);
+  color: var(--on-marigold);
+}
+
+.service:nth-child(4) .price {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.priceNo {
+  font-family: var(--round);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.pricePer {
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.serviceName {
+  font-size: 1.55rem;
+}
+
+.serviceNote {
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.serviceItems {
+  margin: auto 0 0;
+  padding: 1rem 0 0;
+  list-style: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.serviceItems li {
+  padding: 0.35rem 0;
+  border-top: 2px dotted var(--rule-strong);
+}
+
+.band {
+  position: relative;
+  height: 7.5rem;
+  margin-top: clamp(3.5rem, 7vw, 6rem);
+  border-top: 2.5px solid var(--text);
+  border-bottom: 2.5px solid var(--text);
+}
+
+/* --------------------------------------------------------------------- area
+   The map: blocks between streets, a creek, the park, and the walking
+   circle drawn round our base. */
+
+.area {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.area .secNote {
+  margin-top: 1rem;
+}
+
+.map {
+  position: relative;
+  aspect-ratio: 1.15;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 52px, var(--street) 52px 60px),
+    repeating-linear-gradient(90deg, transparent 0 68px, var(--street) 68px 76px),
+    var(--block);
+  border: 2.5px solid var(--text);
+  border-radius: 1.6rem;
+}
+
+.creek {
+  position: absolute;
+  left: -10%;
+  top: 64%;
+  width: 125%;
+  height: 7%;
+  background: var(--water);
+  transform: rotate(-16deg);
+}
+
+.park {
+  position: absolute;
+  left: 14%;
+  top: 14%;
+  width: 32%;
+  height: 30%;
+  background: var(--grass);
+  border-radius: 42% 58% 50% 46%;
+}
+
+.ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 74%;
+  aspect-ratio: 1;
+  border: 3px dashed var(--tomato);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.place,
+.base {
+  position: absolute;
+  margin: 0;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  white-space: nowrap;
+  border-radius: 999px;
+}
+
+.place {
+  background: var(--butter);
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.pElm {
+  top: 25%;
+  left: 19%;
+}
+
+.pMill {
+  top: 58%;
+  left: 60%;
+}
+
+.pLark {
+  top: 13%;
+  left: 58%;
+}
+
+.pTan {
+  top: 74%;
+  left: 14%;
+}
+
+.pHol {
+  top: 88%;
+  left: 64%;
+}
+
+.base {
+  top: 50%;
+  left: 50%;
+  background: var(--navy);
+  color: var(--on-navy);
+  transform: translate(-50%, -50%);
+}
+
+.areaList {
+  margin: 1.8rem 0 0;
+}
+
+.areaList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 2px dotted var(--rule-strong);
+}
+
+.areaList dt {
+  font-family: var(--round);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.areaList dd {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+  text-align: right;
+}
+
+/* --------------------------------------------------------------------- meet */
+
+.meet {
+  --rule-on: color-mix(in oklab, var(--on-navy) 26%, transparent);
+  --muted-on: color-mix(in oklab, var(--on-navy) 78%, var(--navy));
+
+  padding: clamp(2rem, 5vw, 4rem);
+  background: var(--navy);
+  color: var(--on-navy);
+  border-radius: 2rem;
+}
+
+.meetHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1rem 4rem;
+  align-items: end;
+}
+
+.meetTitle {
+  font-size: clamp(2.3rem, 4.6vw, 3.7rem);
+}
+
+.meetLead {
+  margin: 0;
+  color: var(--muted-on);
+}
+
+.meetSteps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.2rem, 3vw, 2.4rem);
+  margin: 2.6rem 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: m;
+}
+
+.meetSteps li {
+  position: relative;
+  padding-top: 4.4rem;
+  counter-increment: m;
+}
+
+.meetSteps li::before {
+  content: counter(m);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  font-family: var(--round);
+  font-size: 1.6rem;
+  font-weight: 600;
+  border-radius: 50%;
+  background: var(--marigold);
+  color: var(--on-marigold);
+}
+
+.meetSteps li:nth-child(2)::before {
+  background: var(--teal);
+  color: var(--on-teal);
+}
+
+.meetSteps li:nth-child(3)::before {
+  background: var(--tomato);
+  color: var(--on-tomato);
+}
+
+.meetStep {
+  font-size: 1.6rem;
+}
+
+.meetText {
+  margin: 0.5rem 0 0;
+  color: var(--muted-on);
+}
+
+.trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 2.6rem 0 0;
+  padding: 1.6rem 0 0;
+  list-style: none;
+  border-top: 2px dotted var(--rule-on);
+}
+
+.trust li {
+  padding: 0.4rem 0.95rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 2px var(--rule-on);
+}
+
+/* --------------------------------------------------------------------- book */
+
+.book {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 5rem);
+}
+
+.book .secNote {
+  margin-top: 1rem;
+}
+
+.contact {
+  margin: 1.8rem 0 0;
+}
+
+.contact div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 2px dotted var(--rule-strong);
+}
+
+.contact dt {
+  font-weight: 700;
+}
+
+.contact dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.contact a {
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  align-content: start;
+  padding: clamp(1.3rem, 3vw, 2.2rem);
+  background: var(--card);
+  border: 2.5px solid var(--text);
+  border-radius: 1.6rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field > label,
+.fieldset legend {
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--butter);
+  border: 2px solid var(--rule-strong);
+  border-radius: 0.9rem;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.fieldset legend {
+  margin-bottom: 0.5rem;
+  padding: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pick {
+  position: relative;
+  cursor: pointer;
+}
+
+.pick input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.pick span {
+  display: inline-block;
+  padding: 0.4rem 0.95rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: var(--butter);
+  border: 2px solid var(--rule-strong);
+  border-radius: 999px;
+}
+
+.pick input:checked + span {
+  background: var(--teal);
+  color: var(--on-teal);
+  border-color: var(--teal);
+}
+
+.pick input:focus-visible + span {
+  outline: 2.5px solid currentColor;
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.85rem 1.7rem;
+  font-family: var(--round);
+  font-size: 1.15rem;
+  font-weight: 600;
+  background: var(--tomato);
+  color: var(--on-tomato);
+  border: 0;
+  border-radius: 999px;
+  box-shadow: 0 4px 0 var(--text);
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 6rem);
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.footDots {
+  position: relative;
+  height: 6rem;
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr) auto;
+  gap: 1rem 3rem;
+  align-items: baseline;
+  padding: 1.6rem var(--gut) 2.6rem;
+  font-size: 0.92rem;
+}
+
+.footInner p {
+  margin: 0;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footName {
+  font-family: var(--round);
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------- breakpoints */
+
+@media (max-width: 1080px) {
+  .hero,
+  .area,
+  .book {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .services {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pawWrap {
+    width: min(80%, 28rem);
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .secHead,
+  .meetHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .meetSteps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The timetable folds: each slot its own block, the week under it. */
+  .schedule,
+  .schedule tbody,
+  .schedule tr {
+    display: block;
+  }
+
+  .schedule thead {
+    display: none;
+  }
+
+  .schedule tr {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.3rem;
+    padding: 0.9rem 0;
+    border-top: 2px dotted var(--rule-strong);
+  }
+
+  .slot {
+    grid-column: 1 / -1;
+    padding: 0 0 0.3rem;
+  }
+
+  .schedule td {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .caption {
+    display: block;
+    padding: 0 0 0.4rem;
+  }
+
+  .cellDay {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .cell {
+    display: grid;
+    place-items: center;
+    min-height: 2.6rem;
+    padding: 0.2rem 0.1rem;
+    font-size: 0.7rem;
+    line-height: 1.1;
+    border-radius: 0.8rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .barCall {
+    display: none;
+  }
+
+  .services,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pawWrap {
+    width: 88%;
+  }
+
+  .place,
+  .base {
+    font-size: 0.68rem;
+    padding: 0.15rem 0.45rem;
+  }
+
+  .contact div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}

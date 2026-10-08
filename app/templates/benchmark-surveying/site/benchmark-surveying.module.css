@@ -1,0 +1,1262 @@
+/* ==========================================================================
+   BENCHMARK LAND SURVEYING - boundary, topographic and elevation surveys
+   The page is a plat on blueprint. The hero is one lot drawn to scale, its
+   calls lettered along each line and the parcel cut out of the protractor
+   field; the survey types are a schedule on a sheet of vellum, the steps a
+   traverse of six stations, the office a drawing's title block. Overpass
+   (highway lettering) for everything, Overpass Mono for bearings and fees.
+   ========================================================================== */
+
+.page {
+  --blue: #173a5c; /* role 0: the blueprint ground */
+  --chalk: #edf0e9;
+  --flag: #ee6a35;
+  --gold: #f1bf3d;
+  --sky: #7fb0d8;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --sans: 'Overpass', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'Overpass Mono', 'Menlo', monospace;
+
+  --text: var(--chalk);
+  --on-chalk: var(--blue);
+  --on-flag: var(--blue);
+  --on-gold: var(--blue);
+
+  --muted: color-mix(in oklab, var(--text) 76%, var(--blue));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 46%, transparent);
+  --grid: color-mix(in oklab, var(--text) 7%, transparent);
+  --lot: color-mix(in oklab, var(--blue) 88%, var(--sky));
+  --panel: color-mix(in oklab, var(--blue) 92%, var(--chalk));
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--blue);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--blue) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--chalk));
+    --on-chalk: color-mix(in oklab, oklch(from var(--chalk) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--chalk));
+    --on-flag: oklch(from var(--flag) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-gold: oklch(from var(--gold) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 800;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--blue);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.brand {
+  justify-self: start;
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 0.75rem;
+  align-items: center;
+  line-height: 1;
+}
+
+/* A survey disk: a brass benchmark with its triangle and point. */
+.brandDisk {
+  grid-row: span 2;
+  position: relative;
+  width: 2.3rem;
+  height: 2.3rem;
+  border: 2px solid var(--text);
+  border-radius: 50%;
+}
+
+.brandDisk::before {
+  content: '';
+  position: absolute;
+  inset: 22% 20% 28%;
+  background: var(--gold);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.brandDisk::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+.brandName {
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.brandSub {
+  margin-top: 0.25rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 1.8rem);
+}
+
+.nav a {
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.25rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--flag);
+}
+
+.barCall {
+  padding: 0.55rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--flag);
+  color: var(--on-flag);
+  border-radius: 2px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--blue);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.kicker {
+  margin: 0 0 1.3rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.8rem, 5.6vw, 4.9rem);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+}
+
+.heroTitle span {
+  display: block;
+  font-weight: 400;
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+.heroLead {
+  max-width: 32rem;
+  margin: 1.5rem 0 0;
+  font-size: 1.1rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.35rem 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 2px;
+}
+
+.button {
+  background: var(--flag);
+  color: var(--on-flag);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--flag) 86%, var(--text));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1.5px var(--text);
+}
+
+.ghost:hover {
+  background: var(--panel);
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  max-width: 32rem;
+  margin: 2.6rem 0 0;
+}
+
+.heroFacts div {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.heroFacts dt {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* The drawing sheet: graph-ruled, framed, with the lot inside. */
+.platSheet {
+  position: relative;
+  padding: clamp(1.8rem, 3.5vw, 3rem) clamp(1.8rem, 3.5vw, 3rem) 1rem;
+  border: 1.5px solid var(--rule-strong);
+  background-color: var(--blue);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: -1px -1px;
+}
+
+.plat {
+  position: relative;
+  aspect-ratio: 1 / 1;
+}
+
+.parcel {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--lot);
+  clip-path: polygon(6% 22%, 84% 8%, 95% 74%, 44% 94%, 4% 72%);
+}
+
+.lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.lines polygon {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 3;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.lines .easement {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 3;
+  stroke-dasharray: 8 6;
+  vector-effect: non-scaling-stroke;
+}
+
+.corner {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--blue);
+  border: 3px solid var(--text);
+}
+
+.cA {
+  left: 6%;
+  top: 22%;
+  background: var(--flag);
+}
+
+.cB {
+  left: 84%;
+  top: 8%;
+}
+
+.cC {
+  left: 95%;
+  top: 74%;
+  background: var(--flag);
+}
+
+.cD {
+  left: 44%;
+  top: 94%;
+}
+
+.cE {
+  left: 4%;
+  top: 72%;
+}
+
+.pob {
+  position: absolute;
+  left: 6%;
+  top: 22%;
+  margin: 0;
+  padding: 0.1rem 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: var(--blue);
+  color: var(--text);
+  transform: translate(-30%, -190%);
+}
+
+.call {
+  position: absolute;
+  display: flex;
+  gap: 0.7em;
+  margin: 0;
+  padding: 0.12rem 0.45rem;
+  font-family: var(--mono);
+  font-size: clamp(0.62rem, 1vw, 0.78rem);
+  line-height: 1.4;
+  white-space: nowrap;
+  background: var(--blue);
+  color: var(--text);
+}
+
+.callDist {
+  font-weight: 600;
+}
+
+.ab {
+  left: 45%;
+  top: 15%;
+  transform: translate(-50%, -50%) rotate(-10.2deg) translateY(-1.5em);
+}
+
+.bc {
+  left: 89.5%;
+  top: 41%;
+  transform: translate(-50%, -50%) rotate(80.5deg) translateY(-1.5em);
+}
+
+.cd {
+  left: 69.5%;
+  top: 84%;
+  transform: translate(-50%, -50%) rotate(-21.4deg) translateY(1.5em);
+}
+
+.de {
+  left: 24%;
+  top: 83%;
+  transform: translate(-50%, -50%) rotate(28.8deg) translateY(1.5em);
+}
+
+.ea {
+  left: 5%;
+  top: 47%;
+  transform: translate(-50%, -50%) rotate(-87.7deg) translateY(-1.5em);
+}
+
+.lotCard {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  padding: 0.9rem 1.2rem 0.8rem;
+  text-align: center;
+  background: var(--blue);
+  border: 1.5px solid var(--text);
+}
+
+.lotCard p {
+  margin: 0;
+}
+
+.lotName {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.lotSub {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.lotArea {
+  margin-top: 0.35rem !important;
+  font-family: var(--mono);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.platFoot {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1.2rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.platFoot p {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+
+/* The north arrow: a half-filled dart over its letter. */
+.north {
+  position: relative;
+  padding-left: 1.6rem;
+  font-weight: 600;
+}
+
+.north::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 1rem;
+  height: 1.6rem;
+  translate: 0 -55%;
+  background: linear-gradient(90deg, var(--text) 50%, var(--rule-strong) 50%);
+  clip-path: polygon(50% 0, 100% 100%, 50% 78%, 0 100%);
+}
+
+.scale {
+  position: relative;
+  padding-left: 5.2rem;
+}
+
+.scale::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 4.4rem;
+  height: 6px;
+  translate: 0 -50%;
+  background: linear-gradient(90deg, var(--text) 25%, transparent 25% 50%, var(--text) 50% 75%, transparent 75%);
+  box-shadow: 0 0 0 1px var(--text);
+}
+
+.sheet {
+  margin-left: auto !important;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  grid-template-areas:
+    'tag tag'
+    'title note';
+  gap: 0.7rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead .secTag {
+  grid-area: tag;
+}
+
+.secHead .secTitle {
+  grid-area: title;
+}
+
+.secHead .secNote {
+  grid-area: note;
+}
+
+.secTag {
+  justify-self: start;
+  margin: 0;
+  padding: 0.18rem 0.55rem 0.08rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--gold);
+  color: var(--on-gold);
+}
+
+.secTitle {
+  font-size: clamp(2.1rem, 4vw, 3.3rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+}
+
+.secNote {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ the vellum */
+
+.vellum {
+  --muted: color-mix(in oklab, var(--on-chalk) 74%, var(--chalk));
+  --rule: color-mix(in oklab, var(--on-chalk) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--on-chalk) 50%, transparent);
+
+  background: var(--chalk);
+  color: var(--on-chalk);
+}
+
+.vellumInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut);
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.schedule {
+  width: 100%;
+  min-width: 52rem;
+  border-collapse: collapse;
+  font-size: 0.93rem;
+  border: 2px solid var(--on-chalk);
+}
+
+.schedule th,
+.schedule td {
+  padding: 0.95rem 1rem;
+  text-align: left;
+  vertical-align: top;
+  border: 1px solid var(--rule-strong);
+}
+
+.schedule thead th {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: bottom;
+  border-bottom: 2px solid var(--on-chalk);
+}
+
+.schedule tbody th {
+  width: 17%;
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.schedule td {
+  color: var(--muted);
+}
+
+.schedule .fee,
+.schedule .time {
+  font-family: var(--mono);
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--on-chalk);
+}
+
+.schedule .fee {
+  font-size: 1.05rem;
+}
+
+/* --------------------------------------------------------------- traverse */
+
+.stations {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.6rem clamp(1.5rem, 3vw, 2.6rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: station;
+}
+
+.station {
+  position: relative;
+  padding-top: 2.6rem;
+  counter-increment: station;
+}
+
+/* The traverse leg, dashed, running into the next station. */
+.station::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: calc(-1 * clamp(1.5rem, 3vw, 2.6rem));
+  top: 0.75rem;
+  border-top: 2px dashed var(--rule-strong);
+}
+
+.station:nth-child(3n)::before {
+  right: 0;
+}
+
+/* The control point: a triangle with the station number beside it. */
+.station::after {
+  content: 'Sta. ' counter(station);
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 0 0.5rem 0 2.1rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.6rem;
+  background:
+    conic-gradient(from 150deg at 50% 4%, var(--gold) 0 60deg, transparent 60deg) 0 0 / 1.6rem 1.6rem no-repeat,
+    var(--blue);
+}
+
+.stationTitle {
+  position: relative;
+  font-size: 1.45rem;
+  line-height: 1.15;
+}
+
+.stationText {
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ band */
+
+.band {
+  position: relative;
+  height: clamp(120px, 13vw, 180px);
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  overflow: hidden;
+  border-block: 1px solid var(--rule-strong);
+}
+
+/* ----------------------------------------------------------------- legend */
+
+.legend {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 clamp(1.5rem, 3vw, 2.6rem);
+  margin: 0;
+}
+
+.legendRow {
+  padding: 1.3rem 0 1.4rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.legendTerm {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.legendWord {
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.legendMeans {
+  margin: 0.6rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.sym {
+  position: relative;
+  flex: none;
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
+.mIrf::before,
+.mIrs::before,
+.mBm::before {
+  content: '';
+  position: absolute;
+  inset: 0.55rem;
+  border-radius: 50%;
+}
+
+.mIrf::before {
+  background: var(--text);
+}
+
+.mIrs::before {
+  border: 3px solid var(--flag);
+  background: var(--blue);
+}
+
+.mIrs::after {
+  content: '';
+  position: absolute;
+  inset: 1rem;
+  border-radius: 50%;
+  background: var(--text);
+}
+
+.mPob::before {
+  content: '';
+  position: absolute;
+  inset: 0.35rem;
+  background: var(--gold);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.mBrg::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--rule-strong);
+}
+
+.mBrg::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+  width: 2px;
+  height: 1.3rem;
+  background: var(--flag);
+  transform-origin: bottom center;
+  rotate: 38deg;
+}
+
+.mEase::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 3px dashed var(--gold);
+}
+
+.mBm::before {
+  border: 2px solid var(--text);
+  background:
+    linear-gradient(var(--text), var(--text)) center / 100% 2px no-repeat,
+    linear-gradient(var(--text), var(--text)) center / 2px 100% no-repeat;
+}
+
+/* -------------------------------------------------------------------- faq */
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.faqSide .secTitle {
+  margin-top: 0.8rem;
+}
+
+/* Detail A: the field cut to a round survey disk, ringed like brass. */
+.detail {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+  margin-top: 2.4rem;
+}
+
+.disk {
+  position: relative;
+  width: min(100%, 15rem);
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--lot);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 6px var(--blue),
+    0 0 0 8px var(--text),
+    0 0 0 16px var(--blue),
+    0 0 0 17px var(--rule-strong);
+  margin: 17px;
+}
+
+.detailLabel {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.faq {
+  margin: 0;
+}
+
+.faqItem {
+  padding: 1.4rem 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.faqItem:last-child {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.faqQ {
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.faqA {
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ order */
+
+.order {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--panel);
+  border-top: 1px solid var(--rule-strong);
+}
+
+.orderInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut);
+}
+
+.orderText .secTitle {
+  margin-top: 0.8rem;
+}
+
+.orderText .secNote {
+  max-width: 30rem;
+  margin-top: 1rem;
+}
+
+/* The office, set out as the title block in a plat's corner. */
+.titleBlock {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 2.2rem;
+  border: 2px solid var(--text);
+}
+
+.titleBlock > div {
+  min-width: 0;
+  padding: 0.7rem 0.9rem;
+  border: 0.5px solid var(--rule-strong);
+}
+
+.tbWide {
+  grid-column: 1 / -1;
+}
+
+.tbLabel {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tbValue {
+  margin: 0.15rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.tbValue a {
+  border-bottom: 1.5px solid var(--rule-strong);
+}
+
+.form {
+  --muted: color-mix(in oklab, var(--on-chalk) 74%, var(--chalk));
+  --rule-strong: color-mix(in oklab, var(--on-chalk) 46%, transparent);
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  align-content: start;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--chalk);
+  color: var(--on-chalk);
+  border-radius: 2px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem 0.6rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--on-chalk);
+  background: var(--chalk);
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 2px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--on-chalk);
+  outline-offset: 0;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.9rem 1.5rem 0.8rem;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--on-flag);
+  background: var(--flag);
+  border: 0;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--flag) 86%, var(--on-flag));
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  border-top: 1px solid var(--rule-strong);
+}
+
+.footField {
+  position: relative;
+  height: 72px;
+  overflow: hidden;
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 3rem;
+  font-size: 0.88rem;
+}
+
+.footName {
+  margin: 0 0 0.6rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.footLine {
+  max-width: 46rem;
+  margin: 0.3rem 0 0;
+  color: var(--muted);
+}
+
+.footLine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1080px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .faqGrid,
+  .orderInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .platSheet {
+    max-width: 40rem;
+  }
+
+  .stations,
+  .legend {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .station:nth-child(3n)::before {
+    right: calc(-1 * clamp(1.5rem, 3vw, 2.6rem));
+  }
+
+  .station:nth-child(2n)::before {
+    right: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .brandSub {
+    display: none;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'tag'
+      'title'
+      'note';
+  }
+
+  .heroFacts dd {
+    font-size: 1.35rem;
+  }
+
+  .platSheet {
+    padding: 1.6rem 1.4rem 0.8rem;
+  }
+
+  .call {
+    gap: 0.4em;
+    padding: 0.08rem 0.3rem;
+    font-size: 0.56rem;
+  }
+
+  .lotCard {
+    padding: 0.5rem 0.7rem;
+  }
+
+  .lotName {
+    font-size: 0.9rem;
+  }
+
+  .lotArea {
+    font-size: 1rem;
+  }
+
+  .platFoot {
+    flex-wrap: wrap;
+    gap: 0.5rem 1.2rem;
+  }
+
+  .stations,
+  .legend,
+  .titleBlock,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The schedule folds into one card per survey, each cell labeled. */
+  .schedule {
+    min-width: 0;
+    border: 0;
+  }
+
+  .schedule thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .schedule,
+  .schedule tbody,
+  .schedule tr,
+  .schedule th,
+  .schedule td {
+    display: block;
+  }
+
+  .schedule tr {
+    margin-bottom: 1rem;
+    border: 2px solid var(--on-chalk);
+  }
+
+  .schedule th,
+  .schedule td {
+    border: 0;
+    border-top: 1px solid var(--rule);
+    padding: 0.6rem 0.9rem;
+  }
+
+  .schedule tbody th {
+    width: auto;
+    border-top: 0;
+    font-size: 1.15rem;
+  }
+
+  .schedule td::before {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .schedule td:nth-of-type(1)::before {
+    content: 'What you get';
+  }
+
+  .schedule td:nth-of-type(2)::before {
+    content: 'Usually for';
+  }
+
+  .schedule td:nth-of-type(3)::before {
+    content: 'Fee from';
+  }
+
+  .schedule td:nth-of-type(4)::before {
+    content: 'Turnaround';
+  }
+
+  .schedule .fee,
+  .schedule .time {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 50%;
+    vertical-align: top;
+  }
+
+  .station::before,
+  .station:nth-child(2n)::before,
+  .station:nth-child(3n)::before {
+    right: 0;
+  }
+}
