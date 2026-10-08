@@ -240,20 +240,24 @@ and it changed no behavior: same MCP handler, same statelessness, same
 JSON 404); auth, generations, media, and the AI gateway land with the bindings
 they need. See `agent-outputs/20260827-studio-ai-plan.md`.
 
-The export is inside the platform limits - roughly 15,300 files against a
+The export is inside the platform limits - roughly 18,600 files against a
 ceiling of 20,000 per Worker version on Workers Free (100,000 on Workers Paid,
 with wrangler 4.34 or later), largest file 3.0 MB against 25 MiB - but both
-are counted per Worker *version*, and on the free plan the headroom is about
-4,700 files. Every pattern costs seven: its page and four RSC payloads, its
-preview and its share card, so batch 14's 44 designs added about 300 (all
-300 it was written with would have added about 2,100).
+are counted per Worker *version*, and on the free plan the headroom is now
+about 1,400 files. Every pattern costs seven: its page and four RSC payloads,
+its preview and its share card, so batch 14's 44 designs added about 300 (all
+300 it was written with would have added about 2,100). A template site with
+no pictures costs about 33: its framed and its bare page with their RSC
+payloads, the two zips and the folders they are made from, its screenshot
+and its share card. The professionals set's hundred added about 3,300, and
+another set that size would not fit on Workers Free.
 The Worker script is separate and small: about 3.4 MiB uncompressed (620 KiB
 gzipped, `npx wrangler deploy --dry-run --outdir <dir>`) against a 64 MiB
 limit that, since September 2026, is the only size check on any plan; no
 pattern data is in it. Don't treat that file count as stable:
 most of it is per-route RSC payloads, and a Next minor can move it a lot (16.3
 cut ~1,400 files off 16.2's output without changing a page). What is stable is
-`public/downloads/`, a flat 6,450 files for 277 sites (the artwork ones ship
+`public/downloads/`, a flat 9,560 files for 377 sites (the artwork ones ship
 their pictures in both packages), so a batch of new template sites is the
 thing most likely to actually threaten the ceiling. `wrangler deploy` prints
 the count it uploaded.
@@ -371,7 +375,7 @@ and *not* `zip` - so CI stayed green while the first Workers deploy died with
 fflate (zero dependencies), so the only thing the packaging step needs is the
 Node that is already running it. Don't reintroduce a PATH lookup here. Two
 details it depends on: every directory gets its own zero-length `<name>/`
-entry, because 106 of the 277 sites reference no image files and their empty
+entry, because 206 of the 377 sites reference no image files and their empty
 `images/` (and the React package's `public/`) would otherwise vanish from
 the download;
 and entries carry the source file's real mtime, which `zip -r` did and fflate
@@ -397,7 +401,7 @@ The two formats are built in opposite directions, and that is the point:
   source to copy - hand-porting is the trap the derive-don't-port strategy
   above exists to avoid.
 - **React is a copy of the page**, because a template page already *is* a plain
-  React component. The only Next.js API any of the 277 uses is `export const
+  React component. The only Next.js API any of the 377 uses is `export const
   metadata`; there is no next/image, next/link, `'use client'` or
   `generateStaticParams` anywhere. So `page.tsx` ships as authored and only the
   frame changes: metadata lifted into `index.html`, workspace imports pointed
@@ -445,7 +449,7 @@ global sheet's stack did reach one template element, the shared
 the download draw the same type.
 
 A site fails loudly rather than shipping broken: more than one CSS module on a
-page, or two hashed names collapsing onto one plain name. All 277 sites
+page, or two hashed names collapsing onto one plain name. All 377 sites
 package, so `KNOWN_UNSUPPORTED` is empty - anything that throws is a new
 problem and exits non-zero.
 
@@ -517,7 +521,7 @@ Four things worth not re-litigating:
   footer) and an edit reaches all of them; the generator fails the build if
   they don't currently agree.
 
-All 277 sites are annotated. The 272 bespoke pages were done by
+All 377 sites are annotated. The 372 bespoke pages were done by
 `scripts/annotate-templates.mjs`, a one-time codemod (`npm run
 annotate:templates`) - run it after adding a new bespoke template, and note it
 skips any page already carrying `data-edit-root`, so a hand-annotated page is
@@ -590,8 +594,9 @@ from the download, had the footer and nothing else. Each of them now renders
 `components/template/TemplateMenu` in its header: a copy of the nav's links
 (same `data-edit` ids, which is allowed, and the editable gate checks they
 agree) behind a "Menu" toggle. The 30 minimal templates, the 70 artwork
-ones, the 50 small-business ones and the 50 picture-led ones were built
-with it, so 257 of the 277 carry one. Four things it depends on:
+ones, the 50 small-business ones, the 50 picture-led ones and the 100
+professionals ones were built with it, so 357 of the 377 carry one. Four
+things it depends on:
 
 - **It is a `<details>`, because the HTML package has no React left.** Open
   and shut are the browser's own there. Closing on a followed link, an
@@ -805,6 +810,52 @@ vectors), `art-silhouette`, `art-pictogram` and `art-manual` (one ink), and
   crate label) keeps it light on a dark palette by deriving it with relative
   color from the ground, not by a role of its own.
 
+## The professionals set - a hundred simple sites
+
+The last 100 entries in `lib/templateSites.ts` (2026-10-08, seed prefix
+`pro-`) are single-page sites for the people who most often need a plain,
+credible website: CPAs, bookkeepers and tax preparers, lawyers, mediators
+and notaries, realtors, appraisers and inspectors, tradespeople,
+clinicians and therapists, coaches, tutors and freelancers. Each leads
+with a design no earlier template leads with: every one of batch 14's 44,
+and 56 older designs that had only ever been secondary. None has a
+picture; the lead design is the imagery, in the hero and at least two more
+places, and each layout is taken from an object of the trade (an engraved
+banknote, a patent drawing sheet, a lobby directory, an inspection report,
+a costume plot, a README). All follow the small-business set's
+any-palette rules above, and every page lost nothing under the five
+stress palettes when it was written.
+
+They were written in parallel by twenty agents, five pages each, against
+one shared `next dev`, and each page was held to a self-check before any
+build: the stress palettes fitted by `fitPalette` and measured the way
+`e2e/palette-fit.spec.ts` measures (on the root rule's roles, since the
+page was not annotated yet), the phone-menu gate, overflow at 390px, ASCII,
+every hex in `page.tsx` one of the roles, the lead design drawn three
+times, and the Google Fonts answer naming every family. Then one pass
+registered, annotated (both codemods) and built them. Things learned:
+
+- **Write the page unannotated and let the codemods do the rest.** The
+  root rule declares the roles; `annotate-templates.mjs` moves them inline
+  and adds `data-edit-root`, so an author who adds either makes the codemod
+  skip the whole page. Of what `annotate-orphan-text.mjs` then reports, the
+  footer's "Patterns by <a>Tabbied</a>." is a hundred of the 109 entries
+  (text beside a link, left as on every older page).
+- **Chromium here reaches Google Fonts only through the proxy**, and only
+  when launched with it (`proxy: { server: process.env.HTTPS_PROXY,
+  bypass: 'localhost,127.0.0.1' }`) and given a context with
+  `ignoreHTTPSErrors`, since the proxy's CA is not in Chromium's store;
+  without both every font file fails and `generate-template-shots.mjs`
+  refuses every shot. Twenty checkers at once
+  still lost random font files and the root layout's Typekit
+  (`ERR_TOO_MANY_RETRIES`); those runs were retried, not read as page bugs.
+- **A global `td:not([align])` rule** in `styles/globals.css` beats a
+  one-class `text-align` on a cell; a template aligns its table cells with
+  two classes.
+- **Some designs paint with color 0**, not just their ground: `coil` draws
+  each ring's hub in it, so a `'transparent'` there leaves the rings with no
+  hole. Look at the preview before making color 0 transparent.
+
 ## Template screenshots on the cards
 
 Every template has a screenshot in `public/template-shots/<slug>.webp`: the
@@ -886,8 +937,9 @@ re-litigating:
   itself, so a large batch of one look sits together on the last pages.
   The first 177 were laid out by `spreadTemplates` and frozen as they were
   first published; the fifty small-business sites were appended after them
-  (2026-09-26), spread among themselves, and the fifty picture-led sites
-  (2026-09-27, `pic-`) after those.
+  (2026-09-26), spread among themselves, the fifty picture-led sites
+  (2026-09-27, `pic-`) after those, and the hundred professionals sites
+  (2026-10-08, `pro-`) after those.
 - **The first cards are picked by hand.** `GALLERY_ORDER` is `GALLERY_LEAD`,
   twenty-three templates chosen for the top of the first page (fifteen on
   2026-10-02, eight more after them the same day), then `GALLERY_SPREAD`,
@@ -1012,7 +1064,7 @@ it hairline at the ~20px the navs draw it at. Scale the box, never the stroke.
 
 **The wordmark's font is declared by `Logo` itself**, not by a route and not
 by the root layout. `plexMono` and `ebGaramond` are applied by the routes that
-use them; the lockup is in a dozen mastheads and in none of the 277 template
+use them; the lockup is in a dozen mastheads and in none of the 377 template
 pages, so the component that draws the word is the only place that knows
 where the font is actually read.
 
@@ -1356,7 +1408,7 @@ another). Five things worth not re-litigating:
   (`components/template/ChooseTemplate.tsx`): how many are chosen, what this
   one costs, and at the limit the chosen ones and "Request more". The page
   learns what is chosen from `GET /api/account/templates`, read once per
-  page into a small store (`lib/myTemplates.ts`) the 277 gallery cards
+  page into a small store (`lib/myTemplates.ts`) the 377 gallery cards
   share. Someone who opens a zip's URL directly is held to the same five.
 - **A click and a fetch are answered differently.** A navigation (a download
   link, told by `Sec-Fetch-Mode`) is sent where the answer is: to
@@ -1427,14 +1479,14 @@ they stay reachable from the framed template preview and from the account.
 The rest of this section describes the flow as built, for when it comes back.
 
 `/studio` takes a description of a business and `/studio/results` answers with
-three template sites. Studio answers with what the repo actually has: 277
+three template sites. Studio answers with what the repo actually has: 377
 finished template sites, each on one of the 382 patterns and one of the 437
 palettes, each with a real page and a real zip. (The AI tier this was designed
 against - `agent-outputs/20260827-studio-ai-plan.md` - has since landed; see
 below. The matcher was not replaced by it.)
 
 - **`lib/studioMatch.ts` is pure and isomorphic; `lib/studioDirections.ts` is
-  server-only.** The index - 277 entries of names, palettes and vocabulary - is
+  server-only.** The index - 377 entries of names, palettes and vocabulary - is
   built at build time and passed to the client as plain data. Importing the
   catalog (490 KB) or the template data into the browser to match against it is
   the thing this split exists to prevent.
@@ -1579,7 +1631,7 @@ the template and shows the result.
   `planEdits`, which is pure and so runs in the Worker with no DOM; one repair
   retry; a second failure writes the three-string `directionToEdits` floor as
   revision 1 with `source: 'fallback'`, and the workspace says so. Because the
-  document is keyed by slot id, **this reaches all 277 templates today** -
+  document is keyed by slot id, **this reaches all 377 templates today** -
   `data-edit-copy` roles matter only for the cheap card-stage preview.
 - **Sites are pinned and versioned.** `site` records `specVersion` and a
   SHA-256 of the packaged `index.html` it was authored against; `GET
@@ -1934,7 +1986,7 @@ of which repeats its README section. Four things worth not re-litigating:
   on the host when it mounts; Svelte writes a spread `style` attribute whole
   on every change, which would take them away and let the oversized grid
   canvas spill out of its box. React's placeholder is left without them
-  because the 277 packaged templates are derived from its markup.
+  because the 377 packaged templates are derived from its markup.
 - **The browser half is tested from the site, not from a framework app.**
   `app/package-test/WrappersProbe.tsx` calls the action the way Svelte does
   (attributes written whole, then `update`) and mounts the Vue component with
