@@ -1,0 +1,1212 @@
+/* ==========================================================================
+   FLETCH ARCHERY COACHING - Ashgrove playing fields
+   An evening range: the page is the green of the field after sundown, and
+   everything on it is something an archer handles. The hero is a target
+   face whose outer rings are cut from the yabane feathers; the beginner
+   course is a paper score sheet clipped to the board; the range times are
+   the week laid out like a shooting line. A high-contrast display serif for
+   the headings, a plain grotesque to read and a mono for every score.
+   ========================================================================== */
+
+.page {
+  --field: #17241d;
+  --chalk: #efe8d6;
+  --gold: #e2b23a;
+  --red: #c8452f;
+  --blue: #3d78a8;
+
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'DM Mono', ui-monospace, Menlo, monospace;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --bar-h: 4.5rem;
+
+  --text: var(--chalk);
+  --on-chalk: var(--field);
+  --on-gold: var(--field);
+  --on-red: var(--chalk);
+  --on-blue: var(--chalk);
+
+  --muted: color-mix(in oklab, var(--text) 72%, var(--field));
+  --rule: color-mix(in oklab, var(--text) 22%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 60%, transparent);
+  --lane: color-mix(in oklab, var(--field) 90%, var(--chalk));
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--field);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--field) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--chalk));
+    --on-chalk: color-mix(in oklab, oklch(from var(--chalk) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--chalk));
+    --on-gold: oklch(from var(--gold) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-red: oklch(from var(--red) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-blue: oklch(from var(--blue) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, ul, ol, dl, dd, blockquote) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  min-height: var(--bar-h);
+  padding: 0 var(--gut);
+  background: var(--field);
+  color: var(--text);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+
+/* A small target face: gold, red, blue, chalk. */
+.brandMark {
+  align-self: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  flex: none;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--gold) 0 30%, var(--red) 30% 55%, var(--blue) 55% 80%, var(--chalk) 80%);
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.brandSub {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.4vw, 2.4rem);
+}
+
+.nav a {
+  padding: 0.3rem 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--gold);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--field);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: center;
+  max-width: 88rem;
+  min-height: min(calc(100vh - var(--bar-h)), 56rem);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut);
+}
+
+.kicker {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  margin-top: 1.1rem;
+  font-size: clamp(3.3rem, 6.8vw, 6.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: italic;
+  color: var(--gold);
+}
+
+.heroLead {
+  max-width: 32rem;
+  margin-top: 1.6rem;
+  font-size: 1.14rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2.2rem;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.5rem;
+  font: inherit;
+  font-size: 0.98rem;
+  font-weight: 700;
+  background: var(--gold);
+  color: var(--on-gold);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.ghost {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.85rem 1.4rem;
+  font-size: 0.98rem;
+  font-weight: 700;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 999px;
+}
+
+.button:hover,
+.ghost:hover {
+  transform: translateY(-1px);
+}
+
+.heroTarget {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 40rem);
+}
+
+.target {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--field);
+  box-shadow: 0 0 0 0.45rem var(--chalk), 0 0 0 0.6rem var(--field), 0 0 0 0.75rem var(--rule-strong);
+}
+
+.targetField {
+  position: absolute;
+  inset: 0;
+}
+
+/* The scoring zones over the feathers: gold, red and blue solid, the two
+   outer colors left to the pattern, and a ring line every tenth. */
+.rings {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(closest-side, transparent 0 calc(5% - 1.5px), var(--field) calc(5% - 1.5px) 5%, transparent 5%),
+    repeating-radial-gradient(closest-side, transparent 0 calc(10% - 2px), var(--field) calc(10% - 2px) 10%),
+    radial-gradient(closest-side, var(--gold) 0 20%, var(--red) 20% 40%, var(--blue) 40% 60%, transparent 60%);
+}
+
+/* Three arrows in the gold, seen from the shooting line. */
+.nock {
+  position: absolute;
+  z-index: 1;
+  width: 4.2%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--field) 0 34%, var(--chalk) 34% 100%);
+  box-shadow: 0 0 0 2px var(--field);
+}
+
+/* The three vanes behind each nock, one of them the red cock feather. */
+.nock::before {
+  content: '';
+  position: absolute;
+  inset: -85%;
+  z-index: -1;
+  border-radius: 50%;
+  background: conic-gradient(from 25deg, var(--red) 0 12deg, transparent 12deg 120deg, var(--chalk) 120deg 132deg, transparent 132deg 240deg, var(--chalk) 240deg 252deg, transparent 252deg);
+}
+
+.nock2::before {
+  transform: rotate(70deg);
+}
+
+.nock3::before {
+  transform: rotate(-40deg);
+}
+
+.nock1 {
+  left: 46%;
+  top: 44.5%;
+}
+
+.nock2 {
+  left: 52.5%;
+  top: 50.5%;
+}
+
+.nock3 {
+  left: 43.5%;
+  top: 53.5%;
+}
+
+.card {
+  position: absolute;
+  left: clamp(-2rem, -2vw, 0rem);
+  bottom: -1rem;
+  width: min(19rem, 70%);
+  padding: 1rem 1.15rem 1.1rem;
+  background: var(--chalk);
+  color: var(--on-chalk);
+  border-radius: 0.3rem;
+  box-shadow: 0 14px 30px -12px color-mix(in oklab, var(--field) 70%, transparent);
+  transform: rotate(-2deg);
+}
+
+.cardHead {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cardEnd {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin-top: 0.7rem;
+  border: 1.5px solid var(--on-chalk);
+}
+
+.cardEnd li {
+  padding: 0.45rem 0;
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.cardEnd li + li {
+  border-left: 1px solid color-mix(in oklab, var(--on-chalk) 40%, transparent);
+}
+
+.cardTotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.cardTotal strong {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  grid-template-areas:
+    'eyebrow eyebrow'
+    'title note';
+  gap: 0.9rem clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.eyebrow {
+  grid-area: eyebrow;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-right: 0.6rem;
+  vertical-align: -0.05rem;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--gold) 0 45%, var(--red) 45%);
+}
+
+.secTitle {
+  grid-area: title;
+  font-size: clamp(2.3rem, 4.4vw, 3.7rem);
+}
+
+.secNote {
+  grid-area: note;
+  max-width: 34rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ score sheet */
+
+.sheet {
+  --text: var(--on-chalk);
+  --muted: color-mix(in oklab, var(--on-chalk) 74%, var(--chalk));
+  --rule: color-mix(in oklab, var(--on-chalk) 22%, transparent);
+  --rule-strong: color-mix(in oklab, var(--on-chalk) 70%, transparent);
+  background: var(--chalk);
+  color: var(--text);
+  border-radius: 0.4rem;
+  box-shadow: 0 30px 60px -30px color-mix(in oklab, var(--field) 80%, transparent);
+}
+
+.sheetTop,
+.sheetFoot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem 2rem;
+  padding: 1.3rem clamp(1.2rem, 3vw, 2rem);
+}
+
+.sheetTop {
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.sheetTitle {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.sheetMeta,
+.sheetNext {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.sheetFoot {
+  border-top: 2px solid var(--rule-strong);
+}
+
+.tableWrap {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.weeks {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.weeks th,
+.weeks td {
+  padding: 0.9rem clamp(0.6rem, 2vw, 1.4rem);
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule);
+}
+
+.weeks th + th,
+.weeks td + td,
+.weeks td + th,
+.weeks th + td {
+  border-left: 1px solid var(--rule);
+}
+
+.weeks thead th {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.weeks td {
+  font-family: var(--mono);
+  font-size: 0.92rem;
+  white-space: nowrap;
+}
+
+.weeks tbody th {
+  font-weight: 500;
+  width: 46%;
+}
+
+.weeks .weekNo {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.weeks td.num {
+  text-align: right;
+}
+
+.weeks tfoot td {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  border-bottom: 0;
+  border-top: 2px solid var(--rule-strong);
+}
+
+.weeks tfoot td.num {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  text-transform: none;
+}
+
+/* ------------------------------------------------------------ the quiver */
+
+.quiver {
+  position: relative;
+  height: clamp(8rem, 13vw, 11rem);
+  overflow: hidden;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* ------------------------------------------------------------------ lessons */
+
+.lessons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.lesson {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.5rem 1.4rem 1.6rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 0.4rem;
+}
+
+.lessonMark {
+  width: 2.2rem;
+  height: 2.2rem;
+  margin-bottom: 0.8rem;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--gold) 0 25%, var(--red) 25% 50%, var(--blue) 50% 75%, var(--chalk) 75%);
+}
+
+.lessonName {
+  font-size: 1.6rem;
+}
+
+.lessonPrice {
+  margin-top: 0.4rem;
+  font-family: var(--serif);
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.lessonPer {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.lessonWhat {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  font-size: 0.94rem;
+  color: var(--muted);
+  border-top: 1px solid var(--rule);
+}
+
+/* -------------------------------------------------------------- range times */
+
+.range {
+  background: var(--lane);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.rangeInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.6fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.rangeHead .eyebrow {
+  display: block;
+  margin-bottom: 0.9rem;
+}
+
+.rangeFacts {
+  margin-top: 2rem;
+}
+
+.rangeFacts div {
+  padding: 0.8rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.rangeFacts dt {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.rangeFacts dd {
+  margin-top: 0.15rem;
+  font-size: 0.95rem;
+}
+
+/* The week as a shooting line: seven lanes, each with its sessions. */
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  align-self: start;
+  border-left: 1px solid var(--rule-strong);
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  min-height: 16rem;
+  border-right: 1px solid var(--rule-strong);
+}
+
+.dayName {
+  padding: 0.7rem 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  border-top: 3px solid var(--gold);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.dayTimes {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.6rem 0.45rem;
+}
+
+.dayTimes li {
+  padding: 0.55rem 0.55rem 0.6rem;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  background: var(--field);
+  border: 1px solid var(--rule);
+  border-radius: 0.25rem;
+}
+
+.closed .dayName {
+  border-top-color: var(--rule-strong);
+}
+
+.closed .dayTimes li {
+  background: transparent;
+  border-style: dashed;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ---------------------------------------------------------------- equipment */
+
+.equip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.equipSide .eyebrow,
+.equipSide .secTitle {
+  display: block;
+}
+
+.equipSide .secTitle {
+  margin-top: 0.9rem;
+}
+
+.equipSide .secNote {
+  margin-top: 1.2rem;
+}
+
+.kit {
+  margin-top: 2rem;
+  padding: 1.3rem 1.4rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 0.4rem;
+}
+
+.kitTitle {
+  font-size: 1.35rem;
+}
+
+.kitList {
+  margin-top: 0.8rem;
+}
+
+.kitList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.kitList dt {
+  font-size: 0.94rem;
+}
+
+.kitList dd {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.bows {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.bow {
+  padding: 1.5rem 1.4rem;
+  background: var(--chalk);
+  color: var(--on-chalk);
+  border-radius: 0.4rem;
+}
+
+.bowName {
+  font-size: 2rem;
+}
+
+.bowDraw {
+  margin-top: 0.4rem;
+  padding-bottom: 0.7rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  border-bottom: 1px solid color-mix(in oklab, var(--on-chalk) 30%, transparent);
+}
+
+.bowNote {
+  margin-top: 0.7rem;
+  font-size: 0.95rem;
+  color: color-mix(in oklab, var(--on-chalk) 80%, var(--chalk));
+}
+
+/* -------------------------------------------------------------------- coach */
+
+.coach {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 6vw, 5.5rem);
+  align-items: center;
+}
+
+/* A quiver: tall, open at the top, rounded at the foot. */
+.coachPanel {
+  position: relative;
+  aspect-ratio: 3 / 5;
+  overflow: hidden;
+  border-radius: 0.4rem 0.4rem 45% 45% / 0.4rem 0.4rem 14% 14%;
+  box-shadow: 0 0 0 0.35rem var(--chalk);
+}
+
+.coachText .eyebrow,
+.coachText .secTitle {
+  display: block;
+}
+
+.coachText .secTitle {
+  margin-top: 0.9rem;
+}
+
+.quote {
+  max-width: 40rem;
+  margin-top: 1.5rem;
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-style: italic;
+  line-height: 1.3;
+}
+
+.creds {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+  margin-top: 2rem;
+}
+
+.creds li {
+  padding: 0.8rem 0 0.8rem 1.6rem;
+  position: relative;
+  font-size: 0.95rem;
+  border-top: 1px solid var(--rule);
+}
+
+.creds li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.15rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--gold) 0 45%, var(--red) 45%);
+}
+
+/* --------------------------------------------------------------------- book */
+
+.book {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.bookInfo .eyebrow,
+.bookInfo .secTitle {
+  display: block;
+}
+
+.bookInfo .secTitle {
+  margin-top: 0.9rem;
+}
+
+.bookInfo .secNote {
+  margin-top: 1.1rem;
+}
+
+.contactList {
+  margin-top: 2rem;
+}
+
+.contactList div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.contactList dt {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 0.2rem;
+}
+
+.contactList dd {
+  overflow-wrap: anywhere;
+}
+
+.contactList a {
+  border-bottom: 1.5px solid var(--gold);
+}
+
+.form {
+  --text: var(--on-chalk);
+  --muted: color-mix(in oklab, var(--on-chalk) 74%, var(--chalk));
+  display: grid;
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--chalk);
+  color: var(--text);
+  border-radius: 0.4rem;
+}
+
+.formHead {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field span,
+.choices legend {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+  color: var(--text);
+  background: transparent;
+  border: 1.5px solid color-mix(in oklab, var(--on-chalk) 45%, transparent);
+  border-radius: 0.3rem;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: 2px solid var(--on-chalk);
+  outline-offset: 1px;
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.choices legend {
+  width: 100%;
+  margin-bottom: 0.45rem;
+  padding: 0;
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.95rem;
+}
+
+.choice input {
+  accent-color: var(--on-chalk);
+}
+
+.form .button {
+  justify-self: start;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  border-top: 1px solid var(--rule);
+}
+
+.footerBand {
+  position: relative;
+  height: 5.5rem;
+  overflow: hidden;
+}
+
+.footerInner {
+  display: grid;
+  gap: 0.45rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.6rem var(--gut) 3rem;
+}
+
+.footerName {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  line-height: 1.1;
+}
+
+.footerLine {
+  max-width: 44rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.footerCredit {
+  margin-top: 0.5rem;
+  font-size: 0.92rem;
+}
+
+.footerCredit a {
+  border-bottom: 1.5px solid currentColor;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .lessons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rangeInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .heroTarget {
+    width: min(100%, 30rem);
+    margin-bottom: 1.5rem;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'eyebrow'
+      'title'
+      'note';
+  }
+
+  .equip,
+  .coach,
+  .book {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .coachPanel {
+    width: min(100%, 16rem);
+    aspect-ratio: 4 / 5;
+  }
+
+  .week {
+    grid-template-columns: minmax(0, 1fr);
+    border-left: 0;
+    border-top: 1px solid var(--rule-strong);
+  }
+
+  .day {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    min-height: 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  .dayName {
+    padding: 0.85rem 0;
+    text-align: left;
+    border-top: 0;
+    border-bottom: 0;
+    border-left: 3px solid var(--gold);
+    padding-left: 0.7rem;
+  }
+
+  .closed .dayName {
+    border-left-color: var(--rule-strong);
+  }
+
+  .dayTimes {
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    padding: 0.5rem 0;
+  }
+
+  .closed .dayTimes li {
+    text-align: left;
+  }
+}
+
+@media (max-width: 620px) {
+  .lessons,
+  .bows,
+  .creds,
+  .formRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .card {
+    left: 0;
+    bottom: -1.5rem;
+    width: 78%;
+  }
+
+  .contactList div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  /* The score sheet folds each week into two lines: the number and what
+     we work on, then the date, the distance and the arrows. */
+  .weeks,
+  .weeks tbody,
+  .weeks tfoot {
+    display: block;
+  }
+
+  .weeks thead {
+    display: none;
+  }
+
+  .weeks tbody tr {
+    display: grid;
+    grid-template-columns: 2.4rem auto auto minmax(0, 1fr);
+    grid-template-areas:
+      'no focus focus focus'
+      'no date dist arrows';
+    gap: 0.35rem 0.9rem;
+    padding: 0.9rem 1.1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .weeks tbody tr > * {
+    padding: 0;
+    border: 0;
+  }
+
+  .weeks tbody tr > :nth-child(1) {
+    grid-area: no;
+  }
+
+  .weeks tbody tr > :nth-child(2) {
+    grid-area: date;
+  }
+
+  .weeks tbody tr > :nth-child(3) {
+    grid-area: dist;
+  }
+
+  .weeks tbody th {
+    grid-area: focus;
+    width: auto;
+  }
+
+  .weeks tbody td.num {
+    grid-area: arrows;
+  }
+
+  .weeks tbody td {
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  .weeks tbody td.num::after {
+    content: ' arrows';
+  }
+
+  .weeks tbody td.weekNo {
+    color: var(--text);
+  }
+
+  .weeks tfoot tr {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.9rem 1.1rem;
+    border-top: 2px solid var(--rule-strong);
+  }
+
+  .weeks tfoot td {
+    padding: 0;
+    border: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .button,
+  .ghost {
+    transition: transform 120ms ease;
+  }
+}

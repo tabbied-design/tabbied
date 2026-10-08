@@ -1,0 +1,1300 @@
+/* ==========================================================================
+   DRY GROUND WATERPROOFING - basement waterproofing contractor
+   The page is a cross-section dug beside a house. It starts above grade in
+   the storm, crosses the grade line, and each section after it is a layer
+   of ground, labeled on a depth ruler down the left like a borehole log:
+   topsoil, backfill, clay, the footing. The middle of the page is the
+   wall itself, drawn in section with its six numbered parts. Condensed
+   contractor type, concrete and storm slate, clay for the soil.
+   ========================================================================== */
+
+.page {
+  --concrete: #e9e7e1;
+  --storm: #15202b;
+  --rain: #4f9bd0;
+  --clay: #b0602c;
+  --sky: #c5d6e2;
+
+  --text: var(--storm);
+  --on-storm: var(--concrete);
+  --on-clay: var(--concrete);
+  --on-rain: var(--storm);
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --sans: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+
+  font-family: var(--sans);
+  font-size: 1.04rem;
+  line-height: 1.6;
+  background: var(--concrete);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--concrete) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--storm));
+    --on-storm: color-mix(in oklab, oklch(from var(--storm) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--storm));
+    --on-clay: oklch(from var(--clay) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-rain: oklch(from var(--rain) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--concrete));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 50%, transparent);
+  --block: color-mix(in oklab, var(--concrete) 74%, var(--storm));
+  --block-dark: color-mix(in oklab, var(--concrete) 58%, var(--storm));
+  --soil: color-mix(in oklab, var(--concrete) 55%, var(--clay));
+  --storm-muted: color-mix(in oklab, var(--on-storm) 76%, var(--storm));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p) {
+  margin: 0;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.7rem var(--gut);
+  background: var(--concrete);
+  border-bottom: 3px solid var(--storm);
+}
+
+.brand {
+  justify-self: start;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  column-gap: 0.6rem;
+  align-items: center;
+  line-height: 1;
+}
+
+.drop {
+  grid-row: 1 / span 2;
+  width: 1.6rem;
+  height: 1.6rem;
+  background: var(--rain);
+  border-radius: 0 50% 50% 50%;
+  transform: rotate(45deg);
+  box-shadow: inset 0 0 0 2px var(--storm);
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.brandSub {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.9rem, 2vw, 1.8rem);
+}
+
+.nav a {
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.25rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--rain);
+}
+
+.barCall {
+  padding: 0.6rem 1.1rem;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  background: var(--storm);
+  color: var(--on-storm);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--concrete);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  background: var(--storm);
+  color: var(--on-storm);
+}
+
+.heroRain {
+  position: absolute;
+  inset: 0 0 18px;
+  overflow: hidden;
+}
+
+.heroInner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.8fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: end;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 9vw, 8rem) var(--gut) clamp(3.5rem, 7vw, 6rem);
+}
+
+.heroCard {
+  padding: clamp(1.6rem, 4vw, 3rem);
+  background: var(--concrete);
+  color: var(--text);
+  box-shadow: 10px 10px 0 color-mix(in oklab, var(--storm) 60%, var(--rain));
+}
+
+.kicker {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  margin-top: 0.9rem;
+  font-size: clamp(3rem, 6.6vw, 6rem);
+  line-height: 0.92;
+}
+
+.heroTitle span {
+  display: block;
+  font-weight: 600;
+}
+
+.heroLead {
+  max-width: 36rem;
+  margin-top: 1.4rem;
+  font-size: 1.12rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.8rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.button {
+  background: var(--storm);
+  color: var(--on-storm);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--storm) 82%, var(--rain));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ghost:hover {
+  background: color-mix(in oklab, var(--concrete) 88%, var(--storm));
+}
+
+.gauge {
+  padding: 1.6rem 1.5rem;
+  background: var(--sky);
+  color: var(--text);
+  border-top: 8px solid var(--rain);
+}
+
+.gaugeLabel {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.gaugeFigure {
+  margin-top: 0.4rem;
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 4vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.gaugeText {
+  margin-top: 0.8rem;
+  font-size: 0.98rem;
+}
+
+.gaugeFacts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.3rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.gaugeFacts div {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.gaugeFacts dt {
+  font-size: 0.82rem;
+}
+
+.gaugeFacts dd {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+/* The grade line, where the storm meets the ground. */
+.grade {
+  position: relative;
+  height: 18px;
+  background: var(--clay);
+  border-top: 4px solid var(--soil);
+}
+
+.gradeLabel {
+  position: absolute;
+  right: var(--gut);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: var(--clay);
+  color: var(--on-clay);
+}
+
+/* ------------------------------------------------------------- the strata */
+
+.stratum {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+.topsoil,
+.backfill,
+.clayLayer,
+.gravelLayer {
+  max-width: none;
+  padding-left: max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  padding-right: max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+}
+
+.topsoil {
+  background: color-mix(in oklab, var(--concrete) 95%, var(--clay));
+}
+
+.backfill {
+  background: color-mix(in oklab, var(--concrete) 91%, var(--clay));
+}
+
+.clayLayer {
+  background: color-mix(in oklab, var(--concrete) 86%, var(--clay));
+}
+
+.gravelLayer {
+  background: color-mix(in oklab, var(--concrete) 90%, var(--storm));
+}
+
+.depth {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.2rem;
+  padding: clamp(3.5rem, 7vw, 5.5rem) 1rem 2rem 0;
+  border-right: 2px solid var(--rule-strong);
+}
+
+.depth::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 14px;
+  background: repeating-linear-gradient(to bottom, var(--rule-strong) 0 2px, transparent 2px 28px);
+}
+
+.depthFt {
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.depthName {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stratumBody {
+  min-width: 0;
+  padding: clamp(3.5rem, 7vw, 5.5rem) 0 clamp(3.5rem, 7vw, 5.5rem) clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.head {
+  max-width: 42rem;
+  margin-bottom: clamp(2rem, 4vw, 2.8rem);
+}
+
+.title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 0.95;
+}
+
+.note {
+  margin-top: 0.9rem;
+  font-size: 1.08rem;
+  color: var(--muted);
+}
+
+/* Signs: six observations in a ruled grid. */
+
+.signs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 2px solid var(--text);
+}
+
+.sign {
+  padding: 1.4rem 1.4rem 1.8rem 0;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.sign + .sign {
+  padding-left: 1.4rem;
+}
+
+.sign:nth-child(3n + 1) {
+  padding-left: 0;
+}
+
+.sign:not(:nth-child(3n)) {
+  border-right: 1px solid var(--rule);
+}
+
+.signNo {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  background: var(--storm);
+  color: var(--on-storm);
+}
+
+.signTitle {
+  margin-top: 0.8rem;
+  font-size: 1.55rem;
+  line-height: 1.05;
+}
+
+.signText {
+  margin-top: 0.5rem;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+/* The cross-section. Everything is placed in percent of a 16:11 box so it
+   scales as one drawing. */
+
+.systemGrid {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.xs {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--concrete);
+  border: 3px solid var(--storm);
+}
+
+.xs > div,
+.xs > span {
+  position: absolute;
+}
+
+.xsSky {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 32%;
+  overflow: hidden;
+  background: var(--storm);
+}
+
+.xsSoil {
+  left: 0;
+  top: 28%;
+  width: 40%;
+  bottom: 0;
+  background: var(--soil);
+  clip-path: polygon(0 4%, 100% 0, 100% 100%, 0 100%);
+}
+
+.xsFloor {
+  left: 47%;
+  right: 0;
+  top: 9%;
+  height: 5%;
+  background: var(--block-dark);
+}
+
+.xsRoom {
+  left: 47%;
+  right: 0;
+  top: 14%;
+  height: 74%;
+  background: var(--concrete);
+}
+
+.xsTag {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.xsSlab {
+  left: 47%;
+  right: 0;
+  top: 88%;
+  height: 8%;
+  background: var(--block);
+}
+
+.xsFooting {
+  left: 35%;
+  width: 17%;
+  top: 87%;
+  height: 9%;
+  background: var(--block-dark);
+}
+
+.xsWall {
+  left: 40%;
+  width: 7%;
+  top: 6%;
+  height: 82%;
+  background-color: var(--block);
+  background-image: repeating-linear-gradient(to bottom, var(--block-dark) 0 2px, transparent 2px 22px);
+}
+
+.xsCrack {
+  left: 42.6%;
+  width: 2.4%;
+  top: 46%;
+  height: 16%;
+  background: var(--clay);
+  clip-path: polygon(40% 0, 60% 0, 30% 30%, 75% 52%, 35% 78%, 62% 100%, 42% 100%, 15% 78%, 55% 52%, 10% 30%);
+}
+
+.xsMembrane {
+  left: 39%;
+  width: 1%;
+  top: 28%;
+  height: 59%;
+  background: var(--rain);
+}
+
+.xsGravel {
+  left: 26%;
+  width: 13%;
+  top: 74%;
+  height: 22%;
+  background-color: var(--block);
+  background-image: radial-gradient(circle, var(--block-dark) 1.6px, transparent 2.2px);
+  background-size: 8px 8px;
+}
+
+.xsTile {
+  left: 30%;
+  width: 5.5%;
+  top: 80%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--concrete);
+  border: 3px solid var(--storm);
+  box-shadow: inset 0 0 0 4px var(--rain);
+}
+
+.xsChannel {
+  left: 47%;
+  width: 6%;
+  top: 84%;
+  height: 8%;
+  background-color: var(--block);
+  background-image: radial-gradient(circle, var(--block-dark) 1.6px, transparent 2.2px);
+  background-size: 7px 7px;
+  border-top: 3px solid var(--rain);
+}
+
+.xsPit {
+  left: 75%;
+  width: 14%;
+  top: 82%;
+  bottom: 0;
+  background: var(--block-dark);
+  border: 2px solid var(--storm);
+  border-bottom: 0;
+}
+
+.xsPump {
+  left: 78.5%;
+  width: 7%;
+  top: 88%;
+  height: 10%;
+  background: var(--storm);
+  border-radius: 6px 6px 2px 2px;
+}
+
+.xsRiser {
+  left: 81.5%;
+  width: 1%;
+  top: 22%;
+  height: 66%;
+  background: var(--storm);
+}
+
+.xsOutlet {
+  left: 26%;
+  width: 56.5%;
+  top: 22%;
+  height: 1.8%;
+  background: var(--storm);
+  box-shadow: 0 0 0 2px var(--concrete);
+}
+
+/* The discharge line ends in a short elbow, pouring onto a splash block. */
+.xsOutlet::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0.9%;
+  min-width: 6px;
+  height: 260%;
+  background: var(--storm);
+  box-shadow: 0 0 0 2px var(--concrete);
+}
+
+.xsSpout {
+  left: 6%;
+  width: 34%;
+  top: 25.6%;
+  height: 1.8%;
+  background: var(--rain);
+  border: 1.5px solid var(--storm);
+  transform-origin: 100% 50%;
+  transform: rotate(-2.9deg);
+}
+
+.xsChip {
+  left: 1.2%;
+  top: 36%;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: var(--concrete);
+  color: var(--text);
+  z-index: 2;
+}
+
+.pin {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+  border-radius: 50%;
+  background: var(--storm);
+  color: var(--on-storm);
+  box-shadow: 0 0 0 2px var(--concrete);
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.pin1 { left: 13%; top: 13%; }
+.pin2 { left: 34%; top: 46%; }
+.pin3 { left: 22%; top: 85%; }
+.pin4 { left: 49.6%; top: 54%; }
+.pin5 { left: 57%; top: 81%; }
+.pin6 { left: 71%; top: 85%; }
+
+.parts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 2rem;
+  border-top: 2px solid var(--text);
+}
+
+.part {
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  gap: 0.9rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.partNo {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 50%;
+  background: var(--storm);
+  color: var(--on-storm);
+}
+
+.partName {
+  font-size: 1.3rem;
+  line-height: 1.1;
+}
+
+.partText {
+  margin-top: 0.25rem;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+.partPrice {
+  margin-top: 0.3rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Prices */
+
+.pricesGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: start;
+}
+
+.example {
+  margin-top: 1.4rem;
+  padding: 1rem 1.2rem;
+  font-weight: 500;
+  background: var(--concrete);
+  border-left: 6px solid var(--clay);
+}
+
+.prices {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--concrete);
+  border: 2px solid var(--text);
+}
+
+.prices th,
+.prices td {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.prices thead th {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--storm);
+  color: var(--on-storm);
+}
+
+.prices tbody th {
+  font-weight: 600;
+}
+
+.prices td {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.prices .priceCell {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  text-align: right;
+}
+
+.prices thead th:last-child {
+  text-align: right;
+}
+
+/* Warranty: back into the rain. */
+
+.warranty {
+  position: relative;
+  background: var(--storm);
+  color: var(--on-storm);
+}
+
+.warrantyRain {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.warrantyInner {
+  position: relative;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 9vw, 7.5rem) var(--gut);
+  display: grid;
+  justify-items: end;
+}
+
+.warrantyCard {
+  max-width: 40rem;
+  padding: clamp(1.6rem, 4vw, 2.8rem);
+  background: var(--concrete);
+  color: var(--text);
+  border-top: 10px solid var(--clay);
+}
+
+.warrantyKicker {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.warrantyTitle {
+  margin-top: 0.6rem;
+  font-size: clamp(2.3rem, 4.4vw, 3.4rem);
+  line-height: 0.98;
+}
+
+.terms {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.terms li {
+  position: relative;
+  padding-left: 2.1rem;
+}
+
+.terms li::before {
+  content: '\2713';
+  position: absolute;
+  left: 0;
+  top: 0.15rem;
+  display: grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: var(--rain);
+  color: var(--on-rain);
+}
+
+/* Process */
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.step {
+  padding: 1.3rem 1.2rem 1.5rem;
+  background: var(--concrete);
+  border-top: 6px solid var(--storm);
+}
+
+.stepNo {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stepTitle {
+  margin-top: 0.4rem;
+  font-size: 1.55rem;
+  line-height: 1.02;
+}
+
+.stepText {
+  margin-top: 0.6rem;
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+.faq {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  border-top: 2px solid var(--text);
+}
+
+.faqItem {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.faqItem summary {
+  padding: 1rem 0;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::after {
+  content: '+';
+  float: right;
+  margin-left: 1rem;
+}
+
+.faqItem[open] summary::after {
+  content: '-';
+}
+
+.faqItem p {
+  padding-bottom: 1.1rem;
+  color: var(--muted);
+}
+
+/* Contact */
+
+.contact {
+  background: color-mix(in oklab, var(--concrete) 82%, var(--clay));
+}
+
+.contactInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut);
+}
+
+.contactTitle {
+  font-size: clamp(2.6rem, 5vw, 4rem);
+  line-height: 0.95;
+}
+
+.contactLead {
+  margin-top: 1rem;
+  max-width: 32rem;
+  font-size: 1.08rem;
+  color: var(--muted);
+}
+
+.contactList {
+  margin: 2rem 0 0;
+  display: grid;
+  gap: 1.1rem;
+}
+
+.contactList dt {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contactList dd {
+  margin: 0.15rem 0 0;
+  font-family: var(--display);
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--concrete);
+  border-top: 8px solid var(--storm);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: color-mix(in oklab, var(--concrete) 92%, var(--storm));
+  border: 0;
+  border-bottom: 2px solid var(--rule-strong);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.9rem 1.6rem;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--on-storm);
+  background: var(--storm);
+  border: 0;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--storm) 82%, var(--rain));
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--storm);
+  color: var(--on-storm);
+}
+
+.footRain {
+  position: relative;
+  height: 90px;
+  overflow: hidden;
+  background: var(--storm);
+  border-bottom: 1px solid color-mix(in oklab, var(--on-storm) 25%, transparent);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
+  gap: 1rem 2.5rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 2.6rem;
+  font-size: 0.92rem;
+  color: var(--storm-muted);
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--on-storm);
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1120px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .parts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .heroInner,
+  .pricesGrid,
+  .contactInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gauge {
+    max-width: 30rem;
+  }
+
+  .signs {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .sign,
+  .sign + .sign,
+  .sign:nth-child(3n + 1) {
+    padding: 1.3rem 1.2rem 1.5rem 0;
+    border-right: 0;
+  }
+
+  .sign:nth-child(2n) {
+    padding-left: 1.2rem;
+    border-left: 1px solid var(--rule);
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .stratum {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .depth {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    padding: 2.6rem 0 0.8rem;
+    border-right: 0;
+    border-bottom: 2px solid var(--rule-strong);
+  }
+
+  .depth::before {
+    display: none;
+  }
+
+  .stratumBody {
+    padding: 1.8rem 0 3.2rem;
+  }
+
+  .signs,
+  .steps,
+  .faq,
+  .form,
+  .parts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sign:nth-child(2n) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .pin,
+  .partNo {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .xsTag {
+    font-size: 0.6rem;
+    top: 0.3rem;
+    right: 0.4rem;
+  }
+
+  .xsChip {
+    font-size: 0.6rem;
+    padding: 0.1rem 0.3rem;
+  }
+
+  /* The price table stacks: the work, what is counted, then the price. */
+  .prices thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .prices tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 1rem;
+    padding: 0.8rem 0.9rem;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  .prices tbody tr:last-child {
+    border-bottom: 0;
+  }
+
+  .prices th,
+  .prices td {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+
+  .prices tbody th {
+    grid-column: 1;
+  }
+
+  .prices td:nth-of-type(1) {
+    grid-column: 1;
+    font-size: 0.88rem;
+  }
+
+  .prices .priceCell {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+  }
+}

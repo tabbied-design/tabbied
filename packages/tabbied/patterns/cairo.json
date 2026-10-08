@@ -1,0 +1,62 @@
+{
+  "name": "Cairo",
+  "slug": "cairo",
+  "galleryOrder": 4033,
+  "description": "The Cairo pentagonal tiling: house-shaped pentagons in pairs, each pair turned a right angle from its neighbors, laid with thin grout lines.",
+  "tags": [
+    "mosaic",
+    "grid"
+  ],
+  "mood": [
+    "calm",
+    "elegant"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "wallpaper",
+    "textile"
+  ],
+  "palette": [
+    "#FFFAF0",
+    "#E76F51",
+    "#2A9D8F",
+    "#264653",
+    "#E9C46A",
+    "#F4A261"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --gate: @r(1); --crk: @calc(0 + 1 * ((@x + @y) % 2) + 2 * max(0, 2 - @x)); --cbk: @calc(0 + 1 * ((@x + @y) % 2) + 2 * max(0, 2 - @y)); @random(${shapeFrequency}) { :before { content: ''; position: absolute; left: -100%; top: -100%; width: 300%; height: 300%; background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-clip-path: @var(--cr$(crk)); clip-path: @var(--cr$(crk)); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: -100%; top: -100%; width: 300%; height: 300%; background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-clip-path: @var(--cb$(cbk)); clip-path: @var(--cb$(cbk)); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --cr0: polygon(59.95% 50%, 67.03% 34.3%, 82.6% 41.33%, 82.6% 58.67%, 67.03% 65.7%, 59.95% 50%, 59.95% 50%, 59.95% 50%, 59.95% 50%, 59.95% 50%, 59.95% 50%, 59.95% 50%); --cr1: polygon(50.73% 41.33%, 66.3% 34.3%, 73.39% 50%, 66.3% 65.7%, 50.73% 58.67%, 50.73% 41.33%, 50.73% 41.33%, 50.73% 41.33%, 50.73% 41.33%, 50.73% 41.33%, 50.73% 41.33%, 50.73% 41.33%); --cr2: polygon(59.95% 50%, 67.03% 34.3%, 82.6% 41.33%, 82.6% 58.67%, 67.03% 65.7%, 59.95% 50%, 17.4% 41.33%, 32.97% 34.3%, 40.05% 50%, 32.97% 65.7%, 17.4% 58.67%, 17.4% 41.33%); --cr3: polygon(50.73% 41.33%, 66.3% 34.3%, 73.39% 50%, 66.3% 65.7%, 50.73% 58.67%, 50.73% 41.33%, 26.61% 50%, 33.7% 34.3%, 49.27% 41.33%, 49.27% 58.67%, 33.7% 65.7%, 26.61% 50%); --cb0: polygon(41.33% 50.73%, 34.3% 66.3%, 50% 73.39%, 65.7% 66.3%, 58.67% 50.73%, 41.33% 50.73%, 41.33% 50.73%, 41.33% 50.73%, 41.33% 50.73%, 41.33% 50.73%, 41.33% 50.73%, 41.33% 50.73%); --cb1: polygon(50% 59.95%, 34.3% 67.03%, 41.33% 82.6%, 58.67% 82.6%, 65.7% 67.03%, 50% 59.95%, 50% 59.95%, 50% 59.95%, 50% 59.95%, 50% 59.95%, 50% 59.95%, 50% 59.95%); --cb2: polygon(41.33% 50.73%, 34.3% 66.3%, 50% 73.39%, 65.7% 66.3%, 58.67% 50.73%, 41.33% 50.73%, 50% 26.61%, 34.3% 33.7%, 41.33% 49.27%, 58.67% 49.27%, 65.7% 33.7%, 50% 26.61%); --cb3: polygon(50% 59.95%, 34.3% 67.03%, 41.33% 82.6%, 58.67% 82.6%, 65.7% 67.03%, 50% 59.95%, 41.33% 17.4%, 34.3% 32.97%, 50% 40.05%, 65.7% 32.97%, 58.67% 17.4%, 41.33% 17.4%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

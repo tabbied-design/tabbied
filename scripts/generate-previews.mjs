@@ -14,6 +14,25 @@
 // Spec: authored palette, default options, fixed seed, default (grid) fit in
 // a square box, i.e. what an embed gets by default, not the gallery-thumbnail
 // look.
+//
+// One exception to "default options": a frequency at its maximum of 1 is drawn
+// with the gate fully open. The package turns `@random(1)` into
+// `@random(0.999)` (see fixFullRandomGate), so about one cell in a thousand is
+// left out at full frequency, and the fixed seed makes that the same cell in
+// every design that rolls the same number of values per cell: a hole in a
+// brick wall or a tartan, in the image the catalog and the share cards show.
+// Just under 1 rolls the gate's values exactly as 0.999 does, so a design that
+// dropped no cell draws the same; one that did draws that cell, and the cells
+// after it re-roll, since a skipped cell never rolled its own picks.
+const FULL_GATE = 0.9999999;
+const openFullGate = (definition) => ({
+  ...definition,
+  options: definition.options.map((option) =>
+    option.replace === '${shapeFrequency}' && option.type === 'Slider' && option.default === 1
+      ? { ...option, default: FULL_GATE }
+      : option
+  ),
+});
 import { createServer } from 'node:http';
 import {
   readFileSync,
@@ -102,7 +121,7 @@ try {
 
     await page.evaluate(
       async ([def, o]) => window.__render(def, o),
-      [definition, { seed: SEED, fit: 'grid', width: SIZE, height: SIZE }]
+      [openFullGate(definition), { seed: SEED, fit: 'grid', width: SIZE, height: SIZE }]
     );
     // Let the authored ~400ms first-arrangement transition finish.
     await page.waitForTimeout(600);

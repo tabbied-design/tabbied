@@ -1,0 +1,834 @@
+/* ==========================================================================
+   BRIDGEWORD - certified translation and interpreting
+   A bilingual edition: English set in roman on the left, Italian in italic
+   on the right, every paragraph facing its translation on the same line,
+   the way a parallel-text book prints a poem. A cool paper, a navy ink, a
+   harbor blue and one red. The interlocking tiles are the bridge between
+   the columns: a wide span in the hero that narrows into a spine down the
+   whole page, where the prices sit between their two names.
+   ========================================================================== */
+
+.page {
+  --paper: #f4f6f1; /* role 0: the page ground */
+  --navy: #1b2b4b;
+  --red: #d8483e;
+  --harbor: #4f7fa3;
+  --aqua: #a9d6d6;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 82rem;
+  --spine: 6rem;
+  --col-gap: clamp(1.5rem, 3.4vw, 3.25rem);
+  --serif: 'Spectral', 'Georgia', serif;
+  --sans: 'Manrope', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--navy);
+  --on-navy: var(--paper);
+  --on-red: var(--paper);
+
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by each surface's lightness, tinted toward the navy:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--navy));
+    --on-navy: color-mix(in oklab, oklch(from var(--navy) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--navy));
+    --on-red: oklch(from var(--red) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+/* Derived surfaces and inks, resolved once the text inks are known. */
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--paper));
+  --rule: color-mix(in oklab, var(--text) 15%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 38%, transparent);
+  --panel: color-mix(in oklab, var(--paper) 84%, var(--aqua));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  font-family: var(--sans);
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: grid;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.brandSub {
+  margin-top: 0.3rem;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 1.9rem);
+}
+
+.nav a {
+  padding: 0.25rem 0;
+  font-size: 0.88rem;
+  font-weight: 500;
+  border-bottom: 1.5px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--red);
+}
+
+/* Two languages, side by side, like the switch on a bilingual site. */
+.pairMark {
+  display: flex;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.pairMark span {
+  padding: 0.35rem 0.55rem;
+  border: 1.5px solid var(--navy);
+}
+
+.pairMark span:first-child {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--paper);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(14rem, 22vw, 21rem) minmax(0, 1fr);
+  max-width: calc(var(--max) + 6rem);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+.heroEn,
+.heroIt {
+  align-self: center;
+  padding: clamp(3rem, 7vw, 6rem) 0 clamp(4rem, 8vw, 7rem);
+}
+
+.heroEn {
+  padding-right: var(--col-gap);
+  text-align: right;
+}
+
+.heroIt {
+  padding-left: var(--col-gap);
+}
+
+/* The bridge: a span of tiles that narrows, at its foot, to the width of
+   the spine below it. */
+.heroBridge {
+  position: relative;
+  min-height: 36rem;
+  background: var(--paper);
+  clip-path: polygon(0 0, 100% 0, 100% 70%, calc(50% + 3rem) 100%, calc(50% - 3rem) 100%, 0 70%);
+}
+
+.tag {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle,
+.heroTitleIt {
+  margin-top: 1rem;
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 4vw, 3.9rem);
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.heroTitle {
+  font-weight: 600;
+}
+
+.heroTitle em {
+  font-weight: 400;
+  color: var(--red);
+}
+
+.heroTitleIt {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.heroTitleIt em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--red);
+}
+
+.heroLead {
+  margin-top: 1.3rem;
+  font-size: 1.08rem;
+  line-height: 1.65;
+}
+
+.heroEn .heroLead {
+  margin-left: auto;
+  max-width: 30rem;
+}
+
+.heroIt .heroLead {
+  max-width: 30rem;
+  font-style: italic;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.8rem;
+}
+
+.heroEn .heroActions {
+  justify-content: flex-end;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.75rem 1.25rem;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: 4px;
+}
+
+.button {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--navy) 82%, var(--harbor));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1.5px var(--text);
+}
+
+.ghost:hover {
+  background: var(--panel);
+}
+
+/* ---------------------------------------------------- the parallel columns */
+
+.parallel {
+  position: relative;
+  padding-bottom: clamp(4rem, 8vw, 6rem);
+}
+
+.spine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: var(--spine);
+  margin-left: calc(var(--spine) / -2);
+  background: var(--paper);
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--spine) minmax(0, 1fr);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+.en {
+  grid-column: 1;
+  padding-right: var(--col-gap);
+}
+
+.it {
+  grid-column: 3;
+  padding-left: var(--col-gap);
+  font-style: italic;
+}
+
+.section {
+  padding-top: clamp(4rem, 8vw, 6rem);
+}
+
+.title,
+.titleIt {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 3.4vw, 2.9rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.title {
+  font-weight: 600;
+}
+
+.titleIt {
+  font-style: italic;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.lead {
+  max-width: 34rem;
+  margin-top: 1rem;
+}
+
+/* Language pairs and the work each one covers. */
+.row > div {
+  padding-top: 1.1rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.pair:first-child + .row > div {
+  margin-top: 2rem;
+  border-top: 1.5px solid var(--rule-strong);
+}
+
+.rowName,
+.rowNameIt {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  line-height: 1.25;
+}
+
+.rowName {
+  font-weight: 600;
+}
+
+.rowNameIt {
+  font-weight: 400;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chips li {
+  padding: 0.15rem 0.6rem;
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  font-style: normal;
+  font-weight: 500;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+}
+
+/* The two translators, one row each. */
+.person > div {
+  padding-top: 1.6rem;
+}
+
+.person + .person > div {
+  padding-top: 1.2rem;
+}
+
+.pair.row + .person > div {
+  margin-top: 1.4rem;
+}
+
+.personName,
+.personNameIt {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.personName::before,
+.personNameIt::before {
+  content: '';
+  width: 1.6rem;
+  height: 3px;
+  background: var(--red);
+}
+
+.personText {
+  max-width: 34rem;
+  margin-top: 0.5rem;
+}
+
+/* Documents: a plain list, line against line. */
+.doc > p {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.pair:first-child + .doc > p {
+  margin-top: 1.8rem;
+  border-top: 1.5px solid var(--rule-strong);
+}
+
+.note > p {
+  padding-top: 1rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* Court and clinic. */
+.setting > div {
+  padding-top: 2rem;
+}
+
+.settingName,
+.settingNameIt {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.settingText {
+  max-width: 34rem;
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1.5px solid var(--rule-strong);
+}
+
+/* Rates: the name in each language, and the price between them on the
+   bridge. */
+.rates {
+  max-width: var(--max);
+  margin: 2rem auto 0;
+  padding: 0 var(--gut);
+  list-style: none;
+}
+
+.rate {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--spine) minmax(0, 1fr);
+  align-items: center;
+}
+
+.rateEn,
+.rateIt {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rateEn {
+  justify-content: flex-end;
+  padding-right: var(--col-gap);
+  text-align: right;
+}
+
+.rateIt {
+  padding-left: var(--col-gap);
+  font-style: italic;
+}
+
+.ratePrice {
+  position: relative;
+  justify-self: center;
+  padding: 0.35rem 0.75rem;
+  font-family: var(--sans);
+  font-size: 0.98rem;
+  font-weight: 700;
+  white-space: nowrap;
+  background: var(--paper);
+  border: 1.5px solid var(--navy);
+  border-radius: 999px;
+}
+
+/* ------------------------------------------------------------------ contact */
+
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  padding: clamp(4rem, 8vw, 6rem) max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  background: var(--panel);
+}
+
+.contactHead .titleIt {
+  margin-top: 0.2rem;
+  color: var(--muted);
+}
+
+.leadIt {
+  max-width: 34rem;
+  margin-top: 0.5rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.contactList {
+  display: grid;
+  margin: 2rem 0 0;
+  border-top: 1.5px solid var(--rule-strong);
+}
+
+.contactList div {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.contactList dt {
+  padding-top: 0.15rem;
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contactList dd {
+  margin: 0;
+}
+
+.contactList dd a {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  align-self: start;
+  padding: clamp(1.5rem, 3.5vw, 2.4rem);
+  font-family: var(--sans);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-top: 6px solid var(--navy);
+}
+
+.field,
+.fieldWide {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.5rem;
+  row-gap: 0.35rem;
+  align-items: baseline;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field > span:first-child,
+.fieldWide > span:first-child {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.fieldIt {
+  font-family: var(--serif);
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.field input,
+.field select,
+.fieldWide textarea {
+  grid-column: 1 / -1;
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--text);
+  background: var(--paper);
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 4px;
+}
+
+.field input:focus,
+.field select:focus,
+.fieldWide textarea:focus {
+  outline: none;
+  border-color: var(--text);
+}
+
+.fieldWide textarea {
+  resize: vertical;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.8rem 1.4rem;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: var(--red);
+  color: var(--on-red);
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footField {
+  position: relative;
+  height: 5rem;
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.8rem 2.5rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 1.8rem var(--gut) 2.4rem;
+  font-family: var(--sans);
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.footLine {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.footLine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 980px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .page {
+    --spine: 4rem;
+  }
+
+  .contact {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* On a phone the columns stack, English above its Italian, and the spine
+   moves to the left margin. */
+@media (max-width: 760px) {
+  .page {
+    --spine: 12px;
+    --indent: calc(var(--gut) + var(--spine) + 1rem);
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0;
+  }
+
+  .heroEn,
+  .heroIt {
+    padding: 2.5rem var(--gut) 0;
+    text-align: left;
+  }
+
+  .heroIt {
+    padding-bottom: 2.5rem;
+  }
+
+  .heroEn .heroLead {
+    margin-left: 0;
+  }
+
+  .heroEn .heroActions {
+    justify-content: flex-start;
+  }
+
+  .heroBridge {
+    order: 3;
+    min-height: 12rem;
+    clip-path: polygon(0 0, 100% 0, 100% 60%, calc(var(--gut) + var(--spine)) 100%, var(--gut) 100%, 0 60%);
+  }
+
+  .spine {
+    left: var(--gut);
+    margin-left: 0;
+  }
+
+  .pair {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0 var(--gut) 0 var(--indent);
+  }
+
+  .rates {
+    padding: 0 var(--gut) 0 var(--indent);
+  }
+
+  .rate {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pairMark {
+    display: none;
+  }
+
+  .en,
+  .it {
+    grid-column: 1;
+    padding: 0;
+  }
+
+  .row > .it,
+  .doc > .it,
+  .person > .it,
+  .setting > .it {
+    margin-top: 0;
+    padding-top: 0.3rem;
+  }
+
+  .row > .en,
+  .doc > .en {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .pair:first-child + .row > .it,
+  .pair:first-child + .doc > .it {
+    margin-top: 0;
+    border-top: 0;
+  }
+
+  .pair:first-child > .it {
+    margin-top: 0.8rem;
+  }
+
+  .setting > .it {
+    padding-top: 1rem;
+  }
+
+  .rateEn,
+  .rateIt {
+    justify-content: flex-start;
+    padding: 0;
+    text-align: left;
+    border: 0;
+  }
+
+  .rate {
+    gap: 0.25rem;
+    justify-items: start;
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .ratePrice {
+    justify-self: start;
+    order: 3;
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contactList div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.15rem;
+  }
+}

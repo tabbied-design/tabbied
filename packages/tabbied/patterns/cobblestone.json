@@ -1,0 +1,65 @@
+{
+  "name": "Cobblestone",
+  "slug": "cobblestone",
+  "galleryOrder": 4024,
+  "galleryWhite": true,
+  "description": "Rounded cobblestones laid in staggered courses, every stone a little different in shape, set and shade.",
+  "tags": [
+    "blocks",
+    "ovals",
+    "grid"
+  ],
+  "mood": [
+    "organic",
+    "calm"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "wallpaper",
+    "card-texture",
+    "textile"
+  ],
+  "palette": [
+    "#2E2A26",
+    "#7A7166",
+    "#8E8579",
+    "#665F56",
+    "#A2958A",
+    "#C8BFB0"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @y(even) { transform: translateX(50%); } @random(${shapeFrequency}) { --t: translate(@r(-3%, 3%), @r(-3%, 3%)) rotate(@r(-6deg, 6deg)); --rd: @r(28%, 48%) @r(28%, 48%) @r(28%, 48%) @r(28%, 48%) / @r(28%, 48%) @r(28%, 48%) @r(28%, 48%) @r(28%, 48%); :after { content: ''; position: absolute; inset: 5%; background: radial-gradient(circle at 34% 28%, var(--color5) 0, transparent 58%), @p(var(--color1), var(--color2), var(--color3), var(--color4)); border-radius: @var(--rd); transform: @var(--t); -webkit-transition: ease 450ms; transition: ease 450ms; } :before { content: ''; position: absolute; top: 5%; bottom: 5%; left: -95%; width: @match(x == 1, 90%, 0); background: radial-gradient(circle at 34% 28%, var(--color5) 0, transparent 58%), @p(var(--color1), var(--color2), var(--color3), var(--color4)); border-radius: @var(--rd); transform: @var(--t); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

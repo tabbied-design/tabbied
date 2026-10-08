@@ -1,0 +1,64 @@
+{
+  "name": "Ice Crack",
+  "slug": "icecrack",
+  "galleryOrder": 4008,
+  "galleryWhite": true,
+  "description": "Cracked ice: a crooked web of shards in pale glazes, every shard split once more and the cracks between them left open.",
+  "tags": [
+    "triangles",
+    "mosaic",
+    "lines"
+  ],
+  "mood": [
+    "organic",
+    "calm"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "wallpaper",
+    "card-texture",
+    "hero-background"
+  ],
+  "palette": [
+    "#2D3A36",
+    "#CFE0D5",
+    "#B8D0C2",
+    "#A3C2B0",
+    "#E2EDE5"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --s: @p(0, 1); --u: @calc(@x * 12.9898 + @y * 78.233); --ax: @calc(2.5 + 32.5 * ((sin($(u) + -89.5228) * 437.5453 + 1000) % 1))%; --ay: @calc(2.5 + 32.5 * ((sin($(u) + -82.1228) * 437.5453 + 1000) % 1))%; --bx: @calc(65 + 32.5 * ((sin($(u) + -76.533) * 437.5453 + 1000) % 1))%; --by: @calc(2.5 + 32.5 * ((sin($(u) + -69.133) * 437.5453 + 1000) % 1))%; --cx: @calc(65 + 32.5 * ((sin($(u) + 1.7) * 437.5453 + 1000) % 1))%; --cy: @calc(65 + 32.5 * ((sin($(u) + 9.1) * 437.5453 + 1000) % 1))%; --dx: @calc(2.5 + 32.5 * ((sin($(u) + -11.2898) * 437.5453 + 1000) % 1))%; --dy: @calc(65 + 32.5 * ((sin($(u) + -3.8898) * 437.5453 + 1000) % 1))%; --mx: calc(@var(--cx) + @var(--s) * (@var(--dx) - @var(--cx))); --nx: calc(@var(--ax) + @var(--s) * (@var(--bx) - @var(--ax))); --ox: calc((@var(--ax) + @var(--bx) + @var(--mx)) / 3); --qx: calc((@var(--nx) + @var(--cx) + @var(--dx)) / 3); --my: calc(@var(--cy) + @var(--s) * (@var(--dy) - @var(--cy))); --ny: calc(@var(--ay) + @var(--s) * (@var(--by) - @var(--ay))); --oy: calc((@var(--ay) + @var(--by) + @var(--my)) / 3); --qy: calc((@var(--ny) + @var(--cy) + @var(--dy)) / 3); @x(1) { --ax: 18.75%; --dx: 18.75%; } @y(1) { --ay: 18.75%; --by: 18.75%; } @match(x == X) { --bx: 81.25%; --cx: 81.25%; } @match(y == Y) { --cy: 81.25%; --dy: 81.25%; } @random(${shapeFrequency}) { :before { content: ''; position: absolute; inset: -30%; background: @p(var(--color1), var(--color2), var(--color3), var(--color4)); -webkit-clip-path: polygon(@var(--ax) @var(--ay), @var(--bx) @var(--by), @var(--mx) @var(--my)); clip-path: polygon(@var(--ax) @var(--ay), @var(--bx) @var(--by), @var(--mx) @var(--my)); transform-origin: @var(--ox) @var(--oy); transform: scale(0.9); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: -30%; background: @p(var(--color1), var(--color2), var(--color3), var(--color4)); -webkit-clip-path: polygon(@var(--nx) @var(--ny), @var(--cx) @var(--cy), @var(--dx) @var(--dy)); clip-path: polygon(@var(--nx) @var(--ny), @var(--cx) @var(--cy), @var(--dx) @var(--dy)); transform-origin: @var(--qx) @var(--qy); transform: scale(0.9); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

@@ -1,0 +1,1080 @@
+/* ==========================================================================
+   KEEL FINANCE - fractional CFO
+   The page is a board deck: every section is a numbered slide on a desk,
+   with a slide bar at the top (number, title, a note) and a footer that
+   counts the pages. Basse is the practice's chart: wide columns rising in
+   counted levels. It is the title slide's chart, the section-break slide
+   and the strip over the footer. A crisp grotesk for the slides and a
+   plex mono for every number and label a deck would set in mono.
+   ========================================================================== */
+
+.page {
+  --paper: #f5f6f3;
+  --ink: #101935;
+  --signal: #3b5bdb;
+  --coral: #e8603c;
+  --lilac: #a9b4ea;
+
+  --text: var(--ink);
+  --on-ink: var(--paper);
+  --on-signal: var(--paper);
+
+  --gut: clamp(1rem, 3.5vw, 2.5rem);
+  --max: 82rem;
+  --sans: 'Schibsted Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'IBM Plex Mono', 'Menlo', monospace;
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--desk);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--ink));
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--ink));
+    --on-signal: oklch(from var(--signal) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --desk: color-mix(in oklab, var(--paper) 90%, var(--ink));
+  --muted: color-mix(in oklab, var(--text) 74%, var(--paper));
+  --rule: color-mix(in oklab, var(--text) 16%, var(--paper));
+  --rule-strong: color-mix(in oklab, var(--text) 42%, var(--paper));
+  --panel: color-mix(in oklab, var(--paper) 90%, var(--lilac));
+  --track: color-mix(in oklab, var(--text) 8%, var(--paper));
+  --before: color-mix(in oklab, var(--text) 30%, var(--paper));
+  --shadow: 0 1px 0 color-mix(in oklab, var(--ink) 10%, transparent), 0 18px 40px -28px color-mix(in oklab, var(--ink) 55%, transparent);
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+/* The mark: a keel, three rising bars on a baseline. */
+.brandMark {
+  width: 1.6rem;
+  height: 1.3rem;
+  background:
+    linear-gradient(var(--signal), var(--signal)) 0 100% / 0.38rem 45% no-repeat,
+    linear-gradient(var(--signal), var(--signal)) 50% 100% / 0.38rem 72% no-repeat,
+    linear-gradient(var(--coral), var(--coral)) 100% 100% / 0.38rem 100% no-repeat;
+  border-bottom: 2px solid var(--text);
+}
+
+.brandName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.25rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--signal);
+}
+
+.barCall {
+  padding: 0.6rem 1.05rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--ink);
+  color: var(--on-ink);
+  border-radius: 3px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--paper);
+}
+
+/* --------------------------------------------------------------- the deck */
+
+.deck {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(1.5rem, 3vw, 2.5rem) var(--gut) 0;
+}
+
+.slide,
+.hero {
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+  scroll-margin-top: 5rem;
+}
+
+.slideBar {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1rem clamp(1.2rem, 3vw, 2.4rem);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.slideNo {
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.1rem 0.45rem;
+  background: var(--ink);
+  color: var(--on-ink);
+  border-radius: 2px;
+}
+
+.slideLabel {
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.slideCo {
+  margin-left: auto;
+  color: var(--muted);
+  text-align: right;
+}
+
+.slideFoot {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: auto;
+  padding: 0.8rem clamp(1.2rem, 3vw, 2.4rem);
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--muted);
+  border-top: 1px solid var(--rule);
+}
+
+.slideHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  padding: clamp(2rem, 4vw, 3.2rem) clamp(1.2rem, 3vw, 2.4rem) clamp(1.5rem, 3vw, 2.2rem);
+}
+
+.slideTitle {
+  font-size: clamp(2rem, 3.8vw, 3.2rem);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+}
+
+.slideNote {
+  margin: 0;
+  max-width: 36rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------- 01 title slide */
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: stretch;
+  padding: clamp(2rem, 4vw, 3.5rem) clamp(1.2rem, 3vw, 2.4rem);
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.kicker {
+  margin: 0 0 1.2rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.8rem, 5.6vw, 5rem);
+  font-weight: 600;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.heroLead {
+  max-width: 33rem;
+  margin: 1.5rem 0 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.35rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 3px;
+}
+
+.button {
+  background: var(--signal);
+  color: var(--on-signal);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--signal) 85%, var(--ink));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1.5px var(--text);
+}
+
+.ghost:hover {
+  background: var(--panel);
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  max-width: 33rem;
+  margin: 2.5rem 0 0;
+}
+
+.heroFacts div {
+  display: flex;
+  flex-direction: column-reverse;
+  padding-top: 0.75rem;
+  border-top: 2px solid var(--text);
+}
+
+.heroFacts dt {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 1.9rem;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+/* The chart: the basse field on a baseline, with counted levels ruled across
+   it, and the headline figure set on its own card in the corner. */
+.heroChart {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 34rem;
+}
+
+.heroField {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  border-bottom: 3px solid var(--text);
+  border-left: 1px solid var(--rule-strong);
+}
+
+.heroField::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, transparent 0 63px, color-mix(in oklab, var(--paper) 70%, transparent) 63px 64px);
+}
+
+.chartCard {
+  position: absolute;
+  z-index: 2;
+  left: 1.2rem;
+  bottom: 1.6rem;
+  max-width: 17rem;
+  padding: 1rem 1.2rem 1.1rem;
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  box-shadow: var(--shadow);
+}
+
+.chartLabel {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.chartFigure {
+  margin: 0.2rem 0 0;
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.chartNote {
+  margin: 0.4rem 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------- 02 metrics */
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0 clamp(1.2rem, 3vw, 2.4rem) clamp(2rem, 4vw, 3rem);
+  list-style: none;
+}
+
+.metric {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.6rem 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.metric:nth-child(odd) {
+  padding-right: clamp(1rem, 3vw, 2.5rem);
+}
+
+.metric:nth-child(even) {
+  padding-left: clamp(1rem, 3vw, 2.5rem);
+  border-left: 1px solid var(--rule);
+}
+
+.metricLabel {
+  font-size: 1.35rem;
+  letter-spacing: -0.015em;
+}
+
+.metricUnit {
+  margin: 0.1rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.bars {
+  display: grid;
+  grid-template-columns: 3.6rem minmax(0, 1fr) 3.4rem;
+  align-items: center;
+  gap: 0.55rem 0.8rem;
+}
+
+.barKey {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.track {
+  display: block;
+  height: 1.35rem;
+  background: var(--track);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.barBefore,
+.barAfter {
+  display: block;
+  height: 100%;
+}
+
+.barBefore {
+  background: var(--before);
+}
+
+.barAfter {
+  background: var(--signal);
+}
+
+.barValue {
+  font-family: var(--mono);
+  font-size: 1.05rem;
+  font-weight: 500;
+  text-align: right;
+}
+
+.metricNote {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- 03 models */
+
+.models {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  padding: 0 clamp(1.2rem, 3vw, 2.4rem) clamp(2rem, 4vw, 3rem);
+}
+
+.model {
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.5rem 1.4rem;
+  background: var(--panel);
+  border-top: 4px solid var(--signal);
+  border-radius: 4px;
+}
+
+.modelPick {
+  background: var(--ink);
+  color: var(--on-ink);
+  border-top-color: var(--coral);
+}
+
+.modelName {
+  font-size: 1.3rem;
+  letter-spacing: -0.015em;
+}
+
+.modelPrice {
+  margin: 1.1rem 0 0;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.modelPer {
+  margin: 0.35rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+
+.modelFit {
+  margin: 1.1rem 0 0;
+  font-size: 0.95rem;
+}
+
+.modelGets {
+  flex: 1;
+  margin: 1.1rem 0 1.2rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.92rem;
+}
+
+.modelGets li {
+  position: relative;
+  padding: 0.5rem 0 0.5rem 1.4rem;
+  border-top: 1px solid color-mix(in oklab, currentColor 18%, transparent);
+}
+
+.modelGets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.95rem;
+  width: 0.65rem;
+  height: 0.65rem;
+  background: currentColor;
+  clip-path: polygon(0 100%, 0 55%, 30% 55%, 30% 25%, 65% 25%, 65% 0, 100% 0, 100% 100%);
+}
+
+.modelTerm {
+  margin: 0;
+  padding-top: 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  border-top: 2px solid currentColor;
+}
+
+/* ---------------------------------------------------------------- 04 plan */
+
+.gantt {
+  --cols: 13;
+  padding: 0 clamp(1.2rem, 3vw, 2.4rem) clamp(2rem, 4vw, 3rem);
+}
+
+.ganttWeeks,
+.ganttTrack {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+}
+
+.ganttWeeks {
+  margin-left: calc(36% + 1.5rem);
+  padding-bottom: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  border-bottom: 2px solid var(--text);
+}
+
+.ganttWeeks span {
+  padding-left: 0.3rem;
+  border-left: 1px solid var(--rule);
+}
+
+.ganttRows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ganttRow {
+  display: grid;
+  grid-template-columns: 36% minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.ganttTask {
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+}
+
+.ganttWhen {
+  margin: 0.1rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.ganttDetail {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.ganttTrack {
+  height: 2.1rem;
+  background:
+    repeating-linear-gradient(90deg, var(--rule) 0 1px, transparent 1px calc(100% / 13));
+}
+
+.ganttBar {
+  grid-row: 1;
+  margin: 0.25rem 0;
+  background: var(--signal);
+  border-radius: 2px;
+}
+
+.ganttRow:last-child .ganttBar {
+  background: var(--coral);
+}
+
+/* ---------------------------------------------------------- section break */
+
+.breakSlide {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(18rem, 32vw, 26rem);
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+}
+
+.breakField {
+  position: absolute;
+  inset: 0;
+}
+
+.breakCard {
+  position: relative;
+  z-index: 1;
+  max-width: min(34rem, calc(100% - 2.5rem));
+  padding: 1.6rem 2rem 1.8rem;
+  text-align: center;
+  background: var(--ink);
+  color: var(--on-ink);
+  border-radius: 4px;
+}
+
+.breakNo {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.breakTitle {
+  margin: 0.5rem 0 0;
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------- 05 clients */
+
+.tableWrap {
+  padding: 0 clamp(1.2rem, 3vw, 2.4rem) clamp(2rem, 4vw, 3rem);
+  overflow-x: auto;
+}
+
+.clients {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.clients th,
+.clients td {
+  padding: 0.95rem 1rem 0.95rem 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule);
+}
+
+.clients thead th {
+  padding-top: 0;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--text);
+}
+
+.clients tbody th {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.clients td:nth-child(3) {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.clients td:last-child {
+  font-weight: 500;
+}
+
+/* ----------------------------------------------------------- 06 questions */
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  gap: 1.5rem 4rem;
+  padding: clamp(2rem, 4vw, 3.2rem) clamp(1.2rem, 3vw, 2.4rem);
+}
+
+.faqs {
+  border-top: 2px solid var(--text);
+}
+
+.faq {
+  border-bottom: 1px solid var(--rule);
+}
+
+.faq summary {
+  position: relative;
+  padding: 1.1rem 2.5rem 1.1rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  position: absolute;
+  right: 0.2rem;
+  top: 0.95rem;
+  font-family: var(--mono);
+  font-size: 1.3rem;
+  font-weight: 400;
+}
+
+.faq[open] summary::after {
+  content: '-';
+}
+
+.faq p {
+  max-width: 44rem;
+  margin: 0 0 1.2rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- 07 contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 2rem clamp(2rem, 5vw, 5rem);
+  padding: clamp(2rem, 4vw, 3.2rem) clamp(1.2rem, 3vw, 2.4rem);
+}
+
+.contactGrid .slideNote {
+  margin-top: 1rem;
+}
+
+.office {
+  margin: 2rem 0 0;
+  font-size: 0.95rem;
+}
+
+.office div {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.office dt {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.office dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.office a {
+  font-weight: 600;
+  border-bottom: 1.5px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  align-content: start;
+  padding: clamp(1.3rem, 3vw, 2rem);
+  background: var(--panel);
+  border-radius: 4px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-radius: 3px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.85rem 1.4rem;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--on-ink);
+  background: var(--ink);
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--ink) 85%, var(--signal));
+}
+
+.formNote {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.footField {
+  position: relative;
+  height: 88px;
+  overflow: hidden;
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+  font-size: 0.88rem;
+}
+
+.footInner p {
+  max-width: 44rem;
+  margin: 0.35rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.8rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .models {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .model {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    column-gap: 2rem;
+  }
+
+  .modelGets,
+  .modelTerm {
+    grid-column: 2;
+  }
+
+  .modelGets {
+    grid-row: 1 / span 4;
+    margin: 0 0 1rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .heroGrid,
+  .slideHead,
+  .faqGrid,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroChart {
+    min-height: 22rem;
+  }
+
+  .metrics {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .metric:nth-child(odd),
+  .metric:nth-child(even) {
+    padding-left: 0;
+    padding-right: 0;
+    border-left: 0;
+  }
+
+  .ganttRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  .ganttWeeks {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .slideCo {
+    display: none;
+  }
+
+  .heroFacts dd {
+    font-size: 1.45rem;
+  }
+
+  .model {
+    display: flex;
+  }
+
+  .modelGets {
+    margin: 1.1rem 0 1.2rem;
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .office div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  .clients thead {
+    display: none;
+  }
+
+  .clients,
+  .clients tbody,
+  .clients tr,
+  .clients th,
+  .clients td {
+    display: block;
+  }
+
+  .clients tr {
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .clients th,
+  .clients td {
+    padding: 0.1rem 0;
+    border: 0;
+  }
+
+  .clients td:nth-child(3) {
+    white-space: normal;
+  }
+
+  .ganttWeeks span:nth-child(even) {
+    color: transparent;
+  }
+}

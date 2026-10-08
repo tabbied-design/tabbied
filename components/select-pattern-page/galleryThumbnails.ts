@@ -869,4 +869,136 @@ export const galleryThumbnails: Record<string, ThumbnailConfig> = {
   mercerising: {
     options: { grid: '5x5', frequency: 1 },
   },
+  vichy: {
+    options: { grid: '5x5', frequency: 1 },
+  },
+  regimental: {
+    options: { grid: '6x6', frequency: 1 },
+  },
+  wavefans: {
+    options: { grid: '6x6', frequency: 1 },
+  },
+  hempleaf: {
+    options: { grid: '5x5', frequency: 1 },
+  },
+  yabane: {
+    options: { grid: '6x6', frequency: 1 },
+  },
+  guilloche: {
+    options: { grid: '5x5', frequency: 1 },
+  },
+  kawung: {
+    options: { grid: '5x5', frequency: 1 },
+  },
+  selbustar: {
+    options: { grid: '5x5', frequency: 1 },
+  },
+  icecrack: {
+    options: { grid: '5x5', frequency: 1 },
+  },
+  crossstitch: {
+    options: { grid: '5x5', frequency: 1 },
+  },
+  float: {
+    options: { grid: '8x8', frequency: 1 },
+  },
+  vanishingpoint: {
+    options: { grid: '6x6', frequency: 1 },
+  },
+  squaretunnel: {
+    options: { grid: '8x8', frequency: 1 },
+  },
+  globe: {
+    options: { grid: '10x10', frequency: 1 },
+  },
+  polarfan: {
+    options: { grid: '8x8', frequency: 1 },
+  },
+  jetstream: {
+    options: { grid: '9x9', frequency: 1 },
+  },
+  windrow: {
+    options: { grid: '9x9', frequency: 1 },
+  },
+  downpour: {
+    options: { grid: '9x9', frequency: 1 },
+  },
+  aquarelle: {
+    options: { grid: '9x9', frequency: 1 },
+  },
+  anabranch: {
+    options: { grid: '10x10', frequency: 1 },
+  },
+  monstera: {
+    options: { grid: '4x4', frequency: 1 },
+  },
+  flemishbond: {
+    options: { grid: '5x5', frequency: 1 },
+  },
+  hitandmiss: {
+    options: { grid: '5x5', frequency: 1 },
+  },
+  subwaytile: {
+    options: { grid: '6x6', frequency: 1 },
+  },
+  cobblestone: {
+    options: { grid: '6x6', frequency: 1 },
+  },
+  crazypaving: {
+    options: { grid: '5x5', frequency: 1 },
+  },
+  hongrie: {
+    options: { grid: '5x5', frequency: 1 },
+  },
+  milkyway: {
+    options: { grid: '10x10', frequency: 1 },
+  },
+  northernlights: {
+    options: { grid: '6x6', frequency: 1 },
+  },
+  duotonetruchet: {
+    options: { grid: '6x6', frequency: 1 },
+  },
+  racetrack: {
+    options: { grid: '6x6', frequency: 1 },
+  },
+  hextruchet: {
+    options: { grid: '6x6', frequency: 1 },
+  },
+  knotwork: {
+    options: { grid: '6x6', frequency: 1 },
+  },
+  cairo: {
+    options: { grid: '6x6', frequency: 1 },
+  },
+  snubsquare: {
+    options: { grid: '6x6', frequency: 1 },
+  },
+  interlock: {
+    options: { grid: '6x6', frequency: 1 },
+  },
+  pyramidrelief: {
+    options: { grid: '10x10', frequency: 1 },
+  },
+  jigsaw: {
+    options: { grid: '6x6', frequency: 1 },
+  },
+  pentomino: {
+    options: { grid: '10x10', frequency: 1 },
+  },
+  cardiograph: {
+    options: { grid: '5x5', frequency: 1 },
+  },
+  piechart: {
+    options: { grid: '6x6', frequency: 1 },
+  },
+  slitlattice: {
+    options: { grid: '10x10', frequency: 1 },
+  },
+  paperscraps: {
+    options: { grid: '5x5', frequency: 1 },
+  },
+  papersea: {
+    options: { grid: '6x6', frequency: 1 },
+  },
 };

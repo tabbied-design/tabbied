@@ -1,0 +1,941 @@
+/* ==========================================================================
+   VALENCE CHEMISTRY TUTORING - one-to-one tutoring, Halden Branch Library
+   A blackboard after a good lesson: a deep navy board, chalk type, and
+   four inks the way a chemistry teacher color-codes. The page is a
+   periodic table. Topics are element tiles in the table's own silhouette,
+   with the key in the top gap and the hex truchet filling the hole in the
+   middle. The hero cuts a benzene hexagon out of the truchet beside an
+   element tile for the business. Sections are numbered as groups. A crisp
+   grotesque (Space Grotesk) with a coder's mono (JetBrains Mono).
+   ========================================================================== */
+
+.page {
+  --board: #0f1f2b;
+  --chalk: #e8eef0;
+  --flame: #e8574a;
+  --teal: #5cc2b8;
+  --brass: #e0b44c;
+  --mist: #8fa3b3;
+
+  --text: var(--chalk);
+  --on-chalk: var(--board);
+  --on-teal: var(--board);
+  --on-brass: var(--board);
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --sans: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--board));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 36%, transparent);
+  --deep: color-mix(in oklab, var(--board) 92%, var(--chalk));
+  --card: color-mix(in oklab, var(--board) 88%, var(--chalk));
+  --c-hs: color-mix(in oklab, var(--board) 80%, var(--teal));
+  --c-ap: color-mix(in oklab, var(--board) 82%, var(--brass));
+  --c-col: color-mix(in oklab, var(--board) 80%, var(--mist));
+  --c-org: color-mix(in oklab, var(--board) 80%, var(--flame));
+  --c-lab: color-mix(in oklab, var(--board) 84%, var(--chalk));
+  --chalk-muted: color-mix(in oklab, var(--on-chalk) 74%, var(--chalk));
+  --teal-muted: color-mix(in oklab, var(--on-teal) 82%, var(--teal));
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--board);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--board) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--chalk));
+    --on-chalk: color-mix(in oklab, oklch(from var(--chalk) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--chalk));
+    --on-teal: oklch(from var(--teal) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-brass: oklch(from var(--brass) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, ul, ol, dl, dd) {
+  margin: 0;
+}
+
+.page :where(h1, h2, h3) {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem var(--gut);
+  background: var(--board);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+  align-items: center;
+  column-gap: 0.7rem;
+  line-height: 1.05;
+}
+
+.brandTile {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  background: var(--chalk);
+  color: var(--on-chalk);
+  border-radius: 4px;
+}
+
+.brandName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.brandSub {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  padding: 0.3rem 0;
+  font-size: 0.94rem;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--teal);
+}
+
+.barCta {
+  padding: 0.55rem 1.05rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  background: var(--teal);
+  color: var(--on-teal);
+  border-radius: 6px;
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--board);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(3.5rem, 7vw, 6rem);
+}
+
+.kicker {
+  margin-bottom: 1.3rem;
+  font-family: var(--mono);
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.9rem, 5.8vw, 5.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: normal;
+  color: var(--teal);
+}
+
+.heroLead {
+  max-width: 33rem;
+  margin-top: 1.6rem;
+  font-size: 1.14rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost,
+.submit {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.85rem 1.3rem;
+  font: inherit;
+  font-size: 0.98rem;
+  font-weight: 700;
+  border-radius: 6px;
+}
+
+.button,
+.submit {
+  background: var(--chalk);
+  color: var(--on-chalk);
+  border: 0;
+}
+
+.ghost {
+  border: 1.5px solid var(--rule-strong);
+}
+
+.button:hover,
+.submit:hover {
+  background: var(--teal);
+  color: var(--on-teal);
+}
+
+.ghost:hover {
+  border-color: currentColor;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 33rem;
+  margin-top: 2.6rem;
+}
+
+.stats div {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  padding-top: 0.8rem;
+  border-top: 2px solid var(--rule-strong);
+}
+
+.stats dt {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.stats dd {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.heroArt {
+  position: relative;
+  padding: 0 0 2rem 2rem;
+}
+
+.ring {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.1547;
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  background: var(--board);
+}
+
+.element {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  width: 11rem;
+  height: 12.5rem;
+  padding: 0.8rem 1rem 0.9rem;
+  background: var(--chalk);
+  color: var(--on-chalk);
+  border-radius: 6px;
+  box-shadow: 0 0 0 6px var(--board);
+}
+
+.elNo {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.elSym {
+  align-self: center;
+  font-size: 4.4rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.elName {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.elMass {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--chalk-muted);
+}
+
+/* ------------------------------------------------------------ section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut);
+}
+
+.secHead {
+  max-width: 44rem;
+  margin-bottom: clamp(2.2rem, 4vw, 3rem);
+}
+
+.label {
+  margin-bottom: 0.8rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.secTitle {
+  font-size: clamp(2.1rem, 3.8vw, 3.3rem);
+  line-height: 1.02;
+}
+
+.secNote {
+  margin-top: 1rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------- the periodic table grid */
+
+.table {
+  --g: 8px;
+  --row: 8.6rem;
+  --cw: calc((100% - 6 * var(--g)) / 7);
+  position: relative;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-rows: repeat(4, var(--row));
+  gap: var(--g);
+  padding: 0;
+  list-style: none;
+}
+
+.tile {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 0.6rem 0.75rem 0.7rem;
+  border-top: 3px solid var(--teal);
+  border-radius: 4px;
+}
+
+.tile:nth-child(1) { grid-area: 1 / 1; }
+.tile:nth-child(2) { grid-area: 1 / 7; }
+.tile:nth-child(3) { grid-area: 2 / 1; }
+.tile:nth-child(4) { grid-area: 2 / 2; }
+.tile:nth-child(5) { grid-area: 2 / 5; }
+.tile:nth-child(6) { grid-area: 2 / 6; }
+.tile:nth-child(7) { grid-area: 2 / 7; }
+.tile:nth-child(8) { grid-area: 3 / 1; }
+.tile:nth-child(9) { grid-area: 3 / 2; }
+.tile:nth-child(10) { grid-area: 3 / 5; }
+.tile:nth-child(11) { grid-area: 3 / 6; }
+.tile:nth-child(12) { grid-area: 3 / 7; }
+.tile:nth-child(n + 13) { grid-row: 4; }
+
+.tile.hs {
+  background: var(--c-hs);
+  border-top-color: var(--teal);
+}
+
+.tile.ap {
+  background: var(--c-ap);
+  border-top-color: var(--brass);
+}
+
+.tile.col {
+  background: var(--c-col);
+  border-top-color: var(--mist);
+}
+
+.tile.org {
+  background: var(--c-org);
+  border-top-color: var(--flame);
+}
+
+.tile.lab {
+  background: var(--c-lab);
+  border-top-color: var(--chalk);
+}
+
+.tileNo {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+}
+
+.tileSym {
+  align-self: center;
+  font-size: clamp(1.8rem, 2.6vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.tileName {
+  font-size: 0.8rem;
+  line-height: 1.25;
+}
+
+.keyList {
+  position: absolute;
+  top: 0;
+  left: calc(var(--cw) + var(--g) + 1rem);
+  width: calc(5 * var(--cw) + 4 * var(--g) - 2rem);
+  height: var(--row);
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  gap: 0.5rem 1.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9rem;
+}
+
+.keyList li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.keyList li::before {
+  content: '';
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 2px;
+  background: var(--teal);
+}
+
+.keyList .ap::before {
+  background: var(--brass);
+}
+
+.keyList .col::before {
+  background: var(--mist);
+}
+
+.keyList .org::before {
+  background: var(--flame);
+}
+
+.keyList .lab::before {
+  background: var(--chalk);
+}
+
+.tableGap {
+  position: absolute;
+  top: calc(var(--row) + var(--g));
+  left: calc(2 * (var(--cw) + var(--g)));
+  width: calc(2 * var(--cw) + var(--g));
+  height: calc(2 * var(--row) + var(--g));
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* ----------------------------------------------------------------- sessions */
+
+.sessions {
+  background: var(--deep);
+  border-block: 1px solid var(--rule);
+}
+
+.sessionsInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut);
+}
+
+.levels {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4rem;
+}
+
+.levels::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4rem;
+  height: 10px;
+  transform: translate(-50%, -50%);
+  border-block: 2px solid var(--rule-strong);
+}
+
+.level {
+  padding: clamp(1.5rem, 3vw, 2.2rem);
+  background: var(--board);
+  border: 1px solid var(--rule-strong);
+  border-radius: 8px;
+}
+
+.levelName {
+  font-size: 2rem;
+}
+
+.levelCourses {
+  margin-top: 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.levelHow {
+  margin-top: 1rem;
+}
+
+.levelPoints {
+  margin-top: 1.2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.levelPoints li {
+  position: relative;
+  padding: 0.6rem 0 0.6rem 1.6rem;
+  font-size: 0.97rem;
+  border-top: 1px solid var(--rule);
+}
+
+.levelPoints li::before {
+  content: '';
+  position: absolute;
+  left: 0.1rem;
+  top: 1.05rem;
+  width: 0.7rem;
+  height: 0.6rem;
+  background: var(--teal);
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+}
+
+/* -------------------------------------------------------------------- exams */
+
+.exams {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.exam {
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.6rem 1.5rem;
+  background: var(--card);
+  border-radius: 8px;
+}
+
+.examWhen {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.examName {
+  margin-top: 0.3rem;
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.reaction {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.1rem;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  font-weight: 500;
+}
+
+.reactArrow {
+  position: relative;
+  height: 2px;
+  background: var(--rule-strong);
+}
+
+.reactArrow::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: -5px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 9px solid var(--rule-strong);
+}
+
+.examPlan {
+  flex: 1;
+  margin-top: 1rem;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+.examPrice {
+  margin-top: 1.2rem;
+  padding-top: 0.8rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  border-top: 1px solid var(--rule);
+}
+
+/* --------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(130px, 14vw, 190px);
+  border-block: 1px solid var(--rule);
+}
+
+/* -------------------------------------------------------------------- rates */
+
+.ratesGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.freeCard {
+  margin-top: 2rem;
+  padding: 1.4rem 1.5rem;
+  background: var(--teal);
+  color: var(--on-teal);
+  border-radius: 8px;
+}
+
+.freeTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.freeText {
+  margin-top: 0.4rem;
+  color: var(--teal-muted);
+}
+
+.rates {
+  border-top: 2px solid var(--text);
+}
+
+.rates div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1.05rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rates dt {
+  font-size: 1.05rem;
+}
+
+.rates dd {
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ contact */
+
+.contact {
+  background: var(--deep);
+  border-top: 1px solid var(--rule);
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut);
+}
+
+.address {
+  margin-top: 2rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+
+.addressNote {
+  margin-top: 0.3rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.line {
+  margin-top: 0.8rem;
+  font-family: var(--mono);
+  font-size: 1rem;
+}
+
+.line a {
+  border-bottom: 1.5px solid var(--teal);
+}
+
+.hours {
+  margin-top: 1.6rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dd {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  padding: clamp(1.5rem, 3vw, 2.2rem);
+  background: var(--board);
+  border: 1px solid var(--rule-strong);
+  border-radius: 8px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--deep);
+  border: 1px solid var(--rule-strong);
+  border-radius: 6px;
+  color-scheme: dark;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  border-top: 1px solid var(--rule);
+}
+
+.footEdge {
+  position: relative;
+  height: 96px;
+}
+
+.footInner {
+  display: grid;
+  gap: 0.5rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 3rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+  border-top: 1px solid var(--rule);
+}
+
+.footName {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.footInner a {
+  color: var(--text);
+  border-bottom: 1px solid currentColor;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1040px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .tileName {
+    font-size: 0.74rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .ratesGrid,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    max-width: 30rem;
+  }
+
+  .exams {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .levels {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+
+  .levels::before {
+    width: 10px;
+    height: 2.5rem;
+    border-block: 0;
+    border-inline: 2px solid var(--rule-strong);
+  }
+
+  .tiles {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: none;
+    grid-auto-rows: 7.6rem;
+  }
+
+  .tile:nth-child(n) {
+    grid-area: auto;
+  }
+
+  .keyList {
+    position: static;
+    width: auto;
+    height: auto;
+    margin-bottom: 1.2rem;
+  }
+
+  .tableGap {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: auto;
+    height: 110px;
+    margin-bottom: var(--g);
+  }
+}
+
+@media (max-width: 560px) {
+  .barCta {
+    display: none;
+  }
+
+  .stats {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .element {
+    width: 8.5rem;
+    height: 10rem;
+  }
+
+  .elSym {
+    font-size: 3.2rem;
+  }
+
+  .heroArt {
+    padding: 0 0 1.5rem 1.2rem;
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

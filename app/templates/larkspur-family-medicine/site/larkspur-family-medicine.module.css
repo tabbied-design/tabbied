@@ -1,0 +1,1229 @@
+/* ==========================================================================
+   LARKSPUR FAMILY MEDICINE - direct primary care on Elm Hill
+   The page is a membership card. The hero is its front, in the gingham
+   that is the practice's mark, with the back peeking out behind and a
+   price sticker on the corner; the next section is the back of the card,
+   magnetic stripe and all, listing what the fee covers; the fees are the
+   cards in a family's wallet. Bricolage Grotesque is the card's printing,
+   Atkinson Hyperlegible the reading text, chosen because it was drawn for
+   low vision. Vichy: the card face, a tablecloth band, the household card
+   and the footer.
+   ========================================================================== */
+
+.page {
+  --linen: #fbf7f0;
+  --ink: #22304f;
+  --berry: #c8414b;
+  --larkspur: #5b63b7;
+  --sky: #a9bde3;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --display: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+  --sans: 'Atkinson Hyperlegible', 'Verdana', Arial, sans-serif;
+
+  --text: var(--ink);
+  --on-ink: var(--linen);
+  --on-berry: var(--linen);
+  --on-larkspur: var(--linen);
+
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  background: var(--linen);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--linen) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--ink));
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--ink));
+    --on-berry: oklch(from var(--berry) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-larkspur: oklch(from var(--larkspur) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--linen));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 42%, transparent);
+  --panel: color-mix(in oklab, var(--linen) 74%, var(--sky));
+  --panel-soft: color-mix(in oklab, var(--linen) 87%, var(--sky));
+  --shadow: color-mix(in oklab, var(--ink) 30%, transparent);
+  --on-ink-muted: color-mix(in oklab, var(--on-ink) 78%, var(--ink));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--linen);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.brandMark {
+  position: relative;
+  flex: none;
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 9px;
+  background: var(--berry);
+}
+
+.brandMark::before,
+.brandMark::after {
+  content: '';
+  position: absolute;
+  inset: 0.5rem 0.95rem;
+  border-radius: 2px;
+  background: var(--linen);
+}
+
+.brandMark::after {
+  inset: 0.95rem 0.5rem;
+}
+
+.brandText {
+  display: grid;
+  line-height: 1.05;
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.brandSub {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.9rem, 1.7vw, 1.6rem);
+}
+
+.nav a {
+  padding: 0.3rem 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--berry);
+}
+
+.barButton {
+  padding: 0.6rem 1.1rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  background: var(--ink);
+  color: var(--on-ink);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--linen);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(2.5rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 5.5rem) var(--gut) clamp(3.5rem, 7vw, 6rem);
+}
+
+.kicker,
+.secKicker {
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.kicker::before,
+.secKicker::before {
+  content: '';
+  display: inline-block;
+  width: 0.65rem;
+  height: 0.65rem;
+  margin-right: 0.55rem;
+  border-radius: 50%;
+  background: var(--berry);
+  vertical-align: 0.05em;
+}
+
+.heroTitle {
+  margin-top: 1.1rem;
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.heroLead {
+  max-width: 34rem;
+  margin-top: 1.5rem;
+  font-size: 1.12rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost,
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 1.45rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 999px;
+}
+
+.button,
+.submit {
+  background: var(--berry);
+  color: var(--on-berry);
+  border: 2px solid var(--berry);
+}
+
+.ghost {
+  border: 2px solid var(--rule-strong);
+}
+
+.ghost:hover {
+  border-color: currentColor;
+}
+
+/* the card, front and back */
+
+.cardStack {
+  position: relative;
+  padding: 3rem 1.5rem 3rem 1.5rem;
+}
+
+.cardBack {
+  position: absolute;
+  top: 0.5rem;
+  right: 0;
+  width: 84%;
+  aspect-ratio: 1.586;
+  background: var(--panel);
+  border-radius: 24px;
+  box-shadow: 0 0 0 1px var(--rule), 0 20px 40px -26px var(--shadow);
+  transform: rotate(7deg);
+  overflow: hidden;
+}
+
+.magStripe {
+  display: block;
+  height: 19%;
+  margin-top: 9%;
+  background: var(--ink);
+}
+
+.sigPanel {
+  display: block;
+  width: 56%;
+  height: 13%;
+  margin: 7% 0 0 7%;
+  background: var(--linen);
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: 47% minmax(0, 1fr);
+  width: 94%;
+  aspect-ratio: 1.586;
+  background: var(--linen);
+  border-radius: 24px;
+  box-shadow: 0 0 0 1px var(--rule-strong), 0 34px 60px -30px var(--shadow);
+  transform: rotate(-4deg);
+  overflow: hidden;
+}
+
+.cardField {
+  position: relative;
+  background: var(--linen);
+  border-bottom: 1px solid var(--rule);
+}
+
+.cardBody {
+  display: grid;
+  align-content: space-between;
+  gap: 0.5rem;
+  padding: clamp(0.8rem, 1.8vw, 1.25rem) clamp(1rem, 2.2vw, 1.6rem);
+}
+
+.cardBrand {
+  font-family: var(--display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cardName {
+  font-family: var(--display);
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.cardFacts {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.cardFacts dt {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cardFacts dd {
+  font-family: var(--display);
+  font-size: 0.98rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sticker {
+  position: absolute;
+  z-index: 2;
+  left: -1.25rem;
+  top: 0;
+  display: grid;
+  place-content: center;
+  width: 8.5rem;
+  height: 8.5rem;
+  text-align: center;
+  line-height: 1.1;
+  background: var(--berry);
+  color: var(--on-berry);
+  border-radius: 50%;
+  box-shadow: 0 0 0 5px var(--linen), 0 18px 30px -16px var(--shadow);
+  transform: rotate(-10deg);
+}
+
+.stickerFrom,
+.stickerPer {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.stickerPrice {
+  font-family: var(--display);
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+/* ---------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+}
+
+.secHead {
+  max-width: 46rem;
+}
+
+.secTitle {
+  margin-top: 0.75rem;
+  font-size: clamp(2.05rem, 3.8vw, 3.2rem);
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+}
+
+.secNote {
+  margin-top: 1rem;
+  font-size: 1.08rem;
+  color: var(--muted);
+}
+
+/* the back of the card */
+
+.backPanel {
+  background: var(--panel);
+  border-radius: 36px;
+  overflow: hidden;
+}
+
+.backStripe {
+  height: clamp(3rem, 5vw, 4.25rem);
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+  background: var(--ink);
+}
+
+.backInner {
+  display: grid;
+  gap: 2.5rem;
+  padding: clamp(2rem, 4vw, 3.25rem) clamp(1.25rem, 4vw, 3.5rem) clamp(2rem, 4vw, 3.5rem);
+}
+
+.covers {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2rem 1.75rem;
+}
+
+.cover {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+}
+
+.cover::before {
+  content: '\2713';
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0.4rem;
+  font-weight: 700;
+  border-radius: 50%;
+  background: var(--larkspur);
+  color: var(--on-larkspur);
+}
+
+.coverTitle {
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
+.coverText {
+  font-size: 0.97rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.notCovered {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: 1rem 2rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--panel-soft);
+  border: 2px dashed var(--rule-strong);
+  border-radius: 18px;
+}
+
+.notTitle {
+  font-size: 1.15rem;
+}
+
+.notList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+}
+
+.notList li {
+  font-weight: 700;
+}
+
+.notList li::before {
+  content: '\00D7';
+  margin-right: 0.4rem;
+  font-weight: 400;
+}
+
+.notNote {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* same-day */
+
+.sameGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  align-items: start;
+}
+
+.stats {
+  display: grid;
+  gap: 0;
+  margin-top: 2.25rem;
+  border-top: 2px solid var(--text);
+}
+
+.stats div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.stats dt {
+  color: var(--muted);
+}
+
+.stats dd {
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.day {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+}
+
+.day::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: 2.35rem;
+  border-left: 2px dotted var(--rule-strong);
+}
+
+.msg {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4.7rem minmax(0, 1fr);
+  align-items: start;
+}
+
+.msgTime {
+  position: relative;
+  justify-self: start;
+  padding: 0.2rem 0.5rem;
+  font-family: var(--display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: var(--linen);
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+}
+
+.bubble {
+  padding: 0.85rem 1.1rem;
+  background: var(--larkspur);
+  color: var(--on-larkspur);
+  border-radius: 4px 18px 18px 18px;
+}
+
+.msgYou .bubble {
+  background: var(--panel);
+  color: var(--text);
+}
+
+.msgWho {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.msgText {
+  margin-top: 0.2rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* labs and medicines */
+
+.labsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+  margin-top: 2.75rem;
+}
+
+.receipt {
+  padding: 1.75rem clamp(1.25rem, 3vw, 2.25rem) 2.5rem;
+  background: var(--panel-soft);
+  box-shadow: inset 0 0 0 1px var(--rule);
+  -webkit-mask:
+    linear-gradient(black 0 0) top / 100% calc(100% - 10px) no-repeat,
+    conic-gradient(from 135deg at 50% 0, black 90deg, transparent 0) bottom / 20px 10px repeat-x;
+  mask:
+    linear-gradient(black 0 0) top / 100% calc(100% - 10px) no-repeat,
+    conic-gradient(from 135deg at 50% 0, black 90deg, transparent 0) bottom / 20px 10px repeat-x;
+}
+
+.labTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.receiptHead {
+  padding-bottom: 1rem;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  text-align: left;
+  letter-spacing: -0.01em;
+}
+
+.labTable thead th {
+  padding: 0.5rem 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: right;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-block: 2px solid var(--text);
+}
+
+.labTable thead th:first-child {
+  text-align: left;
+}
+
+.labTable tbody tr {
+  border-bottom: 1px dashed var(--rule-strong);
+}
+
+.labTable tbody th {
+  padding: 0.65rem 1rem 0.65rem 0;
+  font-weight: 400;
+  text-align: left;
+}
+
+.labTable td {
+  padding: 0.65rem 0 0.65rem 1rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.billed {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.pay {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.receiptFoot {
+  margin-top: 1rem;
+  font-size: 0.92rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.meds {
+  padding-top: 0.4rem;
+}
+
+.medsTitle {
+  font-size: 1.35rem;
+}
+
+.medList {
+  display: grid;
+  margin-top: 1rem;
+  border-top: 2px solid var(--text);
+}
+
+.medList li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.leader {
+  flex: 1;
+  min-width: 1rem;
+  border-bottom: 2px dotted var(--rule-strong);
+}
+
+.medPrice {
+  font-family: var(--display);
+  font-weight: 700;
+}
+
+.medsNote {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* the tablecloth */
+
+.cloth {
+  position: relative;
+  height: clamp(6rem, 10vw, 8.5rem);
+  background: var(--linen);
+  border-block: 1px solid var(--rule-strong);
+  overflow: hidden;
+}
+
+/* fees */
+
+.fees {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.1rem;
+  margin-top: 2.75rem;
+}
+
+.fee {
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem 1.4rem 1.5rem;
+  background: var(--panel);
+  border-radius: 20px;
+  border-top: 8px solid var(--larkspur);
+}
+
+.fee:nth-child(2) {
+  border-top-color: var(--berry);
+}
+
+.fee:nth-child(4) {
+  border-top-color: var(--ink);
+}
+
+.feeWho {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.feeAges {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.feePrice {
+  margin-top: 1.4rem;
+  font-family: var(--display);
+  font-size: 3.4rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.feePer {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.feeNote {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--muted);
+  border-top: 1px solid var(--rule);
+}
+
+.family {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  margin-top: 1.1rem;
+  background: var(--ink);
+  color: var(--on-ink);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.familyField {
+  position: relative;
+  min-height: 11rem;
+  background: var(--linen);
+}
+
+.familyBody {
+  display: grid;
+  align-content: center;
+  gap: 0.6rem;
+  padding: clamp(1.5rem, 3.5vw, 2.5rem);
+}
+
+.familyTitle {
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+}
+
+.familyText {
+  max-width: 34rem;
+  font-size: 1.05rem;
+  color: var(--on-ink-muted);
+}
+
+/* join */
+
+.joinSec {
+  background: var(--panel);
+}
+
+.joinInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.75rem;
+  margin-top: 2.5rem;
+}
+
+.step {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+}
+
+.stepNo {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  margin-bottom: 0.4rem;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  background: var(--berry);
+  color: var(--on-berry);
+  border-radius: 50%;
+}
+
+.stepTitle {
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+
+.stepText {
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+.doctors {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  margin-top: 3rem;
+}
+
+.doctor {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.25rem;
+  padding: 1.5rem;
+  background: var(--linen);
+  border-radius: 20px;
+}
+
+.initials {
+  display: grid;
+  place-items: center;
+  width: 3.75rem;
+  height: 3.75rem;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  background: var(--larkspur);
+  color: var(--on-larkspur);
+  border-radius: 50%;
+}
+
+.docName {
+  font-size: 1.35rem;
+}
+
+.docRole {
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.docNote {
+  margin-top: 0.6rem;
+  font-size: 0.98rem;
+}
+
+.docPanel {
+  margin-top: 0.6rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+/* contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+}
+
+.address {
+  margin-top: 1.6rem;
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.addressNote {
+  margin-top: 0.4rem;
+  color: var(--muted);
+}
+
+.contactLine {
+  margin-top: 0.8rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.contactLine + .contactLine {
+  margin-top: 0.3rem;
+}
+
+.contactLine a {
+  border-bottom: 2px solid var(--berry);
+}
+
+.hours {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 1.6rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.hours dt {
+  font-weight: 700;
+}
+
+.hours dd {
+  text-align: right;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+  padding: clamp(1.5rem, 3.5vw, 2.4rem);
+  background: var(--panel);
+  border-radius: 24px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label,
+.fieldset legend {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  font: inherit;
+  color: inherit;
+  background: var(--linen);
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 12px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--text);
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.fieldset legend {
+  padding: 0;
+  margin-bottom: 0.6rem;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.4rem;
+}
+
+.picks input {
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0;
+  accent-color: var(--berry);
+}
+
+.picks label {
+  margin-right: 1rem;
+  font-weight: 400;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  cursor: pointer;
+}
+
+.formNote {
+  grid-column: 1 / -1;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.footCloth {
+  position: relative;
+  height: 4.5rem;
+  background: var(--linen);
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  gap: 0.45rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 3.5rem) var(--gut) clamp(3rem, 6vw, 4rem);
+}
+
+.footName {
+  margin-bottom: 0.4rem;
+  font-family: var(--display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.footText {
+  font-size: 0.95rem;
+  color: var(--on-ink-muted);
+}
+
+.footText a {
+  color: var(--on-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1120px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .covers,
+  .fees,
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .notCovered {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .sameGrid,
+  .labsGrid,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cardStack {
+    max-width: 34rem;
+  }
+
+  .doctors {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .family {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .familyField {
+    min-height: 7rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .barButton {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .cardStack {
+    padding: 2.5rem 0.5rem 2.5rem 0.75rem;
+  }
+
+  .card {
+    width: 96%;
+  }
+
+  .cardFacts {
+    grid-template-columns: repeat(2, auto);
+    justify-content: start;
+    column-gap: 1.5rem;
+  }
+
+  .cardFacts div:last-child {
+    display: none;
+  }
+
+  .sticker {
+    width: 6.5rem;
+    height: 6.5rem;
+    left: -0.25rem;
+  }
+
+  .stickerPrice {
+    font-size: 1.9rem;
+  }
+
+  .covers,
+  .fees,
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .labTable thead th:nth-child(2),
+  .labTable td.billed {
+    display: none;
+  }
+
+  .doctor {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

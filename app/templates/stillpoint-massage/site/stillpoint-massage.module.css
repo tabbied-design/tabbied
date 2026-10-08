@@ -1,0 +1,1183 @@
+/* ==========================================================================
+   STILLPOINT MASSAGE - one-therapist studio, Larkspur Avenue
+   A room with the lights down: a dark warm ground, cream type, clay and
+   peach for the glow. The page is a treatment menu sold by the minute.
+   Prices sit in a table of techniques against 30, 60 and 90 minutes, the
+   cells warming as the time grows; an hour is drawn to scale as a strip
+   chart; the dotwash halftone is a round lamp in the hero, a band, the face
+   of a gift certificate and the floor of the page. An airy garamond
+   (Cormorant Garamond) over a quiet geometric sans (Jost).
+   ========================================================================== */
+
+.page {
+  --night: #211a1c;
+  --cream: #f1e5d8;
+  --clay: #c27a63;
+  --peach: #e8b496;
+  --sage: #91a68e;
+
+  --text: var(--cream);
+  --on-cream: var(--night);
+  --on-clay: var(--night);
+  --on-peach: var(--night);
+  --on-sage: var(--night);
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 76rem;
+  --serif: 'Cormorant Garamond', Garamond, 'Times New Roman', serif;
+  --sans: 'Jost', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--night));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 34%, transparent);
+  --deep: color-mix(in oklab, var(--night) 93%, var(--cream));
+  --panel: color-mix(in oklab, var(--night) 88%, var(--cream));
+  --t1: color-mix(in oklab, var(--night) 94%, var(--peach));
+  --t2: color-mix(in oklab, var(--night) 88%, var(--peach));
+  --t3: color-mix(in oklab, var(--night) 82%, var(--peach));
+  --track: color-mix(in oklab, var(--night) 90%, var(--cream));
+  --cream-muted: color-mix(in oklab, var(--on-cream) 76%, var(--cream));
+  --cream-rule: color-mix(in oklab, var(--on-cream) 20%, transparent);
+  --glow: color-mix(in oklab, var(--peach) 22%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--night);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--night) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--cream));
+    --on-cream: color-mix(in oklab, oklch(from var(--cream) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--cream));
+    --on-clay: oklch(from var(--clay) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-peach: oklch(from var(--peach) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-sage: oklch(from var(--sage) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, ul, ol, dl, dd) {
+  margin: 0;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--serif);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.9rem var(--gut);
+  background: var(--night);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.brandDot {
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  background: var(--peach);
+  box-shadow: 0 0 0 4px var(--glow);
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  padding: 0.3rem 0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-bottom: 1px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barBook {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  background: var(--peach);
+  color: var(--on-peach);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--night);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(4rem, 7vw, 6rem);
+}
+
+.kicker {
+  margin-bottom: 1.4rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(3rem, 5.8vw, 5.6rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--peach);
+}
+
+.heroLead {
+  max-width: 31rem;
+  margin-top: 1.7rem;
+  font-size: 1.12rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2.2rem;
+}
+
+.button,
+.ghost,
+.submit {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.85rem 1.5rem;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  border-radius: 999px;
+}
+
+.button,
+.submit {
+  background: var(--peach);
+  color: var(--on-peach);
+  border: 0;
+}
+
+.ghost {
+  border: 1px solid var(--rule-strong);
+}
+
+.button:hover,
+.submit:hover {
+  background: var(--cream);
+  color: var(--on-cream);
+}
+
+.ghost:hover {
+  border-color: currentColor;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 31rem;
+  margin-top: 2.6rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+}
+
+.facts dt {
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.facts dd {
+  margin-top: 0.15rem;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  line-height: 1.15;
+}
+
+.heroArt {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 560px);
+}
+
+.lamp {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--night);
+  box-shadow:
+    0 0 0 1px var(--rule),
+    0 0 120px 10px var(--glow);
+}
+
+.nextCard {
+  position: absolute;
+  left: -1rem;
+  bottom: 1.5rem;
+  padding: 1rem 1.3rem 1.1rem;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  box-shadow: 0 20px 40px -24px color-mix(in oklab, var(--night) 80%, transparent);
+}
+
+.nextLabel {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nextWhen {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.nextWhat {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.secHead {
+  max-width: 40rem;
+  margin-bottom: clamp(2.2rem, 4vw, 3.2rem);
+}
+
+.eyebrow {
+  margin-bottom: 0.8rem;
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.secTitle {
+  font-size: clamp(2.3rem, 4vw, 3.5rem);
+  line-height: 1.02;
+}
+
+.secNote {
+  margin-top: 1rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- menu */
+
+.menuWrap {
+  overflow-x: auto;
+}
+
+.menu {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 6px;
+}
+
+.menu .menuCorner {
+  padding: 0 1rem 0.6rem 0;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-align: left;
+  text-transform: uppercase;
+  vertical-align: bottom;
+  color: var(--muted);
+}
+
+.menu .minCol {
+  width: 17%;
+  padding: 0 0 0.6rem;
+  text-align: center;
+  vertical-align: bottom;
+}
+
+.minNum {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 4vw, 3.4rem);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.minWord {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.menu .menuName {
+  padding: 1rem 1rem 1rem 0;
+  text-align: left;
+  font-weight: 400;
+  border-top: 1px solid var(--rule);
+}
+
+.menuTitle {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.65rem;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.menuLine {
+  display: block;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+.menu .p30,
+.menu .p60,
+.menu .p90 {
+  padding: 1rem;
+  font-family: var(--serif);
+  font-size: 1.75rem;
+  font-weight: 500;
+  text-align: center;
+  border-radius: 12px;
+}
+
+.menu .p30 {
+  background: var(--t1);
+}
+
+.menu .p60 {
+  background: var(--t2);
+}
+
+.menu .p90 {
+  background: var(--t3);
+}
+
+.addons {
+  display: grid;
+  grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
+  gap: 1rem 2.5rem;
+  align-items: start;
+  margin-top: 2.6rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--rule);
+}
+
+.addonsTitle {
+  font-size: 1.6rem;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.addonList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2.5rem;
+}
+
+.addonList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px dotted var(--rule-strong);
+}
+
+.addonList dd {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------- hour */
+
+.hour {
+  background: var(--deep);
+  border-block: 1px solid var(--rule);
+}
+
+.hourInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.minutes {
+  display: grid;
+  gap: 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+
+.span {
+  --start: 0;
+  --len: 5;
+  display: grid;
+  grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 2rem;
+  align-items: center;
+}
+
+.span::after {
+  content: '';
+  grid-column: 2;
+  grid-row: 1;
+  height: 2.6rem;
+  border-radius: 999px;
+  background-color: var(--track);
+  background-image: repeating-linear-gradient(90deg, var(--rule) 0 1px, transparent 1px calc(100% / 12));
+}
+
+.spanBar {
+  position: relative;
+  z-index: 1;
+  grid-column: 2;
+  grid-row: 1;
+  height: 2.6rem;
+  width: calc(var(--len) / 60 * 100%);
+  margin-left: calc(var(--start) / 60 * 100%);
+  border-radius: 999px;
+  background: var(--clay);
+}
+
+.spanMins {
+  grid-column: 2;
+  grid-row: 2;
+  margin-left: calc(var(--start) / 60 * 100%);
+  padding-left: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.spanTitle {
+  grid-column: 1;
+  grid-row: 1;
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.spanNote {
+  grid-column: 1;
+  grid-row: 2;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.talk {
+  --start: 0;
+  --len: 5;
+}
+
+.talk .spanBar,
+.arms .spanBar {
+  background: var(--sage);
+}
+
+.back {
+  --start: 5;
+  --len: 20;
+}
+
+.legs {
+  --start: 25;
+  --len: 12;
+}
+
+.legs .spanBar,
+.neck .spanBar {
+  background: var(--peach);
+}
+
+.arms {
+  --start: 37;
+  --len: 8;
+}
+
+.neck {
+  --start: 45;
+  --len: 10;
+}
+
+.rest {
+  --start: 55;
+  --len: 5;
+}
+
+.rest .spanBar {
+  background: var(--cream);
+}
+
+.rest .spanMins {
+  justify-self: end;
+  margin-left: 0;
+  padding: 0 0.4rem 0 0;
+}
+
+/* --------------------------------------------------------------- techniques */
+
+.techniques {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1.2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.technique {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.6rem 1.5rem;
+  background: var(--deep);
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+}
+
+.technique:nth-child(-n + 2) {
+  grid-column: span 3;
+}
+
+.techName {
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.pressure {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 0.5rem;
+}
+
+.dots {
+  --n: 1;
+  position: relative;
+  width: 70px;
+  height: 14px;
+  background: radial-gradient(circle, var(--rule-strong) 0 3px, transparent 3.5px) 0 0 / 14px 14px repeat-x;
+}
+
+.dots::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: calc(var(--n) * 14px);
+  background: radial-gradient(circle, var(--peach) 0 4.5px, transparent 5px) 0 0 / 14px 14px repeat-x;
+}
+
+.press2 {
+  --n: 2;
+}
+
+.press3 {
+  --n: 3;
+}
+
+.press4 {
+  --n: 4;
+}
+
+.press5 {
+  --n: 5;
+}
+
+.pressureText {
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.techText {
+  flex: 1;
+  margin-top: 0.9rem;
+}
+
+.techGood {
+  display: grid;
+  margin-top: 1.1rem;
+  padding-top: 0.8rem;
+  font-size: 0.94rem;
+  border-top: 1px solid var(--rule);
+}
+
+.goodLabel {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(140px, 16vw, 220px);
+  border-block: 1px solid var(--rule);
+}
+
+/* ------------------------------------------------------------------- policy */
+
+.policyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5.5rem);
+  align-items: start;
+}
+
+.booking {
+  display: grid;
+  gap: 1.4rem;
+  margin-top: 2.2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.booking li {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  column-gap: 1rem;
+}
+
+.bookNo {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  border-radius: 50%;
+  background: var(--sage);
+  color: var(--on-sage);
+}
+
+.bookTitle {
+  font-size: 1.45rem;
+  line-height: 1.2;
+}
+
+.bookText {
+  margin-top: 0.2rem;
+  color: var(--muted);
+}
+
+.policyCard {
+  padding: clamp(1.6rem, 3vw, 2.4rem);
+  background: var(--cream);
+  color: var(--on-cream);
+  border-radius: 20px;
+}
+
+.policyTitle {
+  font-size: 2.2rem;
+  line-height: 1.05;
+}
+
+.policyLead {
+  margin-top: 0.3rem;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--cream-muted);
+}
+
+.policyList {
+  margin-top: 1.4rem;
+  border-top: 1px solid var(--cream-rule);
+}
+
+.policyList div {
+  display: grid;
+  grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--cream-rule);
+}
+
+.policyList dt {
+  font-weight: 500;
+}
+
+.policyList dd {
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+/* -------------------------------------------------------------------- gifts */
+
+.gifts {
+  background: var(--deep);
+  border-block: 1px solid var(--rule);
+}
+
+.giftGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.certificate {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+  min-height: 320px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 40px 60px -40px color-mix(in oklab, var(--night) 90%, transparent);
+  transform: rotate(-1.5deg);
+}
+
+.certFace {
+  position: relative;
+  background: var(--night);
+}
+
+.certBody {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 1.8rem;
+  background: var(--cream);
+  color: var(--on-cream);
+  border-left: 2px dashed var(--cream-rule);
+}
+
+.certLabel {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cream-muted);
+}
+
+.certName {
+  margin-top: 0.5rem;
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.certFor {
+  margin-top: 0.8rem;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-style: italic;
+  line-height: 1.3;
+}
+
+.certNo {
+  margin-top: 1.4rem;
+  padding-top: 0.7rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  border-top: 1px solid var(--cream-rule);
+  color: var(--cream-muted);
+}
+
+.giftList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin: 1.8rem 0 2rem;
+}
+
+.giftList div {
+  padding: 0.9rem 1rem;
+  background: var(--panel);
+  border-radius: 12px;
+}
+
+.giftList dt {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.giftList dd {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+/* --------------------------------------------------------------------- book */
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.address {
+  margin-top: 2rem;
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  line-height: 1.2;
+}
+
+.addressNote {
+  margin-top: 0.3rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.line {
+  margin-top: 0.8rem;
+  font-size: 1.1rem;
+}
+
+.line a {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.hours {
+  margin-top: 1.6rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.form {
+  display: grid;
+  gap: 1.1rem;
+  padding: clamp(1.5rem, 3vw, 2.2rem);
+  background: var(--deep);
+  border: 1px solid var(--rule);
+  border-radius: 20px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label,
+.lengths legend {
+  font-size: 0.84rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--night);
+  border: 1px solid var(--rule-strong);
+  border-radius: 10px;
+}
+
+.lengths {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.lengthPicks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.6rem;
+  margin-top: 0.45rem;
+}
+
+.lengthPicks input {
+  accent-color: var(--peach);
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0;
+}
+
+.lengthPicks label {
+  margin-right: 1rem;
+}
+
+.submit {
+  justify-self: start;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  border-top: 1px solid var(--rule);
+}
+
+.footWash {
+  position: relative;
+  height: 160px;
+}
+
+.footInner {
+  display: grid;
+  gap: 0.5rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+  border-top: 1px solid var(--rule);
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.footInner a {
+  color: var(--text);
+  border-bottom: 1px solid currentColor;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1000px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .policyGrid,
+  .giftGrid,
+  .bookGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    width: min(100%, 460px);
+  }
+
+  .techniques {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .technique,
+  .technique:nth-child(-n + 2) {
+    grid-column: auto;
+  }
+
+  .addons {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .techniques,
+  .addonList,
+  .giftList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .span {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto;
+    row-gap: 0.3rem;
+  }
+
+  .spanTitle {
+    grid-row: 1;
+  }
+
+  .spanNote {
+    grid-row: 2;
+  }
+
+  .span::after,
+  .spanBar {
+    grid-column: 1;
+    grid-row: 3;
+    height: 1.4rem;
+  }
+
+  .spanMins {
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  .menu .menuName {
+    padding-right: 0.4rem;
+  }
+
+  .menuTitle {
+    font-size: 1.3rem;
+  }
+
+  .menuLine {
+    font-size: 0.82rem;
+  }
+
+  .menu .p30,
+  .menu .p60,
+  .menu .p90 {
+    padding: 0.6rem 0.3rem;
+    font-size: 1.3rem;
+  }
+
+  .minNum {
+    font-size: 2rem;
+  }
+
+  .minWord {
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+  }
+
+  .certificate {
+    grid-template-columns: minmax(0, 1fr);
+    transform: none;
+  }
+
+  .certFace {
+    min-height: 150px;
+  }
+
+  .certBody {
+    border-left: 0;
+    border-top: 2px dashed var(--cream-rule);
+  }
+
+  .policyList div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.2rem;
+  }
+
+  .nextCard {
+    left: 0;
+    bottom: 0.5rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .barBook {
+    display: none;
+  }
+
+  .facts {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .menu .menuCorner {
+    font-size: 0.62rem;
+  }
+}

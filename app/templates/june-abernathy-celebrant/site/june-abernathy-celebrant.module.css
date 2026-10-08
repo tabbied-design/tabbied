@@ -1,0 +1,1021 @@
+/* ==========================================================================
+   JUNE ABERNATHY - wedding officiant and celebrant
+   The page is the printed order of service. The hero is its cover beside a
+   garden arch, with the order itself as the contents; every section is
+   headed by its item in the program, from the welcome to the recessional.
+   Cormorant Garamond is the engraved program type, Jost the small print.
+   Blossom is the flowers: the arch, the round posy beside June's welcome,
+   the garland around the marriage certificate and the footer's edge.
+   ========================================================================== */
+
+.page {
+  --blush: #fbf1ec;
+  --plum: #3d2140;
+  --rose: #d4637a;
+  --sage: #7e9a6d;
+  --marigold: #e7a23b;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 76rem;
+  --serif: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  --sans: 'Jost', 'Futura', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--plum);
+  --on-plum: var(--blush);
+  --on-rose: var(--plum);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.65;
+  background: var(--blush);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--blush) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--plum));
+    --on-plum: color-mix(in oklab, oklch(from var(--plum) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--plum));
+    --on-rose: oklch(from var(--rose) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--blush));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 42%, transparent);
+  --petal: color-mix(in oklab, var(--blush) 86%, var(--rose));
+  --leaf: color-mix(in oklab, var(--blush) 86%, var(--sage));
+  --shadow: color-mix(in oklab, var(--plum) 30%, transparent);
+  --on-plum-muted: color-mix(in oklab, var(--on-plum) 78%, var(--plum));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, dl, dd, ol, ul, blockquote) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--serif);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem var(--gut);
+  background: var(--blush);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  justify-self: start;
+  display: grid;
+  line-height: 1.05;
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.75rem;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.brandSub {
+  margin-top: 0.3rem;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2.2rem);
+}
+
+.nav a {
+  padding: 0.25rem 0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-bottom: 1px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barButton {
+  padding: 0.6rem 1.15rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--plum);
+  color: var(--on-plum);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--blush);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gut) clamp(3.5rem, 7vw, 6rem);
+}
+
+.arch {
+  position: relative;
+  aspect-ratio: 3 / 4.1;
+  background: var(--plum);
+  border-radius: 999px 999px 6px 6px;
+  box-shadow: 0 0 0 10px var(--blush), 0 0 0 11px var(--rule-strong), 0 40px 60px -40px var(--shadow);
+  overflow: hidden;
+}
+
+.program {
+  text-align: center;
+}
+
+.programKicker,
+.itemLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.programKicker::before,
+.programKicker::after,
+.itemLabel::before,
+.itemLabel::after {
+  content: '';
+  width: 2.75rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.heroTitle {
+  margin-top: 1.4rem;
+  font-size: clamp(2.8rem, 5.6vw, 4.9rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+
+.heroTitle em {
+  display: block;
+  margin-top: 0.15em;
+  font-style: italic;
+}
+
+.heroLead {
+  max-width: 34rem;
+  margin: 1.5rem auto 0;
+  font-size: 1.06rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.order {
+  display: grid;
+  max-width: 30rem;
+  margin: 2rem auto 0;
+  text-align: left;
+  border-block: 1px solid var(--rule-strong);
+}
+
+.orderLink {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.42rem 0;
+}
+
+.order li + li {
+  border-top: 1px solid var(--rule);
+}
+
+.orderItem {
+  font-family: var(--serif);
+  font-size: 1.28rem;
+  font-style: italic;
+}
+
+.orderLink:hover .orderItem {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.leader {
+  flex: 1;
+  min-width: 1rem;
+  border-bottom: 1.5px dotted var(--rule-strong);
+}
+
+.orderWhat {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost,
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-radius: 999px;
+}
+
+.button,
+.submit {
+  background: var(--plum);
+  color: var(--on-plum);
+  border: 1px solid var(--plum);
+}
+
+.ghost {
+  border: 1px solid var(--rule-strong);
+}
+
+.ghost:hover {
+  border-color: currentColor;
+}
+
+/* ---------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+}
+
+.centerHead {
+  max-width: 40rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.secTitle {
+  margin-top: 0.9rem;
+  font-size: clamp(2.4rem, 4.4vw, 3.7rem);
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.secNote {
+  margin-top: 0.9rem;
+  font-size: 1.04rem;
+  color: var(--muted);
+}
+
+.body {
+  margin-top: 1rem;
+  font-size: 1.02rem;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+/* the welcome */
+
+.welcome {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+  border-top: 1px solid var(--rule);
+  padding-top: clamp(3rem, 6vw, 5rem);
+}
+
+.posy {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 24rem);
+  aspect-ratio: 1;
+  background: var(--plum);
+  border-radius: 50%;
+  box-shadow: 0 0 0 10px var(--blush), 0 0 0 11px var(--rule-strong);
+  overflow: hidden;
+}
+
+.welcomeText .itemLabel {
+  justify-content: flex-start;
+}
+
+.welcomeText .itemLabel::before {
+  display: none;
+}
+
+.welcomeLead {
+  margin-top: 1.1rem;
+  font-family: var(--serif);
+  font-size: clamp(1.45rem, 2.3vw, 1.85rem);
+  font-style: italic;
+  line-height: 1.3;
+}
+
+.quote {
+  margin-top: 1.75rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--petal);
+  border-radius: 4px;
+  border-left: 3px solid var(--rose);
+}
+
+.quote p {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-style: italic;
+  line-height: 1.35;
+}
+
+.quote cite {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* the ceremonies, as program entries */
+
+.styles {
+  display: grid;
+  max-width: 52rem;
+  margin: 2.75rem auto 0;
+}
+
+.style {
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.style:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.styleHead {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.styleName {
+  font-size: clamp(1.6rem, 2.6vw, 2.05rem);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.styleLength {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.styleText {
+  max-width: 40rem;
+  margin-top: 0.5rem;
+  font-size: 1.02rem;
+}
+
+.styleRituals {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.styleRituals::before {
+  content: '';
+  flex: none;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--sage);
+  border-radius: 0 100% 0 100%;
+  transform: translateY(-0.05rem);
+}
+
+/* how we write it */
+
+.writingSec {
+  background: var(--leaf);
+}
+
+.writingInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+}
+
+.timeline {
+  position: relative;
+  display: grid;
+  gap: 1.1rem;
+  max-width: 56rem;
+  margin: 3rem auto 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: calc(13rem + 1.5rem + 0.5rem);
+  border-left: 1px solid var(--rule-strong);
+}
+
+.moment {
+  display: grid;
+  grid-template-columns: 13rem 1rem minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.momentWhen {
+  padding-top: 1.15rem;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-style: italic;
+  line-height: 1.2;
+  text-align: right;
+}
+
+.momentDot {
+  position: relative;
+  width: 1rem;
+  height: 1rem;
+  margin-top: 1.4rem;
+  background: var(--rose);
+  border-radius: 50% 0 50% 0;
+  box-shadow: 0 0 0 4px var(--leaf);
+}
+
+.momentCard {
+  padding: 1rem 1.25rem 1.1rem;
+  background: var(--blush);
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px var(--rule);
+}
+
+.momentTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.momentText {
+  margin-top: 0.3rem;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+/* fees, three arched cards */
+
+.fees {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  max-width: 64rem;
+  margin: 3rem auto 0;
+}
+
+.fee {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3.25rem 1.75rem 2rem;
+  text-align: center;
+  background: var(--petal);
+  border-radius: 999px 999px 6px 6px;
+}
+
+.feeMain {
+  background: var(--plum);
+  color: var(--on-plum);
+}
+
+.feeName {
+  font-size: 1.85rem;
+  font-style: italic;
+  line-height: 1.1;
+}
+
+.feeSub {
+  margin-top: 0.35rem;
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.feePrice {
+  margin: 1.1rem 0 1.25rem;
+  font-family: var(--serif);
+  font-size: 3.6rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.feeItems {
+  display: grid;
+  gap: 0.5rem;
+  width: 100%;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--rule-strong);
+  font-size: 0.97rem;
+}
+
+.feeMain .feeItems {
+  border-top-color: color-mix(in oklab, var(--on-plum) 35%, transparent);
+}
+
+.feeMain .feeItems li {
+  color: var(--on-plum-muted);
+}
+
+.feesNote {
+  max-width: 40rem;
+  margin: 1.75rem auto 0;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* the certificate in its garland */
+
+.certificate {
+  position: relative;
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 3rem;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.garland {
+  position: absolute;
+  inset: 0;
+  background: var(--blush);
+}
+
+.certInner {
+  position: relative;
+  padding: clamp(2rem, 5vw, 3.75rem) clamp(1.25rem, 5vw, 4rem);
+  text-align: center;
+  background: var(--blush);
+  border: 3px double var(--rule-strong);
+}
+
+.certLead {
+  max-width: 36rem;
+  margin: 0.9rem auto 0;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.papers {
+  display: grid;
+  margin-top: 2rem;
+  text-align: left;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.papers div {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: 1.5rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.papers dt {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-style: italic;
+  line-height: 1.25;
+}
+
+.papers dd {
+  font-size: 0.98rem;
+}
+
+.signatures {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.sigLine {
+  height: 1.5rem;
+  border-bottom: 1px solid var(--text);
+}
+
+.sigNames {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  margin-top: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* contact */
+
+.contactSec {
+  background: var(--petal);
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+}
+
+.contactGrid .itemLabel {
+  justify-content: flex-start;
+}
+
+.contactGrid .itemLabel::before {
+  display: none;
+}
+
+.address {
+  margin-top: 1.5rem;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.addressNote {
+  margin-top: 0.4rem;
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+.contactLine {
+  margin-top: 0.8rem;
+  font-size: 1.02rem;
+  font-weight: 500;
+}
+
+.contactLine + .contactLine {
+  margin-top: 0.3rem;
+}
+
+.contactLine a {
+  border-bottom: 1px solid var(--rose);
+}
+
+.hours {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 1.6rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule-strong);
+  font-size: 0.96rem;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.hours dt {
+  font-weight: 500;
+}
+
+.hours dd {
+  text-align: right;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 1.5rem;
+  padding: clamp(1.5rem, 3.5vw, 2.5rem);
+  background: var(--blush);
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px var(--rule);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label,
+.fieldset legend {
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 0.5rem 0;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule-strong);
+  border-radius: 0;
+}
+
+.field textarea {
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--rule-strong);
+  resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--text);
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.fieldset legend {
+  padding: 0;
+  margin-bottom: 0.6rem;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.4rem;
+}
+
+.picks input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: var(--plum);
+}
+
+.picks label {
+  margin-right: 1rem;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--plum);
+  color: var(--on-plum);
+}
+
+.footGarland {
+  position: relative;
+  height: 5rem;
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  justify-items: center;
+  gap: 0.45rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 3.5rem) var(--gut) clamp(3rem, 6vw, 4rem);
+  text-align: center;
+}
+
+.footName {
+  margin-bottom: 0.3rem;
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  font-style: italic;
+}
+
+.footText {
+  max-width: 40rem;
+  font-size: 0.92rem;
+  color: var(--on-plum-muted);
+}
+
+.footText a {
+  color: var(--on-plum);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1000px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .fees {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 26rem;
+  }
+}
+
+@media (max-width: 860px) {
+  .hero,
+  .welcome,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .arch {
+    justify-self: center;
+    width: min(100%, 22rem);
+  }
+
+  .posy {
+    width: min(100%, 16rem);
+  }
+
+  .timeline::before {
+    left: 0.5rem;
+  }
+
+  .moment {
+    grid-template-columns: 1rem minmax(0, 1fr);
+    gap: 0.4rem 1rem;
+  }
+
+  .momentWhen {
+    grid-column: 2;
+    padding-top: 0;
+    text-align: left;
+  }
+
+  .momentDot {
+    grid-column: 1;
+    grid-row: 1;
+    margin-top: 0.4rem;
+  }
+
+  .momentCard {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .barButton {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .papers div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.25rem;
+  }
+
+  .certificate {
+    padding: 1.5rem;
+  }
+
+  .styleHead {
+    flex-wrap: wrap;
+  }
+
+  .styleHead .leader {
+    display: none;
+  }
+
+  .styleLength {
+    flex-basis: 100%;
+  }
+
+  .orderWhat {
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+  }
+
+  .orderItem {
+    font-size: 1.15rem;
+  }
+
+  .arch {
+    width: min(100%, 15rem);
+  }
+
+  .signatures,
+  .sigNames {
+    gap: 1rem;
+  }
+}

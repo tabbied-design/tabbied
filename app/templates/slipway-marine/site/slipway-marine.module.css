@@ -1,0 +1,1125 @@
+/* ==========================================================================
+   SLIPWAY MARINE SERVICE - outboard and boat mechanic, Pier Road boatyard
+   Night harbor navy, sailcloth, flare orange, sea teal and rope. Saira
+   Stencil for anything painted on a shed or a hull, Barlow Condensed for
+   the labels on a work order, Barlow to read. The page is the yard's
+   paperwork: a work order pinned over the slipway, the haul-out board, the
+   winterization job card, the dock-visit rota. The jibboom is the rigging,
+   spars run out on the diagonal: the ramp, the wake band and the footer.
+   ========================================================================== */
+
+.page {
+  --harbor: #102231;
+  --sail: #ece6d6;
+  --flare: #f0642d;
+  --tide: #4fa3a5;
+  --rope: #c9ad7a;
+  --hull: #2d4f6c;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --stencil: 'Saira Stencil One', Impact, sans-serif;
+  --cond: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --sans: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--sail);
+  --on-sail: var(--harbor);
+  --on-flare: var(--harbor);
+  --on-tide: var(--harbor);
+  --on-hull: var(--sail);
+
+  font-family: var(--sans);
+  font-size: 1.04rem;
+  line-height: 1.6;
+  background: var(--harbor);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--harbor) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--sail));
+    --on-sail: color-mix(in oklab, oklch(from var(--sail) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--sail));
+    --on-flare: oklch(from var(--flare) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-tide: oklch(from var(--tide) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-hull: oklch(from var(--hull) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--harbor));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 40%, transparent);
+  --deck: color-mix(in oklab, var(--harbor) 90%, var(--sail));
+  --card-muted: color-mix(in oklab, var(--on-sail) 74%, var(--sail));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem var(--gut);
+  background: var(--harbor);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--stencil);
+  font-size: 1.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.brandSub {
+  font-family: var(--cond);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  padding: 0.25rem 0;
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barCall {
+  padding: 0.55rem 1rem;
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: var(--flare);
+  color: var(--on-flare);
+  clip-path: polygon(0.6rem 0, 100% 0, calc(100% - 0.6rem) 100%, 0 100%);
+  padding-inline: 1.3rem;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  --template-menu-bg: var(--harbor);
+}
+
+/* --------------------------------------------------------------------- hero
+   The ramp runs in from the right with a raked edge, like the slipway
+   going down into the water; the work order is pinned across it. */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 6px solid var(--tide);
+}
+
+.ramp {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 52%;
+  background: color-mix(in oklab, var(--harbor) 55%, var(--hull));
+  clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.heroInner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 3rem;
+  align-items: center;
+  max-width: var(--max);
+  min-height: clamp(36rem, 52vw, 44rem);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut);
+  box-sizing: border-box;
+}
+
+.heroText {
+  max-width: 34rem;
+}
+
+.kicker {
+  margin: 0 0 1.4rem;
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-family: var(--stencil);
+  font-size: clamp(3.4rem, 6.8vw, 6.4rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.heroTitle span {
+  display: block;
+  color: var(--flare);
+}
+
+.heroLead {
+  margin: 1.6rem 0 0;
+  font-size: 1.12rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--cond);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.button {
+  background: var(--flare);
+  color: var(--on-flare);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--flare) 85%, var(--on-flare));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ghost:hover {
+  background: var(--deck);
+}
+
+/* The work order: a paper docket with a punched hole and a torn edge. */
+.docket {
+  position: relative;
+  justify-self: end;
+  width: min(100%, 25rem);
+  padding: 1.6rem 1.5rem 1.4rem;
+  background: var(--sail);
+  color: var(--on-sail);
+  transform: rotate(2deg);
+  box-shadow: 0 30px 50px -24px color-mix(in oklab, var(--harbor) 80%, black);
+  -webkit-mask: radial-gradient(circle 6px at 50% 0, transparent 5.5px, black 6px) top / 16px 100% repeat-x;
+  mask: radial-gradient(circle 6px at 50% 0, transparent 5.5px, black 6px) top / 16px 100% repeat-x;
+}
+
+.docket::before {
+  content: '';
+  position: absolute;
+  top: 1.1rem;
+  right: 1.3rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  background: var(--harbor);
+}
+
+.docketHead {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  padding: 0.4rem 0 0.8rem;
+  border-bottom: 2px solid currentColor;
+}
+
+.docketTitle {
+  margin: 0;
+  font-family: var(--stencil);
+  font-size: 1.7rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.docketNo {
+  margin: 0;
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.docketRows {
+  margin: 0;
+}
+
+.docketRows div {
+  display: grid;
+  grid-template-columns: 4.6rem minmax(0, 1fr);
+  gap: 0.8rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px dashed color-mix(in oklab, var(--on-sail) 40%, transparent);
+}
+
+.docketRows dt {
+  font-family: var(--cond);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--card-muted);
+}
+
+.docketRows dd {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.docketStatus {
+  display: inline-block;
+  margin: 1rem 0 0;
+  padding: 0.35rem 0.7rem;
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 2px solid currentColor;
+  transform: rotate(-3deg);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 0.6rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secTag {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.secTitle {
+  font-family: var(--stencil);
+  font-size: clamp(2.3rem, 4.6vw, 3.9rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.secNote {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------- haul-out calendar */
+
+.weeks {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.week,
+.weekFull {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem 1rem 0.9rem;
+  border: 1.5px solid var(--rule-strong);
+  border-top: 5px solid var(--tide);
+}
+
+.weekFull {
+  border-style: dashed;
+  border-top: 5px solid var(--rule-strong);
+}
+
+.weekDate {
+  font-family: var(--stencil);
+  font-size: 1.7rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.weekFull .weekDate,
+.weekFull .weekNote {
+  color: var(--muted);
+}
+
+/* Four lift slots as four dots; the open ones lit. */
+.slots {
+  width: 64px;
+  height: 12px;
+  background: linear-gradient(90deg, var(--tide) 0 calc(var(--open) * 25%), var(--rule-strong) calc(var(--open) * 25%));
+  -webkit-mask: radial-gradient(circle 6px at 6px 6px, black 5.5px, transparent 6px) 0 0 / 16px 12px repeat-x;
+  mask: radial-gradient(circle 6px at 6px 6px, black 5.5px, transparent 6px) 0 0 / 16px 12px repeat-x;
+}
+
+.slots0 {
+  --open: 0;
+}
+
+.slots1 {
+  --open: 1;
+}
+
+.slots2 {
+  --open: 2;
+}
+
+.slots3 {
+  --open: 3;
+}
+
+.slots4 {
+  --open: 4;
+}
+
+.weekNote {
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.season {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 2.6rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.seasonCell {
+  padding: 1.2rem 1.4rem 0 0;
+}
+
+.seasonCell + .seasonCell {
+  padding-left: 1.4rem;
+  border-left: 1px solid var(--rule);
+}
+
+.seasonWhen {
+  margin: 0;
+  font-family: var(--cond);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.seasonWhat {
+  margin-top: 0.3rem;
+  font-family: var(--cond);
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.seasonDoes {
+  margin: 0.4rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- wake */
+
+.wake {
+  position: relative;
+  height: clamp(110px, 12vw, 160px);
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  overflow: hidden;
+  border-block: 1px solid var(--rule-strong);
+}
+
+/* -------------------------------------------------------------- winterize */
+
+.winterGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.winterIntro .secTitle {
+  margin-top: 0.6rem;
+}
+
+.winterIntro .secNote {
+  margin-top: 1.2rem;
+}
+
+.winterPrices {
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid var(--text);
+}
+
+.winterPrices li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.winterPrices strong {
+  font-family: var(--cond);
+  font-size: 1.25rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* The job card: a sailcloth card, numbered lines, a box for initials. */
+.jobCard {
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--sail);
+  color: var(--on-sail);
+  border-left: 10px solid var(--flare);
+}
+
+.jobHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.4rem 1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 2px solid currentColor;
+}
+
+.jobTitle {
+  margin: 0;
+  font-family: var(--stencil);
+  font-size: 1.8rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.jobMeta {
+  margin: 0;
+  font-family: var(--cond);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--card-muted);
+}
+
+.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr) 3.2rem;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.62rem 0;
+  font-size: 0.98rem;
+  line-height: 1.4;
+  border-bottom: 1px solid color-mix(in oklab, var(--on-sail) 22%, transparent);
+  counter-increment: step;
+}
+
+.steps li::before {
+  content: counter(step, decimal-leading-zero);
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.steps li::after {
+  content: '';
+  align-self: end;
+  height: 1.1rem;
+  border-bottom: 1.5px solid currentColor;
+}
+
+.jobFoot {
+  margin: 1rem 0 0;
+  font-size: 0.92rem;
+  color: var(--card-muted);
+}
+
+/* ---------------------------------------------------------------- engines */
+
+.engineGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.engineTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.caption {
+  padding-bottom: 0.8rem;
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.engineTable th,
+.engineTable td {
+  padding: 1rem 0.8rem 1rem 0;
+  text-align: left;
+  vertical-align: baseline;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.engineTable tr:last-child th,
+.engineTable tr:last-child td {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.engineTable th {
+  width: 9rem;
+  font-family: var(--stencil);
+  font-size: 1.45rem;
+  font-weight: 400;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.engineBoats {
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+.enginePrice {
+  font-family: var(--cond);
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.engineTable .enginePrice {
+  padding-right: 0;
+  text-align: right;
+}
+
+.workList {
+  margin: 0;
+  padding: 1.4rem 1.6rem;
+  list-style: none;
+  background: var(--deck);
+  border: 1px solid var(--rule-strong);
+}
+
+.workList li {
+  position: relative;
+  padding: 0.5rem 0 0.5rem 2.2rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.workList li:last-child {
+  border-bottom: 0;
+}
+
+/* Two little spars as the bullet: the jibboom, drawn small. */
+.workList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.95rem;
+  width: 1.3rem;
+  height: 0.6rem;
+  background:
+    linear-gradient(var(--rope), var(--rope)) 0 0 / 100% 2px no-repeat,
+    linear-gradient(var(--rope), var(--rope)) 0 100% / 100% 2px no-repeat;
+  transform: rotate(-35deg);
+}
+
+.rate {
+  margin: 1.6rem 0 0;
+  font-family: var(--cond);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+/* ------------------------------------------------------------------ dock */
+
+.dock {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--tide);
+  color: var(--on-tide);
+}
+
+.dockInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut);
+}
+
+.dockTag {
+  margin: 0;
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.dockTitle {
+  margin-top: 0.6rem;
+  font-family: var(--stencil);
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.dockLead {
+  max-width: 32rem;
+  margin: 1.2rem 0 0;
+}
+
+.vhf {
+  display: inline-block;
+  margin: 1.6rem 0 0;
+  padding: 0.5rem 0.9rem;
+  font-family: var(--cond);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 2px solid currentColor;
+}
+
+.dockDays {
+  margin: 0;
+  border-top: 2px solid currentColor;
+}
+
+.dockDays div {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid color-mix(in oklab, currentColor 35%, transparent);
+}
+
+.dockDays dt {
+  font-family: var(--stencil);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}
+
+.dockDays dd {
+  margin: 0;
+  font-weight: 500;
+}
+
+/* ---------------------------------------------------------------- contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.contactInfo .secTitle {
+  margin-top: 0.6rem;
+}
+
+.address {
+  margin: 1.4rem 0 0;
+  font-family: var(--cond);
+  font-size: 1.7rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.addressNote {
+  max-width: 28rem;
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+}
+
+.contactList {
+  margin: 1.6rem 0 0;
+}
+
+.contactList div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.contactList dt {
+  font-family: var(--cond);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contactList dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.contactList a {
+  font-weight: 600;
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--deck);
+  border: 1px solid var(--rule-strong);
+  border-top: 5px solid var(--flare);
+}
+
+.formTitle {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: var(--stencil);
+  font-size: 1.8rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field label,
+.field legend {
+  padding: 0;
+  font-family: var(--cond);
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--harbor);
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 0;
+}
+
+.field input::placeholder {
+  color: var(--muted);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+
+.pick input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.pick label {
+  display: inline-block;
+  padding: 0.4rem 0.85rem;
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--harbor);
+  border: 1.5px solid var(--rule-strong);
+  cursor: pointer;
+}
+
+.pick input:checked + label {
+  background: var(--sail);
+  color: var(--on-sail);
+  border-color: var(--sail);
+}
+
+.pick input:focus-visible + label {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.85rem 1.6rem;
+  font-family: var(--cond);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--on-flare);
+  background: var(--flare);
+  border: 0;
+  cursor: pointer;
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--hull);
+  color: var(--on-hull);
+}
+
+.footField {
+  position: relative;
+  height: 96px;
+  overflow: hidden;
+  background: var(--harbor);
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 3rem;
+  font-size: 0.92rem;
+}
+
+.footInner p {
+  margin: 0.3rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.8rem;
+  font-family: var(--stencil);
+  font-size: 2rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .weeks {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1040px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+}
+
+@media (max-width: 900px) {
+  .heroInner,
+  .winterGrid,
+  .engineGrid,
+  .dockInner,
+  .contactGrid,
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ramp {
+    top: auto;
+    width: 100%;
+    height: 24rem;
+    clip-path: polygon(0 18%, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .heroInner {
+    padding-bottom: 3rem;
+  }
+
+  .docket {
+    justify-self: center;
+  }
+
+  .season {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .seasonCell:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .brandSub {
+    font-size: 0.8rem;
+  }
+
+  .weeks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .season,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .seasonCell + .seasonCell {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .engineTable th {
+    width: auto;
+    font-size: 1.2rem;
+  }
+
+  .engineBoats {
+    display: none;
+  }
+
+  .dockDays div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  .steps li {
+    grid-template-columns: 2rem minmax(0, 1fr);
+  }
+
+  .steps li::after {
+    display: none;
+  }
+}

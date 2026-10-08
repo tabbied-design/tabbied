@@ -1,0 +1,1108 @@
+/* ==========================================================================
+   SQUARE ONE ORGANIZING - professional organizer, Fairbank
+   A packing grid. Chalk ground ruled like graph paper, indigo ink, and
+   pieces in teal, tangerine and lilac. Red Hat in three cuts: Display for
+   headings, Text for reading, Mono for the label-maker tape that names
+   every section. The pentomino is the grid packed full: the square in the
+   hero, the last space in the room grid, a band after the moving chart and
+   the footer. The rooms are tiles sized by their hours; the moving plan is
+   a chart with weeks across and phases down.
+   ========================================================================== */
+
+.page {
+  --chalk: #f2f3ee; /* role 0: the ground */
+  --indigo: #1c2140;
+  --teal: #129a8b;
+  --tangerine: #f4a024;
+  --lilac: #8f7ff0;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --display: 'Red Hat Display', 'Helvetica Neue', Arial, sans-serif;
+  --body: 'Red Hat Text', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'Red Hat Mono', 'Courier New', monospace;
+
+  --text: var(--indigo);
+  --on-indigo: var(--chalk);
+  --on-teal: var(--chalk);
+  --on-tangerine: var(--indigo);
+  --on-lilac: var(--indigo);
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--chalk));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 40%, transparent);
+  --graph: color-mix(in oklab, var(--indigo) 9%, transparent);
+  --tint-teal: color-mix(in oklab, var(--chalk) 82%, var(--teal));
+  --tint-tangerine: color-mix(in oklab, var(--chalk) 76%, var(--tangerine));
+  --tint-lilac: color-mix(in oklab, var(--chalk) 80%, var(--lilac));
+
+  font-family: var(--body);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--chalk);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--chalk) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--indigo));
+    --on-indigo: color-mix(in oklab, oklch(from var(--indigo) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--indigo));
+    --on-teal: oklch(from var(--teal) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-tangerine: oklch(from var(--tangerine) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-lilac: oklch(from var(--lilac) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+/* The label-maker strip that names each section. */
+.tape,
+.tapeLight {
+  display: inline-block;
+  margin: 0 0 1.1rem;
+  padding: 0.3rem 0.7rem 0.32rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  border-radius: 3px;
+}
+
+.tape {
+  background: var(--indigo);
+  color: var(--on-indigo);
+}
+
+.tapeLight {
+  background: var(--chalk);
+  color: var(--text);
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--chalk);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.brand {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+  column-gap: 0.65rem;
+  align-items: center;
+}
+
+.brandSquare {
+  grid-row: span 2;
+  width: 2.3rem;
+  height: 2.3rem;
+  background:
+    linear-gradient(var(--teal), var(--teal)) 0 0 / 50% 50% no-repeat,
+    linear-gradient(var(--tangerine), var(--tangerine)) 100% 100% / 50% 50% no-repeat,
+    var(--indigo);
+  border-radius: 4px;
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.brandSub {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.4rem;
+}
+
+.nav a {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 999px;
+}
+
+.nav a:hover {
+  background: var(--tint-teal);
+}
+
+.barCta {
+  padding: 0.6rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: var(--indigo);
+  color: var(--on-indigo);
+  border-radius: 6px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--chalk);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4.5rem) var(--gut) clamp(3.5rem, 6vw, 5.5rem);
+  isolation: isolate;
+}
+
+/* Graph paper under the hero, on its own layer so the copy keeps a plain
+   ground. */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0 calc(50% - 50vw);
+  z-index: -1;
+  background-image:
+    linear-gradient(var(--graph) 1px, transparent 1px),
+    linear-gradient(90deg, var(--graph) 1px, transparent 1px);
+  background-size: 44px 44px;
+  background-position: center top;
+}
+
+.heroText,
+.heroArt {
+  position: relative;
+}
+
+.heroTitle {
+  font-size: clamp(2.9rem, 5.8vw, 5.4rem);
+  line-height: 0.98;
+}
+
+.heroTitle span {
+  color: var(--teal);
+}
+
+.heroLead {
+  max-width: 33rem;
+  margin: 1.5rem 0 0;
+  font-size: 1.15rem;
+  line-height: 1.65;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.9rem 1.4rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 6px;
+}
+
+.button {
+  background: var(--indigo);
+  color: var(--on-indigo);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--indigo) 84%, var(--chalk));
+}
+
+.ghost {
+  background: var(--chalk);
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ghost:hover {
+  background: var(--tint-teal);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  max-width: 34rem;
+  margin: 2.6rem 0 0;
+  border: 2px solid var(--text);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.facts div {
+  display: flex;
+  flex-direction: column-reverse;
+  padding: 0.8rem 0.9rem;
+  background: var(--chalk);
+}
+
+.facts div + div {
+  border-left: 2px solid var(--text);
+}
+
+.facts dt {
+  font-size: 0.82rem;
+  line-height: 1.3;
+  color: var(--muted);
+}
+
+.facts dd {
+  margin: 0 0 0.2rem;
+  font-family: var(--display);
+  font-size: 1.45rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.heroArt {
+  justify-self: end;
+  width: min(100%, 36rem);
+}
+
+.square {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 0 0 3px var(--indigo);
+}
+
+/* The label strip stuck across the square. */
+.heroLabel {
+  position: absolute;
+  left: -1.6rem;
+  bottom: 12%;
+  margin: 0;
+  padding: 0.7rem 1.2rem 0.75rem;
+  font-family: var(--mono);
+  font-size: clamp(0.95rem, 1.6vw, 1.2rem);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--indigo);
+  color: var(--on-indigo);
+  border-radius: 4px;
+  transform: rotate(-3deg);
+  box-shadow: 0 10px 20px -12px var(--indigo);
+}
+
+/* ---------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  column-gap: 4rem;
+  align-items: end;
+  margin-bottom: clamp(1.8rem, 4vw, 2.8rem);
+}
+
+.secHead .tape {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+.secTitle {
+  font-size: clamp(2.2rem, 4.4vw, 3.7rem);
+  line-height: 1;
+}
+
+.secNote {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- rooms */
+
+.rooms {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: minmax(12.5rem, auto);
+  grid-template-areas:
+    'kitchen kitchen closet bath'
+    'kitchen kitchen garage garage'
+    'office kids paper paper'
+    'office pantry fill fill';
+  gap: 10px;
+  margin: 0;
+  padding: 10px;
+  list-style: none;
+  background: var(--indigo);
+  border-radius: 12px;
+}
+
+.room {
+  display: flex;
+  flex-direction: column;
+  padding: 1.3rem 1.3rem 1.2rem;
+  border-radius: 6px;
+}
+
+.roomName {
+  font-size: 1.6rem;
+  line-height: 1.05;
+}
+
+.roomTime {
+  margin: 0.35rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.roomWhat {
+  margin: auto 0 0;
+  padding-top: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.kitchen {
+  grid-area: kitchen;
+  background: var(--chalk);
+}
+
+.kitchen .roomName {
+  font-size: clamp(2.6rem, 4.6vw, 4rem);
+}
+
+.kitchen .roomWhat {
+  max-width: 30rem;
+  font-size: 1rem;
+}
+
+/* The cupboard: four shelves, each a ruled band. */
+.shelves {
+  margin: 1.2rem 0 0;
+  border-top: 3px solid var(--text);
+}
+
+.shelves div {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.55rem 0 0.5rem;
+  border-bottom: 3px solid var(--text);
+}
+
+.shelves dt {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding-top: 0.15rem;
+}
+
+.shelves dd {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.closet {
+  grid-area: closet;
+  background: var(--tint-teal);
+}
+
+.bath {
+  grid-area: bath;
+  background: var(--tint-lilac);
+}
+
+.garage {
+  grid-area: garage;
+  background: var(--tint-tangerine);
+}
+
+.office {
+  grid-area: office;
+  background: var(--tangerine);
+  color: var(--on-tangerine);
+}
+
+.kids {
+  grid-area: kids;
+  background: var(--tint-lilac);
+}
+
+.paper {
+  grid-area: paper;
+  background: var(--tint-teal);
+}
+
+.pantry {
+  grid-area: pantry;
+  background: var(--tint-tangerine);
+}
+
+.roomFill {
+  grid-area: fill;
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.fillField {
+  position: absolute;
+  inset: 0;
+}
+
+/* ------------------------------------------------------------------ moving */
+
+.moving {
+  background: var(--indigo);
+  color: var(--on-indigo);
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+}
+
+.movingInner {
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.movingHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  column-gap: 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.movingHead .tapeLight {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+.movingTitle {
+  font-size: clamp(2.2rem, 4.4vw, 3.7rem);
+  line-height: 1;
+}
+
+.movingNote {
+  margin: 0;
+  font-size: 1.05rem;
+  color: color-mix(in oklab, var(--on-indigo) 80%, var(--indigo));
+}
+
+.chart {
+  --cols: 7.5rem repeat(5, minmax(0, 1fr));
+}
+
+.weeks {
+  display: grid;
+  grid-template-columns: var(--cols);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.weeks span {
+  padding: 0 0 0.7rem 0.7rem;
+  border-left: 1px dashed color-mix(in oklab, var(--on-indigo) 34%, transparent);
+}
+
+.weeks span:first-child {
+  grid-column: 2;
+}
+
+.bars {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.barRow {
+  display: grid;
+  grid-template-columns: var(--cols);
+  align-items: stretch;
+  min-height: 6.4rem;
+  border-top: 1px solid color-mix(in oklab, var(--on-indigo) 22%, transparent);
+}
+
+.barRow:last-child {
+  border-bottom: 1px solid color-mix(in oklab, var(--on-indigo) 22%, transparent);
+}
+
+.phase {
+  grid-column: 1;
+  align-self: center;
+  font-size: 1.4rem;
+}
+
+.barFill {
+  margin: 0.55rem 0;
+  padding: 0.7rem 0.9rem;
+  border-radius: 6px;
+}
+
+.barWhen {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.barTask {
+  margin: 0.2rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.edit .barFill {
+  grid-column: 2 / 4;
+  background: var(--teal);
+  color: var(--on-teal);
+}
+
+.pack .barFill {
+  grid-column: 3 / 5;
+  background: var(--tangerine);
+  color: var(--on-tangerine);
+}
+
+.move .barFill {
+  grid-column: 5 / 6;
+  background: var(--chalk);
+  color: var(--text);
+}
+
+.unpack .barFill {
+  grid-column: 5 / 7;
+  background: var(--lilac);
+  color: var(--on-lilac);
+}
+
+.settle .barFill {
+  grid-column: 6 / 7;
+  background: var(--teal);
+  color: var(--on-teal);
+}
+
+/* -------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(4rem, 7vw, 6rem);
+  overflow: hidden;
+}
+
+/* -------------------------------------------------------------- checklists */
+
+.lists {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.4rem;
+}
+
+.list {
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--chalk);
+  border: 2px solid var(--text);
+  border-radius: 10px;
+}
+
+.listDone {
+  background: var(--tint-teal);
+}
+
+.listTitle {
+  font-size: 1.7rem;
+}
+
+.boxes {
+  margin: 1.1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.boxes li {
+  position: relative;
+  padding: 0.7rem 0 0.7rem 2.3rem;
+  border-top: 1px solid var(--rule);
+  font-size: 1.02rem;
+}
+
+.boxes li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.78rem;
+  display: grid;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1;
+  border: 2px solid var(--text);
+  border-radius: 3px;
+}
+
+.ticked li::before {
+  content: '\2713';
+  background: var(--indigo);
+  border-color: var(--indigo);
+  color: var(--on-indigo);
+}
+
+/* ------------------------------------------------------------------ prices */
+
+.prices {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.priceCard {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.3rem 1.4rem;
+  background: var(--chalk);
+  border: 2px solid var(--text);
+  border-radius: 10px;
+}
+
+.priceCard:nth-child(2) {
+  background: var(--indigo);
+  color: var(--on-indigo);
+  border-color: var(--indigo);
+}
+
+.priceName {
+  font-size: 1.3rem;
+}
+
+.priceFig {
+  margin: 0.8rem 0 0;
+  font-family: var(--display);
+  font-size: clamp(2.6rem, 4vw, 3.4rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.priceUnit {
+  margin: 0.4rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.priceNote {
+  margin: auto 0 0;
+  padding-top: 1.2rem;
+  font-size: 0.95rem;
+}
+
+.virtual {
+  margin: 1.6rem 0 0;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- book */
+
+.book {
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+  background: var(--tint-lilac);
+}
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.bookLead {
+  max-width: 30rem;
+  margin: 1.1rem 0 0;
+  font-size: 1.08rem;
+}
+
+.details {
+  margin: 1.8rem 0 0;
+  border-top: 2px solid var(--text);
+}
+
+.details div {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.details dt {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding-top: 0.15rem;
+}
+
+.details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.details a:hover {
+  text-decoration: underline;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  padding: clamp(1.4rem, 4vw, 2.4rem);
+  background: var(--chalk);
+  border: 2px solid var(--text);
+  border-radius: 10px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field label,
+.field legend {
+  padding: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.field input[type='text'],
+.field input[type='email'],
+.field input[type='tel'],
+.field input[type='date'],
+.field textarea {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--chalk);
+  border: 2px solid var(--rule-strong);
+  border-radius: 6px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 1px;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.pick {
+  position: relative;
+}
+
+.pick input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.pick label {
+  display: inline-block;
+  padding: 0.45rem 0.9rem;
+  font-weight: 500;
+  border: 2px solid var(--rule-strong);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.pick input:checked + label {
+  background: var(--indigo);
+  border-color: var(--indigo);
+  color: var(--on-indigo);
+}
+
+.pick input:focus-visible + label {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.9rem 1.5rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--on-indigo);
+  background: var(--indigo);
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--indigo) 84%, var(--chalk));
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  background: var(--indigo);
+  color: var(--on-indigo);
+}
+
+.footField {
+  position: relative;
+  height: clamp(4rem, 7vw, 5.5rem);
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem 3rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2rem var(--gut) 2.6rem;
+}
+
+.footName {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.4rem;
+  font-weight: 900;
+}
+
+.footSmall {
+  margin: 0;
+  font-size: 0.92rem;
+  color: color-mix(in oklab, var(--on-indigo) 84%, var(--indigo));
+}
+
+.footSmall a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .prices {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .secHead,
+  .movingHead,
+  .bookGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secNote,
+  .movingNote {
+    margin-top: 1rem;
+  }
+
+  .heroArt {
+    justify-self: center;
+    width: min(100%, 30rem);
+  }
+
+  .rooms {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      'kitchen kitchen'
+      'closet bath'
+      'garage garage'
+      'office kids'
+      'office pantry'
+      'paper paper'
+      'fill fill';
+    grid-auto-rows: minmax(10rem, auto);
+  }
+
+  .chart {
+    --cols: minmax(0, 1fr);
+  }
+
+  .weeks {
+    display: none;
+  }
+
+  .barRow {
+    grid-template-columns: 6rem minmax(0, 1fr);
+    gap: 0 1rem;
+  }
+
+  .barRow .barFill {
+    grid-column: 2;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .barCta {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .heroLabel {
+    left: 0.6rem;
+  }
+
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .facts div + div {
+    border-left: 0;
+    border-top: 2px solid var(--text);
+  }
+
+  .rooms {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'kitchen'
+      'closet'
+      'bath'
+      'garage'
+      'office'
+      'kids'
+      'pantry'
+      'paper'
+      'fill';
+    grid-auto-rows: auto;
+  }
+
+  .roomFill {
+    min-height: 9rem;
+  }
+
+  .shelves div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  .barRow {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 0.8rem;
+  }
+
+  .barRow .barFill {
+    grid-column: 1;
+  }
+
+  .lists,
+  .prices,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .details div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}

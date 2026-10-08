@@ -168,6 +168,31 @@ test.describe('Tabbied site', () => {
     ).toBe(0);
   });
 
+  test('the gallery pager keeps its slots and fits a phone', async ({ page }) => {
+    // Eleven slots from 768px up and seven below (lib/pagination.ts), on the
+    // last page as on the first, so the pager holds one width.
+    const pager = page.getByRole('navigation', { name: 'Pages' });
+    const slots = pager.locator(':scope > *');
+
+    for (const [width, count] of [
+      [1440, 11],
+      [390, 7],
+    ]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const url of ['/patterns/', '/patterns/?page=999']) {
+        await page.goto(url);
+        await expect(slots).toHaveCount(count);
+        await expect(pager.locator('[aria-current="page"]')).toHaveCount(1);
+        // The slots themselves, not the nav: a flex row that overflows
+        // spills past its box rather than widening it.
+        const first = await slots.first().boundingBox();
+        const last = await slots.last().boundingBox();
+        expect(first!.x).toBeGreaterThanOrEqual(0);
+        expect(last!.x + last!.width).toBeLessThanOrEqual(width);
+      }
+    }
+  });
+
   test('the gallery sidebar stays fixed while the grid scrolls', async ({
     page,
   }) => {

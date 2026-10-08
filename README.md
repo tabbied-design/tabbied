@@ -27,7 +27,7 @@
 ## What is Tabbied?
 
 Tabbied is a free set of tools for getting past the blank canvas. It has
-**338 generative patterns**, **437 color palettes** and **277 website
+**382 generative patterns**, **437 color palettes** and **377 website
 templates**, and you can change every one of them to suit you: the colors,
 how busy the pattern is, and the arrangement of the shapes themselves.
 
@@ -66,7 +66,7 @@ Colors change everything. Choose a palette in the pattern library and every
 card re-colors with it, so you can browse in the colors you already have in
 mind.
 
-## 277 website templates
+## 377 website templates
 
 ![Twelve Tabbied website templates: a plant shop, an arcade bar, hot air balloon rides, a swimwear label, a dog groomer, a new-music ensemble, a music school, a mountain lodge, a scenic railway, a listening bar, a massage clinic and a concert hall](docs/readme/templates.webp)
 

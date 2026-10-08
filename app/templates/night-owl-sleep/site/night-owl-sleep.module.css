@@ -1,0 +1,980 @@
+/* ==========================================================================
+   NIGHT OWL SLEEP CONSULTING - gentle sleep plans, 4 months to 6 years
+   The layout is one night, read left to right: the nursery window in the
+   hero, then a chart of five bedtimes from 5 pm to 7:30 am, the packages,
+   and the promise under a crescent moon. Midnight ground, moon-cream ink,
+   and the aurora's green, teal and lilac for marks and fills. Young Serif
+   is the bedtime-story lettering; Outfit is soft and easy at 3 am. The
+   northern lights fill the arched window, run along the horizon between
+   the chart and the packages, and rise over the footer.
+   ========================================================================== */
+
+.page {
+  --night: #101a2c;
+  --moon: #f2ead6;
+  --aurora: #6fd6a8;
+  --tide: #48b5c8;
+  --lilac: #a48be0;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --serif: 'Young Serif', 'Georgia', serif;
+  --sans: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--moon);
+  --on-moon: var(--night);
+  --on-aurora: var(--night);
+  --on-lilac: var(--night);
+  --on-tide: var(--night);
+
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  background: var(--night);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--night) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--moon));
+    --on-moon: color-mix(in oklab, oklch(from var(--moon) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--moon));
+    --on-aurora: oklch(from var(--aurora) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-lilac: oklch(from var(--lilac) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-tide: oklch(from var(--tide) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--night));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 40%, transparent);
+  --panel: color-mix(in oklab, var(--night) 90%, var(--moon));
+  --deep: color-mix(in oklab, var(--night) 84%, var(--tide));
+  --frame: color-mix(in oklab, var(--moon) 88%, var(--night));
+  --input: color-mix(in oklab, var(--night) 84%, var(--moon));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--night);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+/* A crescent, cut from a circle by its own shadow. */
+.brandMoon {
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  box-shadow: inset -0.5rem 0.15rem 0 0 var(--moon);
+  transform: rotate(-20deg);
+}
+
+.brandText {
+  display: grid;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+}
+
+.brandSub {
+  margin-top: 0.2rem;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  padding: 0.3rem 0;
+  font-size: 0.94rem;
+  font-weight: 500;
+  border-bottom: 1.5px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barBook {
+  padding: 0.55rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--aurora);
+  color: var(--on-aurora);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--night);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.kicker {
+  margin: 0 0 1.3rem;
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.8rem, 6vw, 5.2rem);
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: normal;
+  color: var(--aurora);
+}
+
+.heroLead {
+  max-width: 34rem;
+  margin: 1.6rem 0 0;
+  font-size: 1.14rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2.1rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.5rem;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--aurora);
+  color: var(--on-aurora);
+}
+
+.button:hover {
+  background: var(--moon);
+  color: var(--on-moon);
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1.5px var(--text);
+}
+
+.ghost:hover {
+  background: var(--panel);
+}
+
+.heroStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  max-width: 34rem;
+  margin: 2.4rem 0 0;
+}
+
+.heroStats div {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.heroStats dt {
+  font-size: 0.82rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.heroStats dd {
+  margin: 0 0 0.2rem;
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  line-height: 1.1;
+}
+
+/* The nursery window: an arch with a frame and glazing bars, the sky
+   beyond it, and a sill. */
+.windowWrap {
+  justify-self: center;
+  width: min(100%, 27rem);
+}
+
+.window {
+  position: relative;
+  aspect-ratio: 3 / 4.1;
+  overflow: hidden;
+  background: var(--deep);
+  border: 14px solid var(--frame);
+  border-bottom-width: 18px;
+  border-radius: 999px 999px 0 0;
+}
+
+.sky {
+  position: absolute;
+  inset: 0;
+}
+
+.bars {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent calc(50% - 5px), var(--frame) calc(50% - 5px) calc(50% + 5px), transparent calc(50% + 5px)),
+    linear-gradient(180deg, transparent calc(56% - 5px), var(--frame) calc(56% - 5px) calc(56% + 5px), transparent calc(56% + 5px));
+}
+
+.sill {
+  height: 1.1rem;
+  margin: 0 -1.6rem;
+  background: var(--frame);
+  border-radius: 3px;
+  box-shadow: 0 0.8rem 0 -0.3rem color-mix(in oklab, var(--frame) 40%, transparent);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: 2.6rem;
+}
+
+.secTitle {
+  font-size: clamp(2.1rem, 4.2vw, 3.4rem);
+  line-height: 1.08;
+}
+
+.secNote {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- chart
+   58 quarter hours from 5 pm, after a column for the age. */
+
+.chartWrap {
+  overflow-x: auto;
+  padding-bottom: 0.4rem;
+}
+
+.chart {
+  min-width: 60rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.axis,
+.row {
+  display: grid;
+  grid-template-columns: 13rem repeat(58, minmax(0, 1fr));
+  align-items: center;
+}
+
+.axis {
+  padding-bottom: 0.6rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.axis span {
+  grid-row: 1;
+  padding-left: 0.3rem;
+  border-left: 1px solid var(--rule-strong);
+}
+
+.row {
+  min-height: 5.6rem;
+  border-top: 1px solid var(--rule);
+  background-image: repeating-linear-gradient(90deg, var(--rule) 0 1px, transparent 1px calc(100% / 14.5));
+  background-position: 13rem 0;
+  background-size: calc(100% - 13rem) 100%;
+  background-repeat: no-repeat;
+}
+
+.row:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.rowHead {
+  grid-column: 1;
+  grid-row: 1;
+  padding: 0.7rem 1rem 0.7rem 0;
+  background: var(--night);
+}
+
+.rowAge {
+  font-size: 1.3rem;
+  line-height: 1.1;
+}
+
+.rowSteps,
+.rowNote {
+  margin: 0.15rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.rowNote {
+  color: var(--muted);
+}
+
+.wind,
+.sleep,
+.feed {
+  grid-row: 1;
+  height: 2.6rem;
+}
+
+.wind {
+  background: var(--lilac);
+  border-radius: 999px 0 0 999px;
+}
+
+.sleep {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 0.9rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  white-space: nowrap;
+  background: var(--deep);
+  border-radius: 0 999px 999px 0;
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.feed {
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  align-self: center;
+  height: 1.7rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  background: var(--aurora);
+  color: var(--on-aurora);
+  border-radius: 999px;
+}
+
+.keyList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 2rem;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.keyList li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.swatch {
+  width: 1.6rem;
+  height: 0.8rem;
+  border-radius: 999px;
+}
+
+.swatchWind {
+  background: var(--lilac);
+}
+
+.swatchSleep {
+  background: var(--deep);
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+}
+
+.swatchFeed {
+  background: var(--aurora);
+}
+
+/* The horizon: a long strip of sky between the chart and the packages. */
+.horizon {
+  position: relative;
+  height: clamp(11rem, 18vw, 15rem);
+  margin-top: clamp(3.5rem, 7vw, 6rem);
+  background: linear-gradient(180deg, var(--night), var(--deep));
+}
+
+/* ----------------------------------------------------------------- packages */
+
+.packs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 1.8rem);
+  align-items: stretch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pack {
+  --pack-text: var(--text);
+  --pack-muted: color-mix(in oklab, var(--text) 74%, var(--night));
+  --pack-rule: var(--rule);
+
+  display: flex;
+  flex-direction: column;
+  padding: 1.8rem 1.6rem;
+  background: var(--panel);
+  color: var(--pack-text);
+  border-radius: 1.4rem;
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.packPick {
+  --pack-text: var(--on-moon);
+  --pack-muted: color-mix(in oklab, var(--on-moon) 74%, var(--moon));
+  --pack-rule: color-mix(in oklab, var(--on-moon) 18%, transparent);
+
+  background: var(--moon);
+  box-shadow: none;
+}
+
+.packLength {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pack-muted);
+}
+
+.packName {
+  margin-top: 0.4rem;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.packPrice {
+  margin: 0.6rem 0 0;
+  font-family: var(--serif);
+  font-size: 3.2rem;
+  line-height: 1;
+}
+
+.packLead {
+  margin: 1rem 0 0;
+  color: var(--pack-muted);
+}
+
+.packItems {
+  flex: 1;
+  margin: 1.2rem 0 1.6rem;
+  padding: 0;
+  list-style: none;
+}
+
+.packItems li {
+  position: relative;
+  padding: 0.5rem 0 0.5rem 1.4rem;
+  font-size: 0.95rem;
+  border-top: 1px solid var(--pack-rule);
+}
+
+.packItems li::before {
+  content: '';
+  position: absolute;
+  left: 0.15rem;
+  top: 1rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.packLink {
+  align-self: flex-start;
+  padding: 0.7rem 1.3rem;
+  font-weight: 600;
+  background: var(--aurora);
+  color: var(--on-aurora);
+  border-radius: 999px;
+}
+
+.packPick .packLink {
+  background: var(--night);
+  color: var(--text);
+}
+
+/* ------------------------------------------------------------------ promise */
+
+.promise {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  padding: clamp(2rem, 5vw, 4rem);
+  background: var(--panel);
+  border-radius: 2rem;
+}
+
+.moon {
+  display: block;
+  width: 6.5rem;
+  height: 6.5rem;
+  margin-bottom: 1.6rem;
+  border-radius: 50%;
+  box-shadow: inset -1.6rem 0.4rem 0 0 var(--moon);
+  transform: rotate(-24deg);
+}
+
+.promiseBy {
+  margin: 1.2rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.promises {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: p;
+}
+
+.promises li {
+  position: relative;
+  padding: 1.2rem 0 1.2rem 3.4rem;
+  border-top: 1px solid var(--rule-strong);
+  counter-increment: p;
+}
+
+.promises li:first-child {
+  border-top: 0;
+  padding-top: 0.2rem;
+}
+
+.promises li::before {
+  content: counter(p);
+  position: absolute;
+  left: 0;
+  top: 1.1rem;
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  border-radius: 50%;
+  background: var(--lilac);
+  color: var(--on-lilac);
+}
+
+.promises li:first-child::before {
+  top: 0.1rem;
+}
+
+.promiseTitle {
+  font-size: 1.45rem;
+  line-height: 1.2;
+}
+
+.promiseText {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- faq */
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.faq {
+  border-top: 1px solid var(--rule-strong);
+}
+
+.qa {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.qa summary {
+  position: relative;
+  padding: 1.1rem 3rem 1.1rem 0;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  line-height: 1.3;
+  list-style: none;
+  cursor: pointer;
+}
+
+.qa summary::-webkit-details-marker {
+  display: none;
+}
+
+.qa summary::after {
+  content: '+';
+  position: absolute;
+  right: 0.3rem;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  font-family: var(--sans);
+  font-size: 1.3rem;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.qa[open] summary::after {
+  content: '\2212';
+}
+
+.qa p {
+  max-width: 40rem;
+  margin: 0;
+  padding: 0 0 1.3rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ contact */
+
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  padding-top: 2.2rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.contactInfo .secNote {
+  margin-top: 1rem;
+}
+
+.details {
+  margin: 1.8rem 0 0;
+}
+
+.details div {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.details dt {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.details a {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  align-content: start;
+  padding: clamp(1.3rem, 3vw, 2.2rem);
+  background: var(--panel);
+  border-radius: 1.4rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--input);
+  border: 1px solid var(--rule-strong);
+  border-radius: 0.7rem;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.85rem 1.6rem;
+  font: inherit;
+  font-weight: 600;
+  background: var(--aurora);
+  color: var(--on-aurora);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: var(--moon);
+  color: var(--on-moon);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 6rem);
+}
+
+.footSky {
+  position: relative;
+  height: clamp(10rem, 16vw, 13rem);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.6fr) auto;
+  gap: 1rem 3rem;
+  align-items: baseline;
+  padding: 2rem var(--gut) 2.6rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+  border-top: 1px solid var(--rule-strong);
+}
+
+.footInner p {
+  margin: 0;
+}
+
+.footInner a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  color: var(--text);
+}
+
+/* -------------------------------------------------------------- breakpoints */
+
+@media (max-width: 1000px) {
+  /* The chart folds: the age on its own line, the night drawn full width
+     under it. Column 1 shrinks to nothing so the times keep their lines. */
+  .chart {
+    min-width: 0;
+  }
+
+  .axis,
+  .row {
+    grid-template-columns: 0 repeat(58, minmax(0, 1fr));
+  }
+
+  .axis span {
+    padding-left: 0.2rem;
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+
+  .axis span:nth-child(even) {
+    visibility: hidden;
+  }
+
+  .row {
+    padding-bottom: 0.9rem;
+    background-position: 0 0;
+    background-size: 100% 100%;
+  }
+
+  .rowHead {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.1rem 0.8rem;
+    background: transparent;
+  }
+
+  .rowSteps,
+  .rowNote {
+    margin: 0;
+  }
+
+  .wind,
+  .sleep,
+  .feed {
+    grid-row: 2;
+  }
+
+  .sleep {
+    height: 2.2rem;
+    padding: 0 0.6rem;
+    font-size: 0.74rem;
+  }
+
+  .wind {
+    height: 2.2rem;
+  }
+
+  .feed {
+    justify-self: center;
+    width: 2.4rem;
+    height: 1.4rem;
+    font-size: 0.64rem;
+  }
+}
+
+@media (max-width: 1080px) {
+  .hero,
+  .promise,
+  .faqGrid,
+  .contact {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .packs {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 36rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .barBook {
+    display: none;
+  }
+
+  .windowWrap {
+    width: min(100%, 20rem);
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .details div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  /* On a phone a feed is a dot on the night; the key names it. */
+  .feed {
+    width: 0.9rem;
+    height: 0.9rem;
+    font-size: 0;
+    box-shadow: 0 0 0 2px var(--deep);
+  }
+}

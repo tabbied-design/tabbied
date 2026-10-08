@@ -1,0 +1,977 @@
+.page {
+  --dark: #1f1915;
+  --albumen: #efe4d2;
+  --sepia: #b9824f;
+  --silver: #9aa7ad;
+  --rose: #c47a6a;
+  --gold: #d9b46a;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --serif: 'Cormorant Garamond', 'Georgia', serif;
+  --sans: 'Jost', 'Futura', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--albumen);
+  --on-albumen: var(--dark);
+  --on-sepia: var(--dark);
+  --on-silver: var(--dark);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--dark);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   SILVER & SEPIA - photograph restorers, Copperplate Lane
+   The darkroom: a deep brown ground, albumen cream type, and the tones a
+   print takes on over a century, sepia and silver, with a hand tint of
+   rose and the gilt from the mount for marks. Cormorant Garamond is the
+   studio's embossing, Jost the order slip. The layout idea is before and
+   after: the hero is a cabinet card, silvered out on one side and restored
+   on the other; the prices are graded by how much of the picture is lost;
+   a contact sheet runs between the sections. Toning is the photograph
+   everywhere it appears.
+   ========================================================================== */
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--dark) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--albumen));
+    --on-albumen: color-mix(in oklab, oklch(from var(--albumen) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--albumen));
+    --on-sepia: oklch(from var(--sepia) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-silver: oklch(from var(--silver) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--dark));
+  --rule: color-mix(in oklab, var(--text) 16%, var(--dark));
+  --rule-strong: color-mix(in oklab, var(--text) 36%, var(--dark));
+  --panel: color-mix(in oklab, var(--dark) 92%, var(--albumen));
+  --panel-warm: color-mix(in oklab, var(--dark) 86%, var(--sepia));
+  --mount: color-mix(in oklab, var(--dark) 74%, var(--sepia));
+  --gilt: color-mix(in oklab, var(--gold) 80%, var(--dark));
+  --albumen-muted: color-mix(in oklab, var(--on-albumen) 74%, var(--albumen));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, dl, dd, ul, ol, figure) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--serif);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--dark);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: grid;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.brandName span {
+  font-style: italic;
+  font-weight: 500;
+}
+
+.brandSub {
+  margin-top: 0.25rem;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2.2rem);
+}
+
+.nav a {
+  padding: 0.3rem 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--gold);
+}
+
+.barCta {
+  padding: 0.55rem 1.1rem;
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  background: var(--albumen);
+  color: var(--on-albumen);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--dark);
+}
+
+.kicker {
+  margin-bottom: 1rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.heroTitle {
+  font-size: clamp(2.9rem, 5.8vw, 5.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: italic;
+  color: var(--gold);
+}
+
+.heroLead {
+  max-width: 34rem;
+  margin-top: 1.5rem;
+  font-size: 1.08rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+  padding: 0 1.4rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.button {
+  background: var(--albumen);
+  color: var(--on-albumen);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--albumen) 86%, var(--gold));
+}
+
+.ghost {
+  border: 1px solid var(--rule-strong);
+}
+
+.ghost:hover {
+  border-color: var(--text);
+}
+
+/* The cabinet card: a dark mount with a gilt double rule and a photograph
+   window. Both fields fill the window; the restored one is cut to the
+   right half over the silvered one, so the divider is the only seam. */
+.cabinet {
+  --on-mount: var(--text);
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1rem, 2.4vw, 1.8rem) clamp(1rem, 2.4vw, 1.8rem) 1.1rem;
+  background: var(--mount);
+  border: 1px solid var(--gilt);
+  outline: 1px solid var(--gilt);
+  outline-offset: -0.55rem;
+  border-radius: 0.6rem;
+  box-shadow: 0 30px 50px -30px color-mix(in oklab, var(--dark) 90%, transparent);
+}
+
+@supports (color: oklch(from red l c h)) {
+  .cabinet {
+    --on-mount: oklch(from var(--mount) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.window {
+  position: relative;
+  aspect-ratio: 5 / 6;
+  overflow: hidden;
+  background: var(--dark);
+  border-radius: 0.4rem;
+}
+
+.before,
+.after {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.after {
+  clip-path: inset(0 0 0 50%);
+}
+
+.divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 3px;
+  margin-left: -1.5px;
+  background: var(--albumen);
+}
+
+.divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2.6rem;
+  height: 2.6rem;
+  margin: -1.3rem 0 0 -1.3rem;
+  border-radius: 50%;
+  background:
+    linear-gradient(var(--dark) 0 0) calc(50% - 0.25rem) 50% / 2px 0.9rem no-repeat,
+    linear-gradient(var(--dark) 0 0) calc(50% + 0.25rem) 50% / 2px 0.9rem no-repeat,
+    var(--albumen);
+  box-shadow: 0 4px 12px color-mix(in oklab, var(--dark) 60%, transparent);
+}
+
+.tagBefore,
+.tagAfter {
+  position: absolute;
+  top: 0.9rem;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.tagBefore {
+  left: 0.9rem;
+  background: var(--silver);
+  color: var(--on-silver);
+}
+
+.tagAfter {
+  right: 0.9rem;
+  background: var(--sepia);
+  color: var(--on-sepia);
+}
+
+.mountLine {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-style: italic;
+  text-align: center;
+  color: var(--on-mount);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+  scroll-margin-top: 4rem;
+}
+
+.secHead {
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secTitle {
+  font-size: clamp(2.3rem, 4.4vw, 3.8rem);
+  line-height: 1.02;
+  letter-spacing: -0.005em;
+}
+
+.secNote {
+  max-width: 38rem;
+  margin-top: 1rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- levels */
+
+.levels {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.levelCard {
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border-top: 1px solid var(--rule-strong);
+}
+
+.swatch {
+  position: relative;
+  height: 9.5rem;
+  overflow: hidden;
+  background: var(--dark);
+}
+
+.levelNo {
+  margin: 1.2rem 1.3rem 0;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.levelName {
+  margin: 0.1rem 1.3rem 0;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.levelPrice {
+  margin: 0.4rem 1.3rem 0;
+  font-family: var(--serif);
+  font-size: 2.3rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.damage {
+  display: grid;
+  gap: 0.35rem;
+  margin: 1.1rem 1.3rem 1.4rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+
+.damage li {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.extras {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.2rem 3rem;
+  margin-top: 2rem;
+}
+
+.extras div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.extras dt {
+  flex: 1 1 auto;
+}
+
+.extras dd {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------- mail */
+
+.mailGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.25fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.mailGrid .secHead {
+  position: sticky;
+  top: 6rem;
+  margin-bottom: 0;
+}
+
+.address {
+  display: inline-block;
+  margin-top: 1.6rem;
+  padding: 0.8rem 1rem;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-style: italic;
+  background: var(--panel-warm);
+  border-left: 3px solid var(--gold);
+}
+
+.mailSteps {
+  display: grid;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.mailStep {
+  display: grid;
+  grid-template-columns: 4.2rem minmax(0, 1fr);
+  column-gap: 1.2rem;
+  padding: 1.4rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.mailNo {
+  grid-row: 1 / span 2;
+  font-family: var(--serif);
+  font-size: 2.6rem;
+  font-style: italic;
+  line-height: 0.9;
+  color: var(--gold);
+}
+
+.mailTitle {
+  font-size: 1.65rem;
+  line-height: 1.15;
+}
+
+.mailText {
+  margin-top: 0.3rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- contact sheet
+   A strip of film: sprocket holes along both edges, frames between. */
+.filmstrip {
+  position: relative;
+  height: clamp(11rem, 17vw, 14rem);
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  overflow: hidden;
+  background: var(--dark);
+}
+
+.filmstrip::before,
+.filmstrip::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  height: 1.8rem;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 0.7rem, var(--dark) 0.7rem 1.6rem, transparent 1.6rem 2.4rem) 0 50% / 100% 0.75rem no-repeat,
+    var(--panel);
+}
+
+.filmstrip::before {
+  top: 0;
+}
+
+.filmstrip::after {
+  bottom: 0;
+}
+
+/* ----------------------------------------------------------------- scanning */
+
+.scanGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.scans {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.scans th,
+.scans td {
+  padding: 0.9rem 0.7rem;
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: 1px solid var(--rule);
+}
+
+.scans thead th {
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.scans tbody th {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.scans tbody td {
+  color: var(--muted);
+}
+
+.scans .num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.scans tbody .num {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ------------------------------------------------------------ prints, care */
+
+.printGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+/* Print sizes drawn to scale, nested from the bottom-left corner. */
+.sizeChart {
+  position: relative;
+  width: min(100%, 26rem);
+  aspect-ratio: 16 / 20;
+}
+
+.size {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--rule-strong);
+}
+
+.size:nth-child(1) {
+  z-index: 4;
+  width: 31.25%;
+  height: 35%;
+  background: color-mix(in oklab, var(--dark) 70%, var(--sepia));
+}
+
+.size:nth-child(2) {
+  z-index: 3;
+  width: 50%;
+  height: 50%;
+  background: color-mix(in oklab, var(--dark) 78%, var(--sepia));
+}
+
+.size:nth-child(3) {
+  z-index: 2;
+  width: 68.75%;
+  height: 70%;
+  background: color-mix(in oklab, var(--dark) 86%, var(--sepia));
+}
+
+.size:nth-child(4) {
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background: var(--panel);
+}
+
+.sizeName {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.sizePrice {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.sizeNote {
+  max-width: 26rem;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.care {
+  display: grid;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.careItem {
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.careTitle {
+  font-size: 1.55rem;
+  line-height: 1.15;
+}
+
+.careText {
+  margin-top: 0.25rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+  padding-bottom: clamp(4rem, 8vw, 6.5rem);
+}
+
+.counterText {
+  max-width: 34rem;
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+.counterLine {
+  margin-top: 1.6rem;
+}
+
+.counterLink {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.counterLink a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 4px;
+}
+
+.hours {
+  display: grid;
+  gap: 0.3rem;
+  max-width: 26rem;
+  margin-top: 1.4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.hours dt {
+  color: var(--muted);
+}
+
+/* The order slip: albumen card stock, dark type. */
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--albumen);
+  color: var(--on-albumen);
+}
+
+.formTitle {
+  grid-column: 1 / -1;
+  font-size: 2rem;
+  line-height: 1.05;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.6rem 0.7rem;
+  font: inherit;
+  color: var(--on-albumen);
+  background: var(--albumen);
+  border: 1px solid var(--albumen-muted);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  min-height: 3rem;
+  padding: 0 1.8rem;
+  font: inherit;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--albumen);
+  background: var(--on-albumen);
+  border: 0;
+  cursor: pointer;
+}
+
+.formNote {
+  align-self: center;
+  font-size: 0.9rem;
+  color: var(--albumen-muted);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  border-top: 1px solid var(--rule);
+}
+
+.footStrip {
+  position: relative;
+  height: clamp(4.5rem, 8vw, 6rem);
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
+  gap: 1rem 2.5rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2rem var(--gut) 2.4rem;
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.footText {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.footText a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .levels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .mailGrid,
+  .scanGrid,
+  .printGrid,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cabinet {
+    max-width: 30rem;
+  }
+
+  .mailGrid .secHead {
+    position: static;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .barCta {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .levels {
+    gap: 0.7rem;
+  }
+
+  .swatch {
+    height: 6rem;
+  }
+
+  .levelNo,
+  .levelName,
+  .levelPrice {
+    margin-inline: 0.9rem;
+  }
+
+  .levelName {
+    font-size: 1.6rem;
+  }
+
+  .levelPrice {
+    font-size: 1.8rem;
+  }
+
+  .damage {
+    margin: 0.9rem 0.9rem 1.1rem;
+  }
+
+  .damage li {
+    font-size: 0.88rem;
+    line-height: 1.4;
+  }
+
+  .extras,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mailStep {
+    grid-template-columns: 3rem minmax(0, 1fr);
+  }
+
+  .scans thead {
+    display: none;
+  }
+
+  .scans tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .scans tbody th,
+  .scans tbody td {
+    padding: 0;
+    border: 0;
+  }
+
+  .scans tbody td:nth-of-type(1) {
+    grid-row: 2;
+    grid-column: 1 / -1;
+  }
+
+  .scans tbody .num {
+    grid-row: 1;
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .button,
+  .ghost {
+    transition: background-color 150ms ease, border-color 150ms ease;
+  }
+}

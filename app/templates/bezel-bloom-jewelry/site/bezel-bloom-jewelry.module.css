@@ -1,0 +1,1153 @@
+/* ==========================================================================
+   BEZEL & BLOOM - custom rings, Larkspur Yard
+   A jeweler's tray: jewel colors on dark velvet, a high-contrast serif for
+   display and a clean geometric sans for everything practical. The hero is
+   a cut stone in profile, filled with facets, its spec card tucked into the
+   corner the pavilion leaves. The ring builder is a real form in four
+   steps, every option a card with its own small drawing: a cut stone, a
+   metal ring, a setting seen from above. The commission sits round a stone
+   like a halo, and the care card is printed as it comes in the box.
+   ========================================================================== */
+
+.page {
+  --velvet: #1b1422;
+  --pearl: #f4ede4;
+  --gold: #d6b26e;
+  --ruby: #c8375c;
+  --sapphire: #4a73d6;
+  --emerald: #2e9e78;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --serif: 'Cormorant Garamond', 'Cormorant', 'Didot', Georgia, serif;
+  --sans: 'Jost', 'Futura', 'Century Gothic', sans-serif;
+
+  /* Plain fallbacks; the block below derives them from the surfaces. */
+  --text: var(--pearl);
+  --on-gold: var(--velvet);
+  --on-pearl: var(--velvet);
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--velvet));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 38%, transparent);
+  --panel: color-mix(in oklab, var(--velvet) 91%, var(--pearl));
+  --panel-strong: color-mix(in oklab, var(--velvet) 85%, var(--pearl));
+  --pearl-muted: color-mix(in oklab, var(--on-pearl) 76%, var(--pearl));
+  --pearl-rule: color-mix(in oklab, var(--on-pearl) 22%, transparent);
+  --rose-gold: color-mix(in oklab, var(--gold) 62%, var(--ruby));
+  --platinum: color-mix(in oklab, var(--pearl) 72%, var(--velvet));
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  background: var(--velvet);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* White or black by the lightness of each surface, tinted toward the
+       pearl ink, so the copy reads on any ground a palette brings. */
+    --text: color-mix(in oklab, oklch(from var(--velvet) clamp(0, (0.62 - l) * 1000, 1) 0 0) 82%, var(--pearl));
+    --on-gold: oklch(from var(--gold) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-pearl: color-mix(in oklab, oklch(from var(--pearl) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--velvet));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--velvet);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  display: grid;
+  line-height: 1;
+}
+
+.markName {
+  font-family: var(--serif);
+  font-size: 1.85rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.markSub {
+  margin-top: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barBook {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: var(--gold);
+  color: var(--on-gold);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--velvet);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5.5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gut) clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.kicker {
+  margin: 0 0 1.1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(3.2rem, 6.4vw, 5.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+}
+
+.heroTitle em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.heroLead {
+  max-width: 33rem;
+  margin: 1.7rem 0 0;
+  font-size: 1.12rem;
+  line-height: 1.7;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2.2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.95rem 1.5rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.button {
+  background: var(--gold);
+  color: var(--on-gold);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--gold) 85%, var(--text));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+}
+
+.ghost:hover {
+  box-shadow: inset 0 0 0 1px var(--text);
+}
+
+/* The stone in profile: table, crown, girdle and pavilion. */
+.heroArt {
+  position: relative;
+  padding-bottom: 5.5rem;
+}
+
+.heroArt::before,
+.heroArt::after {
+  content: '';
+  position: absolute;
+  background: var(--pearl);
+  clip-path: polygon(50% 0%, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0% 50%, 42% 42%);
+}
+
+.heroArt::before {
+  right: 4%;
+  bottom: 12%;
+  width: 2.6rem;
+  height: 2.6rem;
+}
+
+.heroArt::after {
+  right: 14%;
+  bottom: 4%;
+  width: 1.4rem;
+  height: 1.4rem;
+  background: var(--gold);
+}
+
+.gem {
+  position: relative;
+  aspect-ratio: 1 / 0.86;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--sapphire) 42%, var(--velvet));
+  clip-path: polygon(26% 0%, 74% 0%, 100% 30%, 100% 34%, 50% 100%, 0% 34%, 0% 30%);
+}
+
+/* The girdle, a thin band of metal where crown meets pavilion. */
+.gem::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  top: 30%;
+  height: 4%;
+  background: var(--gold);
+}
+
+.spec {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: min(46%, 16rem);
+  padding: 1rem 1.1rem 0.9rem;
+  background: var(--velvet);
+  border: 1px solid var(--rule-strong);
+}
+
+.specHead {
+  margin: 0 0 0.5rem;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.specRows {
+  margin: 0;
+}
+
+.specRows div {
+  padding: 0.3rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.specRows dt {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.specRows dd {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: 0.4rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead .kicker {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.secTitle {
+  font-size: clamp(2.4rem, 4.6vw, 3.8rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+}
+
+.secNote {
+  max-width: 34rem;
+  margin: 0;
+  font-size: 1.02rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ builder */
+
+.builder {
+  display: grid;
+}
+
+.step {
+  min-width: 0;
+  margin: 0;
+  padding: 2rem 0 2.2rem;
+  border: 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.stepLegend {
+  float: left;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  width: 100%;
+  padding: 0;
+  margin-bottom: 1.3rem;
+}
+
+.stepNo {
+  font-family: var(--serif);
+  font-size: 2.6rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--gold);
+}
+
+.stepName {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.options {
+  clear: both;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+  gap: 0.8rem;
+}
+
+.option {
+  position: relative;
+  display: flex;
+}
+
+.option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.option label {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 0.3rem;
+  width: 100%;
+  padding: 1.1rem 1.1rem 1rem;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  cursor: pointer;
+}
+
+.option label:hover {
+  border-color: var(--rule-strong);
+}
+
+.option input:checked + label {
+  border-color: var(--gold);
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+
+.option input:focus-visible + label {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.optName {
+  margin-top: 0.4rem;
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.optNote {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.optPrice {
+  margin-top: 0.4rem;
+  padding-top: 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-top: 1px solid var(--rule);
+}
+
+/* The small drawings on each option. */
+.swatch {
+  display: block;
+  width: 2.4rem;
+  height: 2.1rem;
+}
+
+.gemSwatch {
+  background:
+    linear-gradient(115deg, transparent 46%, color-mix(in oklab, var(--pearl) 45%, transparent) 47% 55%, transparent 56%),
+    var(--c);
+  clip-path: polygon(26% 0%, 74% 0%, 100% 32%, 50% 100%, 0% 32%);
+}
+
+.diamond {
+  --c: var(--pearl);
+}
+
+.sapphire {
+  --c: var(--sapphire);
+}
+
+.emerald {
+  --c: var(--emerald);
+}
+
+.ruby {
+  --c: var(--ruby);
+}
+
+.spinel {
+  --c: color-mix(in oklab, var(--ruby) 55%, var(--pearl));
+}
+
+.heirloom {
+  --c: var(--gold);
+}
+
+.metalSwatch {
+  width: 2.1rem;
+  box-sizing: border-box;
+  border: 0.45rem solid var(--c);
+  border-radius: 50%;
+}
+
+.yellow {
+  --c: var(--gold);
+}
+
+.rose {
+  --c: var(--rose-gold);
+}
+
+.platinum {
+  --c: var(--platinum);
+}
+
+.white {
+  --c: var(--pearl);
+}
+
+.setSwatch {
+  width: 2.1rem;
+  box-sizing: border-box;
+  border-radius: 50%;
+}
+
+.setBezel {
+  background: var(--pearl);
+  border: 0.4rem solid var(--gold);
+}
+
+.setProng {
+  background: radial-gradient(circle, var(--pearl) 0 52%, transparent 54%);
+  border: 0.25rem dotted var(--gold);
+}
+
+.setHalo {
+  background: radial-gradient(circle, var(--pearl) 0 34%, transparent 36% 48%, var(--gold) 50% 62%, transparent 64%);
+  border: 0.2rem dotted var(--pearl);
+}
+
+.setTrio {
+  width: 3rem;
+  border-radius: 0;
+  background:
+    radial-gradient(circle at 16% 50%, var(--pearl) 0 0.38rem, transparent 0.42rem),
+    radial-gradient(circle at 50% 50%, var(--pearl) 0 0.6rem, transparent 0.64rem),
+    radial-gradient(circle at 84% 50%, var(--pearl) 0 0.38rem, transparent 0.42rem);
+}
+
+.setEastwest {
+  width: 2.8rem;
+  height: 1.5rem;
+  margin: 0.3rem 0;
+  background: var(--pearl);
+  box-shadow: 0 0 0 0.2rem var(--gold);
+}
+
+.lastStep {
+  clear: both;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.4rem;
+  max-width: 52rem;
+}
+
+.finishes {
+  min-width: 0;
+}
+
+.finishLabel {
+  margin: 0 0 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.finishPicks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.finishPick input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.finishPick label {
+  display: inline-block;
+  padding: 0.55rem 0.95rem;
+  font-size: 0.92rem;
+  background: var(--panel);
+  border: 1px solid var(--rule-strong);
+  cursor: pointer;
+}
+
+.finishPick input:checked + label {
+  border-color: var(--gold);
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+
+.finishPick input:focus-visible + label {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.75rem 0.9rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--rule-strong);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 0;
+}
+
+.submit {
+  align-self: end;
+  justify-self: start;
+  padding: 0.95rem 1.5rem;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--on-gold);
+  background: var(--gold);
+  border: 0;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--gold) 85%, var(--text));
+}
+
+.band {
+  position: relative;
+  height: 160px;
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------- halo
+   Six steps in two columns round a stone seen from above, ringed by a
+   dotted halo of small stones. */
+
+.halo {
+  position: relative;
+}
+
+.halo::before,
+.halo::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.halo::before {
+  width: min(25rem, 30vw);
+  aspect-ratio: 1;
+  border: 7px dotted var(--gold);
+}
+
+.halo::after {
+  width: min(27rem, 32vw);
+  aspect-ratio: 1;
+  border: 1px solid var(--rule-strong);
+}
+
+.haloStone {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(21rem, 25vw);
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--emerald) 34%, var(--velvet));
+  transform: translate(-50%, -50%);
+  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+}
+
+.processList {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) min(31rem, 37vw) minmax(0, 1fr);
+  grid-template-rows: repeat(3, auto);
+  gap: 2.4rem 0;
+  min-height: 30rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.processStep:nth-child(1) {
+  grid-area: 1 / 1;
+}
+
+.processStep:nth-child(2) {
+  grid-area: 2 / 1;
+}
+
+.processStep:nth-child(3) {
+  grid-area: 3 / 1;
+}
+
+.processStep:nth-child(4) {
+  grid-area: 1 / 3;
+}
+
+.processStep:nth-child(5) {
+  grid-area: 2 / 3;
+}
+
+.processStep:nth-child(6) {
+  grid-area: 3 / 3;
+}
+
+.processStep:nth-child(-n + 3) {
+  text-align: right;
+}
+
+.processStep:nth-child(2),
+.processStep:nth-child(5) {
+  align-self: center;
+}
+
+
+.processWhen {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.processTitle {
+  margin-top: 0.2rem;
+  font-size: 1.9rem;
+  line-height: 1.1;
+}
+
+.processText {
+  margin: 0.45rem 0 0;
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+/* --------------------------------------------------------------------- care */
+
+.careGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+/* The care card, printed on pearl like the one in the box. */
+.careCard {
+  padding: clamp(1.6rem, 3vw, 2.4rem);
+  background: var(--pearl);
+  color: var(--on-pearl);
+  box-shadow: inset 0 0 0 8px var(--pearl), inset 0 0 0 9px var(--pearl-rule);
+}
+
+.careKicker {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--pearl-muted);
+}
+
+.careTitle {
+  margin-top: 0.6rem;
+  font-size: 2.6rem;
+  line-height: 1.05;
+}
+
+.careList {
+  margin: 1.2rem 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: care;
+}
+
+.careList li {
+  position: relative;
+  padding: 0.7rem 0 0.7rem 2.4rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-top: 1px solid var(--pearl-rule);
+  counter-increment: care;
+}
+
+.careList li::before {
+  content: counter(care);
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-style: italic;
+  line-height: 1;
+}
+
+.careSign {
+  margin: 1.2rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-style: italic;
+}
+
+.resizeTitle {
+  font-size: 2.2rem;
+  line-height: 1.1;
+}
+
+.resizeNote {
+  margin: 0.8rem 0 0;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+.resizeTable {
+  width: 100%;
+  margin-top: 1.4rem;
+  border-collapse: collapse;
+}
+
+.resizeTable thead th {
+  padding: 0 0.8rem 0.5rem 0;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.resizeTable tbody th,
+.resizeTable td {
+  padding: 0.8rem 0.8rem 0.8rem 0;
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: 1px solid var(--rule);
+}
+
+.resizeTable tbody th {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.resizeTable td {
+  font-size: 0.95rem;
+}
+
+.resizeTable td:last-child,
+.resizeTable thead th:last-child {
+  padding-right: 0;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.resizeTable td:last-child {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------ contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+  padding-top: 2.6rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.address {
+  margin: 1.4rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  line-height: 1.25;
+}
+
+.addressNote {
+  margin: 0.4rem 0 1.2rem;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+.contactLine {
+  margin: 0.3rem 0 0;
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+
+.contactLine a {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.hours {
+  margin: 1.6rem 0 0;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.hours dt {
+  color: var(--muted);
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.3rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--panel-strong);
+}
+
+.form .submit {
+  grid-column: 1 / -1;
+}
+
+.formNote {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 6rem);
+}
+
+.footFacets {
+  position: relative;
+  height: 96px;
+  overflow: hidden;
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 2.8rem;
+  font-size: 0.95rem;
+}
+
+.footInner p {
+  margin: 0.3rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.6rem;
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1000px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .secHead,
+  .careGrid,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    max-width: 36rem;
+  }
+
+  .halo::before,
+  .halo::after {
+    display: none;
+  }
+
+  .haloStone {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: min(16rem, 70%);
+    margin: 0 auto 2.4rem;
+    transform: none;
+  }
+
+  .halo {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .processList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+    gap: 2rem;
+    min-height: 0;
+  }
+
+  .processStep:nth-child(n) {
+    grid-area: auto;
+    margin: 0;
+    text-align: left;
+    align-self: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .barBook {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .markName {
+    font-size: 1.55rem;
+  }
+
+  .heroArt {
+    padding-bottom: 0;
+  }
+
+  .spec {
+    position: relative;
+    width: auto;
+    margin-top: -1rem;
+  }
+
+  .heroArt::before,
+  .heroArt::after {
+    display: none;
+  }
+
+  .options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .option label {
+    padding: 0.9rem 0.85rem;
+  }
+
+  .optName {
+    font-size: 1.2rem;
+  }
+
+  .lastStep,
+  .form,
+  .processList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .resizeTable thead {
+    display: none;
+  }
+
+  .resizeTable tbody th,
+  .resizeTable td {
+    display: block;
+    padding: 0;
+    border: 0;
+    text-align: left;
+  }
+
+  .resizeTable tr {
+    display: block;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .resizeTable td:last-child {
+    text-align: left;
+  }
+}

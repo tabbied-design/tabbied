@@ -1,0 +1,1078 @@
+.page {
+  --court: #16181d;
+  --chalk: #f2efe8;
+  --amber: #f5b82e;
+  --coral: #ff5a4e;
+  --cyan: #3ec7e0;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 82rem;
+  --display: 'Anton', 'Impact', 'Arial Narrow', sans-serif;
+  --sans: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+  --cond: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
+
+  --text: var(--chalk);
+  --on-chalk: var(--court);
+  --on-amber: var(--court);
+  --on-coral: var(--court);
+
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  background: var(--court);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   HOME COURT TRAINING - a personal trainer who comes to you
+   A court at night: near-black ground, chalk-white type, three bright tapes.
+   Anton is the gym-wall lettering, Barlow Condensed the clipboard labels,
+   Barlow the coaching. The layout idea is the workout card: the session is
+   printed on chalk stock with its times down the margin, the packages are
+   a row of tickets, the kit is a packed bag. Skewblock is the floor he
+   brings with him: the slanted hero panel, the rest interval band, the bag
+   and the footer.
+   ========================================================================== */
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--court) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--chalk));
+    --on-chalk: color-mix(in oklab, oklch(from var(--chalk) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--chalk));
+    --on-amber: oklch(from var(--amber) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-coral: oklch(from var(--coral) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--court));
+  --rule: color-mix(in oklab, var(--text) 18%, var(--court));
+  --rule-strong: color-mix(in oklab, var(--text) 40%, var(--court));
+  --panel: color-mix(in oklab, var(--court) 92%, var(--chalk));
+  --chalk-muted: color-mix(in oklab, var(--on-chalk) 74%, var(--chalk));
+  --chalk-rule: color-mix(in oklab, var(--on-chalk) 22%, var(--chalk));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, dl, dd, ul, ol, blockquote) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+.page :where(h1, h2) {
+  font-family: var(--display);
+  font-weight: 400;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--court);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+  column-gap: 0.65rem;
+  align-items: center;
+  line-height: 1;
+}
+
+.brandMark {
+  grid-row: 1 / span 2;
+  width: 2rem;
+  height: 2rem;
+  background:
+    linear-gradient(var(--amber) 0 0) 0 0 / 50% 100% no-repeat,
+    linear-gradient(var(--coral) 0 0) 100% 0 / 50% 100% no-repeat;
+  clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.brandSub {
+  font-family: var(--cond);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2.2rem);
+}
+
+.nav a {
+  padding: 0.3rem 0;
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--amber);
+}
+
+.barCta {
+  padding: 0.55rem 1.1rem;
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--amber);
+  color: var(--on-amber);
+  clip-path: polygon(0.7rem 0, 100% 0, calc(100% - 0.7rem) 100%, 0 100%);
+  padding-inline: 1.4rem;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 600;
+  --template-menu-bg: var(--court);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: stretch;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) clamp(2.5rem, 5vw, 4rem);
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.kicker {
+  margin-bottom: 1.2rem;
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(3.6rem, 8vw, 7.6rem);
+  line-height: 0.9;
+  letter-spacing: 0.005em;
+}
+
+.heroTitle span {
+  display: block;
+  color: var(--amber);
+}
+
+.heroLead {
+  max-width: 34rem;
+  margin-top: 1.6rem;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-flex;
+  align-items: center;
+  min-height: 3.1rem;
+  padding: 0 1.6rem;
+  font-family: var(--cond);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.button {
+  background: var(--amber);
+  color: var(--on-amber);
+  clip-path: polygon(0.9rem 0, 100% 0, calc(100% - 0.9rem) 100%, 0 100%);
+  padding-inline: 1.9rem;
+}
+
+.ghost {
+  border: 2px solid var(--rule-strong);
+}
+
+.ghost:hover {
+  border-color: var(--text);
+}
+
+.heroStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  max-width: 36rem;
+  margin-top: 2.6rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.heroStats div {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+}
+
+.heroStats dd {
+  font-family: var(--display);
+  font-size: clamp(2rem, 3vw, 2.6rem);
+  line-height: 1;
+}
+
+.heroStats dt {
+  margin-top: 0.4rem;
+  font-family: var(--cond);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroArt {
+  position: relative;
+  min-height: clamp(28rem, 48vw, 42rem);
+}
+
+/* The slanted panel: one parallelogram block of the field, leaning the
+   way the design's own blocks lean. */
+.heroPanel {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  clip-path: polygon(24% 0, 100% 0, 76% 100%, 0 100%);
+}
+
+.todayCard {
+  position: absolute;
+  left: 0;
+  bottom: 2.4rem;
+  width: min(16rem, 70%);
+  padding: 1rem 1.2rem 1.1rem;
+  background: var(--chalk);
+  color: var(--on-chalk);
+  border-top: 0.45rem solid var(--coral);
+  box-shadow: 0 22px 40px -22px color-mix(in oklab, var(--court) 80%, transparent);
+}
+
+.todayLabel {
+  font-family: var(--cond);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.todayWhere {
+  font-size: 0.9rem;
+  color: var(--chalk-muted);
+}
+
+.todayMove {
+  margin-top: 0.7rem;
+  padding-top: 0.6rem;
+  font-family: var(--display);
+  font-size: 1.7rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+  border-top: 1px dashed var(--chalk-rule);
+}
+
+.todaySets {
+  font-family: var(--cond);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+  scroll-margin-top: 4rem;
+}
+
+.secHead {
+  max-width: 48rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.9rem;
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.eyebrow::before {
+  content: '';
+  width: 1.8rem;
+  height: 0.55rem;
+  background: var(--coral);
+  clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);
+}
+
+.secTitle {
+  font-size: clamp(2.5rem, 5.4vw, 4.6rem);
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+}
+
+.secNote {
+  max-width: 40rem;
+  margin-top: 1.1rem;
+  font-size: 1.08rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ workout card */
+
+.card {
+  background: var(--chalk);
+  color: var(--on-chalk);
+  box-shadow: 0 30px 60px -40px color-mix(in oklab, var(--court) 90%, transparent);
+}
+
+.cardTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+  align-items: center;
+  border-bottom: 3px solid var(--on-chalk);
+}
+
+.cardTitle {
+  padding: 1rem 1.4rem;
+  font-family: var(--display);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.cardMeta {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1.2rem;
+  font-family: var(--cond);
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  border-left: 1px solid var(--chalk-rule);
+}
+
+.blocks {
+  display: grid;
+}
+
+.block {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 0.8fr) minmax(0, 1.6fr);
+  gap: 1rem 2rem;
+  padding: 1.6rem 1.4rem;
+  border-bottom: 1px solid var(--chalk-rule);
+  border-left: 0.5rem solid var(--amber);
+}
+
+.block:nth-child(2) {
+  border-left-color: var(--coral);
+}
+
+.block:nth-child(3) {
+  border-left-color: var(--cyan);
+}
+
+.block:nth-child(4) {
+  border-left-color: var(--on-chalk);
+  border-bottom: 0;
+}
+
+.blockTime {
+  display: grid;
+  align-content: start;
+}
+
+.from {
+  font-family: var(--display);
+  font-size: 2.6rem;
+  line-height: 1;
+}
+
+.to {
+  margin-top: 0.2rem;
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--chalk-muted);
+}
+
+.blockName {
+  font-family: var(--display);
+  font-size: 1.8rem;
+  font-weight: 400;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.blockNote {
+  margin-top: 0.5rem;
+  font-size: 0.98rem;
+  color: var(--chalk-muted);
+}
+
+.moves {
+  display: grid;
+  align-content: start;
+}
+
+.move {
+  display: grid;
+  grid-template-columns: 1.1rem minmax(0, 1fr) 7.5rem 6.5rem;
+  gap: 0.9rem;
+  align-items: baseline;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--chalk-rule);
+}
+
+.move:last-child {
+  border-bottom: 0;
+}
+
+/* An empty box to tick when the set is done. */
+.move::before {
+  content: '';
+  width: 0.95rem;
+  height: 0.95rem;
+  border: 1.5px solid var(--chalk-muted);
+  transform: translateY(0.12rem);
+}
+
+.moveName {
+  font-weight: 500;
+}
+
+.moveSets {
+  font-family: var(--cond);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.moveLoad {
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--chalk-muted);
+}
+
+/* ---------------------------------------------------------------- rest band */
+
+.rest {
+  position: relative;
+  height: clamp(6rem, 11vw, 9rem);
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  overflow: hidden;
+}
+
+/* ----------------------------------------------------------------- packages */
+
+.packages {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.package {
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.5rem 1.7rem;
+  background: var(--panel);
+  border-top: 0.4rem solid var(--rule-strong);
+}
+
+.packName {
+  font-family: var(--cond);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.packPrice {
+  margin-top: 0.9rem;
+  font-family: var(--display);
+  font-size: clamp(3rem, 4.4vw, 3.8rem);
+  line-height: 1;
+}
+
+.packUnit {
+  margin-top: 0.3rem;
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.packPoints {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 1.3rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--rule);
+}
+
+.packPoints li {
+  display: grid;
+  grid-template-columns: 0.9rem minmax(0, 1fr);
+  gap: 0.6rem;
+  font-size: 0.97rem;
+  line-height: 1.45;
+}
+
+.packPoints li::before {
+  content: '';
+  width: 0.9rem;
+  height: 0.45rem;
+  margin-top: 0.45rem;
+  background: currentColor;
+  clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);
+}
+
+.featured {
+  background: var(--amber);
+  color: var(--on-amber);
+  border-top-color: var(--on-amber);
+}
+
+.featured .packUnit {
+  color: color-mix(in oklab, var(--on-amber) 78%, var(--amber));
+}
+
+.featured .packPoints {
+  border-top-color: color-mix(in oklab, var(--on-amber) 30%, var(--amber));
+}
+
+/* ---------------------------------------------------------------------- kit */
+
+.kitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+/* The bag: a packed holdall of blocks with a handle over the top. */
+.bagWrap {
+  position: relative;
+  padding-top: 4.5rem;
+}
+
+.bagWrap::before {
+  content: '';
+  position: absolute;
+  top: 0.4rem;
+  left: 50%;
+  width: 40%;
+  height: 6rem;
+  transform: translateX(-50%);
+  border: 0.55rem solid var(--chalk);
+  border-bottom: 0;
+  border-radius: 3rem 3rem 0 0;
+}
+
+.bag {
+  position: relative;
+  min-height: clamp(22rem, 38vw, 32rem);
+  overflow: hidden;
+  border: 0.5rem solid var(--chalk);
+  border-radius: 2.4rem 2.4rem 1rem 1rem;
+}
+
+.kit {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+  margin-top: 1.8rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.kitItem {
+  display: grid;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.kitName {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.kitSpec {
+  font-family: var(--cond);
+  font-size: 1.02rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.bring {
+  margin-top: 1.8rem;
+  padding: 1.1rem 1.3rem;
+  border: 2px dashed var(--rule-strong);
+}
+
+.bringTitle {
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.bringList {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: 0.5rem;
+}
+
+/* ------------------------------------------------------------------ stories */
+
+.stories {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.story {
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.6rem 1.7rem;
+  background: var(--panel);
+  border-left: 0.4rem solid var(--cyan);
+}
+
+.story:nth-child(2) {
+  border-left-color: var(--amber);
+}
+
+.story:nth-child(3) {
+  border-left-color: var(--coral);
+}
+
+.storyStat {
+  font-family: var(--display);
+  font-size: 2.15rem;
+  line-height: 1.02;
+  text-transform: uppercase;
+}
+
+.storyQuote {
+  margin-top: 1.1rem;
+  font-size: 1.08rem;
+  font-style: italic;
+  line-height: 1.55;
+}
+
+.storyName {
+  margin-top: auto;
+  padding-top: 1.2rem;
+  font-family: var(--cond);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.storyDetail {
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- book */
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+  padding-bottom: clamp(4rem, 8vw, 6.5rem);
+}
+
+.coachBio {
+  max-width: 34rem;
+  margin-top: 1.2rem;
+  font-size: 1.06rem;
+  color: var(--muted);
+}
+
+.areaTitle {
+  margin-top: 1.8rem;
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.7rem;
+}
+
+.area li {
+  padding: 0.25rem 0.8rem;
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 600;
+  border: 1.5px solid var(--rule-strong);
+}
+
+.hours {
+  display: grid;
+  gap: 0.3rem;
+  max-width: 26rem;
+  margin-top: 1.6rem;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dt {
+  color: var(--muted);
+}
+
+.hours dd {
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.contactLine {
+  margin-top: 0.5rem;
+  font-family: var(--cond);
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.contactLine + .contactLine {
+  margin-top: 0;
+}
+
+.contactLine a:hover {
+  text-decoration: underline;
+}
+
+.base {
+  margin-top: 0.8rem;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+  padding: clamp(1.5rem, 3vw, 2.2rem);
+  background: var(--chalk);
+  color: var(--on-chalk);
+  border-top: 0.45rem solid var(--coral);
+}
+
+.formTitle {
+  grid-column: 1 / -1;
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.65rem 0.8rem;
+  font: inherit;
+  color: var(--on-chalk);
+  background: var(--chalk);
+  border: 1.5px solid var(--chalk-muted);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  min-height: 3.1rem;
+  padding: 0 1.9rem;
+  font-family: var(--cond);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--on-chalk);
+  background: var(--chalk);
+  border: 2px solid var(--on-chalk);
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--chalk) 88%, var(--on-chalk));
+}
+
+.formNote {
+  align-self: center;
+  font-size: 0.94rem;
+  color: var(--chalk-muted);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  border-top: 1px solid var(--rule);
+}
+
+.footBand {
+  position: relative;
+  height: clamp(4.5rem, 8vw, 6rem);
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
+  gap: 1rem 2.5rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2rem var(--gut) 2.4rem;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+}
+
+.footText {
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+.footText a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .packages {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .block {
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+  }
+
+  .moves {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 960px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .kitGrid,
+  .bookGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    min-height: 24rem;
+  }
+
+  .stories {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cardTop {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .cardTitle {
+    grid-column: 1 / -1;
+    border-bottom: 1px solid var(--chalk-rule);
+  }
+
+  .cardMeta:nth-child(2) {
+    border-left: 0;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .barCta {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .heroStats {
+    gap: 0.8rem;
+  }
+
+  .heroArt {
+    min-height: 20rem;
+  }
+
+  .heroPanel {
+    clip-path: polygon(14% 0, 100% 0, 86% 100%, 0 100%);
+  }
+
+  .cardTop {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cardMeta {
+    padding: 0.4rem 1.4rem;
+    border-left: 0;
+  }
+
+  .block {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 1.3rem 1rem;
+  }
+
+  .moves {
+    grid-column: auto;
+  }
+
+  .move {
+    grid-template-columns: 1.1rem minmax(0, 1fr) auto;
+    row-gap: 0;
+  }
+
+  .moveLoad {
+    grid-column: 2 / -1;
+  }
+
+  .packages,
+  .kit,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ghost,
+  .submit {
+    transition: border-color 150ms ease, background-color 150ms ease;
+  }
+}

@@ -151,13 +151,28 @@ function buildPage(blocks, cssDoodle, { checkerboard = false } = {}) {
   <script>${cssDoodle}</script></body></html>`;
 }
 
+const readPattern = (slug) =>
+  JSON.parse(readFileSync(path.join(ROOT, `packages/tabbied/patterns/${slug}.json`), 'utf-8'));
+
 /**
  * Renders a batch and checks it. Exits the process non-zero on any failure, so
  * a per-batch script is just `runRenderSweep({ defs, label })`.
  *
- * @param {{defs: Array<{slug: string, thumb: {grid: string}}>, label: string}} options
+ * `load` reads a design by slug (the pattern JSON on disk by default), so an
+ * authoring tool can sweep definitions that have not been written out yet.
+ * `sheetDir` is where the contact sheets go (/tmp by default). With
+ * `exit: false` the failures are returned instead of ending the process.
+ *
+ * @param {{defs: Array<{slug: string, thumb: {grid: string}}>, label: string,
+ *          load?: (slug: string) => object, sheetDir?: string, exit?: boolean}} options
  */
-export async function runRenderSweep({ defs: allDefs, label }) {
+export async function runRenderSweep({
+  defs: allDefs,
+  label,
+  load = readPattern,
+  sheetDir = '/tmp',
+  exit = true,
+}) {
   const cssDoodle = readFileSync(
     path.join(ROOT, 'node_modules/css-doodle/css-doodle.min.js'),
     'utf-8'
@@ -183,9 +198,7 @@ export async function runRenderSweep({ defs: allDefs, label }) {
     shot++;
     const sourceFor = (transparentBg) =>
       chunk.map((def) => {
-        const pattern = JSON.parse(
-          readFileSync(path.join(ROOT, `packages/tabbied/patterns/${def.slug}.json`), 'utf-8')
-        );
+        const pattern = load(def.slug);
         const { style, doodle } = buildSource(pattern, {
           width: '300px',
           height: '300px',
@@ -218,7 +231,7 @@ export async function runRenderSweep({ defs: allDefs, label }) {
     });
 
     const before = await inspectSettled(page);
-    await page.screenshot({ path: `/tmp/sheet-${label}-${shot}-seed1.png`, fullPage: true });
+    await page.screenshot({ path: path.join(sheetDir, `sheet-${label}-${shot}-seed1.png`), fullPage: true });
 
     await page.evaluate(() => {
       for (const el of document.querySelectorAll('css-doodle')) {
@@ -228,7 +241,7 @@ export async function runRenderSweep({ defs: allDefs, label }) {
     });
     await page.waitForTimeout(2800);
     const after = await inspectSettled(page);
-    await page.screenshot({ path: `/tmp/sheet-${label}-${shot}-seed2.png`, fullPage: true });
+    await page.screenshot({ path: path.join(sheetDir, `sheet-${label}-${shot}-seed2.png`), fullPage: true });
     await page.close();
 
     // Pass 2 - same seed, background slot switched to transparent.
@@ -236,7 +249,7 @@ export async function runRenderSweep({ defs: allDefs, label }) {
       buildPage(sourceFor(true), cssDoodle, { checkerboard: true })
     );
     const clear = await inspectSettled(clearPage);
-    await clearPage.screenshot({ path: `/tmp/sheet-${label}-${shot}-clear.png`, fullPage: true });
+    await clearPage.screenshot({ path: path.join(sheetDir, `sheet-${label}-${shot}-clear.png`), fullPage: true });
     await clearPage.close();
 
     for (const def of chunk) {
@@ -244,9 +257,7 @@ export async function runRenderSweep({ defs: allDefs, label }) {
       const b = before[slug];
       const a = after[slug];
       const t = clear[slug];
-      const pattern = JSON.parse(
-        readFileSync(path.join(ROOT, `packages/tabbied/patterns/${slug}.json`), 'utf-8')
-      );
+      const pattern = load(slug);
       const problems = [];
       if (!b || b.cellCount === 0) problems.push('no cells rendered');
       else {
@@ -271,9 +282,11 @@ export async function runRenderSweep({ defs: allDefs, label }) {
   if (failures.length) {
     console.log('FAILURES:');
     for (const f of failures) console.log(' ', f.slug, '->', f.problems.join('; '));
-    process.exit(1);
+    if (exit) process.exit(1);
+    return failures;
   }
   console.log(
     `all ${defs.length} ${label} patterns render, re-draw on reseed and render identically on a transparent background`
   );
+  return failures;
 }

@@ -1,0 +1,1075 @@
+/* ==========================================================================
+   BRAIDED RIVER FLY FISHING - guided wade trips on the Alder River
+   The page is a guide's river map. The hero ends in the river itself, its
+   channel cut from the anabranch field with gravel bars standing in it and
+   the four beats pinned upstream to down; below it, the beats as a key,
+   the trips, a hatch chart from the guides' notebooks beside the fly box,
+   and the license and gear list. Deep pool green with birch, water blue,
+   trout rose and caddis gold. Fraunces for the headings, Karla to read.
+   ========================================================================== */
+
+.page {
+  --pool: #16302d; /* role 0: the deep pool */
+  --birch: #f2ebda;
+  --water: #7cbad0;
+  --trout: #e8896f;
+  --caddis: #d8b45c;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --serif: 'Fraunces', 'Georgia', serif;
+  --sans: 'Karla', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--birch);
+  --on-birch: var(--pool);
+  --on-caddis: var(--pool);
+
+  --muted: color-mix(in oklab, var(--text) 76%, var(--pool));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 42%, transparent);
+  --panel: color-mix(in oklab, var(--pool) 90%, var(--birch));
+  --channel: color-mix(in oklab, var(--pool) 80%, var(--water));
+  --gravel: color-mix(in oklab, var(--pool) 52%, var(--birch));
+  --birch-muted: color-mix(in oklab, var(--on-birch) 76%, var(--birch));
+  --birch-rule: color-mix(in oklab, var(--on-birch) 20%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  background: var(--pool);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--pool) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--birch));
+    --on-birch: color-mix(in oklab, oklch(from var(--birch) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--birch));
+    --on-caddis: oklch(from var(--caddis) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--pool);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  justify-self: start;
+  display: grid;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: -0.01em;
+}
+
+.brandSub {
+  margin-top: 0.3rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 1.8rem);
+}
+
+.nav a {
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.25rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--caddis);
+}
+
+.barBook {
+  padding: 0.6rem 1.15rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  background: var(--caddis);
+  color: var(--on-caddis);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--pool);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.heroTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.75fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2rem, 4vw, 3rem) var(--gut) clamp(1rem, 2vw, 1.5rem);
+}
+
+.kicker {
+  margin: 0 0 1.1rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.8rem, 5.6vw, 5.1rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.heroTitle em {
+  font-weight: 400;
+  font-style: italic;
+}
+
+.heroLead {
+  max-width: 36rem;
+  margin: 1.4rem 0 0;
+  font-size: 1.12rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.8rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--birch);
+  color: var(--on-birch);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--birch) 86%, var(--pool));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1.5px var(--text);
+}
+
+.ghost:hover {
+  background: var(--panel);
+}
+
+/* Today's report, on a card pinned up at the shop door. */
+.report {
+  padding: 1.4rem 1.5rem 1.3rem;
+  background: var(--birch);
+  color: var(--on-birch);
+  border-radius: 6px;
+}
+
+.reportDate {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--birch-muted);
+}
+
+.reportTitle {
+  margin-top: 0.2rem;
+  font-size: 1.8rem;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.reportList {
+  margin: 0.8rem 0 0;
+}
+
+.reportList div {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 0.6rem;
+  padding: 0.45rem 0;
+  border-top: 1px solid var(--birch-rule);
+}
+
+.reportList dt {
+  font-size: 0.86rem;
+  color: var(--birch-muted);
+}
+
+.reportList dd {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.reportBest {
+  margin: 0.5rem 0 0;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: var(--caddis);
+  color: var(--on-caddis);
+  border-radius: 4px;
+}
+
+/* The map: the river channel cut from the field, full bleed. */
+.map {
+  position: relative;
+  height: clamp(15rem, 26vw, 23rem);
+}
+
+.river {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--channel);
+  clip-path: polygon(0% 36.2%, 3.3% 41.2%, 6.7% 44.7%, 10% 45.9%, 13.3% 45%, 16.7% 42.5%, 20% 39.4%, 23.3% 36.7%, 26.7% 35%, 30% 34.2%, 33.3% 33.8%, 36.7% 32.9%, 40% 30.8%, 43.3% 27.2%, 46.7% 22.6%, 50% 18%, 53.3% 14.5%, 56.7% 13.1%, 60% 14%, 63.3% 16.9%, 66.7% 20.9%, 70% 24.9%, 73.3% 27.9%, 76.7% 29.7%, 80% 30.5%, 83.3% 31.1%, 86.7% 32.3%, 90% 34.7%, 93.3% 38.2%, 96.7% 42%, 100% 45.2%, 100% 74.3%, 96.7% 68.8%, 93.3% 63.5%, 90% 59.7%, 86.7% 58.2%, 83.3% 58.8%, 80% 60.8%, 76.7% 63.1%, 73.3% 64.5%, 70% 64.3%, 66.7% 62.5%, 63.3% 59.7%, 60% 56.9%, 56.7% 55%, 53.3% 54.4%, 50% 55.2%, 46.7% 56.7%, 43.3% 58.1%, 40% 58.9%, 36.7% 59%, 33.3% 58.9%, 30% 59.4%, 26.7% 61.4%, 23.3% 65.2%, 20% 70.7%, 16.7% 77%, 13.3% 82.6%, 10% 86.2%, 6.7% 86.8%, 3.3% 84.2%, 0% 78.9%);
+}
+
+/* Gravel bars standing in the channel, where the braids split. */
+.gravel {
+  position: absolute;
+  translate: -50% -50%;
+  background: var(--gravel);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--pool);
+}
+
+.bar1 {
+  left: 24%;
+  top: 51%;
+  width: 5%;
+  height: 7%;
+  rotate: -12deg;
+}
+
+.bar2 {
+  left: 51%;
+  top: 36%;
+  width: 6%;
+  height: 8%;
+  rotate: -16deg;
+}
+
+.bar3 {
+  left: 74%;
+  top: 47%;
+  width: 5.5%;
+  height: 7.5%;
+  rotate: 8deg;
+}
+
+.pin {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  translate: -1.15rem -50%;
+}
+
+.p1 {
+  left: 13%;
+  top: 64%;
+}
+
+.p2 {
+  left: 38%;
+  top: 46%;
+}
+
+.p3 {
+  left: 62%;
+  top: 37%;
+}
+
+.p4 {
+  left: 87%;
+  top: 45%;
+  flex-direction: row-reverse;
+  translate: calc(-100% + 1.15rem) -50%;
+}
+
+.pinNo {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.3rem;
+  height: 2.3rem;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  background: var(--birch);
+  color: var(--on-birch);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--pool);
+}
+
+.pinName {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  white-space: nowrap;
+  background: var(--pool);
+  color: var(--text);
+  border-radius: 4px;
+}
+
+.upstream,
+.downstream {
+  position: absolute;
+  margin: 0;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--pool);
+  color: var(--muted);
+}
+
+.upstream {
+  left: var(--gut);
+  top: 8%;
+}
+
+.downstream {
+  right: var(--gut);
+  bottom: 6%;
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 1.3rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.secTitle {
+  font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+
+.secNote {
+  margin: 0;
+  font-size: 1.02rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ beats */
+
+.beats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.2rem, 2.5vw, 2.2rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.beat {
+  display: flex;
+  flex-direction: column;
+}
+
+.beatNo {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin: 0 0 1rem;
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  border: 2px solid var(--text);
+  border-radius: 50%;
+}
+
+.beatName {
+  font-size: 1.55rem;
+  line-height: 1.1;
+}
+
+.beatTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.beatTags li {
+  padding: 0.1rem 0.55rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+}
+
+.beatText {
+  margin: 0.8rem 0 0;
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ trips */
+
+.trips {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trip {
+  display: flex;
+  flex-direction: column;
+  padding: 1.8rem 1.6rem 1.6rem;
+  background: var(--panel);
+  border-radius: 6px;
+}
+
+.tripFeature {
+  background: var(--birch);
+  color: var(--on-birch);
+}
+
+.tripName {
+  font-size: 1.8rem;
+  font-style: italic;
+  line-height: 1.05;
+}
+
+.tripHours {
+  margin: 0.35rem 0 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.tripPrice {
+  margin: 1.1rem 0 0;
+  font-family: var(--serif);
+  font-size: 3.6rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.tripText {
+  margin: 1rem 0 0;
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+.tripFeature .tripText {
+  color: var(--birch-muted);
+}
+
+.tripItems {
+  margin: 1rem 0 0;
+  padding: 0.9rem 0 0;
+  list-style: none;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.tripFeature .tripItems {
+  border-top-color: var(--birch-rule);
+}
+
+.tripItems li {
+  position: relative;
+  padding: 0.28rem 0 0.28rem 1.5rem;
+  font-size: 0.94rem;
+}
+
+/* A quarter arc: a bend of the river. */
+.tripItems li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-top: 3px solid var(--trout);
+  border-right: 3px solid var(--trout);
+  border-radius: 0 100% 0 0;
+}
+
+/* ---------------------------------------------------------------- hatches */
+
+.hatchGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.chartWrap {
+  overflow-x: auto;
+}
+
+.chart {
+  width: 100%;
+  min-width: 36rem;
+  border-collapse: collapse;
+}
+
+.chart thead th {
+  padding: 0 0 0.6rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.chart .month {
+  text-align: center;
+}
+
+.chart tbody th {
+  width: 34%;
+  padding: 0.55rem 1rem 0.55rem 0;
+  text-align: left;
+  font-weight: 400;
+  border-bottom: 1px solid var(--rule);
+}
+
+.bug {
+  display: block;
+  font-weight: 700;
+  font-size: 0.96rem;
+  line-height: 1.3;
+}
+
+.fly {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.chart td {
+  padding: 0;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--rule);
+}
+
+.chart td::before {
+  content: '';
+  display: block;
+  height: 0.9rem;
+}
+
+.on::before {
+  background: color-mix(in oklab, var(--water) 42%, var(--pool));
+}
+
+.peak::before {
+  background: var(--water);
+}
+
+.none::before {
+  background: transparent;
+}
+
+/* The fly box: the pattern for a lid, foam compartments below. */
+.flyBox {
+  overflow: hidden;
+  background: var(--panel);
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+}
+
+.lid {
+  position: relative;
+  height: 9rem;
+  border-bottom: 6px solid var(--pool);
+}
+
+.boxBody {
+  padding: 1.3rem 1.3rem 1.4rem;
+}
+
+.boxTitle {
+  font-size: 1.45rem;
+  font-style: italic;
+}
+
+.slots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slot {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.7rem 0.8rem;
+  background: var(--pool);
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.slotFly {
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.slotWhen {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(110px, 11vw, 150px);
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  overflow: hidden;
+  border-block: 1px solid var(--rule);
+}
+
+/* ------------------------------------------------------------------- gear */
+
+.gear {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.license {
+  padding: 1.6rem 1.6rem 1.4rem;
+  background: var(--birch);
+  color: var(--on-birch);
+  border-radius: 6px;
+}
+
+.gearTitle {
+  font-size: 1.5rem;
+  font-style: italic;
+}
+
+.gearText {
+  margin: 0.6rem 0 0;
+  font-size: 0.96rem;
+}
+
+.license .gearText {
+  color: var(--birch-muted);
+}
+
+.fees {
+  margin: 1rem 0 0;
+}
+
+.fees div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--birch-rule);
+}
+
+.fees dd {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.lists {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.list {
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list li {
+  position: relative;
+  padding: 0.6rem 0 0.6rem 1.6rem;
+  font-size: 0.98rem;
+  border-top: 1px solid var(--rule);
+}
+
+.list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.95rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-top: 3px solid var(--caddis);
+  border-left: 3px solid var(--caddis);
+  border-radius: 100% 0 0 0;
+}
+
+/* ------------------------------------------------------------------- book */
+
+.book {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--panel);
+}
+
+.bookInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut);
+}
+
+.bookText .secNote {
+  max-width: 30rem;
+  margin-top: 1rem;
+}
+
+.contact {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.6rem;
+  margin: 2rem 0 0;
+}
+
+.contact div {
+  min-width: 0;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.contact div:first-child {
+  grid-column: 1 / -1;
+}
+
+.contact dt {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contact dd {
+  margin: 0.15rem 0 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.contact a {
+  border-bottom: 1.5px solid var(--rule-strong);
+}
+
+.form {
+  --form-muted: color-mix(in oklab, var(--on-birch) 40%, transparent);
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  align-content: start;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--birch);
+  color: var(--on-birch);
+  border-radius: 6px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--on-birch);
+  background: var(--birch);
+  border: 1.5px solid var(--form-muted);
+  border-radius: 4px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--on-birch);
+  outline-offset: 0;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--pool);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footRiver {
+  position: relative;
+  height: 70px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--rule);
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 3rem;
+  font-size: 0.92rem;
+}
+
+.footName {
+  margin: 0 0 0.6rem;
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.footLine {
+  max-width: 46rem;
+  margin: 0.3rem 0 0;
+  color: var(--muted);
+}
+
+.footLine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .beats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hatchGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .flyBox {
+    max-width: 34rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .heroTop,
+  .secHead,
+  .gear,
+  .bookInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .report {
+    max-width: 28rem;
+  }
+
+  .trips {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 34rem;
+  }
+
+  .pinName {
+    display: none;
+  }
+
+  .p4 {
+    flex-direction: row;
+    translate: -1.15rem -50%;
+  }
+}
+
+@media (max-width: 720px) {
+  .barBook {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .map {
+    height: 13rem;
+  }
+
+  .pinNo {
+    width: 1.9rem;
+    height: 1.9rem;
+    font-size: 0.95rem;
+  }
+
+  .upstream,
+  .downstream {
+    font-size: 0.64rem;
+  }
+
+  .beats,
+  .lists,
+  .contact,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .chart {
+    min-width: 0;
+  }
+
+  .chart tbody th {
+    width: 40%;
+    padding-right: 0.5rem;
+  }
+
+  .chart thead th {
+    font-size: 0.62rem;
+    letter-spacing: 0;
+  }
+
+  .bug {
+    font-size: 0.86rem;
+  }
+
+  .fly {
+    font-size: 0.74rem;
+  }
+
+  .tripPrice {
+    font-size: 3rem;
+  }
+}

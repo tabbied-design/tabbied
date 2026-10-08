@@ -1,0 +1,65 @@
+{
+  "name": "Hit and Miss",
+  "slug": "hitandmiss",
+  "galleryOrder": 4022,
+  "galleryWhite": true,
+  "description": "A honeycomb brick screen: each course laid with open gaps between the bricks, and the course above bridging every gap.",
+  "tags": [
+    "blocks",
+    "lattice",
+    "grid"
+  ],
+  "mood": [
+    "calm",
+    "organic"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "wallpaper",
+    "hero-background",
+    "card-texture"
+  ],
+  "palette": [
+    "#24302F",
+    "#C2623F",
+    "#D98A5F",
+    "#A9472F",
+    "#E3B27E",
+    "#8E3B2A"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "5x8",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { :before { content: ''; position: absolute; inset: 0; background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-mask: @var(--ha); mask: @var(--ha); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: -50%; top: 0%; width: 164%; height: 100%; background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-mask: @var(--hb); mask: @var(--hb); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --ha: linear-gradient(#000, #000) 0% 0% / 64% 21% no-repeat, linear-gradient(#000, #000) 0% 63.291% / 64% 21% no-repeat; --hb: linear-gradient(#000, #000) 100% 31.646% / 39.024% 21% no-repeat, linear-gradient(#000, #000) 0% 31.646% / 39.024% 21% no-repeat, linear-gradient(#000, #000) 100% 94.937% / 39.024% 21% no-repeat, linear-gradient(#000, #000) 0% 94.937% / 39.024% 21% no-repeat; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

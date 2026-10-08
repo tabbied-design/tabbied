@@ -1,0 +1,60 @@
+{
+  "name": "Aquarelle",
+  "slug": "aquarelle",
+  "galleryOrder": 4018,
+  "description": "Two washes of translucent discs laid half a cell apart, each thickening and thinning with its own smooth field, so where they cross they pool into a third tone.",
+  "tags": [
+    "circles",
+    "gradients",
+    "lattice"
+  ],
+  "mood": [
+    "calm",
+    "organic"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "hero-background",
+    "wallpaper"
+  ],
+  "palette": [
+    "#FAF5EC",
+    "#2D7DA8",
+    "#E39B2D"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 3,
+    "default": 3
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "8x12",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { :before { content: ''; position: absolute; left: -8%; top: -8%; width: 116%; height: 116%; border-radius: 50%; background: @p(var(--color1)); opacity: @calc(max(0.06, min(0.78, @rn(-0.4, 1.3, 1.2)))); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: 42%; top: 42%; width: 116%; height: 116%; border-radius: 50%; background: @p(var(--color2)); opacity: @calc(max(0.06, min(0.78, @rn(-0.4, 1.3, 1.7)))); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

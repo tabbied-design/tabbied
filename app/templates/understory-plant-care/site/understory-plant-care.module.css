@@ -1,0 +1,1015 @@
+/* ==========================================================================
+   UNDERSTORY PLANT CARE - houseplant styling and care
+   A greenhouse. The hero is the jungle itself, monstera leaves edge to
+   edge, with the promise written on a big plant tag pushed in among them.
+   The services are four stake tags standing in a row, the plants are the
+   nursery labels that go home with them, the office plans sit in the shade
+   under the canopy. Greenhouse-glass ground, forest shade, two leaf greens
+   and a terracotta pot; a soft display serif and a clean grotesque.
+   ========================================================================== */
+
+.page {
+  --glass: #e8ede0; /* role 0: greenhouse glass, the page ground */
+  --forest: #16332a;
+  --leaf: #2f7a4d;
+  --lime: #93c46e;
+  --pot: #c3643f;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --serif: 'DM Serif Display', 'Georgia', serif;
+  --sans: 'Manrope', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--forest);
+  --on-forest: var(--glass);
+  --on-lime: var(--forest);
+  --on-pot: var(--glass);
+  --card: var(--glass);
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--glass));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 40%, transparent);
+  --tag: color-mix(in oklab, var(--glass) 82%, var(--lime));
+  --forest-muted: color-mix(in oklab, var(--on-forest) 78%, var(--forest));
+  --forest-rule: color-mix(in oklab, var(--on-forest) 24%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--glass);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--glass) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--forest));
+    --on-forest: color-mix(in oklab, oklch(from var(--forest) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--forest));
+    --on-lime: oklch(from var(--lime) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-pot: oklch(from var(--pot) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    /* A label a shade lighter than the glass (darker on a dark ground). */
+    --card: oklch(from var(--glass) calc(l + (0.6 - l) * -0.08) c h);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--glass);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 0.6rem;
+  align-items: center;
+  line-height: 1;
+}
+
+.brandLeaf {
+  grid-row: span 2;
+  width: 1.7rem;
+  height: 1.7rem;
+  background:
+    linear-gradient(135deg, transparent calc(50% - 1px), var(--glass) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+    var(--leaf);
+  border-radius: 0 100% 0 100%;
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+}
+
+.brandSub {
+  margin-top: 0.1rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  padding: 0.25rem 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barButton {
+  padding: 0.6rem 1.15rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--forest);
+  color: var(--on-forest);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--glass);
+}
+
+/* --------------------------------------------------------------------- hero
+   The jungle, edge to edge, with a plant tag pushed in among the leaves. */
+
+.hero {
+  position: relative;
+  min-height: clamp(600px, 54vw, 740px);
+  overflow: hidden;
+  background: var(--forest);
+}
+
+.jungle {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+/* The tag: a punched hole at the top, a point at the bottom. */
+.heroTag {
+  position: relative;
+  width: min(100%, 38rem);
+  padding: 3.6rem clamp(1.6rem, 4vw, 2.8rem) 5.4rem;
+  background: var(--card);
+  clip-path: polygon(0 1.6rem, 1.6rem 0, calc(100% - 1.6rem) 0, 100% 1.6rem, 100% calc(100% - 3.6rem), 50% 100%, 0 calc(100% - 3.6rem));
+  transform: rotate(-1.2deg);
+  filter: drop-shadow(0 18px 30px color-mix(in oklab, var(--forest) 60%, transparent));
+}
+
+.heroTag::before {
+  content: '';
+  position: absolute;
+  top: 1.3rem;
+  left: 50%;
+  width: 1rem;
+  height: 1rem;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: var(--forest);
+  box-shadow: 0 0 0 3px var(--rule-strong);
+}
+
+.kicker {
+  margin: 0 0 1rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.8rem, 5vw, 4.3rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: italic;
+}
+
+.heroLead {
+  margin: 1.3rem 0 0;
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.8rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.35rem;
+  font-size: 0.96rem;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--forest);
+  color: var(--on-forest);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--forest) 84%, var(--text));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ghost:hover {
+  background: var(--tag);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3.2rem);
+}
+
+.secTitle {
+  font-size: clamp(2.4rem, 4.6vw, 3.8rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+}
+
+.secTitle em {
+  font-style: italic;
+}
+
+.secNote {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ stake tags
+   Four services, each on a plant stake: a label with a hole, and a long
+   pointed stake under it. */
+
+.stakes {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.stake {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 2.8rem 1.4rem 1.6rem;
+  margin-bottom: 4.5rem;
+  background: var(--tag);
+  border-radius: 1.4rem 1.4rem 0.4rem 0.4rem;
+}
+
+.stake::before {
+  content: '';
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  width: 0.75rem;
+  height: 0.75rem;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: var(--glass);
+  box-shadow: inset 0 0 0 1.5px var(--rule-strong);
+}
+
+/* The stake, pushed into the soil. */
+.stake::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 2.4rem;
+  height: 4.5rem;
+  translate: -50% 0;
+  background: var(--tag);
+  clip-path: polygon(0 0, 100% 0, 100% 62%, 50% 100%, 0 62%);
+}
+
+.stakeName {
+  font-size: 1.75rem;
+  line-height: 1.08;
+}
+
+.stakeLine {
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.stakeFacts {
+  margin: 1.1rem 0 0;
+  font-size: 0.9rem;
+}
+
+.stakeFacts div {
+  padding: 0.65rem 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.stakeFacts dt {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stakeFacts dd {
+  margin: 0.15rem 0 0;
+}
+
+.factPrice dd {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+
+/* ------------------------------------------------------------- plant tags
+   Nursery labels: a notched end with an eyelet, the botanical name in
+   italic, then light, water and pets. */
+
+.labels {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.label {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem 1.3rem 1.3rem 2.6rem;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 0.3rem;
+  clip-path: polygon(1.4rem 0, 100% 0, 100% 100%, 1.4rem 100%, 0 calc(100% - 1.4rem), 0 1.4rem);
+}
+
+.label::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  translate: 0 -50%;
+  border-radius: 50%;
+  background: var(--glass);
+  box-shadow: inset 0 0 0 1.5px var(--rule-strong);
+}
+
+.labelLatin {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.labelCommon {
+  margin-top: 0.1rem;
+  font-size: 1.55rem;
+  line-height: 1.1;
+}
+
+.care {
+  margin: 0.9rem 0 0;
+  font-size: 0.86rem;
+}
+
+.care div {
+  display: grid;
+  grid-template-columns: 4.4rem minmax(0, 1fr);
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.care dt {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.care dt::before {
+  content: '';
+  flex: none;
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+/* A sun, a drop and a paw, drawn rather than typed. */
+.careSun::before {
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--text) 0 38%, transparent 40%);
+  box-shadow: 0 0 0 1.5px var(--text) inset;
+}
+
+.careDrop::before {
+  background: var(--text);
+  border-radius: 0 50% 50% 50%;
+  transform: rotate(45deg) scale(0.85);
+}
+
+.carePaw::before {
+  background:
+    radial-gradient(circle at 50% 72%, var(--text) 0 26%, transparent 28%),
+    radial-gradient(circle at 18% 38%, var(--text) 0 12%, transparent 14%),
+    radial-gradient(circle at 40% 18%, var(--text) 0 12%, transparent 14%),
+    radial-gradient(circle at 62% 18%, var(--text) 0 12%, transparent 14%),
+    radial-gradient(circle at 84% 38%, var(--text) 0 12%, transparent 14%);
+}
+
+.care dd {
+  margin: 0;
+}
+
+/* Three bars, filled to the plant's need. */
+.meter {
+  display: block;
+  width: 3rem;
+  height: 0.45rem;
+  margin: 0.35rem 0 0.3rem;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, transparent 0 31%, var(--card) 31% 35%, transparent 35% 65%, var(--card) 65% 69%, transparent 69%),
+    linear-gradient(90deg, var(--leaf) 0 var(--fill, 0%), var(--rule-strong) var(--fill, 0%));
+}
+
+.lv1 {
+  --fill: 33%;
+}
+
+.lv2 {
+  --fill: 67%;
+}
+
+.lv3 {
+  --fill: 100%;
+}
+
+.labelNote {
+  margin: auto 0 0;
+  padding-top: 0.8rem;
+  font-size: 0.88rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+/* ----------------------------------------------------------------- canopy */
+
+.canopy {
+  position: relative;
+  height: clamp(150px, 16vw, 230px);
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  overflow: hidden;
+  background: var(--forest);
+}
+
+/* ---------------------------------------------------------------- offices */
+
+.offices {
+  background: var(--forest);
+  color: var(--on-forest);
+}
+
+.officeGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(4rem, 8vw, 6rem);
+}
+
+.officeTitle {
+  font-size: clamp(2.4rem, 4.6vw, 3.8rem);
+  line-height: 1.02;
+}
+
+.officeLead {
+  margin: 1.1rem 0 0;
+  font-size: 1.05rem;
+  color: var(--forest-muted);
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.plan {
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.4rem;
+  border: 1.5px solid var(--forest-rule);
+  border-radius: 1.2rem;
+}
+
+/* The plan most offices take, filled with the young-leaf green. */
+.plan:nth-child(2) {
+  background: var(--lime);
+  color: var(--on-lime);
+  border-color: var(--lime);
+}
+
+.planName {
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.planSize {
+  margin: 0.4rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.planPrice {
+  margin: 1.2rem 0 0;
+  font-family: var(--serif);
+  font-size: 2.8rem;
+  line-height: 1;
+}
+
+.planPer {
+  margin: 0.3rem 0 0;
+  font-size: 0.86rem;
+}
+
+.planPoints {
+  list-style: none;
+  margin: 1.2rem 0 0;
+  padding: 0.8rem 0 0;
+  font-size: 0.92rem;
+  border-top: 1px solid currentColor;
+}
+
+.planPoints li {
+  position: relative;
+  padding: 0.3rem 0 0.3rem 1.3rem;
+}
+
+.planPoints li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.75rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  background: currentColor;
+  border-radius: 0 100% 0 100%;
+}
+
+/* -------------------------------------------------------------- first visit */
+
+.firstGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.firstIntro .secNote {
+  margin-top: 1rem;
+}
+
+/* A plant in a pot: a dome of leaves masked out of the field, and a
+   terracotta pot in front of its lower half. */
+.pot {
+  position: relative;
+  width: min(100%, 22rem);
+  height: 24rem;
+  margin-top: 2.4rem;
+  overflow: hidden;
+  background: var(--forest);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 0 69%, transparent 70%), linear-gradient(black, black);
+  -webkit-mask-size: 100% 74%, 52% 34%;
+  -webkit-mask-position: 50% 0, 50% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-image: radial-gradient(ellipse at 50% 50%, black 0 69%, transparent 70%), linear-gradient(black, black);
+  mask-size: 100% 74%, 52% 34%;
+  mask-position: 50% 0, 50% 100%;
+  mask-repeat: no-repeat;
+}
+
+.pot::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  left: 24%;
+  right: 24%;
+  bottom: 0;
+  height: 34%;
+  background:
+    linear-gradient(color-mix(in oklab, var(--pot) 78%, var(--forest)), color-mix(in oklab, var(--pot) 78%, var(--forest))) top / 100% 22% no-repeat,
+    var(--pot);
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: 3.4rem minmax(0, 1fr);
+  column-gap: 1.2rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.steps li:last-child {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.stepNo {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  border-radius: 0 50% 50% 50%;
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.stepTitle {
+  font-size: 1.6rem;
+  line-height: 1.15;
+}
+
+.stepText {
+  margin: 0.4rem 0 0;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.shed .secNote {
+  margin: 1rem 0 1.8rem;
+}
+
+.address {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.addressNote {
+  margin: 0.4rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.contactLine {
+  margin: 1rem 0 0;
+  font-size: 1.08rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.contactLine + .contactLine {
+  margin-top: 0.3rem;
+}
+
+.contactLine a {
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.hours {
+  max-width: 28rem;
+  margin: 1.6rem 0 0;
+  font-size: 0.94rem;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.hours dt {
+  font-weight: 600;
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+  color: var(--muted);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--tag);
+  border-radius: 1.4rem;
+}
+
+.formTitle {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field label,
+.field legend {
+  padding: 0;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.field input,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.9rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--glass);
+  border: 1px solid var(--rule-strong);
+  border-radius: 0.7rem;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.picks input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.picks label {
+  padding: 0.45rem 0.95rem;
+  font-weight: 600;
+  background: var(--glass);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.picks input:checked + label {
+  background: var(--forest);
+  color: var(--on-forest);
+  border-color: var(--forest);
+}
+
+.picks input:focus-visible + label {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.85rem 1.8rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--on-forest);
+  background: var(--forest);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--forest) 84%, var(--text));
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--forest);
+  color: var(--on-forest);
+}
+
+.footLeaves {
+  position: relative;
+  height: 120px;
+  overflow: hidden;
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 3rem;
+  font-size: 0.9rem;
+  border-top: 1px solid var(--forest-rule);
+}
+
+.footInner p {
+  margin: 0.35rem 0 0;
+  color: var(--forest-muted);
+}
+
+.footer .footName {
+  margin: 0 0 0.8rem;
+  font-family: var(--serif);
+  font-size: 2rem;
+  line-height: 1.1;
+  color: var(--on-forest);
+}
+
+.footInner a {
+  color: var(--on-forest);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .stakes,
+  .labels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .plans {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .officeGrid {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  }
+}
+
+@media (max-width: 960px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .secHead,
+  .officeGrid,
+  .firstGrid,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plans {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .barButton {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .hero {
+    min-height: 0;
+  }
+
+  .heroInner {
+    padding-top: 9rem;
+  }
+
+  .heroTag {
+    transform: rotate(-1deg);
+  }
+
+  .stakes,
+  .labels,
+  .plans,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stake {
+    margin-bottom: 3.6rem;
+  }
+
+  .stake::after {
+    height: 3.6rem;
+  }
+
+  .pot {
+    height: 20rem;
+  }
+}

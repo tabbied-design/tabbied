@@ -40,11 +40,14 @@ const serveRepo = () =>
     const server = createServer((req, out) => {
       const file = join(ROOT, decodeURIComponent(req.url.split('?')[0]));
 
+      // Read before writing the head: a missing file (the browser asks for a
+      // favicon) must still be able to answer 404.
       try {
+        const body = readFileSync(file);
         out.writeHead(200, {
           'Content-Type': MIME[extname(file)] || 'application/octet-stream',
         });
-        out.end(readFileSync(file));
+        out.end(body);
       } catch {
         out.writeHead(404);
         out.end();

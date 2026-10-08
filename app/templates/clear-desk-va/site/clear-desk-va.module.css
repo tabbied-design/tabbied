@@ -1,0 +1,1061 @@
+/* ==========================================================================
+   CLEAR DESK - Mina Corrigan, virtual assistant
+   The page is her desk at the end of a good week. The hero is an inbox
+   window, every message already handled and the reading pane empty, filled
+   with the dotfield the way an app fills an empty state; the week of
+   support is a task board, one column a day; the contact form is a new
+   message. Lilac paper, indigo ink, and three soft accents that tag the
+   work. A warm, round display serif over a friendly grotesque.
+   ========================================================================== */
+
+.page {
+  --paper: #f1eef7;
+  --ink: #221d3a;
+  --violet: #6a4fd0;
+  --apricot: #f2955e;
+  --mint: #8cc7b0;
+
+  --serif: 'Young Serif', Georgia, serif;
+  --sans: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --bar-h: 4.5rem;
+
+  --text: var(--ink);
+  --on-ink: var(--paper);
+  --on-violet: var(--paper);
+  --on-apricot: var(--ink);
+  --on-mint: var(--ink);
+
+  --muted: color-mix(in oklab, var(--text) 72%, var(--paper));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 40%, transparent);
+  --tint: color-mix(in oklab, var(--paper) 90%, var(--violet));
+  --shade: color-mix(in oklab, var(--paper) 94%, var(--ink));
+  --shadow: color-mix(in oklab, var(--ink) 22%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1.03rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--ink));
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--ink));
+    --on-violet: oklch(from var(--violet) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-apricot: oklch(from var(--apricot) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-mint: oklch(from var(--mint) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, ul, ol, dl, dd) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  min-height: var(--bar-h);
+  padding: 0 var(--gut);
+  background: var(--paper);
+  color: var(--text);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+/* An in-tray with two letters left in it. */
+.brandMark {
+  width: 1.9rem;
+  height: 1.9rem;
+  flex: none;
+  border-radius: 0.5rem;
+  background:
+    linear-gradient(var(--paper), var(--paper)) 50% 34% / 56% 2px no-repeat,
+    linear-gradient(var(--paper), var(--paper)) 50% 54% / 56% 2px no-repeat,
+    linear-gradient(var(--apricot), var(--apricot)) 50% 74% / 56% 4px no-repeat,
+    var(--violet);
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.4rem;
+}
+
+.nav a {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 999px;
+}
+
+.nav a:hover {
+  background: var(--tint);
+}
+
+.nav a:last-child {
+  margin-left: 0.4rem;
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--paper);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  padding: clamp(3rem, 6vw, 5rem) max(var(--gut), calc((100% - 86rem) / 2));
+  min-height: min(calc(100vh - var(--bar-h)), 54rem);
+  background: var(--tint);
+}
+
+.kicker {
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.heroTitle {
+  margin-top: 1rem;
+  font-size: clamp(3rem, 5.6vw, 5.2rem);
+  line-height: 1.02;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: normal;
+  color: var(--violet);
+}
+
+.heroLead {
+  max-width: 33rem;
+  margin-top: 1.5rem;
+  font-size: 1.12rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.5rem;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  background: var(--violet);
+  color: var(--on-violet);
+  border: 0;
+  border-radius: 0.7rem;
+  cursor: pointer;
+}
+
+.ghost {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.85rem 1.4rem;
+  font-size: 1rem;
+  font-weight: 700;
+  background: var(--paper);
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 0.7rem;
+}
+
+.button:hover,
+.ghost:hover {
+  transform: translateY(-1px);
+}
+
+/* The inbox window: folders, handled mail, an empty reading pane. */
+.window {
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-radius: 1rem;
+  box-shadow: 0 30px 60px -30px var(--shadow), 0 2px 0 var(--rule);
+}
+
+.windowBar {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid var(--rule);
+  background: var(--shade);
+}
+
+.windowBar span {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--rule-strong);
+}
+
+.windowBody {
+  display: grid;
+  grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
+  min-height: 30rem;
+}
+
+.folders {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0.9rem;
+  border-right: 1px solid var(--rule);
+}
+
+.folderList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 0.4rem;
+}
+
+.folderList li:first-child {
+  background: var(--tint);
+  font-weight: 700;
+}
+
+.count {
+  min-width: 1.6rem;
+  padding: 0 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: center;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+}
+
+.mailList {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.mail {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.6rem 0.7rem 0.65rem 0.85rem;
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--tag);
+  border-radius: 0.5rem;
+}
+
+.mailFrom {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.mailSubject {
+  font-size: 0.85rem;
+  line-height: 1.3;
+}
+
+.mailDone {
+  position: relative;
+  margin-top: 0.2rem;
+  padding-left: 1.2rem;
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.mailDone::before {
+  content: '\2713';
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  line-height: 0.9rem;
+  text-align: center;
+  border-radius: 50%;
+  background: var(--mint);
+  color: var(--on-mint);
+}
+
+.pane {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+.paneField {
+  position: absolute;
+  inset: 0;
+}
+
+.zero {
+  position: relative;
+  max-width: 17rem;
+  padding: 1.3rem 1.4rem;
+  text-align: center;
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-radius: 0.9rem;
+  box-shadow: 0 20px 40px -24px var(--shadow);
+}
+
+.zeroTitle {
+  font-family: var(--serif);
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.zeroText {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* Tag colors, shared by the inbox and the board. */
+.inbox {
+  --tag: var(--violet);
+}
+
+.calendar {
+  --tag: var(--apricot);
+}
+
+.invoices {
+  --tag: var(--mint);
+}
+
+.travel {
+  --tag: var(--ink);
+}
+
+.clients {
+  --tag: var(--violet);
+}
+
+.report {
+  --tag: var(--apricot);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1rem clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secTitle {
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+}
+
+.secNote {
+  max-width: 34rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- task board */
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0.8rem;
+  background: var(--tint);
+  border-radius: 0.9rem;
+}
+
+.columnHead {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2rem 0.3rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.cards {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.task {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.85rem 0.9rem 0.95rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 0.6rem;
+  box-shadow: 0 2px 0 var(--rule);
+}
+
+.tag {
+  position: relative;
+  justify-self: start;
+  padding: 0.1rem 0.55rem 0.1rem 1.25rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+}
+
+.tag::before {
+  content: '';
+  position: absolute;
+  left: 0.45rem;
+  top: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-top: -0.25rem;
+  border-radius: 50%;
+  background: var(--tag);
+}
+
+.taskText {
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+/* ----------------------------------------------------------------- the band */
+
+.band {
+  position: relative;
+  height: clamp(7rem, 12vw, 10rem);
+  overflow: hidden;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* ----------------------------------------------------------------- packages */
+
+.packages {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  align-items: stretch;
+}
+
+.package {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.7rem 1.6rem 1.8rem;
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-radius: 1rem;
+  --meter: var(--violet);
+  --track: var(--tint);
+}
+
+.pick {
+  background: var(--ink);
+  color: var(--on-ink);
+  border-color: var(--ink);
+  --muted: color-mix(in oklab, var(--on-ink) 76%, var(--ink));
+  --meter: var(--mint);
+  --track: color-mix(in oklab, var(--on-ink) 18%, var(--ink));
+}
+
+.packageName {
+  font-size: 2rem;
+}
+
+.packageHours {
+  font-weight: 700;
+}
+
+.meter {
+  position: relative;
+  display: block;
+  height: 0.6rem;
+  margin: 0.8rem 0 0.6rem;
+  border-radius: 999px;
+  background: var(--track);
+  overflow: hidden;
+}
+
+.meter::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--fill);
+  border-radius: 999px;
+  background: var(--meter);
+}
+
+.m10 {
+  --fill: 25%;
+}
+
+.m20 {
+  --fill: 50%;
+}
+
+.m40 {
+  --fill: 100%;
+}
+
+.packagePrice {
+  font-family: var(--serif);
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.packageRate {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.packageFit {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.95rem;
+}
+
+.pick .packageFit {
+  border-top-color: color-mix(in oklab, var(--on-ink) 24%, transparent);
+}
+
+.notes {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem 1.5rem;
+  margin-top: 2rem;
+}
+
+.notes li {
+  position: relative;
+  padding-left: 1.7rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.notes li::before,
+.safeList li::before {
+  content: '\2713';
+  position: absolute;
+  left: 0;
+  top: 0.15rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.15rem;
+  text-align: center;
+  border-radius: 50%;
+  background: var(--mint);
+  color: var(--on-mint);
+}
+
+/* -------------------------------------------------------------------- tools */
+
+.tools {
+  position: relative;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+  background: var(--tint);
+}
+
+.toolsField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.toolsCard {
+  position: relative;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-radius: 1.2rem;
+  box-shadow: 0 30px 60px -30px var(--shadow);
+}
+
+.toolsHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem 3rem;
+  align-items: end;
+  margin-bottom: 2rem;
+}
+
+.toolList {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.toolList div {
+  padding: 1rem 1rem 1.1rem;
+  background: var(--tint);
+  border-radius: 0.7rem;
+}
+
+.toolList dt {
+  font-weight: 700;
+}
+
+.toolList dd {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.safe {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem 2rem;
+  align-items: center;
+  margin-top: 1.8rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+
+.safeTitle {
+  font-size: 1.5rem;
+}
+
+.safeList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 2rem;
+}
+
+.safeList li {
+  position: relative;
+  padding-left: 1.7rem;
+  font-size: 0.94rem;
+}
+
+/* -------------------------------------------------------------------- about */
+
+.about {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.aboutLead {
+  max-width: 36rem;
+  margin-top: 1.2rem;
+  font-size: 1.08rem;
+  color: var(--muted);
+}
+
+.start {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.startStep {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  grid-template-areas:
+    'no title'
+    'no text';
+  gap: 0.1rem 1rem;
+  align-items: center;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 0.8rem;
+}
+
+.startNo {
+  grid-area: no;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  border-radius: 50%;
+  background: var(--violet);
+  color: var(--on-violet);
+}
+
+.startTitle {
+  grid-area: title;
+  font-size: 1.3rem;
+}
+
+.startText {
+  grid-area: text;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ contact */
+
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.contactInfo .secNote {
+  margin-top: 1.1rem;
+}
+
+.contactList {
+  margin-top: 2rem;
+}
+
+.contactList div {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.contactList dt {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.contactList dd {
+  overflow-wrap: anywhere;
+}
+
+.contactList a {
+  border-bottom: 1.5px solid var(--violet);
+}
+
+/* The form is a new message: a dark title bar, then lined fields. */
+.form {
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-radius: 1rem;
+  box-shadow: 0 30px 60px -30px var(--shadow);
+}
+
+.formHead {
+  padding: 0.75rem 1.2rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.formRow .field + .field {
+  border-left: 1px solid var(--rule);
+}
+
+.field {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+  padding: 0.75rem 1.2rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.field span,
+.choices legend {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.3rem 0;
+  font: inherit;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+}
+
+.field:focus-within {
+  background: var(--tint);
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.85rem 1.2rem 1rem;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.choices legend {
+  float: left;
+  width: 100%;
+  margin-bottom: 0.45rem;
+  padding: 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.chip input {
+  margin: 0;
+  accent-color: var(--violet);
+}
+
+.form .button {
+  justify-self: start;
+  margin: 1rem 1.2rem 1.2rem;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--ink);
+  color: var(--on-ink);
+  --muted: color-mix(in oklab, var(--on-ink) 76%, var(--ink));
+}
+
+.footerField {
+  position: relative;
+  height: 5.5rem;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+.footerInner {
+  display: grid;
+  gap: 0.45rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.5rem var(--gut) 3rem;
+}
+
+.footerName {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.footerLine {
+  max-width: 44rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.footerCredit {
+  margin-top: 0.5rem;
+  font-size: 0.92rem;
+}
+
+.footerCredit a {
+  border-bottom: 1.5px solid currentColor;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .board {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .toolList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .notes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .secHead,
+  .toolsHead,
+  .about,
+  .contact {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .packages {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 34rem;
+  }
+
+  .safe {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 620px) {
+  .windowBody {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .folders {
+    border-right: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .mailList li:nth-child(n + 3) {
+    display: none;
+  }
+
+  .pane {
+    min-height: 16rem;
+  }
+
+  /* On a phone the board scrolls sideways, a day at a time, the way a
+     board app does. */
+  .board {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 80%;
+    margin-right: calc(-1 * var(--gut));
+    padding-right: var(--gut);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+  }
+
+  .column {
+    scroll-snap-align: start;
+  }
+
+  .toolList,
+  .notes,
+  .formRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .formRow .field + .field {
+    border-left: 0;
+  }
+
+  .contactList div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .button,
+  .ghost {
+    transition: transform 120ms ease;
+  }
+}

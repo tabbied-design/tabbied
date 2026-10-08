@@ -1,0 +1,1051 @@
+/* ==========================================================================
+   ODD SHAPE STUDIO - Noor Halloway, freelance graphic designer
+   A portfolio that behaves like one: a cobalt page, cream type, butter and
+   tomato used the way a designer uses spot colors. The hero is an odd shape
+   cut from the truchet, with a quarter circle and a sticker beside it; the
+   work is a grid of client tiles, each a mark built from the same few
+   shapes on the color that client wears; the process steps are a circle, a
+   quarter and a square. A chunky grotesque does the shouting, and an
+   italic serif says the one word in each heading that matters.
+   ========================================================================== */
+
+.page {
+  --cobalt: #2c3fcf;
+  --cream: #f5efe2;
+  --tomato: #ff5b35;
+  --butter: #ffd23f;
+  --night: #15151a;
+
+  --grot: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 82rem;
+  --bar-h: 4.5rem;
+
+  --text: var(--cream);
+  --on-cream: var(--night);
+  --on-tomato: var(--night);
+  --on-butter: var(--night);
+  --on-night: var(--cream);
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--cobalt));
+  --rule: color-mix(in oklab, var(--text) 26%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 75%, transparent);
+
+  font-family: var(--grot);
+  font-size: 1.04rem;
+  line-height: 1.55;
+  background: var(--cobalt);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--cobalt) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--cream));
+    --on-cream: color-mix(in oklab, oklch(from var(--cream) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--cream));
+    --on-tomato: oklch(from var(--tomato) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-butter: oklch(from var(--butter) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-night: color-mix(in oklab, oklch(from var(--night) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--night));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, ul, ol, dl, dd, blockquote) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--grot);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.page :where(h1, h2) em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  min-height: var(--bar-h);
+  padding: 0 var(--gut);
+  background: var(--cobalt);
+  color: var(--text);
+  border-bottom: 1.5px solid var(--rule);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+/* One truchet tile: two quarter circles on a tomato square. */
+.brandMark {
+  width: 1.9rem;
+  height: 1.9rem;
+  flex: none;
+  background:
+    radial-gradient(circle at 0 0, var(--cream) 0 50%, transparent 50%),
+    radial-gradient(circle at 100% 100%, var(--cream) 0 50%, transparent 50%),
+    var(--tomato);
+}
+
+.brandName {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.5rem;
+}
+
+.nav a {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+}
+
+.nav a:hover {
+  border-color: var(--rule-strong);
+}
+
+.nav a:last-child {
+  background: var(--butter);
+  color: var(--on-butter);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--cobalt);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: 88rem;
+  min-height: min(calc(100vh - var(--bar-h)), 56rem);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut);
+}
+
+.kicker {
+  display: inline-block;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 999px;
+}
+
+.heroTitle {
+  margin-top: 1.5rem;
+  font-size: clamp(3.4rem, 7.2vw, 7.2rem);
+  line-height: 0.9;
+}
+
+.heroTitle em {
+  color: var(--butter);
+  font-size: 1.08em;
+}
+
+.heroLead {
+  max-width: 35rem;
+  margin-top: 1.8rem;
+  font-size: 1.14rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2.2rem;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 1.6rem;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 800;
+  background: var(--butter);
+  color: var(--on-butter);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.ghost {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.9rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 800;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 999px;
+}
+
+.button:hover,
+.ghost:hover {
+  transform: translateY(-2px);
+}
+
+.heroArt {
+  position: relative;
+  width: min(100%, 34rem);
+  justify-self: center;
+  aspect-ratio: 1;
+}
+
+/* The odd shape: a square with three corners rounded off and one left
+   sharp, the truchet showing through. */
+.blob {
+  position: absolute;
+  inset: 6% 0 0 6%;
+  overflow: hidden;
+  border-radius: 0 50% 50% 50%;
+  background: var(--cobalt);
+  box-shadow: inset 0 0 0 2px var(--rule);
+}
+
+.quarter {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 30%;
+  aspect-ratio: 1;
+  background: var(--tomato);
+  border-radius: 0 100% 0 0;
+}
+
+.dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 11%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--night);
+}
+
+.sticker {
+  position: absolute;
+  right: -2%;
+  top: 4%;
+  display: grid;
+  place-items: center;
+  width: 9rem;
+  aspect-ratio: 1;
+  padding: 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.15;
+  text-align: center;
+  background: var(--butter);
+  color: var(--on-butter);
+  border-radius: 50%;
+  transform: rotate(12deg);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 7rem) var(--gut);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 1rem clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3.2rem);
+}
+
+.secTitle {
+  font-size: clamp(2.6rem, 5.4vw, 5rem);
+}
+
+.secNote {
+  max-width: 34rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- work */
+
+.work {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: minmax(22rem, auto);
+  gap: 1rem;
+}
+
+.case {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.4rem;
+  overflow: hidden;
+  background: var(--tile);
+  color: var(--on-tile);
+  border-radius: 1.2rem;
+}
+
+.cream {
+  --tile: var(--cream);
+  --on-tile: var(--on-cream);
+  --mark-a: var(--cobalt);
+  --mark-b: var(--tomato);
+}
+
+.tomato {
+  --tile: var(--tomato);
+  --on-tile: var(--on-tomato);
+  --mark-a: var(--night);
+  --mark-b: var(--cream);
+}
+
+.butter {
+  --tile: var(--butter);
+  --on-tile: var(--on-butter);
+  --mark-a: var(--cobalt);
+  --mark-b: var(--tomato);
+}
+
+.night {
+  --tile: var(--night);
+  --on-tile: var(--on-night);
+  --mark-a: var(--butter);
+  --mark-b: var(--tomato);
+}
+
+.pell {
+  grid-column: span 2;
+  flex-direction: row-reverse;
+  align-items: flex-end;
+}
+
+.pell .mark {
+  width: min(17rem, 45%);
+  height: 12rem;
+  margin: 0;
+  flex: none;
+}
+
+.second {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.patternCase {
+  grid-column: 2 / span 2;
+  grid-row: 2;
+  justify-content: flex-end;
+  padding: 0;
+  background: var(--cream);
+}
+
+.fennel {
+  grid-column: 4;
+  grid-row: 2;
+}
+
+/* The marks: each client's logo, drawn from circles, quarters and bars. */
+.mark {
+  position: relative;
+  display: block;
+  width: 7.5rem;
+  height: 7.5rem;
+  margin-top: 0.5rem;
+}
+
+.loaf {
+  width: 11rem;
+  background:
+    radial-gradient(farthest-side at 50% 100%, var(--mark-a) 0 99%, transparent 100%) 0 0 / 100% 55% no-repeat,
+    linear-gradient(var(--mark-b), var(--mark-b)) 0 100% / 100% 40% no-repeat;
+}
+
+.wheels {
+  width: 10rem;
+  background:
+    radial-gradient(circle, var(--mark-a) 0 46%, transparent 46%) 0 50% / 50% 64% no-repeat,
+    radial-gradient(circle, var(--mark-a) 0 46%, transparent 46%) 100% 50% / 50% 64% no-repeat,
+    linear-gradient(var(--mark-b), var(--mark-b)) 50% 50% / 52% 12% no-repeat;
+}
+
+.tooth {
+  border-radius: 45% 45% 20% 20%;
+  background:
+    radial-gradient(circle at 50% 100%, var(--tile) 0 22%, transparent 22%),
+    var(--mark-a);
+}
+
+.tooth::after {
+  content: '';
+  position: absolute;
+  right: -0.6rem;
+  top: -0.6rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background: var(--mark-b);
+}
+
+.spines {
+  background:
+    linear-gradient(var(--mark-a), var(--mark-a)) 0 100% / 22% 90% no-repeat,
+    linear-gradient(var(--mark-b), var(--mark-b)) 30% 100% / 22% 70% no-repeat,
+    linear-gradient(var(--mark-a), var(--mark-a)) 60% 100% / 22% 100% no-repeat;
+}
+
+.spines::after {
+  content: '';
+  position: absolute;
+  right: -0.3rem;
+  bottom: 0;
+  width: 22%;
+  height: 80%;
+  background: var(--mark-b);
+  transform-origin: 0 100%;
+  transform: rotate(14deg);
+}
+
+.leaf {
+  background:
+    radial-gradient(circle at 100% 100%, var(--mark-a) 0 70%, transparent 70%) 0 0 / 50% 50% no-repeat,
+    radial-gradient(circle at 0 0, var(--mark-b) 0 70%, transparent 70%) 100% 100% / 50% 50% no-repeat;
+  border-radius: 0 50%;
+}
+
+.caseText {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.caseClient {
+  font-size: clamp(1.5rem, 2.2vw, 2.1rem);
+}
+
+.caseTrade {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-style: italic;
+}
+
+.caseMade {
+  margin-top: 0.6rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: color-mix(in oklab, var(--on-tile) 78%, var(--tile));
+}
+
+.caseYear {
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.caseField {
+  position: absolute;
+  inset: 0;
+}
+
+.caseLabel {
+  position: relative;
+  display: grid;
+  gap: 0.2rem;
+  max-width: 24rem;
+  margin: 1rem;
+  padding: 1.1rem 1.2rem;
+  background: var(--cream);
+  color: var(--on-cream);
+  border-radius: 0.9rem;
+  --on-tile: var(--on-cream);
+  --tile: var(--cream);
+}
+
+/* ------------------------------------------------------------------ process */
+
+.process {
+  background: var(--cream);
+  color: var(--on-cream);
+  --text: var(--on-cream);
+  --muted: color-mix(in oklab, var(--on-cream) 74%, var(--cream));
+  --rule: color-mix(in oklab, var(--on-cream) 22%, transparent);
+}
+
+.processInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 7rem) var(--gut);
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.step {
+  display: grid;
+  align-content: start;
+  gap: 0.3rem;
+  padding-top: 1.2rem;
+  border-top: 1.5px solid var(--rule);
+}
+
+.stepShape {
+  width: 6rem;
+  height: 6rem;
+  margin-bottom: 1.2rem;
+}
+
+.circle {
+  border-radius: 50%;
+  background: var(--tomato);
+}
+
+.arc {
+  border-radius: 0 100% 0 0;
+  background: var(--cobalt);
+}
+
+.square {
+  background:
+    radial-gradient(circle at 0 0, var(--cream) 0 50%, transparent 50%),
+    radial-gradient(circle at 100% 100%, var(--cream) 0 50%, transparent 50%),
+    var(--night);
+}
+
+.stepNo {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.stepTitle {
+  font-size: clamp(2.2rem, 3.6vw, 3rem);
+}
+
+.stepTime {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-style: italic;
+}
+
+.stepText {
+  margin-top: 0.6rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- rates */
+
+.rates {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.dayCard,
+.projectCard {
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  border-radius: 1.2rem;
+}
+
+.dayCard {
+  display: flex;
+  flex-direction: column;
+  background: var(--butter);
+  color: var(--on-butter);
+}
+
+.projectCard {
+  background: var(--cream);
+  color: var(--on-cream);
+}
+
+.rateTitle {
+  font-size: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid currentColor;
+}
+
+.dayList div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--on-butter) 30%, transparent);
+}
+
+.dayList dt {
+  font-weight: 600;
+}
+
+.dayList dd {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.dayNote {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-style: italic;
+  line-height: 1.3;
+}
+
+.projectList li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'name price'
+    'what price';
+  gap: 0.1rem 1.5rem;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--on-cream) 22%, transparent);
+}
+
+.projectList li:last-child {
+  border-bottom: 0;
+}
+
+.projectName {
+  grid-area: name;
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.projectWhat {
+  grid-area: what;
+  font-size: 0.92rem;
+  color: color-mix(in oklab, var(--on-cream) 76%, var(--cream));
+}
+
+.projectPrice {
+  grid-area: price;
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------- studio */
+
+.studio {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.studioLead {
+  max-width: 36rem;
+  margin-top: 1.5rem;
+  font-size: 1.12rem;
+  color: var(--muted);
+}
+
+.quote {
+  margin-top: 2rem;
+  padding: 1.4rem 1.5rem;
+  background: var(--night);
+  color: var(--on-night);
+  border-radius: 1.2rem 1.2rem 1.2rem 0;
+}
+
+.quote p {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  line-height: 1.2;
+}
+
+.quote cite {
+  display: block;
+  margin-top: 0.8rem;
+  font-size: 0.9rem;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.facts div {
+  padding: 1.3rem 1.3rem 1.4rem;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 1.2rem;
+}
+
+.facts dt {
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.facts dd {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- the band */
+
+.band {
+  position: relative;
+  height: clamp(10rem, 18vw, 15rem);
+  overflow: hidden;
+  border-top: 1.5px solid var(--rule);
+  border-bottom: 1.5px solid var(--rule);
+}
+
+/* ------------------------------------------------------------------ contact */
+
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.contactInfo .secNote {
+  margin-top: 1.3rem;
+}
+
+.contactList {
+  margin-top: 2rem;
+}
+
+.contactList div {
+  padding: 0.8rem 0;
+  border-top: 1.5px solid var(--rule);
+}
+
+.contactList dt {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.contactList dd {
+  font-size: 1.12rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.form {
+  --text: var(--on-cream);
+  --muted: color-mix(in oklab, var(--on-cream) 74%, var(--cream));
+  display: grid;
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--cream);
+  color: var(--text);
+  border-radius: 1.2rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field span,
+.budget legend {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.75rem 0.9rem;
+  font: inherit;
+  color: var(--text);
+  background: transparent;
+  border: 1.5px solid color-mix(in oklab, var(--on-cream) 45%, transparent);
+  border-radius: 0.7rem;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: 2px solid var(--on-cream);
+  outline-offset: 1px;
+}
+
+.budget {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.budget legend {
+  width: 100%;
+  margin-bottom: 0.45rem;
+  padding: 0;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  border: 1.5px solid color-mix(in oklab, var(--on-cream) 45%, transparent);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.pill input {
+  margin: 0;
+  accent-color: var(--on-cream);
+}
+
+.form .button {
+  justify-self: start;
+  background: var(--tomato);
+  color: var(--on-tomato);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--night);
+  color: var(--on-night);
+  --muted: color-mix(in oklab, var(--on-night) 74%, var(--night));
+}
+
+.footerField {
+  position: relative;
+  height: 6rem;
+  overflow: hidden;
+  background: var(--night);
+}
+
+.footerInner {
+  display: grid;
+  gap: 0.45rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.6rem var(--gut) 3rem;
+}
+
+.footerName {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.footerLine {
+  max-width: 44rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.footerCredit {
+  margin-top: 0.5rem;
+  font-size: 0.92rem;
+}
+
+.footerCredit a {
+  border-bottom: 1.5px solid currentColor;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .work {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pell,
+  .patternCase {
+    grid-column: span 2;
+  }
+
+  .second,
+  .fennel,
+  .patternCase {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .patternCase {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .heroArt {
+    width: min(100%, 26rem);
+  }
+
+  .secHead,
+  .rates,
+  .studio,
+  .contact {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .step {
+    grid-template-columns: 5rem minmax(0, 1fr);
+    column-gap: 1.2rem;
+  }
+
+  .stepShape {
+    grid-row: span 4;
+    width: 5rem;
+    height: 5rem;
+  }
+}
+
+@media (max-width: 620px) {
+  .work {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: auto;
+  }
+
+  .pell,
+  .patternCase {
+    grid-column: auto;
+  }
+
+  .pell {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pell .mark {
+    width: 11rem;
+    height: 7.5rem;
+  }
+
+  .patternCase {
+    min-height: 22rem;
+  }
+
+  .facts,
+  .formRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sticker {
+    width: 7rem;
+    padding: 0.9rem;
+    font-size: 0.8rem;
+  }
+
+  .step {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stepShape {
+    grid-row: auto;
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .projectList li {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'name'
+      'what'
+      'price';
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .button,
+  .ghost {
+    transition: transform 120ms ease;
+  }
+}

@@ -8,7 +8,7 @@ above all, is proprietary (see LICENSE, and "Licensing" below).
 
 Tabbied: generative patterns built on css-doodle. npm workspaces - the
 Next.js site at the root consumes the `tabbied` package in
-`packages/tabbied/` (framework-free core + a web component, React, Vue and Svelte wrappers + 338 pattern
+`packages/tabbied/` (framework-free core + a web component, React, Vue and Svelte wrappers + 382 pattern
 presets as JSON in `packages/tabbied/patterns/`, embedded by codegen), the
 `tabbied-mcp` package in `packages/tabbied-mcp/` (the MCP server, shared by
 the site's `/mcp` endpoint and a `tabbied-mcp` stdio bin), and
@@ -240,12 +240,24 @@ and it changed no behavior: same MCP handler, same statelessness, same
 JSON 404); auth, generations, media, and the AI gateway land with the bindings
 they need. See `agent-outputs/20260827-studio-ai-plan.md`.
 
-The export is comfortably inside the platform limits - roughly 13,100 files
-against a 20,000 free-plan ceiling, largest file 3.0 MB against 25 MiB - but
-both are counted per Worker *version*. Don't treat that file count as stable:
+The export is inside the platform limits - roughly 18,600 files against a
+ceiling of 20,000 per Worker version on Workers Free (100,000 on Workers Paid,
+with wrangler 4.34 or later), largest file 3.0 MB against 25 MiB - but both
+are counted per Worker *version*, and on the free plan the headroom is now
+about 1,400 files. Every pattern costs seven: its page and four RSC payloads,
+its preview and its share card, so batch 14's 44 designs added about 300 (all
+300 it was written with would have added about 2,100). A template site with
+no pictures costs about 33: its framed and its bare page with their RSC
+payloads, the two zips and the folders they are made from, its screenshot
+and its share card. The professionals set's hundred added about 3,300, and
+another set that size would not fit on Workers Free.
+The Worker script is separate and small: about 3.4 MiB uncompressed (620 KiB
+gzipped, `npx wrangler deploy --dry-run --outdir <dir>`) against a 64 MiB
+limit that, since September 2026, is the only size check on any plan; no
+pattern data is in it. Don't treat that file count as stable:
 most of it is per-route RSC payloads, and a Next minor can move it a lot (16.3
 cut ~1,400 files off 16.2's output without changing a page). What is stable is
-`public/downloads/`, a flat 6,450 files for 277 sites (the artwork ones ship
+`public/downloads/`, a flat 9,560 files for 377 sites (the artwork ones ship
 their pictures in both packages), so a batch of new template sites is the
 thing most likely to actually threaten the ceiling. `wrangler deploy` prints
 the count it uploaded.
@@ -307,7 +319,7 @@ Four things worth not re-litigating:
 - **The Worker reads the catalog through `env.ASSETS`, not from its bundle.**
   The tools then describe exactly the bytes that deployment serves: a design
   added in the same commit cannot be missing from the catalog an agent queries,
-  and 384 KB of JSON stays out of the Worker.
+  and 490 KB of JSON stays out of the Worker.
 
 `legacy: 'stateless'` is spelled out at the call site even though it is the
 default: it is what keeps 2025-era clients working, and every shipping client
@@ -363,7 +375,7 @@ and *not* `zip` - so CI stayed green while the first Workers deploy died with
 fflate (zero dependencies), so the only thing the packaging step needs is the
 Node that is already running it. Don't reintroduce a PATH lookup here. Two
 details it depends on: every directory gets its own zero-length `<name>/`
-entry, because 106 of the 277 sites reference no image files and their empty
+entry, because 206 of the 377 sites reference no image files and their empty
 `images/` (and the React package's `public/`) would otherwise vanish from
 the download;
 and entries carry the source file's real mtime, which `zip -r` did and fflate
@@ -389,7 +401,7 @@ The two formats are built in opposite directions, and that is the point:
   source to copy - hand-porting is the trap the derive-don't-port strategy
   above exists to avoid.
 - **React is a copy of the page**, because a template page already *is* a plain
-  React component. The only Next.js API any of the 277 uses is `export const
+  React component. The only Next.js API any of the 377 uses is `export const
   metadata`; there is no next/image, next/link, `'use client'` or
   `generateStaticParams` anywhere. So `page.tsx` ships as authored and only the
   frame changes: metadata lifted into `index.html`, workspace imports pointed
@@ -437,7 +449,7 @@ global sheet's stack did reach one template element, the shared
 the download draw the same type.
 
 A site fails loudly rather than shipping broken: more than one CSS module on a
-page, or two hashed names collapsing onto one plain name. All 277 sites
+page, or two hashed names collapsing onto one plain name. All 377 sites
 package, so `KNOWN_UNSUPPORTED` is empty - anything that throws is a new
 problem and exits non-zero.
 
@@ -509,7 +521,7 @@ Four things worth not re-litigating:
   footer) and an edit reaches all of them; the generator fails the build if
   they don't currently agree.
 
-All 277 sites are annotated. The 272 bespoke pages were done by
+All 377 sites are annotated. The 372 bespoke pages were done by
 `scripts/annotate-templates.mjs`, a one-time codemod (`npm run
 annotate:templates`) - run it after adding a new bespoke template, and note it
 skips any page already carrying `data-edit-root`, so a hand-annotated page is
@@ -582,8 +594,9 @@ from the download, had the footer and nothing else. Each of them now renders
 `components/template/TemplateMenu` in its header: a copy of the nav's links
 (same `data-edit` ids, which is allowed, and the editable gate checks they
 agree) behind a "Menu" toggle. The 30 minimal templates, the 70 artwork
-ones, the 50 small-business ones and the 50 picture-led ones were built
-with it, so 257 of the 277 carry one. Four things it depends on:
+ones, the 50 small-business ones, the 50 picture-led ones and the 100
+professionals ones were built with it, so 357 of the 377 carry one. Four
+things it depends on:
 
 - **It is a `<details>`, because the HTML package has no React left.** Open
   and shut are the browser's own there. Closing on a followed link, an
@@ -797,6 +810,52 @@ vectors), `art-silhouette`, `art-pictogram` and `art-manual` (one ink), and
   crate label) keeps it light on a dark palette by deriving it with relative
   color from the ground, not by a role of its own.
 
+## The professionals set - a hundred simple sites
+
+The last 100 entries in `lib/templateSites.ts` (2026-10-08, seed prefix
+`pro-`) are single-page sites for the people who most often need a plain,
+credible website: CPAs, bookkeepers and tax preparers, lawyers, mediators
+and notaries, realtors, appraisers and inspectors, tradespeople,
+clinicians and therapists, coaches, tutors and freelancers. Each leads
+with a design no earlier template leads with: every one of batch 14's 44,
+and 56 older designs that had only ever been secondary. None has a
+picture; the lead design is the imagery, in the hero and at least two more
+places, and each layout is taken from an object of the trade (an engraved
+banknote, a patent drawing sheet, a lobby directory, an inspection report,
+a costume plot, a README). All follow the small-business set's
+any-palette rules above, and every page lost nothing under the five
+stress palettes when it was written.
+
+They were written in parallel by twenty agents, five pages each, against
+one shared `next dev`, and each page was held to a self-check before any
+build: the stress palettes fitted by `fitPalette` and measured the way
+`e2e/palette-fit.spec.ts` measures (on the root rule's roles, since the
+page was not annotated yet), the phone-menu gate, overflow at 390px, ASCII,
+every hex in `page.tsx` one of the roles, the lead design drawn three
+times, and the Google Fonts answer naming every family. Then one pass
+registered, annotated (both codemods) and built them. Things learned:
+
+- **Write the page unannotated and let the codemods do the rest.** The
+  root rule declares the roles; `annotate-templates.mjs` moves them inline
+  and adds `data-edit-root`, so an author who adds either makes the codemod
+  skip the whole page. Of what `annotate-orphan-text.mjs` then reports, the
+  footer's "Patterns by <a>Tabbied</a>." is a hundred of the 109 entries
+  (text beside a link, left as on every older page).
+- **Chromium here reaches Google Fonts only through the proxy**, and only
+  when launched with it (`proxy: { server: process.env.HTTPS_PROXY,
+  bypass: 'localhost,127.0.0.1' }`) and given a context with
+  `ignoreHTTPSErrors`, since the proxy's CA is not in Chromium's store;
+  without both every font file fails and `generate-template-shots.mjs`
+  refuses every shot. Twenty checkers at once
+  still lost random font files and the root layout's Typekit
+  (`ERR_TOO_MANY_RETRIES`); those runs were retried, not read as page bugs.
+- **A global `td:not([align])` rule** in `styles/globals.css` beats a
+  one-class `text-align` on a cell; a template aligns its table cells with
+  two classes.
+- **Some designs paint with color 0**, not just their ground: `coil` draws
+  each ring's hub in it, so a `'transparent'` there leaves the rings with no
+  hole. Look at the preview before making color 0 transparent.
+
 ## Template screenshots on the cards
 
 Every template has a screenshot in `public/template-shots/<slug>.webp`: the
@@ -878,8 +937,9 @@ re-litigating:
   itself, so a large batch of one look sits together on the last pages.
   The first 177 were laid out by `spreadTemplates` and frozen as they were
   first published; the fifty small-business sites were appended after them
-  (2026-09-26), spread among themselves, and the fifty picture-led sites
-  (2026-09-27, `pic-`) after those.
+  (2026-09-26), spread among themselves, the fifty picture-led sites
+  (2026-09-27, `pic-`) after those, and the hundred professionals sites
+  (2026-10-08, `pro-`) after those.
 - **The first cards are picked by hand.** `GALLERY_ORDER` is `GALLERY_LEAD`,
   twenty-three templates chosen for the top of the first page (fifteen on
   2026-10-02, eight more after them the same day), then `GALLERY_SPREAD`,
@@ -1004,7 +1064,7 @@ it hairline at the ~20px the navs draw it at. Scale the box, never the stroke.
 
 **The wordmark's font is declared by `Logo` itself**, not by a route and not
 by the root layout. `plexMono` and `ebGaramond` are applied by the routes that
-use them; the lockup is in a dozen mastheads and in none of the 277 template
+use them; the lockup is in a dozen mastheads and in none of the 377 template
 pages, so the component that draws the word is the only place that knows
 where the font is actually read.
 
@@ -1348,7 +1408,7 @@ another). Five things worth not re-litigating:
   (`components/template/ChooseTemplate.tsx`): how many are chosen, what this
   one costs, and at the limit the chosen ones and "Request more". The page
   learns what is chosen from `GET /api/account/templates`, read once per
-  page into a small store (`lib/myTemplates.ts`) the 277 gallery cards
+  page into a small store (`lib/myTemplates.ts`) the 377 gallery cards
   share. Someone who opens a zip's URL directly is held to the same five.
 - **A click and a fetch are answered differently.** A navigation (a download
   link, told by `Sec-Fetch-Mode`) is sent where the answer is: to
@@ -1419,16 +1479,16 @@ they stay reachable from the framed template preview and from the account.
 The rest of this section describes the flow as built, for when it comes back.
 
 `/studio` takes a description of a business and `/studio/results` answers with
-three template sites. Studio answers with what the repo actually has: 277
-finished template sites, each on one of the 338 patterns and one of the 437
+three template sites. Studio answers with what the repo actually has: 377
+finished template sites, each on one of the 382 patterns and one of the 437
 palettes, each with a real page and a real zip. (The AI tier this was designed
 against - `agent-outputs/20260827-studio-ai-plan.md` - has since landed; see
 below. The matcher was not replaced by it.)
 
 - **`lib/studioMatch.ts` is pure and isomorphic; `lib/studioDirections.ts` is
-  server-only.** The index - 277 entries of names, palettes and vocabulary - is
+  server-only.** The index - 377 entries of names, palettes and vocabulary - is
   built at build time and passed to the client as plain data. Importing the
-  catalog (384 KB) or the template data into the browser to match against it is
+  catalog (490 KB) or the template data into the browser to match against it is
   the thing this split exists to prevent.
 - **Everyday words are mapped onto the closed catalog vocabulary**
   (`packages/tabbied/scripts/catalog-vocabulary.mjs`), and moods are scored by
@@ -1532,7 +1592,7 @@ the template and shows the result.
   package imports `tabbied` from esm.sh, pinned, which is right for a stranger
   who unzipped it years later and wrong for this site drawing its own preview.
   `scripts/build-preview-runtime.mjs` bundles `hydratePatterns` plus the whole
-  catalog (338 designs, 108 KB gzipped, cached across previews) into
+  catalog (382 designs, 138 KB gzipped, cached across previews) into
   `public/studio/preview-runtime.js`, and the shell rewrites that one script
   tag. Serving `tabbied/dist` raw instead does not
   work: `register.js` does a bare `import 'css-doodle'` that no browser
@@ -1571,7 +1631,7 @@ the template and shows the result.
   `planEdits`, which is pure and so runs in the Worker with no DOM; one repair
   retry; a second failure writes the three-string `directionToEdits` floor as
   revision 1 with `source: 'fallback'`, and the workspace says so. Because the
-  document is keyed by slot id, **this reaches all 277 templates today** -
+  document is keyed by slot id, **this reaches all 377 templates today** -
   `data-edit-copy` roles matter only for the cheap card-stage preview.
 - **Sites are pinned and versioned.** `site` records `specVersion` and a
   SHA-256 of the packaged `index.html` it was authored against; `GET
@@ -1679,7 +1739,7 @@ whatever text Studio wrote, so putting them back is a UI change.
   otherwise, which once made a third of the losses look like the fit's.
 - **The preview runtime carries the whole catalog.** It used to bundle the
   231 designs the packaged templates mount, which was right while a preview
-  could only re-color a field; a shuffle can swap to any of the 338, and a
+  could only re-color a field; a shuffle can swap to any of the 382, and a
   design missing from the bundle hydrates to nothing with a console warning.
 - **The download is rebuilt where the changes are.** The customizer's
   Download menu fetches the packaged `<slug>-html.zip`, applies the document
@@ -1926,7 +1986,7 @@ of which repeats its README section. Four things worth not re-litigating:
   on the host when it mounts; Svelte writes a spread `style` attribute whole
   on every change, which would take them away and let the oversized grid
   canvas spill out of its box. React's placeholder is left without them
-  because the 277 packaged templates are derived from its markup.
+  because the 377 packaged templates are derived from its markup.
 - **The browser half is tested from the site, not from a framework app.**
   `app/package-test/WrappersProbe.tsx` calls the action the way Svelte does
   (attributes written whole, then `update`) and mounts the Vue component with
@@ -2162,6 +2222,76 @@ things keep a design under it:
   rings where the design offers 12 to 28. The cap is the largest count the
   grid option offers; the eight such designs carry one.
 
+## Batch 14 - 44 designs that know where they sit
+
+Gallery orders 4000-4999. 300 were written, in twelve families of 25 (Loom,
+Wagara, Illusion, Drift, Grove, Masonry, Atomic, Orbit, Pantry, Tessellate,
+Press, Papercraft), each drawn from a subject rather than one primitive, and
+44 were kept after looking at them (2026-10-08). The other 256 left the
+definitions as well as the catalog, so regenerating cannot bring them back;
+the history before that commit has them. Atomic and Pantry kept nothing.
+They hold batches 11-13's promise (native SVG with no caveat) and add what
+those never used: css-doodle's 2D noise (`@rn`, so neighboring cells get
+neighboring values: Jet Stream's flow field, Aquarelle's washes, Anabranch's
+braided channels) and the cell's place in the sheet (`@x`/`@X`, `@dx`/`@dy`,
+the distance from the middle), which is how Regimental keeps a stripe's ink
+along its diagonal and Vanishing Point and Globe center on the sheet.
+`scripts/pattern-gen/pattern-defs-14/` holds one file per family, and the
+catalog metadata lives in each definition, so `generate-batch14.mjs` never
+writes a design without its tags. `check-batch14.mjs <letter>` renders one
+family straight from its definitions (render gate, preview sheets, SVG parity,
+cost, `FREQ=0.4` to see the slider thin it), which is what let twelve be
+written side by side. Things the batch learned, all silent when wrong (some
+from designs that were cut):
+
+- **`z-index` takes an integer.** `@r(1, 9)` rolls a fraction and the
+  declaration is dropped; `@ri(1, 9)`.
+- **`@var(--x)` is written out as `var(--x)`**, so it paints but cannot be
+  read inside `@calc` or `@match`. `$(x)` reads a per-cell `--x: @r(...)` (or
+  `@rn`) back as a number when the CSS is generated, so one roll can drive
+  several properties; `$deg(x)` adds the unit. `rotate(@calc(...) deg)` with a
+  space is invalid, and so is a bare `0` as an `@match` result.
+- **Compute a value once per cell and read it back.** Every `@calc` and `$()`
+  is evaluated by css-doodle in JavaScript, cell by cell, so a polygon whose
+  every vertex repeats the same sine sum took two seconds to reshuffle (a
+  streamgraph, since cut). `--h: $(...)` once and `$(h)` at each vertex
+  brought it, and a dozen others, from 400-2000 ms to 100-250 ms. css-doodle also caches a
+  parsed expression by its text, and `@x` is pasted in as a number, so an
+  expression over `@x` is parsed afresh in every cell; declare `--ix: @x`
+  once and write the expression over `$(ix)`, and its text is the same in
+  every cell and parses once. Two traps inside `$()`: a
+  comparison like `(k == 0)` evaluates to 0 in a custom property, and four
+  variable reads in a row that expand to the same text are taken for a loop
+  and give 0. Read each variable once and decode picks arithmetically.
+- **Noise is bell-shaped**: `@rn(0, 1)` lands in 0.27-0.73 nine times in ten.
+  Draw from a wider range and clamp to reach the ends.
+- **`@pd(@m(@X, @p(...)))` deals one pick per column**, which is how a stripe
+  holds one ink down the sheet; a sheet-wide pick rolled once is the first
+  draw, so two seeds can agree on it and a design whose only reseed change is
+  that one value fails the render gate's "reseed changed nothing".
+- **Wave Fans paints its top row outside the frequency gate**: the fans
+  that would come from above the sheet are laid under the first row
+  whatever the slider says, so a thinned sheet keeps a band along its top
+  edge. Every other kept design sits inside the one gate (measured with the
+  gate shut on a transparent ground).
+- **A preview is drawn with a full frequency's gate fully open.** The
+  package turns `@random(1)` into `@random(0.999)`, and with the preview's
+  fixed seed the dropped cell was the same one in every design rolling the
+  same number of values per cell: 11 of one family's 25 previews had a hole.
+  `generate-previews.mjs` passes just under 1 instead: the gate rolls the
+  same values, so only a design that dropped a cell draws differently, from
+  that cell on. The editor still drops about one cell in a thousand.
+- **The catalog grew by more than its count in the browser.** The gallery
+  imports every design (`patterns.generated.js`: 63 KB gzipped before the
+  batch, 89 KB after, and 276 KB with all 300), which it needs. Batch-14
+  designs are heavier than the average because their outlines are long
+  polygons on the host. The docs pages import a handful by name and still
+  receive the shared chunk holding all of them, so they grew by the same
+  amount; a per-design import (`tabbied/patterns/<slug>`) is the likely way to
+  ship them only what they draw.
+- The converter limits the families met and worked around are listed in
+  docs/svg-export.md ("Batch 14's workarounds").
+
 ## Importing a pattern authored outside this repo
 
 The September 2026 drop was 60 hand-authored designs from a standalone
@@ -2226,7 +2356,7 @@ is mostly mechanical, and four things are not:
 
 A pattern moves three ways, and `prefers-reduced-motion` has to stop all of
 them. The `redrawInterval` timer is the obvious one. The second is that
-**all 338 designs declare a ~400ms `transition`** - the thing that makes a
+**all 382 designs declare a ~400ms `transition`** - the thing that makes a
 redraw morph rather than cut - and it fires on any re-render, including ones
 nobody asked for: `grid` and `cover` re-derive their cell grid on resize, so
 turning a phone would otherwise animate every cell on the page. The third
@@ -2267,7 +2397,7 @@ rendered patterns to true vector SVG. Rules that must not regress:
   (9 designs) documents limitations - filter-based effects or ≤1px
   deviations. The option-level form still works but no design uses it: the
   Shadow toggle that was its only user was removed rather than left as an
-  export trap. Everything else (297) is clean.
+  export trap. Everything else (341) is clean.
   See docs/svg-export.md for the complete lists and reasons.
 - **The tier is measured, not read off the source.** Ten of the drop's
   designs throw; eighteen more export a plausible SVG that is not what the

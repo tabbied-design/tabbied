@@ -1,0 +1,65 @@
+{
+  "name": "Guilloche",
+  "slug": "guilloche",
+  "galleryOrder": 4005,
+  "galleryWhite": true,
+  "description": "Rings linked into a mesh, every ring passing over one neighbor and under the next, the under strand broken where it crosses, like interlaced chain.",
+  "tags": [
+    "rings",
+    "circles",
+    "lattice",
+    "braids"
+  ],
+  "mood": [
+    "elegant",
+    "technical"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "wallpaper",
+    "card-texture",
+    "textile"
+  ],
+  "palette": [
+    "#0F1626",
+    "#F5F0E1",
+    "#FF6E6C",
+    "#FFC857",
+    "#4ECDC4"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "6x9",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --k: @p(var(--color1), var(--color2), var(--color3), var(--color4)); @random(${shapeFrequency}) { :before { content: ''; position: absolute; inset: -20%; background: @p(@var(--k)); -webkit-mask: @var(--over); mask: @var(--over); -webkit-mask-composite: source-in; mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; inset: -20%; background: @var(--k); -webkit-mask: @var(--under); mask: @var(--under); -webkit-mask-composite: source-in; mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --over: radial-gradient(circle closest-side at 50% 50%, transparent 83%, #000 83% 96%, transparent 96%), conic-gradient(from 0deg, #000 0 90deg, transparent 90deg 180deg, #000 180deg 270deg, transparent 270deg 360deg); --under: radial-gradient(circle closest-side at 50% 50%, transparent 83%, #000 83% 96%, transparent 96%), conic-gradient(from 90deg, #000 0 90deg, transparent 90deg 180deg, #000 180deg 270deg, transparent 270deg 360deg), radial-gradient(ellipse 100% 100% at -21.43% 50%, #000 39%, transparent 39% 50.5%, #000 50.5%), radial-gradient(ellipse 100% 100% at 121.43% 50%, #000 39%, transparent 39% 50.5%, #000 50.5%), radial-gradient(ellipse 100% 100% at 50% -21.43%, #000 39%, transparent 39% 50.5%, #000 50.5%), radial-gradient(ellipse 100% 100% at 50% 121.43%, #000 39%, transparent 39% 50.5%, #000 50.5%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

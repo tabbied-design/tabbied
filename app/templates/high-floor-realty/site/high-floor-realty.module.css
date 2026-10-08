@@ -1,0 +1,1142 @@
+/* ==========================================================================
+   HIGH FLOOR REALTY - condos and lofts, Iris Calder
+   A building lobby: limestone walls, a navy felt directory board with its
+   letters pressed into the grooves, brass fittings. The hero is a window
+   on the thirty-first floor looking straight down at the city, which is
+   the lead design: towers leaning out from the middle of the sheet. The
+   listings are the lobby directory, read top down; the guide is two
+   elevator cars, one going up for buyers and one coming down for sellers.
+   Condensed display type for the signage, a plain grotesque for reading.
+   ========================================================================== */
+
+.page {
+  --stone: #ebe5da; /* role 0: the lobby wall, the page ground */
+  --navy: #1e2840;
+  --brass: #c4923e;
+  --brick: #b4523a;
+  --teal: #2c6d73;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --display: 'Big Shoulders Display', 'Arial Narrow', sans-serif;
+  --sans: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--navy);
+  --on-navy: var(--stone);
+  --on-brass: var(--navy);
+  --on-brick: var(--stone);
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--stone));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 42%, transparent);
+  --panel: color-mix(in oklab, var(--stone) 91%, var(--navy));
+  --panel-warm: color-mix(in oklab, var(--stone) 88%, var(--brass));
+  --navy-muted: color-mix(in oklab, var(--on-navy) 76%, var(--navy));
+  --navy-rule: color-mix(in oklab, var(--on-navy) 20%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--stone);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--stone) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--navy));
+    --on-navy: color-mix(in oklab, oklch(from var(--navy) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--navy));
+    --on-brass: oklch(from var(--brass) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-brick: oklch(from var(--brick) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, h4) {
+  margin: 0;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem var(--gut);
+  background: var(--stone);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  column-gap: 0.7rem;
+  align-items: center;
+  line-height: 1;
+}
+
+/* An elevator's floor indicator: the number in a brass ring. */
+.brandFloor {
+  grid-row: 1 / 3;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 3px var(--brass),
+    inset 0 0 0 4px var(--text);
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.brandSub {
+  margin-top: 0.15rem;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  padding: 0.25rem 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barCall {
+  padding: 0.6rem 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: var(--navy);
+  color: var(--on-navy);
+  border-radius: 3px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--stone);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.kicker {
+  display: inline-block;
+  margin: 0 0 1.4rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid var(--rule-strong);
+}
+
+.heroTitle {
+  font-family: var(--display);
+  font-size: clamp(3.4rem, 7.6vw, 7.2rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+}
+
+.heroTitle span {
+  display: block;
+  font-weight: 500;
+}
+
+.heroLead {
+  max-width: 34rem;
+  margin: 1.8rem 0 0;
+  font-size: 1.1rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 3px;
+}
+
+.button {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--navy) 84%, var(--text));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1.5px var(--text);
+}
+
+.ghost:hover {
+  background: var(--panel);
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  max-width: 34rem;
+  margin: 2.6rem 0 0;
+}
+
+.heroFacts div {
+  display: flex;
+  flex-direction: column-reverse;
+  padding-top: 0.7rem;
+  border-top: 3px solid var(--text);
+}
+
+.heroFacts dt {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 2.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* The window: a heavy navy frame with a cross of glazing bars, and the
+   city far below it. */
+.heroView {
+  margin: 0;
+  justify-self: center;
+  width: min(100%, 32rem);
+}
+
+.window {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 0.8rem solid var(--navy);
+  box-shadow:
+    0 0 0 1px var(--rule-strong),
+    0 24px 48px -28px color-mix(in oklab, var(--text) 60%, transparent);
+}
+
+.window::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent calc(50% - 7px), var(--navy) calc(50% - 7px) calc(50% - 5px), var(--stone) calc(50% - 5px) calc(50% + 5px), var(--navy) calc(50% + 5px) calc(50% + 7px), transparent calc(50% + 7px)),
+    linear-gradient(transparent calc(36% - 7px), var(--navy) calc(36% - 7px) calc(36% - 5px), var(--stone) calc(36% - 5px) calc(36% + 5px), var(--navy) calc(36% + 5px) calc(36% + 7px), transparent calc(36% + 7px));
+  box-shadow: inset 0 0 0 6px var(--stone), inset 0 0 0 8px var(--navy);
+}
+
+.viewCaption {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.viewFloor {
+  flex: none;
+  padding: 0.3rem 0.6rem;
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  background: var(--brass);
+  color: var(--on-brass);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec,
+.directory {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.directory {
+  padding-top: clamp(1rem, 3vw, 2rem);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 1.3rem;
+  border-bottom: 3px solid var(--text);
+}
+
+.secTitle {
+  font-family: var(--display);
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
+  font-weight: 800;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.secNote {
+  max-width: 36rem;
+  margin: 0;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ the directory
+   Navy felt with fine horizontal grooves, a brass frame, letters set in
+   spaced capitals as if pressed into the felt one by one. */
+
+.board {
+  padding: clamp(1.2rem, 3vw, 2.4rem) clamp(1rem, 3vw, 2.6rem);
+  background-color: var(--navy);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 7px,
+    color-mix(in oklab, var(--on-navy) 7%, transparent) 7px 8px
+  );
+  color: var(--on-navy);
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 0.55rem var(--brass),
+    0 0 0 calc(0.55rem + 1px) var(--rule-strong);
+}
+
+.boardHead {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr) auto;
+  gap: 1rem;
+  margin: 0;
+  padding-bottom: 0.8rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--navy-muted);
+  border-bottom: 1px solid var(--navy-rule);
+}
+
+.boardList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.boardRow {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1.3fr) minmax(0, 2fr) minmax(0, 0.9fr) 9.5rem;
+  gap: 0.4rem 1rem;
+  align-items: center;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid var(--navy-rule);
+  text-transform: uppercase;
+}
+
+.boardFloor {
+  font-family: var(--display);
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.boardUnit {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.boardUnit strong {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
+.boardUnit span {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  color: var(--navy-muted);
+}
+
+.boardMetas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.2rem 1rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--navy-muted);
+}
+
+.boardPrice {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-align: right;
+}
+
+.boardStatus,
+.boardQuiet {
+  justify-self: end;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-align: right;
+}
+
+.boardStatus {
+  padding: 0.35rem 0.6rem;
+  background: var(--brass);
+  color: var(--on-brass);
+  border-radius: 2px;
+}
+
+.boardQuiet {
+  color: var(--navy-muted);
+}
+
+.boardFoot {
+  margin: 1.1rem 0 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--navy-muted);
+}
+
+/* ------------------------------------------------------------------ aerial */
+
+.aerial {
+  position: relative;
+  height: clamp(130px, 15vw, 210px);
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  overflow: hidden;
+  border-block: 6px solid var(--navy);
+}
+
+/* --------------------------------------------------------------- buildings */
+
+.buildings {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.building {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.5rem 1.4rem;
+  background: var(--panel);
+  border-radius: 4px;
+}
+
+/* A small elevation of the building: lit windows on a navy tower, as tall
+   as the building is. */
+.elevation {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.7rem;
+  height: 5.5rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid var(--text);
+}
+
+.elevation::before {
+  content: '';
+  order: -1;
+  width: 2.4rem;
+  height: var(--tower, 100%);
+  background:
+    repeating-linear-gradient(90deg, transparent 0 5px, var(--navy) 5px 8px),
+    repeating-linear-gradient(to bottom, var(--navy) 0 4px, var(--brass) 4px 7px);
+  box-shadow: 0 0 0 2px var(--navy);
+}
+
+.tall .elevation::before {
+  --tower: 100%;
+}
+
+.mid .elevation::before {
+  --tower: 68%;
+}
+
+.low .elevation::before {
+  --tower: 38%;
+}
+
+.floorsBig {
+  font-family: var(--display);
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 0.85;
+}
+
+.floorsLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.buildingName {
+  font-family: var(--display);
+  font-size: 1.85rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.buildingAddress {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.buildingFacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 1rem;
+  margin: 1rem 0;
+  font-size: 0.84rem;
+}
+
+.buildingFacts div {
+  padding: 0.4rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.buildingFacts dt {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.buildingFacts dd {
+  margin: 0;
+}
+
+.buildingNote {
+  margin: auto 0 0;
+  padding-top: 0.9rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  border-top: 1px solid var(--rule-strong);
+}
+
+/* ------------------------------------------------------------------- guide
+   Two elevator cars. Each stop is a round call button. */
+
+.cars {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 3vw, 2.5rem);
+}
+
+.car {
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--panel-warm);
+  border: 2px solid var(--text);
+  border-radius: 4px;
+}
+
+.carHead {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 1rem;
+  align-items: center;
+  padding-bottom: 1.2rem;
+  margin-bottom: 0.4rem;
+  border-bottom: 2px solid var(--text);
+}
+
+.carArrow {
+  grid-row: span 2;
+  width: 0;
+  height: 0;
+  border-left: 1.1rem solid transparent;
+  border-right: 1.1rem solid transparent;
+  border-bottom: 1.6rem solid var(--text);
+}
+
+.carDown {
+  border-bottom: 0;
+  border-top: 1.6rem solid var(--text);
+}
+
+.carTitle {
+  font-family: var(--display);
+  font-size: 2.4rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.carNote {
+  margin: 0.3rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.stops {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.stops li {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  column-gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.stops li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.stopButton {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 2px var(--text),
+    inset 0 0 0 5px var(--panel-warm),
+    inset 0 0 0 6px var(--rule-strong);
+}
+
+.stopTitle {
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.stopText {
+  margin: 0.3rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- sales */
+
+.salesGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+  padding-top: 1.6rem;
+  border-top: 3px solid var(--text);
+}
+
+.salesIntro .secNote {
+  margin-top: 1rem;
+}
+
+.salesView {
+  position: relative;
+  height: 15rem;
+  margin-top: 2rem;
+  overflow: hidden;
+  border: 0.5rem solid var(--navy);
+}
+
+.tableWrap {
+  min-width: 0;
+}
+
+.sales {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.sales th,
+.sales td {
+  padding: 0.9rem 0.6rem;
+  text-align: right;
+  border-bottom: 1px solid var(--rule);
+}
+
+.sales thead th {
+  padding-top: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--text);
+}
+
+.sales thead th:first-child,
+.sales tbody th {
+  padding-left: 0;
+  text-align: left;
+}
+
+.sales td {
+  font-variant-numeric: tabular-nums;
+}
+
+.saleUnit {
+  display: block;
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.saleBuilding {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.82rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+  padding-top: 1.6rem;
+  border-top: 3px solid var(--text);
+}
+
+.desk .secNote {
+  margin: 1rem 0 1.6rem;
+}
+
+.address {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.contactLine {
+  margin: 0.9rem 0 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.contactLine + .contactLine {
+  margin-top: 0.3rem;
+}
+
+.contactLine a {
+  border-bottom: 1.5px solid var(--rule-strong);
+}
+
+.hours {
+  margin: 1.6rem 0 0;
+  font-size: 0.92rem;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.hours dt {
+  font-weight: 600;
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+  color: var(--muted);
+}
+
+.license {
+  margin: 1.2rem 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--panel);
+  border-top: 6px solid var(--navy);
+  border-radius: 4px;
+}
+
+.formTitle {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field label,
+.field legend {
+  padding: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--stone);
+  border: 1px solid var(--rule-strong);
+  border-radius: 3px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.picks input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.picks label {
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  background: var(--stone);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.picks input:checked + label {
+  background: var(--navy);
+  color: var(--on-navy);
+  border-color: var(--navy);
+}
+
+.picks input:focus-visible + label {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.9rem 1.5rem;
+  font-family: var(--sans);
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--on-navy);
+  background: var(--navy);
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--navy) 84%, var(--text));
+}
+
+.formNote {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.footSkyline {
+  position: relative;
+  height: 96px;
+  overflow: hidden;
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+  font-size: 0.88rem;
+}
+
+.footInner p {
+  margin: 0.35rem 0 0;
+  color: var(--navy-muted);
+}
+
+.footer .footName {
+  margin: 0 0 0.8rem;
+  font-family: var(--display);
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--on-navy);
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  color: var(--on-navy);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .boardRow {
+    grid-template-columns: 4.2rem minmax(0, 1.2fr) minmax(0, 1.3fr) minmax(0, 0.9fr) 8.5rem;
+  }
+
+  .boardMetas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .buildings {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .secHead,
+  .salesGrid,
+  .contactGrid,
+  .cars {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroView {
+    width: min(100%, 26rem);
+  }
+}
+
+@media (max-width: 720px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .boardHead {
+    display: none;
+  }
+
+  .boardRow {
+    grid-template-columns: 3.4rem minmax(0, 1fr) auto;
+    gap: 0.25rem 0.8rem;
+  }
+
+  .boardFloor {
+    grid-row: span 3;
+    align-self: start;
+    font-size: 2rem;
+  }
+
+  .boardUnit {
+    grid-column: 2 / 3;
+  }
+
+  .boardPrice {
+    grid-column: 3;
+    grid-row: 1;
+    font-size: 1.35rem;
+  }
+
+  .boardUnit strong {
+    letter-spacing: 0.08em;
+  }
+
+  .boardMetas {
+    grid-column: 2 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.1rem 0.9rem;
+    font-size: 0.72rem;
+  }
+
+  .boardStatus,
+  .boardQuiet {
+    grid-column: 2 / -1;
+    justify-self: start;
+    text-align: left;
+  }
+
+  .buildings,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroFacts dd {
+    font-size: 2.2rem;
+  }
+
+  .hideSmall {
+    display: none;
+  }
+}

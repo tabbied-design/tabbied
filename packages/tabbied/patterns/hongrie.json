@@ -1,0 +1,65 @@
+{
+  "name": "Hongrie",
+  "slug": "hongrie",
+  "galleryOrder": 4026,
+  "galleryWhite": true,
+  "description": "Point de Hongrie parquet: planks mitered into stacked chevrons, every plank its own shade of oak, honey and walnut.",
+  "tags": [
+    "chevrons",
+    "zigzags",
+    "stripes"
+  ],
+  "mood": [
+    "elegant",
+    "calm"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "wallpaper",
+    "textile",
+    "card-texture"
+  ],
+  "palette": [
+    "#3A281C",
+    "#C8955A",
+    "#A8743F",
+    "#E0B47A",
+    "#7A4E2D",
+    "#B9824C"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "5x8",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @random(${shapeFrequency}) { :before { content: ''; position: absolute; left: 0%; top: -100%; width: 100%; height: 200%; background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-clip-path: @var(--hl); clip-path: @var(--hl); -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: 0%; top: -100%; width: 100%; height: 200%; background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-clip-path: @var(--hr); clip-path: @var(--hr); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --hl: polygon(1.4% 51.6%, 48.6% 75.2%, 48.6% 123.4%, 1.4% 99.8%, 1.4% 51.6%, 1.4% 51.6%, 1.4% 1.6%, 48.6% 25.2%, 48.6% 73.4%, 1.4% 49.8%, 1.4% 1.6%); --hr: polygon(98.6% 99.8%, 51.4% 123.4%, 51.4% 75.2%, 98.6% 51.6%, 98.6% 99.8%, 98.6% 99.8%, 98.6% 49.8%, 51.4% 73.4%, 51.4% 25.2%, 98.6% 1.6%, 98.6% 49.8%); } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

@@ -1,0 +1,1159 @@
+.page {
+  --blush: #f4e4dc;
+  --aubergine: #231a2e;
+  --vermilion: #c63d2f;
+  --marigold: #e2a33b;
+  --teal: #2f5d62;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 76rem;
+  --display: 'Libre Caslon Display', 'Libre Caslon Text', Georgia, serif;
+  --serif: 'Libre Caslon Text', Georgia, 'Times New Roman', serif;
+
+  --text: var(--aubergine);
+  --on-aubergine: var(--blush);
+  --on-vermilion: var(--blush);
+  --on-marigold: var(--aubergine);
+  --on-teal: var(--blush);
+  --sheet: var(--blush);
+
+  --muted: color-mix(in oklab, var(--text) 72%, var(--blush));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 48%, transparent);
+  --fold: color-mix(in oklab, var(--aubergine) 30%, transparent);
+  --spine: color-mix(in oklab, var(--vermilion) 88%, var(--aubergine));
+
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.65;
+  background: var(--blush);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Black or white by the lightness of the surface, tinted toward the ink.
+   The sheet (the flaps, cards and form) is the blush pushed away from the
+   middle, so the jacket's paper stays paper on any ground. */
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--blush) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--aubergine));
+    --on-aubergine: color-mix(in oklab, oklch(from var(--aubergine) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--aubergine));
+    --on-vermilion: oklch(from var(--vermilion) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-marigold: oklch(from var(--marigold) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-teal: oklch(from var(--teal) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --sheet: color-mix(in oklab, var(--blush) 45%, oklch(from var(--blush) clamp(0, (l - 0.62) * 1000, 1) 0 0));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, h4) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.9rem var(--gut);
+  background: var(--blush);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.4vw, 2.4rem);
+}
+
+.nav a {
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barCta {
+  padding: 0.5rem 1rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  box-shadow: inset 0 0 0 1px var(--text);
+}
+
+.barCta:hover {
+  background: var(--aubergine);
+  color: var(--on-aubergine);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--blush);
+}
+
+/* -------------------------------------------------------------------- hero
+   The new book's dust jacket, unfolded flat: back flap, back cover, spine,
+   front cover, front flap. */
+
+.hero {
+  padding: clamp(2rem, 4vw, 3.4rem) var(--gut) 0;
+}
+
+.jacket {
+  display: grid;
+  grid-template-columns: minmax(0, 0.56fr) minmax(0, 1fr) minmax(0, 0.16fr) minmax(0, 1fr) minmax(0, 0.56fr);
+  grid-template-areas: 'bflap back spine front fflap';
+  max-width: 86rem;
+  margin: 0 auto;
+  box-shadow: 0 34px 60px -36px color-mix(in oklab, var(--aubergine) 70%, transparent);
+}
+
+.panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.panel + .panel::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: linear-gradient(90deg, var(--fold), transparent);
+}
+
+.backFlap,
+.frontFlap {
+  gap: 0.7rem;
+  padding: 1.6rem 1.2rem 1.3rem;
+  background: var(--sheet);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.backFlap {
+  grid-area: bflap;
+}
+
+.frontFlap {
+  grid-area: fflap;
+}
+
+.flapHead {
+  margin: 0;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.flapText {
+  margin: 0 0 0.4rem;
+}
+
+.flapList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-style: italic;
+}
+
+.flapPrice {
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-align: right;
+}
+
+.flapFoot {
+  margin: auto 0 0;
+  padding-top: 0.7rem;
+  font-size: 0.7rem;
+  font-style: italic;
+  color: var(--muted);
+  border-top: 1px solid var(--rule);
+}
+
+.backCover {
+  grid-area: back;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: clamp(1.6rem, 3vw, 2.6rem) clamp(1.4rem, 2.6vw, 2.4rem);
+  background: var(--vermilion);
+  color: var(--on-vermilion);
+}
+
+.blurbs {
+  display: grid;
+  gap: 1.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.blurbQuote {
+  margin: 0;
+  font-size: clamp(0.98rem, 1.3vw, 1.18rem);
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.blurbWho {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.68rem;
+  font-style: normal;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.barcode {
+  align-self: flex-end;
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.6rem 0.7rem 0.45rem;
+  background: var(--sheet);
+  color: var(--text);
+}
+
+.bars {
+  width: 8.5rem;
+  height: 2.8rem;
+  background: repeating-linear-gradient(90deg, var(--text) 0 2px, transparent 2px 3px, var(--text) 3px 4px, transparent 4px 7px, var(--text) 7px 10px, transparent 10px 11px, var(--text) 11px 12px, transparent 12px 15px);
+}
+
+.isbn {
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+}
+
+.spine {
+  grid-area: spine;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.6rem 0 1.4rem;
+  background: var(--spine);
+  color: var(--on-vermilion);
+}
+
+.spineAuthor,
+.spineTitle {
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+}
+
+.spineAuthor {
+  font-size: 0.78rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.spineTitle {
+  font-family: var(--display);
+  font-size: clamp(1.3rem, 1.9vw, 1.8rem);
+  font-style: italic;
+}
+
+/* The publisher's mark: a half-filled ring. */
+.spineMark {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: linear-gradient(90deg, var(--marigold) 50%, transparent 50%);
+  box-shadow: inset 0 0 0 2px var(--marigold);
+}
+
+.frontCover {
+  grid-area: front;
+  aspect-ratio: 2 / 3;
+  padding: 1.5rem clamp(1.4rem, 2.6vw, 2.2rem) 1.8rem;
+  text-align: center;
+  background: var(--vermilion);
+  color: var(--on-vermilion);
+}
+
+.coverPrize {
+  margin: 0;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.coverArt {
+  position: relative;
+  flex: 1;
+  margin: 1.2rem calc(-1 * clamp(1.4rem, 2.6vw, 2.2rem)) 1.4rem;
+  overflow: hidden;
+}
+
+.coverTitle {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 4.2vw, 3.9rem);
+  line-height: 0.95;
+}
+
+.coverTitle em {
+  display: block;
+  font-style: italic;
+}
+
+.coverNovel {
+  margin: 0.6rem 0 0;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.coverAuthor {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  font-family: var(--serif);
+  font-size: clamp(1.1rem, 1.6vw, 1.45rem);
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  border-top: 1px solid currentColor;
+}
+
+.heroCaption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.2rem 2rem;
+  max-width: 86rem;
+  margin: clamp(1.6rem, 3vw, 2.4rem) auto 0;
+}
+
+.heroNote {
+  max-width: 38rem;
+  margin: 0;
+  font-size: 1.05rem;
+  font-style: italic;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.8rem 1.3rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.button {
+  background: var(--aubergine);
+  color: var(--on-aubergine);
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1px var(--text);
+}
+
+.ghost:hover {
+  background: var(--sheet);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut) 0;
+}
+
+.secHead {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secLabel {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0 0 1rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.secLabel::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule-strong);
+}
+
+.secTitle {
+  font-family: var(--display);
+  font-size: clamp(2.5rem, 4.8vw, 4.2rem);
+  line-height: 1;
+}
+
+.secTitle em {
+  font-style: italic;
+}
+
+/* -------------------------------------------------------------------- books */
+
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.6rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.book {
+  display: flex;
+  flex-direction: column;
+}
+
+.miniCover {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  aspect-ratio: 2 / 3;
+  margin-bottom: 1.1rem;
+  padding: 1.6rem 1.2rem 1.3rem;
+  text-align: center;
+  outline: 1px solid currentColor;
+  outline-offset: -0.6rem;
+  box-shadow: 10px 14px 26px -16px color-mix(in oklab, var(--aubergine) 70%, transparent);
+}
+
+.coverVermilion {
+  background: var(--vermilion);
+  color: var(--on-vermilion);
+}
+
+.coverTeal {
+  background: var(--teal);
+  color: var(--on-teal);
+}
+
+.coverMarigold {
+  background: var(--marigold);
+  color: var(--on-marigold);
+}
+
+.coverAubergine {
+  background: var(--aubergine);
+  color: var(--on-aubergine);
+}
+
+/* A small device in the middle of each cover, drawn in its own ink. */
+.miniCover::after {
+  content: '';
+  order: 1;
+  align-self: center;
+  width: 3rem;
+  height: 3rem;
+}
+
+.coverVermilion::after {
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px currentColor;
+  background: radial-gradient(circle, currentColor 0 22%, transparent 24%);
+}
+
+.coverTeal::after {
+  height: 1.8rem;
+  background: repeating-linear-gradient(to bottom, currentColor 0 1px, transparent 1px 0.45rem);
+}
+
+.coverMarigold::after {
+  width: 1.6rem;
+  background: currentColor;
+  clip-path: polygon(40% 0, 60% 0, 70% 22%, 64% 22%, 76% 100%, 24% 100%, 36% 22%, 30% 22%);
+}
+
+.coverAubergine::after {
+  height: 1.5rem;
+  border-radius: 999px 999px 0 0;
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+
+.miniTitle {
+  font-family: var(--display);
+  font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+  font-style: italic;
+  line-height: 1.05;
+}
+
+.miniAuthor {
+  order: 2;
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.bookYear {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+}
+
+.bookTitle {
+  margin-top: 0.2rem;
+  font-family: var(--display);
+  font-size: 1.55rem;
+  line-height: 1.1;
+}
+
+.bookLine {
+  flex: 1;
+  margin: 0.5rem 0 0.8rem;
+  font-size: 0.93rem;
+}
+
+.bookPress {
+  margin: 0;
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.bookPrice {
+  margin: 0.3rem 0 0;
+  padding-top: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-top: 1px solid var(--rule);
+}
+
+/* --------------------------------------------------------------- grain rule */
+
+.grainRule {
+  position: relative;
+  height: clamp(100px, 10vw, 140px);
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------- events */
+
+.eventsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.nextEvent {
+  padding: clamp(1.6rem, 3.4vw, 2.8rem);
+  background: var(--teal);
+  color: var(--on-teal);
+}
+
+.nextEvent .secLabel::after {
+  background: color-mix(in oklab, var(--on-teal) 40%, transparent);
+}
+
+.nextTitle {
+  font-family: var(--display);
+  font-size: clamp(2.2rem, 3.6vw, 3.2rem);
+  line-height: 1.02;
+}
+
+.dateBlock {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 1rem;
+  align-items: end;
+  margin: 1.6rem 0 1.2rem;
+  padding: 1rem 0;
+  border-top: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+}
+
+.dateDay {
+  grid-row: span 2;
+  font-family: var(--display);
+  font-size: 4.6rem;
+  line-height: 0.85;
+}
+
+.dateMonth {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-style: italic;
+  line-height: 1;
+}
+
+.dateTime {
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.nextText {
+  margin: 0 0 1.5rem;
+  font-size: 0.98rem;
+}
+
+.nextEvent .button {
+  background: var(--blush);
+  color: var(--text);
+}
+
+.moreHead {
+  padding-bottom: 0.8rem;
+  font-family: var(--display);
+  font-size: 1.9rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.events {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.event {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  column-gap: 1.2rem;
+  padding: 1.05rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.eventDate {
+  grid-row: span 2;
+  margin: 0.2rem 0 0;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.eventTitle {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+.eventWhere {
+  margin: 0.2rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------- newsletter */
+
+.letter {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  background: var(--sheet);
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+}
+
+.letterArt {
+  position: relative;
+  min-height: 22rem;
+  overflow: hidden;
+  background: var(--aubergine);
+}
+
+.letterBody {
+  padding: clamp(1.8rem, 4vw, 3.2rem);
+}
+
+.letterText {
+  max-width: 34rem;
+  margin: 1.2rem 0 0;
+  font-size: 1.02rem;
+}
+
+.signup {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.4rem 0.6rem;
+  max-width: 32rem;
+  margin-top: 1.6rem;
+}
+
+.signupLabel {
+  grid-column: 1 / -1;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.signup input {
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 0.75rem 0.85rem;
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--blush);
+  border: 1px solid var(--text);
+  border-radius: 0;
+}
+
+.signupButton {
+  padding: 0.75rem 1.2rem;
+  font-family: var(--serif);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-aubergine);
+  background: var(--aubergine);
+  border: 0;
+  cursor: pointer;
+}
+
+.recent {
+  list-style: none;
+  max-width: 32rem;
+  margin: 1.8rem 0 0;
+  padding: 0;
+}
+
+.recent li {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.recentMonth {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.recentTitle {
+  font-style: italic;
+}
+
+/* ------------------------------------------------------------------- rights */
+
+.rightsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.8fr);
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.rights {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2.4rem;
+  margin: 0;
+}
+
+.right {
+  padding: 1rem 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.right dt {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.rightWho {
+  margin: 0.3rem 0 0;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.rightMail {
+  margin: 0.2rem 0 0;
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.rightMail a {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.pressCard {
+  padding: 1.8rem 1.6rem;
+  background: var(--marigold);
+  color: var(--on-marigold);
+}
+
+.pressFigure {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 5rem;
+  line-height: 0.9;
+}
+
+.pressText {
+  margin: 0.6rem 0 0;
+  font-size: 0.98rem;
+}
+
+.pressLink {
+  margin: 1.2rem 0 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.pressLink a {
+  border-bottom: 1px solid currentColor;
+}
+
+.pressSmall {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+/* -------------------------------------------------------------------- write */
+
+.writeGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.writeText {
+  max-width: 30rem;
+  margin: 1.2rem 0 0;
+  font-size: 1.02rem;
+}
+
+.address {
+  margin: 1.8rem 0 0;
+}
+
+.address div {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.address dt {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.address dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.address a {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--sheet);
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field label,
+.field legend {
+  padding: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.65rem 0.8rem;
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--blush);
+  border: 1px solid var(--rule-strong);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible,
+.signup input:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.picks input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.picks label {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.9rem;
+  letter-spacing: 0;
+  text-transform: none;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.picks input:checked + label {
+  background: var(--aubergine);
+  color: var(--on-aubergine);
+  border-color: var(--aubergine);
+}
+
+.picks input:focus-visible + label {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.85rem 1.6rem;
+  font-family: var(--serif);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-aubergine);
+  background: var(--aubergine);
+  border: 0;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+}
+
+.footGrain {
+  position: relative;
+  height: 110px;
+  overflow: hidden;
+  background: var(--vermilion);
+}
+
+.footInner {
+  display: grid;
+  gap: 0.3rem;
+  padding: 2.6rem max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut))) 3rem;
+  font-size: 0.9rem;
+  background: var(--aubergine);
+  color: var(--on-aubergine);
+}
+
+.footName {
+  margin: 0 0 0.4rem;
+  font-family: var(--display);
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.footLine {
+  max-width: 42rem;
+  margin: 0;
+}
+
+.footLine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .jacket {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.16fr) minmax(0, 1fr);
+    grid-template-areas:
+      'back spine front'
+      'bflap bflap fflap';
+  }
+
+  .backFlap {
+    box-shadow: inset 0 1px 0 var(--fold);
+  }
+
+  .frontFlap::before {
+    display: none;
+  }
+
+  .shelf {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1060px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .eventsGrid,
+  .letter,
+  .rightsGrid,
+  .writeGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .letterArt {
+    min-height: 10rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .barCta {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .jacket {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'front'
+      'fflap'
+      'back'
+      'bflap';
+  }
+
+  .spine {
+    display: none;
+  }
+
+  .panel + .panel::before {
+    display: none;
+  }
+
+  .backFlap,
+  .frontFlap {
+    font-size: 0.9rem;
+  }
+
+  .frontCover {
+    aspect-ratio: auto;
+    min-height: 34rem;
+  }
+
+  .shelf,
+  .rights,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .shelf {
+    gap: 2.6rem;
+  }
+
+  .miniCover {
+    max-width: 16rem;
+  }
+
+  .signup {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .signupButton {
+    justify-self: start;
+  }
+
+  .event,
+  .recent li,
+  .address div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  .eventDate {
+    grid-row: auto;
+  }
+}

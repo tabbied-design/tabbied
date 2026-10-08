@@ -1,0 +1,63 @@
+{
+  "name": "Pentomino",
+  "slug": "pentomino",
+  "galleryOrder": 4038,
+  "description": "All twelve pentominoes packed into a rectangle and repeated edge to edge, each piece a solid block of one ink with grout lines between pieces.",
+  "tags": [
+    "blocks",
+    "squares",
+    "mosaic",
+    "grid"
+  ],
+  "mood": [
+    "playful",
+    "retro"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "packaging",
+    "wallpaper"
+  ],
+  "palette": [
+    "#F0F7F4",
+    "#FF9F1C",
+    "#2EC4B6",
+    "#E71D36",
+    "#011627"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "10x15",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --ox: @pd(@ri(0, 9)); --oy: @pd(@ri(0, 5)); --co: @pd(@ri(0, 3)); --pk: @calc(0 + (@x - 1 + $(ox)) % 10 + 10 * ((@y - 1 + $(oy)) % 6)); --pv: @match($(pk) == 0, 13, $(pk) == 1, 27, $(pk) == 2, 26, $(pk) == 3, 26, $(pk) == 4, 26, $(pk) == 5, 30, $(pk) == 6, 45, $(pk) == 7, 123, $(pk) == 8, 122, $(pk) == 9, 124, $(pk) == 10, 3, $(pk) == 11, 8, $(pk) == 12, 14, $(pk) == 13, 43, $(pk) == 14, 42, $(pk) == 15, 42, $(pk) == 16, 38, $(pk) == 17, 187, $(pk) == 18, 188, $(pk) == 19, 117, $(pk) == 20, 173, $(pk) == 21, 7, $(pk) == 22, 57, $(pk) == 23, 58, $(pk) == 24, 62, $(pk) == 25, 105, $(pk) == 26, 106, $(pk) == 27, 108, $(pk) == 28, 181, $(pk) == 29, 119, $(pk) == 30, 165, $(pk) == 31, 59, $(pk) == 32, 54, $(pk) == 33, 141, $(pk) == 34, 93, $(pk) == 35, 103, $(pk) == 36, 157, $(pk) == 37, 103, $(pk) == 38, 179, $(pk) == 39, 190, $(pk) == 40, 161, $(pk) == 41, 174, $(pk) == 42, 137, $(pk) == 43, 134, $(pk) == 44, 85, $(pk) == 45, 155, $(pk) == 46, 144, $(pk) == 47, 158, $(pk) == 48, 73, $(pk) == 49, 76, $(pk) == 50, 167, $(pk) == 51, 139, $(pk) == 52, 134, $(pk) == 53, 91, $(pk) == 54, 82, $(pk) == 55, 94, $(pk) == 56, 151, $(pk) == 57, 75, $(pk) == 58, 66, 70); --pid: @calc(floor($(pv) / 16)); @random(${shapeFrequency}) { :before { content: ''; position: absolute; top: @calc(4 * (floor($(pv) / 8) % 2))%; right: @calc(4 * (floor($(pv) / 4) % 2))%; bottom: @calc(4 * (floor($(pv) / 2) % 2))%; left: @calc(4 * (floor($(pv) / 1) % 2))%; border-radius: @calc(18 * (floor($(pv) / 8) % 2) * (floor($(pv) / 1) % 2))% @calc(18 * (floor($(pv) / 8) % 2) * (floor($(pv) / 4) % 2))% @calc(18 * (floor($(pv) / 2) % 2) * (floor($(pv) / 4) % 2))% @calc(18 * (floor($(pv) / 2) % 2) * (floor($(pv) / 1) % 2))%; background: @match(($(pid) + $(co)) % 4 == 0, @p(var(--color1)), ($(pid) + $(co)) % 4 == 1, @p(var(--color2)), ($(pid) + $(co)) % 4 == 2, @p(var(--color3)), @p(var(--color4))); -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

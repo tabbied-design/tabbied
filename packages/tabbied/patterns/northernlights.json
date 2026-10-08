@@ -1,0 +1,69 @@
+{
+  "name": "Northern Lights",
+  "slug": "northernlights",
+  "galleryOrder": 4028,
+  "galleryWhite": true,
+  "description": "Two curtains of rayed light hang across a night sky in green, teal and violet, brightest along their swaying lower hems and fading upward among faint stars.",
+  "tags": [
+    "stripes",
+    "gradients",
+    "waves",
+    "lines"
+  ],
+  "mood": [
+    "organic",
+    "calm"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "hero-background",
+    "poster",
+    "og-image"
+  ],
+  "palette": [
+    "#06131F",
+    "#E9F7F2",
+    "#5BE3A8",
+    "#3CC6D6",
+    "#9B7BEA",
+    "#E07AB8"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "sizing": {
+    "minCellPx": 44
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "8x12",
+      "options": [
+        "2x3",
+        "4x6",
+        "6x9",
+        "8x12",
+        "10x15"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --h1: @r(2.2, 3.6); --h2: @r(1.4, 2.4); @random(${shapeFrequency}) { background: radial-gradient(circle at @r(6, 94)% @r(6, 94)%, var(--color1) 0 1.6%, transparent 2.4%); :before { content: ''; position: absolute; left: -1%; width: 102%; height: calc(@var(--h1) * 100%); top: calc((@calc(((@Y * (0.5 + 0.16 * sin(6.283 * 1.1 * ((@x - 0.5) / @X) + 0.7))) - @y + 1)) - @var(--h1)) * 100%); transform-origin: 50% 100%; transform: skewY(@calc(atan((@Y * 0.16 * 6.283 * 1.1 * cos(6.283 * 1.1 * ((@x - 0.5) / @X) + 0.7) / @X)) * 180 / PI)deg); background: @p(var(--color2), var(--color3), var(--color4)); opacity: @calc((((@Y * (0.5 + 0.16 * sin(6.283 * 1.1 * ((@x - 0.5) / @X) + 0.7))) >= @y - 1) * ((@Y * (0.5 + 0.16 * sin(6.283 * 1.1 * ((@x - 0.5) / @X) + 0.7))) < @y)) * @r(0.55, 1)); mask: linear-gradient(0deg, transparent 0, #000 6%, #00000080 40%, transparent 100%), repeating-linear-gradient(90deg, #000 0 @r(3, 8)%, #00000047 0 @r(9, 15)%); mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } :after { content: ''; position: absolute; left: -1%; width: 102%; height: calc(@var(--h2) * 100%); top: calc((@calc(((@Y * (0.8 + 0.08 * sin(6.283 * 1.7 * ((@x - 0.5) / @X) + 2.5))) - @y + 1)) - @var(--h2)) * 100%); transform-origin: 50% 100%; transform: skewY(@calc(atan((@Y * 0.08 * 6.283 * 1.7 * cos(6.283 * 1.7 * ((@x - 0.5) / @X) + 2.5) / @X)) * 180 / PI)deg); background: @p(var(--color2), var(--color3), var(--color5)); opacity: @calc((((@Y * (0.8 + 0.08 * sin(6.283 * 1.7 * ((@x - 0.5) / @X) + 2.5))) >= @y - 1) * ((@Y * (0.8 + 0.08 * sin(6.283 * 1.7 * ((@x - 0.5) / @X) + 2.5))) < @y)) * @r(0.55, 1)); mask: linear-gradient(0deg, transparent 0, #000 6%, #00000080 40%, transparent 100%), repeating-linear-gradient(90deg, #000 0 @r(3, 8)%, #00000047 0 @r(9, 15)%); mask-composite: intersect; -webkit-transition: ease 450ms; transition: ease 450ms; } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

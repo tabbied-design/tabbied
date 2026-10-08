@@ -2,7 +2,12 @@
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import useMediaQuery from 'lib/useMediaQuery';
-import { paginationWindow } from 'lib/pagination';
+import {
+  paginationWindow,
+  PAGER_SLOTS,
+  PAGER_SLOTS_NARROW,
+  PAGER_WIDE_QUERY,
+} from 'lib/pagination';
 import type { GalleryItem } from 'lib/pattern';
 import { matchesQuery } from 'lib/catalogSearch';
 import {
@@ -63,6 +68,9 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
   // desktop DOM; the `&&` placeholder holds the slot so the grid (a later
   // sibling) never remounts when this toggles.
   const isMobile = useMediaQuery('(max-width: 991.98px)');
+  // The pager's width: false on the first render, so the prerendered pager is
+  // the narrow one, which fits a phone before any script runs.
+  const widePager = useMediaQuery(PAGER_WIDE_QUERY);
 
   const [search, setSearch] = useState('');
   // The gallery page lives in the URL (?page=N) so it's shareable and works
@@ -233,7 +241,11 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
     () => filtered.slice((clampedPage - 1) * PER_PAGE, clampedPage * PER_PAGE),
     [filtered, clampedPage]
   );
-  const pages = paginationWindow(clampedPage, pageCount);
+  const pages = paginationWindow(
+    clampedPage,
+    pageCount,
+    widePager ? PAGER_SLOTS : PAGER_SLOTS_NARROW
+  );
 
   // The masonry ends on one line: the lowest card in each column is stretched
   // to the last row (see flushGridBottom), again whenever the grid's width
@@ -403,7 +415,8 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
             </div>
 
             {/* Numbers only, as the design draws it: the window always shows
-                the current page's neighbors. Real links, so each page is a URL
+                the current page's neighbors, in a constant number of slots
+                (lib/pagination.ts). Real links, so each page is a URL
                 a crawler can follow and a person can open in a tab; a plain
                 click stays in the page. */}
             {pageCount > 1 && (

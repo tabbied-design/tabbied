@@ -1,0 +1,1239 @@
+.page {
+  --concrete: #e8e6e1;
+  --asphalt: #1c2124;
+  --signal: #f2b51e;
+  --glass: #9cc6cc;
+  --pane: #cfe3e3;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --cond: 'Oswald', 'Arial Narrow', sans-serif;
+  --sans: 'Public Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--asphalt);
+  --on-asphalt: var(--concrete);
+  --on-signal: var(--asphalt);
+  --on-glass: var(--asphalt);
+  --sheet: var(--concrete);
+
+  --muted: color-mix(in oklab, var(--text) 72%, var(--concrete));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 50%, transparent);
+  --asphalt-muted: color-mix(in oklab, var(--on-asphalt) 78%, var(--asphalt));
+  --asphalt-rule: color-mix(in oklab, var(--on-asphalt) 22%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--concrete);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Copy is black or white by the lightness of what it sits on, tinted
+   toward the asphalt; the sheet is the concrete pushed away from the
+   middle, so a work order stays a work order on any ground. */
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--concrete) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--asphalt));
+    --on-asphalt: color-mix(in oklab, oklch(from var(--asphalt) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--asphalt));
+    --on-signal: oklch(from var(--signal) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-glass: oklch(from var(--glass) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --sheet: color-mix(in oklab, var(--concrete) 45%, oklch(from var(--concrete) clamp(0, (l - 0.62) * 1000, 1) 0 0));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--cond);
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.7rem var(--gut);
+  background: var(--asphalt);
+  color: var(--on-asphalt);
+}
+
+.brand {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 0.6rem;
+  align-items: center;
+  line-height: 1;
+}
+
+/* A star chip: a small eight-point star in a ring. */
+.brandMark {
+  grid-row: span 2;
+  position: relative;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px var(--signal);
+}
+
+.brandMark::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  background: var(--signal);
+  clip-path: polygon(50% 0, 60% 38%, 100% 50%, 60% 62%, 50% 100%, 40% 62%, 0 50%, 40% 38%);
+}
+
+.brandName {
+  font-family: var(--cond);
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.brandSub {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.25rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--signal);
+}
+
+.barCall {
+  padding: 0.55rem 1rem;
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  background: var(--signal);
+  color: var(--on-signal);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--asphalt);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.kicker {
+  margin: 0 0 1.2rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.9rem, 5.3vw, 5.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.heroTitle span {
+  display: block;
+  margin-top: 0.12em;
+  line-height: 1.1;
+  text-decoration: underline;
+  text-decoration-color: var(--signal);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.1em;
+  text-decoration-skip-ink: none;
+}
+
+.heroLead {
+  max-width: 32rem;
+  margin: 1.6rem 0 0;
+  font-size: 1.12rem;
+  line-height: 1.6;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.8rem 1.4rem;
+  font-family: var(--cond);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.button {
+  background: var(--asphalt);
+  color: var(--on-asphalt);
+  box-shadow: 5px 5px 0 var(--signal);
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ghost:hover {
+  background: var(--sheet);
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 32rem;
+  list-style: none;
+  margin: 2.6rem 0 0;
+  padding: 0;
+}
+
+.heroFacts li {
+  display: grid;
+  padding-top: 0.6rem;
+  border-top: 3px solid var(--text);
+}
+
+.heroFacts strong {
+  font-family: var(--cond);
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.heroFacts span {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+/* The windshield: a trapezoid of black seal with the cracked glass set
+   into it, a mirror at the top and a chip marked on the passenger side. */
+.heroArt {
+  position: relative;
+  container-type: inline-size;
+}
+
+.windshield {
+  position: relative;
+  aspect-ratio: 16 / 9.4;
+  background: var(--asphalt);
+  clip-path: polygon(12% 0, 88% 0, 100% 100%, 0 100%);
+}
+
+.glassField {
+  position: absolute;
+  inset: 16px 18px;
+  overflow: hidden;
+  background: var(--asphalt);
+  clip-path: polygon(11.6% 0, 88.4% 0, 100% 100%, 0 100%);
+}
+
+.mirror {
+  position: absolute;
+  z-index: 2;
+  top: 16px;
+  left: 50%;
+  width: 15%;
+  height: 11%;
+  margin-left: -7.5%;
+  background: var(--asphalt);
+  border-radius: 0 0 14px 14px;
+}
+
+.chipMark {
+  position: absolute;
+  z-index: 2;
+  left: 66%;
+  top: 40%;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--asphalt) 0 4px, transparent 5px);
+  box-shadow:
+    0 0 0 3px var(--signal),
+    0 0 0 9px color-mix(in oklab, var(--signal) 40%, transparent);
+}
+
+.callout {
+  position: absolute;
+  z-index: 3;
+  left: calc(66% - 1.6rem);
+  top: 41cqw;
+  max-width: 17.5rem;
+  display: grid;
+  gap: 0.1rem;
+  margin: 0;
+  padding: 0.75rem 1rem 0.8rem;
+  background: var(--signal);
+  color: var(--on-signal);
+  box-shadow: 6px 6px 0 var(--asphalt);
+}
+
+.callout::before {
+  content: '';
+  position: absolute;
+  left: calc(1.6rem - 1.5px);
+  bottom: 100%;
+  width: 3px;
+  height: calc(41cqw - 23.5cqw - 26px);
+  background: var(--signal);
+}
+
+.callout strong {
+  font-family: var(--cond);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.callout span {
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.hazard {
+  height: 16px;
+  background: repeating-linear-gradient(-45deg, var(--signal) 0 18px, var(--asphalt) 18px 36px);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secTitle {
+  font-size: clamp(2.5rem, 4.6vw, 4rem);
+  line-height: 0.98;
+  text-transform: uppercase;
+}
+
+.secNote {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- coin test
+   A twelve-inch rule, the zones laid on it to scale, and a quarter and a
+   dollar bill drawn at the same scale beneath. */
+
+.scale {
+  display: grid;
+  gap: 0.6rem;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  background: var(--sheet);
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.ruler {
+  height: 2.6rem;
+  background:
+    linear-gradient(90deg, var(--text) 0 2px, transparent 2px) 0 0 / calc(100% / 12) 100% repeat-x,
+    linear-gradient(90deg, var(--text) 0 1px, transparent 1px) 0 0 / calc(100% / 48) 38% repeat-x;
+  border-bottom: 2px solid var(--text);
+}
+
+.zones {
+  display: grid;
+  grid-template-columns: 1fr 5fr 6fr;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zones li {
+  display: grid;
+  align-content: start;
+  gap: 0.1rem;
+  min-height: 5rem;
+  padding: 0.7rem 0.8rem;
+}
+
+.zoneRepair {
+  background: var(--glass);
+  color: var(--on-glass);
+}
+
+.zoneMaybe {
+  background: var(--signal);
+  color: var(--on-signal);
+}
+
+.zoneReplace {
+  background: var(--asphalt);
+  color: var(--on-asphalt);
+}
+
+.zoneName {
+  font-family: var(--cond);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.zoneRange {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.zoneRepair .zoneName {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.zoneRepair .zoneRange {
+  display: none;
+}
+
+.measure {
+  display: grid;
+  grid-template-columns: 51.17% minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: start;
+  padding-top: 0.6rem;
+}
+
+.objects {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.howTitle {
+  font-size: 1.5rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.howList {
+  margin: 0.7rem 0 0;
+  padding: 0 0 0 1.2rem;
+  font-size: 0.95rem;
+}
+
+.howList li {
+  padding: 0.25rem 0 0.25rem 0.3rem;
+}
+
+.howList li::marker {
+  font-family: var(--cond);
+  font-weight: 700;
+}
+
+/* A quarter is 0.955 in across: 7.96% of the twelve-inch rule, drawn in
+   a column 6.14 in wide (the bill's length), so 15.56% of it. */
+.quarter {
+  width: 15.56%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, transparent 0 58%, color-mix(in oklab, var(--text) 30%, transparent) 60% 62%, transparent 64%),
+    radial-gradient(circle at 35% 30%, var(--pane), color-mix(in oklab, var(--glass) 60%, var(--asphalt)));
+  box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--text) 50%, transparent);
+}
+
+/* A dollar bill is 6.14 by 2.61 in. */
+.bill {
+  width: 100%;
+  aspect-ratio: 6.14 / 2.61;
+  background:
+    radial-gradient(ellipse 13% 34% at 50% 50%, transparent 0 88%, color-mix(in oklab, var(--text) 35%, transparent) 90% 96%, transparent 98%),
+    color-mix(in oklab, var(--glass) 45%, var(--sheet));
+  box-shadow:
+    inset 0 0 0 6px color-mix(in oklab, var(--glass) 45%, var(--sheet)),
+    inset 0 0 0 8px color-mix(in oklab, var(--text) 40%, transparent);
+  border-radius: 3px;
+}
+
+.scaleNote {
+  margin: 1rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.verdicts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin-top: clamp(1.5rem, 3vw, 2.2rem);
+}
+
+.verdict {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.4rem 1.4rem;
+  background: var(--sheet);
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+/* A pane of glass with the damage drawn on it: a bullseye chip, or a
+   crack running in from one side. */
+.verdictArt {
+  position: relative;
+  height: 9rem;
+  margin: calc(2px - 1.5rem) calc(2px - 1.4rem) 1.3rem;
+  background: color-mix(in oklab, var(--pane) 70%, var(--glass));
+  border-bottom: 2px solid var(--text);
+}
+
+.artChip::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3.2rem;
+  height: 3.2rem;
+  margin: -1.6rem 0 0 -1.6rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, var(--asphalt) 0 3px, transparent 4px),
+    conic-gradient(from 20deg, transparent 0 40deg, color-mix(in oklab, var(--asphalt) 70%, transparent) 40deg 44deg, transparent 44deg 130deg, color-mix(in oklab, var(--asphalt) 70%, transparent) 130deg 134deg, transparent 134deg 230deg, color-mix(in oklab, var(--asphalt) 70%, transparent) 230deg 234deg, transparent 234deg 300deg, color-mix(in oklab, var(--asphalt) 70%, transparent) 300deg 304deg, transparent 304deg);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--asphalt) 45%, transparent);
+}
+
+.artCrack::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 22%;
+  top: 30%;
+  height: 40%;
+  background: var(--asphalt);
+  clip-path: polygon(0 46%, 18% 38%, 31% 58%, 47% 44%, 60% 62%, 76% 48%, 100% 56%, 76% 51%, 60% 66%, 47% 48%, 31% 62%, 18% 42%, 0 50%);
+}
+
+.verdictTag {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.verdictTag::before {
+  content: '';
+  width: 0.9rem;
+  height: 0.9rem;
+  background: var(--glass);
+  box-shadow: inset 0 0 0 1.5px var(--text);
+}
+
+.verdict:nth-child(2) .verdictTag::before {
+  background: var(--signal);
+}
+
+.verdictSize {
+  margin-top: 0.6rem;
+  font-size: 2rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.verdictText {
+  flex: 1;
+  margin: 0.8rem 0 1rem;
+  font-size: 0.96rem;
+}
+
+.verdictPrice {
+  margin: 0;
+  font-family: var(--cond);
+  font-size: 2.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.verdictFine {
+  margin: 0.3rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.verdictReplace {
+  padding: 0;
+  background: var(--asphalt);
+  color: var(--on-asphalt);
+  box-shadow: none;
+}
+
+.replaceField {
+  position: relative;
+  height: 9rem;
+  overflow: hidden;
+  background: var(--asphalt);
+}
+
+.replaceCard {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1.3rem 1.4rem 1.4rem;
+}
+
+.verdictReplace .verdictTag::before {
+  background: var(--asphalt);
+  box-shadow: inset 0 0 0 1.5px var(--on-asphalt);
+}
+
+.verdictReplace .verdictFine {
+  color: var(--asphalt-muted);
+}
+
+/* ------------------------------------------------------------------ prices */
+
+.workOrder {
+  background: var(--sheet);
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.orderHead {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin: 0;
+  padding: 0.75rem 1.2rem;
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--asphalt);
+  color: var(--on-asphalt);
+}
+
+.prices {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.prices th,
+.prices td {
+  padding: 0.85rem 1.2rem;
+  text-align: left;
+  border-bottom: 1px dashed var(--rule-strong);
+}
+
+.prices thead th {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--text);
+}
+
+.prices tbody th {
+  font-weight: 600;
+}
+
+.prices tbody tr:last-child th,
+.prices tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.priceCell {
+  font-family: var(--cond);
+  font-size: 1.45rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------------- the band */
+
+.band {
+  position: relative;
+  height: clamp(110px, 12vw, 170px);
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  overflow: hidden;
+  background: var(--asphalt);
+}
+
+/* ------------------------------------------------------------ mobile vans */
+
+.mobile {
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut);
+  background: var(--asphalt);
+  color: var(--on-asphalt);
+}
+
+.mobileInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.mobileTitle {
+  font-size: clamp(2.5rem, 4.6vw, 4rem);
+  line-height: 0.98;
+  text-transform: uppercase;
+}
+
+.mobileNote {
+  margin: 1.2rem 0 0;
+  font-size: 1.05rem;
+  color: var(--asphalt-muted);
+}
+
+.needTitle {
+  margin-top: 2.2rem;
+  font-size: 1.35rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.need {
+  list-style: none;
+  margin: 0.8rem 0 0;
+  padding: 0;
+}
+
+.need li {
+  position: relative;
+  padding: 0.6rem 0 0.6rem 1.8rem;
+  font-size: 0.96rem;
+  border-top: 1px solid var(--asphalt-rule);
+}
+
+.need li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.95rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--signal);
+}
+
+.route {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 2px solid var(--on-asphalt);
+}
+
+.routeRow {
+  display: grid;
+  grid-template-columns: 4.2rem minmax(0, 1fr);
+  grid-template-areas:
+    'day where'
+    'day note';
+  column-gap: 1.2rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--asphalt-rule);
+}
+
+.routeDay {
+  grid-area: day;
+  display: grid;
+  place-items: center;
+  height: 3.2rem;
+  font-family: var(--cond);
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--signal);
+  color: var(--on-signal);
+}
+
+.routeWhere {
+  grid-area: where;
+  font-family: var(--cond);
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.routeNote {
+  grid-area: note;
+  font-size: 0.92rem;
+  color: var(--asphalt-muted);
+}
+
+/* --------------------------------------------------------------- insurance */
+
+.claim {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.claimStep {
+  padding-top: 0.8rem;
+  border-top: 3px solid var(--text);
+}
+
+.claimNo {
+  font-family: var(--cond);
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.claimTitle {
+  margin-top: 0.4rem;
+  font-size: 1.5rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.claimText {
+  margin: 0.5rem 0 0;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+.insurers {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem 2rem;
+  align-items: center;
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding: 1.1rem 1.3rem;
+  background: var(--sheet);
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.insurersHead {
+  margin: 0;
+  font-family: var(--cond);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.insurerList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-weight: 500;
+}
+
+/* -------------------------------------------------------------------- book */
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.bookGrid .secNote {
+  margin-top: 1rem;
+}
+
+.shop {
+  margin: 2rem 0 0;
+}
+
+.shop div {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px dashed var(--rule-strong);
+}
+
+.shop dt {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.shop dd {
+  margin: 0;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.shop a {
+  border-bottom: 2px solid var(--signal);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  padding: clamp(1.3rem, 3vw, 2rem);
+  background: var(--sheet);
+  box-shadow: inset 0 0 0 2px var(--text), 8px 8px 0 var(--signal);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field label,
+.field legend {
+  padding: 0;
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.field input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.65rem 0.75rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--concrete);
+  border: 2px solid var(--text);
+  border-radius: 0;
+}
+
+.field input:focus-visible {
+  outline: 3px solid var(--signal);
+  outline-offset: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.picks input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.picks label {
+  padding: 0.45rem 0.9rem;
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  border: 2px solid var(--text);
+  cursor: pointer;
+}
+
+.picks input:checked + label {
+  background: var(--asphalt);
+  color: var(--on-asphalt);
+  border-color: var(--asphalt);
+}
+
+.picks input:focus-visible + label {
+  outline: 3px solid var(--signal);
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.8rem 1.6rem;
+  font-family: var(--cond);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--on-asphalt);
+  background: var(--asphalt);
+  border: 0;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--asphalt);
+  color: var(--on-asphalt);
+}
+
+.footField {
+  position: relative;
+  height: 90px;
+  overflow: hidden;
+  background: var(--asphalt);
+  border-top: 16px solid transparent;
+  border-image: repeating-linear-gradient(-45deg, var(--signal) 0 18px, var(--asphalt) 18px 36px) 16;
+}
+
+.footInner {
+  display: grid;
+  gap: 0.3rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+  font-size: 0.9rem;
+}
+
+.footName {
+  margin: 0 0 0.5rem;
+  font-family: var(--cond);
+  font-size: 2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.footLine {
+  max-width: 44rem;
+  margin: 0;
+  color: var(--asphalt-muted);
+}
+
+.footLine a {
+  color: var(--on-asphalt);
+  text-decoration: underline;
+  text-decoration-color: var(--signal);
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1060px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .secHead,
+  .mobileInner,
+  .bookGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .verdicts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .verdictReplace {
+    grid-column: 1 / -1;
+  }
+
+  .claim {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .heroFacts strong {
+    font-size: 1.45rem;
+  }
+
+  .callout {
+    position: relative;
+    left: auto;
+    top: auto;
+    max-width: none;
+    margin-top: 1.4rem;
+  }
+
+  .callout::before {
+    left: 66%;
+    height: 2.4rem;
+  }
+
+  .measure {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.4rem;
+  }
+
+  .objects {
+    width: 51.17%;
+  }
+
+  .zones {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .zones li {
+    min-height: 0;
+  }
+
+  .zoneRepair .zoneName {
+    writing-mode: horizontal-tb;
+    transform: none;
+  }
+
+  .zoneRepair .zoneRange {
+    display: block;
+  }
+
+  .verdicts,
+  .claim,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .prices thead {
+    display: none;
+  }
+
+  .prices tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px dashed var(--rule-strong);
+  }
+
+  .prices th,
+  .prices td {
+    padding: 0;
+    border: 0;
+  }
+
+  .prices tbody th {
+    grid-column: 1 / -1;
+  }
+
+  .prices td:nth-child(2),
+  .prices td:nth-child(4) {
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+
+  .priceCell {
+    grid-row: 2;
+    grid-column: 2;
+    justify-self: end;
+  }
+
+  .prices td:nth-child(4) {
+    grid-column: 1;
+  }
+
+  .insurers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .shop div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}

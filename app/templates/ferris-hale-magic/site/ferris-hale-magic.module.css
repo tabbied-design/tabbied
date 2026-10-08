@@ -1,0 +1,878 @@
+/* ==========================================================================
+   FERRIS HALE - close-up magician
+   The page is a card table under a lamp. Green baize for the ground; the
+   hero deals one card face up, its face the square tunnel, with two backs
+   fanned behind it; each show is a playing card with its own index in the
+   corner; the kind words are dealt face up at an angle; the booking panel
+   keeps the back of the deck beside the form. A high-contrast Bodoni for
+   the showman's voice and a warm grotesque for the practical words.
+   ========================================================================== */
+
+.page {
+  --felt: #10211b;
+  --cream: #f3ead8;
+  --red: #c8333b;
+  --gold: #d9a542;
+  --teal: #3aa6a0;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --serif: 'Bodoni Moda', 'Didot', 'Georgia', serif;
+  --sans: 'Manrope', 'Helvetica Neue', Arial, sans-serif;
+  --card-r: 1rem;
+
+  --text: var(--cream);
+  --on-cream: var(--felt);
+  --on-gold: var(--felt);
+  --on-red: var(--cream);
+
+  /* Derived surfaces and inks. */
+  --muted: color-mix(in oklab, var(--text) 74%, var(--felt));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 40%, transparent);
+  --baize: color-mix(in oklab, var(--felt) 90%, var(--teal));
+  --cream-muted: color-mix(in oklab, var(--on-cream) 74%, var(--cream));
+  --cream-rule: color-mix(in oklab, var(--on-cream) 16%, transparent);
+  --cream-well: color-mix(in oklab, var(--cream) 92%, var(--felt));
+  --shadow: color-mix(in oklab, var(--felt) 70%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  background: var(--felt);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--felt) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--cream));
+    --on-cream: color-mix(in oklab, oklch(from var(--cream) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--felt));
+    --on-gold: oklch(from var(--gold) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-red: oklch(from var(--red) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.page :where(p, ul, ol, dl, dd, blockquote) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--felt);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: grid;
+  line-height: 1;
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.brandSub {
+  margin-top: 0.25rem;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1.2rem, 2.6vw, 2.4rem);
+}
+
+.nav a {
+  padding: 0.25rem 0;
+  font-size: 0.92rem;
+  font-weight: 500;
+  border-bottom: 1px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barButton {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  background: var(--gold);
+  color: var(--on-gold);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--felt);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4.5rem) var(--gut) clamp(3.5rem, 7vw, 6rem);
+}
+
+.kicker {
+  margin-bottom: 1.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(3.2rem, 6.2vw, 5.6rem);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: italic;
+  color: var(--gold);
+}
+
+.heroLead {
+  max-width: 34rem;
+  margin-top: 1.7rem;
+  font-size: 1.12rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.5rem;
+  font-size: 0.98rem;
+  font-weight: 700;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--gold);
+  color: var(--on-gold);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--gold) 84%, var(--cream));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1.5px var(--text);
+}
+
+.ghost:hover {
+  background: var(--baize);
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 34rem;
+  margin-top: 2.6rem;
+}
+
+.heroFacts div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.2rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.heroFacts dt {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+/* The deal: one card face up, two backs fanned behind it. */
+.deal {
+  position: relative;
+  height: clamp(28rem, 44vw, 38rem);
+}
+
+.faceCard,
+.backOne,
+.backTwo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(16rem, 25vw, 22rem);
+  aspect-ratio: 5 / 7;
+  border-radius: var(--card-r);
+  box-shadow: 0 30px 50px -24px var(--shadow);
+}
+
+.backOne,
+.backTwo {
+  display: block;
+  background:
+    repeating-linear-gradient(45deg, color-mix(in oklab, var(--red) 78%, var(--cream)) 0 5px, transparent 5px 12px),
+    repeating-linear-gradient(-45deg, color-mix(in oklab, var(--red) 78%, var(--cream)) 0 5px, var(--red) 5px 12px);
+  box-shadow:
+    inset 0 0 0 10px var(--cream),
+    inset 0 0 0 12px var(--red),
+    0 30px 50px -24px var(--shadow);
+}
+
+.backOne {
+  transform: translate(-72%, -50%) rotate(-16deg);
+}
+
+.backTwo {
+  transform: translate(-60%, -52%) rotate(-7deg);
+}
+
+.faceCard {
+  z-index: 1;
+  box-sizing: border-box;
+  padding: 3.2rem 1.6rem;
+  background: var(--cream);
+  transform: translate(-40%, -50%) rotate(5deg);
+}
+
+/* The corner indices: an ace of spades, drawn in CSS as a card would be. */
+.faceCard::before,
+.faceCard::after {
+  content: 'A\A\2660';
+  position: absolute;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 0.95;
+  text-align: center;
+  white-space: pre;
+  color: var(--on-cream);
+}
+
+.faceCard::before {
+  top: 0.75rem;
+  left: 0.85rem;
+}
+
+.faceCard::after {
+  right: 0.85rem;
+  bottom: 0.75rem;
+  transform: rotate(180deg);
+}
+
+.faceField {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background: var(--cream);
+  border-radius: 0.35rem;
+  box-shadow: 0 0 0 1.5px var(--on-cream);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: 2.8rem;
+}
+
+.secTitle {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  letter-spacing: -0.02em;
+}
+
+.secTitle em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.secNote {
+  max-width: 34rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- shows */
+
+.shows {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.6rem;
+}
+
+.show {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 4rem 2.2rem 3.8rem;
+  background: var(--cream);
+  color: var(--on-cream);
+  border-radius: var(--card-r);
+  box-shadow: 0 26px 46px -26px var(--shadow);
+}
+
+.index {
+  position: absolute;
+  top: 0.9rem;
+  left: 1rem;
+  display: grid;
+  justify-items: center;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 0.95;
+}
+
+/* The suit under the rank: a mark, drawn as an escape. */
+.index::after {
+  font-size: 1.3rem;
+}
+
+.hearts .index::after {
+  content: '\2665';
+  color: var(--red);
+}
+
+.diamonds .index::after {
+  content: '\2666';
+  color: var(--red);
+}
+
+.spades .index::after {
+  content: '\2660';
+}
+
+.indexBottom {
+  top: auto;
+  left: auto;
+  right: 1rem;
+  bottom: 0.9rem;
+  transform: rotate(180deg);
+}
+
+.showName {
+  margin-top: 0.4rem;
+  font-size: 2.3rem;
+}
+
+.showFor {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cream-muted);
+}
+
+.showText {
+  font-size: 1rem;
+}
+
+.includes {
+  display: grid;
+  gap: 0.4rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--cream-rule);
+}
+
+.includes li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 0.94rem;
+}
+
+.includes li::before {
+  content: '\2666';
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  font-size: 0.8rem;
+  color: var(--cream-muted);
+}
+
+.showFacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--cream-rule);
+}
+
+.showFacts dt {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream-muted);
+}
+
+.showFacts dd {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* ---------------------------------------------------------------- corridor */
+
+.corridor {
+  position: relative;
+  height: clamp(13rem, 22vw, 19rem);
+  overflow: hidden;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* ----------------------------------------------------------------- reviews */
+
+.reviews {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.8rem;
+  padding: 1rem 0;
+}
+
+.review {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 2.2rem 2rem 2rem;
+  background: var(--cream);
+  color: var(--on-cream);
+  border-radius: var(--card-r);
+  box-shadow: 0 26px 46px -26px var(--shadow);
+  transform: rotate(-2.5deg);
+}
+
+.review:nth-child(2) {
+  transform: rotate(1.5deg) translateY(1rem);
+}
+
+.review:nth-child(3) {
+  transform: rotate(-0.8deg);
+}
+
+.reviewQuote {
+  flex: 1;
+  margin-bottom: 1rem;
+}
+
+.reviewQuote p {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.reviewWho {
+  padding-top: 0.9rem;
+  font-weight: 700;
+  border-top: 1px solid var(--cream-rule);
+}
+
+.reviewWhere {
+  font-size: 0.9rem;
+  color: var(--cream-muted);
+}
+
+/* --------------------------------------------------------------- questions */
+
+.qGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 2.5rem 5rem;
+  align-items: start;
+}
+
+.qGrid .secNote {
+  margin-top: 1.2rem;
+}
+
+.questions {
+  border-top: 1px solid var(--rule-strong);
+}
+
+.question {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.qSummary {
+  position: relative;
+  padding: 1.15rem 2.5rem 1.15rem 0;
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1.25;
+  list-style: none;
+  cursor: pointer;
+}
+
+.qSummary::-webkit-details-marker {
+  display: none;
+}
+
+.qSummary::after {
+  content: '+';
+  position: absolute;
+  right: 0.3rem;
+  top: 1rem;
+  font-family: var(--sans);
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.question[open] .qSummary::after {
+  content: '-';
+}
+
+.qAnswer {
+  max-width: 40rem;
+  padding: 0 2.5rem 1.3rem 0;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- book */
+
+.bookSec {
+  background: var(--baize);
+}
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 3rem 5rem;
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+}
+
+.bookIntro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 9rem;
+  gap: 1.2rem 2rem;
+  align-items: start;
+}
+
+.bookIntro .secTitle,
+.bookIntro .secNote,
+.bookIntro .details {
+  grid-column: 1;
+}
+
+/* The back of the deck, a card standing beside the words. */
+.deckBack {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  width: 100%;
+  aspect-ratio: 5 / 7;
+  overflow: hidden;
+  background: var(--felt);
+  border-radius: 0.8rem;
+  box-shadow:
+    0 0 0 6px var(--cream),
+    0 24px 40px -20px var(--shadow);
+  transform: rotate(6deg);
+}
+
+.details {
+  display: grid;
+  margin-top: 0.6rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.details div {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.details dt {
+  padding-top: 0.15rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.details dd {
+  overflow-wrap: anywhere;
+}
+
+.details a {
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+  background: var(--cream);
+  color: var(--on-cream);
+  border-radius: var(--card-r);
+  box-shadow: 0 30px 50px -26px var(--shadow);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream-muted);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.65rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--on-cream);
+  background: var(--cream-well);
+  border: 1px solid color-mix(in oklab, var(--on-cream) 34%, transparent);
+  border-radius: 0.5rem;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.85rem 1.6rem;
+  font: inherit;
+  font-weight: 700;
+  background: var(--red);
+  color: var(--on-red);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  border-top: 1px solid var(--rule);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: 2rem;
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.8rem var(--gut) 3.2rem;
+}
+
+.footCard {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 7;
+  overflow: hidden;
+  border-radius: 0.6rem;
+  box-shadow: 0 0 0 4px var(--cream);
+  transform: rotate(-6deg);
+}
+
+.footText {
+  display: grid;
+  gap: 0.45rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.footText a {
+  border-bottom: 1px solid currentColor;
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text);
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1080px) {
+  .shows {
+    gap: 1.1rem;
+  }
+
+  .show {
+    padding-left: 1.7rem;
+    padding-right: 1.7rem;
+  }
+
+  .bookGrid,
+  .qGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .barButton {
+    justify-self: end;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .deal {
+    height: clamp(24rem, 80vw, 32rem);
+  }
+
+  .shows,
+  .reviews {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 36rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .barButton {
+    display: none;
+  }
+
+  .shows,
+  .reviews,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroFacts dd {
+    font-size: 1.35rem;
+  }
+
+  .faceCard,
+  .backOne,
+  .backTwo {
+    width: 14rem;
+  }
+
+  .bookIntro {
+    grid-template-columns: minmax(0, 1fr) 6rem;
+  }
+
+  .review,
+  .review:nth-child(2),
+  .review:nth-child(3) {
+    transform: none;
+  }
+
+  .show {
+    padding: 4.2rem 1.6rem 3.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .button,
+  .ghost,
+  .nav a {
+    transition: background-color 150ms ease, border-color 150ms ease;
+  }
+}

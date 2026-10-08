@@ -1,0 +1,1074 @@
+/* ==========================================================================
+   TWO CHAIRS COUNSELING - couples therapy, Ruth Ellery, LMFT
+   Two voices on the page. The hero is the room: two armchairs turned toward
+   each other, their cushions upholstered in kawung batik, with the
+   practice's promise between them. Every worry is printed twice, once in
+   each voice (a soft italic serif and a plain round sans), with the
+   counselor's answer underneath. Blush walls, plum frames, rose, ochre and
+   indigo in the cloth. The intensives are the one dark room.
+   ========================================================================== */
+
+.page {
+  --blush: #f5ece6; /* role 0: the walls, the page ground */
+  --plum: #3b2236;
+  --rose: #c46a6f;
+  --ochre: #d39b4a;
+  --indigo: #3d4f7a;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 76rem;
+  --serif: 'Fraunces', 'Georgia', serif;
+  --sans: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--plum);
+  --on-plum: var(--blush);
+  --on-rose: var(--plum);
+  --on-indigo: var(--blush);
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--blush));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 40%, transparent);
+  --tint-one: color-mix(in oklab, var(--blush) 84%, var(--rose));
+  --tint-other: color-mix(in oklab, var(--blush) 86%, var(--indigo));
+  --panel: color-mix(in oklab, var(--blush) 88%, var(--ochre));
+  --plum-muted: color-mix(in oklab, var(--on-plum) 78%, var(--plum));
+  --plum-rule: color-mix(in oklab, var(--on-plum) 22%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1.04rem;
+  line-height: 1.6;
+  background: var(--blush);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--blush) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--plum));
+    --on-plum: color-mix(in oklab, oklch(from var(--plum) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--plum));
+    --on-rose: oklch(from var(--rose) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-indigo: oklch(from var(--indigo) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--blush);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 0.7rem;
+  align-items: center;
+  line-height: 1;
+}
+
+/* The mark: two seats, turned toward each other. */
+.brandSeats {
+  grid-row: span 2;
+  display: flex;
+  gap: 0.3rem;
+  align-items: flex-end;
+}
+
+.brandSeats span {
+  width: 0.95rem;
+  height: 1.5rem;
+  background: var(--rose);
+  border-radius: 0.5rem 0.5rem 0.15rem 0.15rem;
+  box-shadow: inset 0 -0.45rem 0 var(--plum);
+}
+
+.brandSeats span:last-child {
+  background: var(--indigo);
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.brandSub {
+  margin-top: 0.15rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  padding: 0.25rem 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-bottom: 1.5px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barButton {
+  padding: 0.6rem 1.15rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: var(--plum);
+  color: var(--on-plum);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--blush);
+}
+
+/* --------------------------------------------------------------------- hero
+   Chair, words, chair. The chairs turn in toward the middle and stand on a
+   shared rug. */
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 38rem) minmax(0, 1fr);
+  gap: clamp(1rem, 2vw, 2rem);
+  align-items: end;
+  max-width: 88rem;
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(3.5rem, 6vw, 5rem);
+}
+
+/* The rug under both chairs. */
+.hero::before {
+  content: '';
+  position: absolute;
+  left: var(--gut);
+  right: var(--gut);
+  bottom: clamp(2.2rem, 4vw, 3.4rem);
+  height: 3.2rem;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--blush) 80%, var(--rose));
+  box-shadow: inset 0 0 0 0.45rem color-mix(in oklab, var(--blush) 70%, var(--ochre));
+}
+
+.chair {
+  position: relative;
+  z-index: 1;
+  justify-self: center;
+  width: min(100%, 20rem);
+  aspect-ratio: 17 / 24;
+  margin-bottom: 1.2rem;
+}
+
+.chairOne {
+  transform: perspective(900px) rotateY(26deg);
+}
+
+.chairOther {
+  transform: perspective(900px) rotateY(-26deg);
+}
+
+/* The upholstered back. */
+.cushion {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: 0;
+  bottom: 27%;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--blush) 76%, var(--ochre));
+  border-radius: 46% 46% 0.6rem 0.6rem / 30% 30% 0.6rem 0.6rem;
+  box-shadow: inset 0 0 0 0.35rem var(--plum);
+}
+
+/* Arms and seat in one plum frame, and the two front legs under it. */
+.chair::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: 9%;
+  height: 40%;
+  border-radius: 2.4rem 2.4rem 0.8rem 0.8rem;
+  background:
+    linear-gradient(color-mix(in oklab, var(--plum) 72%, var(--blush)), color-mix(in oklab, var(--plum) 72%, var(--blush))) 50% 50% / 70% 4px no-repeat,
+    linear-gradient(90deg, var(--plum) 0 15%, transparent 15% 85%, var(--plum) 85%),
+    linear-gradient(var(--plum), var(--plum)) bottom / 100% 52% no-repeat;
+}
+
+.chair::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 10%;
+  background: linear-gradient(90deg, transparent 0 9%, var(--plum) 9% 15%, transparent 15% 85%, var(--plum) 85% 91%, transparent 91%);
+}
+
+.heroText {
+  position: relative;
+  z-index: 1;
+  align-self: center;
+  padding-bottom: 3rem;
+  text-align: center;
+}
+
+.kicker {
+  margin: 0 0 1.2rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.8rem, 4.9vw, 4.3rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.heroLead {
+  max-width: 32rem;
+  margin: 1.5rem auto 0;
+  font-size: 1.12rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 999px;
+}
+
+.button {
+  background: var(--plum);
+  color: var(--on-plum);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--plum) 84%, var(--text));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1.5px var(--text);
+}
+
+.ghost:hover {
+  background: var(--panel);
+}
+
+.heroWho {
+  margin: 1.8rem 0 0;
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secTitle {
+  font-size: clamp(2.3rem, 4.4vw, 3.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.secNote {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- two voices
+   Each exchange: one voice on the left in italic serif, the other on the
+   right in the round sans, and the answer under both, across the middle. */
+
+.exchanges {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.exchange {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem clamp(1rem, 4vw, 4rem);
+  padding: clamp(1.6rem, 3vw, 2.4rem) 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.voiceOne,
+.voiceOther {
+  position: relative;
+  margin: 0;
+  padding: 1.2rem 1.4rem 1.3rem;
+  border-radius: 1.4rem;
+}
+
+.voiceOne {
+  justify-self: start;
+  background: var(--tint-one);
+  border-bottom-left-radius: 0.3rem;
+}
+
+.voiceOther {
+  justify-self: end;
+  margin-top: 2.4rem;
+  text-align: right;
+  background: var(--tint-other);
+  border-bottom-right-radius: 0.3rem;
+}
+
+.voiceLabel {
+  margin: 0 0 0.3rem;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.voiceText {
+  margin: 0;
+  font-size: clamp(1.3rem, 2.2vw, 1.75rem);
+  line-height: 1.25;
+}
+
+.voiceOne .voiceText {
+  font-family: var(--serif);
+  font-style: italic;
+}
+
+.voiceOther .voiceText {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.reply {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: 1rem;
+  max-width: 46rem;
+  margin: 0.4rem auto 0;
+}
+
+.replyLabel {
+  margin: 0.15rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.replyText {
+  margin: 0;
+  padding-left: 1rem;
+  border-left: 2px solid var(--text);
+  font-size: 1.04rem;
+}
+
+/* ------------------------------------------------------- first three */
+
+.meetings {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: none;
+}
+
+.meeting {
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.6rem 1.7rem;
+  background: var(--panel);
+  border-radius: 1.2rem;
+}
+
+/* Who is in the room: three seats, the counselor's in the middle. */
+.seats {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+  height: 2.6rem;
+  margin-bottom: 1.2rem;
+}
+
+.seats span {
+  width: 1.5rem;
+  height: 2.2rem;
+  border-radius: 0.8rem 0.8rem 0.2rem 0.2rem;
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+.seats span:nth-child(2) {
+  width: 1.1rem;
+  height: 1.6rem;
+  margin-inline: 0.4rem;
+  background: var(--text);
+}
+
+.seatsBoth span:first-child,
+.seatsBoth span:last-child,
+.seatsOne span:first-child {
+  background: var(--text);
+}
+
+.meetingN {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.meetingTitle {
+  margin-top: 0.3rem;
+  font-size: 1.8rem;
+  line-height: 1.1;
+}
+
+.meetingWho {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+  margin: 0.8rem 0 0;
+  padding: 0.6rem 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-block: 1px solid var(--rule-strong);
+}
+
+.meetingText {
+  margin: 0.9rem 0 0;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(110px, 12vw, 170px);
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  overflow: hidden;
+  background: color-mix(in oklab, var(--blush) 76%, var(--ochre));
+}
+
+/* -------------------------------------------------------------------- fees */
+
+.feesGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.feesList .secNote {
+  margin-top: 1rem;
+}
+
+.fees {
+  width: 100%;
+  margin-top: 2rem;
+  border-collapse: collapse;
+}
+
+.fees th,
+.fees td {
+  padding: 0.95rem 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+}
+
+.fees thead th {
+  padding-top: 0;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1.5px solid var(--text);
+}
+
+.fees th:first-child {
+  padding-left: 0;
+}
+
+.fees tbody th {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 400;
+}
+
+.fees td {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.fees td:last-child,
+.fees thead th:last-child {
+  padding-right: 0;
+  text-align: right;
+}
+
+.fees td:last-child {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  color: var(--text);
+}
+
+.insurance {
+  margin: 0;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--tint-other);
+  border-radius: 1.4rem;
+}
+
+.insurance div + div {
+  margin-top: 1.4rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule);
+}
+
+.insurance dt {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-style: italic;
+  line-height: 1.25;
+}
+
+.insurance dd {
+  margin: 0.4rem 0 0;
+  font-size: 0.98rem;
+}
+
+/* ------------------------------------------------------------- intensives */
+
+.intensive {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--plum);
+  color: var(--on-plum);
+}
+
+.intensiveGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut);
+}
+
+.intensiveKicker {
+  margin: 0 0 0.8rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--plum-muted);
+}
+
+.intensiveTitle {
+  font-size: clamp(2.8rem, 5.4vw, 4.4rem);
+  font-style: italic;
+  line-height: 1;
+}
+
+.intensiveLead {
+  max-width: 30rem;
+  margin: 1.2rem 0 0;
+  font-size: 1.08rem;
+  color: var(--plum-muted);
+}
+
+.intensivePrice {
+  margin: 1.6rem 0 0;
+  font-family: var(--serif);
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.intensiveNote {
+  max-width: 26rem;
+  margin: 0.6rem 0 0;
+  font-size: 0.92rem;
+  color: var(--plum-muted);
+}
+
+.batik {
+  position: relative;
+  height: 13rem;
+  max-width: 28rem;
+  margin-top: 2.2rem;
+  overflow: hidden;
+  border-radius: 999px 999px 1rem 1rem;
+}
+
+.schedule {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.schedule li {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  column-gap: 1.4rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--plum-rule);
+}
+
+.schedule li:last-child {
+  border-bottom: 1px solid var(--plum-rule);
+}
+
+.scheduleTime {
+  grid-row: span 2;
+  margin: 0.2rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.schedulePart {
+  font-size: 1.5rem;
+  line-height: 1.15;
+}
+
+.scheduleText {
+  margin: 0.4rem 0 0;
+  font-size: 0.98rem;
+  color: var(--plum-muted);
+}
+
+/* ---------------------------------------------------------------- contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.contactInfo .secNote {
+  margin: 1rem 0 1.8rem;
+}
+
+.address {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  line-height: 1.25;
+}
+
+.addressNote {
+  margin: 0.4rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.contactLine {
+  margin: 1rem 0 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.contactLine + .contactLine {
+  margin-top: 0.3rem;
+}
+
+.contactLine a {
+  border-bottom: 1.5px solid var(--rule-strong);
+}
+
+.hours {
+  max-width: 26rem;
+  margin: 1.6rem 0 0;
+  font-size: 0.95rem;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.hours dt {
+  font-weight: 500;
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+  color: var(--muted);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--tint-one);
+  border-radius: 1.4rem;
+}
+
+.formTitle {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-style: italic;
+  line-height: 1.1;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field label,
+.field legend {
+  padding: 0;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.field input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.9rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--blush);
+  border: 1px solid var(--rule-strong);
+  border-radius: 0.7rem;
+}
+
+.field input:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.picks input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.picks label {
+  padding: 0.45rem 1rem;
+  font-weight: 500;
+  background: var(--blush);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.picks input:checked + label {
+  background: var(--plum);
+  color: var(--on-plum);
+  border-color: var(--plum);
+}
+
+.picks input:focus-visible + label {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--on-plum);
+  background: var(--plum);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--plum) 84%, var(--text));
+}
+
+.formNote {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--plum);
+  color: var(--on-plum);
+}
+
+.footBand {
+  position: relative;
+  height: 76px;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--blush) 76%, var(--ochre));
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+  font-size: 0.92rem;
+}
+
+.footInner p {
+  margin: 0.35rem 0 0;
+  color: var(--plum-muted);
+}
+
+.footer .footName {
+  margin: 0 0 0.8rem;
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-style: italic;
+  line-height: 1.1;
+  color: var(--on-plum);
+}
+
+.footInner a {
+  color: var(--on-plum);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .hero {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: end;
+  }
+
+  .heroText {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    padding-bottom: 0;
+  }
+
+  .chair {
+    width: min(100%, 13rem);
+  }
+
+  .chairOne {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .chairOther {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  /* The rug becomes a grid item under the row of chairs. */
+  .hero::before {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    align-self: end;
+    height: 2.6rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .secHead,
+  .feesGrid,
+  .intensiveGrid,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .meetings {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .barButton {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .chair {
+    width: min(100%, 9.5rem);
+  }
+
+  .hero::before {
+    height: 2rem;
+  }
+
+  .exchange {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .voiceOne {
+    margin-right: 1.5rem;
+  }
+
+  .voiceOther {
+    margin-top: 0;
+    margin-left: 1.5rem;
+  }
+
+  .reply {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.3rem;
+  }
+
+  .replyLabel {
+    text-align: left;
+  }
+
+  .schedule li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .scheduleTime {
+    grid-row: auto;
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -1,0 +1,806 @@
+.page {
+  --washi: #f2ede3;
+  --sumi: #2b2a27;
+  --indigo: #2f4b6e;
+  --persimmon: #c0603a;
+  --matcha: #6f7f4f;
+
+  --text: var(--sumi);
+  --on-indigo: var(--washi);
+
+  --mincho: 'Zen Old Mincho', 'Hiragino Mincho ProN', Georgia, serif;
+  --gothic: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Helvetica Neue', Arial, sans-serif;
+  --gut: clamp(1rem, 4vw, 3rem);
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--washi));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 38%, transparent);
+  --meridian: color-mix(in oklab, var(--persimmon) 70%, var(--washi));
+  --wash: color-mix(in oklab, var(--washi) 93%, var(--matcha));
+  --wash-blue: color-mix(in oklab, var(--washi) 94%, var(--indigo));
+  --shadow: color-mix(in oklab, var(--sumi) 30%, transparent);
+
+  font-family: var(--gothic);
+  font-size: 1rem;
+  line-height: 1.85;
+  letter-spacing: 0.01em;
+  background: var(--washi);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--washi) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--sumi));
+    --on-indigo: oklch(from var(--indigo) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--mincho);
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem var(--gut);
+  background: var(--washi);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+}
+
+.brandName {
+  font-family: var(--mincho);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.06em;
+}
+
+.brandSub {
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1.2rem, 2.4vw, 2.4rem);
+}
+
+.nav a {
+  padding: 0.2rem 0;
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.nav a:last-child {
+  padding: 0.35rem 1.1rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--washi);
+}
+
+/* --------------------------------------------------------------------- hero
+   A hanging scroll of indigo hemp-leaf cloth beside the words. */
+
+.hero {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) minmax(0, 23rem);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) clamp(3.5rem, 7vw, 6rem);
+}
+
+.vertical {
+  align-self: start;
+  margin-top: 0.4rem;
+  padding-left: 0.9rem;
+  font-family: var(--mincho);
+  font-size: 0.95rem;
+  letter-spacing: 0.42em;
+  color: var(--muted);
+  border-left: 1px solid var(--meridian);
+  writing-mode: vertical-rl;
+}
+
+.kicker {
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.heroTitle {
+  margin-top: 1.4rem;
+  font-size: clamp(2.6rem, 5vw, 4.3rem);
+  line-height: 1.22;
+  letter-spacing: 0.01em;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: normal;
+  color: var(--indigo);
+}
+
+.heroLead {
+  max-width: 32rem;
+  margin-top: 1.6rem;
+  font-size: 1.06rem;
+  line-height: 1.95;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.8rem;
+  margin-top: 2.2rem;
+}
+
+.button,
+.submit {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.8rem 1.7rem;
+  font-family: var(--gothic);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  background: var(--indigo);
+  color: var(--on-indigo);
+  border: 0;
+  border-radius: 999px;
+}
+
+.button:hover,
+.submit:hover {
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--indigo) 22%, transparent);
+}
+
+.textLink {
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-decoration: underline;
+  text-decoration-color: var(--meridian);
+  text-underline-offset: 6px;
+}
+
+.heroNote {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 2.4rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.heroNote::before {
+  content: '';
+  width: 2.4rem;
+  height: 1px;
+  background: var(--meridian);
+}
+
+.scroll {
+  display: grid;
+  justify-items: center;
+}
+
+.scroll::before {
+  content: '';
+  width: 46%;
+  height: 2.2rem;
+  background:
+    linear-gradient(to top right, transparent calc(50% - 1px), var(--sumi) 50%, transparent calc(50% + 1px)) left / 50% 100% no-repeat,
+    linear-gradient(to top left, transparent calc(50% - 1px), var(--sumi) 50%, transparent calc(50% + 1px)) right / 50% 100% no-repeat;
+}
+
+.rod {
+  display: block;
+  width: 100%;
+  height: 0.75rem;
+  background: var(--sumi);
+  border-radius: 0.4rem;
+}
+
+.cloth {
+  position: relative;
+  width: 86%;
+  height: clamp(24rem, 40vw, 34rem);
+  background: var(--indigo);
+  box-shadow: 0 30px 40px -30px var(--shadow);
+}
+
+.scrollCaption {
+  max-width: 17rem;
+  margin-top: 1.1rem;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- the flow
+   One meridian line down the page, a point at every section. */
+
+.flow {
+  position: relative;
+  max-width: 58rem;
+  margin: 0 auto;
+  padding: 0 var(--gut) 0 calc(var(--gut) + 8rem);
+}
+
+.flow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--gut) + 3.5rem);
+  width: 1px;
+  background: var(--meridian);
+}
+
+.sec {
+  position: relative;
+  padding: clamp(3.5rem, 7vw, 5rem) 0;
+}
+
+.point {
+  position: absolute;
+  top: clamp(3.5rem, 7vw, 5rem);
+  left: -8rem;
+  display: grid;
+  justify-items: center;
+  gap: 0.55rem;
+  width: 7rem;
+  padding-bottom: 0.3rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+  background: var(--washi);
+}
+
+.point::before {
+  content: '';
+  width: 0.85rem;
+  height: 0.85rem;
+  margin-top: 0.55rem;
+  background: var(--persimmon);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 6px var(--washi),
+    0 0 0 7px var(--meridian);
+}
+
+.secTitle {
+  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+  line-height: 1.3;
+}
+
+.secLead {
+  max-width: 34rem;
+  margin-top: 0.9rem;
+  font-size: 1.04rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ session */
+
+.timeline {
+  margin-top: 2.4rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.moment {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 0.2rem 2rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.time {
+  grid-row: span 2;
+  padding-top: 0.25rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.momentTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.momentText {
+  max-width: 34rem;
+}
+
+/* --------------------------------------------------------------------- wear */
+
+.wearGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin-top: 2.2rem;
+}
+
+.wearCol {
+  padding: 1.6rem 1.7rem 1.8rem;
+  background: var(--wash-blue);
+}
+
+.wearTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.wearList {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.wearList li {
+  position: relative;
+  padding-left: 1.6rem;
+  line-height: 1.7;
+}
+
+.wearList li::before {
+  content: '\25CB';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--indigo);
+}
+
+.avoid li::before {
+  content: '\00D7';
+  font-size: 1.15rem;
+  line-height: 1.5;
+  color: var(--persimmon);
+}
+
+/* -------------------------------------------------------------------- noren
+   The cloth at the door, split into four panels from the hem up. */
+
+.noren {
+  max-width: 64rem;
+  margin: 1rem auto;
+  padding: 0 var(--gut);
+}
+
+.norenRod {
+  display: block;
+  height: 0.7rem;
+  margin: 0 -0.8rem;
+  background: var(--sumi);
+  border-radius: 0.35rem;
+}
+
+.norenCloth {
+  position: relative;
+  height: clamp(10rem, 18vw, 15rem);
+  background: var(--indigo);
+  -webkit-mask:
+    linear-gradient(black 0 0) top / 100% 42% no-repeat,
+    linear-gradient(90deg, black 0 calc(25% - 3px), transparent calc(25% - 3px) calc(25% + 3px), black calc(25% + 3px) calc(50% - 3px), transparent calc(50% - 3px) calc(50% + 3px), black calc(50% + 3px) calc(75% - 3px), transparent calc(75% - 3px) calc(75% + 3px), black calc(75% + 3px)) bottom / 100% 60% no-repeat;
+  mask:
+    linear-gradient(black 0 0) top / 100% 42% no-repeat,
+    linear-gradient(90deg, black 0 calc(25% - 3px), transparent calc(25% - 3px) calc(25% + 3px), black calc(25% + 3px) calc(50% - 3px), transparent calc(50% - 3px) calc(50% + 3px), black calc(50% + 3px) calc(75% - 3px), transparent calc(75% - 3px) calc(75% + 3px), black calc(75% + 3px)) bottom / 100% 60% no-repeat;
+}
+
+/* --------------------------------------------------------------------- fees */
+
+.fees {
+  margin-top: 2.2rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.fee {
+  display: grid;
+  grid-template-columns: minmax(0, 11rem) minmax(0, 1fr) auto;
+  gap: 0.2rem 1.5rem;
+  align-items: baseline;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.feeName {
+  font-family: var(--mincho);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.feeDetail {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.feePrice {
+  font-family: var(--mincho);
+  font-size: 1.45rem;
+}
+
+.gift {
+  margin-top: 1.4rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- practitioner */
+
+.bio {
+  display: grid;
+  grid-template-columns: 12rem minmax(0, 1fr);
+  gap: 2.6rem;
+  align-items: start;
+  margin-top: 2rem;
+}
+
+.crest {
+  position: relative;
+  width: 12rem;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--washi);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 1px var(--rule-strong),
+    0 0 0 9px var(--washi),
+    0 0 0 10px var(--rule);
+}
+
+.bioLead {
+  font-family: var(--mincho);
+  font-size: 1.2rem;
+  line-height: 1.8;
+}
+
+.bioMore {
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+.creds {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 2rem;
+  margin-top: 1.8rem;
+  padding-top: 1.3rem;
+  border-top: 1px solid var(--rule);
+}
+
+.creds dt {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.creds dd {
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------- book */
+
+.book {
+  margin-top: clamp(2rem, 5vw, 3rem);
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut);
+  background: var(--wash);
+}
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2.5rem clamp(2rem, 6vw, 5rem);
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.contact {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.contact div {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.contact dt {
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  padding-top: 0.1rem;
+}
+
+.access {
+  margin-top: 1.4rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.form {
+  display: grid;
+  gap: 1.1rem;
+  align-content: start;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field label,
+.fieldset legend {
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--washi);
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.fieldset legend {
+  margin-bottom: 0.45rem;
+  padding: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pick {
+  position: relative;
+}
+
+.pick input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pick label {
+  display: inline-block;
+  padding: 0.35rem 1rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  background: var(--washi);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.pick input:checked + label {
+  background: var(--indigo);
+  color: var(--on-indigo);
+  border-color: var(--indigo);
+}
+
+.pick input:focus-visible + label {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.submit {
+  justify-self: start;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--washi);
+}
+
+.hem {
+  position: relative;
+  height: 6.5rem;
+  border-block: 1px solid var(--rule);
+}
+
+.footInner {
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 2.8rem;
+  text-align: center;
+}
+
+.footName {
+  font-family: var(--mincho);
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.footText {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.footText a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 960px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: 2rem minmax(0, 1fr);
+  }
+
+  .scroll {
+    grid-column: 1 / -1;
+    width: min(100%, 22rem);
+    justify-self: center;
+  }
+
+  .cloth {
+    height: 24rem;
+  }
+
+  .bookGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .brandSub {
+    display: none;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .vertical {
+    display: none;
+  }
+
+  .cloth {
+    height: 20rem;
+  }
+
+  .flow {
+    padding-left: calc(var(--gut) + 2.4rem);
+  }
+
+  .flow::before {
+    left: calc(var(--gut) + 0.6rem);
+  }
+
+  .point {
+    left: -2.4rem;
+    width: 1.2rem;
+    font-size: 0;
+    letter-spacing: 0;
+    background: none;
+  }
+
+  .moment {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .time {
+    grid-row: auto;
+  }
+
+  .wearGrid,
+  .creds {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fee {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .feeDetail {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .feePrice {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .bio {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .crest {
+    width: 9rem;
+    margin-left: 10px;
+  }
+
+  .contact div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}
