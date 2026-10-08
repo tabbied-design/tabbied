@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
+import { radius } from 'tabbied/patterns';
 import { PACKAGE_VERSION, PATTERN_COUNT } from 'lib/siteCounts';
 import CodeBlock from 'components/react-docs-page/CodeBlock';
 import DocsShell from 'components/react-docs-page/DocsShell';
 import { Callout, Code } from 'components/react-docs-page/parts';
 import { SETUP_SECTIONS } from 'components/react-docs-page/sections';
 import { QuickStartDemo, RedrawDemo } from 'components/react-docs-page/GuideDemos';
+import Example from 'components/react-docs-page/Example';
+import { PaletteSwapDemo } from 'components/react-docs-page/PageDemos';
 import {
   ExampleSections,
   ExportNotes,
@@ -30,16 +33,21 @@ export const metadata: Metadata = pageMetadata({
 
 const installCode = `npm install tabbied`;
 
+// The update sample's palettes, which the demo beside it draws.
+const COOL = ['#0B1020', '#3E8BFF', '#3FFFB2'];
+const WARM = ['#FFF4E6', '#E8590C'];
+const list = (colors: string[]) => `[${colors.map((color) => `'${color}'`).join(', ')}]`;
+
 const updatesCode = `<script>
   import { tabbied, tabbiedAttributes } from 'tabbied/svelte';
   import { radius } from 'tabbied/patterns';
 
-  let palette = $state(['#0B1020', '#3E8BFF', '#3FFFB2']);
+  let palette = $state(${list(COOL)});
   const props = $derived({ pattern: radius, palette, height: 320 });
 </script>
 
 <div {...tabbiedAttributes(props)} use:tabbied={props}></div>
-<button onclick={() => (palette = ['#FFF4E6', '#E8590C'])}>Warm</button>`;
+<button onclick={() => (palette = ${list(WARM)})}>Warm</button>`;
 
 // The same component without runes, for Svelte 4 (and Svelte 5's legacy
 // mode): a plain `let` is reactive, `$:` derives, and events are `on:`.
@@ -47,12 +55,12 @@ const updatesLegacyCode = `<script>
   import { tabbied, tabbiedAttributes } from 'tabbied/svelte';
   import { radius } from 'tabbied/patterns';
 
-  let palette = ['#0B1020', '#3E8BFF', '#3FFFB2'];
+  let palette = ${list(COOL)};
   $: props = { pattern: radius, palette, height: 320 };
 </script>
 
 <div {...tabbiedAttributes(props)} use:tabbied={props}></div>
-<button on:click={() => (palette = ['#FFF4E6', '#E8590C'])}>Warm</button>`;
+<button on:click={() => (palette = ${list(WARM)})}>Warm</button>`;
 
 export default function SvelteDocsPage() {
   return (
@@ -120,7 +128,9 @@ export default function SvelteDocsPage() {
           with the design&apos;s own transition. Props that come out the same
           are skipped.
         </p>
-        <CodeBlock code={updatesCode} title="+page.svelte" lang="svelte" className={styles.codeStandalone} />
+        <Example code={updatesCode} title="+page.svelte" lang="svelte">
+          <PaletteSwapDemo pattern={radius} from={COOL} to={WARM} label="Warm" height={320} />
+        </Example>
         <p>
           The examples here use Svelte 5&apos;s runes. The action is the same
           in Svelte 4, where the component is written without them:

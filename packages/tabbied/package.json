@@ -1,6 +1,6 @@
 {
   "name": "tabbied",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Tabbied generative patterns: a framework-agnostic core, a <tabbied-pattern> web component, React and Vue components and a Svelte action, powered by css-doodle.",
   "type": "module",
   "license": "MIT",

@@ -1,11 +1,14 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { radius } from 'tabbied/patterns';
 import { PACKAGE_VERSION, PATTERN_COUNT } from 'lib/siteCounts';
 import CodeBlock from 'components/react-docs-page/CodeBlock';
 import DocsShell from 'components/react-docs-page/DocsShell';
 import { Callout, Code } from 'components/react-docs-page/parts';
 import { SETUP_SECTIONS } from 'components/react-docs-page/sections';
 import { QuickStartDemo, RedrawDemo } from 'components/react-docs-page/GuideDemos';
+import Example from 'components/react-docs-page/Example';
+import { PaletteSwapDemo } from 'components/react-docs-page/PageDemos';
 import {
   ExampleSections,
   ExportNotes,
@@ -38,6 +41,9 @@ const scriptCode = `<!-- Once per page, after the patterns. -->
   hydratePatterns({ patterns: { radius, vitrail } });
 </script>`;
 
+// The palette the update sample changes to, which the demo beside it draws.
+const WARM = ['#FFF4E6', '#E8590C'];
+
 const updatesCode = `<script type="module">
   import { hydratePatterns } from 'https://esm.sh/tabbied@${PACKAGE_VERSION}';
   import { radius } from 'https://esm.sh/tabbied@${PACKAGE_VERSION}/patterns?exports=radius';
@@ -46,7 +52,7 @@ const updatesCode = `<script type="module">
 
   // Each element with its controller.
   const { controller } = mounted[0];
-  controller.update({ palette: ['#FFF4E6', '#E8590C'] }); // redraws in place
+  controller.update({ palette: [${WARM.map((color) => `'${color}'`).join(', ')}] }); // redraws in place
 </script>`;
 
 const ATTRIBUTES: [string, ReactNode][] = [
@@ -160,7 +166,9 @@ export default function HtmlDocsPage() {
           already on the page, which redraws in place, with the design&apos;s
           own transition.
         </p>
-        <CodeBlock code={updatesCode} title="index.html" lang="html" className={styles.codeStandalone} />
+        <Example code={updatesCode} title="index.html" lang="html">
+          <PaletteSwapDemo pattern={radius} to={WARM} label="update()" code height={320} />
+        </Example>
         <p>
           The same controller has <Code>redraw()</Code> for a new seed,{' '}
           <Code>exportImage()</Code> for a PNG and <Code>exportSvg()</Code>{' '}

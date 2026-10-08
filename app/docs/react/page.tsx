@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import type { PatternDefinition } from 'tabbied';
 import { TabbiedPattern } from 'tabbied/react';
-import { wander } from 'tabbied/patterns';
+import { pebble, wander } from 'tabbied/patterns';
 import { PACKAGE_VERSION, PATTERN_COUNT } from 'lib/siteCounts';
 import CodeBlock from 'components/react-docs-page/CodeBlock';
 import DocsShell from 'components/react-docs-page/DocsShell';
@@ -9,6 +10,7 @@ import Example from 'components/react-docs-page/Example';
 import { Code } from 'components/react-docs-page/parts';
 import { SETUP_SECTIONS } from 'components/react-docs-page/sections';
 import { QuickStartDemo, RedrawDemo } from 'components/react-docs-page/GuideDemos';
+import { Live } from 'components/react-docs-page/live';
 import {
   ExampleSections,
   ExportNotes,
@@ -65,12 +67,39 @@ export default function Page() {
   return <TabbiedPattern pattern={pebble} height={320} />;
 }`;
 
+// A definition of your own, drawn live beside the sample: the sample prints
+// these strings, so what it shows is what it draws.
+const DEFINITION = {
+  palette: ['#101418', '#3e8bff', '#3fffb2'],
+  style: ['--rule: ( background: @p(var(--color1), var(--color2)); ', 'border-radius: @p(0, 50%); );'],
+  doodle: [':doodle { @grid: ${grid}; @size: ${width} ${height}; } ', ':container { background: var(--color0); }'],
+};
+
+const myPattern: PatternDefinition = {
+  name: 'My design',
+  slug: 'my-design',
+  palette: DEFINITION.palette,
+  options: [
+    {
+      id: 'grid',
+      displayName: 'Columns and rows',
+      type: 'ButtonSelectGroup',
+      default: '6x9',
+      options: ['2x3', '4x6', '6x9'],
+      replace: '${grid}',
+    },
+  ],
+  code: { style: DEFINITION.style.join(''), doodle: DEFINITION.doodle.join('') },
+};
+
+const quote = (text: string) => `'${text}'`;
+
 const definitionCode = `import type { PatternDefinition } from 'tabbied';
 
 const myPattern: PatternDefinition = {
   name: 'My design',
   slug: 'my-design',
-  palette: ['#101418', '#3e8bff', '#3fffb2'],
+  palette: [${DEFINITION.palette.map(quote).join(', ')}],
   options: [
     {
       id: 'grid',
@@ -82,10 +111,11 @@ const myPattern: PatternDefinition = {
     },
   ],
   code: {
-    style: '--rule: ( background: var(--color1); );',
+    // One rule per cell: here a square or a circle, in one of two inks.
+    style:
+      ${DEFINITION.style.map(quote).join(' +\n      ')},
     doodle:
-      ':doodle { @grid: \${grid}; @size: \${width} \${height}; } ' +
-      ':container { background: var(--color0); }',
+      ${DEFINITION.doodle.map(quote).join(' +\n      ')},
   },
 };`;
 
@@ -471,10 +501,9 @@ export default function ReactDocsPage() {
           App Router you can use it directly from Server
           Components; no <Code>ssr: false</Code> ceremony needed.
         </p>
-        <CodeBlock
-          code={ssrCode}
-          className={styles.codeStandalone}
-        />
+        <Example code={ssrCode} title="app/page.tsx">
+          <Live pattern={pebble} style={{ height: 320 }} className={styles.demoArt} />
+        </Example>
       </Section>
 
       <ExampleSections setup="react" recipes={REACT_RECIPES} />
@@ -544,11 +573,9 @@ export default function ReactDocsPage() {
           Presets are plain data. You can author your own - the
           renderer only cares about the shape:
         </p>
-        <CodeBlock
-          code={definitionCode}
-          lang="ts"
-          className={styles.codeStandalone}
-        />
+        <Example code={definitionCode} lang="ts">
+          <Live pattern={myPattern} style={{ height: 240 }} className={styles.demoArt} />
+        </Example>
         <p>
           The full type (palette slots, option kinds, per-pattern
           sizing metadata) ships with the package - {' '}

@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
+import { radius } from 'tabbied/patterns';
 import { PACKAGE_VERSION, PATTERN_COUNT } from 'lib/siteCounts';
 import CodeBlock from 'components/react-docs-page/CodeBlock';
 import DocsShell from 'components/react-docs-page/DocsShell';
 import { Callout, Code } from 'components/react-docs-page/parts';
 import { SETUP_SECTIONS } from 'components/react-docs-page/sections';
 import { QuickStartDemo, RedrawDemo } from 'components/react-docs-page/GuideDemos';
+import Example from 'components/react-docs-page/Example';
+import { Live } from 'components/react-docs-page/live';
+import { ControllerDemo } from 'components/react-docs-page/PageDemos';
 import {
   ExampleSections,
   ExportNotes,
@@ -30,11 +34,15 @@ export const metadata: Metadata = pageMetadata({
 
 const SCRIPT_URL = `https://cdn.jsdelivr.net/npm/tabbied@${PACKAGE_VERSION}/dist/element/tabbied-element.js`;
 
+// The samples' palettes, which the demos beside them draw.
+const COOL = ['#0B1020', '#3E8BFF', '#3FFFB2'];
+const WARM = ['#FFF4E6', '#E8590C'];
+
 const cdnCode = `<tabbied-pattern
   pattern="radius"
   seed="k9Pz"
-  palette="#0B1020, #3E8BFF, #3FFFB2"
-  style="display: block; aspect-ratio: 3 / 2; background: #0B1020"
+  palette="${COOL.join(', ')}"
+  style="display: block; aspect-ratio: 3 / 2; background: ${COOL[0]}"
 ></tabbied-pattern>
 
 <script type="module" src="${SCRIPT_URL}"></script>`;
@@ -68,7 +76,7 @@ const scriptingCode = `const pattern = document.querySelector('tabbied-pattern')
 
 pattern.addEventListener('ready', () => console.log('drawn'));
 
-pattern.setAttribute('palette', '#FFF4E6, #E8590C'); // redraws in place
+pattern.setAttribute('palette', '${WARM.join(', ')}'); // redraws in place
 pattern.redraw();                                     // a new seed
 const { svg } = await pattern.exportSvg();            // a vector file`;
 
@@ -105,7 +113,11 @@ export default function WebComponentDocsPage() {
           Each design is a separate file next to it, and the element fetches
           only the ones the page names, a couple of KB each.
         </p>
-        <CodeBlock code={cdnCode} title="index.html" lang="html" className={styles.codeStandalone} />
+        <Example code={cdnCode} title="index.html" lang="html">
+          <div className={styles.previewNarrow}>
+            <Live pattern={radius} seed="k9Pz" palette={COOL} style={{ aspectRatio: '3 / 2' }} className={styles.demoArt} />
+          </div>
+        </Example>
         <p>
           Pin the version, as here, so the page keeps drawing what it drew.
           unpkg serves the same files at the same path. To host them yourself,
@@ -187,7 +199,18 @@ export default function WebComponentDocsPage() {
           place, with the design&apos;s own transition. The element has the
           controller&apos;s methods itself:
         </p>
-        <CodeBlock code={scriptingCode} title="script.js" lang="ts" className={styles.codeStandalone} />
+        <Example code={scriptingCode} title="script.js" lang="ts">
+          <ControllerDemo
+            pattern={radius}
+            height={280}
+            ready='The ready event fired, and the console says "drawn".'
+            actions={[
+              { kind: 'update', label: "setAttribute('palette')", palette: WARM },
+              { kind: 'redraw', label: 'redraw()' },
+              { kind: 'svg', label: 'exportSvg()' },
+            ]}
+          />
+        </Example>
         <p>
           The <Code>ready</Code> event fires once the first render is drawn.{' '}
           <Code>error</Code> fires when a design cannot be loaded, with the

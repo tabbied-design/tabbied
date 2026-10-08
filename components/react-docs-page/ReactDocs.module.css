@@ -494,8 +494,12 @@ code.entryName {
   border-radius: 14px;
 }
 
+/* The ink is a hex, as in the recipes' wells, not the article's oklch():
+   a pattern inherits it as currentColor, and the SVG converter cannot read
+   the lab() Chromium reports for that, so exportSvg() threw in here. */
 .preview {
   padding: 20px;
+  color: var(--h-ink);
   background-color: var(--h-paper-well);
 }
 
@@ -898,20 +902,13 @@ code.entryName {
   background-color: var(--h-paper-well);
 }
 
-/* The setup's own mark, in a well above its name; teal with the card's
-   border on hover. */
+/* The setup's own mark, bare above its name; teal with the card's border
+   on hover. */
 .setupIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  margin-bottom: 16px;
+  display: flex;
+  margin-bottom: 20px;
   color: var(--h-ink);
-  background-color: var(--h-paper-well);
-  border: 1px solid var(--h-paper-rule);
-  border-radius: 12px;
-  transition: color 160ms ease, border-color 160ms ease;
+  transition: color 160ms ease;
 }
 
 .setupIcon svg {
@@ -922,7 +919,6 @@ code.entryName {
 .article a.setupCard:hover .setupIcon,
 .article a.setupCard:focus-visible .setupIcon {
   color: var(--h-teal);
-  border-color: var(--h-teal);
 }
 
 .setupMeta {
@@ -934,7 +930,8 @@ code.entryName {
 
 @media (prefers-reduced-motion: reduce) {
   .article a.setupCard,
-  .setupIcon {
+  .setupIcon,
+  .docsTileLink .artCaption {
     transition: none;
   }
 }
@@ -958,8 +955,9 @@ code.entryName {
 }
 
 /* The Concepts page's examples: a row of setups over the code panel, set
-   like the heading's chips, the chosen one filled. On a phone the row wraps
-   rather than scrolling, so every setup is in sight. */
+   like the heading's chips, the chosen one filled. On a phone the row is a
+   select instead (.setupSelect, below): wrapped, the six pills took two rows
+   and pushed the code a screen further down. */
 .setupTabs {
   margin-top: 24px;
 }
@@ -1002,10 +1000,202 @@ code.entryName {
   outline-offset: 1px;
 }
 
+/* The phone's switch: one pill the width of the column, the chosen setup's
+   mark filled the way its tab was, its name, and a caret. The tabs and this
+   are both in the page and the width decides which shows. */
+.setupSelect {
+  display: none;
+  box-sizing: border-box;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 44px;
+  padding: 0 16px 0 6px;
+  margin-bottom: 10px;
+  font: 400 12px var(--h-mono);
+  color: var(--h-ink);
+  letter-spacing: 0.12em;
+  text-align: left;
+  text-transform: uppercase;
+  background-color: var(--h-paper);
+  border: 1px solid oklch(0 0 0 / 0.14);
+  border-radius: 999px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 150ms ease;
+}
+
+.setupSelect:hover,
+.setupSelect[data-popup-open] {
+  border-color: var(--h-ink);
+}
+
+.setupSelect:focus-visible {
+  outline: 2px solid var(--h-teal);
+  outline-offset: 1px;
+}
+
+@media (max-width: 767.98px) {
+  .setupTabList {
+    display: none;
+  }
+
+  .setupSelect {
+    display: flex;
+  }
+}
+
+.setupSelectValue {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.setupSelectCaret {
+  display: flex;
+  color: var(--h-ink-dim);
+  transition: transform 150ms ease;
+}
+
+.setupSelect[data-popup-open] .setupSelectCaret {
+  transform: rotate(180deg);
+}
+
+/* A setup's mark, in a small well: filled with ink in the trigger and on the
+   chosen option, as the chosen tab is. */
+.setupSelectMark {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--h-ink);
+  background-color: var(--h-paper-well);
+  border: 1px solid var(--h-paper-rule);
+  border-radius: 999px;
+}
+
+.setupSelectMark svg {
+  width: 16px;
+  height: 16px;
+}
+
+.setupSelect .setupSelectMark,
+.setupSelectItem[data-selected] .setupSelectMark {
+  color: var(--h-paper);
+  background-color: var(--h-ink);
+  border-color: var(--h-ink);
+}
+
+/* Portaled to <body>, outside the page wrapper that declares --h-*, so the
+   popup redeclares the tokens it reads (a `font:` naming an undeclared one
+   is invalid as a whole), and carries plexMono's variable as a class. */
+.setupSelectPositioner {
+  z-index: 70;
+  outline: none;
+}
+
+.setupSelectPopup {
+  --h-paper: #ffffff;
+  --h-ink: #0e0e13;
+  --h-ink-dim: oklch(0.5 0.01 260);
+  --h-paper-rule: oklch(0 0 0 / 0.08);
+  --h-paper-well: oklch(0.98 0.002 260);
+  --h-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  box-sizing: border-box;
+  width: var(--anchor-width);
+  padding: 6px;
+  color: var(--h-ink);
+  background-color: var(--h-paper);
+  border: 1px solid var(--h-paper-rule);
+  border-radius: 28px;
+  outline: none;
+  box-shadow: 0 12px 32px oklch(0 0 0 / 0.16);
+  transform-origin: var(--transform-origin);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.setupSelectPopup[data-starting-style],
+.setupSelectPopup[data-ending-style] {
+  opacity: 0;
+  transform: scale(0.97);
+}
+
+.setupSelectList {
+  max-height: calc(var(--available-height) - 12px);
+  overflow-y: auto;
+  outline: none;
+}
+
+.setupSelectItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 44px;
+  padding: 0 12px 0 6px;
+  font: 400 12px var(--h-mono);
+  color: var(--h-ink-dim);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.setupSelectItem[data-highlighted] {
+  color: var(--h-ink);
+  background-color: var(--h-paper-well);
+}
+
+.setupSelectItem[data-selected] {
+  color: var(--h-ink);
+}
+
+.setupSelectCheck {
+  display: flex;
+  margin-left: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .setupTab {
+  .setupTab,
+  .setupSelect,
+  .setupSelectCaret,
+  .setupSelectPopup {
     transition: none;
   }
+}
+
+/* The Concepts page's sizing result: the four ways to size one design, two
+   to a row (three left the fixed canvas alone on a row of its own), each in
+   the box its code gives it. One to a row on a phone. */
+.conceptSizing {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 16px;
+  align-items: start;
+}
+
+@media (max-width: 559.98px) {
+  .conceptSizing {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* A fixed canvas drawn at half its size: the frame is half the canvas, and
+   the canvas inside it is scaled from its top left corner to fill it. */
+.halfScale {
+  margin: 0 auto;
+}
+
+.halfScale > * {
+  transform: scale(0.5);
+  transform-origin: 0 0;
 }
 
 /* ---- The Developers page (DocsShell layout="wide") ---- */
@@ -1060,7 +1250,19 @@ code.entryName {
   margin-top: 0;
 }
 
-/* What every setup shares, as two columns of links into the Concepts page. */
+/* What every setup shares: the Concepts page's card in the first of the
+   cards' three columns, so it is the width of every other card on the page,
+   and two columns of links into it in the other two. The card keeps its
+   own height rather than the list's. */
+.sharedEntries {
+  align-items: start;
+}
+
+.sharedEntries .sharedList {
+  grid-column: span 2;
+  padding-left: 28px;
+}
+
 .sharedList {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1121,6 +1323,30 @@ code.entryName {
   aspect-ratio: 4 / 3;
 }
 
+/* A tile of the strip is a link to its design in the editor, in the colors
+   it wears. A block, so `.article a`'s underline and color stay off it; its
+   caption's plate lightens to a neutral gray of the same hue, opaque, which
+   reads over any palette the tile is in. */
+.article a.docsTileLink {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.article a.docsTileLink:focus-visible {
+  outline: 2px solid var(--h-teal);
+  outline-offset: 2px;
+}
+
+.docsTileLink .artCaption {
+  transition: background-color 150ms ease;
+}
+
+.docsTileLink:hover .artCaption,
+.docsTileLink:focus-visible .artCaption {
+  background-color: oklch(0.42 0.012 285);
+}
+
 /* The design and palette a piece is drawn in, on a dark plate in its corner
    so it reads over any of them. */
 .artCaption {
@@ -1170,6 +1396,12 @@ code.entryName {
 
   .sharedList {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* One column of cards here, so the list goes under the card. */
+  .sharedEntries .sharedList {
+    grid-column: auto;
+    padding-left: 0;
   }
 }
 
@@ -1257,6 +1489,14 @@ code.entryName {
   margin: 24px 0 0;
 }
 
+/* A few cases' boxes side by side, for a sample that sizes a box those
+   ways; one to a row where two do not fit. */
+.sizeResults {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 32px;
+}
+
 /* A recipe's result, live, above its file: a well with a label, so the
    result reads as the code's output and not as part of the page. */
 .recipePreview {
@@ -1335,6 +1575,21 @@ code.entryName {
 .demoBtn:disabled {
   cursor: default;
   opacity: 0.5;
+}
+
+/* A button labelled with the call it runs, `redraw()`, as the code beside
+   it writes it. */
+.demoBtnCode {
+  height: 36px;
+  padding: 0 16px;
+  font: 400 13px var(--h-mono);
+}
+
+/* A toggle that is on: filled, like a chosen setup tab. */
+.demoBtn[aria-pressed='true'] {
+  color: var(--h-paper);
+  background-color: var(--h-ink);
+  border-color: var(--h-ink);
 }
 
 /* The hero recipe: a section the copy sizes, the pattern behind it. */

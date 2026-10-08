@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
+import { radius } from 'tabbied/patterns';
 import { PACKAGE_VERSION, PATTERN_COUNT } from 'lib/siteCounts';
 import CodeBlock from 'components/react-docs-page/CodeBlock';
 import DocsShell from 'components/react-docs-page/DocsShell';
 import { Code } from 'components/react-docs-page/parts';
 import { SETUP_SECTIONS } from 'components/react-docs-page/sections';
 import { QuickStartDemo, RedrawDemo } from 'components/react-docs-page/GuideDemos';
+import Example from 'components/react-docs-page/Example';
+import { PaletteSwapDemo } from 'components/react-docs-page/PageDemos';
 import {
   ExampleSections,
   ExportNotes,
@@ -30,17 +33,22 @@ export const metadata: Metadata = pageMetadata({
 
 const installCode = `npm install tabbied`;
 
+// The update sample's palettes, which the demo beside it draws.
+const COOL = ['#0B1020', '#3E8BFF', '#3FFFB2'];
+const WARM = ['#FFF4E6', '#E8590C'];
+const list = (colors: string[]) => `[${colors.map((color) => `'${color}'`).join(', ')}]`;
+
 const updatesCode = `<script setup>
 import { ref } from 'vue';
 import { TabbiedPattern } from 'tabbied/vue';
 import { radius } from 'tabbied/patterns';
 
-const palette = ref(['#0B1020', '#3E8BFF', '#3FFFB2']);
+const palette = ref(${list(COOL)});
 </script>
 
 <template>
   <TabbiedPattern :pattern="radius" :palette="palette" :height="320" class="hero" />
-  <button @click="palette = ['#FFF4E6', '#E8590C']">Warm</button>
+  <button @click="palette = ${list(WARM)}">Warm</button>
 </template>`;
 
 export default function VueDocsPage() {
@@ -101,7 +109,9 @@ export default function VueDocsPage() {
           <Code>style</Code> on the component lands on its element, beside
           the box&apos;s own.
         </p>
-        <CodeBlock code={updatesCode} title="App.vue" lang="vue" className={styles.codeStandalone} />
+        <Example code={updatesCode} title="App.vue" lang="vue">
+          <PaletteSwapDemo pattern={radius} from={COOL} to={WARM} label="Warm" height={320} />
+        </Example>
         <p>
           A template ref exposes <Code>redraw()</Code> for a new seed,{' '}
           <Code>exportImage()</Code> for a PNG, <Code>exportSvg()</Code> for
