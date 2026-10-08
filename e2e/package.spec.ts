@@ -350,6 +350,53 @@ test.describe('tabbied package (component test page)', () => {
     expect(await maxCellTransitionMs(page, selector)).toBe(0);
   });
 
+  // A grid change builds every cell anew, which is a first paint: the cells
+  // cut in rather than each easing in from its unstyled state. Concentric
+  // Rings is why: its rotated, sheet-sized rings each became a compositing
+  // layer for the ease, and Chromium painted the ground color over the page.
+  test('a grid change cuts to the new cells instead of animating them in', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1200, height: 800 });
+    await page.goto('/package-test');
+
+    const selector = '#fit-grid [data-pattern="radius"]';
+    await expect(page.locator(`${selector} css-doodle`)).toBeAttached({
+      timeout: 15000,
+    });
+    await expect
+      .poll(() => maxCellTransitionMs(page, selector), { timeout: 10000 })
+      .toBeGreaterThan(0);
+
+    const before = await cellCount(page, selector);
+    const settled = page.evaluate(
+      ([sel, count]) =>
+        new Promise<number>((resolve) => {
+          // Checked every frame, so the new cells are seen while any
+          // transition they started would still be running.
+          const tick = () => {
+            const root = document.querySelector(`${sel} css-doodle`)?.shadowRoot;
+            const cells = root?.querySelectorAll('cssd-cell').length ?? 0;
+
+            if (root && cells > 0 && cells !== count) {
+              resolve(root.getAnimations().length);
+            } else {
+              requestAnimationFrame(tick);
+            }
+          };
+          tick();
+        }),
+      [selector, before] as const
+    );
+    await page.setViewportSize({ width: 640, height: 800 });
+
+    expect(await settled).toBe(0);
+    // The authored ease is back once the new cells have painted.
+    await expect
+      .poll(() => maxCellTransitionMs(page, selector), { timeout: 10000 })
+      .toBeGreaterThan(0);
+  });
+
   test('redrawInterval is skipped under prefers-reduced-motion', async ({
     page,
   }) => {

@@ -2375,12 +2375,23 @@ first frame, which is the still the four already-paused designs show, while
 
 Two things that look redundant and are not:
 
-- **`ensureMuted()` after every `element.update()`.** css-doodle regenerates
-  the shadow root when the grid changes, which takes the injected `<style>`
-  with it. Without the re-assert the mute holds at mount and is gone after the
-  first resize-driven re-render - i.e. it fails in exactly the case it exists
-  for. `e2e/package.spec.ts` covers this by resizing and asserting the cell
-  transition-duration is still 0ms.
+- **`muteRebuiltCells()` after an `element.update()` that rebuilt.**
+  css-doodle regenerates the shadow root when the grid changes, which takes
+  the injected `<style>` with it. Without the re-assert the mute holds at
+  mount and is gone after the first resize-driven re-render - i.e. it fails in
+  exactly the case it exists for. `e2e/package.spec.ts` covers this by
+  resizing and asserting the cell transition-duration is still 0ms.
+
+A rebuild is muted for two frames without reduced motion too, because it is
+a first paint: every cell is new and would animate in from its unstyled
+state. That is not a morph, and for a design whose cells are rotated,
+sheet-sized rings it is not affordable either: Concentric Rings at the
+editor's density 0.7 made 361 compositing layers (229 megapixels) for the
+length of the ease, and Chromium, out of tile memory, painted the ground
+color over the plate and the rail around it. A rebuild is told apart by a
+node from before `update()` no longer being connected, since css-doodle
+restyles in place when it can and replaces the shadow root's `innerHTML`
+when it cannot.
 - **The `change` listener on the media query.** The preference is observed,
   not read once: `syncRedrawTimer` only re-checks on a config change, so a
   toggle mid-session would otherwise leave a running timer ticking.
