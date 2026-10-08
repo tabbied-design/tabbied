@@ -1,23 +1,24 @@
-// Batch 14 - 300 designs in twelve families, gallery orders 4000-4999. Each
+// Batch 14 - 44 designs in ten families, gallery orders 4000-4999. Each
 // family is drawn from a subject rather than from one geometric primitive,
 // and the batch reads where a cell sits in the sheet as well as what is in it
 // (css-doodle's 2D noise, the cell's column, row and distance from the
 // middle); pattern-defs-14/shared.mjs has the vocabulary for that.
 //
-// The families, in the order they ship:
+// 300 were written, 25 to a family, and these 44 were kept after looking at
+// them; the definitions of the rest were removed with them (the history
+// before the cut has them). Two families, G. Atomic and I. Pantry, kept
+// nothing, so their letters are unused. The families, in the order they ship:
 //
-//   A. Loom         cloth: checks, twills, plaids and the marks woven, printed and stitched into it.
+//   A. Loom         cloth: a gingham and a regimental stripe.
 //   B. Wagara       the old repeat motifs of Japan and of tilework and folk ornament elsewhere.
-//   C. Illusion     op art: figures that bulge, twist, tunnel and shimmer as they cross the sheet.
-//   D. Drift        fields steered by 2D noise: strokes that flow, dots that cloud, levels that contour.
-//   E. Grove        leaves, petals, scales, seeds and stones.
-//   F. Masonry      floors, walls and roofs: bonds, parquet, shingles, screens and tracery.
-//   G. Atomic       mid-century to nineties pop: starbursts, boomerangs, supergraphics, squiggles.
-//   H. Orbit        sky and space: stars, moons, planets, orbits, comets and eclipses.
-//   I. Pantry       things on a table: fruit cut open, sweets, buttons and other small objects.
-//   J. Tessellate   tilings and tile games: truchet sets, Cairo and rhombille tilings, Wang tiles.
-//   K. Press        print, signal and data: screens, dithers, barcodes, flags, gauges and charts.
-//   L. Papercraft   paper folded and cut, patchwork blocks, stitching, bunting and rosettes.
+//   C. Illusion     op art: figures that bulge, tunnel and turn as they cross the sheet.
+//   D. Drift        fields steered by 2D noise: strokes that flow, washes, braided channels.
+//   E. Grove        a leaf.
+//   F. Masonry      walls, screens and paving: bonds and stones.
+//   H. Orbit        the sky: the Milky Way and the northern lights.
+//   J. Tessellate   tilings and tile games: truchet sets, the Cairo tiling, a jigsaw.
+//   K. Press        signal and data: an ECG trace and a pie chart.
+//   L. Papercraft   paper cut, torn and layered.
 //
 // House rules, enforced by build-batch14.mjs (via pattern-lints.mjs) and by
 // validate-batch14.mjs / validate-svg-batch14.mjs:
@@ -43,9 +44,7 @@ import { sectionC } from './pattern-defs-14/c-illusion.mjs';
 import { sectionD } from './pattern-defs-14/d-drift.mjs';
 import { sectionE } from './pattern-defs-14/e-grove.mjs';
 import { sectionF } from './pattern-defs-14/f-masonry.mjs';
-import { sectionG } from './pattern-defs-14/g-atomic.mjs';
 import { sectionH } from './pattern-defs-14/h-orbit.mjs';
-import { sectionI } from './pattern-defs-14/i-pantry.mjs';
 import { sectionJ } from './pattern-defs-14/j-tessellate.mjs';
 import { sectionK } from './pattern-defs-14/k-press.mjs';
 import { sectionL } from './pattern-defs-14/l-papercraft.mjs';
@@ -57,9 +56,7 @@ export const SECTIONS = [
   sectionD,
   sectionE,
   sectionF,
-  sectionG,
   sectionH,
-  sectionI,
   sectionJ,
   sectionK,
   sectionL,

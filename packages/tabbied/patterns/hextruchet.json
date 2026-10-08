@@ -1,7 +1,7 @@
 {
   "name": "Hex Truchet",
   "slug": "hextruchet",
-  "galleryOrder": 4228,
+  "galleryOrder": 4031,
   "galleryWhite": true,
   "description": "Hexagonal truchet tiles: three arcs in every hexagon, each joining two neighboring sides, so the arcs link into long meandering loops with no ends.",
   "tags": [

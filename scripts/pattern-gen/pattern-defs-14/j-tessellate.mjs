@@ -5,32 +5,17 @@
 //
 //   truchet sets and paths
 //     Duotone Truchet  Smith tiles filled two-tone, the regions colored by the parity of their corners
-//     Neon Truchet     Smith arcs as glowing tubes
 //     Racetrack        Smith arcs as roads with lane lines
 //     Hex Truchet      three arcs per hexagon on offset rows
 //     Knotwork         a diagonal plait, over and under, broken into knots
-//     Pixel Maze       the ten print maze as pixel staircases
-//     Pipework         Wang tiles of pipe with rounded bends
-//     Boogie Woogie    a Wang network of lines and blocks
 //   tilings
 //     Cairo            the Cairo pentagonal tiling
-//     Cairo Morph      diamonds to Cairo pentagons to basketweave across the sheet
 //     Snub Square      tipped squares and equilateral triangles
-//     Pythagorean      two sizes of square on a 3-4-5 lattice
-//     Windmill         squares and dominoes in pinwheels, read off (x + 3y) mod 5
 //     Interlock        one S-sided tile by translation, rippling
 //     Pyramid Relief   the triangular lattice raised into lit pyramids
-//     Low Poly         a jittered triangulated mesh
-//     Fibonacci Grid   rectangles cut long and short by the Fibonacci word
-//     Apollonian       three generations of an Apollonian packing
-//     Baravelle        square spirals from nested turned squares
 //   tile games and rules
 //     Jigsaw           puzzle pieces whose knobs are cut by a hash of each edge
-//     Edge Match       an Eternity II style edge-matching puzzle
-//     Autotile         corner-matched game-map tiles (marching squares)
 //     Pentomino        a six by ten pentomino packing, repeated
-//     Euler Square     a Graeco-Latin square of shapes and inks
-//     Knight Tour      a closed knight's tour, move by move
 //
 // Three ways of making neighbors agree recur:
 //
@@ -39,8 +24,8 @@
 //     move with such flags is written as one @calc() per coordinate (flagPoly).
 //   * A hash of an edge's or a corner's place in the sheet, plus a number
 //     rolled once per sheet (SEED, which @pd() caches). Both cells sharing an
-//     edge compute the same hash, so Wang tiles, jigsaw knobs and mesh corners
-//     always match, and a reseed recuts the whole sheet.
+//     edge compute the same hash, so jigsaw knobs always match, and a reseed
+//     recuts the whole sheet.
 //   * A tile bigger than its cell, drawn whole by one cell in a box two or
 //     three cells wide. The sheet's first column and row also draw the pieces
 //     that would have come from outside it, through a second outline in the
@@ -50,7 +35,7 @@
 // cell, so nothing here leans on a later cell's background staying under an
 // earlier cell's overflow; rounded tiles are boxes with border-radius, since
 // the converter reads only the first radius of inset(... round ...).
-import { section, F, TR, cp, msk, mskI, B, A, ink, noise } from './shared.mjs';
+import { section, F, TR, cp, msk, mskI, B, A, ink } from './shared.mjs';
 
 const { add, all } = section('J. Tessellate');
 
@@ -77,18 +62,6 @@ const sheetInk = (c, from = 1, to = c - 1) => `@pd(@p(${inks(c, from, to)}))`;
  * designs that lost a cell in their catalog preview carry it.
  */
 const SHIFT = '--gate: @r(1);';
-
-/**
- * The cell's place as plain variables, for $() expressions. css-doodle
- * caches a parsed expression by its text, so an expression written over these
- * (rather than over @x, which is pasted in as a number) is parsed once for
- * the whole sheet instead of once per cell. A variable is read back by
- * re-parsing its text, so values meant to be read again are rounded short.
- * One more trap: $() treats four reads in a row of the same text as a
- * reference cycle and reads the fourth as 0, so no expression here reads
- * more than three equal values back to back.
- */
-const POS = '--ix: @x; --iy: @y; --mx: @X; --my: @Y;';
 
 /** The cell's checkerboard parity, 0 or 1, as a css-doodle expression. */
 const Q = '((@x + @y) % 2)';
@@ -224,12 +197,6 @@ const insetPoly = (pts, g) => {
   });
 };
 
-/**
- * A mask layer that shows nothing. A mask list whose every layer is `none`
- * means no mask at all, so a list of optional layers always carries one.
- */
-const EMPTY = 'linear-gradient(transparent, transparent)';
-
 /** A host declaration holding a list of mask layers (or any value), read in a cell with @var(). */
 const hostList = (name, layers) => `--${name}: ${Array.isArray(layers) ? layers.join(', ') : layers};`;
 
@@ -294,13 +261,6 @@ const lpt = ([u, v], span) => {
   const m = (e) => lscale(ladd(e, lin(o)), 100 / span);
   return `${lstr(m(u))}% ${lstr(m(v))}%`;
 };
-/** Shrink an outline of linear points toward its centroid by factor k. */
-const lshrink = (pts, k) => {
-  const n = pts.length;
-  const cx = pts.reduce((acc, p) => ladd(acc, lscale(p[0], 1 / n)), lin(0));
-  const cy = pts.reduce((acc, p) => ladd(acc, lscale(p[1], 1 / n)), lin(0));
-  return pts.map(([u, v]) => [ladd(cx, lscale(ladd(u, lscale(cx, -1)), k)), ladd(cy, lscale(ladd(v, lscale(cy, -1)), k))]);
-};
 const L = (c, name, k = 1) => (name ? lin(c, { [name]: k }) : lin(c));
 
 // -- truchet sets and paths ------------------------------------------------------
@@ -320,24 +280,6 @@ add(
     grid: '6x9',
     tg: '6x6',
     meta: { tags: ['quarter-circles', 'curves', 'maze'], mood: ['bold', 'playful'], density: 'dense', goodFor: ['poster', 'textile'] },
-  }
-);
-
-add(
-  'Neon Truchet',
-  'Smith truchet arcs drawn as neon tubes: a bright white core inside a soft colored glow, the loops winding unbroken across a dark sheet.',
-  (c) => {
-    const glow = (at) => `radial-gradient(circle farthest-side at ${at}, transparent 24%, #000 50%, transparent 76%)`;
-    return {
-      host: `${hostList('ng', [glow('0 0'), glow('100% 100%')])} ${hostList('nc', [ringFS('0 0', 46.5, 53.5), ringFS('100% 100%', 46.5, 53.5)])}`,
-      rule: `--glow: ${sheetInk(c, 2)}; ${F} { ${tf('rotate(@p(0deg, 90deg))')} ${B(`inset: 0; background: @p(@var(--glow)); opacity: 0.62; ${msk('@var(--ng)')}`)} ${A(`inset: 0; background: @p(var(--color1)); ${msk('@var(--nc)')}`)} }${TR}`,
-    };
-  },
-  {
-    palette: ['#120B26', '#FFF2FA', '#FF3FA4', '#3FE0FF', '#B46BFF', '#FFC94A'],
-    grid: '6x9',
-    tg: '6x6',
-    meta: { tags: ['curves', 'arcs', 'gradients', 'maze'], mood: ['bold', 'retro'], density: 'medium', goodFor: ['poster', 'og-image'] },
   }
 );
 
@@ -476,161 +418,6 @@ add(
   }
 );
 
-// Pixel Maze: the 10 PRINT maze in blocky pixels, a two-pixel staircase
-// running corner to corner, either way up, cut off at the cell edge so it
-// meets the next staircase at the corner.
-const PIX = (() => {
-  const n = 6;
-  const pts = [];
-  // upper outline, left to right: row r spans x in [(n-1-r)/n, (n+1-r)/n], clipped
-  for (let r = n - 1; r >= 0; r--) {
-    const x0 = (n - 1 - r) / n;
-    pts.push([x0, (r + 1) / n], [x0, r / n]);
-  }
-  pts.push([1, 0]);
-  const lower = [];
-  for (let r = 0; r < n; r++) {
-    const x1 = Math.min(1, (n + 1 - r) / n);
-    lower.push([x1, r / n], [x1, (r + 1) / n]);
-  }
-  return [...pts, ...lower.slice(1)];
-})();
-add(
-  'Pixel Maze',
-  'The ten print maze in chunky pixels: stepped diagonal strokes, one per cell, leaning either way and joining at the corners into a blocky labyrinth.',
-  () => ({
-    host: `--px: ${polyIn(1, PIX)};`,
-    rule: `${SHIFT} ${F} { ${tf('rotate(@p(0deg, 90deg))')} background: @p(var(--color1), var(--color1), var(--color2)); ${cp('@var(--px)')} }${TR}`,
-  }),
-  {
-    palette: ['#2E2A6B', '#8C82E6', '#B9B2F5'],
-    grid: '8x12',
-    tg: '10x10',
-    meta: { tags: ['maze', 'steps', 'diagonals'], mood: ['retro', 'technical'], density: 'medium', goodFor: ['wallpaper', 'card-texture'] },
-  }
-);
-
-// Pipework: Wang tiles of pipe. Each cell edge is open or shut by the hash
-// of its place; a cell bends a quarter-round elbow between every two open
-// sides that meet at a corner, runs straight through when only two opposite
-// sides are open, and caps a lone opening with a round end. Every piece stays
-// in its own cell, and the pipes meet across every open edge.
-const PIPE = (() => {
-  const ring = (at, hw) => ringFS(at, r2(50 - hw), r2(50 + hw));
-  const shapes = (hw) => {
-    const a = r2(50 - hw);
-    const z = r2(50 + hw);
-    const vband = `linear-gradient(90deg, transparent ${a}%, #000 ${a}% ${z}%, transparent ${z}%)`;
-    const hband = `linear-gradient(transparent ${a}%, #000 ${a}% ${z}%, transparent ${z}%)`;
-    const cap = `radial-gradient(circle farthest-side, #000 ${r2(hw * 2)}%, transparent ${r2(hw * 2)}%)`;
-    return [
-      ring('100% 0', hw),
-      ring('100% 100%', hw),
-      ring('0 100%', hw),
-      ring('0 0', hw),
-      vband,
-      hband,
-      `${vband} top / 100% 50% no-repeat`,
-      `${vband} bottom / 100% 50% no-repeat`,
-      `${hband} left / 50% 100% no-repeat`,
-      `${hband} right / 50% 100% no-repeat`,
-      cap,
-    ];
-  };
-  // the pieces each of the sixteen edge codes (8 top + 4 right + 2 bottom + left) needs
-  const host = (name, hw) => {
-    const sh = shapes(hw);
-    return Array.from({ length: 16 }, (_, k) => {
-      const [t, r, b, l] = [(k >> 3) & 1, (k >> 2) & 1, (k >> 1) & 1, k & 1];
-      const on = [
-        t * r,
-        r * b,
-        b * l,
-        l * t,
-        t * b * (1 - l) * (1 - r),
-        l * r * (1 - t) * (1 - b),
-        t * (1 - r) * (1 - b) * (1 - l),
-        b * (1 - r) * (1 - t) * (1 - l),
-        l * (1 - r) * (1 - b) * (1 - t),
-        r * (1 - t) * (1 - b) * (1 - l),
-        t + r + b + l === 1 ? 1 : 0,
-      ];
-      const list = sh.filter((_, i) => on[i]);
-      return hostList(`${name}${k}`, list.length ? list : [EMPTY]);
-    }).join(' ');
-  };
-  return { host };
-})();
-add(
-  'Pipework',
-  'Wang tiles of pipe: elbows, straights, tees and crosses with rounded bends, each tile open only where its neighbor is, so the pipes join into one tangled network.',
-  (c) => {
-    // The four edges' hashes are summed into the cell's code in one $() whose
-    // text is the same in every cell. (Summed from stored 0/1 variables it
-    // tripped $()'s cycle guard: four open edges came out as 14, not 15.)
-    const edge = (xe, ye, a, b, k) => `floor(0.55 + (sin(${xe} * ${a} + ${ye} * ${b} + s * ${k}) * 43758.5453 % 1 + 1) % 1)`;
-    const H = (xe, ye) => edge(xe, ye, 12.9898, 78.233, 1);
-    const G = (xe, ye) => edge(xe, ye, 39.3467, 11.1351, 1.7);
-    const code = `--pk: $(8 * ${G('ix', '(iy - 1)')} + 4 * ${H('ix', 'iy')} + 2 * ${G('ix', 'iy')} + ${H('(ix - 1)', 'iy')});`;
-    return {
-      host: `${PIPE.host('po', 17)} ${PIPE.host('pi', 4)}`,
-      rule: `${SHIFT} ${SEED} ${POS} ${code} --pipe: ${sheetInk(c, 1, 2)}; ${F} { ${B(`inset: 0; background: @p(@var(--pipe)); ${msk('@var(--po$(pk))')}`)} ${A(
-        `inset: 0; background: @p(var(--color3), var(--color4)); ${msk('@var(--pi$(pk))')}`
-      )} }${TR}`,
-    };
-  },
-  {
-    palette: ['#E9E4D8', '#2F5D62', '#3E4A61', '#F2A65A', '#EFE7D7'],
-    grid: '8x12',
-    tg: '10x10',
-    meta: { tags: ['curves', 'lines', 'maze', 'quarter-circles'], mood: ['playful', 'technical'], density: 'medium', goodFor: ['wallpaper', 'packaging'] },
-  }
-);
-
-// Boogie Woogie: a Wang network. Each cell edge is open or shut by the hash
-// of its place, so both cells sharing it agree; a cell draws the line from
-// its middle to its right and lower neighbors' middles where those edges are
-// open (the first column and row also their outer edges), and a small block
-// over its middle.
-const BW = 20;
-add(
-  'Boogie Woogie',
-  'A Wang network of yellow street lines that meet, turn and stop where the edge rules say, with small red, blue and gray blocks set along them.',
-  () => {
-    // Each line's far end, in percent of the three-cell box, from the hash
-    // of the edge it crosses: one $() each, written over the cell's own
-    // variables so the text is the same in every cell. The first column and
-    // row also run their lines out across the sheet's outer edge.
-    const open = (xe, ye, a, b, k) => `floor(0.5 + (sin(${xe} * ${a} + ${ye} * ${b} + s * ${k}) * 43758.5453 % 1 + 1) % 1)`;
-    const H = (xe, ye) => open(xe, ye, 12.9898, 78.233, 1);
-    const G = (xe, ye) => open(xe, ye, 39.3467, 11.1351, 1.7);
-    const h = BW / 2;
-    const end = (name, sign, bit) => `--${name}: $(round((${100 + 50 + sign * h} ${sign < 0 ? '-' : '+'} 100 * ${bit}) * 100 / 3) / 100)%;`;
-    const ends = [
-      end('xr', 1, H('ix', 'iy')),
-      end('xl', -1, `max(0, 2 - ix) * ${H('(ix - 1)', 'iy')}`),
-      end('yb', 1, G('ix', 'iy')),
-      end('yt', -1, `max(0, 2 - iy) * ${G('ix', '(iy - 1)')}`),
-    ].join(' ');
-    const c0 = `${r2((150 - h) / 3)}%`;
-    const c1 = `${r2((150 + h) / 3)}%`;
-    const across = ['@var(--xl) ' + c0, '@var(--xr) ' + c0, '@var(--xr) ' + c1, '@var(--xl) ' + c1];
-    const down = [`${c0} @var(--yt)`, `${c1} @var(--yt)`, `${c1} @var(--yb)`, `${c0} @var(--yb)`];
-    const lines = `--ln: polygon(${[...across, across[0], ...down, down[0]].join(', ')});`;
-    return {
-      rule: `${SHIFT} ${SEED} --ix: @x; --iy: @y; ${ends} ${lines} ${F} { ${B(
-        `${spanBox(3)} background: @p(var(--color1)); ${cp('@var(--ln)')}`
-      )} ${A(`left: ${50 - h}%; top: ${50 - h}%; width: ${BW}%; height: ${BW}%; background: @p(var(--color2), var(--color3), var(--color4), var(--color1), var(--color1));`)} }${TR}`,
-    };
-  },
-  {
-    palette: ['#EEEAE0', '#F2C40C', '#C7311E', '#2350A0', '#A9A69C'],
-    grid: '8x12',
-    tg: '10x10',
-    meta: { tags: ['lines', 'squares', 'grid', 'maze'], mood: ['playful', 'retro'], density: 'medium', goodFor: ['poster', 'wallpaper'] },
-  }
-);
-
 // -- tilings ---------------------------------------------------------------------
 
 // Cairo: every cell has a short bar through its middle, level on one parity
@@ -683,64 +470,6 @@ add(
     grid: '6x9',
     tg: '6x6',
     meta: { tags: ['mosaic', 'grid'], mood: ['calm', 'elegant'], density: 'dense', goodFor: ['wallpaper', 'textile'] },
-  }
-);
-
-// Cairo Morph: the Cairo construction with the bar through each cell growing
-// from nothing at one corner of the sheet to the full cell at the other. At
-// no length the pentagons are diamonds, at the golden middle the true Cairo
-// tiling, and at full length pairs of oblongs in a basketweave; each cell
-// uses its own length, so the pieces still meet wherever the sweep is.
-const CM = (() => {
-  // The sweep is worked out by css-doodle, once per cell and rounded; the
-  // pentagons' corners, which are straight sums of it, are left to the
-  // browser as calc() over those variables, so css-doodle only pastes text.
-  // A selector block per parity (and per outer column and row) writes the
-  // one polygon each cell needs.
-  const sweep = (dx, dy) => `$(round(max(0.02, min(0.98, 1.15 * ((ix - ${0.5 - dx}) / mx + (iy - ${0.5 - dy}) / my) / 2 - 0.05)) * 10000) / 10000)`;
-  // the pentagon across the right edge, own bar length `a`, neighbor's `b`
-  const right = (q, a, b) => {
-    const h = (n, sign) => L(0.5, n, sign * 0.5);
-    return q === 0
-      ? [[h(a, 1), lin(0.5)], [lin(1), lin(0)], [lin(1.5), h(b, -1)], [lin(1.5), h(b, 1)], [lin(1), lin(1)]]
-      : [[lin(0.5), h(a, -1)], [lin(1), lin(0)], [ladd(h(b, -1), lin(1)), lin(0.5)], [lin(1), lin(1)], [lin(0.5), h(a, 1)]];
-  };
-  const swap = (pts) => pts.map(([u, v]) => [v, u]);
-  const shiftBy = (pts, du, dv) => pts.map(([u, v]) => [ladd(u, lin(du)), ladd(v, lin(dv))]);
-  const k = 0.9;
-  // cell units to percent of the three-cell box, as a CSS calc() over the sweep variables
-  const css = (e) => {
-    const m = lscale(ladd(e, lin(1)), 100 / 3);
-    const parts = Object.entries(m.terms).filter(([, v]) => r2(v) !== 0);
-    if (!parts.length) return `${r2(m.c)}%`;
-    return `calc(${r2(m.c)}%${parts.map(([n, v]) => ` ${v < 0 ? '-' : '+'} ${Math.abs(r2(v))}% * @var(--${n})`).join('')})`;
-  };
-  const pts = (fig) => lshrink(fig, k).map(([u, v]) => `${css(u)} ${css(v)}`);
-  const loop = (list) => [...list, list[0]];
-  const poly = (...figs) => `polygon(${(figs.length > 1 ? figs.flatMap((f) => loop(pts(f))) : pts(figs[0])).join(', ')})`;
-  const rightPoly = (q, extra) => (extra ? poly(right(q, 'ca', 'cr'), shiftBy(right(1 - q, 'cl', 'ca'), -1, 0)) : poly(right(q, 'ca', 'cr')));
-  const bottomPoly = (q, extra) => (extra ? poly(swap(right(1 - q, 'ca', 'cd')), shiftBy(swap(right(q, 'cu', 'ca')), 0, -1)) : poly(swap(right(1 - q, 'ca', 'cd'))));
-  const vars = [
-    POS,
-    `--ca: ${sweep(0, 0)}; --cr: ${sweep(1, 0)}; --cd: ${sweep(0, 1)};`,
-    '@x(1) { --cl: ' + sweep(-1, 0) + '; } @y(1) { --cu: ' + sweep(0, -1) + '; }',
-    ...[0, 1].map((q) => `@match((x + y) % 2 == ${q}) { --rp: ${rightPoly(q, false)}; --bp: ${bottomPoly(q, false)}; }`),
-    ...[0, 1].map((q) => `@match(x == 1 && (x + y) % 2 == ${q}) { --rp: ${rightPoly(q, true)}; }`),
-    ...[0, 1].map((q) => `@match(y == 1 && (x + y) % 2 == ${q}) { --bp: ${bottomPoly(q, true)}; }`),
-  ].join(' ');
-  return { vars };
-})();
-add(
-  'Cairo Morph',
-  'A tiling that changes as it crosses the sheet: diamonds in one corner open into Cairo pentagons and then flatten into a basketweave of oblongs in the opposite corner.',
-  (c) => ({
-    rule: `${SHIFT} ${CM.vars} ${F} { ${B(`${spanBox(3)} background: ${ink(c)}; ${cp('@var(--rp)')}`)} ${A(`${spanBox(3)} background: ${ink(c)}; ${cp('@var(--bp)')}`)} }${TR}`,
-  }),
-  {
-    pal: 34,
-    grid: '8x12',
-    tg: '10x10',
-    meta: { tags: ['mosaic', 'diamonds', 'blocks', 'grid'], mood: ['calm', 'technical'], density: 'dense', goodFor: ['wallpaper', 'poster'] },
   }
 );
 
@@ -822,77 +551,6 @@ add(
     grid: '6x9',
     tg: '6x6',
     meta: { tags: ['squares', 'triangles', 'mosaic'], mood: ['elegant', 'bold'], density: 'dense', goodFor: ['wallpaper', 'poster'] },
-  }
-);
-
-// Pythagorean: a small square on every cell, turned so its sides run 3:4,
-// and a big square on every cell corner. The two sizes are the legs of a
-// 3-4-5 triangle, which is what lets them close up with no gap.
-const PY = { a: 0.8, b: 0.6, c: 0.8, s: 0.6, g: 0.018 };
-const turnedSquare = (cx, cy, side) => {
-  const h = side / 2;
-  return [[-h, -h], [h, -h], [h, h], [-h, h]].map(([u, v]) => [cx + PY.c * u - PY.s * v, cy + PY.s * u + PY.c * v]);
-};
-
-add(
-  'Pythagorean',
-  'The Pythagorean tiling: big and small squares, both turned off the grid, locking together so every small square sits in the notch between four big ones.',
-  (c) => {
-    const small = flagPoly(() => insetPoly(turnedSquare(0.5, 0.5, PY.b), PY.g), [], inSpan(3));
-    // the big squares on the right and bottom corners, and on the sheet's
-    // outer corners for the first column and row
-    const big = flagPoly(
-      ([ex, ey]) => {
-        const sqAt = (u, v) => insetPoly(turnedSquare(u, v, PY.a), PY.g);
-        const a = sqAt(1, 1);
-        const none = (pts) => pts.map(() => a[0]);
-        const bl = sqAt(0, 1);
-        const tr = sqAt(1, 0);
-        const tl = sqAt(0, 0);
-        return slit(a, ex ? bl : none(bl), ey ? tr : none(tr), ex && ey ? tl : none(tl));
-      },
-      [FIRST_X, FIRST_Y],
-      inSpan(3)
-    );
-    return {
-      rule: `${SHIFT} ${F} { ${B(`${spanBox(3)} background: @p(var(--color1), var(--color5)); ${cp(small)}`)} ${A(`${spanBox(3)} background: @p(var(--color2), var(--color3), var(--color4)); ${cp(big)}`)} }${TR}`,
-    };
-  },
-  {
-    pal: 2,
-    grid: '6x9',
-    tg: '6x6',
-    meta: { tags: ['squares', 'mosaic', 'grid'], mood: ['calm', 'elegant'], density: 'dense', goodFor: ['wallpaper', 'textile'] },
-  }
-);
-
-// Windmill: the plane tiled by unit squares and dominoes in pinwheels. The
-// tiling repeats on the lattice spanned by (2, 1) and (-1, 2), so a cell's
-// part is read straight off (x + 3y) mod 5: 0 is a square, 2 and 3 the two
-// halves of a level domino, 1 and 4 the halves of an upright one. Each part
-// opens grout only on its outer sides and rounds its outer corners.
-add(
-  'Windmill',
-  'Windmill tiling: every small square ringed by four dominoes turning like the sails of a windmill, the pinwheels interlocking edge to edge in three inks.',
-  () => {
-    const g = 5;
-    const R = 16;
-    // sides with grout, per part: [top, right, bottom, left]
-    const parts = [[1, 1, 1, 1], [1, 1, 0, 1], [1, 0, 1, 1], [1, 1, 1, 0], [0, 1, 1, 1]];
-    const side = (i) => `@match(${parts.map((p, k) => `$(wk) == ${k}, ${p[i] * g}%`).join(', ')}, 0%)`;
-    const corner = (i, j) => `@match(${parts.map((p, k) => `$(wk) == ${k}, ${p[i] * p[j] * R}%`).join(', ')}, 0%)`;
-    return {
-      rule: `--wo: @pd(@ri(0, 4)); --wc: @pd(@ri(0, 2)); --wk: @calc(0 + (@x + 3 * @y + $(wo)) % 5); --wt: @calc(0 + (min(1, $(wk)) + (floor($(wk) / 2) % 2) * (1 - floor($(wk) / 4)) + $(wc)) % 3); ${F} { ${B(
-        `top: ${side(0)}; right: ${side(1)}; bottom: ${side(2)}; left: ${side(3)}; border-radius: ${corner(0, 3)} ${corner(0, 1)} ${corner(2, 1)} ${corner(2, 3)}; background: @match($(wt) == 0, @p(var(--color1)), $(wt) == 1, @p(var(--color2)), @p(var(--color3)));`
-      )} }${TR}`,
-    };
-  },
-  {
-    pal: 37,
-    inks: 4,
-    grid: '10x15',
-    tg: '10x10',
-    meta: { tags: ['squares', 'blocks', 'grid', 'mosaic'], mood: ['calm', 'retro'], density: 'dense', goodFor: ['wallpaper', 'textile'] },
   }
 );
 
@@ -980,193 +638,6 @@ add(
   }
 );
 
-// Low Poly: a triangulated mesh. Every grid corner is nudged by the hash of
-// its place, so the four cells that share it agree, and each cell's
-// quadrilateral is split corner to corner into two triangles shaded from a
-// smooth noise field, the halves a step apart so the facets show.
-const LP = (() => {
-  const J = 0.56;
-  // Each corner's nudge is a hash of its place: the fraction of a big
-  // multiple of a sine, whose argument is linear in the corner's column and
-  // row, so a cell reaches its four corners by a fixed offset from its own.
-  // A corner coordinate is one $() whose text is the same in every cell
-  // (css-doodle parses it once for the sheet), stored in percent of
-  // the doubled box the facets are drawn in. Corners on the sheet's edge only
-  // slide along it. The polygons read the stored values back with @var(),
-  // which the browser resolves.
-  const AX = [12.99, 78.23];
-  const AY = [39.35, 11.14];
-  const off = (co, di, dj) => r2(-(co[0] * di + co[1] * dj));
-  const base = (co, k) => `ix*${co[0]} + iy*${co[1]} + s${k === 1 ? '' : `*${k}`}`;
-  // in units of 1/5000 of the box, so the whole sum is one short line
-  const at = (b0, hv, co, di, dj) => {
-    const o = off(co, di, dj);
-    const arg = o ? `${hv} ${o < 0 ? '-' : '+'} ${Math.abs(o)}` : hv;
-    return `$(round(${r2((b0 + 0.5) * 5000 - (J / 2) * 5000)} + ${r2(J * 5000)}*(abs(sin(${arg}))*43758.5 % 1))/100)%`;
-  };
-  // a corner as one variable holding both coordinates; `fix` pins either to the sheet's edge
-  const corner = (name, di, dj, u, v, fix = {}) =>
-    `--p${name}: ${fix.x ?? at(u, base(AX, 1), AX, di, dj)} ${fix.y ?? at(v, base(AY, 1.3), AY, di, dj)};`;
-  const C = { a: [1, 1, 0, 0], b: [0, 1, 1, 0], c: [0, 0, 1, 1], d: [1, 0, 0, 1] };
-  const pin = (name, fix) => corner(name, ...C[name], fix);
-  const vars = [
-    POS,
-    ...Object.keys(C).map((n) => pin(n)),
-    // corners on the sheet's edge only slide along it: the outer columns and rows put theirs back
-    `@x(1) { ${pin('a', { x: '25%' })} ${pin('d', { x: '25%' })} }`,
-    `@match(x == X) { ${pin('b', { x: '75%' })} ${pin('c', { x: '75%' })} }`,
-    `@y(1) { ${pin('a', { y: '25%' })} ${pin('b', { y: '25%' })} }`,
-    `@match(y == Y) { ${pin('c', { y: '75%' })} ${pin('d', { y: '75%' })} }`,
-    `@match(x == 1 && y == 1) { --pa: 25% 25%; } @match(x == X && y == 1) { --pb: 75% 25%; }`,
-    `@match(x == X && y == Y) { --pc: 75% 75%; } @match(x == 1 && y == Y) { --pd: 25% 75%; }`,
-    // split along a-c, or along b-d
-    '--quad: polygon(@var(--pa), @var(--pb), @var(--pc), @var(--pd)); --tri: polygon(@var(--pa), @var(--pb), @p(@var(--pc), @var(--pd)));',
-  ].join(' ');
-  return { vars, quad: '@var(--quad)' };
-})();
-add(
-  'Low Poly',
-  'A low poly mesh of irregular triangles, every grid point nudged off true and the facets shaded through smooth bands of color like a faceted landscape.',
-  (c) => {
-    // the ink of a facet: which of five bands of the field (nudged a little) it falls in
-    const band = `@p(@var(--color$(1 + min(4, max(0, floor((n + @p(-0.12, -0.06, 0, 0.06, 0.12)) * 5))))))`;
-    return {
-      rule: `${SHIFT} ${SEED} ${LP.vars} --n: ${noise(-0.6, 1.6, 1.1)}; ${F} { ${B(`left: -50%; top: -50%; width: 200%; height: 200%; background: ${band}; ${cp(LP.quad)}`)} ${A(
-        `left: -50%; top: -50%; width: 200%; height: 200%; background: ${band}; ${cp('@var(--tri)')}`
-      )} }${TR}`,
-    };
-  },
-  {
-    palette: ['#0E1A2B', '#1B3A5C', '#2D6A8A', '#4FA3A5', '#A8D5BA', '#F2E8C9'],
-    grid: '8x12',
-    tg: '8x8',
-    meta: { tags: ['triangles', 'mosaic', 'gradients'], mood: ['calm', 'technical'], density: 'dense', goodFor: ['hero-background', 'og-image'] },
-  }
-);
-
-// Fibonacci Grid: columns and rows cut long and short in the order of the
-// Fibonacci word (a Sturmian sequence, which never repeats), so the
-// rectangles come in four sizes laid out quasi-periodically. Each cell draws
-// the rectangle of its own column and row, wherever the sequence has carried
-// it; the long and short sides average a little over one cell, so the last
-// rectangles always reach the sheet edge. Inks follow the four sizes.
-const FIB = (() => {
-  const alpha = 0.6180339887;
-  const avg = 1.15;
-  const S = avg / (1 + alpha * (1.6180339887 - 1));
-  const Lg = 1.6180339887 * S;
-  const D = Lg - S;
-  const pos = (n, r) => `(${n} * ${r2(S * 1000) / 1000} + ${r2(D * 1000) / 1000} * floor(${n} * ${alpha} + $(${r})))`;
-  const wide = (n, r) => `(floor((${n} + 1) * ${alpha} + $(${r})) - floor(${n} * ${alpha} + $(${r})))`;
-  return { pos, wide, S: r2(S * 1000) / 1000, D: r2(D * 1000) / 1000 };
-})();
-add(
-  'Fibonacci Grid',
-  'Rectangles in four sizes on a black ground, their columns and rows cut long and short in the never-repeating order of the Fibonacci word, the smallest in primary colors.',
-  () => {
-    const g = 3.2;
-    const nx = '(@x - 1)';
-    const ny = '(@y - 1)';
-    return {
-      rule: `--rx: @pd(@r(0, 1)); --ry: @pd(@r(0, 1)); --w: @calc(0 + ${FIB.wide(nx, 'rx')}); --h: @calc(0 + ${FIB.wide(ny, 'ry')}); ${F} { ${B(
-        `left: ${rc(`100 * ${FIB.pos(nx, 'rx')} - 100 * ${nx} + ${g}`)}%; top: ${rc(`100 * ${FIB.pos(ny, 'ry')} - 100 * ${ny} + ${g}`)}%; width: ${rc(`100 * ${FIB.S} + 100 * ${FIB.D} * $(w) - ${2 * g}`)}%; height: ${rc(`100 * ${FIB.S} + 100 * ${FIB.D} * $(h) - ${2 * g}`)}%; background: @match($(w) + 2 * $(h) == 3, @p(var(--color1)), $(w) + 2 * $(h) == 2, @p(var(--color1), var(--color1), var(--color3)), $(w) + 2 * $(h) == 1, @p(var(--color1), var(--color4)), @p(var(--color2), var(--color4), var(--color3)));`
-      )} }${TR}`,
-    };
-  },
-  {
-    palette: ['#161616', '#F1EDE3', '#D3262A', '#F3C613', '#1F4C9C'],
-    grid: '8x12',
-    tg: '8x8',
-    meta: { tags: ['squares', 'blocks', 'grid', 'mosaic'], mood: ['bold', 'retro'], density: 'dense', goodFor: ['poster', 'wallpaper'] },
-  }
-);
-
-// Apollonian: three generations of an Apollonian packing on the square grid.
-// A disc fills every cell, a smaller disc sits in the hollow at every grid
-// corner, and the smallest discs fill the curved triangles left between
-// them; the sizes follow from Descartes' circle theorem.
-const APO = (() => {
-  const g = 0.014;
-  const R1 = 0.5;
-  const R2 = Math.SQRT1_2 - 0.5;
-  const k4 = 2 + 2 + 1 / R2 + 2 * Math.sqrt(4 + 4 / R2);
-  const R3 = 1 / k4;
-  const y3 = 1 - R2 - R3;
-  const map = inSpan(1.6);
-  const disc = ([u, v], r) => {
-    const [x, y] = map([u, v]).map(r2);
-    const rr = r2(((r - g) / 1.6) * 100);
-    return `radial-gradient(ellipse ${rr}% ${rr}% at ${x}% ${y}%, #000 100%, transparent 100%)`;
-  };
-  const small = (corner, edges) => [disc(corner, R2), ...edges.map((p) => disc(p, R3))];
-  return {
-    big: `inset: ${r2(g * 100)}%; border-radius: 50%;`,
-    // right and bottom edges, the bottom right corner
-    main: small([1, 1], [[1, 1 - y3], [1, y3], [1 - y3, 1], [y3, 1]]),
-    left: small([0, 1], [[0, 1 - y3], [0, y3]]),
-    top: small([1, 0], [[1 - y3, 0], [y3, 0]]),
-    corner: [disc([0, 0], R2)],
-  };
-})();
-add(
-  'Apollonian',
-  'Three generations of an Apollonian circle packing: big discs touching in a square grid, middling discs in the hollows between them and tiny discs in the gaps left over.',
-  (c) => {
-    const host = [
-      hostList('ap00', APO.main),
-      hostList('ap10', [...APO.main, ...APO.left]),
-      hostList('ap01', [...APO.main, ...APO.top]),
-      hostList('ap11', [...APO.main, ...APO.left, ...APO.top, ...APO.corner]),
-    ].join(' ');
-    return {
-      host,
-      rule: `${SHIFT} ${F} { ${B(`${APO.big} background: @p(var(--color1), var(--color2), var(--color3));`)} ${A(
-        `${spanBox(1.6)} background: @p(var(--color4), var(--color5)); ${msk('@match(x == 1, @match(y == 1, @var(--ap11), @var(--ap10)), @match(y == 1, @var(--ap01), @var(--ap00)))')}`
-      )} }${TR}`,
-    };
-  },
-  {
-    pal: 44,
-    grid: '6x9',
-    tg: '6x6',
-    meta: { tags: ['circles', 'dots', 'grid'], mood: ['calm', 'elegant'], density: 'medium', goodFor: ['wallpaper', 'textile'] },
-  }
-);
-
-// Baravelle: squares nested one inside the next at half the area, each turned
-// 45 degrees, and the corner triangles between them dealt round in turn to
-// four arms, so the arms wind in as square spirals. Opposite arms share an ink.
-const BAR = (() => {
-  const levels = 7;
-  const arms = [[], [], [], []];
-  let sq = [[0, 0], [1, 0], [1, 1], [0, 1]];
-  for (let k = 0; k < levels; k++) {
-    const mid = sq.map((v, i) => [(v[0] + sq[(i + 1) % 4][0]) / 2, (v[1] + sq[(i + 1) % 4][1]) / 2]);
-    for (let c = 0; c < 4; c++) {
-      const tri = [sq[c], mid[c], mid[(c + 3) % 4]];
-      arms[(c + 4 - (k % 4)) % 4].push(tri);
-    }
-    sq = mid;
-  }
-  const g = 0.008;
-  const arm = (j) => arms[j].map((t) => insetPoly(t, g));
-  return { a: polyIn(1, slit(...arm(0), ...arm(2))), b: polyIn(1, slit(...arm(1), ...arm(3))) };
-})();
-add(
-  'Baravelle',
-  'Baravelle spirals: squares nested at half the size and turned, their corner triangles shaded in turn so four arms wind inward, each square whirling one way or the other.',
-  (c) => ({
-    host: `--ba: ${BAR.a}; --bb: ${BAR.b};`,
-    rule: `${SHIFT} ${F} { ${tf('rotate(@p(0deg, 90deg)) scaleX(@p(1, -1))')} ${B(`inset: 0; background: ${ink(c)}; ${cp('@var(--ba)')}`)} ${A(`inset: 0; background: ${ink(c)}; ${cp('@var(--bb)')}`)} }${TR}`,
-  }),
-  {
-    pal: 4,
-    grid: '6x9',
-    tg: '6x6',
-    meta: { tags: ['spirals', 'triangles', 'squares'], mood: ['bold', 'playful'], density: 'dense', goodFor: ['poster', 'textile'] },
-  }
-);
-
 // -- tile games and rules --------------------------------------------------------
 
 // Jigsaw: each piece's four edges carry a knob that points out or in by the
@@ -1247,119 +718,6 @@ add(
   }
 );
 
-// Edge Match: an edge-matching puzzle in the manner of Eternity II. Each
-// cell edge carries a diamond of one color with a cut-out motif, half on
-// either side, so the tiles only fit one way round; a cell draws the
-// diamonds on its right and lower edges whole, split down the middle by the
-// tile seam.
-const EM = (() => {
-  const g = 0.02;
-  const dia = (cx, cy) => insetPoly([[cx - 0.5, cy], [cx, cy - 0.5], [cx + 0.5, cy], [cx, cy + 0.5]], g);
-  const vert = flagPoly(([e]) => {
-    const a = dia(1, 0.5);
-    const b = dia(0, 0.5);
-    return slit(a, e ? b : b.map(() => a[0]));
-  }, [FIRST_X], inSpan(3));
-  const horiz = flagPoly(([e]) => {
-    const a = dia(0.5, 1);
-    const b = dia(0.5, 0);
-    return slit(a, e ? b : b.map(() => a[0]));
-  }, [FIRST_Y], inSpan(3));
-  const map = inSpan(3);
-  // the seam: a gap down x = 0 and x = 1 (or across y = 0 and y = 1)
-  const gp = (100 * g) / 3;
-  const seam = (deg, a, b) =>
-    `linear-gradient(${deg}, #000 ${r2(a - gp)}%, transparent ${r2(a - gp)}% ${r2(a + gp)}%, #000 ${r2(a + gp)}% ${r2(b - gp)}%, transparent ${r2(b - gp)}% ${r2(b + gp)}%, #000 ${r2(b + gp)}%)`;
-  const motif = (cx, cy) => {
-    const [x, y] = map([cx, cy]).map(r2);
-    const e = (rx, ry, stops) => `radial-gradient(ellipse ${r2((rx / 3) * 100)}% ${r2((ry / 3) * 100)}% at ${x}% ${y}%, ${stops})`;
-    return [
-      e(0.15, 0.15, 'transparent 100%, #000 100%'),
-      e(0.17, 0.17, '#000 0 38%, transparent 38% 100%, #000 100%'),
-      e(0.22, 0.1, 'transparent 100%, #000 100%'),
-      e(0.1, 0.22, 'transparent 100%, #000 100%'),
-    ];
-  };
-  const vSeam = seam('90deg', map([0, 0])[0], map([1, 0])[0]);
-  const hSeam = seam('180deg', map([0, 0])[1], map([0, 1])[1]);
-  const host = [0, 1, 2, 3]
-    .map((k) => `${hostList(`ev${k}`, [vSeam, motif(1, 0.5)[k], motif(0, 0.5)[k]])} ${hostList(`eh${k}`, [hSeam, motif(0.5, 1)[k], motif(0.5, 0)[k]])}`)
-    .join(' ');
-  const pick = (p) => `@match($(m) == 0, @var(--${p}0), $(m) == 1, @var(--${p}1), $(m) == 2, @var(--${p}2), @var(--${p}3))`;
-  return { vert, horiz, host, vMask: pick('ev'), hMask: pick('eh') };
-})();
-add(
-  'Edge Match',
-  'An edge-matching puzzle: square tiles whose sides carry half-diamonds with round cut-out motifs, laid so every pair of halves meets its partner across the seams.',
-  (c) => ({
-    host: EM.host,
-    rule: `${F} { ${B(`--m: @p(0, 1, 2, 3); ${spanBox(3)} background: ${ink(c)}; ${cp(EM.vert)} ${mskI(EM.vMask)}`)} ${A(`--m: @p(0, 1, 2, 3); ${spanBox(3)} background: ${ink(c)}; ${cp(EM.horiz)} ${mskI(EM.hMask)}`)} }${TR}`,
-  }),
-  {
-    pal: 18,
-    grid: '6x9',
-    tg: '6x6',
-    meta: { tags: ['diamonds', 'circles', 'grid', 'mosaic'], mood: ['playful', 'bold'], density: 'dense', goodFor: ['packaging', 'poster'] },
-  }
-);
-
-// Autotile: the corner-matched tiles a game map is drawn with. Every grid
-// corner is land or water by a smooth field the whole sheet shares, and each
-// cell draws its piece of the coast from its four corners (marching squares
-// with round corners): a quarter disc for a lone corner, a half for a land
-// side, the cell less a quarter disc for a single water corner. Pieces agree
-// along every shared side, so the coast runs on unbroken. A second, higher
-// level draws hills inside the land.
-const AUTO = (() => {
-  // the field at a grid corner, computed once per corner and shared by both levels
-  // The field at a grid corner, a sum of three sines across the sheet: one
-  // $() per corner, its text the same in every cell (css-doodle parses it
-  // once), rounded so the two levels read it back quickly.
-  // the corner (ix + di, iy + dj): each sine's argument is the cell's own plus a fixed offset
-  const add = (e, o) => (r2(o) === 0 ? e : `${e} ${o < 0 ? '-' : '+'} ${Math.abs(r2(o))}`);
-  const field = (di, dj) =>
-    `$(round((sin(${add('ix*1.13 + iy*0.47 + s', 1.13 * di + 0.47 * dj)}) + sin(${add('iy*1.05 - ix*0.41 + 1.7*s', 1.05 * dj - 0.41 * di)}) + 0.7*sin(${add('(ix - iy)*0.83 + 2.3*s', 0.83 * (di - dj))}))*10000)/10000)`;
-  const fields = `${POS} --fa: ${field(-1, -1)}; --fb: ${field(0, -1)}; --fc: ${field(0, 0)}; --fd: ${field(-1, 0)};`;
-  /** The level's four corners as one number, 8 a + 4 b + 2 c + d (a comparison reads as 1 or 0). */
-  const code = (p, t) => `--${p}k: $(8*(fa >= ${t}) + 4*(fb >= ${t}) + 2*(fc >= ${t}) + (fd >= ${t}));`;
-  const shapes = [
-    cornerDisc('50%', '0 0'),
-    cornerDisc('50%', '100% 0'),
-    cornerDisc('50%', '100% 100%'),
-    cornerDisc('50%', '0 100%'),
-    'linear-gradient(#000 0 50%, transparent 50%)',
-    'linear-gradient(90deg, transparent 50%, #000 50%)',
-    'linear-gradient(transparent 50%, #000 50%)',
-    'linear-gradient(90deg, #000 0 50%, transparent 50%)',
-    cornerBore('50%', '0 0'),
-    cornerBore('50%', '100% 0'),
-    cornerBore('50%', '100% 100%'),
-    cornerBore('50%', '0 100%'),
-  ];
-  // the layers each of the sixteen corner codes needs, worked out here once
-  const host = Array.from({ length: 16 }, (_, k) => {
-    const [a, b, cc, d] = [(k >> 3) & 1, (k >> 2) & 1, (k >> 1) & 1, k & 1];
-    const on = [a, b, cc, d, a * b, b * cc, cc * d, d * a, b * cc * d * (1 - a), a * cc * d * (1 - b), a * b * d * (1 - cc), a * b * cc * (1 - d)];
-    const list = shapes.filter((_, i) => on[i]);
-    return hostList(`am${k}`, list.length ? list : [EMPTY]);
-  }).join(' ');
-  return { vars: `${fields} ${code('l', 0.15)} ${code('h', 1.05)}`, host };
-})();
-add(
-  'Autotile',
-  'A game map drawn with corner-matched tiles: rounded islands of land in open water, with hills rising inside them, the coastlines running smoothly from tile to tile.',
-  () => ({
-    host: AUTO.host,
-    rule: `${SHIFT} ${SEED} ${AUTO.vars} ${F} { ${B(`inset: 0; background: @p(var(--color1)); ${msk('@var(--am$(lk))')}`)} ${A(`inset: 0; background: @p(var(--color2)); ${msk('@var(--am$(hk))')}`)} }${TR}`,
-  }),
-  {
-    palette: ['#3F86A8', '#F0DFA8', '#5E8F4A'],
-    grid: '8x12',
-    tg: '10x10',
-    meta: { tags: ['curves', 'blocks', 'quarter-circles', 'grid'], mood: ['playful', 'organic'], density: 'medium', goodFor: ['wallpaper', 'packaging'] },
-  }
-);
-
 // Pentomino: the twelve pentominoes packed into a six by ten rectangle (a
 // solution found by search), repeated across the sheet. A cell looks itself
 // up in the packing, and the table also says which of its four sides face a
@@ -1407,97 +765,6 @@ add(
     grid: '10x15',
     tg: '10x10',
     meta: { tags: ['blocks', 'squares', 'mosaic', 'grid'], mood: ['playful', 'retro'], density: 'dense', goodFor: ['packaging', 'wallpaper'] },
-  }
-);
-
-// Euler Square: two orthogonal Latin squares of order five laid over each
-// other, one choosing the shape and one the ink, so in any five by five
-// block every shape meets every ink exactly once. The outlines all have 24
-// points, so a reseed (which shifts both squares) morphs one into another.
-const EULER = (() => {
-  const N = 24;
-  const ring = (fn) => Array.from({ length: N }, (_, i) => fn(i / N));
-  const along = (verts, t) => {
-    // a point at fraction t round the closed outline `verts`
-    const segs = verts.map((v, i) => [v, verts[(i + 1) % verts.length]]);
-    const lens = segs.map(([a, b]) => Math.hypot(b[0] - a[0], b[1] - a[1]));
-    const total = lens.reduce((x, y) => x + y, 0);
-    let d = t * total;
-    for (let i = 0; i < segs.length; i++) {
-      if (d <= lens[i] || i === segs.length - 1) {
-        const f = lens[i] ? d / lens[i] : 0;
-        return [segs[i][0][0] + (segs[i][1][0] - segs[i][0][0]) * f, segs[i][0][1] + (segs[i][1][1] - segs[i][0][1]) * f];
-      }
-      d -= lens[i];
-    }
-  };
-  const poly = (verts) => ring((t) => along(verts, t));
-  const circle = ring((t) => [0.5 + 0.34 * Math.sin(2 * Math.PI * t), 0.5 - 0.34 * Math.cos(2 * Math.PI * t)]);
-  const square = poly([[0.5, 0.2], [0.8, 0.2], [0.8, 0.8], [0.2, 0.8], [0.2, 0.2]]);
-  const tri = poly([[0.5, 0.14], [0.86, 0.8], [0.14, 0.8]]);
-  const diamond = poly([[0.5, 0.12], [0.88, 0.5], [0.5, 0.88], [0.12, 0.5]]);
-  const k = 0.12;
-  const plus = poly([[0.5 - k, 0.14], [0.5 + k, 0.14], [0.5 + k, 0.5 - k], [0.86, 0.5 - k], [0.86, 0.5 + k], [0.5 + k, 0.5 + k], [0.5 + k, 0.86], [0.5 - k, 0.86], [0.5 - k, 0.5 + k], [0.14, 0.5 + k], [0.14, 0.5 - k], [0.5 - k, 0.5 - k]]);
-  const shapes = [circle, square, tri, diamond, plus];
-  return {
-    host: shapes.map((sh, i) => `--e${i}: ${polyIn(1, sh)};`).join(' '),
-    names: shapes.map((_, i) => `--e${i}`),
-  };
-})();
-add(
-  'Euler Square',
-  'Circles, squares, triangles, diamonds and crosses in five inks, arranged as a Graeco-Latin square so every shape meets every color once in each five by five block.',
-  () => ({
-    host: EULER.host,
-    rule: `${SHIFT} --a: @pd(@ri(0, 4)); --b: @pd(@ri(0, 4)); --sh: @calc(0 + (@x + @y + $(a)) % 5); --ik: @calc(0 + (@x + 2 * @y + $(b)) % 5); ${F} { background: @match(${[0, 1, 2, 3]
-      .map((i) => `$(ik) == ${i}, @p(var(--color${i + 1}))`)
-      .join(', ')}, @p(var(--color5))); ${cp(pickVar('$(sh)', EULER.names))} }${TR}`,
-  }),
-  {
-    pal: 1,
-    grid: '5x5',
-    tg: '5x5',
-    meta: { tags: ['circles', 'squares', 'triangles', 'diamonds', 'crosses', 'grid'], mood: ['playful', 'technical'], density: 'medium', goodFor: ['poster', 'packaging'] },
-  }
-);
-
-// Knight Tour: a closed knight's tour of the chessboard, repeated board to
-// board. A cell looks up its square's place in the tour and draws the move
-// to the next square as a bar leaving its middle; the tour is colored in
-// four quarters, so its progress shows. The board is marked by the square's
-// color, a dot on light and a block on dark (a painted board would hide the
-// strokes the converter draws from earlier cells), so every stroke joins a
-// dot to a block, as a knight's move always changes color. A reseed moves
-// the window over the board and rotates where the coloring starts.
-const KT = (() => {
-  const board = [[1, 4, 63, 28, 17, 6, 55, 52], [62, 29, 2, 5, 56, 53, 18, 7], [3, 0, 57, 60, 27, 16, 51, 54], [30, 61, 26, 15, 48, 59, 8, 19], [25, 14, 47, 58, 41, 20, 45, 50], [34, 31, 36, 23, 46, 49, 40, 9], [13, 24, 33, 42, 11, 38, 21, 44], [32, 35, 12, 37, 22, 43, 10, 39]];
-  const dir = [[1, 1, 7, 6, 1, 1, 6, 6], [2, 7, 6, 2, 6, 1, 0, 7], [3, 4, 0, 6, 4, 4, 3, 4], [0, 4, 2, 2, 0, 5, 0, 6], [2, 2, 2, 2, 7, 0, 6, 4], [0, 7, 0, 6, 5, 2, 5, 7], [3, 4, 5, 1, 6, 1, 6, 4], [2, 3, 5, 2, 4, 2, 5, 4]];
-  const moves = [[1, 2], [2, 1], [2, -1], [1, -2], [-1, -2], [-2, -1], [-2, 1], [-1, 2]];
-  const entries = [];
-  for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) entries.push(board[y][x] * 8 + dir[y][x]);
-  const look = `@match(${entries.slice(0, -1).map((v, i) => `$(kq) == ${i}, ${v}`).join(', ')}, ${entries[63]})`;
-  const angle = `@match(${moves.slice(0, -1).map(([dx, dy], i) => `$(kd) == ${i}, ${r2((Math.atan2(dy, dx) * 180) / Math.PI)}deg`).join(', ')}, ${r2((Math.atan2(moves[7][1], moves[7][0]) * 180) / Math.PI)}deg)`;
-  return { look, angle };
-})();
-add(
-  'Knight Tour',
-  "A knight's tour: every square of a chessboard joined to the next by a knight's move, a dot on each light square and a block on each dark one, the strokes crossing into a web in four colors.",
-  () => {
-    const w = 7;
-    const band = `@match(${[0, 1, 2]
-      .map((i) => `floor((($(ks) + $(co)) % 64) / 16) == ${i}, @p(var(--color${i + 1}))`)
-      .join(', ')}, @p(var(--color4)))`;
-    return {
-      rule: `${SHIFT} --ox: @pd(@ri(0, 7)); --oy: @pd(@ri(0, 7)); --co: @pd(@ri(0, 63)); --kq: @calc(0 + (@x - 1 + $(ox)) % 8 + 8 * ((@y - 1 + $(oy)) % 8)); --kv: ${KT.look}; --ks: @calc(floor($(kv) / 8)); --kd: @calc(0 + $(kv) % 8); ${F} { ${B(
-        `left: 50%; top: ${50 - w / 2}%; width: 223.61%; height: ${w}%; border-radius: 99px; background: ${band}; -webkit-transform-origin: 0 50%; transform-origin: 0 50%; ${tf(`rotate(${KT.angle})`)}`
-      )} ${A(`--dk: @calc(0 + (@x + @y + $(ox) + $(oy)) % 2); left: @match($(dk) == 1, 33%, 38%); top: @match($(dk) == 1, 33%, 38%); width: @match($(dk) == 1, 34%, 24%); height: @match($(dk) == 1, 34%, 24%); border-radius: @match($(dk) == 1, 24%, 50%); background: ${band};`)} }${TR}`,
-    };
-  },
-  {
-    palette: ['#F1EADB', '#2B4C7E', '#1E8A6E', '#E08E2B', '#C0392B'],
-    grid: '8x12',
-    tg: '8x8',
-    meta: { tags: ['lines', 'dots', 'diagonals', 'grid'], mood: ['technical', 'elegant'], density: 'medium', goodFor: ['poster', 'card-texture'] },
   }
 );
 

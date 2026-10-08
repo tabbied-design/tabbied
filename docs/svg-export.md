@@ -15,12 +15,13 @@ warning, or on a pixel diff above a budget deliberately tighter than the
 shipped one. Both are thin callers of `scripts/pattern-gen/svg-sweep.mjs`, and
 both batches share the authoring lints in `scripts/pattern-gen/pattern-lints.mjs`.
 
-Batch 14 (gallery orders 4000-4999, 300 designs) holds the same line with
-`validate-svg-batch14.mjs`, and while a family is authored
+Batch 14 (gallery orders 4000-4999; 300 authored, 44 kept) holds the same
+line with `validate-svg-batch14.mjs`, and while a family is authored
 `check-batch14.mjs` runs the sweep straight from its definitions. Its designs
-are drawn from subjects (cloth, tiles, quilts, charts, the sky) rather than one
-primitive, so they met more of the converter's edges than any batch before;
-what they worked around is listed under "Batch 14's workarounds" below.
+were drawn from subjects (cloth, tiles, quilts, charts, the sky) rather than
+one primitive, so they met more of the converter's edges than any batch
+before; what they worked around is listed under "Batch 14's workarounds"
+below, including the limits only the designs that were cut ran into.
 
 Batch 12 is where the *smooth* gradient gets used: 19 of its 32 designs are
 built on linear and radial ramps - fades, a corner glow, halftones and ruled
@@ -152,7 +153,7 @@ design that needs a conditional effect can use it. It is currently unexercised
 by any pattern, which is why `e2e/svg-export.spec.ts` no longer has a case for
 it: there is no fixture to point one at.
 
-### 4. Full support - everything else (597)
+### 4. Full support - everything else (341)
 
 Solid fills, border-radius shapes, per-side borders, clip-paths,
 linear/radial/repeating gradients (incl. `calc(% ± px)` ramps and
@@ -329,8 +330,8 @@ converter failures and are not:
   so do two boxes that merely butt. Run the polygon a few percent past the
   cell, or scale the cell by about 1.01 so it covers the joint.
 - **A background sized smaller than its box is pixel-snapped** on screen
-  (Barn Raising measured 10% that way); lay the bands across the whole box
-  with hard stops instead.
+  (a patchwork block, since cut, measured 10% that way); lay the bands across
+  the whole box with hard stops instead.
 
 ## Converter subtleties (hard-won; don't regress these)
 

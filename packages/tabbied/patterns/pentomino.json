@@ -1,7 +1,7 @@
 {
   "name": "Pentomino",
   "slug": "pentomino",
-  "galleryOrder": 4247,
+  "galleryOrder": 4038,
   "description": "All twelve pentominoes packed into a rectangle and repeated edge to edge, each piece a solid block of one ink with grout lines between pieces.",
   "tags": [
     "blocks",

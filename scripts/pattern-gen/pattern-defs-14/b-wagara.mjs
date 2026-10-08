@@ -1,28 +1,23 @@
 // B. Wagara - the old repeat motifs of Japan and of tilework and folk ornament elsewhere.
 //
-//   Japan      Wave Fans (seigaiha), Hemp Leaf (asanoha), Yabane, Mitsuuroko,
-//              Sakura, Kiku, Kanoko, Igeta, Amime, Matsukawabishi, Kagome,
-//              Hitomezashi, Same Komon, Tachiwaki, Tomoe
-//   elsewhere  Greek Key, Guilloche, Kawung, Star And Cross, Chakana,
-//              Selbu Star, Talavera, Ice Crack, Cross Stitch, Cintamani
+//   Japan      Wave Fans (seigaiha), Hemp Leaf (asanoha), Yabane
+//   elsewhere  Guilloche, Kawung, Selbu Star, Ice Crack, Cross Stitch
 //
 // Most motifs are drawn once, in JS, as a polygon on the host and read in
-// the cell with @var(), so a long outline costs nothing per cell: bitmaps are
-// traced square by square (Greek Key, Chakana, Selbu Star), smooth shapes are
-// contoured from an implicit function by marching squares (Tomoe, Cross
-// Stitch, Cintamani), and radial ones come from a polar profile (Sakura,
-// Kiku, Talavera). Patterns that join across cells do it without z-index
+// the cell with @var(), so a long outline costs nothing per cell: a bitmap is
+// traced square by square (Selbu Star) and a smooth shape is contoured from
+// an implicit function by marching squares (Cross Stitch). Patterns that
+// join across cells do it without z-index
 // between cells, which the SVG export does not keep: the fans of Wave Fans
 // stack inside one cell's stacking context, and Guilloche cuts a real gap
 // in the under strand of every crossing instead of layering the rings.
-import { section, F, TR, ink, cp, msk, mskI, B, A, noise } from './shared.mjs';
+import { section, F, TR, ink, cp, msk, B, A } from './shared.mjs';
 
 const { add, all } = section('B. Wagara');
 
 // -- local helpers -------------------------------------------------------------
 
 const tf = (v) => `-webkit-transform: ${v}; transform: ${v};`;
-const tfo = (v) => `-webkit-transform-origin: ${v}; transform-origin: ${v};`;
 const n2 = (v) => (Math.abs(v) < 1e-9 ? 0 : +v.toFixed(2));
 /** A polygon from [x, y] points already in percent of the box. */
 const P = (pts) => `polygon(${pts.map(([x, y]) => `${n2(x)}% ${n2(y)}%`).join(', ')})`;
@@ -152,46 +147,6 @@ const asterisk = (arms, t) => {
   return pts;
 };
 
-/** Points around (0, 0) from a polar radius function of the angle (y down). */
-const polar = (r, steps = 180) => {
-  const pts = [];
-  for (let i = 0; i < steps; i++) {
-    const t = (i / steps) * 2 * Math.PI;
-    const R = r(t);
-    pts.push([R * Math.cos(t), R * Math.sin(t)]);
-  }
-  return pts;
-};
-
-/** A centered polar shape of unit radius as a polygon filling the box. */
-const polarPoly = (r, steps) => P(polar(r, steps).map(([x, y]) => [50 + 50 * x, 50 + 50 * y]));
-
-/** A convex polygon moved inward by `t` on every side (same units as pts). */
-const inset = (pts, t) => {
-  const n = pts.length;
-  const lines = pts.map((p, i) => {
-    const q = pts[(i + 1) % n];
-    const dx = q[0] - p[0], dy = q[1] - p[1];
-    const L = Math.hypot(dx, dy);
-    // Clockwise in y-down coordinates: the inside is to the right.
-    const nx = -dy / L, ny = dx / L;
-    return [p[0] + nx * t, p[1] + ny * t, dx, dy];
-  });
-  return lines.map((l, i) => {
-    const m = lines[(i + n - 1) % n];
-    // Intersect line m with line l.
-    const det = m[2] * -l[3] + l[2] * m[3];
-    const s = ((l[0] - m[0]) * -l[3] + l[2] * (l[1] - m[1])) / det;
-    return [m[0] + s * m[2], m[1] + s * m[3]];
-  });
-};
-
-/** A frame: the polygon less its inset, as one keyhole polygon. */
-const frame = (pts, t) => {
-  const inner = inset(pts, t);
-  return [...pts, pts[0], inner[0], ...inner.slice(1).reverse(), inner[0]];
-};
-
 /**
  * Smooth outlines of an implicit shape (inside where f < 0) by marching
  * squares on an n x n sampling of the unit box. Loops run clockwise around
@@ -275,9 +230,6 @@ const ringL = (inner, outer, at = '50% 50%') =>
 /** Opposite quadrants of the box, starting at `from` (0deg = top right). */
 const quadL = (from) =>
   `conic-gradient(from ${from}, #000 0 90deg, transparent 90deg 180deg, #000 180deg 270deg, transparent 270deg 360deg)`;
-
-/** A hole of radius r (percent of the box half-side) bored at the center. */
-const boreL = (r) => `radial-gradient(circle closest-side, transparent ${r}%, #000 ${r}%)`;
 
 /**
  * Mask layers kept on the host as one property and read in the cell, so a
@@ -369,354 +321,7 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
   );
 }
 
-{
-  // Each cell holds one up-pointing triangle, split into the three-scale
-  // crest with a real hole at its middle; the down-pointing triangles left
-  // between the cells are the plain scales of the ground.
-  const topT = P([[50, 0], [75, 50], [25, 50]]);
-  const feet = P([[25, 50], [50, 100], [75, 50], [100, 100], [0, 100]]);
-  add(
-    'Mitsuuroko',
-    'Rows of triangles like dragon scales, each one a crest of three smaller triangles round an empty middle, in red, black and gold.',
-    (c) => ({
-      rule: `--k: ${ink(c)}; ${F} { ${B(clipped(topT, '@p(@var(--k))'))} ${A(clipped(feet, '@var(--k)'))} }${TR}`,
-    }),
-    {
-      pal: 29,
-      inks: 3,
-      grid: '6x9',
-      tg: '6x6',
-      meta: { tags: ['triangles', 'mosaic', 'grid'], mood: ['bold', 'festive'], density: 'medium', goodFor: ['textile', 'packaging', 'poster'] },
-    }
-  );
-}
-
-{
-  // Five notched petals: the union of five lobes, each a rounded polar
-  // profile with a small V cut at its tip.
-  const step = (2 * Math.PI) / 5;
-  const lobe = (phi) => {
-    const w = 0.7;
-    if (Math.abs(phi) >= w) return 0;
-    const base = Math.cos((phi / w) * (Math.PI / 2)) ** 0.55;
-    return base * (1 - 0.2 * Math.exp(-((phi / 0.085) ** 2)));
-  };
-  const r = (t) => {
-    let m = 0.16;
-    for (let k = 0; k < 5; k++) {
-      let phi = t - (-Math.PI / 2 + k * step);
-      phi = Math.atan2(Math.sin(phi), Math.cos(phi));
-      m = Math.max(m, lobe(phi));
-    }
-    return m;
-  };
-  const bloom = polarPoly(r, 200);
-  const pistil = polarPoly((t) => 0.55 + 0.45 * Math.abs(Math.cos(2.5 * (t + Math.PI / 2))), 60);
-  add(
-    'Sakura',
-    'Cherry blossoms of five notched petals strewn over a night ground, every flower turned and sized a little differently, each with a pale star at its heart.',
-    (c) => ({
-      host: `--bloom: ${bloom}; --heart: ${pistil};`,
-      rule: `${F} { ${tf(`translate(@r(-14%, 14%), @r(-14%, 14%)) rotate(${noise(-40, 40, 1.2)}deg) scale(@r(0.62, 1.04))`)} ${B(clipped('@var(--bloom)', pick(1, 2, 3, 4), 'inset: 2%;'))} ${A(clipped('@var(--heart)', pick(5, 3), 'inset: 39%;'))} }${TR}`,
-    }),
-    {
-      palette: ['#1D2440', '#F7C6D0', '#F09CB2', '#FBE4EA', '#E07A98', '#F4D06F'],
-      grid: '6x9',
-      tg: '5x5',
-      meta: { tags: ['petals', 'stars'], mood: ['organic', 'calm', 'elegant'], density: 'medium', goodFor: ['textile', 'wallpaper', 'packaging'] },
-    }
-  );
-}
-
-{
-  // Sixteen rounded petals in two ranks, the back rank turned half a petal;
-  // full crests on one square of the checker and small ones on the other.
-  const petals = polarPoly((t) => 0.58 + 0.42 * Math.abs(Math.cos(8 * t)) ** 0.45, 192);
-  add(
-    'Kiku',
-    'Chrysanthemum crests of sixteen rounded petals in two ranks, large and small crests alternating like a checker, each with an open heart.',
-    (c) => ({
-      host: `--kiku: ${petals};`,
-      rule: `@odd { ${tf('scale(0.56)')} } ${F} { ${B(clipped('@var(--kiku)', ink(c), 'inset: 3%;', tf('rotate(11.25deg)')))} ${A(clipped('@var(--kiku)', ink(c), 'inset: 13%;', msk(boreL(22))))} }${TR}`,
-    }),
-    {
-      palette: ['#1F2E2A', '#E6B44C', '#C8473E', '#F2E3C6', '#8DA77B'],
-      grid: '6x9',
-      tg: '5x5',
-      meta: { tags: ['petals', 'radial', 'checkerboard', 'circles'], mood: ['elegant', 'festive'], density: 'medium', goodFor: ['textile', 'packaging', 'wallpaper'] },
-    }
-  );
-}
-
-{
-  // Shibori dots: two tied dots to a cell on a diagonal grid, each a softly
-  // squared knot with a dyed point at its middle, set a little askew.
-  const dot = (c, pos) =>
-    `left: ${pos}; top: ${pos}; width: 36%; height: 36%; margin: -18% 0 0 -18%; border-radius: 24%; background: ${ink(c)}; ${msk(boreL(34))} ${tf('rotate(@r(32deg, 58deg)) scale(@r(0.82, 1.04))')}`;
-  add(
-    'Kanoko',
-    'Fawn-spot tie-dye on purple silk: pale, softly squared knots on a diagonal grid, each with a dyed point at its middle, set askew the way hand-tied cloth comes out.',
-    (c) => ({
-      rule: `${F} { ${B(dot(c, '25%'))} ${A(dot(c, '75%'))} }${TR}`,
-    }),
-    {
-      palette: ['#3B2A5A', '#F3EDF5', '#DCCDE8', '#BFAED6'],
-      grid: '7x10',
-      tg: '6x6',
-      meta: { tags: ['dots', 'squares', 'diamonds', 'grid'], mood: ['organic', 'calm'], density: 'medium', goodFor: ['textile', 'card-texture', 'wallpaper'] },
-    }
-  );
-}
-
-{
-  // Well-curb crosses in kasuri: the four bars dyed into the threads, so the
-  // ends blur and each pair sits a little off its neighbor.
-  const bars = (c, turn) =>
-    `left: 26%; top: 12%; width: 48%; height: 76%; background: ${ink(c)}; ${mskVar('bars', true)} ${tf(`rotate(${turn}) translate(@r(-5%, 5%), @r(-4%, 4%))`)}`;
-  add(
-    'Igeta',
-    'Well-curb crosses dyed into indigo cloth, the bars soft at their ends and each one a little out of register, like ikat-woven kasuri.',
-    (c) => ({
-      host: '--bars: linear-gradient(90deg, #000 0 22%, transparent 22% 78%, #000 78%), linear-gradient(180deg, transparent, #000 24% 76%, transparent);',
-      rule: `${F} { ${B(bars(c, '0deg'))} ${A(bars(c, '90deg'))} }${TR}`,
-    }),
-    {
-      palette: ['#1F2F4D', '#EDE7DA', '#C9D4E2', '#A4B7CF'],
-      grid: '6x9',
-      tg: '5x5',
-      meta: { tags: ['crosses', 'lattice', 'gradients', 'grid'], mood: ['calm', 'organic'], density: 'medium', goodFor: ['textile', 'wallpaper', 'card-texture'] },
-    }
-  );
-}
-
-{
-  // Fishing net: every cell carries three arcs of circles one cell in
-  // radius, hung from the middle of its top edge and from its neighbors'
-  // middles, so the arcs cross into curved meshes. A knot sits where three
-  // arcs meet.
-  const arc = (at) =>
-    `radial-gradient(ellipse 100% 100% at ${at}, transparent 92.5%, #000 92.5% 100%, transparent 100%)`;
-  add(
-    'Amime',
-    'A fishing net of sagging arcs crossing into curved meshes, with a colored knot tied at the top of every mesh.',
-    (c) => ({
-      rule: `${F} { ${B(`inset: 0; background: var(--color1); ${msk(arc('-50% 0'), arc('50% 0'), arc('150% 0'))}`)} ${A(`left: 50%; top: 0; width: 14%; height: 14%; margin: -7% 0 0 -7%; border-radius: 50%; background: ${ink(c, 2)};`)} }${TR}`,
-    }),
-    {
-      pal: 40,
-      inks: 4,
-      grid: '6x9',
-      tg: '5x5',
-      meta: { tags: ['curves', 'lattice', 'arcs', 'dots'], mood: ['calm', 'organic'], density: 'medium', goodFor: ['wallpaper', 'hero-background', 'textile'] },
-    }
-  );
-}
-
-{
-  // Pine-bark lozenge: a wide diamond with a smaller one rising out of its
-  // top and bottom, drawn as an outline with a solid copy nested inside.
-  const shape = [
-    [0.5, 0], [0.75, 0.25], [2 / 3, 1 / 3], [1, 0.5], [2 / 3, 2 / 3], [0.75, 0.75],
-    [0.5, 1], [0.25, 0.75], [1 / 3, 2 / 3], [0, 0.5], [1 / 3, 1 / 3], [0.25, 0.25],
-  ];
-  const outer = P(pct(frame(shape, 0.085)));
-  const inner = P(pct(shape));
-  add(
-    'Matsukawabishi',
-    'Stepped pine-bark diamonds, each a wide lozenge with smaller ones rising from its top and bottom, drawn as an outline with a solid one nested inside, tip to tip.',
-    (c) => ({
-      host: `--outline: ${outer}; --core: ${inner};`,
-      rule: `${F} { ${B(clipped('@var(--outline)', ink(c)))} ${A(clipped('@var(--core)', ink(c), 'inset: 26%;'))} }${TR}`,
-    }),
-    {
-      pal: 5,
-      inks: 3,
-      grid: '6x9',
-      tg: '5x5',
-      meta: { tags: ['diamonds', 'steps', 'lattice'], mood: ['elegant', 'calm'], density: 'medium', goodFor: ['textile', 'wallpaper', 'packaging'] },
-    }
-  );
-}
-
-{
-  // Hexagons touching only at their corners, so the triangles between them
-  // make the six-pointed stars of a woven bamboo basket.
-  const k = 0.1;
-  const hexPts = [[0, 0.5], [0.25, 0], [0.75, 0], [1, 0.5], [0.75, 1], [0.25, 1]];
-  const ring = P(pct(frame(hexPts, k)));
-  const box = (left) => `left: ${left}; top: 0; width: 100%; height: 100%;`;
-  add(
-    'Kagome',
-    'A woven-basket lattice: hexagon outlines touching corner to corner, the triangles between them closing into rows of six-pointed stars.',
-    (c) => ({
-      host: `--ring: ${ring};`,
-      rule: `@y(even) { ${tf('translateX(50%)')} } ${F} { ${B(clipped('@var(--ring)', ink(c), box('0')))} ${A(clipped('@var(--ring)', ink(c), box('-100%'), 'opacity: @match(x == 1, 1, 0);'))} }${TR}`,
-    }),
-    {
-      palette: ['#1E2B3C', '#E3C88F', '#D3A35F', '#F1E4C4', '#B9824A'],
-      grid: '6x9',
-      tg: '5x5',
-      meta: { tags: ['hexagons', 'lattice', 'stars', 'lines'], mood: ['organic', 'calm'], density: 'medium', goodFor: ['wallpaper', 'textile', 'card-texture'] },
-    }
-  );
-}
-
-{
-  // Hitomezashi: every grid line is a running stitch starting on or off the
-  // first square, chosen per line by a fixed hash, so the stitches lock into
-  // a maze of steps and crosses.
-  const bit = (v, a, b) => {
-    const s = `sin(${v} * ${a} + ${b}) * 437.585`;
-    return `floor(2 * ((${s}) - floor(${s})))`;
-  };
-  const across = `opacity: @calc((${bit('@y', 12.9898, 7.1)} + @x) % 2);`;
-  const down = `opacity: @calc((${bit('@x', 78.233, 3.3)} + @y) % 2);`;
-  add(
-    'Hitomezashi',
-    'Sashiko running stitches along every line of a grid, each line starting on or off the first square, so the stitches lock into a maze of steps.',
-    (c) => ({
-      rule: `${F} { ${B(`left: 9%; width: 82%; top: -4%; height: 8%; border-radius: 99px; background: ${ink(c)}; ${across}`)} ${A(`top: 9%; height: 82%; left: -4%; width: 8%; border-radius: 99px; background: ${ink(c)}; ${down}`)} }${TR}`,
-    }),
-    {
-      palette: ['#1B2A47', '#F1ECE1', '#E3D5B8', '#C5D1E0', '#D8604C'],
-      grid: '8x12',
-      tg: '10x10',
-      meta: { tags: ['lines', 'maze', 'steps', 'grid'], mood: ['calm', 'organic'], density: 'medium', goodFor: ['textile', 'card-texture', 'wallpaper'] },
-    }
-  );
-}
-
-{
-  // Shark-skin dots: tiny dashes along four rings of a fan, cut by the rings
-  // and a fan of spokes; the fans overlap row on row.
-  const n = 22;
-  const stops = [];
-  for (let i = 0; i < n; i++) {
-    const a0 = +((180 / n) * i).toFixed(3);
-    const a1 = +((180 / n) * (i + 0.5)).toFixed(3);
-    const a2 = +((180 / n) * (i + 1)).toFixed(3);
-    stops.push(`#000 ${a0}deg ${a1}deg`, `transparent ${a1}deg ${a2}deg`);
-  }
-  const spokes = `conic-gradient(from -90deg, ${stops.join(', ')}, transparent 180deg 360deg)`;
-  const rings = 'radial-gradient(circle closest-side, transparent 0 52%, #000 52% 58%, transparent 58% 67%, #000 67% 73%, transparent 73% 82%, #000 82% 88%, transparent 88% 94%, #000 94% 100%, transparent 100%)';
-  add(
-    'Same Komon',
-    'A fine sharkskin texture: tiny dots strung along overlapping fans of arcs, so the cloth seems to shimmer from a distance.',
-    (c) => ({
-      host: `--spokes: ${spokes};`,
-      rule: `${F} { ${B(`left: -50%; top: 0; width: 200%; height: 200%; background: ${ink(c)}; ${mskI('@var(--spokes)', rings)}`)} }${TR}`,
-    }),
-    {
-      palette: ['#26355A', '#E8E4DA', '#C9CFDB'],
-      grid: '8x12',
-      tg: '10x10',
-      meta: { tags: ['dots', 'arcs', 'scallops', 'halftone'], mood: ['calm', 'elegant'], density: 'dense', goodFor: ['textile', 'card-texture', 'wallpaper'] },
-    }
-  );
-}
-
-{
-  // Rising steam: two wavy lines per column that swell apart and pinch
-  // together, every other column half a wave out of step so the neighbors
-  // run parallel.
-  const band = (phase, side) => {
-    const N = 48;
-    const h = 0.045;
-    const cx = (y) => {
-      const s = Math.sin(Math.PI * y + phase) ** 2;
-      const x = 0.5 - 0.07 - 0.29 * s;
-      return side < 0 ? x : 1 - x;
-    };
-    const L = [];
-    const R = [];
-    for (let i = 0; i <= N; i++) {
-      const y = i / N;
-      L.push([cx(y) - h, y]);
-      R.push([cx(y) + h, y]);
-    }
-    return P(pct([...L, ...R.reverse()]));
-  };
-  add(
-    'Tachiwaki',
-    'Rising steam: pairs of wavy lines swelling apart and pinching together up every column, the neighbors half a wave out of step.',
-    (c) => ({
-      host: `--la: ${band(0, -1)}; --ra: ${band(0, 1)}; --lb: ${band(Math.PI / 2, -1)}; --rb: ${band(Math.PI / 2, 1)};`,
-      rule: `${F} { ${B(clipped('@match(x % 2 == 0, @var(--lb), @var(--la))', ink(c)))} ${A(clipped('@match(x % 2 == 0, @var(--rb), @var(--ra))', ink(c)))} }${TR}`,
-    }),
-    {
-      palette: ['#F3EBDD', '#7A1F2B', '#1F3A5F', '#B5652A', '#3E6B52'],
-      grid: '6x9',
-      tg: '6x6',
-      meta: { tags: ['waves', 'lines', 'curves', 'stripes'], mood: ['calm', 'organic', 'elegant'], density: 'medium', goodFor: ['wallpaper', 'textile', 'hero-background'] },
-    }
-  );
-}
-
-{
-  // Three commas swirling round a middle: each a round head with a tail that
-  // sweeps out to the rim and runs round the outside of the next head,
-  // tapering away. The crest sits in a ring; neighbors swirl the other way.
-  const R = 0.4;
-  const tau = 2 * Math.PI;
-  const smooth = (t) => t * t * (3 - 2 * t);
-  const comma = (x, y, a0) => {
-    const ca = Math.cos(-a0), sa = Math.sin(-a0);
-    const qx = x * ca - y * sa, qy = x * sa + y * ca;
-    const head = Math.hypot(qx - 0.42, qy) - 0.27;
-    const r = Math.hypot(qx, qy);
-    const back = ((-Math.atan2(qy, qx)) % tau + tau) % tau;
-    const span = (170 / 180) * Math.PI;
-    let tail = 1;
-    if (back <= span) {
-      const u = back / span;
-      const out = 0.69 + 0.31 * smooth(Math.min(1, u / 0.3));
-      const w = 0.54 * (1 - u) ** 1.5;
-      tail = Math.max(out - w - r, r - out);
-    }
-    return Math.min(head, tail);
-  };
-  const crest = shapeOf((x, y) => {
-    const px = (x - 0.5) / R, py = (y - 0.5) / R;
-    return Math.min(comma(px, py, 0), comma(px, py, tau / 3), comma(px, py, (2 * tau) / 3));
-  }, 120);
-  add(
-    'Tomoe',
-    'Crests of three swirling commas, each tail sweeping round the head of the next inside a thin ring, the crests turning one way and the other like a checker.',
-    (c) => ({
-      host: `--tomoe: ${crest};`,
-      rule: `@odd { ${tf('scaleX(-1)')} } ${F} { ${B(clipped('@var(--tomoe)', ink(c)))} ${A(`inset: 4%; border-radius: 50%; background: ${ink(c)}; ${msk(ringL(90, 98))}`)} }${TR}`,
-    }),
-    {
-      palette: ['#EFE6D2', '#1E2A3A', '#A12B2B', '#C8902E', '#2F5D50'],
-      grid: '6x9',
-      tg: '5x5',
-      meta: { tags: ['spirals', 'circles', 'rings', 'radial'], mood: ['bold', 'elegant'], density: 'medium', goodFor: ['textile', 'packaging', 'poster'] },
-    }
-  );
-}
-
 // -- elsewhere -----------------------------------------------------------------
-
-{
-  // A simple key: the line runs along the foot of the module, climbs the
-  // left side, crosses the top and hooks back in. Each module is a glazed
-  // tile of its own color; the key runs on across them in one ink.
-  const key = bitmap(['......', '#####.', '#...#.', '#.###.', '#.....', '######']);
-  add(
-    'Greek Key',
-    'A running meander: one square-cornered line turning in on itself along every row, laid over tiles glazed in dark shades like a temple frieze.',
-    (c) => ({
-      host: `--key: ${key};`,
-      rule: `${F} { background: ${ink(c, 2)}; ${B(clipped('@var(--key)', 'var(--color1)'))} }${TR}`,
-    }),
-    {
-      palette: ['#E9DDC8', '#D98A4E', '#1F1A17', '#3A2A22', '#6E2A1C'],
-      grid: '6x9',
-      tg: '5x5',
-      meta: { tags: ['maze', 'lines', 'squares', 'blocks'], mood: ['elegant', 'retro'], density: 'dense', goodFor: ['section-divider', 'textile', 'packaging'] },
-    }
-  );
-}
 
 {
   // Each ring passes over its neighbors in two opposite quarters and under
@@ -769,66 +374,6 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
 }
 
 {
-  // Two squares, one turned an eighth, make each eight-pointed star; the
-  // crosses left between four stars are the ground.
-  const h = 0.3536;
-  const pts = [];
-  for (let i = 0; i < 16; i++) {
-    const a = (i * Math.PI) / 8 - Math.PI / 2;
-    const R = i % 2 === 0 ? h * Math.SQRT2 : h * 1.0824;
-    pts.push([0.5 + R * Math.cos(a), 0.5 + R * Math.sin(a)]);
-  }
-  const star = P(pct(pts));
-  add(
-    'Star And Cross',
-    'Zellige tilework: eight-pointed stars point to point, the cross-shaped spaces between them left open, each star holding a smaller star and a round hole.',
-    (c) => ({
-      host: `--star: ${star};`,
-      rule: `${F} { ${B(clipped('@var(--star)', ink(c), 'inset: 0;', msk(boreL(16))))} ${A(clipped('@var(--star)', ink(c), 'inset: 25%;', `${msk(boreL(32))} ${tf('rotate(22.5deg)')}`))} }${TR}`,
-    }),
-    {
-      palette: ['#F3EEE4', '#1B5E5A', '#1D3E7A', '#C8892B', '#2B2B2B'],
-      grid: '6x9',
-      tg: '5x5',
-      meta: { tags: ['stars', 'crosses', 'mosaic', 'grid'], mood: ['bold', 'elegant'], density: 'medium', goodFor: ['wallpaper', 'packaging', 'poster'] },
-    }
-  );
-}
-
-{
-  // Andean stepped cross: three steps to each side, a round hole at the
-  // middle, a smaller cross set inside; the arms meet the neighbors' arms.
-  const cross = [
-    '....###....',
-    '....###....',
-    '..#######..',
-    '..#######..',
-    '###########',
-    '###########',
-    '###########',
-    '..#######..',
-    '..#######..',
-    '....###....',
-    '....###....',
-  ];
-  const shape = bitmap(cross);
-  add(
-    'Chakana',
-    'Andean stepped crosses, three steps to every side and a round hole at the heart, their arms joining into a lattice with stepped diamonds of ground between.',
-    (c) => ({
-      host: `--chakana: ${shape};`,
-      rule: `${F} { ${B(clipped('@var(--chakana)', ink(c), 'inset: 0;', msk(boreL(22))))} ${A(clipped('@var(--chakana)', ink(c), 'inset: 25%;', msk(boreL(44))))} }${TR}`,
-    }),
-    {
-      pal: 15,
-      grid: '6x9',
-      tg: '5x5',
-      meta: { tags: ['crosses', 'steps', 'lattice', 'diamonds'], mood: ['bold', 'festive'], density: 'dense', goodFor: ['textile', 'poster', 'packaging'] },
-    }
-  );
-}
-
-{
   // Selbu star: eight slanted petals of knitted stitches round an empty
   // middle, a small cross at the heart and a block of stitches at each
   // corner where four cells meet.
@@ -861,38 +406,6 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
       grid: '6x9',
       tg: '5x5',
       meta: { tags: ['stars', 'squares', 'steps', 'grid'], mood: ['festive', 'retro'], density: 'medium', goodFor: ['textile', 'packaging', 'wallpaper'] },
-    }
-  );
-}
-
-{
-  // A rosette tile: four broad and four narrow petals round an open heart;
-  // the quarter rings at the corners close into a ring and dot wherever four
-  // tiles meet.
-  const lobe = (phi, w) => (Math.abs(phi) >= w ? 0 : Math.cos((phi / w) * (Math.PI / 2)) ** 0.7);
-  const r = (t) => {
-    let m = 0.2;
-    for (let k = 0; k < 4; k++) {
-      const big = Math.atan2(Math.sin(t - (k * Math.PI) / 2 + Math.PI / 2), Math.cos(t - (k * Math.PI) / 2 + Math.PI / 2));
-      const small = Math.atan2(Math.sin(t - (k * Math.PI) / 2 - Math.PI / 4), Math.cos(t - (k * Math.PI) / 2 - Math.PI / 4));
-      m = Math.max(m, lobe(big, 0.62), 0.6 * lobe(small, 0.42));
-    }
-    return m;
-  };
-  const rosette = polarPoly(r, 200);
-  const corner = (at) => `radial-gradient(circle farthest-side at ${at}, #000 0 12%, transparent 12% 19%, #000 19% 24%, transparent 24%)`;
-  add(
-    'Talavera',
-    'Painted tiles each holding a rosette of four broad and four narrow petals, with quarter rings at the corners that close into a ring wherever four tiles meet.',
-    (c) => ({
-      host: `--rosette: ${rosette}; --corners: ${['0 0', '100% 0', '0 100%', '100% 100%'].map(corner).join(', ')};`,
-      rule: `${F} { ${B(clipped('@var(--rosette)', ink(c, 2), 'inset: 8%;', msk(boreL(18))))} ${A(`inset: 0; background: var(--color1); ${mskVar('corners')}`)} }${TR}`,
-    }),
-    {
-      palette: ['#F7F3EA', '#1F4E9C', '#E2A72E', '#2E7D5B', '#C0502E', '#3C6FC4'],
-      grid: '6x9',
-      tg: '5x5',
-      meta: { tags: ['petals', 'rings', 'radial', 'grid'], mood: ['festive', 'bold'], density: 'medium', goodFor: ['wallpaper', 'packaging', 'textile'] },
     }
   );
 }
@@ -993,39 +506,6 @@ const clipped = (shape, inkValue, box = 'inset: 0;', extra = '') =>
       grid: '6x9',
       tg: '5x5',
       meta: { tags: ['diamonds', 'crosses', 'stars', 'steps'], mood: ['festive', 'retro'], density: 'medium', goodFor: ['textile', 'packaging', 'card-texture'] },
-    }
-  );
-}
-
-{
-  // Cintamani: three crescent-marked balls in a pyramid, and a pair of wavy
-  // tiger stripes, alternating on a diagonal grid.
-  const ball = (x, y, cx, cy) => {
-    const moon = Math.max(disc(x, y, cx - 0.015, cy + 0.02, 0.13), -disc(x, y, cx + 0.035, cy - 0.02, 0.11));
-    return Math.max(disc(x, y, cx, cy, 0.2), -moon);
-  };
-  const stripe = (x, y, base) => {
-    const u = (x - 0.5) / 0.46;
-    if (Math.abs(u) >= 1) return 1;
-    const mid = base + 0.06 * Math.sin(((x - 0.04) / 0.3) * 2 * Math.PI);
-    return Math.abs(y - mid) - 0.075 * (1 - u * u) ** 0.5;
-  };
-  const balls = shapeOf((x, y) => Math.min(ball(x, y, 0.5, 0.27), ball(x, y, 0.27, 0.71), ball(x, y, 0.73, 0.71)), 120);
-  const stripes = shapeOf((x, y) => Math.min(stripe(x, y, 0.36), stripe(x, y, 0.64)), 120);
-  const at = (shape, inkValue, pos) =>
-    clipped(shape, inkValue, `left: ${pos}; top: ${pos}; width: 48%; height: 48%;`);
-  add(
-    'Cintamani',
-    'The Ottoman cintamani on cream silk: triplets of crescent-marked balls and pairs of wavy tiger stripes, alternating on a diagonal grid.',
-    (c) => ({
-      host: `--balls: ${balls}; --stripes: ${stripes};`,
-      rule: `${F} { ${B(at('@var(--balls)', ink(c), '1%'))} ${A(at('@var(--stripes)', ink(c), '51%'))} }${TR}`,
-    }),
-    {
-      palette: ['#F2E8D5', '#B0222C', '#1F3B6E', '#C8963A', '#2E2A26'],
-      grid: '5x8',
-      tg: '5x5',
-      meta: { tags: ['circles', 'waves', 'dots', 'grid'], mood: ['elegant', 'bold'], density: 'sparse', goodFor: ['textile', 'packaging', 'wallpaper'] },
     }
   );
 }

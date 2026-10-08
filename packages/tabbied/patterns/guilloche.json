@@ -1,7 +1,7 @@
 {
   "name": "Guilloche",
   "slug": "guilloche",
-  "galleryOrder": 4041,
+  "galleryOrder": 4005,
   "galleryWhite": true,
   "description": "Rings linked into a mesh, every ring passing over one neighbor and under the next, the under strand broken where it crosses, like interlaced chain.",
   "tags": [

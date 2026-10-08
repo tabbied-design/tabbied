@@ -8,7 +8,7 @@ above all, is proprietary (see LICENSE, and "Licensing" below).
 
 Tabbied: generative patterns built on css-doodle. npm workspaces - the
 Next.js site at the root consumes the `tabbied` package in
-`packages/tabbied/` (framework-free core + a web component, React, Vue and Svelte wrappers + 638 pattern
+`packages/tabbied/` (framework-free core + a web component, React, Vue and Svelte wrappers + 382 pattern
 presets as JSON in `packages/tabbied/patterns/`, embedded by codegen), the
 `tabbied-mcp` package in `packages/tabbied-mcp/` (the MCP server, shared by
 the site's `/mcp` endpoint and a `tabbied-mcp` stdio bin), and
@@ -240,12 +240,13 @@ and it changed no behavior: same MCP handler, same statelessness, same
 JSON 404); auth, generations, media, and the AI gateway land with the bindings
 they need. See `agent-outputs/20260827-studio-ai-plan.md`.
 
-The export is inside the platform limits - roughly 17,000 files against a
+The export is inside the platform limits - roughly 15,300 files against a
 ceiling of 20,000 per Worker version on Workers Free (100,000 on Workers Paid,
 with wrangler 4.34 or later), largest file 3.0 MB against 25 MiB - but both
-are counted per Worker *version*, and on the free plan the headroom is now
-about 3,000 files. Every pattern costs seven: its page and four RSC payloads,
-its preview and its share card, so batch 14's 300 designs added about 2,100.
+are counted per Worker *version*, and on the free plan the headroom is about
+4,700 files. Every pattern costs seven: its page and four RSC payloads, its
+preview and its share card, so batch 14's 44 designs added about 300 (all
+300 it was written with would have added about 2,100).
 The Worker script is separate and small: about 3.4 MiB uncompressed (620 KiB
 gzipped, `npx wrangler deploy --dry-run --outdir <dir>`) against a 64 MiB
 limit that, since September 2026, is the only size check on any plan; no
@@ -314,7 +315,7 @@ Four things worth not re-litigating:
 - **The Worker reads the catalog through `env.ASSETS`, not from its bundle.**
   The tools then describe exactly the bytes that deployment serves: a design
   added in the same commit cannot be missing from the catalog an agent queries,
-  and 830 KB of JSON stays out of the Worker.
+  and 490 KB of JSON stays out of the Worker.
 
 `legacy: 'stateless'` is spelled out at the call site even though it is the
 default: it is what keeps 2025-era clients working, and every shipping client
@@ -1427,7 +1428,7 @@ The rest of this section describes the flow as built, for when it comes back.
 
 `/studio` takes a description of a business and `/studio/results` answers with
 three template sites. Studio answers with what the repo actually has: 277
-finished template sites, each on one of the 638 patterns and one of the 437
+finished template sites, each on one of the 382 patterns and one of the 437
 palettes, each with a real page and a real zip. (The AI tier this was designed
 against - `agent-outputs/20260827-studio-ai-plan.md` - has since landed; see
 below. The matcher was not replaced by it.)
@@ -1435,7 +1436,7 @@ below. The matcher was not replaced by it.)
 - **`lib/studioMatch.ts` is pure and isomorphic; `lib/studioDirections.ts` is
   server-only.** The index - 277 entries of names, palettes and vocabulary - is
   built at build time and passed to the client as plain data. Importing the
-  catalog (830 KB) or the template data into the browser to match against it is
+  catalog (490 KB) or the template data into the browser to match against it is
   the thing this split exists to prevent.
 - **Everyday words are mapped onto the closed catalog vocabulary**
   (`packages/tabbied/scripts/catalog-vocabulary.mjs`), and moods are scored by
@@ -1539,7 +1540,7 @@ the template and shows the result.
   package imports `tabbied` from esm.sh, pinned, which is right for a stranger
   who unzipped it years later and wrong for this site drawing its own preview.
   `scripts/build-preview-runtime.mjs` bundles `hydratePatterns` plus the whole
-  catalog (638 designs, 319 KB gzipped, cached across previews) into
+  catalog (382 designs, 138 KB gzipped, cached across previews) into
   `public/studio/preview-runtime.js`, and the shell rewrites that one script
   tag. Serving `tabbied/dist` raw instead does not
   work: `register.js` does a bare `import 'css-doodle'` that no browser
@@ -1686,7 +1687,7 @@ whatever text Studio wrote, so putting them back is a UI change.
   otherwise, which once made a third of the losses look like the fit's.
 - **The preview runtime carries the whole catalog.** It used to bundle the
   231 designs the packaged templates mount, which was right while a preview
-  could only re-color a field; a shuffle can swap to any of the 638, and a
+  could only re-color a field; a shuffle can swap to any of the 382, and a
   design missing from the bundle hydrates to nothing with a console warning.
 - **The download is rebuilt where the changes are.** The customizer's
   Download menu fetches the packaged `<slug>-html.zip`, applies the document
@@ -2149,22 +2150,27 @@ things keep a design under it:
   rings where the design offers 12 to 28. The cap is the largest count the
   grid option offers; the eight such designs carry one.
 
-## Batch 14 - 300 designs that know where they sit
+## Batch 14 - 44 designs that know where they sit
 
-Gallery orders 4000-4999: twelve families of 25 (Loom, Wagara, Illusion,
-Drift, Grove, Masonry, Atomic, Orbit, Pantry, Tessellate, Press,
-Papercraft), each drawn from a subject rather than one primitive. They hold
-batches 11-13's promise (native SVG with no caveat) and add what those never
-used: css-doodle's 2D noise (`@rn`, so neighboring cells get neighboring
-values: flow fields, contour maps, clouds) and the cell's place in the sheet
-(`@x`/`@X`, `@dx`/`@dy`, the distance from the middle), which is how a tartan
-keeps a stripe's color down a column and an orrery centers on the sheet.
+Gallery orders 4000-4999. 300 were written, in twelve families of 25 (Loom,
+Wagara, Illusion, Drift, Grove, Masonry, Atomic, Orbit, Pantry, Tessellate,
+Press, Papercraft), each drawn from a subject rather than one primitive, and
+44 were kept after looking at them (2026-10-08). The other 256 left the
+definitions as well as the catalog, so regenerating cannot bring them back;
+the history before that commit has them. Atomic and Pantry kept nothing.
+They hold batches 11-13's promise (native SVG with no caveat) and add what
+those never used: css-doodle's 2D noise (`@rn`, so neighboring cells get
+neighboring values: Jet Stream's flow field, Aquarelle's washes, Anabranch's
+braided channels) and the cell's place in the sheet (`@x`/`@X`, `@dx`/`@dy`,
+the distance from the middle), which is how Regimental keeps a stripe's ink
+along its diagonal and Vanishing Point and Globe center on the sheet.
 `scripts/pattern-gen/pattern-defs-14/` holds one file per family, and the
 catalog metadata lives in each definition, so `generate-batch14.mjs` never
 writes a design without its tags. `check-batch14.mjs <letter>` renders one
 family straight from its definitions (render gate, preview sheets, SVG parity,
 cost, `FREQ=0.4` to see the slider thin it), which is what let twelve be
-written side by side. Things the batch learned, all silent when wrong:
+written side by side. Things the batch learned, all silent when wrong (some
+from designs that were cut):
 
 - **`z-index` takes an integer.** `@r(1, 9)` rolls a fraction and the
   declaration is dropped; `@ri(1, 9)`.
@@ -2175,9 +2181,9 @@ written side by side. Things the batch learned, all silent when wrong:
   space is invalid, and so is a bare `0` as an `@match` result.
 - **Compute a value once per cell and read it back.** Every `@calc` and `$()`
   is evaluated by css-doodle in JavaScript, cell by cell, so a polygon whose
-  every vertex repeats the same sine sum took two seconds to reshuffle
-  (Streamgraph). `--h: $(...)` once and `$(h)` at each vertex brought it, and
-  a dozen others, from 400-2000 ms to 100-250 ms. css-doodle also caches a
+  every vertex repeats the same sine sum took two seconds to reshuffle (a
+  streamgraph, since cut). `--h: $(...)` once and `$(h)` at each vertex
+  brought it, and a dozen others, from 400-2000 ms to 100-250 ms. css-doodle also caches a
   parsed expression by its text, and `@x` is pasted in as a number, so an
   expression over `@x` is parsed afresh in every cell; declare `--ix: @x`
   once and write the expression over `$(ix)`, and its text is the same in
@@ -2191,9 +2197,11 @@ written side by side. Things the batch learned, all silent when wrong:
   holds one ink down the sheet; a sheet-wide pick rolled once is the first
   draw, so two seeds can agree on it and a design whose only reseed change is
   that one value fails the render gate's "reseed changed nothing".
-- **Some designs paint their ground outside the frequency gate** (a quilt's
-  muslin and sashing, bunting's string): the slider thins the figures and
-  leaves the cloth. Everything else sits inside the one gate.
+- **Wave Fans paints its top row outside the frequency gate**: the fans
+  that would come from above the sheet are laid under the first row
+  whatever the slider says, so a thinned sheet keeps a band along its top
+  edge. Every other kept design sits inside the one gate (measured with the
+  gate shut on a transparent ground).
 - **A preview is drawn with a full frequency's gate fully open.** The
   package turns `@random(1)` into `@random(0.999)`, and with the preview's
   fixed seed the dropped cell was the same one in every design rolling the
@@ -2201,12 +2209,14 @@ written side by side. Things the batch learned, all silent when wrong:
   `generate-previews.mjs` passes just under 1 instead: the gate rolls the
   same values, so only a design that dropped a cell draws differently, from
   that cell on. The editor still drops about one cell in a thousand.
-- **The whole catalog is now four times heavier in the browser.** The
-  gallery imports every design (`patterns.generated.js`: 63 KB gzipped before
-  the batch, 276 KB after), which it needs. The docs pages import a handful
-  by name and still receive the shared chunk holding all of them, so they
-  grew by the same amount; a per-design import (`tabbied/patterns/<slug>`) is
-  the likely way to ship them only what they draw.
+- **The catalog grew by more than its count in the browser.** The gallery
+  imports every design (`patterns.generated.js`: 63 KB gzipped before the
+  batch, 89 KB after, and 276 KB with all 300), which it needs. Batch-14
+  designs are heavier than the average because their outlines are long
+  polygons on the host. The docs pages import a handful by name and still
+  receive the shared chunk holding all of them, so they grew by the same
+  amount; a per-design import (`tabbied/patterns/<slug>`) is the likely way to
+  ship them only what they draw.
 - The converter limits the families met and worked around are listed in
   docs/svg-export.md ("Batch 14's workarounds").
 
@@ -2274,7 +2284,7 @@ is mostly mechanical, and four things are not:
 
 A pattern moves three ways, and `prefers-reduced-motion` has to stop all of
 them. The `redrawInterval` timer is the obvious one. The second is that
-**all 638 designs declare a ~400ms `transition`** - the thing that makes a
+**all 382 designs declare a ~400ms `transition`** - the thing that makes a
 redraw morph rather than cut - and it fires on any re-render, including ones
 nobody asked for: `grid` and `cover` re-derive their cell grid on resize, so
 turning a phone would otherwise animate every cell on the page. The third
@@ -2315,7 +2325,7 @@ rendered patterns to true vector SVG. Rules that must not regress:
   (9 designs) documents limitations - filter-based effects or ≤1px
   deviations. The option-level form still works but no design uses it: the
   Shadow toggle that was its only user was removed rather than left as an
-  export trap. Everything else (597) is clean.
+  export trap. Everything else (341) is clean.
   See docs/svg-export.md for the complete lists and reasons.
 - **The tier is measured, not read off the source.** Ten of the drop's
   designs throw; eighteen more export a plausible SVG that is not what the

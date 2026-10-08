@@ -1,7 +1,7 @@
 {
   "name": "Snub Square",
   "slug": "snubsquare",
-  "galleryOrder": 4235,
+  "galleryOrder": 4034,
   "galleryWhite": true,
   "description": "The snub square tiling: squares tipped alternately left and right, with pairs of equilateral triangles filling the gaps between them.",
   "tags": [
