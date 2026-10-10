@@ -1,5 +1,7 @@
 import { SELF, env } from 'cloudflare:test';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import app from '../index';
+import type { Env } from '../env';
 import { ORIGIN, json } from './helpers';
 
 // These drive the real Worker over real (local) bindings: the routing, the
@@ -234,5 +236,139 @@ describe('trusted origins', () => {
     const elsewhere = await signInFrom(ORIGIN, 'https://evil.example.com');
     expect(elsewhere.status).toBe(403);
     expect(await elsewhere.text()).toContain('Invalid origin');
+  });
+
+  it('trusts a preview for the OAuth proxy hop, which carries no Origin', async () => {
+    // The last hop of a social sign-in on a preview is a top-level redirect
+    // from the provider's callback on PUBLIC_ORIGIN, so it arrives with no
+    // Origin header, and its callbackURL is checked all the same. Past that
+    // check, a hop with no profile is sent to the error page.
+    const hop = (url: string) =>
+      SELF.fetch(
+        `${url}/api/auth/callback/github/oauth-proxy?callbackURL=${encodeURIComponent(`${PREVIEW}/account/`)}`,
+        { redirect: 'manual' }
+      );
+
+    const preview = await hop(PREVIEW);
+    expect(preview.status, await preview.text()).toBe(302);
+    expect(preview.headers.get('location')).toContain('error=missing_profile');
+
+    // Production trusts no preview host, so it will not finish a sign-in
+    // there.
+    const production = await hop(ORIGIN);
+    expect(production.status).toBe(403);
+  });
+});
+
+// A preview's host cannot be registered with GitHub or Google, so the provider
+// always returns to PUBLIC_ORIGIN, and the OAuth proxy hands the profile back
+// to the preview (worker/auth.ts). GitHub is faked at the fetch boundary and
+// given credentials for these requests only, so the rest of the file still
+// sees no providers configured.
+
+const withGitHub = (): Env => ({
+  ...(env as unknown as Env),
+  GITHUB_CLIENT_ID: 'github-client',
+  GITHUB_CLIENT_SECRET: 'github-secret',
+});
+
+function fakeGitHub(email: string) {
+  vi.stubGlobal('fetch', async (input: RequestInfo | URL) => {
+    const url = input instanceof Request ? input.url : String(input);
+
+    if (url.startsWith('https://github.com/login/oauth/access_token')) {
+      return Response.json({ access_token: 'gho_fake', token_type: 'bearer', scope: 'read:user,user:email' });
+    }
+    if (url === 'https://api.github.com/user') {
+      return Response.json({ id: 4242, login: 'octo', name: 'Octo Cat', email: null, avatar_url: 'https://example.com/octo.png' });
+    }
+    if (url === 'https://api.github.com/user/emails') {
+      return Response.json([{ email, primary: true, verified: true }]);
+    }
+
+    return new Response('fake: no such endpoint', { status: 404 });
+  });
+}
+
+const cookiesOf = (response: Response) =>
+  response.headers
+    .getSetCookie()
+    .map((cookie) => cookie.split(';')[0])
+    .join('; ');
+
+/** The form's first step: ask the Worker where to send the person. */
+async function beginGitHub(host: string): Promise<{ authorize: URL; cookie: string }> {
+  const response = await app.request(
+    `${host}/api/auth/sign-in/social`,
+    {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', origin: host },
+      body: JSON.stringify({ provider: 'github', callbackURL: `${host}/account/` }),
+    },
+    withGitHub()
+  );
+  expect(response.status, await response.clone().text()).toBe(200);
+
+  const { url } = (await response.json()) as { url: string };
+
+  return { authorize: new URL(url), cookie: cookiesOf(response) };
+}
+
+describe('social sign-in on a preview', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('goes by way of production and signs the person in on the preview', async () => {
+    fakeGitHub('preview-github@example.com');
+
+    // The provider is sent back to the one callback registered with it.
+    const { authorize } = await beginGitHub(PREVIEW);
+    expect(authorize.searchParams.get('redirect_uri')).toBe(`${ORIGIN}/api/auth/callback/github`);
+
+    // Production exchanges the code, carrying none of the preview's cookies,
+    // and hands the profile back without making a session of its own.
+    const state = authorize.searchParams.get('state') ?? '';
+    const callback = await app.request(
+      `${ORIGIN}/api/auth/callback/github?code=fake-code&state=${encodeURIComponent(state)}`,
+      {},
+      withGitHub()
+    );
+    expect(callback.status).toBe(302);
+    expect(cookiesOf(callback)).not.toContain('session_token');
+
+    const hop = new URL(callback.headers.get('location') ?? '');
+    expect(hop.origin).toBe(PREVIEW);
+    expect(hop.pathname).toBe('/api/auth/callback/github/oauth-proxy');
+
+    // The preview finishes it on its own host; a redirect carries no Origin.
+    const finished = await app.request(hop.toString(), {}, withGitHub());
+    expect(finished.status, await finished.clone().text()).toBe(302);
+    expect(finished.headers.get('location')).toBe(`${PREVIEW}/account/`);
+
+    const session = await app.request(
+      `${PREVIEW}/api/auth/get-session`,
+      { headers: { cookie: cookiesOf(finished) } },
+      withGitHub()
+    );
+    const { user } = (await session.json()) as { user: { email: string; emailVerified: boolean } };
+    expect(user.email).toBe('preview-github@example.com');
+    expect(user.emailVerified).toBe(true);
+  });
+
+  it('is not proxied on production, which signs in directly', async () => {
+    fakeGitHub('production-github@example.com');
+
+    const { authorize, cookie } = await beginGitHub(ORIGIN);
+    const state = authorize.searchParams.get('state') ?? '';
+
+    const callback = await app.request(
+      `${ORIGIN}/api/auth/callback/github?code=fake-code&state=${encodeURIComponent(state)}`,
+      { headers: { cookie } },
+      withGitHub()
+    );
+    expect(callback.status).toBe(302);
+    expect(callback.headers.get('location')).toBe(`${ORIGIN}/account/`);
+    expect(cookiesOf(callback)).toContain('session_token');
   });
 });

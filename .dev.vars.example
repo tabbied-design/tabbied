@@ -40,6 +40,11 @@ PUBLIC_ORIGIN=http://localhost:8787
 # RESEND_API_KEY=
 # MAIL_FROM=Tabbied <hello@tabbied.com>
 # TEAM_EMAIL=you@example.com
+
+# Social sign-in (docs/social-sign-in.md). A provider is on only with both of
+# its pair. Register http://localhost:8787/api/auth/callback/<provider> with
+# the app beside the production URI, or on an app kept for development, which
+# keeps the production secrets off this machine.
 # GITHUB_CLIENT_ID=
 # GITHUB_CLIENT_SECRET=
 # GOOGLE_CLIENT_ID=
