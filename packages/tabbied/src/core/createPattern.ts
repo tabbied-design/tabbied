@@ -170,10 +170,11 @@ const GRID_RESIZE_DEBOUNCE_MS = 180;
 //
 // 1. The first paint has nothing to morph from, so every cell would animate in
 //    from its unstyled state, and a page of patterns would pay for thousands
-//    of transitions while loading. Muted for two frames, then dropped.
+//    of transitions while loading. Muted for two frames, then dropped. A grid
+//    change is a first paint too: css-doodle builds every cell anew.
 // 2. Under prefers-reduced-motion it stays for the controller's whole life.
 //    The redraw timer is switched off separately (see syncRedrawTimer), but a
-//    resize also re-derives the grid and re-renders, which would morph every
+//    resize, a palette or an option also re-renders, which would morph every
 //    cell unasked.
 //
 // It lives in the shadow root because that is where css-doodle puts the cell
@@ -572,15 +573,24 @@ export function createPattern(
   };
 
   // css-doodle's update() regenerates the shadow root when the grid changes,
-  // taking the override with it, so under reduced motion it is re-asserted
-  // after every update, not just at mount. Synchronously, so it is in place
-  // for the style recalculation that would otherwise start the transitions.
-  const ensureMuted = () => {
-    if (!element || !prefersReducedMotion() || muteStyle?.isConnected) {
+  // taking the override with it, and every cell it builds animates in from its
+  // unstyled state, as on a first paint. That is no morph, and it is not free:
+  // a design whose cells are rotated full-canvas rings (concentricrings) made
+  // each of its 361 rings a compositing layer for the length of the ease, and
+  // Chromium, out of tile memory, painted the ground color over the editor.
+  // So a rebuild is muted like a mount: for two frames, or for good under
+  // reduced motion. Synchronously, so it is in place for the style
+  // recalculation that would otherwise start the transitions.
+  const muteRebuiltCells = () => {
+    if (!element || muteStyle?.isConnected) {
       return;
     }
 
     muteStyle = appendMuteStyle(element);
+
+    if (!prefersReducedMotion()) {
+      releaseFirstDrawMute();
+    }
   };
 
   // Two frames: one for the cells to get their styles, one to paint them.
@@ -652,8 +662,16 @@ export function createPattern(
       element.setAttribute('data-seed', seed);
     }
 
+    // css-doodle restyles in place when it can and rebuilds the shadow root
+    // with innerHTML when it cannot, so a node from before that is no longer
+    // connected means every cell is new.
+    const firstNode = element.shadowRoot?.firstChild ?? null;
+
     element.update(doodleCode);
-    ensureMuted();
+
+    if (!firstNode?.isConnected) {
+      muteRebuiltCells();
+    }
     rendered = { ...rendered, styleCode, doodleCode, seed, renderBox, cellPx };
   };
 
