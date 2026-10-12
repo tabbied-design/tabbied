@@ -1,5 +1,17 @@
 # tabbied
 
+## 0.10.0
+
+### Minor Changes
+
+- [#125](https://github.com/tabbied-design/tabbied/pull/125) [`24fd4ed`](https://github.com/tabbied-design/tabbied/commit/24fd4edbc852abaa5330b69342710c239f10f102) Thanks [@subwaymatch](https://github.com/subwaymatch)! - 44 new designs, taking the catalog from 338 to 382. They are drawn from subjects rather than one shape: cloth (Vichy, Regimental), Japanese and folk ornament (Wave Fans, Hemp Leaf, Yabane, Guilloche, Kawung, Selbu Star, Ice Crack, Cross Stitch), op art (Float, Vanishing Point, Square Tunnel, Globe, Polar Fan), fields steered by noise (Jet Stream, Windrow, Downpour, Aquarelle, Anabranch), Monstera, floors and walls (Flemish Bond, Hit and Miss, Subway Tile, Cobblestone, Crazy Paving, Hongrie), the sky (Milky Way, Northern Lights), tilings (Duotone Truchet, Racetrack, Hex Truchet, Knotwork, Cairo, Snub Square, Interlock, Pyramid Relief, Jigsaw, Pentomino), charts (Cardiograph, Pie Chart) and paper (Slit Lattice, Paper Scraps, Paper Sea).
+
+  Many read where a cell sits in the sheet: bias stripes that keep their color along a diagonal, a field of strokes that flows because neighboring cells share css-doodle's 2D noise, a tunnel or a vanishing point centered on the sheet. Every one exports as native SVG with no caveat, carries the catalog's tags, mood, density and uses, and has a preview image. `tabbied-mcp`'s README counts the larger catalog.
+
+### Patch Changes
+
+- [#130](https://github.com/tabbied-design/tabbied/pull/130) [`c6833b0`](https://github.com/tabbied-design/tabbied/commit/c6833b02e68b0641332f7dcdd5849a13c21c81bb) Thanks [@subwaymatch](https://github.com/subwaymatch)! - A grid change now cuts to the new cells instead of animating each one in from its unstyled state. When the grid changes (a resize that derives a different grid, or a new `density` or `cellSize`), css-doodle builds every cell anew, which is a first paint, and a first paint was already drawn without the designs' transitions. Concentric Rings showed why it matters: each of its rings is rotated and as large as the sheet, so the ease made every ring a compositing layer, and in Chromium the pattern and the page around it briefly turned into a block of the ground color. Redraws and palette or option changes on the same grid still morph as before.
+
 ## 0.9.0
 
 ### Minor Changes
