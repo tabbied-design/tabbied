@@ -369,7 +369,7 @@ test.describe('the /templates gallery', () => {
       const onPage = await cards.locator('a[href^="/templates/"][href$="/"]').evaluateAll((links) =>
         [...new Set(links.map((link) => link.getAttribute('href')!.split('/')[2]).filter(Boolean))]
       );
-      expect(onPage.length).toBeLessThanOrEqual(50);
+      expect(onPage.length).toBeLessThanOrEqual(48);
       expect(await asks.count()).toBe(onPage.length);
       onPage.forEach((slug) => slugs.add(slug));
     }
@@ -456,7 +456,7 @@ test.describe('the /templates gallery', () => {
     const lead = slugsIn(committed.slice(leadAt, spreadAt));
     const galleryOrder = [...lead, ...slugsIn(committed.slice(spreadAt))];
     expect(lead.length).toBeGreaterThan(0);
-    expect(firstPage).toEqual(galleryOrder.slice(0, 50));
+    expect(firstPage).toEqual(galleryOrder.slice(0, 48));
 
     const batches = firstPage.map((slug) => batchOf.get(slug) ?? 'first');
     expect(new Set(batches).size).toBeGreaterThanOrEqual(4);

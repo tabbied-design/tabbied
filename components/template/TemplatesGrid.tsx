@@ -49,8 +49,8 @@ export type TemplateCard = {
 /** The most swatches a card shows; the inks, never the ground. */
 const MAX_SWATCHES = 4;
 
-/** Cards per page. */
-const PER_PAGE = 50;
+/** Cards per page: a multiple of 3, 2 and 1, the grid's columns, so no row is short. */
+const PER_PAGE = 48;
 
 type Guard = (slug: string, name: string, action: TemplateAction, run: () => void) => void;
 

@@ -912,9 +912,10 @@ newer than their sources. A template with no shot uses its pattern's card.
 
 ## The template gallery - a mixed order, pages, and the URL
 
-`/templates` shows 50 cards a page, in the order `GALLERY_ORDER` in
-`lib/templateOrder.ts` commits, with the category and the page in the query
-string (`?category=food-and-drink&page=2`). Four things worth not
+`/templates` shows 48 cards a page (whole rows at three, two or one
+columns, so the last row is never cut short), in the order `GALLERY_ORDER`
+in `lib/templateOrder.ts` commits, with the category and the page in the
+query string (`?category=food-and-drink&page=2`). Four things worth not
 re-litigating:
 
 - **The order spreads the batches, and a batch is a seed prefix.** The
