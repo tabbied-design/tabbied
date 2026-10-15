@@ -478,7 +478,8 @@ test.describe('studio site', () => {
     await expect(gate.getByRole('heading', { name: 'Create a free account to save Verdant' })).toBeVisible();
     await expect(gate.getByText('Downloading never needs an account.')).toBeVisible();
     const next = `next=${encodeURIComponent(`/studio/customize/?slug=${SLUG}`)}&intent=save`;
-    await expect(gate.getByRole('link', { name: 'Create free account' })).toHaveAttribute('href', `/sign-up?${next}`);
+    // trailingSlash: Next writes the link as /sign-up/.
+    await expect(gate.getByRole('link', { name: 'Create free account' })).toHaveAttribute('href', `/sign-up/?${next}`);
     expect(made).toHaveLength(0);
 
     // Following it stashes the edits on the way to the form.
