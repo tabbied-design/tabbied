@@ -199,13 +199,20 @@ const stripReactArtifacts = (html) =>
  * Rewrite hashed CSS-module class names back to the plain names the authored
  * stylesheet uses: `werkraum-module__N8Ibmq__heroTitle` -> `heroTitle`.
  *
- * Fails loudly on the two things that would silently corrupt a template: more
- * than one CSS module on the page (this ships exactly one stylesheet), and two
- * hashed names that collapse onto the same plain name (which would merge two
- * unrelated rules).
+ * The hash is base64url, so it can hold a `-` (`fix-it-repair-cafe-module__
+ * -D-Hpa__coverField`), about one page in twelve. Read as `[A-Za-z0-9_]`, the
+ * name matched nothing and stayed hashed, and the page shipped with every
+ * class missing from its stylesheet: unstyled, a pattern field spread over
+ * the whole page. The hash is matched greedily up to the last `__`, which no
+ * local class name contains.
+ *
+ * Fails loudly on the three things that would silently corrupt a template:
+ * more than one CSS module on the page (this ships exactly one stylesheet),
+ * two hashed names that collapse onto the same plain name (which would merge
+ * two unrelated rules), and a hashed name this did not rewrite.
  */
 function dehashClassNames(html, slug) {
-  const hashedClass = /([A-Za-z0-9_-]+)-module__([A-Za-z0-9_]+)__([A-Za-z0-9_-]+)/g;
+  const hashedClass = /([A-Za-z0-9_-]+)-module__([A-Za-z0-9_-]+)__([A-Za-z0-9_-]+)/g;
   const modules = new Set();
   const collisions = new Map();
 
@@ -233,11 +240,21 @@ function dehashClassNames(html, slug) {
     );
   }
 
+  const dehashed = html.replace(hashedClass, (_m, _module, _hash, localName) => localName);
+  const residue = /[^\s"]*-module__[^\s"]*/.exec(dehashed);
+
+  if (residue) {
+    throw new Error(
+      `${slug}: "${residue[0]}" is still hashed after de-hashing - its class ` +
+        `would match nothing in the shipped stylesheet.`
+    );
+  }
+
   return {
-    html: html.replace(hashedClass, (_m, _module, _hash, localName) => localName),
+    html: dehashed,
     // Which module the page's classes came from, and which of its classes the
     // page actually uses - both needed to pick and trim the stylesheet.
-    moduleName: [...modules][0]?.replace(/-module__[A-Za-z0-9_]+__$/, '') ?? null,
+    moduleName: [...modules][0]?.replace(/-module__[A-Za-z0-9_-]+__$/, '') ?? null,
     usedClasses: new Set(collisions.keys()),
   };
 }
