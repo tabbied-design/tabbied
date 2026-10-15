@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import GalleryLink from './GalleryLink';
 import t from './HomePage.module.css';
 import styles from './HomeCta.module.css';
 
@@ -11,9 +11,9 @@ export default function HomeCta() {
           Make your next website feel like you.
         </h2>
         <div className={styles.actions}>
-          <Link href="/templates" prefetch={false} className={styles.button}>
+          <GalleryLink href="/templates" className={styles.button}>
             Find your template
-          </Link>
+          </GalleryLink>
         </div>
       </div>
     </section>

@@ -101,6 +101,8 @@
   aspect-ratio: 16 / 9.4;
   overflow: hidden;
   border-radius: 22px;
+  /* The photographs are dark: this is their ground while one loads. */
+  background-color: #2b2c31;
   color: #ffffff;
   opacity: 0.45;
   cursor: pointer;
@@ -158,81 +160,28 @@
 
 /* -- The site in front ------------------------------------------------------ */
 
+/* The template itself: its screenshot under a browser bar, rising from the
+   card's foot, and a link to its preview like the arrow beside it. */
 .mock {
   position: absolute;
   left: 44px;
   bottom: -9%;
+  display: block;
   width: 62%;
   container-type: inline-size;
   overflow: hidden;
   border-radius: 12px;
   background-color: var(--site-bg);
-  color: var(--site-ink);
   box-shadow: 0 40px 80px -30px oklch(0 0 0 / 0.55);
 }
 
-.siteHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 2.6cqw 4cqw;
-}
-
-.brand {
-  font: 500 2.5cqw var(--site-family);
-  letter-spacing: 0.1em;
-  white-space: nowrap;
-}
-
-.nav {
-  display: flex;
-  gap: 2.8cqw;
-  font: 400 1.3cqw var(--hp-sans);
-  white-space: nowrap;
-}
-
-.siteBody {
-  display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-  gap: 4cqw;
-  align-items: center;
-  padding: 1cqw 4cqw 5cqw;
-}
-
-.headline {
-  font: var(--site-head-weight) 6.4cqw / 1.02 var(--site-family);
-  letter-spacing: -0.01em;
-  text-wrap: balance;
-}
-
-.sub {
-  margin-top: 2.4cqw;
-  font: 400 1.5cqw / 1.5 var(--hp-sans);
-  color: var(--site-muted);
-}
-
-.button {
-  display: inline-block;
-  margin-top: 3cqw;
-  padding: 1.2cqw 2.4cqw;
-  border-radius: 99px;
-  background-color: var(--site-button-bg);
-  color: var(--site-button-ink);
-  font: 500 1.3cqw var(--hp-sans);
-  white-space: nowrap;
-}
-
-.art {
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  border-radius: 1cqw;
-}
-
-.art img {
+.shot {
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
   object-fit: cover;
+  object-position: top;
 }
 
 /* The palette and the face, on a card beside the site. */
@@ -274,7 +223,7 @@
   color: var(--hp-ink);
 }
 
-/* The way into the gallery, searched for this trade. */
+/* The way to the template's preview. */
 .open {
   position: absolute;
   right: 28px;

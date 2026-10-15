@@ -469,8 +469,25 @@ test.describe('the /templates gallery', () => {
     const names = await cards.locator('p').allTextContents();
     expect(names.length).toBeGreaterThan(0);
     expect(names.length).toBeLessThan(50);
-    // Every card shown is a bakery by its own description.
-    for (const topic of names) expect(topic.toLowerCase()).toContain('bak');
+    // Every card shown is a bakery by its own description, or a patisserie,
+    // which the search counts as one (TRADE_WORDS in lib/catalogSearch.ts).
+    for (const topic of names) expect(topic.toLowerCase()).toMatch(/bak|patisserie|pastr/);
+
+    // The trade as a person names it finds the template that names the work
+    // ("Plumbing and heating contractor"), and not one that only starts like
+    // it (Plumbline Payroll); a word inside another is not a match.
+    await search.fill('plumber');
+    await expect(cards.getByRole('heading', { name: 'Northside Plumbing' })).toBeVisible();
+    await expect(cards.getByRole('heading', { name: 'Plumbline Payroll' })).toHaveCount(0);
+    await search.fill('hair');
+    await expect(cards.getByRole('heading', { name: 'Fringe', exact: true })).toBeVisible();
+    await expect(cards.getByRole('heading', { name: 'Two Chairs Counseling' })).toHaveCount(0);
+
+    // A near miss is offered the search that would have found something.
+    await search.fill('plumer');
+    await page.getByRole('button', { name: 'plumber', exact: true }).click();
+    await expect(search).toHaveValue('plumber');
+    await expect(cards.getByRole('heading', { name: 'Northside Plumbing' })).toBeVisible();
 
     // It narrows within a category, and a deep link opens on it.
     await page.goto('/templates/?category=food-and-drink&q=bakery');

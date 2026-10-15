@@ -12,13 +12,14 @@ import {
 import Link from 'next/link';
 import useMediaQuery from 'lib/useMediaQuery';
 import BrowserBar from './MockBrowser';
-import { MOCK_FONTS, PATTERNS, SLIDES, SLIDE_CATEGORIES, type Slide } from './homeData';
+import GalleryLink from './GalleryLink';
+import type { SlideCategory, SlideView } from './homeShowcase';
 import t from './HomePage.module.css';
 import styles from './SkilledHands.module.css';
 
 // "The world still runs on skilled hands": a carousel of trades, each slide a
-// photograph of the work with a site for it in front, filtered by the chips
-// above it.
+// photograph of the work with a real template for it in front, filtered by
+// the chips above it, which are the gallery's own categories.
 //
 // It advances on its own every SLIDE_SECONDS, and the clock is the active
 // dot's fill: a CSS animation whose end steps the carousel. So the dot shows
@@ -29,8 +30,8 @@ import styles from './SkilledHands.module.css';
 // is being dragged, and while it has keyboard focus.
 //
 // A slide is dragged or swiped sideways; the dots are a tab list (one tab
-// stop, arrow keys between them), and the slide's arrow opens the gallery
-// searched for its trade.
+// stop, arrow keys between them), and the slide's arrow, like the site in
+// front, opens the template's preview.
 
 const SLIDE_SECONDS = 6;
 
@@ -39,25 +40,19 @@ const DRAG_DISTANCE = 60;
 const FLICK_DISTANCE = 20;
 const FLICK_SPEED = 0.5;
 
-type Category = (typeof SLIDE_CATEGORIES)[number];
+type Category = 'All' | SlideCategory['name'];
 
 type Drag = { x: number; y: number; time: number; id: number; axis: 'x' | 'y' | null };
 
-function siteVars(slide: Slide): CSSProperties {
-  const font = MOCK_FONTS[slide.font];
-
-  return {
-    '--site-bg': slide.bg,
-    '--site-ink': slide.ink,
-    '--site-muted': slide.muted,
-    '--site-button-bg': slide.buttonBg,
-    '--site-button-ink': slide.buttonInk,
-    '--site-family': font.family,
-    '--site-head-weight': slide.headWeight,
-  } as CSSProperties;
-}
-
-export default function SkilledHands({ templateCount }: { templateCount: number }) {
+export default function SkilledHands({
+  templateCount,
+  slides: allSlides,
+  categories,
+}: {
+  templateCount: number;
+  slides: SlideView[];
+  categories: SlideCategory[];
+}) {
   const [category, setCategory] = useState<Category>('All');
   const [index, setIndex] = useState(0);
   const [userPaused, setUserPaused] = useState(false);
@@ -74,7 +69,8 @@ export default function SkilledHands({ templateCount }: { templateCount: number 
   // slide or follow its link.
   const movedRef = useRef(false);
 
-  const slides = category === 'All' ? SLIDES : SLIDES.filter((slide) => slide.category === category);
+  const slides = category === 'All' ? allSlides : allSlides.filter((slide) => slide.category === category);
+  const chosen = categories.find((entry) => entry.name === category);
   const count = slides.length;
   const current = Math.min(index, count - 1);
   const autoplay = !reduced;
@@ -227,7 +223,7 @@ export default function SkilledHands({ templateCount }: { templateCount: number 
           Start the business you've been thinking about, with a website as well made as your work.
         </p>
         <div className={styles.filters}>
-          {SLIDE_CATEGORIES.map((name) => (
+          {(['All', ...categories.map((entry) => entry.name)] as Category[]).map((name) => (
             <button
               key={name}
               type="button"
@@ -238,9 +234,15 @@ export default function SkilledHands({ templateCount }: { templateCount: number 
               {name}
             </button>
           ))}
-          <Link href="/templates" prefetch={false} className={styles.browseAll}>
-            <span>Browse all {templateCount} &#x2192;</span>
-          </Link>
+          {/* The chip's own category in the gallery, or the whole of it. */}
+          <GalleryLink
+            href={chosen ? `/templates/?category=${chosen.slug}` : '/templates'}
+            className={styles.browseAll}
+          >
+            <span>
+              {chosen ? `Browse all ${chosen.count} in ${chosen.name}` : `Browse all ${templateCount}`} &#x2192;
+            </span>
+          </GalleryLink>
         </div>
       </div>
 
@@ -265,11 +267,10 @@ export default function SkilledHands({ templateCount }: { templateCount: number 
         <div className={styles.track} style={trackStyle}>
           {slides.map((slide, k) => {
             const on = k === current;
-            const art = PATTERNS[slide.pattern];
 
             return (
               <div
-                key={slide.name}
+                key={slide.slug}
                 id={`skilled-slide-${k}`}
                 className={styles.slide}
                 role="tabpanel"
@@ -277,7 +278,6 @@ export default function SkilledHands({ templateCount }: { templateCount: number 
                 aria-label={`${k + 1} of ${count}: ${slide.name}`}
                 aria-hidden={!on}
                 data-current={on ? '' : undefined}
-                style={{ backgroundColor: slide.card }}
                 onClick={() => {
                   if (!on) go(k);
                 }}
@@ -299,52 +299,53 @@ export default function SkilledHands({ templateCount }: { templateCount: number 
                   <p className={styles.description}>{slide.description}</p>
                 </div>
 
-                <div className={styles.mock} style={siteVars(slide)} aria-hidden="true">
-                  <BrowserBar domain={slide.domain} />
-                  <div className={styles.siteHead}>
-                    <span className={styles.brand}>{slide.brand}</span>
-                    <span className={styles.nav}>
-                      {slide.nav.map((item) => (
-                        <span key={item}>{item}</span>
-                      ))}
-                    </span>
-                  </div>
-                  <div className={styles.siteBody}>
-                    <div>
-                      <div className={styles.headline}>{slide.head}</div>
-                      <div className={styles.sub}>{slide.sub}</div>
-                      <span className={styles.button}>{slide.cta}</span>
-                    </div>
-                    <div className={styles.art}>
-                      <img
-                        src={art.src}
-                        width={art.width}
-                        height={art.height}
-                        alt=""
-                        loading="lazy"
-                        decoding="async"
-                        draggable={false}
-                      />
-                    </div>
-                  </div>
-                </div>
+                {/* The arrow below is the way in for a keyboard or a screen
+                    reader; this is the same link for a pointer, so a click on
+                    the picture of the site opens that site. On a slide that is
+                    not current, a click brings the slide forward instead. */}
+                <Link
+                  href={slide.href}
+                  prefetch={false}
+                  className={styles.mock}
+                  style={{ '--site-bg': slide.colors[0] } as CSSProperties}
+                  aria-hidden="true"
+                  tabIndex={-1}
+                  draggable={false}
+                  onClick={(event) => {
+                    if (!on) event.preventDefault();
+                  }}
+                >
+                  <BrowserBar domain={`tabbied.com/templates/${slide.slug}`} />
+                  <img
+                    className={styles.shot}
+                    src={slide.shot}
+                    width={960}
+                    height={720}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    draggable={false}
+                  />
+                </Link>
 
                 <div className={styles.typeChip}>
                   <span className={styles.swatches} aria-hidden="true">
-                    {slide.palette.map((color) => (
-                      <span key={color} style={{ backgroundColor: color }} />
+                    {slide.colors.map((color, i) => (
+                      <span key={`${color}-${i}`} style={{ backgroundColor: color }} />
                     ))}
                   </span>
-                  <span className={styles.setIn}>
-                    Set in <span>{slide.fontName}</span>
-                  </span>
+                  {slide.display ? (
+                    <span className={styles.setIn}>
+                      Set in <span>{slide.display}</span>
+                    </span>
+                  ) : null}
                 </div>
 
                 <Link
-                  href={`/templates/?q=${encodeURIComponent(slide.query)}`}
+                  href={slide.href}
                   prefetch={false}
                   className={styles.open}
-                  aria-label={`Browse ${slide.browseLabel} templates`}
+                  aria-label={`Preview ${slide.name}, ${slide.kind} template`}
                   tabIndex={on ? undefined : -1}
                   draggable={false}
                 >
@@ -364,7 +365,7 @@ export default function SkilledHands({ templateCount }: { templateCount: number 
 
             return (
               <button
-                key={slide.name}
+                key={slide.slug}
                 ref={(element) => {
                   dotRefs.current[k] = element;
                 }}

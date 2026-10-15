@@ -35,6 +35,10 @@ type Overview = {
   /** Every zip served in the last 30 days, anonymous ones included. */
   downloads30d: number;
   anonymousDownloads30d: number;
+  /** Of those, the ones the customizer built. Absent from an older Worker. */
+  customizedDownloads30d?: number;
+  /** The week's most downloaded templates, original and customized together. */
+  topDownloads7d?: { slug: string; n: number }[];
   /** Times the customizer was opened on a template, last 30 days. */
   customizerSessions30d: number;
   newAccounts30d: number;
@@ -107,6 +111,34 @@ function GrowthChart({ signups }: { signups?: { day: string; n: number }[] }) {
   );
 }
 
+/** The week's most downloaded templates, each a link to its preview. */
+function TopDownloads({ rows = [] }: { rows?: { slug: string; n: number }[] }) {
+  return (
+    <div className={`${styles.card} ${styles.chartCard}`}>
+      <div className={styles.cardHead}>
+        <div>
+          <h2 className={styles.h3}>Most downloaded</h2>
+          <p className={styles.cardSub}>Templates by downloads, original and customized, last 7 days</p>
+        </div>
+      </div>
+      {rows.length === 0 ? (
+        <p className={styles.quiet}>No downloads this week.</p>
+      ) : (
+        <ol className={styles.topList}>
+          {rows.map((row) => (
+            <li key={row.slug} className={styles.topRow}>
+              <a href={`/templates/${row.slug}/`} className={styles.topSlug}>
+                {row.slug}
+              </a>
+              <span className={styles.topCount}>{row.n.toLocaleString()}</span>
+            </li>
+          ))}
+        </ol>
+      )}
+    </div>
+  );
+}
+
 export function OverviewPanel() {
   const { data, error } = useAdminData<Overview>('/api/admin/overview');
 
@@ -124,7 +156,9 @@ export function OverviewPanel() {
     {
       label: 'Downloads',
       value: data.downloads30d.toLocaleString(),
-      note: `Last 30 days, ${data.anonymousDownloads30d.toLocaleString()} with no account`,
+      note: `Last 30 days, ${data.anonymousDownloads30d.toLocaleString()} with no account${
+        data.customizedDownloads30d === undefined ? '' : `, ${data.customizedDownloads30d.toLocaleString()} customized`
+      }`,
     },
     {
       label: 'Customizer sessions',
@@ -152,6 +186,8 @@ export function OverviewPanel() {
       </ul>
 
       <GrowthChart signups={data.signupsByDay} />
+
+      <TopDownloads rows={data.topDownloads7d} />
 
       <div className={styles.sectionHead}>
         <h2 className={styles.h2}>Recent users</h2>

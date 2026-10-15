@@ -25,16 +25,21 @@ test.describe('Tabbied site', () => {
       /\/templates\/?$/
     );
 
-    // A trade tab puts its site in the hero's front window.
-    const mockups = page.getByRole('img', { name: /^Sample websites for/ });
-    await page.getByRole('button', { name: 'Preview a florist template' }).click();
-    await expect(page.getByRole('button', { name: 'Preview a florist template' })).toHaveAttribute('aria-pressed', 'true');
-    await expect(mockups).toHaveAttribute('aria-label', /^Sample websites for a florist and/);
-
-    // Each slide leads to the gallery, searched for its trade.
-    await expect(page.getByRole('link', { name: 'Browse tattoo templates' })).toHaveAttribute(
+    // A trade tab puts its template in the hero's front window, and the
+    // window is that template's preview.
+    const florist = page.getByRole('button', { name: /^Florist: / });
+    await florist.click();
+    await expect(florist).toHaveAttribute('aria-pressed', 'true');
+    const floristName = (await florist.getAttribute('aria-label'))!.replace(/^Florist: /, '');
+    await expect(page.getByRole('link', { name: new RegExp(`^Preview ${floristName}, a florist template`) })).toHaveAttribute(
       'href',
-      '/templates/?q=tattoo'
+      /^\/templates\/[a-z0-9-]+\/$/
+    );
+
+    // Each slide leads to the template it shows.
+    await expect(page.getByRole('link', { name: /^Preview Inkwell Tattoo, a tattoo studio template$/ })).toHaveAttribute(
+      'href',
+      '/templates/inkwell-tattoo/'
     );
 
     // Patterns are second, a link away.
@@ -50,6 +55,49 @@ test.describe('Tabbied site', () => {
     ).toBeVisible();
   });
 
+  test('every template the homepage shows is a real one, and opens it', async ({ page, request }) => {
+    // The 14 October design drew fictional businesses, several of which were
+    // not templates and some of which shared a name with another one
+    // (components/main-page/homeShowcase.ts). Now every window, slide and the
+    // live demo name a template, and each link must open its preview.
+    await page.goto('/');
+
+    const hrefs = new Set<string>();
+    const collect = async () => {
+      for (const href of await page
+        .locator('main a[href^="/templates/"]')
+        .evaluateAll((anchors) => anchors.map((a) => a.getAttribute('href')!))) {
+        hrefs.add(href);
+      }
+    };
+
+    // The hero shows two templates at a time: each trade's tab puts its own
+    // in the front window. Focused rather than clicked, since the row is
+    // wider than the screen and its end tabs sit past the edge until reached.
+    const tabs = page.getByRole('group', { name: 'Trades' }).getByRole('button');
+    for (let i = 0; i < (await tabs.count()); i += 1) {
+      await tabs.nth(i).focus();
+      await expect(tabs.nth(i)).toHaveAttribute('aria-pressed', 'true');
+      await collect();
+    }
+    await collect();
+
+    const previews = [...hrefs].filter((href) => /^\/templates\/[a-z0-9-]+\/$/.test(href));
+
+    // Fourteen trades, nine slides and the demo, with repeats among them.
+    expect(previews.length).toBeGreaterThan(18);
+    for (const href of previews) {
+      expect((await request.get(href)).status(), href).toBe(200);
+    }
+
+    // The picture in a window is that template's own screenshot.
+    for (const shot of await page.locator('main img[src^="/template-shots/"]').evaluateAll((images) =>
+      images.map((image) => image.getAttribute('src')!)
+    )) {
+      expect((await request.get(shot)).status(), shot).toBe(200);
+    }
+  });
+
   test('the homepage animates only when motion is welcome', async ({
     page,
   }) => {
@@ -58,7 +106,7 @@ test.describe('Tabbied site', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
 
-    const tab = page.getByRole('button', { name: 'Preview a florist template' });
+    const tab = page.getByRole('button', { name: /^Florist: / });
     await expect(tab.locator('..')).toHaveCSS('animation-name', 'none');
 
     // No clock, so no pause button, and the first slide stays put.

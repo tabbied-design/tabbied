@@ -114,13 +114,26 @@ async function inlineMedia(
   return problems;
 }
 
-/** One packaged download, unzipped. Each fetch is the Worker's claim too. */
-async function fetchPackage(slug: string, format: 'html' | 'react'): Promise<Record<string, Uint8Array>> {
-  const response = await fetch(`/downloads/${slug}-${format}.zip`);
+/**
+ * What a fetch of a package is for, which the Worker counts by
+ * (worker/lib/downloads.ts): `customized`, the zip the person is about to
+ * get, logged as a download of that format and as a customized one; `build`,
+ * a package read only to make another (the HTML page the React project's
+ * result is taken from), not logged, or one customized React download would
+ * count as two.
+ */
+type PackageUse = 'customized' | 'build';
+
+/** One packaged download, unzipped. */
+async function fetchPackage(
+  slug: string,
+  format: 'html' | 'react',
+  use: PackageUse
+): Promise<Record<string, Uint8Array>> {
+  const response = await fetch(`/downloads/${slug}-${format}.zip?for=${use}`);
 
   if (!response.ok) {
-    // The Worker's claim answers a refused fetch (signed out, or every
-    // template already chosen) with a JSON sentence, which is the toast.
+    // A Worker that answers with a JSON sentence has it shown as the toast.
     const said = await response
       .json()
       .then((body: { error?: string }) => body.error)
@@ -148,7 +161,7 @@ export async function buildCustomisedArchive(options: {
   edits: EditsDocument;
 }): Promise<CustomisedArchive> {
   const { slug, spec, edits } = options;
-  const entries = await fetchPackage(slug, 'html');
+  const entries = await fetchPackage(slug, 'html', 'customized');
   const page = `${slug}/index.html`;
 
   if (!entries[page]) {
@@ -387,7 +400,7 @@ export async function buildCustomisedReactArchive(options: {
   edits: EditsDocument;
 }): Promise<CustomisedArchive> {
   const { slug, spec, edits } = options;
-  const [html, entries] = await Promise.all([fetchPackage(slug, 'html'), fetchPackage(slug, 'react')]);
+  const [html, entries] = await Promise.all([fetchPackage(slug, 'html', 'build'), fetchPackage(slug, 'react', 'customized')]);
   const page = html[`${slug}/index.html`];
   const main = Object.keys(entries).find((name) => name.endsWith('/src/main.tsx'));
 

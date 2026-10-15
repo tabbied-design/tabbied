@@ -11,9 +11,11 @@ export type TemplateIndexEntry = {
   topic: string;
   /** Background first. */
   colors: string[];
+  /** The catalog design the template leads with. */
+  pattern: string;
 };
 
 export const TEMPLATE_INDEX: TemplateIndexEntry[] = [
-  ...TEMPLATE_SITES.map((site) => ({ slug: site.slug, name: site.brand, topic: site.topic, colors: site.colors })),
-  ...NEW_TEMPLATE_SITES.map((site) => ({ slug: site.slug, name: site.name, topic: site.topic, colors: site.palette })),
+  ...TEMPLATE_SITES.map((site) => ({ slug: site.slug, name: site.brand, topic: site.topic, colors: site.colors, pattern: site.pattern })),
+  ...NEW_TEMPLATE_SITES.map((site) => ({ slug: site.slug, name: site.name, topic: site.topic, colors: site.palette, pattern: site.patternSlug })),
 ];

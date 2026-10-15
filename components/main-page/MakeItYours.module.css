@@ -1,5 +1,6 @@
-/* "Any template": a site on the gray band, and the toolbar that recolors it
-   overlapping its foot. Sizes inside the site are `cqw` of the site. */
+/* "Any template": a real template on the gray band, and the toolbar that
+   recolors it overlapping its foot. The browser bar's sizes are `cqw` of
+   the window. */
 
 .section {
   padding: 112px var(--hp-pad) 120px;
@@ -17,20 +18,17 @@
 }
 
 .site {
+  position: relative;
   max-width: 940px;
   margin: 56px auto 0;
   container-type: inline-size;
   overflow: hidden;
   border-radius: 14px;
-  background-color: var(--site-bg);
-  color: var(--site-ink);
+  background-color: #ffffff;
   text-align: left;
   box-shadow:
     0 50px 90px -40px oklch(0.25 0.03 270 / 0.45),
     0 0 0 1px oklch(0 0 0 / 0.07);
-  transition:
-    background-color 0.45s ease,
-    color 0.45s ease;
 }
 
 .bar {
@@ -42,67 +40,47 @@
   --mb-spacer: 3.4cqw;
 }
 
-.siteHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 2.6cqw 4.4cqw;
-}
-
-.brand {
-  font: 500 2.1cqw var(--font-home-jost), sans-serif;
-  letter-spacing: 0.16em;
-  white-space: nowrap;
-}
-
-.nav {
-  display: flex;
-  gap: 3cqw;
-  font: 400 1.25cqw var(--hp-sans);
-}
-
-.siteBody {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-  gap: 4.4cqw;
-  align-items: center;
-  padding: 2cqw 4.4cqw 5cqw;
-}
-
-.headline {
-  font: 300 6.6cqw / 1.02 var(--font-home-jost), sans-serif;
-  letter-spacing: -0.02em;
-}
-
-.sub {
-  max-width: 32cqw;
-  margin-top: 2.4cqw;
-  font: 400 1.45cqw / 1.55 var(--hp-sans);
-  opacity: 0.8;
-}
-
-.button {
-  display: inline-block;
-  margin-top: 3cqw;
-  padding: 1.2cqw 2.4cqw;
-  border-radius: 99px;
-  background-color: var(--site-accent);
-  color: var(--site-accent-ink);
-  font: 500 1.25cqw var(--hp-sans);
-  transition: background-color 0.45s ease;
-}
-
-.art {
-  aspect-ratio: 1.2 / 1;
+/* The page, at a site's width and scaled into the window (the script sets
+   the frame's size and scale). Its screenshot is underneath until the page
+   has drawn, and wherever the package cannot be fetched. */
+.canvas {
+  position: relative;
+  aspect-ratio: 16 / 10;
   overflow: hidden;
-  border-radius: 1cqw;
 }
 
-.art img {
+.shot {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: top;
+}
+
+.frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 0;
+  transform-origin: 0 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.frame[data-drawn] {
+  opacity: 1;
+}
+
+.siteLink {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.siteLink:focus-visible {
+  outline: 2px solid var(--hp-focus);
+  outline-offset: -2px;
 }
 
 /* -- The toolbar ------------------------------------------------------------ */
@@ -229,8 +207,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .site,
-  .button,
+  .frame,
   .start {
     transition: none;
   }

@@ -47,6 +47,7 @@
 /* The phone's notice, in place of the rail. Hidden until the rail is. */
 .smallNotice {
   display: none;
+  flex-wrap: wrap;
   gap: 12px;
   align-items: center;
   padding: 14px 18px;
@@ -54,6 +55,29 @@
   color: oklch(0.32 0.05 70);
   background-color: oklch(0.965 0.045 88);
   border-bottom: 1px solid oklch(0.87 0.07 82);
+}
+
+.smallNoticeText {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+/* The notice's one action, in its own colors, under the words on a phone. */
+.smallNoticeShare {
+  flex: none;
+  margin-left: 38px;
+  padding: 7px 12px;
+  border: 1px solid oklch(0.78 0.08 80);
+  border-radius: 999px;
+  font: 500 13px var(--s-sans);
+  color: oklch(0.28 0.05 70);
+  background-color: oklch(0.99 0.02 90);
+  cursor: pointer;
+}
+
+.smallNoticeShare:focus-visible {
+  outline: 2px solid oklch(0.35 0.06 70);
+  outline-offset: 2px;
 }
 
 .smallNoticeIcon {

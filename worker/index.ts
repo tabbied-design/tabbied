@@ -31,7 +31,7 @@ import journal from './migrations/meta/_journal.json';
 import { drizzle } from 'drizzle-orm/d1';
 import * as schema from './db/schema';
 import { requireUser } from './lib/session';
-import { forgetDownload, isReactSource, logDownload, parseDownloadName, takesCopy } from './lib/downloads';
+import { downloadUse, forgetDownload, isReactSource, logDownload, parseDownloadName, takesCopy } from './lib/downloads';
 import { mailProvider } from './lib/mail';
 import { templateSlugOf, withLicenseNotice } from './lib/notice';
 import { isTemplateSite, withNoindex } from './lib/noindex';
@@ -356,15 +356,23 @@ app.get('/downloads/:file', async (c, next) => {
   if (!named) return next();
 
   const request = c.req.raw;
+  const use = downloadUse(c.req.query('for'));
 
-  // A HEAD or a resumed range is served and writes nothing (takesCopy).
-  if (!takesCopy(request)) return c.env.ASSETS.fetch(request);
+  // A HEAD or a resumed range is served and writes nothing (takesCopy), and
+  // so is a package the customizer only reads to build another.
+  if (!takesCopy(request) || use === 'build') return c.env.ASSETS.fetch(request);
 
   const db = drizzle(c.env.DB, { schema });
   // Counting is never a reason to refuse a free download: a row that cannot
   // be written (D1 unavailable, a schema behind this code) leaves the zip
   // served and uncounted.
-  const logged = await logDownload(db, await downloaderOf(c.env, request), named.slug, named.format).catch(
+  const logged = await logDownload(
+    db,
+    await downloaderOf(c.env, request),
+    named.slug,
+    named.format,
+    use === 'customized'
+  ).catch(
     (error: unknown) => {
       console.error('download log failed', error);
       return null;

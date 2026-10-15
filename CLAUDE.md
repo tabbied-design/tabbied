@@ -921,7 +921,21 @@ in the query string (`?category=food-and-drink&page=2&q=bakery`). Since the 14
 October designs the hero is "A website for every trade, free" with the search
 box in it, and a card is one link, straight into the customizer (or onto the
 person's newest saved site on that template), with the screenshot kept as
-the thumbnail. Four things worth not re-litigating:
+the thumbnail. Five things worth not re-litigating:
+
+- **The search matches by word and stem, not substring**
+  (`lib/catalogSearch.ts`, `searchTemplates`). A person types the trade and
+  the topics name the work, so "plumber" found nothing while "plumbing" found
+  Northside Plumbing, and "hair" found Two Chairs Counseling (the 2026-10-15
+  guest audit). Both sides go through one `stem`, `TRADE_WORDS` joins the few
+  trades that share no stem ("hvac" and heating, "lawyer" and attorney), a
+  word still being typed matches the words it starts, and stem matches rank
+  first. A group is added to every template holding one of its words, so it
+  must never hold a category's name or a word many trades share ("salon",
+  "clinic", "school"). A search that finds nothing offers the nearest query
+  that does ("plumer" to plumber), then common trades. The MCP tool still
+  matches substrings. `lib/templateSearch.test.mjs` holds the audit's terms
+  to the real registries.
 
 - **The order spreads the batches, and a batch is a seed prefix.** The
   registries list templates in the batches they were made in, and a batch
@@ -947,8 +961,10 @@ the thumbnail. Four things worth not re-litigating:
   (2026-09-27, `pic-`) after those, and the hundred professionals sites
   (2026-10-08, `pro-`) after those.
 - **The first cards are picked by hand.** `GALLERY_ORDER` is `GALLERY_LEAD`,
-  twenty-three templates chosen for the top of the first page (fifteen on
-  2026-10-02, eight more after them the same day), then `GALLERY_SPREAD`,
+  forty-six templates chosen for the top of the first page (twenty-four
+  everyday trades on 2026-10-15, the florists, barbers, bakers and
+  electricians the gallery's own heading names, ahead of the twenty-three
+  picked on 2026-10-02, fifteen and then eight), then `GALLERY_SPREAD`,
   the spread above less those, which is the part that stays append-only.
   Editing the lead moves every card after it, so it is an editorial
   decision, not a side effect of adding templates. The lead is shown in the
@@ -1213,20 +1229,62 @@ not re-litigating:
 
 Since the 14 October designs (Sy's note: make website templates the hero and
 patterns secondary) the homepage leads with templates: a dark hero
-("Websites with personality.") with two mock sites that change with a row
-of trade tabs along its foot, a carousel of trades ("The world still runs on
-skilled hands."), a mock site recolored from a toolbar ("Any template.
-Entirely your own."), then patterns ("Good patterns go beyond websites."),
-the developers, the questions and a last way in, over the light footer. It
-is built from one component per section in `components/main-page/`
-(`TradesHero`, `SkilledHands`, `MakeItYours`, `BeyondWebsites`,
-`ForDevelopers`, `HomeFaq`, `HomeCta`), reading `HomePage.module.css`'s
-tokens and the design's data in `homeData.ts`. The mock sites are drawn in
-markup with static pictures under `public/images/home/` (pattern stills, the
-carousel's photos, the gallery tiles), not live patterns: thirty live
-css-doodle fields on one page would cost what the gallery measured
-(`gallery-cost.mjs`). The mock sites' six display faces load through
-`next/font` for this page only, unpreloaded (`homeFonts.ts`).
+("Websites with personality.") with two windows onto templates that change
+with a row of trade tabs along its foot, a carousel of trades ("The world
+still runs on skilled hands."), a template recolored from a toolbar ("Any
+template. Entirely your own."), then patterns ("Good patterns go beyond
+websites."), the developers, the questions and a last way in, over the light
+footer. It is built from one component per section in
+`components/main-page/` (`TradesHero`, `SkilledHands`, `MakeItYours`,
+`BeyondWebsites`, `ForDevelopers`, `HomeFaq`, `HomeCta`), reading
+`HomePage.module.css`'s tokens.
+
+**Every template the homepage shows is a real one, and opens it.** The
+design drew fictional businesses as mockups (Lumen, Kettle Plumbing, Ashby
+Plumbing, Studio Nova), several of which were not templates and some of
+which named a different one, and the carousel's arrows searched the gallery
+rather than opening what the slide showed; the 2026-10-15 guest audit
+clicked "Ashby Plumbing" and landed on Northside Plumbing. Four things keep
+it honest:
+
+- **`homeData.ts` holds only the editorial choices**: which template stands
+  for each of the fourteen trades, each slide's template, photograph and
+  sentence (written from the template's own sections), and the demo's
+  template, palettes and designs. `homeShowcase.ts` resolves the rest on the
+  server from the registries, the category table and the screenshots, and
+  throws on a slug no template has or one with no screenshot, so the export
+  fails before a card can lead somewhere else.
+- **The windows are the templates' screenshots** (`public/template-shots`,
+  above), each a link to `/templates/<slug>/`, and a reshoot reaches the
+  homepage too. The hero fetches the other trades' shots once a pointer or
+  focus reaches the tab row, not on the first paint. The carousel's chips
+  are the gallery's own categories, and "Browse all" follows the chip into
+  `/templates/?category=`.
+- **A tab is a strip of the pattern its template wears, in its colors**, and
+  the carousel's "Set in" chip is the face the template's h1 is set in:
+  both captured off the live page by `scripts/capture-home-tabs.mjs` into
+  `public/images/home/tabs/` and `homeShowcase.json`, committed because the
+  deploy build has no browser. Run it after `homeData.ts` names a new
+  template (it reads the slugs from that file); until then the tab falls
+  back to the design's catalog preview in its own colors. It needs
+  `MOCKUP_CHROMIUM=/opt/pw-browsers/chromium` in the cloud container, and
+  takes `--base http://localhost:3000` to read a dev server instead of
+  `out/`.
+- **"Any template" is the customizer in miniature, not a picture of it.**
+  The window is the template's packaged download in an iframe, drawn by the
+  Studio's same-origin runtime and recolored by the same engine
+  (`buildPreviewDocument`, `fitPalette`, `planEdits` and `rehydrate`), laid
+  out at 1280px (800px in a narrow window) and scaled down. It loads when
+  the section nears the screen, costs nothing before, and shows the
+  screenshot until the page has drawn and wherever the package cannot be
+  fetched, which includes `next dev` before a build. A pattern choice puts
+  one design on every field; the template's own row puts each field's
+  authored slug, seed and options back, which a plan can do without
+  rebuilding the frame. The frame is `inert`, and a link laid over it (a
+  link may not hold an iframe) opens the template's preview.
+
+Only the mono face loads through `next/font` for this page alone
+(`homeFonts.ts`); the mockups' six display faces went with the mockups.
 
 `/templates` and the docs keep the older dark editorial token set
 (`components/main-page/home.module.css`, read as `var(--h-...)`): the
@@ -1421,7 +1479,15 @@ what it changes. Five things worth not re-litigating:
   gives the row back (a 304 is not a miss). A HEAD or a Range resuming past
   byte 0 is served and writes nothing (`takesCopy`). The session is read only
   to name the person, and an auth failure of any kind logs the download as
-  anonymous rather than refusing it.
+  anonymous rather than refusing it. The customizer builds its download in
+  the browser from these same zips and says what each fetch is for
+  (`?for=`, `lib/studioDownload.ts`): `customized` is the zip the person's
+  copy is made from, a download plus a `download-customized` event the
+  Worker writes beside it; `build` is the HTML package a customized React
+  project reads its result from, served and not logged. Until 2026-10-15 a
+  customized React download counted as two downloads and none said it was
+  customized. The overview shows the customized share and the week's ten
+  most downloaded templates.
 - **The customizer's counts are a beacon, `POST /api/events`.** A closed list
   of kinds (`lib/events.ts`): `customize` (the customizer opened on a
   template), `save-gate` (a signed-out Save asked for an account) and

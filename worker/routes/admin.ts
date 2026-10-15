@@ -59,8 +59,9 @@ const daysAgo = (days: number) => new Date(Date.now() - days * 86_400_000);
 
 // The overview's figures. The headline four are the 2026-10 design's:
 // downloads over the last 30 days (no account needed, so most carry no
-// user), customizer sessions, new accounts and how many of them began at the
-// Save gate, and the sites saved across every account. The rest are the
+// user, and how many the customizer built), customizer sessions, new
+// accounts and how many of them began at the Save gate, and the sites saved
+// across every account; then the week's most downloaded templates. The rest are the
 // generation tier's, held back from the first launch but still answered.
 admin.get('/overview', async (c) => {
   const db = drizzle(c.env.DB, { schema });
@@ -83,6 +84,7 @@ admin.get('/overview', async (c) => {
     [newAccounts],
     [fromSave],
     [saved],
+    topDownloads,
   ] = await Promise.all([
     db.select({ n: sql<number>`count(*)` }).from(user),
     db.select({ n: sql<number>`count(*)` }).from(user).where(gte(user.createdAt, week)),
@@ -129,6 +131,15 @@ admin.get('/overview', async (c) => {
       .innerJoin(user, eq(user.id, event.userId))
       .where(and(eq(event.kind, 'gate-save'), gte(user.createdAt, month))),
     db.select({ n: sql<number>`count(*)` }).from(site),
+    // Which templates went out this week, original and customized together:
+    // the guest audit asked for downloads per template.
+    db
+      .select({ slug: download.slug, n: sql<number>`count(*)` })
+      .from(download)
+      .where(gte(download.createdAt, week))
+      .groupBy(download.slug)
+      .orderBy(sql`count(*) desc`, download.slug)
+      .limit(10),
   ]);
 
   const eventCount = (kind: EventKind) => Number(events.find((row) => row.kind === kind)?.n ?? 0);
@@ -138,6 +149,10 @@ admin.get('/overview', async (c) => {
     newUsersThisWeek: Number(newUsers.n),
     downloads30d: Number(downloads.n),
     anonymousDownloads30d: Number(downloads.anonymous),
+    // Of downloads30d, the ones the customizer built (its own event, written
+    // beside the download row; worker/lib/downloads.ts).
+    customizedDownloads30d: eventCount('download-customized'),
+    topDownloads7d: topDownloads.map((row) => ({ slug: row.slug, n: Number(row.n) })),
     customizerSessions30d: eventCount('customize'),
     saveGates30d: eventCount('save-gate'),
     newAccounts30d: Number(newAccounts.n),
