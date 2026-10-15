@@ -444,6 +444,50 @@
   margin-top: 22px;
 }
 
+/* The week's most downloaded templates: a ranked list, slug and count. */
+.topList {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: top;
+}
+
+.topRow {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  padding: 9px 0;
+  border-top: 1px solid var(--a-line);
+  font: 400 14px var(--a-sans);
+  counter-increment: top;
+}
+
+.topRow::before {
+  content: counter(top);
+  width: 20px;
+  color: var(--a-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.topSlug {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--a-ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topSlug:hover {
+  text-decoration: underline;
+}
+
+.topCount {
+  color: var(--a-ink);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
 .cardHead {
   display: flex;
   flex-wrap: wrap;

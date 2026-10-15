@@ -85,16 +85,30 @@
   padding-bottom: 9%;
 }
 
+/* Each window is a link to the template it shows: a browser bar over the
+   template's own screenshot, on its ground color while the picture loads. */
 .large,
 .small {
+  display: block;
   container-type: inline-size;
   overflow: hidden;
   border-radius: 12px;
   background-color: var(--site-bg);
-  color: var(--site-ink);
+  color: inherit;
   transition:
     background-color 0.45s ease,
-    color 0.45s ease;
+    transform 0.25s ease;
+}
+
+.large:hover,
+.small:hover {
+  transform: translateY(-3px);
+}
+
+.large:focus-visible,
+.small:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 4px;
 }
 
 .large {
@@ -127,117 +141,21 @@
   --mb-spacer: 6cqw;
 }
 
-.siteHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 2.6cqw 4cqw;
-}
-
-.brand {
-  font: var(--site-brand);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.nav {
-  display: flex;
-  gap: 2.8cqw;
-  font: 400 1.3cqw var(--hp-sans);
-  white-space: nowrap;
-}
-
-.siteBody {
-  display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-  gap: 4cqw;
-  align-items: center;
-  padding: 1cqw 4cqw 4.4cqw;
-}
-
-.headline {
-  font: var(--site-head);
-  letter-spacing: -0.01em;
-  text-wrap: balance;
-}
-
-.sub {
-  margin-top: 2.4cqw;
-  font: 400 1.5cqw / 1.5 var(--hp-sans);
-  color: var(--site-muted);
-}
-
-.button {
-  display: inline-block;
-  margin-top: 3cqw;
-  padding: 1.2cqw 2.4cqw;
-  border-radius: 99px;
-  background-color: var(--site-button-bg);
-  color: var(--site-button-ink);
-  font: 500 1.3cqw var(--hp-sans);
-  white-space: nowrap;
-  transition:
-    background-color 0.45s ease,
-    color 0.45s ease;
-}
-
-.art {
-  aspect-ratio: 1 / 1.05;
-  overflow: hidden;
-  border-radius: 1cqw;
-}
-
-.art img {
+.shot {
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
+  /* The design's window proportion: the shot's foot is cropped. */
+  aspect-ratio: 3 / 2;
   object-fit: cover;
+  object-position: top;
+  animation: shown 0.35s ease;
 }
 
-.strip {
-  display: flex;
-  gap: 6cqw;
-  padding: 1.8cqw 4cqw;
-  border-top: 1px solid oklch(0.3 0.03 50 / 0.15);
-  font: 500 1cqw var(--hp-mono-medium);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--site-muted);
-  white-space: nowrap;
-}
-
-/* The small window: the same site, set larger for its size. */
-.small .siteHead {
-  gap: 3cqw;
-  padding: 4.4cqw 6cqw 2cqw;
-}
-
-.small .nav {
-  gap: 4cqw;
-  font-size: 2.2cqw;
-  color: var(--site-muted);
-}
-
-.small .siteBody {
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 5cqw;
-  padding: 3cqw 6cqw 6.5cqw;
-}
-
-.small .headline {
-  letter-spacing: -0.02em;
-}
-
-.small .button {
-  margin-top: 5cqw;
-  padding: 2cqw 3.8cqw;
-  font-size: 2.2cqw;
-}
-
-.small .art {
-  aspect-ratio: 1 / 1.15;
-  border-radius: 1.6cqw;
+@keyframes shown {
+  from {
+    opacity: 0;
+  }
 }
 
 /* -- The trade tabs --------------------------------------------------------- */
@@ -317,15 +235,14 @@
     inset 0 0 0 4px #ffffff;
 }
 
-/* The pattern at 300px wide, centered, as the design's background-size. */
+/* The strip of the template's own pattern (scripts/capture-home-tabs.mjs),
+   covering the tab whatever its height. */
 .tabArt {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 300px;
-  max-width: none;
-  height: auto;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   pointer-events: none;
 }
 
@@ -380,8 +297,16 @@
   .pill,
   .large,
   .small,
-  .button,
   .cta {
     transition: none;
+  }
+
+  .large:hover,
+  .small:hover {
+    transform: none;
+  }
+
+  .shot {
+    animation: none;
   }
 }

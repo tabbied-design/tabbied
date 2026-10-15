@@ -239,11 +239,13 @@ describe('acting on accounts', () => {
 
     const cookie = await signIn('saver@example.com');
     const { id } = (await env.DB.prepare('SELECT id FROM user WHERE email = ?').bind('saver@example.com').first<{ id: string }>())!;
-    const take = async (headers: Record<string, string> = {}) => {
-      const response = await SELF.fetch(`${ORIGIN}/downloads/verdant-html.zip`, { headers });
+    const take = async (headers: Record<string, string> = {}, file = 'verdant-html.zip') => {
+      const response = await SELF.fetch(`${ORIGIN}/downloads/${file}`, { headers });
       expect(response.status).toBe(200);
       await response.arrayBuffer();
     };
+    const verdantThisWeek = (o: { topDownloads7d?: { slug: string; n: number }[] }) =>
+      o.topDownloads7d?.find((row) => row.slug === 'verdant')?.n ?? 0;
     const send = (kind: string, headers: Record<string, string> = {}) =>
       SELF.fetch(`${ORIGIN}/api/events`, { method: 'POST', headers: { ...json, ...headers }, body: JSON.stringify({ kind, slug: 'verdant' }) });
 
@@ -251,6 +253,11 @@ describe('acting on accounts', () => {
     await take();
     await take();
     await take({ cookie });
+    // A customized React download as the customizer makes it: the React zip
+    // it turns into the person's copy is one download and one customized
+    // one, and the HTML package it reads the result from is not counted.
+    await take({}, 'verdant-react.zip?for=customized');
+    await take({}, 'verdant-html.zip?for=build');
     await env.DB.prepare('INSERT INTO download (id, user_id, slug, format, created_at) VALUES (?, ?, ?, ?, unixepoch() - 40 * 86400)')
       .bind('download-old', null, 'verdant', 'react')
       .run();
@@ -268,17 +275,20 @@ describe('acting on accounts', () => {
 
     const after = await overview();
     const moved = (field: string) => after[field] - before[field];
+    expect(verdantThisWeek(after as never) - verdantThisWeek(before as never)).toBe(4);
     expect({
       downloads30d: moved('downloads30d'),
       anonymousDownloads30d: moved('anonymousDownloads30d'),
+      customizedDownloads30d: moved('customizedDownloads30d'),
       customizerSessions30d: moved('customizerSessions30d'),
       saveGates30d: moved('saveGates30d'),
       newAccounts30d: moved('newAccounts30d'),
       newAccountsFromSave30d: moved('newAccountsFromSave30d'),
       savedTemplates: moved('savedTemplates'),
     }).toEqual({
-      downloads30d: 3,
-      anonymousDownloads30d: 2,
+      downloads30d: 4,
+      anonymousDownloads30d: 3,
+      customizedDownloads30d: 1,
       customizerSessions30d: 3,
       saveGates30d: 1,
       newAccounts30d: 1,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
 import { Search, X } from 'lucide-react';
 import type { PatternDefinition } from 'tabbied';
 import {
@@ -16,17 +16,20 @@ import {
   PAGER_WIDE_QUERY,
 } from 'lib/pagination';
 import useMediaQuery from 'lib/useMediaQuery';
-import { matchesQuery, templateKeywords } from 'lib/catalogSearch';
+import { indexTemplate, matchesTemplate, searchTemplates, suggestQueries, type TemplateIndex } from 'lib/catalogSearch';
 import { customizeHref, savedOf, savedSlugs, useSavedTemplates } from 'lib/savedTemplates';
 import LazyPattern from './LazyPattern';
 import s from './TemplatesGrid.module.css';
 
 // The template gallery: the hero with its search box, a row of category
-// chips, a page of the cards they filter, and the pager. The search matches
-// what the MCP server's list_templates does (lib/catalogSearch.ts), so
-// "bakery" finds the same sites on the page and over MCP. Client-side for the
-// search, the chips and the pages, and for the one thing the server cannot
-// know, which templates the visitor has saved (lib/savedTemplates.ts).
+// chips, a page of the cards they filter, and the pager. The search reads the
+// fields the MCP server's list_templates does, matched by word and stem
+// (lib/catalogSearch.ts), so the trade a person types ("plumber", "dog
+// groomer") finds the template that names its work ("Plumbing and heating
+// contractor"), and one that finds nothing offers the nearest that does.
+// Client-side for the search, the chips and the pages, and for the one thing
+// the server cannot know, which templates the visitor has saved
+// (lib/savedTemplates.ts).
 //
 // Nothing here asks for an account: every template is free to customize and
 // download, so a card is one link, straight into the customizer (the 14
@@ -51,6 +54,12 @@ const MAX_SWATCHES = 4;
 
 /** Cards per page: a multiple of 3, 2 and 1, the grid's columns, so no row is short. */
 const PER_PAGE = 48;
+
+/**
+ * What an empty search offers when no word is near the one typed: trades the
+ * site's own copy names, each shown only where it finds something.
+ */
+const COMMON_SEARCHES = ['plumber', 'electrician', 'florist', 'bakery', 'hair salon', 'landscaper'];
 
 /**
  * A card. Each carries its accent as a custom property, which tints the
@@ -165,6 +174,11 @@ export default function TemplatesGrid({
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState('');
   const saved = useSavedTemplates();
+  // Each card's words and stems, worked out once rather than per keystroke.
+  const indexes = useMemo(
+    () => new Map<string, TemplateIndex>(cards.map((c) => [c.slug, indexTemplate(c)])),
+    [cards]
+  );
 
   useEffect(() => {
     const read = () => {
@@ -208,7 +222,7 @@ export default function TemplatesGrid({
       : active === 'Saved'
         ? cards.filter((c) => savedSet.has(c.slug))
         : cards.filter((c) => c.category === active);
-  const matching = query.trim() ? inFilter.filter((c) => matchesQuery(templateKeywords(c), query)) : inFilter;
+  const matching = query.trim() ? searchTemplates(inFilter, (c) => indexes.get(c.slug)!, query) : inFilter;
   const filters: Filter[] = saved.status === 'ready' ? ['All', 'Saved', ...categories] : ['All', ...categories];
 
   // A page past the end (a link from before a category shrank, or a typed
@@ -218,10 +232,25 @@ export default function TemplatesGrid({
   // Narrow until mounted, so the prerendered pager fits a phone.
   const widePager = useMediaQuery(PAGER_WIDE_QUERY);
   // The design's placeholder is cut off on a phone, so a phone gets a
-  // shorter one; the export draws the long one.
+  // shorter one (about 224px of the field is left for it at 390px wide, and
+  // "Search by trade, e.g. plumber" lost its last letter); the export draws
+  // the long one.
   const narrowSearch = useMediaQuery('(max-width: 559.98px)');
   const shown = matching.slice((current - 1) * PER_PAGE, current * PER_PAGE);
   const here = galleryHref(active, current, query);
+
+  // Only worked out for a search that found nothing, over the cards the
+  // filter holds, so every offer finds something where the person is.
+  const empty = matching.length === 0 && query.trim() !== '';
+  const offers = useMemo(() => {
+    if (!empty) return { near: [], common: [] };
+
+    const pool = inFilter.map((c) => indexes.get(c.slug)!);
+    const near = suggestQueries(pool, query, 2);
+    const common = near.length > 0 ? [] : COMMON_SEARCHES.filter((term) => pool.some((index) => matchesTemplate(index, term)));
+
+    return { near, common };
+  }, [empty, inFilter, indexes, query]);
 
   // A page is chosen at the foot of the grid, so the new one is brought into
   // view from its top, and focus goes with it for a keyboard.
@@ -254,7 +283,7 @@ export default function TemplatesGrid({
               type="search"
               value={query}
               onChange={(event) => search(event.target.value)}
-              placeholder={narrowSearch ? 'Search by trade, e.g. plumber' : 'Search by trade or business, e.g. plumber'}
+              placeholder={narrowSearch ? 'Your trade, e.g. plumber' : 'Search by trade or business, e.g. plumber'}
               aria-label="Search templates"
               autoComplete="off"
               spellCheck={false}
@@ -302,8 +331,35 @@ export default function TemplatesGrid({
             <p className={s.noneTitle}>
               No templates for &quot;{query.trim()}&quot;{active === 'All' ? ' yet' : ` in ${active === 'Saved' ? 'your saved ones' : active}`}
             </p>
+            {offers.near.length > 0 ? (
+              <p>
+                Did you mean{' '}
+                {offers.near.map((term, i) => (
+                  <span key={term}>
+                    {i > 0 ? ' or ' : null}
+                    <button type="button" className={s.clearSearch} onClick={() => search(term)}>
+                      {term}
+                    </button>
+                  </span>
+                ))}
+                ?
+              </p>
+            ) : offers.common.length > 0 ? (
+              <p>
+                Try{' '}
+                {offers.common.map((term, i) => (
+                  <span key={term}>
+                    {i > 0 ? ', ' : null}
+                    <button type="button" className={s.clearSearch} onClick={() => search(term)}>
+                      {term}
+                    </button>
+                  </span>
+                ))}
+                .
+              </p>
+            ) : null}
             <p>
-              Try a broader word,{' '}
+              Or{' '}
               <button type="button" className={s.clearSearch} onClick={() => search('')}>
                 clear the search
               </button>

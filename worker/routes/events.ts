@@ -18,6 +18,11 @@ import { requireUser } from '../lib/session';
 //   save-gate   a signed-out person pressed Save and was asked to make an account
 //   gate-save   the edits held at that gate were saved after signing in
 //
+// and one the Worker writes itself, beside the download row, which is why it
+// is not in the list a page may post (worker/lib/downloads.ts):
+//
+//   download-customized   a download the customizer built from a template
+//
 // Anyone may post, signed in or not, so the gate is per client address
 // (`CF-Connecting-IP`, which Cloudflare sets on every request; the constant is
 // for local dev, where nothing does). Generous, since a person opening a few
@@ -25,7 +30,8 @@ import { requireUser } from '../lib/session';
 
 export const EVENT_KINDS = ['customize', 'save-gate', 'gate-save'] as const;
 
-export type EventKind = (typeof EVENT_KINDS)[number];
+/** Every kind the `event` table holds: the ones a page posts, and the Worker's own. */
+export type EventKind = (typeof EVENT_KINDS)[number] | 'download-customized';
 
 const eventSchema = z.object({
   kind: z.enum(EVENT_KINDS),

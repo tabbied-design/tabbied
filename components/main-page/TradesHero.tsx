@@ -2,16 +2,20 @@
 
 import { useRef, useState, type CSSProperties, type FocusEvent } from 'react';
 import Link from 'next/link';
+import GalleryLink from './GalleryLink';
 import BrowserBar from './MockBrowser';
-import { FIRST_TRADE, MOCK_FONTS, PATTERNS, SECOND_TRADE, TRADES, type Trade } from './homeData';
+import { FIRST_TRADE, SECOND_TRADE } from './homeData';
+import type { HeroTradeView } from './homeShowcase';
 import styles from './TradesHero.module.css';
 
 // The homepage's hero: the pitch on the left, and on the right two windows
-// onto sites for two trades, the one chosen last in front of the one before
-// it. Along the hero's foot, a row of fourteen tabs, one per trade, each a
-// strip of the pattern its site wears; pointing at one, focusing it or
-// clicking it puts its site in the large window and moves the one that was
-// there to the small one.
+// onto real templates for two trades, the one chosen last in front of the one
+// before it. Each window is the template's screenshot and a link to its
+// preview, so what the hero shows is what a click opens. Along the hero's
+// foot, a row of fourteen tabs, one per trade, each a strip of the pattern
+// its template wears; pointing at one, focusing it or clicking it puts its
+// template in the large window and moves the one that was there to the small
+// one.
 //
 // The tabs rise in on load as a CSS animation, staggered by index, so they
 // arrive with the first paint rather than after hydration and stop for
@@ -22,41 +26,52 @@ import styles from './TradesHero.module.css';
 /** How far from the band's edges a focused tab is brought, in px. */
 const EDGE = 16;
 
-const article = (word: string) => (/^[aeiou]/i.test(word) ? 'an' : 'a');
+/** The address a window's bar shows: where the template actually is. */
+const address = (trade: HeroTradeView) => `tabbied.com/templates/${trade.slug}`;
 
-/** The colors and faces a window paints a trade's site in, as the properties its rules read. */
-function siteVars(trade: Trade, size: 'large' | 'small'): CSSProperties {
-  const font = MOCK_FONTS[trade.font];
-  const brandSize = (size === 'large' ? 2.6 : 3) * font.scale;
-  const headSize = (size === 'large' ? 6.4 : 8.6) * font.scale;
-  // The small window's headline is a step lighter, except in a face that
-  // has only the one weight to give.
-  const headWeight = size === 'large' || font.headWeight === 400 ? font.headWeight : 300;
-
-  return {
-    '--site-bg': trade.bg,
-    '--site-ink': trade.ink,
-    '--site-muted': trade.muted,
-    '--site-button-bg': trade.buttonBg,
-    '--site-button-ink': trade.buttonInk,
-    '--site-brand': `${font.brandWeight} ${brandSize.toFixed(2)}cqw ${font.family}`,
-    '--site-head': `${headWeight} ${headSize.toFixed(2)}cqw / ${font.lineHeight} ${font.family}`,
-  } as CSSProperties;
+function Window({ trade, size }: { trade: HeroTradeView; size: 'large' | 'small' }) {
+  return (
+    <Link
+      href={trade.href}
+      prefetch={false}
+      className={size === 'large' ? styles.large : styles.small}
+      style={{ '--site-bg': trade.colors[0] } as CSSProperties}
+      aria-label={`Preview ${trade.name}, ${trade.kind} template`}
+    >
+      <BrowserBar domain={address(trade)} className={size === 'small' ? styles.smallBar : undefined} />
+      {/* Keyed, so a new template fades in rather than swapping under the old one. */}
+      <img key={trade.slug} className={styles.shot} src={trade.shot} width={960} height={720} alt="" />
+    </Link>
+  );
 }
 
-export default function TradesHero({ templateCount }: { templateCount: number }) {
+export default function TradesHero({ templateCount, trades }: { templateCount: number; trades: HeroTradeView[] }) {
   const [shown, setShown] = useState({ front: FIRST_TRADE, back: SECOND_TRADE });
   const [shift, setShift] = useState(0);
   const bandRef = useRef<HTMLDivElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
+  const warmed = useRef(false);
 
-  const front = TRADES[shown.front];
-  const back = TRADES[shown.back];
+  const front = trades[shown.front];
+  const back = trades[shown.back];
 
   const pick = (index: number) =>
     setShown((current) =>
       current.front === index ? current : { front: index, back: current.front }
     );
+
+  // A pointer or focus arriving at the row is someone about to browse it, so
+  // every screenshot is fetched then, once, rather than on the first paint
+  // (fourteen of them) or as each tab is reached (a blank window per tab).
+  const warm = () => {
+    if (warmed.current) return;
+    warmed.current = true;
+
+    for (const trade of trades) {
+      const image = new Image();
+      image.src = trade.shot;
+    }
+  };
 
   // Keyboard focus only: a click focuses the tab too, and sliding the row
   // under a pointer that has not moved would put the next tab under it.
@@ -93,75 +108,16 @@ export default function TradesHero({ templateCount }: { templateCount: number })
             in place of stock photos.
           </p>
           <div className={styles.actions}>
-            <Link href="/templates" prefetch={false} className={styles.cta}>
+            <GalleryLink href="/templates" className={styles.cta}>
               Pick your template
-            </Link>
+            </GalleryLink>
           </div>
           <p className={styles.note}>{templateCount} free templates. No account needed.</p>
         </div>
 
-        <div
-          className={styles.showcase}
-          role="img"
-          aria-label={`Sample websites for ${article(front.label)} ${front.label.toLowerCase()} and ${article(back.label)} ${back.label.toLowerCase()}`}
-        >
-          <div className={styles.large} style={siteVars(front, 'large')}>
-            <BrowserBar domain={front.domain} />
-            <div className={styles.siteHead}>
-              <span className={styles.brand}>{front.brand}</span>
-              <span className={styles.nav}>
-                {front.nav.map((item) => (
-                  <span key={item}>{item}</span>
-                ))}
-              </span>
-            </div>
-            <div className={styles.siteBody}>
-              <div>
-                <div className={styles.headline}>{front.head}</div>
-                <div className={styles.sub}>{front.sub}</div>
-                <span className={styles.button}>{front.cta}</span>
-              </div>
-              <div className={styles.art}>
-                <img
-                  src={PATTERNS[front.pattern].src}
-                  width={PATTERNS[front.pattern].width}
-                  height={PATTERNS[front.pattern].height}
-                  alt=""
-                />
-              </div>
-            </div>
-            <div className={styles.strip}>
-              {front.strip.map((item) => (
-                <span key={item}>{item}</span>
-              ))}
-            </div>
-          </div>
-
-          <div className={styles.small} style={siteVars(back, 'small')}>
-            <BrowserBar domain={back.domain} className={styles.smallBar} />
-            <div className={styles.siteHead}>
-              <span className={styles.brand}>{back.brand}</span>
-              <span className={styles.nav}>
-                {back.nav.slice(0, 3).map((item) => (
-                  <span key={item}>{item}</span>
-                ))}
-              </span>
-            </div>
-            <div className={styles.siteBody}>
-              <div>
-                <div className={styles.headline}>{back.head}</div>
-                <span className={styles.button}>{back.cta}</span>
-              </div>
-              <div className={styles.art}>
-                <img
-                  src={PATTERNS[back.pattern].src}
-                  width={PATTERNS[back.pattern].width}
-                  height={PATTERNS[back.pattern].height}
-                  alt=""
-                />
-              </div>
-            </div>
-          </div>
+        <div className={styles.showcase}>
+          <Window trade={front} size="large" />
+          <Window trade={back} size="small" />
         </div>
       </div>
 
@@ -172,22 +128,23 @@ export default function TradesHero({ templateCount }: { templateCount: number })
           role="group"
           aria-label="Trades"
           style={{ '--shift': `${shift}px` } as CSSProperties}
+          onPointerEnter={warm}
+          onFocus={warm}
         >
-          {TRADES.map((trade, index) => {
+          {trades.map((trade, index) => {
             const on = index === shown.front;
-            const art = PATTERNS[trade.pattern];
 
             return (
               <span
-                key={trade.label}
+                key={trade.slug}
                 className={styles.slot}
                 style={{ '--i': index } as CSSProperties}
               >
                 <button
                   type="button"
                   className={styles.tab}
-                  style={{ height: trade.tabHeight + 24 }}
-                  aria-label={`Preview ${article(trade.label)} ${trade.label.toLowerCase()} template`}
+                  style={{ height: trade.tabHeight + 24, backgroundColor: trade.colors[0] }}
+                  aria-label={`${trade.label}: ${trade.name}`}
                   aria-pressed={on}
                   onMouseEnter={() => pick(index)}
                   onFocus={(event) => {
@@ -198,9 +155,9 @@ export default function TradesHero({ templateCount }: { templateCount: number })
                 >
                   <img
                     className={styles.tabArt}
-                    src={art.src}
-                    width={art.width}
-                    height={art.height}
+                    src={trade.tab}
+                    width={400}
+                    height={200}
                     alt=""
                     draggable={false}
                   />

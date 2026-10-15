@@ -152,6 +152,9 @@ export default function StudioSite({
   const [draft, setDraft] = useState<EditsDocument | null>(null);
   const [saveState, setSaveState] = useState<SaveState>('clean');
   const [downloading, setDownloading] = useState(false);
+  // The draft a person last downloaded, while it is still the draft: a
+  // download of a site never saved is that person's copy of it.
+  const [downloadedDraft, setDownloadedDraft] = useState<EditsDocument | null>(null);
   const [shuffling, setShuffling] = useState(false);
   const [expanded, setExpanded] = useState(false);
   // Bumped to remount the iframe. React diffs `srcDoc` against its last prop,
@@ -248,9 +251,14 @@ export default function StudioSite({
 
   // Unsaved changes are asked about before the page goes: a draft has
   // nowhere else to be kept, and a saved site's latest changes are not in
-  // it until Save.
+  // it until Save. A draft just downloaded is not asked about (the guest
+  // audit of 2026-10-15 met the prompt right after a download): those
+  // changes are in the zip, and the next change asks again. A saved site
+  // still asks, since its account copy is behind until Save.
+  const keptByDownload = downloadedDraft !== null && downloadedDraft === draft && state.status === 'ready' && state.site.id === '';
+
   useEffect(() => {
-    if (saveState !== 'dirty') return;
+    if (saveState !== 'dirty' || keptByDownload) return;
 
     const warn = (event: BeforeUnloadEvent) => {
       event.preventDefault();
@@ -259,7 +267,7 @@ export default function StudioSite({
     window.addEventListener('beforeunload', warn);
 
     return () => window.removeEventListener('beforeunload', warn);
-  }, [saveState]);
+  }, [saveState, keptByDownload]);
 
   const ready = state.status === 'ready' ? state : null;
   const spec = ready?.spec ?? null;
@@ -542,6 +550,7 @@ export default function StudioSite({
       const shell = problems.some((problem) => problem.level === 'error' && problem.path === 'runtime');
 
       saveArchive(bytes, `${archiveNameFor(site.title)}-html.zip`);
+      setDownloadedDraft(draft);
       toaster.add({
         title: shell
           ? 'Downloaded, but the package has changed shape and its patterns may not draw.'
@@ -562,6 +571,7 @@ export default function StudioSite({
       const leftOut = problems.some((problem) => problem.path === 'text' || problem.path === 'images');
 
       saveArchive(bytes, `${archiveNameFor(site.title)}-react.zip`);
+      setDownloadedDraft(draft);
       toaster.add({
         title: leftOut
           ? `Downloaded ${site.title} as a React project, with your colors and patterns (its README says what else).`
@@ -575,6 +585,26 @@ export default function StudioSite({
   };
 
   const patternEdit = (slot: PatternSlot): PatternEdit | undefined => draft.edits.patterns?.[slot.id];
+
+  // The phone's own share sheet (mail, messages, notes), or the clipboard
+  // where there is none. The address opens this template, or this saved
+  // site, in the customizer on a computer.
+  const sendLink = async () => {
+    const url = window.location.href;
+
+    if (typeof navigator.share === 'function') {
+      // A dismissed sheet rejects; that is the person's answer, not an error.
+      await navigator.share({ title: `${site.title} on Tabbied`, url }).catch(() => undefined);
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
+      toaster.add({ title: 'Link copied. Open it on a computer to customize.' });
+    } catch {
+      toaster.add({ title: `Open ${url} on a computer to customize.` });
+    }
+  };
 
   return (
     <>
@@ -653,7 +683,14 @@ export default function StudioSite({
                 <path d="M12 16v4" />
               </svg>
             </span>
-            <span>Customizing works on a larger screen. From here you can preview and download.</span>
+            <span className={styles.smallNoticeText}>
+              Customizing works on a larger screen. From here you can preview and download.
+            </span>
+            {/* Most visitors on a phone came from a link; this is how they
+                take the template to a computer without hunting for it. */}
+            <button type="button" className={styles.smallNoticeShare} onClick={() => void sendLink()}>
+              Send yourself the link
+            </button>
           </div>
         ) : null}
 
