@@ -6,7 +6,7 @@
 //   /mcp        the remote MCP endpoint (see docs/mcp-server.md)
 //   /api        the platform tier: auth, Studio, media, account, admin
 //   /health     a liveness probe that doesn't depend on the asset pipeline
-//   /downloads  template zips, gated on a session; the rest passes through
+//   /downloads  template zips, logged as they go out; the rest passes through
 //
 // Everything else falls through to `env.ASSETS`, which also serves the custom
 // 404 page (`not_found_handling: "404-page"`).
@@ -32,14 +32,14 @@ import { drizzle } from 'drizzle-orm/d1';
 import * as schema from './db/schema';
 import { requireUser } from './lib/session';
 import { forgetDownload, isReactSource, logDownload, parseDownloadName, takesCopy } from './lib/downloads';
-import { mailProvider, teamRecipients } from './lib/mail';
-import { claimTemplate, limitMessage, mayTake, releaseTemplate, templateStatus } from './lib/templates';
+import { mailProvider } from './lib/mail';
 import { templateSlugOf, withLicenseNotice } from './lib/notice';
 import { isTemplateSite, withNoindex } from './lib/noindex';
 import { withSecurityHeaders } from './lib/securityHeaders';
 import media from './routes/media';
 import account from './routes/account';
 import admin from './routes/admin';
+import events from './routes/events';
 import make from './routes/make';
 import sites from './routes/sites';
 import studio from './routes/studio';
@@ -167,7 +167,7 @@ app.use('*', async (c, next) => {
 /**
  * A page load in a browser (told by `Sec-Fetch-Mode`, or by an Accept that
  * asks for HTML where that header is missing), as opposed to a fetch or an
- * API client. The downloads and the MCP endpoint both answer the two apart.
+ * API client. The MCP endpoint answers the two apart.
  */
 const isNavigation = (request: Request): boolean => {
   const mode = request.headers.get('sec-fetch-mode');
@@ -321,29 +321,11 @@ app.onError(async (error, c) => {
 app.get('/health', (c) => c.text('ok'));
 
 // ---- template downloads --------------------------------------------------
-// Taking a zip is a signed-in act that chooses the template; one not yet
-// chosen is refused once the allowance is used (worker/lib/templates.ts).
-// Everything else under the folder (the packaged pages the previews read)
-// passes to the binding.
-//
-// A navigation (a click on a download link) is redirected where the answer
-// is, to sign in or to the account page; a fetch (the customizer building a
-// customized zip) gets JSON and a status it can put in a toast.
-
-/** Where to come back to after signing in: the page the link was on, if it was ours. */
-const backTo = (request: Request): string => {
-  const referer = request.headers.get('referer');
-
-  if (!referer) return '/templates/';
-
-  try {
-    const url = new URL(referer);
-
-    return url.origin === new URL(request.url).origin ? `${url.pathname}${url.search}` : '/templates/';
-  } catch {
-    return '/templates/';
-  }
-};
+// Every template is free to download, with or without an account. The zips
+// still come through here, because this is where they are counted: each one
+// served is a row in `download` (lib/downloads.ts), carrying the person when
+// one is signed in. Everything else under the folder (the packaged pages the
+// previews read) passes to the binding.
 
 // The React package's unzipped folder answers as if it were not there: its
 // zip is the way that source leaves (isReactSource).
@@ -351,62 +333,57 @@ app.get('/downloads/*', (c, next) =>
   isReactSource(new URL(c.req.url).pathname) ? c.text('Not found', 404) : next()
 );
 
+/**
+ * Who is downloading, for the log, or null. The session is read only to
+ * attach a name to the row, never to decide anything, so a request with no
+ * cookie skips the lookup (most downloads are anonymous) and an auth tier that
+ * is down or misconfigured costs the row its name, not the person their zip.
+ */
+async function downloaderOf(env: Env, request: Request): Promise<string | null> {
+  if (!request.headers.has('cookie')) return null;
+
+  try {
+    return await requireUser(env, request.headers);
+  } catch (error) {
+    console.error('[downloads] session lookup failed; logging as anonymous', error);
+    return null;
+  }
+}
+
 app.get('/downloads/:file', async (c, next) => {
   const named = parseDownloadName(c.req.param('file'));
 
   if (!named) return next();
 
   const request = c.req.raw;
-  const userId = await requireUser(c.env, request.headers);
 
-  if (!userId) {
-    if (isNavigation(request)) {
-      return c.redirect(`/sign-in/?next=${encodeURIComponent(backTo(request))}`, 302);
-    }
-
-    return c.json({ error: 'Sign in to download a template.' }, 401);
-  }
+  // A HEAD or a resumed range is served and writes nothing (takesCopy).
+  if (!takesCopy(request)) return c.env.ASSETS.fetch(request);
 
   const db = drizzle(c.env.DB, { schema });
-  const counts = takesCopy(request);
-
-  // A request that takes a copy claims the template in the statement that
-  // checks the allowance (`claimTemplate`). A HEAD or a resumed range is
-  // answered by the same rule but writes nothing.
-  const claim = counts ? await claimTemplate(db, userId, named.slug) : null;
-  const allowed = claim ? claim.ok : await mayTake(db, userId, named.slug);
-
-  if (!allowed) {
-    if (isNavigation(request)) {
-      return c.redirect('/account/?templates=full', 302);
+  // Counting is never a reason to refuse a free download: a row that cannot
+  // be written (D1 unavailable, a schema behind this code) leaves the zip
+  // served and uncounted.
+  const logged = await logDownload(db, await downloaderOf(c.env, request), named.slug, named.format).catch(
+    (error: unknown) => {
+      console.error('download log failed', error);
+      return null;
     }
-
-    const status = await templateStatus(db, userId);
-
-    return c.json({ error: limitMessage(status.total), used: status.used, total: status.total }, 403);
-  }
-
-  const logged = counts ? await logDownload(db, userId, named.slug, named.format) : null;
-  const newChoice = claim?.ok ? claim.id : null;
-
-  // A choice made and a row logged by this request are undone when no bytes
-  // go out, so both only ever record zips that were served.
-  const giveBack = async () => {
-    if (logged) await forgetDownload(db, logged);
-    if (newChoice) await releaseTemplate(db, newChoice);
-  };
+  );
 
   let zip: Response;
 
   try {
     zip = await c.env.ASSETS.fetch(request);
   } catch (error) {
-    await giveBack();
+    if (logged) await forgetDownload(db, logged);
     throw error;
   }
 
-  // A 304 means the browser already holds the bytes, so the choice stands.
-  if (!zip.ok && zip.status !== 304) await giveBack();
+  // The row is given back when no bytes went out (a zip the packager never
+  // wrote), so the log only records zips that were served. A 304 counts: the
+  // browser already holds the bytes it was sent.
+  if (logged && !zip.ok && zip.status !== 304) await forgetDownload(db, logged);
 
   return zip;
 });
@@ -442,7 +419,7 @@ api.use('*', async (c, next) => {
 //                the Worker means it is misspelled, on another environment, or
 //                a Text variable that `wrangler deploy` replaced (use a Secret).
 //   mail         whether RESEND_API_KEY is set (unset in production, sign-up
-//                throws) and how many inboxes hear about "Request more".
+//                throws).
 api.get('/health', async (c) => {
   const schema = await schemaStatus(c.env);
 
@@ -454,7 +431,6 @@ api.get('/health', async (c) => {
     adminEmails: configuredAdmins(c.env).length,
     mail: {
       provider: mailProvider(c.env),
-      teamInboxes: teamRecipients(c.env).length,
     },
   });
 });
@@ -484,6 +460,7 @@ api.route('/media', media);
 api.route('/uploads', uploads);
 api.route('/account', account);
 api.route('/admin', admin);
+api.route('/events', events);
 
 // A miss under /api is JSON, never the site's 404 page. `all('*')`, not
 // `notFound()`: a sub-app's notFound handler is not used once it is mounted

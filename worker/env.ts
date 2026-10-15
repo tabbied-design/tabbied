@@ -33,11 +33,6 @@ export type Env = {
    */
   MAIL_FROM?: string;
   /**
-   * Comma-separated inboxes that hear about "Request more" messages. Falls
-   * back to ADMIN_EMAILS, then to MAIL_FROM's own address.
-   */
-  TEAM_EMAIL?: string;
-  /**
    * Comma-separated emails that are admins by configuration: granted the role
    * when the account is created or, for an existing account, on its next
    * sign-in.

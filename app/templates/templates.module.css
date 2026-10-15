@@ -1,7 +1,7 @@
-/* The template gallery (/templates/): the dark shell's masthead, a centerd
-   hero over a contact sheet of patterns, the filterable grid of sample
-   sites (components/template/TemplatesGrid), and the dark footer. The
-   tokens are the homepage's, `--h-...`. */
+/* The template gallery (/templates/): the dark shell's masthead, the hero
+   with its search and the filterable grid of sample sites
+   (components/template/TemplatesGrid), and the dark footer. The tokens are
+   the homepage's, `--h-...`. */
 
 .page {
   min-height: 100vh;
@@ -12,97 +12,4 @@
 .page *::before,
 .page *::after {
   box-sizing: border-box;
-}
-
-/* ---- Hero ---- */
-
-/* The backdrop is a contact sheet of four different patterns on four
-   different palettes, kept faint under a scrim so the headline is what is
-   read; the premise of the page is legible before the headline is. */
-.hero {
-  position: relative;
-  overflow: hidden;
-  text-align: center;
-}
-
-.heroScrim {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(60% 60% at 50% 40%, oklch(0.14 0.01 265 / 0.55) 0%, var(--h-bg) 78%);
-}
-
-.heroInner {
-  position: relative;
-  z-index: 4;
-  max-width: var(--h-max);
-  margin: 0 auto;
-  padding: 96px var(--h-pad) 44px;
-}
-
-/* Two classes deep on purpose: the eyebrow is a <p>, and `.hero p` below,
-   the intro's rule, outranks a single class, which drew the eyebrow as a
-   17px grey paragraph instead of the design's mint mono label. */
-.hero .eyebrow {
-  max-width: none;
-  margin: 0;
-  font: 400 12px var(--h-mono);
-  color: var(--h-mint);
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-}
-
-.hero h1 {
-  margin: 34px 0 0;
-  font: 700 92px / 1.02 var(--h-display);
-  color: var(--h-fg);
-  letter-spacing: -0.025em;
-  text-wrap: balance;
-}
-
-/* Cyan through mint only. A magenta stop lands near black on this ground
-   and swallows the last word. */
-.hero h1 span {
-  background: linear-gradient(100deg, var(--h-cyan), var(--h-mint) 60%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.hero p {
-  max-width: 620px;
-  margin: 36px auto 0;
-  font: 400 17px / 1.75 var(--h-sans);
-  color: oklch(0.84 0.01 260);
-}
-
-.hero strong {
-  font-weight: 600;
-  color: var(--h-fg);
-}
-
-/* ---- The grid's column ---- */
-
-.wrap {
-  max-width: var(--h-max);
-  margin: 0 auto;
-  padding: 44px var(--h-pad) 120px;
-}
-
-@media (max-width: 767.98px) {
-  .heroInner {
-    padding-right: 24px;
-    padding-left: 24px;
-  }
-
-  /* The intro keeps its 17px on a phone; only the headline steps down. */
-  .hero h1 {
-    font-size: 52px;
-    line-height: 1.05;
-  }
-
-  .wrap {
-    padding-right: 24px;
-    padding-left: 24px;
-  }
 }

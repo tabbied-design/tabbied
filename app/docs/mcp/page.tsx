@@ -538,9 +538,10 @@ export default function McpDocsPage() {
                     so an assistant can rebrand a downloaded template precisely.
                   </p>
                   <p>
-                    The templates are licensed per Tabbied account, not with
-                    the MCP server: to download one, choose it with your
-                    account, and you can then build websites with it under the{' '}
+                    The templates are licensed to the person who downloads them
+                    from tabbied.com, not with the MCP server: downloading is
+                    free and needs no account, and you can then build websites
+                    with a template under the{' '}
                     <a href="/terms-of-service/#template-license">Template License</a>.
                     Copying a template from its preview is not covered by that
                     license, and the tools tell the assistant so.
@@ -614,7 +615,7 @@ export default function McpDocsPage() {
         </main>
       </div>
 
-      <HomeFooter />
+      <HomeFooter developers />
     </div>
   );
 }

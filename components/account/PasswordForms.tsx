@@ -3,10 +3,11 @@
 // The three small pages around a password: asking for a reset link, using
 // it, and the landing for the email-verification link. Each is one form and
 // one message, in the sign-in form's own clothes.
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { authClient, useSessionUser } from 'lib/authClient';
+import { safeNext } from 'lib/safeNext';
 import styles from './AuthForm.module.css';
 
 export function ForgotPasswordForm() {
@@ -25,7 +26,7 @@ export function ForgotPasswordForm() {
           its way.
         </p>
         <p className={styles.swap}>
-          <Link href="/sign-in">Back to sign in</Link>
+          <Link href="/sign-in">Back to log in</Link>
         </p>
       </div>
     );
@@ -152,8 +153,19 @@ export function ResetPasswordForm() {
 
 /** Where the verification link lands. better-auth has already acted by now. */
 export function VerifyEmailNotice() {
-  const problem = useSearchParams().get('error');
+  const params = useSearchParams();
+  const problem = params.get('error');
+  // Where the sign-up form was going (AuthForm carries it into the link):
+  // the customizer, when the person came from its save gate.
+  const next = safeNext(params.get('next'), '/account');
   const { user, isPending } = useSessionUser();
+  const router = useRouter();
+
+  // Signed in by the link and sent from somewhere: go back there, where the
+  // customizer saves the edits it stashed. The account needs no detour.
+  useEffect(() => {
+    if (!problem && user && next !== '/account') router.replace(next);
+  }, [problem, user, next, router]);
 
   if (problem) {
     return (
@@ -161,10 +173,10 @@ export function VerifyEmailNotice() {
         <p className={styles.eyebrow}>Account</p>
         <h1 className={styles.title}>That link didn't work</h1>
         <p className={styles.lede}>
-          It may have expired or already been used. Sign in to request another.
+          It may have expired or already been used. Log in to request another.
         </p>
         <p className={styles.swap}>
-          <Link href="/sign-in">Sign in</Link>
+          <Link href="/sign-in">Log in</Link>
         </p>
       </div>
     );
@@ -176,13 +188,17 @@ export function VerifyEmailNotice() {
       <h1 className={styles.title}>Email confirmed</h1>
       <p className={styles.lede}>
         {isPending
-          ? 'Signing you in...'
+          ? 'Logging you in...'
           : user
-            ? `You're signed in as ${user.email}.`
-            : 'Your address is confirmed. Sign in to continue.'}
+            ? `You're logged in as ${user.email}.`
+            : 'Your address is confirmed. Log in to continue.'}
       </p>
       <p className={styles.swap}>
-        {user ? <Link href="/account">Go to my account</Link> : <Link href="/sign-in">Sign in</Link>}
+        {user ? (
+          <Link href={next}>{next === '/account' ? 'Go to my account' : 'Continue'}</Link>
+        ) : (
+          <Link href={next === '/account' ? '/sign-in' : `/sign-in?next=${encodeURIComponent(next)}`}>Log in</Link>
+        )}
       </p>
     </div>
   );

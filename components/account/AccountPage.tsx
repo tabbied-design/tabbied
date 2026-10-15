@@ -52,11 +52,11 @@ export default function AccountPage({
         ) : !user ? (
           <div className={styles.gate}>
             <p className={styles.eyebrow}>Account</p>
-            <h1 className={styles.title}>You're signed out</h1>
+            <h1 className={styles.title}>You're logged out</h1>
             <p className={styles.lede}>
-              Signing in is only needed to generate with AI. Patterns, templates
-              and library matches are open to everyone.{' '}
-              <Link href="/sign-in?next=%2Faccount">Sign in</Link> or{' '}
+              An account is only needed to save a customized template. Patterns
+              and templates are free to customize and download without one.{' '}
+              <Link href="/sign-in?next=%2Faccount">Log in</Link> or{' '}
               <Link href="/sign-up">create an account</Link>.
             </p>
           </div>

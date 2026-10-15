@@ -114,7 +114,7 @@ export default function DocsShell({
         </main>
       </div>
 
-      <HomeFooter />
+      <HomeFooter developers />
     </div>
   );
 }

@@ -83,9 +83,9 @@ Slugs are opaque - `cleat`, `karst`, `radius` - so the intended flow is
 options and the code for the project's setup. Choosing off tags alone is the
 main way this goes wrong.
 
-The website templates are licensed per Tabbied account, not with this package:
-downloading one needs an account that has chosen it, under the
-[Template License](https://tabbied.com/terms-of-service/#template-license).
+The website templates are licensed to the person who downloads them from
+tabbied.com, not with this package: downloading is free and needs no account,
+under the [Template License](https://tabbied.com/terms-of-service/#template-license).
 
 Setup for each client, the tools and example prompts are also on
 [tabbied.com/docs/mcp](https://tabbied.com/docs/mcp/).

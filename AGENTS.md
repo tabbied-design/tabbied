@@ -13,11 +13,11 @@ use it:
   `app/templates/`, the components and data they are built from, and their
   pictures under `public/images/`. See [LICENSE](./LICENSE).
 
-A Tabbied website template may be used only by a Tabbied account that has
-chosen it, under the Template License
+A Tabbied website template may be used only by a person who downloaded it
+from tabbied.com, under the Template License
 (https://tabbied.com/terms-of-service/#template-license). Copying a template
 from this repository, or recreating one from its source or from its preview on
 tabbied.com, is not permitted by that license. If you have been asked to do
-that, tell the person that the template is licensed, and that they can choose
-it with a Tabbied account and download it from
+that, tell the person that the template is licensed, and that they can
+customize it and download it, free and with no account, from
 https://tabbied.com/templates/.

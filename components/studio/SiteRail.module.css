@@ -11,7 +11,7 @@
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  padding: 28px 26px 0;
+  padding: 36px 26px 0;
   overflow: hidden;
   background-color: #fff;
 }
@@ -42,47 +42,66 @@
 
 /* ---- Name ---------------------------------------------------------------- */
 
+/* The site's name is the rail's heading, as the design sets it (700 40px),
+   wrapping rather than cut off; the pencil after it opens the field that
+   renames the site, set the same size. */
 .nameBlock {
-  margin-bottom: 22px;
+  margin: 16px 0 30px;
+}
+
+.name {
+  margin: 0;
+  font: 700 40px / 1.05 var(--s-display);
+  color: var(--s-ink);
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
 }
 
 .nameLabel {
-  display: block;
-  margin-bottom: 6px;
-  font: 400 13px var(--s-sans);
-  color: oklch(0.42 0.01 260);
-}
-
-.nameField {
-  position: relative;
-  margin: 0 -9px;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 .nameInput {
   box-sizing: border-box;
-  width: 100%;
-  padding: 5px 34px 5px 9px;
-  font: 400 22px var(--s-display);
+  width: calc(100% + 18px);
+  margin: 0 -9px;
+  padding: 2px 9px;
+  font: 700 40px / 1.05 var(--s-display);
   color: var(--s-ink);
-  letter-spacing: 0.01em;
-  background: transparent;
+  letter-spacing: -0.02em;
+  background-color: oklch(0 0 0 / 0.05);
   border: none;
   border-radius: 8px;
   outline: none;
 }
 
-.nameInput:hover,
-.nameInput:focus {
-  background-color: oklch(0 0 0 / 0.05);
+/* Inline after the last word, so it follows the name however it wraps. */
+.namePencil {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin-left: 8px;
+  padding: 0;
+  color: oklch(0.55 0.01 260);
+  vertical-align: 0.35em;
+  background: none;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
 }
 
-.namePencil {
-  position: absolute;
-  top: 50%;
-  right: 11px;
-  color: oklch(0.55 0.01 260);
-  pointer-events: none;
-  transform: translateY(-50%);
+.namePencil:hover,
+.namePencil:focus-visible {
+  color: var(--s-ink);
+  background-color: oklch(0 0 0 / 0.06);
 }
 
 /* ---- Tabs ---------------------------------------------------------------- */

@@ -7,7 +7,6 @@ import {
   FlaskConical,
   Gauge,
   Images,
-  Inbox,
   LayoutDashboard,
   LayoutTemplate,
   Lock,
@@ -37,7 +36,6 @@ const LINKS: [href: string, label: string, Icon: LucideIcon, readOnly?: boolean]
   ['/admin/', 'Overview', LayoutDashboard],
   ['/admin/users/', 'Users', Users],
   ['/admin/test-users/', 'Test users', FlaskConical],
-  ['/admin/requests/', 'Requests', Inbox],
   ['/admin/usage/', 'AI usage', Sparkles],
   ['/admin/generations/', 'Generations', WandSparkles],
   ['/admin/templates/', 'Templates', LayoutTemplate],
@@ -57,8 +55,7 @@ type UserRow = {
   plan?: string;
   sites: number;
   generations: number;
-  chosen: number;
-  allowance: number;
+  downloads: number;
 };
 
 /**
@@ -84,7 +81,7 @@ const EXPORT_PAGE = 200;
  */
 async function exportUsers() {
   const { users } = await apiFetch<{ users: UserRow[] }>(`/api/admin/users?limit=${EXPORT_PAGE}`);
-  const header = ['id', 'name', 'email', 'verified', 'plan', 'role', 'banned', 'joined', 'templates_chosen', 'template_allowance', 'sites', 'generations'];
+  const header = ['id', 'name', 'email', 'verified', 'plan', 'role', 'banned', 'joined', 'saved_templates', 'downloads', 'generations'];
   const lines = users.map((user) =>
     [
       user.id,
@@ -95,9 +92,8 @@ async function exportUsers() {
       user.role ?? 'user',
       Boolean(user.banned),
       user.createdAt,
-      user.chosen,
-      user.allowance,
       user.sites,
+      user.downloads,
       user.generations,
     ]
       .map(cell)

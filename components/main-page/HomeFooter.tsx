@@ -1,21 +1,24 @@
 import SamePageLink from 'components/SamePageLink';
 import GitHubMark from 'components/GitHubMark';
+import { Logo } from 'components/logo';
+import FooterAccountLink from './FooterAccountLink';
 import styles from './HomeFooter.module.css';
 
-// The dark shell's footer, under the homepage, the template gallery and the
-// docs; the legal pages and the 404 keep components/Footer. Four columns on
-// a desktop: the name with the contact lines under it, Product, and the
-// docs over the last two. The masthead leads to the docs' landing page;
-// every docs page is listed here, and GitHub (as its mark) and the legal
-// pages sit in the bottom bar beside the copyright. Studio is left out while
-// the generation flow is held back (see CLAUDE.md, "Studio"); the artboard's
-// "Colophon" is a page nobody has written.
+// The site's footer, as the 14 October designs draw it: the lockup and the
+// masthead's destinations on one line, the copyright and the thanks under
+// them. Two tones, like the masthead: `light` under the homepage, `dark`
+// under the template gallery and the docs. It declares its own tokens, so it
+// reads the same under any page wrapper.
+//
+// The design's bottom line is the copyright alone; the legal pages and the
+// GitHub mark stay beside it, because the Template License (Terms of
+// Service, section 7) is linked from everywhere and this is where a reader
+// looks for it. Under the docs (`developers`) a line of every docs page sits
+// between the two, in the order the /docs landing page lists them: a new docs
+// page joins DEVELOPER_LINKS and the landing page's cards.
 
 const GITHUB_URL = 'https://github.com/tabbied-design/tabbied/';
 
-// The docs, one link per setup, in the order the /docs landing page lists
-// them. A new docs page joins this list and the landing page's cards. They
-// are set in two of the footer's columns, read down.
 const DEVELOPER_LINKS = [
   ['/docs', 'Overview'],
   ['/docs/concepts', 'Concepts'],
@@ -28,81 +31,44 @@ const DEVELOPER_LINKS = [
   ['/docs/mcp', 'MCP server'],
 ] as const;
 
-/** Rows for the two developer columns: the links, split in half. */
-const DEVELOPER_ROWS = Math.ceil(DEVELOPER_LINKS.length / 2);
-
-export default function HomeFooter() {
+export default function HomeFooter({
+  tone = 'dark',
+  developers = false,
+}: {
+  tone?: 'dark' | 'light';
+  /** List every docs page, under the docs. */
+  developers?: boolean;
+}) {
   return (
-    <footer className={styles.footer}>
-      <div className={styles.grid}>
-        <div>
-          <div className={styles.wordmark}>Tabbied</div>
-          <p className={styles.blurb}>
-            Generative patterns and website templates, drawn live in your
-            browser.
-          </p>
-          <div className={styles.contact}>
-            <p>
-              <a href="mailto:hello@tabbied.com">hello@tabbied.com</a>
-            </p>
-            <p>
-              Built by{' '}
-              <a
-                href="https://www.syunghong.com/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Sy
-              </a>{' '}
-              &amp;{' '}
-              <a
-                href="https://www.behance.net/yejoopark"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Park
-              </a>
-            </p>
-          </div>
-        </div>
-
-        <div>
-          <h2 className={styles.heading}>Product</h2>
-          <ul className={styles.links}>
-            <li>
-              <SamePageLink href="/patterns" prefetch={false}>
-                Patterns
-              </SamePageLink>
-            </li>
-            <li>
-              <SamePageLink href="/templates" prefetch={false}>
-                Websites
-              </SamePageLink>
-            </li>
-            <li>
-              <SamePageLink href="/account" prefetch={false}>
-                My account
-              </SamePageLink>
-            </li>
-          </ul>
-        </div>
-
-        <div className={styles.developers}>
-          <h2 className={styles.heading}>For Developers</h2>
-          <ul
-            className={`${styles.links} ${styles.developerLinks}`}
-            style={{ gridTemplateRows: `repeat(${DEVELOPER_ROWS}, auto)` }}
-          >
-            {DEVELOPER_LINKS.map(([href, label]) => (
-              <li key={href}>
-                <SamePageLink href={href} prefetch={false}>
-                  {label}
-                </SamePageLink>
-              </li>
-            ))}
-          </ul>
-        </div>
+    <footer className={styles.footer} data-tone={tone}>
+      <div className={styles.row}>
+        <SamePageLink href="/" className={styles.logo} aria-label="Tabbied home" prefetch={false}>
+          <Logo size={21} wordSize={19} />
+        </SamePageLink>
+        <nav className={styles.links} aria-label="Footer">
+          <SamePageLink href="/templates" prefetch={false}>
+            Website templates
+          </SamePageLink>
+          <SamePageLink href="/patterns" prefetch={false}>
+            Patterns
+          </SamePageLink>
+          <SamePageLink href="/docs" prefetch={false}>
+            For developers
+          </SamePageLink>
+          <FooterAccountLink />
+        </nav>
       </div>
+
+      {developers ? (
+        <nav className={styles.docs} aria-label="Developer docs">
+          <span className={styles.docsLabel}>Docs</span>
+          {DEVELOPER_LINKS.map(([href, label]) => (
+            <SamePageLink key={href} href={href} prefetch={false}>
+              {label}
+            </SamePageLink>
+          ))}
+        </nav>
+      ) : null}
 
       <div className={styles.bottom}>
         <span className={styles.legal}>
@@ -116,7 +82,7 @@ export default function HomeFooter() {
           >
             <GitHubMark size={18} />
           </a>
-          <span>&copy; {new Date().getFullYear()} Tabbied</span>
+          <span>&copy; {new Date().getFullYear()} tabbied</span>
           <SamePageLink href="/privacy-policy" prefetch={false}>
             Privacy Policy
           </SamePageLink>
@@ -126,12 +92,7 @@ export default function HomeFooter() {
         </span>
         <span>
           Special thanks to{' '}
-          <a
-            href="https://css-doodle.com/"
-            target="_blank"
-            rel="noreferrer"
-            className={styles.thanks}
-          >
+          <a href="https://css-doodle.com/" target="_blank" rel="noreferrer" className={styles.thanks}>
             CSS-Doodle
           </a>
         </span>

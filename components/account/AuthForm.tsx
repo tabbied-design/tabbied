@@ -12,27 +12,37 @@ import styles from './AuthForm.module.css';
 // Sign-in and sign-up are one component: the same form with two sets of
 // labels, and the states that matter (pending, error, "check your mail") are
 // identical, so the two pages cannot drift apart.
+//
+// Nothing on the site needs an account but saving a customization, so the
+// copy says so. `?intent=save` is the customizer's save gate sending someone
+// here with their edits stashed (lib/pendingSave.ts): the form is titled for
+// that, and the way back is the customizer, which saves the edits once a
+// session exists.
 
 type Mode = 'sign-in' | 'sign-up';
 
 const COPY = {
   'sign-in': {
-    title: 'Sign in',
-    lede: 'Create an account to customize websites and manage your projects.',
-    submit: 'Sign in',
+    title: 'Log in',
+    saveTitle: 'Log in to save',
+    lede: "Log in to see the templates you've saved. You don't need an account to customize or download.",
+    submit: 'Log in',
     swapText: 'No account yet?',
     swapLabel: 'Create one',
     swapHref: '/sign-up',
   },
   'sign-up': {
     title: 'Create an account',
+    saveTitle: 'Create a free account to save',
     lede: 'An account keeps your customized sites and patterns, so they are still here when you come back.',
     submit: 'Create account',
     swapText: 'Already have an account?',
-    swapLabel: 'Sign in',
+    swapLabel: 'Log in',
     swapHref: '/sign-in',
   },
 } as const;
+
+const SAVE_LEDE = "Your edits carry over. Once you're in, we'll save them to your account so you can keep editing later.";
 
 // Only the Worker knows which providers are configured (worker/auth.ts). The
 // form asks once and draws a button per answer, so an unconfigured provider
@@ -98,8 +108,10 @@ function ProviderIcon({ provider }: { provider: Provider }) {
 export default function AuthForm({ mode }: { mode: Mode }) {
   const copy = COPY[mode];
   const router = useRouter();
+  const params = useSearchParams();
   // Where to land afterwards: same-origin paths only (lib/safeNext).
-  const next = safeNext(useSearchParams().get('next'), '/account');
+  const next = safeNext(params.get('next'), '/account');
+  const saving = params.get('intent') === 'save';
   const providers = useProviders();
 
   const [email, setEmail] = useState('');
@@ -123,8 +135,12 @@ export default function AuthForm({ mode }: { mode: Mode }) {
             password,
             // Absolute, like the social callback below: better-auth resolves
             // a relative one against its own baseURL, which in development
-            // is the Worker on :8787, not the site.
-            callbackURL: `${window.location.origin}/verify-email/`,
+            // is the Worker on :8787, not the site. It carries `next`, so a
+            // person who came from the customizer's save gate is taken back
+            // there once the address is confirmed.
+            callbackURL: `${window.location.origin}/verify-email/${
+              next === '/account' ? '' : `?next=${encodeURIComponent(next)}`
+            }`,
           })
         : await signIn.email({ email, password });
 
@@ -165,8 +181,12 @@ export default function AuthForm({ mode }: { mode: Mode }) {
     }
   }
 
-  const swapHref =
-    next === '/account' ? copy.swapHref : `${copy.swapHref}?next=${encodeURIComponent(next)}`;
+  // The other form keeps where this one was going, and why.
+  const swapParams = new URLSearchParams();
+  if (next !== '/account') swapParams.set('next', next);
+  if (saving) swapParams.set('intent', 'save');
+  const swapQuery = swapParams.toString();
+  const swapHref = swapQuery ? `${copy.swapHref}?${swapQuery}` : copy.swapHref;
 
   if (sent) {
     return (
@@ -175,10 +195,14 @@ export default function AuthForm({ mode }: { mode: Mode }) {
         <h1 className={styles.title}>Check your email</h1>
         <p className={styles.lede}>
           We sent a confirmation link to <strong>{email}</strong>. Follow it and
-          you'll be signed in.
+          you'll be logged in{saving ? ', and your edits saved' : ''}.
         </p>
         <p className={styles.swap}>
-          <Link href="/account">Back to my account</Link>
+          {saving ? (
+            <Link href={next}>Back to your template</Link>
+          ) : (
+            <Link href="/templates">Browse templates</Link>
+          )}
         </p>
       </div>
     );
@@ -187,8 +211,8 @@ export default function AuthForm({ mode }: { mode: Mode }) {
   return (
     <form className={styles.form} onSubmit={submit}>
       <p className={styles.eyebrow}>Account</p>
-      <h1 className={styles.title}>{copy.title}</h1>
-      <p className={styles.lede}>{copy.lede}</p>
+      <h1 className={styles.title}>{saving ? copy.saveTitle : copy.title}</h1>
+      <p className={styles.lede}>{saving ? SAVE_LEDE : copy.lede}</p>
 
       {providers.length > 0 ? (
         <>
@@ -265,8 +289,8 @@ export default function AuthForm({ mode }: { mode: Mode }) {
         {pending ? 'One moment...' : copy.submit}
       </button>
 
-      {/* An account is what a template's license is granted to (Terms,
-          section 7), so the terms are named where one is made. */}
+      {/* The terms, Template License included, are named where an account
+          is made. */}
       {mode === 'sign-up' ? (
         <p className={styles.legal}>
           By creating an account you agree to the{' '}

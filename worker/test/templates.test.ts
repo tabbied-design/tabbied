@@ -1,15 +1,14 @@
 import { SELF, env } from 'cloudflare:test';
 import { describe, expect, it } from 'vitest';
+import app from '../index';
+import type { Env } from '../env';
 import { ORIGIN, json, signIn } from './helpers';
 
-// Five templates per account during the beta. A template becomes a person's
-// on its first download, its first customizer save, or "Add to my templates";
-// after that it is theirs to take as often as they like. The zip route tells
-// a navigation apart from a fetch: a click is sent where the answer is, a
-// fetch gets JSON.
-
-const FREE = 5;
-const ZIP = `${ORIGIN}/downloads/verdant-html.zip`;
+// Every template is free to download and customize without an account. The
+// zip route serves anyone and logs each zip it serves, with the person when
+// one is signed in; an account is only for saving a customization, and there
+// is no count of those to run out of. The site's product events
+// (routes/events.ts) are counted beside the downloads.
 
 const zipFor = (slug: string, format = 'html') => `${ORIGIN}/downloads/${slug}-${format}.zip`;
 
@@ -31,102 +30,115 @@ const asNavigation = (cookie?: string) => ({
 });
 const asFetch = (cookie?: string) => ({ ...(cookie ? { cookie } : {}), 'sec-fetch-mode': 'cors', accept: '*/*' });
 
-type Mine = {
-  used: number;
-  total: number;
-  left: number;
-  chosen: { slug: string; chosenAt: string; site: { id: string; updatedAt: string } | null }[];
-  request: { status: string; granted: number } | null;
-};
-
-const mine = async (cookie: string) =>
-  (await SELF.fetch(`${ORIGIN}/api/account/templates`, { headers: { cookie } }).then((r) => r.json())) as Mine;
-
-const choose = (cookie: string, slug: string) =>
-  SELF.fetch(`${ORIGIN}/api/account/templates`, {
-    method: 'POST',
-    headers: { ...json, cookie },
-    body: JSON.stringify({ slug }),
-  });
-
 const userId = async (email: string) =>
   (await env.DB.prepare('SELECT id FROM user WHERE email = ?').bind(email).first<{ id: string }>())!.id;
 
+/** The download log for one template, oldest first. The storage is shared by the file, so each test reads its own slug. */
+const logOf = async (slug: string) =>
+  (
+    await env.DB.prepare('SELECT user_id AS userId, format FROM download WHERE slug = ? ORDER BY rowid')
+      .bind(slug)
+      .all<{ userId: string | null; format: string }>()
+  ).results;
+
 describe('template downloads', () => {
-  it('sends a signed-out click to sign in, back to the page it came from', async () => {
-    const response = await SELF.fetch(ZIP, {
-      redirect: 'manual',
-      headers: { ...asNavigation(), referer: `${ORIGIN}/templates/verdant/` },
-    });
-    expect(response.status).toBe(302);
-    expect(response.headers.get('location')).toBe('/sign-in/?next=%2Ftemplates%2Fverdant%2F');
+  it('serves a zip to anyone, and logs it with no user', async () => {
+    const [slug] = await otherSlugs(1);
 
-    expect((await SELF.fetch(ZIP, { headers: asFetch() })).status).toBe(401);
+    // A click and a fetch alike: nothing redirects to sign in any more.
+    const clicked = await SELF.fetch(zipFor(slug), { redirect: 'manual', headers: asNavigation() });
+    expect(clicked.status).toBe(200);
+    expect(clicked.headers.get('content-type')).toContain('zip');
+    await clicked.arrayBuffer();
+
+    const fetched = await SELF.fetch(zipFor(slug, 'react'), { headers: asFetch() });
+    expect(fetched.status).toBe(200);
+    await fetched.arrayBuffer();
+
+    expect(await logOf(slug)).toEqual([
+      { userId: null, format: 'html' },
+      { userId: null, format: 'react' },
+    ]);
   });
 
-  it('chooses a template on its first download and stops at five', async () => {
+  it('logs a signed-in download against the person, as often as they take it', async () => {
     const cookie = await signIn('downloader@example.com');
+    const me = await userId('downloader@example.com');
+    const slugs = await otherSlugs(8);
 
-    const first = await SELF.fetch(ZIP, { headers: asNavigation(cookie) });
-    expect(first.status).toBe(200);
-    expect(first.headers.get('content-type')).toContain('zip');
-    expect(await mine(cookie)).toMatchObject({ used: 1, total: FREE, left: FREE - 1 });
-
-    // A zip the packager never wrote chooses nothing.
-    expect((await SELF.fetch(zipFor('no-such-site'), { headers: asFetch(cookie) })).status).toBe(404);
-    expect((await mine(cookie)).used).toBe(1);
-
-    // The same template again, and its other format, is still one.
-    expect((await SELF.fetch(ZIP, { headers: asFetch(cookie) })).status).toBe(200);
-    expect((await SELF.fetch(zipFor('verdant', 'react'), { headers: asFetch(cookie) })).status).toBe(200);
-    expect((await mine(cookie)).used).toBe(1);
-
-    const others = await otherSlugs(FREE);
-
-    for (const slug of others.slice(0, FREE - 1)) {
-      expect((await SELF.fetch(zipFor(slug), { headers: asFetch(cookie) })).status, slug).toBe(200);
+    // Well past the five the beta allowed, and the same one twice.
+    for (const slug of [...slugs.slice(1), slugs[1]]) {
+      const response = await SELF.fetch(zipFor(slug), { headers: asFetch(cookie) });
+      expect(response.status, slug).toBe(200);
+      await response.arrayBuffer();
     }
-    expect(await mine(cookie)).toMatchObject({ used: FREE, left: 0 });
 
-    // Full: a fetch is told in JSON, a click is sent to the account page.
-    const refused = await SELF.fetch(zipFor(others[FREE - 1]), { headers: asFetch(cookie) });
-    expect(refused.status).toBe(403);
-    expect(refused.headers.get('content-type')).toContain('application/json');
-
-    const clicked = await SELF.fetch(zipFor(others[FREE - 1]), { redirect: 'manual', headers: asNavigation(cookie) });
-    expect(clicked.status).toBe(302);
-    expect(clicked.headers.get('location')).toBe('/account/?templates=full');
-
-    // A chosen template is unlimited.
-    expect((await SELF.fetch(ZIP, { headers: asFetch(cookie) })).status).toBe(200);
-
-    const listed = await mine(cookie);
-    expect(listed.chosen.map((row) => row.slug)).toEqual(['verdant', ...others.slice(0, FREE - 1)]);
-    expect((await SELF.fetch(`${ORIGIN}/api/account/templates`)).status).toBe(401);
+    expect(await logOf(slugs[1])).toEqual([
+      { userId: me, format: 'html' },
+      { userId: me, format: 'html' },
+    ]);
+    expect(await logOf(slugs[7])).toEqual([{ userId: me, format: 'html' }]);
   });
 
-  it('a HEAD, or a range resuming a copy, answers without choosing', async () => {
-    const cookie = await signIn('prober@example.com');
+  it('a session that cannot be read still downloads, as anonymous', async () => {
+    // Past the eight the test above takes, so the log is this test's alone.
+    const slug = (await otherSlugs(10))[9];
+    const response = await SELF.fetch(zipFor(slug, 'react'), {
+      headers: asFetch('better-auth.session_token=not-a-real-session'),
+    });
+    expect(response.status).toBe(200);
+    await response.arrayBuffer();
 
-    expect((await SELF.fetch(zipFor('verdant'), { method: 'HEAD', headers: asFetch(cookie) })).status).toBe(200);
+    expect(await logOf(slug)).toEqual([{ userId: null, format: 'react' }]);
+  });
 
-    const resumed = await SELF.fetch(ZIP, { headers: { ...asFetch(cookie), range: 'bytes=100-' } });
+  it('an auth tier with no secret, or a changed one, still downloads, as anonymous', async () => {
+    // The route is called with altered bindings, so the cookie was signed by
+    // a secret the Worker no longer has, or the Worker has none at all.
+    const cookie = await signIn('rotated@example.com');
+    const slug = (await otherSlugs(12))[11];
+    const base = env as unknown as Env;
+
+    for (const bindings of [
+      { ...base, BETTER_AUTH_SECRET: undefined, DEV: undefined },
+      { ...base, BETTER_AUTH_SECRET: 'a-secret-the-cookie-was-not-signed-with' },
+    ]) {
+      const response = await app.request(zipFor(slug), { headers: asFetch(cookie) }, bindings);
+      expect(response.status).toBe(200);
+      await response.arrayBuffer();
+    }
+
+    expect(await logOf(slug)).toEqual([
+      { userId: null, format: 'html' },
+      { userId: null, format: 'html' },
+    ]);
+  });
+
+  it('a HEAD, or a range resuming a copy, is served and writes nothing', async () => {
+    const before = (await logOf('verdant')).length;
+
+    const head = await SELF.fetch(zipFor('verdant'), { method: 'HEAD', headers: asFetch() });
+    expect(head.status).toBe(200);
+
+    const resumed = await SELF.fetch(zipFor('verdant'), { headers: { ...asFetch(), range: 'bytes=100-' } });
     expect(resumed.ok).toBe(true);
-    expect((await mine(cookie)).used).toBe(0);
+    await resumed.arrayBuffer();
 
-    expect((await SELF.fetch(ZIP, { method: 'HEAD', headers: asFetch() })).status).toBe(401);
+    expect(await logOf('verdant')).toHaveLength(before);
+
+    // A range from the first byte is a copy starting, and counts.
+    const fromStart = await SELF.fetch(zipFor('verdant'), { headers: { ...asFetch(), range: 'bytes=0-' } });
+    expect(fromStart.ok).toBe(true);
+    await fromStart.arrayBuffer();
+    expect(await logOf('verdant')).toHaveLength(before + 1);
   });
 
-  it('holds the allowance when every request arrives at once', async () => {
-    const cookie = await signIn('stampede@example.com');
-    const slugs = await otherSlugs(FREE + 12);
+  it('a zip the packager never wrote is a 404 and logs nothing', async () => {
+    const cookie = await signIn('missing@example.com');
 
-    const statuses = await Promise.all(
-      slugs.map((slug) => SELF.fetch(zipFor(slug), { headers: asFetch(cookie) }).then((r) => r.status))
-    );
-    expect(statuses.filter((status) => status === 200)).toHaveLength(FREE);
-    expect(statuses.filter((status) => status === 403)).toHaveLength(slugs.length - FREE);
-    expect((await mine(cookie)).used).toBe(FREE);
+    expect((await SELF.fetch(zipFor('no-such-site'), { headers: asFetch() })).status).toBe(404);
+    expect((await SELF.fetch(zipFor('no-such-site', 'react'), { headers: asFetch(cookie) })).status).toBe(404);
+    expect(await logOf('no-such-site')).toEqual([]);
   });
 
   it('other files under /downloads are plain assets', async () => {
@@ -136,9 +148,10 @@ describe('template downloads', () => {
   });
 
   it("never serves the React package's unzipped source, signed in or not", async () => {
-    // The zip is the one way it leaves; the folder it was made from is in the
-    // deploy but must not answer, or the claim above is a formality.
+    // The zip is the one way it leaves; the folder it was made from is in
+    // the deploy but must not answer.
     const cookie = await signIn('react-source@example.com');
+    const before = (await logOf('verdant')).length;
     const paths = [
       '/downloads/verdant-react',
       '/downloads/verdant-react/',
@@ -154,28 +167,15 @@ describe('template downloads', () => {
       }
     }
 
-    // and nothing was chosen on the way
-    expect((await mine(cookie)).used).toBe(0);
+    // and nothing was logged on the way
+    expect(await logOf('verdant')).toHaveLength(before);
   });
 });
 
-describe('choosing templates', () => {
-  it('"Add to my templates" claims one without taking it, once', async () => {
-    const cookie = await signIn('chooser@example.com');
-
-    const chosen = await choose(cookie, 'verdant');
-    expect(chosen.status).toBe(200);
-    expect(await chosen.json()).toMatchObject({ slug: 'verdant', chosen: true, used: 1, left: FREE - 1 });
-
-    const again = await choose(cookie, 'verdant');
-    expect(await again.json()).toMatchObject({ chosen: false, used: 1 });
-
-    expect((await choose(cookie, 'no-such-site')).status).toBe(404);
-    expect((await choose(cookie, 'Not A Slug')).status).toBe(400);
-  });
-
-  it('the first customizer save chooses the template, and a full account cannot save a new one', async () => {
+describe('saving a customization', () => {
+  it('saves a site on any number of templates, with no count to check', async () => {
     const cookie = await signIn('customizer@example.com');
+    const me = await userId('customizer@example.com');
     const save = (slug: string) =>
       SELF.fetch(`${ORIGIN}/api/studio/sites`, {
         method: 'POST',
@@ -183,173 +183,121 @@ describe('choosing templates', () => {
         body: JSON.stringify({ slug }),
       });
 
-    const made = await save('verdant');
-    expect(made.status, await made.clone().text()).toBe(200);
-    const { id } = (await made.json()) as { id: string };
+    // Seven templates, two more than the beta's five, and one of them twice.
+    // The burst gate (three a minute) is cleared between saves: it is not
+    // what this is about.
+    const slugs = ['verdant', ...(await otherSlugs(6)), 'verdant'];
 
-    const listed = await mine(cookie);
-    expect(listed.used).toBe(1);
-    expect(listed.chosen[0]).toMatchObject({ slug: 'verdant', site: { id } });
-
-    for (const slug of await otherSlugs(FREE - 1)) {
-      expect((await choose(cookie, slug)).status).toBe(200);
+    for (const slug of slugs) {
+      await env.DB.prepare('DELETE FROM rate_window WHERE key = ?').bind(`site:${me}`).run();
+      const made = await save(slug);
+      expect(made.status, `${slug}: ${await made.clone().text()}`).toBe(200);
     }
 
-    const [extra] = (await otherSlugs(FREE)).slice(-1);
-    expect((await save(extra)).status).toBe(403);
-    // A template already chosen saves again as another site.
-    expect((await save('verdant')).status).toBe(200);
+    const sites = (await SELF.fetch(`${ORIGIN}/api/studio/sites`, { headers: { cookie } }).then((r) => r.json())) as {
+      sites: { slug: string }[];
+    };
+    expect(sites.sites).toHaveLength(slugs.length);
+
+    // Saving signed out is still an account's act.
+    expect((await SELF.fetch(`${ORIGIN}/api/studio/sites`, { method: 'POST', headers: json, body: JSON.stringify({ slug: 'verdant' }) })).status).toBe(401);
+  });
+
+  it('the routes that chose, requested and granted templates are gone', async () => {
+    const cookie = await signIn('former-chooser@example.com');
+
+    for (const [method, path] of [
+      ['GET', '/api/account/templates'],
+      ['POST', '/api/account/templates'],
+      ['POST', '/api/account/templates/request'],
+      ['POST', '/api/account/templates/request/resend'],
+      ['GET', '/api/account/templates/activate?token=PREVIEW-ONLY-not-a-real-token'],
+    ]) {
+      const response = await SELF.fetch(`${ORIGIN}${path}`, {
+        method,
+        redirect: 'manual',
+        headers: { ...json, cookie },
+        ...(method === 'POST' ? { body: JSON.stringify({ slug: 'verdant' }) } : {}),
+      });
+      expect(response.status, `${method} ${path}`).toBe(404);
+      expect(await response.json(), path).toEqual({ error: 'Not found' });
+    }
   });
 });
 
-describe('"Request more"', () => {
-  const ask = (cookie: string, body: Record<string, string>) =>
-    SELF.fetch(`${ORIGIN}/api/account/templates/request`, {
+describe('product events', () => {
+  const send = (body: unknown, headers: Record<string, string> = {}) =>
+    SELF.fetch(`${ORIGIN}/api/events`, {
       method: 'POST',
-      headers: { ...json, cookie },
-      body: JSON.stringify(body),
+      headers: { ...json, ...headers },
+      body: typeof body === 'string' ? body : JSON.stringify(body),
     });
 
-  /** The link in the person's latest dev mail (the approval email). */
-  const linkFor = async (email: string) => {
-    const row = await env.DB.prepare('SELECT url FROM dev_mail WHERE email = ?').bind(email).first<{ url: string }>();
-    return row!;
-  };
+  type Row = { kind: string; slug: string | null; userId: string | null };
 
-  const follow = (url: string) => SELF.fetch(url, { redirect: 'manual' });
+  /** Every event row for a slug, or with no slug when it is null. */
+  const rowsOf = async (slug: string | null) =>
+    (
+      await env.DB.prepare(
+        `SELECT kind, slug, user_id AS userId FROM event WHERE ${slug === null ? 'slug IS NULL' : 'slug = ?'} ORDER BY rowid`
+      )
+        .bind(...(slug === null ? [] : [slug]))
+        .all<Row>()
+    ).results;
 
-  const FIRST = { role: 'Freelancer', building: 'Client sites', sites: '3-10' };
-  const SECOND = { need: '10', pay: 'Maybe', fairPrice: '$10/month', link: 'studio.example', note: 'Six cafes in Portland.' };
+  it('counts each kind, with the person when one is signed in', async () => {
+    const [slug] = await otherSlugs(1);
+    const cookie = await signIn('eventful@example.com');
+    const me = await userId('eventful@example.com');
 
-  it('a first request emails a single-use link that adds five', async () => {
-    const cookie = await signIn('asker@example.com');
-    const slugs = await otherSlugs(FREE * 2 + 1);
+    expect((await send({ kind: 'customize', slug })).status).toBe(204);
+    expect((await send({ kind: 'save-gate', slug })).status).toBe(204);
+    const saved = await send({ kind: 'gate-save', slug }, { cookie });
+    expect(saved.status).toBe(204);
+    expect(await saved.text()).toBe('');
 
-    // Not before every template is chosen.
-    expect((await ask(cookie, FIRST)).status).toBe(409);
-    for (const slug of slugs.slice(0, FREE)) expect((await choose(cookie, slug)).status).toBe(200);
+    expect(await rowsOf(slug)).toEqual([
+      { kind: 'customize', slug, userId: null },
+      { kind: 'save-gate', slug, userId: null },
+      { kind: 'gate-save', slug, userId: me },
+    ]);
 
-    expect((await ask(cookie, { role: 'Freelancer' })).status).toBe(400);
-    expect((await ask(cookie, { ...FIRST, role: 'Astronaut' })).status).toBe(400);
-
-    const before = Date.now();
-    const sent = await ask(cookie, { ...FIRST, note: 'Mostly restaurants.' });
-    expect(sent.status, await sent.clone().text()).toBe(200);
-    const { request } = (await sent.json()) as { request: { round: number; status: string; sendAt: string } };
-    expect(request).toMatchObject({ round: 1, status: 'sent' });
-    // The email is scheduled a few minutes out, as the page promises.
-    expect(new Date(request.sendAt).getTime()).toBeGreaterThanOrEqual(before + 4 * 60_000);
-
-    // One open request at a time.
-    expect((await ask(cookie, FIRST)).status).toBe(409);
-
-    const mail = await linkFor('asker@example.com');
-    expect(mail.url).toMatch(/\/api\/account\/templates\/activate\?token=/);
-
-    // Following it (no session needed) adds five, once.
-    const first = await follow(mail.url);
-    expect(first.status).toBe(302);
-    expect(first.headers.get('location')).toBe('/account/?activated=5');
-    expect(await mine(cookie)).toMatchObject({ used: FREE, total: FREE * 2, left: FREE });
-    expect((await follow(mail.url)).headers.get('location')).toBe('/account/?activated=used');
-    expect((await follow(`${ORIGIN}/api/account/templates/activate?token=nope`)).headers.get('location')).toBe('/account/?activated=unknown');
-    expect((await mine(cookie)).total).toBe(FREE * 2);
-
-    // A second request goes to the team, with more to say.
-    for (const slug of slugs.slice(FREE, FREE * 2)) expect((await choose(cookie, slug)).status).toBe(200);
-    expect((await ask(cookie, { need: '10' })).status).toBe(400);
-    const second = await ask(cookie, SECOND);
-    expect(second.status, await second.clone().text()).toBe(200);
-    expect(await second.json()).toMatchObject({ request: { round: 2, status: 'pending', role: 'Freelancer' } });
-
-    const notice = await env.DB.prepare('SELECT subject, body FROM dev_mail WHERE email = ?').bind('team@example.com').first<{ subject: string; body: string }>();
-    expect(notice?.subject).toContain('More templates');
-    expect(notice?.body).toContain('Six cafes');
+    // The slug is optional.
+    const before = (await rowsOf(null)).length;
+    expect((await send({ kind: 'customize' })).status).toBe(204);
+    expect(await rowsOf(null)).toHaveLength(before + 1);
   });
 
-  it('an admin answers the reviewed round, not the emailed one', async () => {
-    const cookie = await signIn('asker2@example.com');
-    const boss = await signIn('granter@example.com');
-    await env.DB.prepare("UPDATE user SET role = 'admin' WHERE email = ?").bind('granter@example.com').run();
-    const slugs = await otherSlugs(FREE * 2 + 1);
+  it('refuses what is not one of its events, and writes nothing', async () => {
+    const before = await env.DB.prepare('SELECT count(*) AS n FROM event').first<{ n: number }>();
 
-    for (const slug of slugs.slice(0, FREE)) await choose(cookie, slug);
-    await ask(cookie, FIRST);
-    await follow((await linkFor('asker2@example.com')).url);
-    for (const slug of slugs.slice(FREE, FREE * 2)) await choose(cookie, slug);
-    expect((await ask(cookie, SECOND)).status).toBe(200);
+    for (const body of [
+      { kind: 'download' },
+      { kind: 'customize', slug: 'Not A Slug' },
+      { kind: 'customize', slug: 'x'.repeat(81) },
+      { slug: 'verdant' },
+      'not json',
+    ]) {
+      const response = await send(body);
+      expect(response.status, JSON.stringify(body)).toBe(400);
+    }
 
-    // The directory reads the same allowance rule as the person's own page,
-    // so an account that followed the emailed link counts that grant too.
-    const directory = async () =>
-      ((await SELF.fetch(`${ORIGIN}/api/admin/users?q=asker2`, { headers: { cookie: boss } }).then((r) => r.json())) as {
-        users: { email: string; chosen: number; allowance: number }[];
-      }).users.find((row) => row.email === 'asker2@example.com')!;
-    expect(await directory()).toMatchObject({ chosen: FREE * 2, allowance: FREE * 2 });
-
-    type Listed = { counts: Record<string, number>; requests: { id: string; email: string; round: number; chosen: number; allowance: number; firstActivatedAt: string | null; need: string }[] };
-    const list = async (tab: string) =>
-      (await SELF.fetch(`${ORIGIN}/api/admin/requests?tab=${tab}`, { headers: { cookie: boss } }).then((r) => r.json())) as Listed;
-
-    const review = await list('review');
-    const request = review.requests.find((row) => row.email === 'asker2@example.com')!;
-    expect(request).toMatchObject({ round: 2, chosen: FREE * 2, allowance: FREE * 2, need: '10' });
-    expect(request.firstActivatedAt).not.toBeNull();
-    const linked = (await list('link')).requests.find((row) => row.email === 'asker2@example.com')!;
-    expect(linked.round).toBe(1);
-
-    const decide = (id: string, body: unknown, who = boss) =>
-      SELF.fetch(`${ORIGIN}/api/admin/requests/${id}`, { method: 'POST', headers: { ...json, cookie: who }, body: JSON.stringify(body) });
-
-    expect((await decide(request.id, { status: 'granted', granted: 3 }, cookie)).status).toBe(404);
-    expect((await decide(request.id, { status: 'granted', granted: 0 })).status).toBe(400);
-    // The emailed round is the person's to take, not the admin's.
-    expect((await decide(linked.id, { status: 'declined' })).status).toBe(404);
-
-    const granted = await decide(request.id, { status: 'granted', granted: 3 });
-    expect(await granted.json()).toMatchObject({ request: { status: 'granted', granted: 3 }, mailed: true });
-    expect(await mine(cookie)).toMatchObject({ used: FREE * 2, total: FREE * 2 + 3, left: 3 });
-    expect(await directory()).toMatchObject({ chosen: FREE * 2, allowance: FREE * 2 + 3 });
-
-    // Undo takes the grant away; nothing already chosen is taken back.
-    await choose(cookie, slugs[FREE * 2]);
-    expect((await decide(request.id, { status: 'pending' })).status).toBe(200);
-    expect(await mine(cookie)).toMatchObject({ used: FREE * 2 + 1, total: FREE * 2, left: 0 });
+    expect(await env.DB.prepare('SELECT count(*) AS n FROM event').first<{ n: number }>()).toEqual(before);
+    expect((await send({ kind: 'customize', note: 'x'.repeat(4000) })).status).toBe(413);
   });
 
-  it('a resent link replaces the old one, once the first is due, and a lapsed link says so', async () => {
-    const cookie = await signIn('resender@example.com');
-    const me = await userId('resender@example.com');
-    for (const slug of await otherSlugs(FREE)) await choose(cookie, slug);
-    await ask(cookie, FIRST);
-    const old = (await linkFor('resender@example.com')).url;
-    const resend = () =>
-      SELF.fetch(`${ORIGIN}/api/account/templates/request/resend`, { method: 'POST', headers: { ...json, cookie } });
+  it('holds one address to sixty a minute, and no other', async () => {
+    const from = (ip: string) => ({ 'cf-connecting-ip': ip });
 
-    // Not before the first email is due: Resend still holds that message,
-    // and a new token now would make the link in it dead on arrival.
-    const early = await resend();
-    expect(early.status, await early.clone().text()).toBe(409);
-    expect((await linkFor('resender@example.com')).url).toBe(old);
+    for (let n = 0; n < 60; n++) {
+      expect((await send({ kind: 'customize', slug: 'burst-test' }, from('203.0.113.7'))).status, `event ${n + 1}`).toBe(204);
+    }
 
-    await env.DB.prepare('UPDATE template_request SET send_at = unixepoch() - 60 WHERE user_id = ?').bind(me).run();
-    const sent = await resend();
-    expect(sent.status, await sent.clone().text()).toBe(200);
-    const fresh = (await linkFor('resender@example.com')).url;
-    expect(fresh).not.toBe(old);
-    expect((await follow(old)).headers.get('location')).toBe('/account/?activated=unknown');
-
-    // Each resend is a real email, so a few in a row is a burst: three tries
-    // in ten minutes, the refused one above included.
-    expect((await resend()).status).toBe(200);
-    const limited = await resend();
+    const limited = await send({ kind: 'customize', slug: 'burst-test' }, from('203.0.113.7'));
     expect(limited.status).toBe(429);
     expect(limited.headers.get('retry-after')).toMatch(/^\d+$/);
-    const newest = (await linkFor('resender@example.com')).url;
-    expect(newest).not.toBe(fresh);
+    expect(await rowsOf('burst-test')).toHaveLength(60);
 
-    await env.DB.prepare('UPDATE template_request SET expires_at = unixepoch() - 60 WHERE user_id = ?').bind(me).run();
-    expect((await follow(newest)).headers.get('location')).toBe('/account/?activated=expired');
-    expect((await mine(cookie)).total).toBe(FREE);
+    expect((await send({ kind: 'customize', slug: 'burst-test' }, from('198.51.100.4'))).status).toBe(204);
   });
 });

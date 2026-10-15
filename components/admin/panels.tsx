@@ -6,11 +6,10 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, ArrowRight, ChevronDown, SquarePen } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronDown } from 'lucide-react';
 import { ApiError, apiFetch, apiUrl } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';
 import { initials } from 'components/nav';
-import TemplatesDialog from './TemplatesDialog';
 import UserActions from './UserActions';
 import { money, useAdminData, when } from './useAdminData';
 import styles from './admin.module.css';
@@ -21,10 +20,6 @@ const Load = ({ error }: { error: string | null }) => (
 
 const day = (value: string | Date) =>
   new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-
-/** A request's dates: a queue of recent weeks, so month and day, as the design has them. */
-const shortDay = (value: string | Date) =>
-  new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 
 // ---- overview ---------------------------------------------------------------
 
@@ -37,10 +32,17 @@ type Overview = {
   aiCallsToday: number;
   aiCostToday: number;
   imagesThisWeek: number;
-  templatesChosen: number;
-  averageChosen: number;
-  freeTemplates: number;
-  pendingRequests: number;
+  /** Every zip served in the last 30 days, anonymous ones included. */
+  downloads30d: number;
+  anonymousDownloads30d: number;
+  /** Times the customizer was opened on a template, last 30 days. */
+  customizerSessions30d: number;
+  newAccounts30d: number;
+  /** Of those, the accounts whose edits were saved through the save gate. */
+  newAccountsFromSave30d: number;
+  /** Saved customizations, across all accounts. */
+  savedTemplates: number;
+  saveGates30d: number;
   /** Absent from a Worker older than the chart: read as no sign-ups. */
   signupsByDay?: { day: string; n: number }[];
 };
@@ -110,19 +112,31 @@ export function OverviewPanel() {
 
   if (!data) return <Load error={error} />;
 
-  // The design's four, all about templates. The endpoint's other figures
-  // (generations, sites, fallbacks, AI calls and cost) are Studio's, and the
-  // AI usage and Generations pages carry them.
+  // The 14 October design's four, which measure what dropping the sign-in
+  // did: downloads with no account, customizer sessions, the accounts made
+  // (and how many began at the save gate), and what was saved. The
+  // endpoint's other figures (generations, sites, fallbacks, AI calls and
+  // cost) are Studio's, and the AI usage and Generations pages carry them.
+  const fromSave = data.newAccounts30d
+    ? Math.round((data.newAccountsFromSave30d / data.newAccounts30d) * 100)
+    : 0;
   const stats: { label: string; value: string; note: string; dark?: boolean }[] = [
-    { label: 'Total users', value: data.users.toLocaleString(), note: `+${data.newUsersThisWeek} this week` },
-    { label: 'New users', value: data.newUsersThisWeek.toLocaleString(), note: 'In the last 7 days' },
-    { label: 'Templates chosen', value: data.templatesChosen.toLocaleString(), note: 'Across all users' },
     {
-      label: 'Average chosen',
-      value: data.averageChosen.toLocaleString(undefined, { maximumFractionDigits: 1 }),
-      note: `of ${data.freeTemplates} templates per user`,
-      dark: true,
+      label: 'Downloads',
+      value: data.downloads30d.toLocaleString(),
+      note: `Last 30 days, ${data.anonymousDownloads30d.toLocaleString()} with no account`,
     },
+    {
+      label: 'Customizer sessions',
+      value: data.customizerSessions30d.toLocaleString(),
+      note: `Last 30 days, ${data.saveGates30d.toLocaleString()} asked to save`,
+    },
+    {
+      label: 'New accounts',
+      value: data.newAccounts30d.toLocaleString(),
+      note: data.newAccounts30d ? `Last 30 days, ${fromSave}% started from a save` : 'Last 30 days',
+    },
+    { label: 'Saved templates', value: data.savedTemplates.toLocaleString(), note: 'Across all accounts', dark: true },
   ];
 
   return (
@@ -164,41 +178,15 @@ export type UserRow = {
   plan?: string;
   /** Made by the Test users page, on the reserved domain. */
   test?: boolean;
+  /** Saved customizations. */
   sites: number;
   generations: number;
-  /** Templates chosen, against the person's allowance (five plus any grant). */
-  chosen: number;
-  allowance: number;
+  /** Template zips this account took while signed in. */
+  downloads: number;
 };
 
 /** "free" as the directory prints it. */
 export const planLabel = (plan = 'free') => plan.charAt(0).toUpperCase() + plan.slice(1);
-
-/**
- * "3 / 5", with the way to change it: the pencil opens Manage templates. Red
- * once every template the person may choose is chosen: the people who write in.
- */
-export function QuotaEdit({ row, onEdit }: { row: UserRow; onEdit: () => void }) {
-  const full = row.chosen >= row.allowance;
-
-  return (
-    <span className={`${styles.quota} ${full ? styles.quotaFull : ''}`}>
-      <span title={full ? `All ${row.allowance} chosen` : undefined}>
-        {row.chosen} / {row.allowance}
-        {full ? <span className={styles.srOnly}> (all chosen)</span> : null}
-      </span>
-      <button
-        type="button"
-        className={styles.quotaEdit}
-        aria-label={`Manage templates for ${row.name || row.email}`}
-        title="Manage templates"
-        onClick={onEdit}
-      >
-        <SquarePen size={14} strokeWidth={1.8} aria-hidden="true" />
-      </button>
-    </span>
-  );
-}
 
 /** The name, and what is worth knowing at a glance beside it. */
 export function PersonName({ row, self }: { row: UserRow; self: boolean }) {
@@ -215,16 +203,14 @@ export function PersonName({ row, self }: { row: UserRow; self: boolean }) {
   );
 }
 
-const FILTERS = ['All users', 'Active', 'All chosen', 'Banned', 'Admins', 'Unverified'] as const;
+const FILTERS = ['All users', 'Active', 'Has saved', 'Banned', 'Admins', 'Unverified'] as const;
 type Filter = (typeof FILTERS)[number];
-
-const allChosen = (row: UserRow) => row.chosen >= row.allowance;
 
 const matchesFilter = (row: UserRow, filter: Filter) =>
   filter === 'All users'
     ? true
-    : filter === 'All chosen'
-      ? allChosen(row)
+    : filter === 'Has saved'
+      ? row.sites > 0
       : filter === 'Active'
       ? !row.banned && row.emailVerified
       : filter === 'Banned'
@@ -236,8 +222,7 @@ const matchesFilter = (row: UserRow, filter: Filter) =>
 /**
  * The directory: search goes to the API (it is what knows every row), the
  * filter and the pages are the browser's over what came back. There is no
- * Status column: a ban or a missing verification is a badge by the name, and
- * a full quota is the quota in red.
+ * Status column: a ban or a missing verification is a badge by the name.
  * The overview shows the first handful of it; the users page all of it.
  */
 function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number; compact?: boolean }) {
@@ -246,7 +231,6 @@ function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number;
   const [filter, setFilter] = useState<Filter>('All users');
   const [page, setPage] = useState(0);
   const [message, setMessage] = useState<string | null>(null);
-  const [managing, setManaging] = useState<UserRow | null>(null);
   const { user: me } = useSessionUser();
   const { data, error, reload } = useAdminData<{ users: UserRow[] }>(
     `/api/admin/users?q=${encodeURIComponent(query)}&limit=${compact ? pageSize : 200}`
@@ -312,15 +296,15 @@ function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number;
       <div className={`${styles.panel} ${styles.scroll}`}>
         <div className={`${styles.tableHead} ${styles.userCols}`} aria-hidden="true">
           <div>User</div>
-          <div>Plan</div>
+          <div>Account</div>
           <div>Registered</div>
           {/* Two lines, so the column is as narrow as its figures. */}
           <div>
-            Template
+            Saved
             <br />
-            Quota
+            templates
           </div>
-          <div>Remaining</div>
+          <div>Downloads</div>
           <div />
         </div>
 
@@ -342,14 +326,12 @@ function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number;
                   </Link>
                 </div>
               </div>
-              <div className={styles.cell} data-label="Plan">
+              <div className={styles.cell} data-label="Account">
                 <span className={styles.plan}>{planLabel(row.plan)}</span>
               </div>
               <div className={`${styles.cell} ${styles.cellDim}`} data-label="Registered">{day(row.createdAt)}</div>
-              <div className={styles.cell} data-label="Template quota">
-                <QuotaEdit row={row} onEdit={() => setManaging(row)} />
-              </div>
-              <div className={styles.cell} data-label="Remaining">{Math.max(0, row.allowance - row.chosen)}</div>
+              <div className={styles.cell} data-label="Saved templates">{row.sites}</div>
+              <div className={styles.cell} data-label="Downloads">{row.downloads}</div>
               <div className={styles.actions}>
                 <UserActions row={row} self={row.id === me?.id} onChanged={reload} onError={setMessage} />
               </div>
@@ -357,15 +339,6 @@ function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number;
           ))
         )}
       </div>
-
-      {managing ? (
-        <TemplatesDialog
-          person={managing}
-          open
-          onOpenChange={(open) => (open ? null : setManaging(null))}
-          onChanged={reload}
-        />
-      ) : null}
 
       {compact || !data ? null : (
         <div className={styles.pager}>
@@ -412,7 +385,6 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 export function UserDetailPanel({ id }: { id: string }) {
   const [message, setMessage] = useState<string | null>(null);
-  const [managing, setManaging] = useState(false);
   const { user: me } = useSessionUser();
   const router = useRouter();
   const { data, error, reload } = useAdminData<{
@@ -420,13 +392,7 @@ export function UserDetailPanel({ id }: { id: string }) {
     sites: { id: string; slug: string; title: string; updatedAt: string }[];
     generations: { id: string; description: string; source: string; model: string; createdAt: string }[];
     usageToday: { endpoint: string; calls: number; cost: number; cap: number | null }[];
-    templates: {
-      used: number;
-      total: number;
-      left: number;
-      chosen: { slug: string; createdAt: string }[];
-      grants: { id: string; granted: number }[];
-    };
+    downloads: number;
   }>(`/api/admin/users/${id}`);
 
   if (!data) return <Load error={error} />;
@@ -455,52 +421,16 @@ export function UserDetailPanel({ id }: { id: string }) {
             onChanged={reload}
             onRemoved={() => router.push('/admin/users/')}
             onError={setMessage}
-            profileLink={false}
           />
         </div>
         <p className={styles.quiet} style={{ marginTop: 16, marginBottom: 0 }}>
           Joined {when(data.user.createdAt)}, {planLabel(data.user.plan)} plan,{' '}
           {data.user.role === 'admin' ? 'admin' : 'member'}, {data.user.emailVerified ? 'verified' : 'unverified'}
-          {data.user.banned ? `, banned${data.user.banReason ? `: ${data.user.banReason}` : ''}` : ''}
+          {data.user.banned ? `, banned${data.user.banReason ? `: ${data.user.banReason}` : ''}` : ''}.{' '}
+          {data.sites.length === 1 ? '1 saved template' : `${data.sites.length} saved templates`},{' '}
+          {data.downloads === 1 ? '1 download' : `${data.downloads} downloads`} while logged in.
         </p>
       </div>
-
-      <div className={styles.card}>
-        <div className={styles.cardHead}>
-          <h2 className={styles.h3}>Templates</h2>
-          <button type="button" className={styles.small} onClick={() => setManaging(true)}>
-            Manage
-          </button>
-        </div>
-        <p className={styles.quiet} style={{ margin: '0 0 14px' }}>
-          {data.templates.used} of {data.templates.total} chosen, {data.templates.left} left.
-          {data.templates.grants.length
-            ? (() => {
-                const net = data.templates.grants.reduce((sum, row) => sum + row.granted, 0);
-                return net ? ` Admins changed it by ${net > 0 ? '+' : ''}${net}.` : '';
-              })()
-            : ''}
-        </p>
-        {data.templates.chosen.length > 0 ? (
-          <ul className={styles.plainList}>
-            {data.templates.chosen.map((row) => (
-              <li key={row.slug}>
-                <Link href={`/templates/${row.slug}/`} prefetch={false}>
-                  {row.slug}
-                </Link>{' '}
-                <span className={styles.cellDim}>chosen {day(row.createdAt)}</span>
-              </li>
-            ))}
-          </ul>
-        ) : null}
-      </div>
-      <TemplatesDialog
-        person={data.user}
-        open={managing}
-        onOpenChange={setManaging}
-        onChanged={reload}
-        profileLink={false}
-      />
 
       <Section title="Today">
         {data.usageToday.length === 0 ? (
@@ -517,7 +447,7 @@ export function UserDetailPanel({ id }: { id: string }) {
         )}
       </Section>
 
-      <Section title="Sites">
+      <Section title="Saved templates">
         {data.sites.length === 0 ? (
           <p className={styles.quiet} style={{ margin: 0 }}>None.</p>
         ) : (
@@ -835,18 +765,6 @@ export function QuotasPanel() {
                 Daily AI caps (the table above): <code>DAILY_CAPS</code> in <code>worker/lib/quota.ts</code>.
               </li>
               <li>
-                Templates every account may choose, and the floor no limit goes under:{' '}
-                <code>FREE_TEMPLATES</code> in <code>worker/lib/templates.ts</code>, and its copies in{' '}
-                <code>lib/myTemplates.ts</code>, which the pages print, and{' '}
-                <code>components/admin/TemplatesDialog.tsx</code>. The first two also hold{' '}
-                <code>FIRST_REQUEST_GRANT</code>, what a first request&apos;s emailed link adds.
-              </li>
-              <li>
-                The most one grant or one change raises a limit by: <code>MAX_GRANT</code> in{' '}
-                <code>worker/lib/templates.ts</code>, and in <code>components/admin/panels.tsx</code> and{' '}
-                <code>TemplatesDialog.tsx</code>.
-              </li>
-              <li>
                 Burst limits (requests a minute): the <code>BURST</code> table at the top of{' '}
                 <code>worker/routes/account.ts</code>, <code>sites.ts</code> and <code>studio.ts</code>.
               </li>
@@ -861,260 +779,7 @@ export function QuotasPanel() {
             request: no migration, and no stored data changes.
           </li>
         </ol>
-        <p className={styles.quiet} style={{ margin: 0 }}>
-          For one person rather than everyone, use Manage templates on the Users page.
-        </p>
       </div>
     </>
   );
-}
-
-// ---- requests ---------------------------------------------------------------
-
-type RequestRow = {
-  id: string;
-  userId: string;
-  name: string;
-  email: string;
-  round: number;
-  status: 'sent' | 'activated' | 'pending' | 'granted' | 'declined';
-  granted: number;
-  role: string | null;
-  building: string | null;
-  sites: string | null;
-  need: string | null;
-  pay: string | null;
-  fairPrice: string | null;
-  link: string | null;
-  note: string;
-  sendAt: string | null;
-  decidedAt: string | null;
-  createdAt: string;
-  chosen: number;
-  allowance: number;
-  firstActivatedAt: string | null;
-};
-
-type RequestTab = 'review' | 'link' | 'granted' | 'declined';
-
-const REQUEST_TABS: { tab: RequestTab; label: string }[] = [
-  { tab: 'review', label: 'Needs review' },
-  { tab: 'link', label: 'Link sent' },
-  { tab: 'granted', label: 'Granted' },
-  { tab: 'declined', label: 'Declined' },
-];
-
-/** The most templates one answer can add; the Worker holds the same number. */
-const MAX_GRANT = 20;
-
-/** A link someone typed, made followable without trusting its scheme. */
-const hrefFor = (link: string) => (/^https?:\/\//i.test(link) ? link : `https://${link}`);
-
-/**
- * "Request more". A first request is answered by the person following the
- * link its email carries, so it sits under Link sent with no decision to
- * make; every later one waits under Needs review, where granting adds the
- * stepper's number to the person's allowance and mails them, declining
- * mails them too, and Undo puts it back. Replies beyond that go by email,
- * from the team inbox the request's notice arrived in.
- */
-export function RequestsPanel() {
-  const [tab, setTab] = useState<RequestTab>('review');
-  const [amounts, setAmounts] = useState<Record<string, number>>({});
-  const [busy, setBusy] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
-  const { data, error, reload } = useAdminData<{
-    free: number;
-    counts: Record<RequestTab, number>;
-    requests: RequestRow[];
-  }>(`/api/admin/requests?tab=${tab}`);
-
-  const decide = async (row: RequestRow, body: { status: 'pending' | 'granted' | 'declined'; granted?: number }) => {
-    setBusy(row.id);
-    setMessage(null);
-
-    try {
-      const answer = await apiFetch<{ mailed: boolean | null }>(`/api/admin/requests/${row.id}`, {
-        method: 'POST',
-        body: JSON.stringify(body),
-      });
-      if (answer.mailed === false) {
-        setMessage(`Saved, but the email to ${row.email} did not send. Reply to them by hand.`);
-      }
-      reload();
-    } catch (cause) {
-      setMessage(cause instanceof ApiError ? cause.message : 'That did not work.');
-    } finally {
-      setBusy(null);
-    }
-  };
-
-  const amount = (id: string) => amounts[id] ?? 5;
-  const step = (id: string, by: number) =>
-    setAmounts((current) => ({ ...current, [id]: Math.min(MAX_GRANT, Math.max(1, amount(id) + by)) }));
-
-  return (
-    <>
-      <div className={styles.tabs} role="group" aria-label="Filter requests">
-        {REQUEST_TABS.map((item) => (
-          <button
-            key={item.tab}
-            type="button"
-            className={styles.tab}
-            aria-pressed={tab === item.tab}
-            onClick={() => setTab(item.tab)}
-          >
-            {item.label} &#xB7; {data?.counts[item.tab] ?? 0}
-          </button>
-        ))}
-      </div>
-
-      {message ? (
-        <p className={styles.error} role="alert">
-          {message}
-        </p>
-      ) : null}
-
-      {!data ? (
-        <Load error={error} />
-      ) : data.requests.length === 0 ? (
-        <div className={styles.panel}>
-          <p className={styles.empty}>Nothing here.</p>
-        </div>
-      ) : (
-        <div className={styles.requests}>
-          {data.requests.map((row) => {
-            const reviewed = row.round > 1;
-            const answers = [row.role, row.building, row.sites ? `${row.sites} sites in the next 3 months` : null]
-              .filter(Boolean)
-              .join(' \u00B7 ');
-
-            return (
-              <div key={row.id} className={styles.request}>
-                <div className={styles.requestHead}>
-                  <div className={styles.person}>
-                    <span className={`${styles.avatar} ${styles.requestAvatar}`} aria-hidden="true">
-                      {initials(row.name, row.email)}
-                    </span>
-                    <div className={styles.personText}>
-                      <p className={styles.requestName}>
-                        <span>{row.name || row.email}</span>
-                        <span className={`${styles.roundBadge} ${reviewed ? styles.roundSecond : ''}`}>
-                          {reviewed ? `${ordinal(row.round)} request` : '1st request'}
-                        </span>
-                      </p>
-                      <p className={styles.requestMeta}>
-                        <a href={`mailto:${row.email}`}>{row.email}</a> &#xB7;{' '}
-                        <span className={styles.nowrap}>Sent {shortDay(row.createdAt)}</span> &#xB7;{' '}
-                        <span className={styles.nowrap}>
-                          Using {row.chosen} of {row.allowance}
-                        </span>{' '}
-                        &#xB7;{' '}
-                        <Link href={`/admin/users/?id=${row.userId}`} prefetch={false} className={styles.metaLink}>
-                          Profile
-                        </Link>
-                      </p>
-                      {reviewed ? (
-                        <p className={`${styles.requestMeta} ${styles.requestAsk}`}>
-                          Needs {row.need ?? '?'} more &#xB7; Would pay: {row.pay ?? '?'}
-                          {row.fairPrice ? ` (${row.fairPrice})` : ''}
-                          {row.link ? (
-                            <>
-                              {' '}
-                              &#xB7;{' '}
-                              <a
-                                href={hrefFor(row.link)}
-                                target="_blank"
-                                rel="noopener noreferrer nofollow"
-                                className={styles.metaLink}
-                              >
-                                {row.link}
-                              </a>
-                            </>
-                          ) : null}
-                        </p>
-                      ) : null}
-                      {answers ? (
-                        <p className={`${styles.requestMeta} ${styles.requestAnswers}`}>
-                          {answers}
-                          {reviewed && row.firstActivatedAt ? (
-                            <>
-                              {' '}
-                              &#xB7;{' '}
-                              <span className={styles.nowrap}>+5 via email link on {shortDay(row.firstActivatedAt)}</span>
-                            </>
-                          ) : null}
-                        </p>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  {row.status === 'pending' ? (
-                    <div className={styles.decide}>
-                      <button
-                        type="button"
-                        className={styles.decline}
-                        disabled={busy !== null}
-                        onClick={() => void decide(row, { status: 'declined' })}
-                      >
-                        Decline
-                      </button>
-                      <div className={styles.stepper}>
-                        <button type="button" aria-label="One fewer" disabled={amount(row.id) <= 1} onClick={() => step(row.id, -1)}>
-                          &#x2212;
-                        </button>
-                        <span aria-live="polite">{amount(row.id)}</span>
-                        <button type="button" aria-label="One more" disabled={amount(row.id) >= MAX_GRANT} onClick={() => step(row.id, 1)}>
-                          +
-                        </button>
-                      </div>
-                      <button
-                        type="button"
-                        className={styles.grant}
-                        disabled={busy !== null}
-                        onClick={() => void decide(row, { status: 'granted', granted: amount(row.id) })}
-                      >
-                        Grant {amount(row.id)}
-                      </button>
-                    </div>
-                  ) : (
-                    <div className={`${styles.decide} ${styles.decided}`}>
-                      <span className={`${styles.outcome} ${row.status === 'declined' ? '' : styles.outcomeGranted}`}>
-                        {row.status === 'activated'
-                          ? `Link clicked \u00B7 +${row.granted} on ${shortDay(row.decidedAt!)}`
-                          : row.status === 'sent'
-                            ? row.sendAt && new Date(row.sendAt).getTime() > Date.now()
-                              ? 'Email scheduled'
-                              : 'Link sent \u00B7 not clicked yet'
-                            : row.status === 'granted'
-                              ? `Granted ${row.granted} template${row.granted === 1 ? '' : 's'}`
-                              : 'Declined'}
-                      </span>
-                      {reviewed ? (
-                        <button
-                          type="button"
-                          className={styles.undo}
-                          disabled={busy !== null}
-                          onClick={() => void decide(row, { status: 'pending' })}
-                        >
-                          Undo
-                        </button>
-                      ) : null}
-                    </div>
-                  )}
-                </div>
-                {row.note ? <p className={styles.requestNote}>&quot;{row.note}&quot;</p> : null}
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </>
-  );
-}
-
-/** "2nd", "3rd", "4th": a request's round, as the badge says it. */
-function ordinal(n: number): string {
-  const tail = n % 100 >= 11 && n % 100 <= 13 ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[n % 10] ?? 'th';
-  return `${n}${tail}`;
 }

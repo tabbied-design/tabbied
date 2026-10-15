@@ -17,14 +17,16 @@ import styles from './SiteNav.module.css';
 // dark shell (`dark`, the homepage and the template gallery). See CLAUDE.md,
 // "The masthead - one bar, two tones".
 //
-// Patterns / Websites / Developers in the middle; the lockup is the way
-// home. Signed out, "Sign in" on the right; signed in, the person's initials
-// opening the account menu, which is where My account lives. Below 768px the
-// destinations fold into that menu (signed out, into one behind a hamburger).
+// Website templates / Patterns / For developers in the middle, templates
+// first since the 14 October designs made them the lead; the lockup is the
+// way home. Signed out, "Log in" on the right; signed in, the person's
+// initials opening the account menu, which is where My account lives. Below
+// 768px the destinations fold into that menu (signed out, into one behind a
+// hamburger).
 //
 // A prerendered page cannot know who is looking, so the signed-out chrome
 // draws until the session answers. A browser signed in last time
-// (SESSION_HINT_KEY) would see "Sign in" flash to its initials, so the bar
+// (SESSION_HINT_KEY) would see "Log in" flash to its initials, so the bar
 // marks itself `data-session="likely"` and draws a placeholder instead: from
 // the inline script before hydration, and from state after it.
 
@@ -38,9 +40,9 @@ const noSubscription = () => () => {};
 type NavTone = 'dark' | 'light';
 
 const DESTINATIONS = [
+  ['/templates', 'Website templates'],
   ['/patterns', 'Patterns'],
-  ['/templates', 'Websites'],
-  ['/docs', 'Developers'],
+  ['/docs', 'For developers'],
 ] as const;
 
 /** Two letters for the circle: first and last name, or the start of the email. */
@@ -203,7 +205,7 @@ export default function SiteNav({
                       }
                     }}
                   >
-                    {impersonating ? 'Stop impersonating' : 'Sign out'}
+                    {impersonating ? 'Stop impersonating' : 'Log out'}
                   </Menu.Item>
                 </Menu.Popup>
               </Menu.Positioner>
@@ -212,7 +214,7 @@ export default function SiteNav({
         ) : (
           <>
             <Link href={signInHref} className={styles.signIn} prefetch={false}>
-              Sign in
+              Log in
             </Link>
 
             <Menu.Root>
@@ -232,7 +234,7 @@ export default function SiteNav({
                   <Menu.Popup className={styles.menu}>
                     {DESTINATIONS.map(([href, label]) => item(href, label))}
                     <Menu.Separator className={styles.menuRule} />
-                    {item(signInHref, 'Sign in')}
+                    {item(signInHref, 'Log in')}
                   </Menu.Popup>
                 </Menu.Positioner>
               </Menu.Portal>

@@ -1,31 +1,26 @@
 'use client';
 
-// The customizer's top bar: the way back, Download, and the person. Dark,
-// like the template preview's, so the chrome reads apart from the site on the
-// canvas.
+// The customizer's top row, over the canvas: the way back, and Download. The
+// 14 October design dropped the dark bar the customizer had, with the
+// account menu that was in it: the customizer is reached without an
+// account, so it leads back to where it was opened from and offers nothing
+// that needs one but Save, in the rail.
 //
 // Download is a menu of two packages, as the design draws it: the customized
 // version, rebuilt in the browser with the site's colors and patterns in it
-// (lib/studioDownload.ts), and the original template in both formats. The
-// customized HTML has the changes written into the page; the customized React
-// project carries them in files of its own over the template's source, since
-// the document cannot be written into JSX.
+// (lib/studioDownload.ts), and the original template in both formats. Both
+// are free and need no account. The customized HTML has the changes written
+// into the page; the customized React project carries them in files of its
+// own over the template's source, since the document cannot be written into
+// JSX.
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Menu } from '@base-ui/react/menu';
-import { ChevronDown } from 'lucide-react';
-import { initials } from 'components/nav';
 import ImpersonationNotice from 'components/nav/ImpersonationNotice';
-import { CUSTOMIZED_FORMAT_NOTE } from 'components/template/DownloadMenu';
-import { signOut, useSessionUser } from 'lib/authClient';
-import { stopImpersonating } from 'lib/impersonation';
 import styles from './CustomizerBar.module.css';
 
-/** Where the way back leads, by who is looking at what. */
-const BACK = {
-  mine: { href: '/account/', label: 'My account', aria: 'Back to your templates' },
-  visitor: { href: '/templates', label: 'Templates', aria: 'Back to the templates' },
-};
+/** How each format carries the changes, said where the choice is made. */
+export const CUSTOMIZED_FORMAT_NOTE =
+  'Your colors and patterns are written into the HTML page, and laid over the React source in files of their own.';
 
 /** "Edited Today" or "Edited Sep 22", as the design writes the last save. */
 function editedLabel(when: string | Date): string {
@@ -52,7 +47,7 @@ export default function CustomizerBar({
   /** The viewer owns the site: the way back is the account. */
   mine: boolean;
   /**
-   * The template slug of a site not saved yet: the way back is the template
+   * The template slug of a site not saved yet: the way back is the gallery
    * it was opened from, since the account has nothing of it to show.
    */
   template?: string;
@@ -69,32 +64,29 @@ export default function CustomizerBar({
   /** When the latest revision was saved, or null for a site not saved yet. */
   editedAt: string | Date | null;
 }) {
-  const { user, isPending, impersonating } = useSessionUser();
-  const router = useRouter();
-  const back = template
-    ? { href: `/templates/${template}/`, label: 'Template', aria: 'Back to the template' }
-    : mine
-      ? BACK.mine
-      : BACK.visitor;
+  const back =
+    mine && !template
+      ? { href: '/account/', label: 'Your templates' }
+      : { href: '/templates/', label: 'Templates' };
 
   return (
-    <header className={styles.bar}>
+    <div className={styles.bar}>
       <ImpersonationNotice />
-      <Link href={back.href} prefetch={false} className={styles.back} aria-label={back.aria}>
-        <span className={styles.backCircle} aria-hidden="true">
-          <svg
-            viewBox="0 0 24 24"
-            width="17"
-            height="17"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.7"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M14.5 5.5 8 12l6.5 6.5" />
-          </svg>
-        </span>
+      <Link href={back.href} prefetch={false} className={styles.back} aria-label={`Back to ${back.label.toLowerCase()}`}>
+        <svg
+          viewBox="0 0 24 24"
+          width="22"
+          height="22"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M20 12H4" />
+          <path d="M10 6l-6 6 6 6" />
+        </svg>
         <span className={styles.backLabel}>{back.label}</span>
       </Link>
 
@@ -108,11 +100,11 @@ export default function CustomizerBar({
             <svg
               className={styles.downloadIcon}
               viewBox="0 0 24 24"
-              width="18"
-              height="18"
+              width="16"
+              height="16"
               fill="none"
               stroke="currentColor"
-              strokeWidth="1.7"
+              strokeWidth="1.8"
               strokeLinecap="round"
               strokeLinejoin="round"
               aria-hidden="true"
@@ -120,7 +112,6 @@ export default function CustomizerBar({
               <path d="M12 4v10m0 0 4-4m-4 4-4-4M5 19h14" />
             </svg>
             <span className={styles.downloadLabel}>{downloading ? 'Preparing...' : 'Download'}</span>
-            <ChevronDown className={styles.caret} size={15} strokeWidth={1.8} aria-hidden="true" />
           </Menu.Trigger>
           <Menu.Portal>
             <Menu.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>
@@ -180,7 +171,8 @@ export default function CustomizerBar({
                     </Menu.Item>
                   </div>
                   <p className={styles.dlFoot}>
-                    Unlimited downloads. HTML &amp; CSS drops on any host; React is ready for a repo.
+                    Free, unlimited downloads. No account needed. HTML &amp; CSS drops on any host;
+                    React is ready for a repo.
                   </p>
                 </div>
               </Menu.Popup>
@@ -188,65 +180,7 @@ export default function CustomizerBar({
           </Menu.Portal>
         </Menu.Root>
 
-        {user ? (
-          <Menu.Root>
-            <Menu.Trigger className={styles.account} aria-label="Account menu">
-              <span className={styles.avatar}>{initials(user.name, user.email)}</span>
-              <span className={styles.lines} aria-hidden="true">
-                <span />
-                <span />
-              </span>
-            </Menu.Trigger>
-            <Menu.Portal>
-              <Menu.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>
-                <Menu.Popup className={`${styles.menu} ${styles.accountMenu}`}>
-                  <div className={styles.menuEmail}>
-                    {impersonating ? `Viewing as ${user.email}` : user.email}
-                  </div>
-                  <Menu.Separator className={styles.menuRule} />
-                  <Menu.Item className={styles.menuItem} render={<Link href="/account/" prefetch={false} />}>
-                    My account
-                  </Menu.Item>
-                  <Menu.Item className={styles.menuItem} render={<Link href="/patterns/" prefetch={false} />}>
-                    Patterns
-                  </Menu.Item>
-                  {/* The customizer is under Websites, so that row is drawn as the current one. */}
-                  <Menu.Item
-                    className={`${styles.menuItem} ${styles.menuItemOn}`}
-                    render={<Link href="/templates/" prefetch={false} />}
-                  >
-                    Websites
-                  </Menu.Item>
-                  <Menu.Item className={styles.menuItem} render={<Link href="/account/settings/" prefetch={false} />}>
-                    Settings
-                  </Menu.Item>
-                  <Menu.Separator className={styles.menuRule} />
-                  {/* A borrowed session ends by handing the admin's back. */}
-                  <Menu.Item
-                    className={styles.menuItem}
-                    onClick={async () => {
-                      if (impersonating) {
-                        await stopImpersonating().catch(() => undefined);
-                        return;
-                      }
-                      await signOut();
-                      router.push('/');
-                    }}
-                  >
-                    {impersonating ? 'Stop impersonating' : 'Sign out'}
-                  </Menu.Item>
-                </Menu.Popup>
-              </Menu.Positioner>
-            </Menu.Portal>
-          </Menu.Root>
-        ) : isPending ? (
-          <span className={styles.avatarGhost} aria-hidden="true" />
-        ) : (
-          <Link href="/sign-in?next=%2Faccount" className={styles.signIn} prefetch={false}>
-            Sign in
-          </Link>
-        )}
       </div>
-    </header>
+    </div>
   );
 }

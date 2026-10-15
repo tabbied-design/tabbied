@@ -107,7 +107,7 @@ test('list_templates returns one line per site, and the categories there are', a
     { category: 'Shop', count: 1 },
     { category: 'Wellness & sport', count: 1 },
   ]);
-  assert.match(result.license, /licensed per Tabbied account/);
+  assert.match(result.license, /licensed to the person who downloads them/);
 });
 
 test('list_templates gives the palette, patterns and slot counts on request', async () => {
@@ -201,7 +201,7 @@ test('get_template returns the spec, the downloads, and how to use them', async 
   assert.match(result.usage.text, /\{em\}/);
   // An agent asked to copy a template from its preview should learn here that
   // it is licensed, and where the terms are.
-  assert.match(result.license, /licensed per Tabbied account/);
+  assert.match(result.license, /licensed to the person who downloads them/);
   assert.match(result.license, /terms-of-service\/#template-license/);
 });
 

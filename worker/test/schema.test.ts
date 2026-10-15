@@ -28,7 +28,7 @@ describe('the schema the deployment expects', () => {
     // The same report counts the configured admin addresses (two, from the
     // vitest config's ADMIN_EMAILS) without naming them.
     expect(body.adminEmails).toBe(2);
-    expect(body.mail).toEqual({ provider: 'dev-mail', teamInboxes: 1 });
+    expect(body.mail).toEqual({ provider: 'dev-mail' });
     expect(JSON.stringify(body)).not.toContain('example.com');
   });
 

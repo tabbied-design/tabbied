@@ -6,7 +6,11 @@ export const metadata: Metadata = { title: 'Admin - Tabbied', robots: { index: f
 
 export default function Page() {
   return (
-    <AdminPage eyebrow="Users" title="User overview" lede="Track audience growth and how many of their 5 templates customers have chosen.">
+    <AdminPage
+      eyebrow="Users"
+      title="User overview"
+      lede="Templates are free to download without an account. Accounts are only needed to save a customization."
+    >
       <OverviewPanel />
     </AdminPage>
   );
