@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
-import Link from 'next/link';
-import { CircleCheck, Eye, Palette, Plus, Search } from 'lucide-react';
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
+import { Search, X } from 'lucide-react';
 import type { PatternDefinition } from 'tabbied';
 import {
   TEMPLATE_CATEGORIES,
@@ -18,23 +17,24 @@ import {
 } from 'lib/pagination';
 import useMediaQuery from 'lib/useMediaQuery';
 import { matchesQuery, templateKeywords } from 'lib/catalogSearch';
-import Toaster from 'components/Toaster';
-import { chosenOf, customizeHref, type MyTemplatesState } from 'lib/myTemplates';
-import { useTemplateGate, type TemplateAction } from './ChooseTemplate';
-import DownloadMenu, { type DownloadMenuClasses } from './DownloadMenu';
+import { customizeHref, savedOf, savedSlugs, useSavedTemplates } from 'lib/savedTemplates';
 import LazyPattern from './LazyPattern';
 import s from './TemplatesGrid.module.css';
 
-// The template gallery's body: a search box, a row of category chips, a page
-// of the cards they filter, and the pager. The search matches what the MCP
-// server's list_templates does (lib/catalogSearch.ts), so "bakery" finds the
-// same sites on the page and over MCP. Client-side for the search, the chips
-// and the pages, and for the one thing the server cannot know, which
-// templates are the visitor's (lib/myTemplates.ts).
+// The template gallery: the hero with its search box, a row of category
+// chips, a page of the cards they filter, and the pager. The search matches
+// what the MCP server's list_templates does (lib/catalogSearch.ts), so
+// "bakery" finds the same sites on the page and over MCP. Client-side for the
+// search, the chips and the pages, and for the one thing the server cannot
+// know, which templates the visitor has saved (lib/savedTemplates.ts).
+//
+// Nothing here asks for an account: every template is free to customize and
+// download, so a card is one link, straight into the customizer (the 14
+// October designs). A template the person saved a customization of opens on
+// their newest saved site instead, and says "Saved".
 
 export type TemplateCard = {
   slug: string;
-  href: string;
   n: number;
   name: string;
   topic: string;
@@ -52,179 +52,69 @@ const MAX_SWATCHES = 4;
 /** Cards per page: a multiple of 3, 2 and 1, the grid's columns, so no row is short. */
 const PER_PAGE = 48;
 
-type Guard = (slug: string, name: string, action: TemplateAction, run: () => void) => void;
-
-/** The Download menu in this module's shape; the menu itself is DownloadMenu's. */
-const MENU: DownloadMenuClasses = {
-  trigger: s.pill,
-  caret: s.caret,
-  positioner: s.positioner,
-  menu: s.menu,
-  menuLabel: s.menuLabel,
-  menuItem: s.menuItem,
-  menuRule: s.menuRule,
-  menuNote: s.menuNote,
-};
-
-/**
- * The card's footer, in the four states the account puts it in. The zips
- * are links to the Worker's gated route, which makes the template the
- * person's on its first download; the dialog before that is the page's
- * courtesy, not the rule.
- */
-function Footer({ c, templates, guard, here }: { c: TemplateCard; templates: MyTemplatesState; guard: Guard; here: string }) {
-  const chosen = chosenOf(templates, c.slug);
-
-  if (templates.status !== 'ready') {
-    // Signed out, or not known yet: the artboard's guest footer. While the
-    // session resolves it is drawn the same, so the row never jumps. A
-    // sign-in comes back to the category and page it left from.
-    const next = encodeURIComponent(here);
-
-    return (
-      <div className={s.dl}>
-        <span className={s.formats}>
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M12 4v11" />
-            <path d="m7 10 5 5 5-5" />
-            <path d="M5 20h14" />
-          </svg>
-          HTML &#xB7; React
-        </span>
-        {templates.status === 'signed-out' ? (
-          <Link href={`/sign-in?next=${next}`} prefetch={false} className={s.pill}>
-            Sign in to use
-          </Link>
-        ) : (
-          <span className={`${s.pill} ${s.pillGhost}`} aria-hidden="true">
-            Sign in to use
-          </span>
-        )}
-      </div>
-    );
-  }
-
-  if (chosen) {
-    return (
-      <div className={s.dl}>
-        <Link href={customizeHref(c.slug, chosen)} prefetch={false} className={s.textLink}>
-          <Palette size={14} strokeWidth={1.8} aria-hidden="true" />
-          Customize
-        </Link>
-        <DownloadMenu name={c.name} chosen={chosen} side="top" classes={MENU} />
-      </div>
-    );
-  }
-
-  if (templates.left > 0) {
-    return (
-      <div className={s.dl}>
-        <a href={c.href} className={s.quietLink}>
-          <Eye size={14} strokeWidth={1.8} aria-hidden="true" />
-          Preview
-        </a>
-        <button type="button" className={`${s.pill} ${s.pillSolid}`} onClick={() => guard(c.slug, c.name, 'choose', () => {})}>
-          <Plus size={14} strokeWidth={2} aria-hidden="true" />
-          Add to my templates
-        </button>
-      </div>
-    );
-  }
-
-  return (
-    <div className={s.dl}>
-      <span className={s.quiet}>
-        <CircleCheck size={14} strokeWidth={1.8} aria-hidden="true" />
-        All {templates.total} chosen
-      </span>
-      {/* A click opens the at-limit dialog, as the artboard has it: the
-          chosen templates, where a request stands, and the way to ask. The
-          href is the account's request form, for a new tab. */}
-      <Link
-        href="/account/?request=1"
-        prefetch={false}
-        className={s.pill}
-        onClick={(event) => {
-          if (!plainClick(event)) return;
-          event.preventDefault();
-          guard(c.slug, c.name, 'choose', () => {});
-        }}
-      >
-        <Plus size={14} strokeWidth={1.8} aria-hidden="true" />
-        Request more
-      </Link>
-    </div>
-  );
-}
-
 /**
  * A card. Each carries its accent as a custom property, which tints the
  * hover, so mousing across the grid previews each site's color.
  */
-function Card({ c, templates, guard, here }: { c: TemplateCard; templates: MyTemplatesState; guard: Guard; here: string }) {
+function Card({ c, savedId }: { c: TemplateCard; savedId: string | null }) {
   const vars = { '--accent': c.colors[1] ?? c.colors[0] } as CSSProperties;
-  const mine = chosenOf(templates, c.slug) !== null;
+  const href = customizeHref(c.slug, savedId ? { id: savedId } : null);
 
   return (
-    // A <div>, not an <a>: the footer holds anchors of its own and an anchor
-    // cannot nest inside another. The card link covers everything above it.
-    <div className={s.card} style={vars}>
-      <a className={s.cardLink} href={c.href}>
-        {/* A browser's title bar, as the homepage's template rails draw it. */}
-        <span className={s.chrome} aria-hidden="true">
-          <span />
-          <span />
-          <span />
+    <a className={s.card} style={vars} href={href} aria-label={`Customize ${c.name}, ${c.topic.toLowerCase()}`}>
+      {/* A browser's title bar over the site's first screen. */}
+      <span className={s.chrome} aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </span>
+      <div className={s.thumb}>
+        {c.shot ? (
+          // The site itself, with its pattern as the accent in the corner;
+          // a template with no shot is the pattern alone
+          // (scripts/generate-template-shots.mjs).
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element -- a committed file under public/ */}
+            <img
+              className={s.shot}
+              src={c.shot}
+              alt={`Screenshot of the ${c.name} website template`}
+              loading="lazy"
+              decoding="async"
+            />
+            <span className={s.accent} aria-hidden="true">
+              <LazyPattern pattern={c.art} palette={c.colors} seed={c.seed} />
+            </span>
+          </>
+        ) : (
+          <LazyPattern pattern={c.art} palette={c.colors} seed={c.seed} />
+        )}
+        <span className={s.num}>
+          <span className={s.numN}>{String(c.n).padStart(2, '0')}</span>
+          {savedId ? (
+            <span className={s.saved}>
+              <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="m5 12 5 5L20 7" />
+              </svg>
+              Saved
+            </span>
+          ) : null}
         </span>
-        <div className={s.thumb}>
-          {c.shot ? (
-            // The site itself, with its pattern as the accent in the corner;
-            // a template with no shot is the pattern alone
-            // (scripts/generate-template-shots.mjs).
-            <>
-              {/* eslint-disable-next-line @next/next/no-img-element -- a committed file under public/ */}
-              <img
-                className={s.shot}
-                src={c.shot}
-                alt={`Screenshot of the ${c.name} website template`}
-                loading="lazy"
-                decoding="async"
-              />
-              <span className={s.accent} aria-hidden="true">
-                <LazyPattern pattern={c.art} palette={c.colors} seed={c.seed} />
-              </span>
-            </>
-          ) : (
-            <LazyPattern pattern={c.art} palette={c.colors} seed={c.seed} />
-          )}
-          <span className={s.num}>
-            <span className={s.numN}>{String(c.n).padStart(2, '0')}</span>
-            {mine ? (
-              <span className={s.yours}>
-                <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="m5 12 5 5L20 7" />
-                </svg>
-                Yours
-              </span>
-            ) : null}
-          </span>
+      </div>
+      <div className={s.body}>
+        <h3>{c.name}</h3>
+        <p>{c.topic}</p>
+        <div className={s.sw} aria-hidden="true">
+          {c.colors.slice(1, 1 + MAX_SWATCHES).map((col, i) => (
+            <span key={i} style={{ background: col }} />
+          ))}
         </div>
-        <div className={s.body}>
-          <h3>{c.name}</h3>
-          <p>{c.topic}</p>
-          <div className={s.sw} aria-hidden="true">
-            {c.colors.slice(1, 1 + MAX_SWATCHES).map((col, i) => (
-              <span key={i} style={{ background: col }} />
-            ))}
-          </div>
-        </div>
-      </a>
-      <Footer c={c} templates={templates} guard={guard} here={here} />
-    </div>
+      </div>
+    </a>
   );
 }
 
-type Filter = TemplateCategory | 'All' | 'Yours';
+type Filter = TemplateCategory | 'All' | 'Saved';
 
 /**
  * The gallery's address for a filter, a page and a search: `?category=`,
@@ -233,7 +123,7 @@ type Filter = TemplateCategory | 'All' | 'Yours';
  */
 function galleryHref(filter: Filter, page: number, query = ''): string {
   const params = new URLSearchParams();
-  if (filter !== 'All') params.set('category', filter === 'Yours' ? 'yours' : categorySlug(filter));
+  if (filter !== 'All') params.set('category', filter === 'Saved' ? 'saved' : categorySlug(filter));
   if (query.trim()) params.set('q', query.trim());
   if (page > 1) params.set('page', String(page));
   const search = params.toString();
@@ -245,7 +135,9 @@ function galleryHref(filter: Filter, page: number, query = ''): string {
 function readLocation(search: string): { filter: Filter; page: number; query: string } {
   const params = new URLSearchParams(search);
   const category = params.get('category') ?? '';
-  const filter: Filter = category === 'yours' ? 'Yours' : (categoryFromSlug(category) ?? 'All');
+  // `yours` is the address the filter had while templates were chosen.
+  const filter: Filter =
+    category === 'saved' || category === 'yours' ? 'Saved' : (categoryFromSlug(category) ?? 'All');
   const page = parseInt(params.get('page') ?? '', 10);
 
   return { filter, page: Number.isFinite(page) && page >= 1 ? page : 1, query: params.get('q') ?? '' };
@@ -255,7 +147,15 @@ function readLocation(search: string): { filter: Filter; page: number; query: st
 const plainClick = (event: MouseEvent) =>
   event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
 
-export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
+export default function TemplatesGrid({
+  cards,
+  title,
+  lede,
+}: {
+  cards: TemplateCard[];
+  title: string;
+  lede: string;
+}) {
   // The filter and page live in the URL, so a view can be shared, reloaded
   // and walked with back and forward. They are read after mount rather than
   // with useSearchParams, which would drop the prerendered grid and render
@@ -264,8 +164,7 @@ export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
   const [filter, setFilter] = useState<Filter>('All');
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState('');
-  const names = useMemo(() => Object.fromEntries(cards.map((c) => [c.slug, c.name])), [cards]);
-  const { guard, dialog, templates } = useTemplateGate(names);
+  const saved = useSavedTemplates();
 
   useEffect(() => {
     const read = () => {
@@ -299,18 +198,18 @@ export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
   const categories = TEMPLATE_CATEGORIES.filter((category) =>
     cards.some((c) => c.category === category)
   );
-  const yours = templates.status === 'ready' ? templates.chosen.length : 0;
-  // "Yours" means nothing until the account has answered, and nothing at all
+  const savedSet = savedSlugs(saved);
+  // "Saved" means nothing until the account has answered, and nothing at all
   // to a visitor who is signed out: both see All.
-  const active: Filter = filter === 'Yours' && templates.status !== 'ready' ? 'All' : filter;
+  const active: Filter = filter === 'Saved' && saved.status !== 'ready' ? 'All' : filter;
   const inFilter =
     active === 'All'
       ? cards
-      : active === 'Yours'
-        ? cards.filter((c) => chosenOf(templates, c.slug))
+      : active === 'Saved'
+        ? cards.filter((c) => savedSet.has(c.slug))
         : cards.filter((c) => c.category === active);
   const matching = query.trim() ? inFilter.filter((c) => matchesQuery(templateKeywords(c), query)) : inFilter;
-  const filters: Filter[] = templates.status === 'ready' ? ['All', 'Yours', ...categories] : ['All', ...categories];
+  const filters: Filter[] = saved.status === 'ready' ? ['All', 'Saved', ...categories] : ['All', ...categories];
 
   // A page past the end (a link from before a category shrank, or a typed
   // number) shows the last page rather than an empty grid.
@@ -318,6 +217,9 @@ export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
   const current = Math.min(page, pageCount);
   // Narrow until mounted, so the prerendered pager fits a phone.
   const widePager = useMediaQuery(PAGER_WIDE_QUERY);
+  // The design's placeholder is cut off on a phone, so a phone gets a
+  // shorter one; the export draws the long one.
+  const narrowSearch = useMediaQuery('(max-width: 559.98px)');
   const shown = matching.slice((current - 1) * PER_PAGE, current * PER_PAGE);
   const here = galleryHref(active, current, query);
 
@@ -341,95 +243,112 @@ export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
 
   return (
     <>
-      <div className={s.searchRow} ref={topRef}>
-        <label className={s.search}>
-          <Search size={15} strokeWidth={1.8} aria-hidden="true" />
-          <input
-            type="search"
-            value={query}
-            onChange={(event) => search(event.target.value)}
-            placeholder="Search templates: bakery, dentist, studio..."
-            aria-label="Search templates"
-            autoComplete="off"
-            spellCheck={false}
-          />
-        </label>
-      </div>
-      <div className={s.filterWrap}>
-        <div className={s.filters} role="group" aria-label="Filter by kind of site">
-          {filters.map((category) => (
-            <button
-              key={category}
-              type="button"
-              className={s.filter}
-              aria-pressed={active === category}
-              onClick={() => go(category, 1)}
-            >
-              {category === 'Yours' ? `Yours (${yours})` : category}
-            </button>
+      <header className={s.hero}>
+        <div className={s.heroScrim} />
+        <div className={s.heroInner}>
+          <h1>{title}</h1>
+          <p>{lede}</p>
+          <label className={s.search}>
+            <Search className={s.searchIcon} size={22} strokeWidth={1.8} aria-hidden="true" />
+            <input
+              type="search"
+              value={query}
+              onChange={(event) => search(event.target.value)}
+              placeholder={narrowSearch ? 'Search by trade, e.g. plumber' : 'Search by trade or business, e.g. plumber'}
+              aria-label="Search templates"
+              autoComplete="off"
+              spellCheck={false}
+            />
+            {query ? (
+              <button type="button" className={s.clear} onClick={() => search('')} aria-label="Clear search" title="Clear search">
+                <X size={16} strokeWidth={1.8} aria-hidden="true" />
+              </button>
+            ) : null}
+          </label>
+        </div>
+      </header>
+
+      <div className={s.wrap}>
+        <div className={s.filterWrap} ref={topRef}>
+          <div className={s.filters} role="group" aria-label="Filter by kind of site">
+            {filters.map((category) => (
+              <button
+                key={category}
+                type="button"
+                className={s.filter}
+                aria-pressed={active === category}
+                onClick={() => go(category, 1)}
+              >
+                {category === 'Saved' ? `Saved (${savedSet.size})` : category}
+              </button>
+            ))}
+          </div>
+          <div className={s.filterFade} aria-hidden="true" />
+        </div>
+
+        <div
+          ref={gridRef}
+          className={s.grid}
+          tabIndex={-1}
+          role="region"
+          aria-label={pageCount > 1 ? `Templates, page ${current} of ${pageCount}` : 'Templates'}
+        >
+          {shown.map((c) => (
+            <Card key={c.slug} c={c} savedId={savedOf(saved, c.slug)?.id ?? null} />
           ))}
         </div>
-        <div className={s.filterFade} aria-hidden="true" />
+        {matching.length === 0 && query.trim() ? (
+          <div className={s.none} role="status">
+            <p className={s.noneTitle}>
+              No templates for &quot;{query.trim()}&quot;{active === 'All' ? ' yet' : ` in ${active === 'Saved' ? 'your saved ones' : active}`}
+            </p>
+            <p>
+              Try a broader word,{' '}
+              <button type="button" className={s.clearSearch} onClick={() => search('')}>
+                clear the search
+              </button>
+              , or <a href="mailto:hello@tabbied.com">tell us which trade to add</a>.
+            </p>
+          </div>
+        ) : active === 'Saved' && matching.length === 0 ? (
+          <div className={s.none}>
+            <p>Nothing saved yet. Customize any template and press Save to keep it here.</p>
+          </div>
+        ) : null}
+
+        {/* Real links, so every page is an address a person can open in a tab
+            and a crawler can follow; a plain click stays in the page. */}
+        {pageCount > 1 ? (
+          <nav className={s.pagination} aria-label="Pages">
+            {paginationWindow(
+              current,
+              pageCount,
+              widePager ? PAGER_SLOTS : PAGER_SLOTS_NARROW
+            ).map((p, index) =>
+              p === null ? (
+                <span key={`gap-${index}`} className={s.pageGap} aria-hidden="true">
+                  ...
+                </span>
+              ) : (
+                <a
+                  key={p}
+                  href={galleryHref(active, p, query)}
+                  className={s.pageNumber}
+                  aria-label={`Page ${p}`}
+                  aria-current={p === current ? 'page' : undefined}
+                  onClick={(event) => {
+                    if (!plainClick(event)) return;
+                    event.preventDefault();
+                    goToPage(p);
+                  }}
+                >
+                  {p}
+                </a>
+              )
+            )}
+          </nav>
+        ) : null}
       </div>
-
-      <div
-        ref={gridRef}
-        className={s.grid}
-        tabIndex={-1}
-        role="region"
-        aria-label={pageCount > 1 ? `Templates, page ${current} of ${pageCount}` : 'Templates'}
-      >
-        {shown.map((c) => (
-          <Card key={c.slug} c={c} templates={templates} guard={guard} here={here} />
-        ))}
-      </div>
-      {matching.length === 0 && query.trim() ? (
-        <p className={s.none} role="status">
-          No templates match &quot;{query.trim()}&quot;
-          {active === 'All' ? '' : ` in ${active === 'Yours' ? 'yours' : active}`}.{' '}
-          <button type="button" className={s.clearSearch} onClick={() => search('')}>
-            Clear search
-          </button>
-        </p>
-      ) : active === 'Yours' && matching.length === 0 ? (
-        <p className={s.none}>No templates chosen yet. Choose one from All.</p>
-      ) : null}
-
-      {/* Real links, so every page is an address a person can open in a tab
-          and a crawler can follow; a plain click stays in the page. */}
-      {pageCount > 1 ? (
-        <nav className={s.pagination} aria-label="Pages">
-          {paginationWindow(
-            current,
-            pageCount,
-            widePager ? PAGER_SLOTS : PAGER_SLOTS_NARROW
-          ).map((p, index) =>
-            p === null ? (
-              <span key={`gap-${index}`} className={s.pageGap} aria-hidden="true">
-                ...
-              </span>
-            ) : (
-              <a
-                key={p}
-                href={galleryHref(active, p, query)}
-                className={s.pageNumber}
-                aria-label={`Page ${p}`}
-                aria-current={p === current ? 'page' : undefined}
-                onClick={(event) => {
-                  if (!plainClick(event)) return;
-                  event.preventDefault();
-                  goToPage(p);
-                }}
-              >
-                {p}
-              </a>
-            )
-          )}
-        </nav>
-      ) : null}
-
-      {dialog}
-      <Toaster />
     </>
   );
 }

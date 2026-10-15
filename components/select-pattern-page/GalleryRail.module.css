@@ -6,15 +6,15 @@
 .sidebar {
   position: fixed;
   /* Below the masthead, which is sticky at the top of the same page. */
-  top: var(--gallery-bar-h, 62px);
+  top: var(--gallery-bar-h, 80px);
   left: 0;
   z-index: 1;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   width: var(--gallery-rail-w, 300px);
-  height: calc(100vh - var(--gallery-bar-h, 62px));
-  height: calc(100dvh - var(--gallery-bar-h, 62px));
+  height: calc(100vh - var(--gallery-bar-h, 80px));
+  height: calc(100dvh - var(--gallery-bar-h, 80px));
   /* 36px, plus the rows' own 12px, puts the search, "Mixed" and every
      palette name on the masthead lockup's left edge (48px), as the artboard
      rules them; the pills' ink reaches 12px past that line, on the right

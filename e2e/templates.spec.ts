@@ -343,34 +343,33 @@ test.describe('the /templates gallery', () => {
     await page.route(/https:\/\/(use\.typekit\.net|fonts\.googleapis\.com|fonts\.gstatic\.com)\//, (route) => route.abort());
   });
 
-  test('a visitor is asked to sign in, and every card has both zips behind it', async ({ page }) => {
+  test('a visitor opens any template in the customizer, and every card has both zips behind it', async ({ page }) => {
     await page.route('**/api/auth/get-session', (route) =>
       route.fulfill({ status: 200, contentType: 'application/json', body: 'null' })
     );
     await page.goto('/templates/');
 
     const cards = page.getByRole('region', { name: /^Templates/ });
-    const asks = cards.getByRole('link', { name: 'Sign in to use' });
-    await expect(asks.first()).toHaveAttribute('href', /^\/sign-in\/?\?next=%2Ftemplates%2F$/);
-    // The zips and the customizer are behind that sign-in, not on the card.
-    await expect(page.locator('a[href^="/downloads/"]')).toHaveCount(0);
-    await expect(page.locator('a[href="/studio/customize/?slug=verdant"]')).toHaveCount(0);
+    // Nothing on a card asks for an account: the card is one link, straight
+    // into the customizer, where downloading is free.
+    await expect(page.getByText('Sign in to use')).toHaveCount(0);
+    await expect(cards.locator('a').first()).toHaveAttribute('href', /^\/studio\/customize\/\?slug=[a-z0-9-]+$/);
 
     // Every card's template has both packages: a card for a site the
-    // packager skipped would be a dead download once the template is chosen.
-    // The gallery is paged, so walk every page and gather its cards.
-    const total = Number((await page.getByRole('heading', { level: 1 }).textContent())?.match(/(\d+) sites/)?.[1]);
+    // packager skipped would be a dead download. The gallery is paged, so
+    // walk every page and gather its cards.
+    const committed = fs.readFileSync(path.join(REPO_ROOT, 'lib', 'templateOrder.ts'), 'utf-8');
+    const total = [...committed.matchAll(/^  '([^']+)',$/gm)].length;
     const pages = Number(await page.getByRole('navigation', { name: 'Pages' }).getByRole('link').last().textContent());
     const slugs = new Set<string>();
 
     for (let n = 1; n <= pages; n++) {
       if (n > 1) await page.getByRole('navigation', { name: 'Pages' }).getByRole('link', { name: `Page ${n}` }).click();
       await expect(page).toHaveURL(n === 1 ? /\/templates\/$/ : new RegExp(`\\?page=${n}$`));
-      const onPage = await cards.locator('a[href^="/templates/"][href$="/"]').evaluateAll((links) =>
-        [...new Set(links.map((link) => link.getAttribute('href')!.split('/')[2]).filter(Boolean))]
+      const onPage = await cards.locator('a').evaluateAll((links) =>
+        links.map((link) => link.getAttribute('href')!.split('slug=')[1])
       );
       expect(onPage.length).toBeLessThanOrEqual(48);
-      expect(await asks.count()).toBe(onPage.length);
       onPage.forEach((slug) => slugs.add(slug));
     }
 
@@ -390,21 +389,12 @@ test.describe('the /templates gallery', () => {
     const pager = page.getByRole('navigation', { name: 'Pages' });
     const cards = page.getByRole('region', { name: /^Templates/ });
 
-    // A deep link opens on its view, and a card's sign-in comes back to it.
-    // (No category runs past one page, so the category and the page are
-    // opened separately.)
+    // A deep link opens on its view. (No category runs past one page, so
+    // the category and the page are opened separately.)
     await page.goto('/templates/?category=shop');
     await expect(page.getByRole('button', { name: 'Shop', exact: true })).toHaveAttribute('aria-pressed', 'true');
-    await expect(cards.getByRole('link', { name: 'Sign in to use' }).first()).toHaveAttribute(
-      'href',
-      /next=%2Ftemplates%2F%3Fcategory%3Dshop$/
-    );
     await page.goto('/templates/?page=2');
     await expect(pager.getByRole('link', { name: 'Page 2' })).toHaveAttribute('aria-current', 'page');
-    await expect(cards.getByRole('link', { name: 'Sign in to use' }).first()).toHaveAttribute(
-      'href',
-      /next=%2Ftemplates%2F%3Fpage%3D2$/
-    );
 
     // A chip starts its category on page 1; a page number keeps the category.
     await page.getByRole('button', { name: 'All', exact: true }).click();
@@ -443,8 +433,8 @@ test.describe('the /templates gallery', () => {
       [...registry.matchAll(/slug: '([^']+)'.*?seed: '([a-z]+)-/g)].map((m) => [m[1], m[2]] as const)
     );
     await page.goto('/templates/');
-    const firstPage = await cards.locator('a[href^="/templates/"][href$="/"]').evaluateAll((links) =>
-      [...new Set(links.map((link) => link.getAttribute('href')!.split('/')[2]).filter(Boolean))]
+    const firstPage = await cards.locator('a').evaluateAll((links) =>
+      links.map((link) => link.getAttribute('href')!.split('slug=')[1])
     );
     // And the order is the committed one: the hand-picked lead, then the
     // spread, which only grows at the end, so a page keeps its cards when
@@ -490,54 +480,68 @@ test.describe('the /templates gallery', () => {
 
     // Nothing matching says so, with the way out.
     await search.fill('zzzz');
-    await expect(page.getByText('No templates match "zzzz" in Food & drink.')).toBeVisible();
-    await page.getByRole('button', { name: 'Clear search' }).click();
+    await expect(page.getByText('No templates for "zzzz" in Food & drink')).toBeVisible();
+    await page.getByRole('button', { name: 'clear the search' }).click();
     await expect(search).toHaveValue('');
     await expect(page).toHaveURL(/\?category=food-and-drink$/);
   });
 
-  test('a chosen template downloads a real zip, and choosing another asks first', async ({ page }) => {
-    const chosen = ['werkraum'];
-    const posted: unknown[] = [];
-
+  test('a saved template is marked and reopens its site; a zip downloads with no account', async ({ page }) => {
+    // Signed in, with one saved customization of werkraum.
     await page.route('**/api/auth/get-session', (route) =>
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(signedIn) })
     );
-    await page.route('**/api/account/templates', (route) => {
-      if (route.request().method() === 'POST') {
-        const body = route.request().postDataJSON() as { slug: string };
-        posted.push(body);
-        chosen.push(body.slug);
-        return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ slug: body.slug, chosen: true }) });
-      }
-
-      return route.fulfill({
+    await page.route('**/api/studio/sites', (route) =>
+      route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          used: chosen.length,
-          total: 5,
-          left: 5 - chosen.length,
-          chosen: chosen.map((slug) => ({ slug, chosenAt: '2026-09-01T00:00:00Z', site: null })),
-          request: null,
+          sites: [
+            {
+              id: 'site-werkraum',
+              slug: 'werkraum',
+              templateName: 'Werkraum',
+              title: 'Werkraum',
+              stance: '',
+              palette: ['#f4f1ea', '#1b1b1b'],
+              revisions: 1,
+              createdAt: '2026-09-01T00:00:00Z',
+              updatedAt: '2026-09-02T00:00:00Z',
+            },
+          ],
         }),
-      });
-    });
+      })
+    );
 
     await page.goto('/templates/');
-    await expect(page.getByRole('button', { name: /^Yours \(1\)/ })).toBeVisible();
-    await page.getByRole('button', { name: /^Yours/ }).click();
+    await expect(page.getByRole('button', { name: /^Saved \(1\)/ })).toBeVisible();
+    await page.getByRole('button', { name: /^Saved/ }).click();
+    await expect(page).toHaveURL(/\?category=saved$/);
 
-    const card = page.locator('a[href="/templates/werkraum/"]').locator('..');
-    await expect(card.getByText('Yours', { exact: true })).toBeVisible();
-    await expect(card.getByRole('link', { name: /Customize/ })).toHaveAttribute('href', '/studio/customize/?slug=werkraum');
+    const card = page.getByRole('region', { name: /^Templates/ }).locator('a');
+    await expect(card).toHaveCount(1);
+    await expect(card.getByText('Saved', { exact: true })).toBeVisible();
+    await expect(card).toHaveAttribute('href', '/studio/site/?id=site-werkraum');
+
+    // Signed out, the preview's one menu says no account is needed and
+    // hands over both zips.
+    await page.unroute('**/api/auth/get-session');
+    await page.route('**/api/auth/get-session', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: 'null' })
+    );
+    await page.goto('/templates/werkraum/');
 
     for (const [label, format] of [
-      ['HTML & CSS', 'html'],
+      ['Static HTML & CSS', 'html'],
       ['React project', 'react'],
     ] as const) {
-      await card.getByRole('button', { name: /Download/ }).click();
-      const item = page.getByRole('menuitem', { name: label });
+      await page.getByRole('button', { name: 'Use this template' }).click();
+      await expect(page.getByText('Free to customize and download. No account needed.')).toBeVisible();
+      await expect(page.getByRole('menuitem', { name: /Customize/ })).toHaveAttribute(
+        'href',
+        '/studio/customize/?slug=werkraum'
+      );
+      const item = page.getByRole('menuitem', { name: new RegExp(`^${label}`) });
       await expect(item).toHaveAttribute('href', `/downloads/werkraum-${format}.zip`);
       const download = page.waitForEvent('download');
       await item.click();
@@ -557,20 +561,6 @@ test.describe('the /templates gallery', () => {
       expect(roots.size).toBe(1);
       expect(names).toContain(`${[...roots][0]}/index.html`);
     }
-
-    // Another template: Add to my templates asks, and only the confirm spends one.
-    await page.getByRole('button', { name: 'All', exact: true }).click();
-    await page.getByRole('button', { name: 'Add to my templates' }).first().click();
-    const dialog = page.getByRole('dialog');
-    await expect(dialog.getByText('1 of 5 templates chosen')).toBeVisible();
-    await expect(dialog.getByRole('heading', { name: /as one of your templates\?$/ })).toBeVisible();
-    await dialog.getByRole('button', { name: 'Cancel' }).click();
-    expect(posted).toEqual([]);
-
-    await page.getByRole('button', { name: 'Add to my templates' }).first().click();
-    await page.getByRole('dialog').getByRole('button', { name: 'Add to my templates' }).click();
-    await expect(page.getByRole('button', { name: /^Yours \(2\)/ })).toBeVisible();
-    expect(posted).toHaveLength(1);
   });
 
   test('the React package is a runnable Vite app', async () => {

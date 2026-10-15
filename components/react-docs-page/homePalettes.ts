@@ -1,13 +1,12 @@
-// The homepage's four palettes (components/main-page/homeMotion.ts), as
-// palettes a pattern can take: a ground first, then the pool the homepage's
-// skyline and pattern demo draw from, cut or cycled to the design's own color
-// bounds. The docs draw their decoration and their sizing diagrams in these,
+// The four palettes of the 2026 homepage (components/main-page/homeMotion.ts),
+// as palettes a pattern can take: a ground first, then the pool, cut or
+// cycled to the design's own color bounds. The docs draw their decoration and their sizing diagrams in these,
 // so they read as a part of the same site.
 import type { PatternDefinition } from 'tabbied';
 import { PALETTE_POOLS, type PaletteName } from 'components/main-page/homeMotion';
 import { fitToColorBounds } from 'lib/randomPalettes';
 
-/** `--h-bg`, the homepage's ground. */
+/** `--h-bg`, the dark shell's ground. */
 export const HOME_GROUND = '#0e0e13';
 
 /** The pool's near-white, the dark shell's own ink: on the docs' white paper it draws nothing. */

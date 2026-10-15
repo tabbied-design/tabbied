@@ -1,0 +1,35 @@
+/* The browser bar of a mockup. Its defaults are the large mockups' (the hero's
+   front window and the carousel's); a smaller window overrides the
+   properties, never the rules. */
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--mb-gap, 0.8cqw);
+  padding: var(--mb-pad, 1.3cqw 1.6cqw);
+  background-color: var(--mb-bg, oklch(0.975 0.004 270));
+  border-bottom: var(--mb-rule, 1px solid oklch(0 0 0 / 0.07));
+}
+
+.dot {
+  flex: none;
+  width: var(--mb-dot, 1cqw);
+  height: var(--mb-dot, 1cqw);
+  border-radius: 50%;
+  background-color: oklch(0.82 0.01 270);
+}
+
+.address {
+  margin: 0 auto;
+  padding: var(--mb-address-pad, 0.4cqw 2.6cqw);
+  border-radius: 99px;
+  background-color: #ffffff;
+  font: 400 var(--mb-address-size, 1.1cqw) var(--hp-mono);
+  color: oklch(0.5 0.01 270);
+  white-space: nowrap;
+}
+
+.spacer {
+  flex: none;
+  width: var(--mb-spacer, 3.8cqw);
+}

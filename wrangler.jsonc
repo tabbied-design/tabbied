@@ -98,8 +98,8 @@
   },
 
   // Secrets (never in this file): AI_API_KEY, BETTER_AUTH_SECRET, RESEND_API_KEY,
-  // GITHUB_/GOOGLE_/APPLE_CLIENT_ID and _SECRET, and the settings ADMIN_EMAILS,
-  // MAIL_FROM and TEAM_EMAIL (docs/email.md). Those three are Secrets too: a
+  // GITHUB_/GOOGLE_/APPLE_CLIENT_ID and _SECRET, and the settings ADMIN_EMAILS
+  // and MAIL_FROM (docs/email.md). Those two are Secrets too: a
   // Text variable added in the dashboard is replaced by this file's `vars` on
   // the next deploy. Locally they live in .dev.vars (gitignored); in
   // production, `wrangler secret put <NAME>`.

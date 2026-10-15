@@ -24,8 +24,8 @@ export default function AuthShell({
   return (
     <div className={[styles.shell, className].filter(Boolean).join(' ')}>
       <header className={styles.bar}>
-        {/* The fallback holds the circle's place, so the bar does not reflow
-            when the link arrives. */}
+        {/* The fallback holds the link's place, so the bar does not reflow
+            when it arrives. */}
         <Suspense fallback={<span className={styles.back} aria-hidden="true" />}>
           <AuthBackLink />
         </Suspense>

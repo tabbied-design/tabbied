@@ -136,7 +136,8 @@ describe('acting on accounts', () => {
     await env.DB.prepare('INSERT INTO upload (id, user_id, key, content_type, bytes) VALUES (?, ?, ?, ?, ?)')
       .bind('upload-leaving', id, key, 'image/png', 3)
       .run();
-    await env.DB.prepare('INSERT INTO template_choice (id, user_id, slug) VALUES (?, ?, ?)').bind('choice-leaving', id, 'verdant').run();
+    await env.DB.prepare('INSERT INTO download (id, user_id, slug, format) VALUES (?, ?, ?, ?)').bind('download-leaving', id, 'verdant', 'html').run();
+    await env.DB.prepare('INSERT INTO event (id, kind, slug, user_id) VALUES (?, ?, ?, ?)').bind('event-leaving', 'gate-save', 'verdant', id).run();
 
     expect((await call(`users/${adminId}`, { method: 'DELETE' })).status).toBe(400);
 
@@ -155,7 +156,9 @@ describe('acting on accounts', () => {
     expect(await count('session')).toBe(0);
     expect(await count('account')).toBe(0);
     expect(await count('upload')).toBe(0);
-    expect(await count('template_choice')).toBe(0);
+    expect(await count('download')).toBe(0);
+    // Product events outlive the account, as a count with no name on it.
+    expect(await env.DB.prepare('SELECT user_id AS userId FROM event WHERE id = ?').bind('event-leaving').first()).toEqual({ userId: null });
     // The bytes do not, and went anyway.
     expect(await env.MEDIA.get(key)).toBeNull();
 
@@ -205,11 +208,8 @@ describe('acting on accounts', () => {
     };
     expect(preview.provider).toBe('dev-mail');
     expect(preview.to).toBe('keeper@example.com');
-    expect(preview.emails.map((email) => email.key)).toEqual(['verify', 'reset', 'approval', 'request', 'granted', 'added', 'declined']);
-    const approval = preview.emails.find((email) => email.key === 'approval')!;
-    expect(approval.subject).toBe('Your 5 extra templates are ready');
-    expect(approval.html).toContain('PREVIEW-ONLY');
-    // The two better-auth mails are designed too, and carry the link twice:
+    expect(preview.emails.map((email) => email.key)).toEqual(['verify', 'reset']);
+    // The two better-auth mails are designed, and carry the link twice:
     // on the button and written out for a client that will not follow it.
     for (const key of ['verify', 'reset']) {
       const html = preview.emails.find((email) => email.key === key)!.html!;
@@ -227,76 +227,92 @@ describe('acting on accounts', () => {
     expect((await call('emails/test', { method: 'POST', body: JSON.stringify({ key: 'nope' }) })).status).toBe(400);
   });
 
-  it("takes chosen templates back, with the sites made on them, and adds to a person's limit", async () => {
-    const cookie = await signIn('chooser@example.com');
-    const { id } = (await env.DB.prepare('SELECT id FROM user WHERE email = ?').bind('chooser@example.com').first<{ id: string }>())!;
-    for (const slug of ['verdant', 'solstice', 'cobalt-works']) {
-      await env.DB.prepare('INSERT INTO template_choice (id, user_id, slug) VALUES (?, ?, ?)').bind(`choice-${slug}`, id, slug).run();
+  it('counts downloads, customizer sessions, accounts from a save and saved templates', async () => {
+    type Overview = Record<string, number>;
+    const overview = async () => (await call('overview').then((r) => r.json())) as Overview;
+    const before = await overview();
+
+    // The allowance's figures are gone with it.
+    for (const field of ['templatesChosen', 'averageChosen', 'freeTemplates', 'pendingRequests']) {
+      expect(before, field).not.toHaveProperty(field);
     }
-    // A customized site on verdant, with a revision and a picture.
+
+    const cookie = await signIn('saver@example.com');
+    const { id } = (await env.DB.prepare('SELECT id FROM user WHERE email = ?').bind('saver@example.com').first<{ id: string }>())!;
+    const take = async (headers: Record<string, string> = {}) => {
+      const response = await SELF.fetch(`${ORIGIN}/downloads/verdant-html.zip`, { headers });
+      expect(response.status).toBe(200);
+      await response.arrayBuffer();
+    };
+    const send = (kind: string, headers: Record<string, string> = {}) =>
+      SELF.fetch(`${ORIGIN}/api/events`, { method: 'POST', headers: { ...json, ...headers }, body: JSON.stringify({ kind, slug: 'verdant' }) });
+
+    // Two zips with no account and one signed in; one older than the window.
+    await take();
+    await take();
+    await take({ cookie });
+    await env.DB.prepare('INSERT INTO download (id, user_id, slug, format, created_at) VALUES (?, ?, ?, ?, unixepoch() - 40 * 86400)')
+      .bind('download-old', null, 'verdant', 'react')
+      .run();
+
+    // Three customizer sessions, a Save that asked for an account, and the
+    // account it made saving twice: one account from a save, not two.
+    for (let n = 0; n < 3; n++) expect((await send('customize')).status).toBe(204);
+    expect((await send('save-gate')).status).toBe(204);
+    expect((await send('gate-save', { cookie })).status).toBe(204);
+    expect((await send('gate-save', { cookie })).status).toBe(204);
+
     await env.DB.prepare('INSERT INTO site (id, user_id, slug, title, spec_version, template_hash) VALUES (?, ?, ?, ?, ?, ?)')
-      .bind('site-verdant', id, 'verdant', 'Pat Plants', 1, 'hash')
+      .bind('site-saver', id, 'verdant', 'Pat Plants', 1, 'hash')
       .run();
-    await env.DB.prepare('INSERT INTO revision (id, site_id, n, edits, source, model) VALUES (?, ?, ?, ?, ?, ?)')
-      .bind('rev-verdant', 'site-verdant', 1, '{}', 'manual', 'none')
-      .run();
-    const picture = 'gen/site/site-verdant/1/hero.webp';
-    await env.MEDIA.put(picture, new Uint8Array([1]));
 
-    const remove = (body: unknown) => call(`users/${id}/templates/remove`, { method: 'POST', body: JSON.stringify(body) });
+    const after = await overview();
+    const moved = (field: string) => after[field] - before[field];
+    expect({
+      downloads30d: moved('downloads30d'),
+      anonymousDownloads30d: moved('anonymousDownloads30d'),
+      customizerSessions30d: moved('customizerSessions30d'),
+      saveGates30d: moved('saveGates30d'),
+      newAccounts30d: moved('newAccounts30d'),
+      newAccountsFromSave30d: moved('newAccountsFromSave30d'),
+      savedTemplates: moved('savedTemplates'),
+    }).toEqual({
+      downloads30d: 3,
+      anonymousDownloads30d: 2,
+      customizerSessions30d: 3,
+      saveGates30d: 1,
+      newAccounts30d: 1,
+      newAccountsFromSave30d: 1,
+      savedTemplates: 1,
+    });
 
-    // One template: its choice, its site, the site's revision and picture go; the rest stay.
-    const one = (await remove({ slugs: ['verdant', 'never-chosen'] }).then((r) => r.json())) as {
-      removed: string[];
-      sitesDeleted: number;
-      used: number;
+    // The directory and the person's page read the same rows.
+    const listed = (await call('users?q=saver').then((r) => r.json())) as {
+      users: { email: string; plan: string; sites: number; downloads: number }[];
     };
-    expect(one).toMatchObject({ removed: ['verdant'], sitesDeleted: 1, used: 2 });
-    expect(await env.DB.prepare('SELECT id FROM site WHERE id = ?').bind('site-verdant').first()).toBeNull();
-    expect(await env.DB.prepare('SELECT id FROM revision WHERE id = ?').bind('rev-verdant').first()).toBeNull();
-    expect(await env.MEDIA.get(picture)).toBeNull();
+    expect(listed.users).toEqual([expect.objectContaining({ email: 'saver@example.com', plan: 'free', sites: 1, downloads: 1 })]);
+    expect(listed.users[0]).not.toHaveProperty('chosen');
+    expect(listed.users[0]).not.toHaveProperty('allowance');
 
-    // Reset: every other one.
-    const all = (await remove({ all: true }).then((r) => r.json())) as { removed: string[]; used: number };
-    expect(all.removed.sort()).toEqual(['cobalt-works', 'solstice']);
-    expect(all.used).toBe(0);
-    expect((await remove({})).status).toBe(400);
+    const detail = (await call(`users/${id}`).then((r) => r.json())) as { sites: { id: string }[]; downloads: number };
+    expect(detail.sites.map((row) => row.id)).toEqual(['site-saver']);
+    expect(detail.downloads).toBe(1);
+    expect(detail).not.toHaveProperty('templates');
 
-    // Setting the limit: counted everywhere the allowance is read, mailed only on a raise.
-    const setLimit = (body: unknown) => call(`users/${id}/grants`, { method: 'POST', body: JSON.stringify(body) });
-    expect((await setLimit({ limit: 4 })).status).toBe(400);
-    expect((await setLimit({ limit: 26 })).status).toBe(400);
-    const raise = (await setLimit({ limit: 8, note: 'Workshop attendee', notify: true }).then((r) => r.json())) as {
-      grant: { id: string; granted: number };
-      total: number;
-      mailed: boolean;
-    };
-    expect(raise).toMatchObject({ grant: { granted: 3 }, total: 8, mailed: true });
-    const mail = await env.DB.prepare('SELECT subject, body FROM dev_mail WHERE email = ?').bind('chooser@example.com').first<{ subject: string; body: string }>();
-    expect(mail?.subject).toBe('You have more Tabbied templates');
-    expect(mail?.body).toContain("We've added 3 templates");
-    expect(mail?.body).toContain('choose 8 in all');
-    expect((await setLimit({ limit: 8 })).status).toBe(400);
+    // What served the allowance answers like any route that never existed.
+    for (const [method, path] of [
+      ['GET', 'requests'],
+      ['POST', 'requests/some-request'],
+      ['POST', `users/${id}/grants`],
+      ['DELETE', `users/${id}/grants/some-grant`],
+      ['POST', `users/${id}/templates/remove`],
+    ]) {
+      const response = await call(path, { method, ...(method === 'POST' ? { body: '{}' } : {}) });
+      expect(response.status, `${method} ${path}`).toBe(404);
+    }
 
-    // The person's own page reads the same allowance.
-    const theirs = (await SELF.fetch(`${ORIGIN}/api/account/templates`, { headers: { cookie } }).then((r) => r.json())) as { total: number };
-    expect(theirs.total).toBe(8);
-    const detail = (await call(`users/${id}`).then((r) => r.json())) as {
-      templates: { total: number; grants: { granted: number; note: string; grantedBy: string | null }[] };
-    };
-    expect(detail.templates.grants).toEqual([expect.objectContaining({ granted: 3, note: 'Workshop attendee', grantedBy: 'keeper@example.com' })]);
-
-    // A quiet raise sends nothing; a decrease is never mailed, whatever the box says.
-    expect(await setLimit({ limit: 10, notify: false }).then((r) => r.json())).toMatchObject({ total: 10, mailed: null });
-    await env.DB.prepare('DELETE FROM dev_mail WHERE email = ?').bind('chooser@example.com').run();
-    expect(await setLimit({ limit: 5, notify: true }).then((r) => r.json())).toMatchObject({ grant: { granted: -5 }, total: 5, mailed: null });
-    expect(await env.DB.prepare('SELECT email FROM dev_mail WHERE email = ?').bind('chooser@example.com').first()).toBeNull();
-
-    // Never under five: taking back the first raise leaves the sum at 2, the limit at 5.
-    expect(await call(`users/${id}/grants/${raise.grant.id}`, { method: 'DELETE' }).then((r) => r.json())).toMatchObject({ total: 5 });
-    // And a limit set from there is exactly the one asked for.
-    expect(await setLimit({ limit: 6, notify: false }).then((r) => r.json())).toMatchObject({ total: 6 });
-    expect((await call(`users/${id}/grants/${raise.grant.id}`, { method: 'DELETE' })).status).toBe(404);
+    const quotas = (await call('quotas').then((r) => r.json())) as { caps: Record<string, unknown> };
+    expect(quotas.caps).not.toHaveProperty('template-choice');
   });
 
   it('lets an admin see the site as a member, and come back', async () => {

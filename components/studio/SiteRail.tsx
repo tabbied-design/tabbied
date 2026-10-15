@@ -105,6 +105,7 @@ export default function SiteRail({
 }) {
   const [tab, setTab] = useState<RailTab>('colors');
   const [name, setName] = useState(title);
+  const [renaming, setRenaming] = useState(false);
   /** The row whose pencil was pressed, or null when the dialog is shut. */
   const [editing, setEditing] = useState<string | null>(null);
   /** The pattern field whose pencil was pressed, or null when the picker is shut. */
@@ -150,37 +151,44 @@ export default function SiteRail({
 
   return (
     <aside className={styles.rail} aria-label="Customize this site">
+      {/* The site's name is the rail's heading, wrapping as long as it has
+          to; its pencil turns it into the field that renames the site. */}
       <div className={styles.nameBlock}>
-        <label className={styles.nameLabel} htmlFor="site-name">
-          Your site name
-        </label>
-        <div className={styles.nameField}>
-          <input
-            id="site-name"
-            className={styles.nameInput}
-            value={name}
-            placeholder="Untitled site"
-            maxLength={80}
-            onChange={(event) => setName(event.target.value)}
-            onBlur={commitName}
-            onKeyDown={onNameKey}
-          />
-          <svg
-            className={styles.namePencil}
-            viewBox="0 0 24 24"
-            width="14"
-            height="14"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.7"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M12 20h9" />
-            <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
-          </svg>
-        </div>
+        {renaming ? (
+          <>
+            <label className={styles.nameLabel} htmlFor="site-name">
+              Site name
+            </label>
+            <input
+              id="site-name"
+              className={styles.nameInput}
+              value={name}
+              placeholder="Untitled site"
+              maxLength={80}
+              autoFocus
+              onFocus={(event) => event.currentTarget.select()}
+              onChange={(event) => setName(event.target.value)}
+              onBlur={() => {
+                commitName();
+                setRenaming(false);
+              }}
+              onKeyDown={onNameKey}
+            />
+          </>
+        ) : (
+          <h1 className={styles.name}>
+            {title}
+            <button
+              type="button"
+              className={styles.namePencil}
+              title="Rename this site"
+              aria-label="Rename this site"
+              onClick={() => setRenaming(true)}
+            >
+              <Pencil size={14} aria-hidden="true" />
+            </button>
+          </h1>
+        )}
       </div>
 
       <div className={styles.tabs} role="tablist" aria-label="What to change">

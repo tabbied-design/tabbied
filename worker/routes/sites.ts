@@ -45,7 +45,6 @@ import { deletePrefix } from '../lib/media';
 import { ensurePalette } from '../lib/palette';
 import { checkQuota, recordUsage } from '../lib/quota';
 import { consume } from '../lib/ratelimit';
-import { claimTemplate, limitMessage, releaseTemplate, templateStatus } from '../lib/templates';
 import { requireUser } from '../lib/session';
 import { loadStudioIndex } from '../lib/studioIndex';
 import {
@@ -341,57 +340,36 @@ sites.post('/', async (c) => {
       return c.json(refused.body, refused.status);
     }
 
-    // Saving makes the template one of the person's, the same claim a first
-    // download makes (lib/templates.ts). One already theirs saves freely.
-    const claim = await claimTemplate(db, userId, slug);
-
-    if (!claim.ok) {
-      const status = await templateStatus(db, userId);
-
-      return c.json({ error: limitMessage(status.total), used: status.used, total: status.total }, 403);
-    }
-
     const id = newId();
     const now = new Date();
 
-    // One batch, so a site cannot exist without its first revision. A claim
-    // this request made is given back if the write fails, so a D1 error does
-    // not spend one of the five on a site never saved.
-    try {
-      await db.batch([
-        db.insert(site).values({
-          id,
-          userId,
-          generationId: null,
-          directionIndex: null,
-          slug,
-          title: title ?? entry.name,
-          specVersion: spec.specVersion,
-          templateHash,
-          createdAt: now,
-          updatedAt: now,
-        }),
-        db.insert(revision).values({
-          id: newId(),
-          siteId: id,
-          n: 1,
-          edits: JSON.stringify(edits),
-          instruction: null,
-          source: 'manual',
-          model: 'none',
-          responseId: null,
-          createdAt: now,
-        }),
-      ]);
-    } catch (error) {
-      if (claim.id) {
-        await releaseTemplate(db, claim.id).catch((cause) =>
-          console.error('[templates] could not give back the claim after a failed save', cause)
-        );
-      }
-
-      throw error;
-    }
+    // One batch, so a site cannot exist without its first revision. There is
+    // no count to check first: an account may save as many as it likes.
+    await db.batch([
+      db.insert(site).values({
+        id,
+        userId,
+        generationId: null,
+        directionIndex: null,
+        slug,
+        title: title ?? entry.name,
+        specVersion: spec.specVersion,
+        templateHash,
+        createdAt: now,
+        updatedAt: now,
+      }),
+      db.insert(revision).values({
+        id: newId(),
+        siteId: id,
+        n: 1,
+        edits: JSON.stringify(edits),
+        instruction: null,
+        source: 'manual',
+        model: 'none',
+        responseId: null,
+        createdAt: now,
+      }),
+    ]);
 
     return c.json({ id, source: 'template', revision: 1, title: title ?? entry.name });
   }

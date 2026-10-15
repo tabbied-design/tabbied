@@ -1,0 +1,143 @@
+/* "For developers": the one dark band below the hero. The pitch on the
+   left, a code card on the right with the code's own output under it;
+   stacked below 1000px. */
+
+.section {
+  --lede-color: oklch(0.8 0.01 270);
+  /* On this ground the page's teal hover and blue focus ring all but
+     vanish; the card's mint and plain white take their places. */
+  --hp-link-hover: #3fffb2;
+  --hp-focus: #ffffff;
+
+  padding: 112px var(--hp-pad);
+  background-color: #0e0e13;
+  color: #f4f5f9;
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 72px;
+  align-items: center;
+  max-width: 1184px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  font: 500 12px var(--hp-mono-medium);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #3fffb2;
+}
+
+.title {
+  --title-size: 48px;
+
+  margin-top: 18px;
+}
+
+.lede {
+  margin-top: 18px;
+}
+
+.more {
+  margin-top: 32px;
+}
+
+/* -- The code card ---------------------------------------------------------- */
+
+.card {
+  overflow: hidden;
+  border-radius: 16px;
+  background-color: #17171f;
+  box-shadow: 0 0 0 1px oklch(1 0 0 / 0.08);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid oklch(1 0 0 / 0.08);
+  font: 400 13px var(--hp-mono);
+  color: oklch(0.72 0.01 270);
+}
+
+.copy {
+  margin: -6px -8px;
+  padding: 6px 8px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  font: 400 12px var(--hp-mono);
+  color: oklch(0.6 0.01 270);
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+
+.copy:hover {
+  color: #f4f5f9;
+}
+
+.copy:focus-visible {
+  outline: 2px solid var(--hp-focus);
+}
+
+.code {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 20px;
+  padding: 22px 24px;
+  overflow-x: auto;
+  font: 400 15px / 1.9 var(--hp-mono);
+}
+
+.lines {
+  color: oklch(0.45 0.01 270);
+  text-align: right;
+  user-select: none;
+}
+
+.source {
+  margin: 0;
+  font: inherit;
+  color: #e6e7ee;
+  white-space: pre;
+}
+
+.keyword {
+  color: rgb(185, 138, 255);
+}
+
+.string {
+  color: #3fffb2;
+}
+
+.tag {
+  color: #3eecff;
+}
+
+.comment {
+  color: oklch(0.6 0.01 270);
+}
+
+/* The sample's output, drawn live (DevelopersLive.tsx). Its height is the
+   sample's own `height`, which the pattern sets on itself. */
+.strip {
+  overflow: hidden;
+  border-top: 1px solid oklch(1 0 0 / 0.08);
+  min-height: 120px;
+}
+
+@media (max-width: 1000px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .copy {
+    transition: none;
+  }
+}

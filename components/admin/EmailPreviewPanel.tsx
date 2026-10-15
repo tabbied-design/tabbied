@@ -122,7 +122,7 @@ function SendTest({ preview }: { preview: Preview }) {
           <>No RESEND_API_KEY in this environment, so a test copy is written to the dev_mail table in D1 instead of sent.</>
         ) : (
           <>
-            Sent only to your own address, {preview.to}, with a sample link that confirms, resets and grants nothing.
+            Sent only to your own address, {preview.to}, with a sample link that confirms and resets nothing.
           </>
         )}
       </p>

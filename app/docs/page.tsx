@@ -134,7 +134,7 @@ npx tabbied render radius --seed k9Pz --size 1600x900 --out hero.svg`;
 
 // The page's decoration, every piece of it Tabbied: a banner under the
 // heading, a band between sections and a strip of six tiles before the last,
-// each a different design in one of the homepage's four palettes on the
+// each a different design in one of the docs' four palettes on the
 // page's own white, so the page is drawn by the package it documents. Each
 // runs the window's full width. Decorative (aria-hidden), built as each
 // nears the viewport; the strip's tiles are also links to their designs in

@@ -2,40 +2,33 @@
 
 // A template in a frame, with one thing to do with it: use it.
 //
-// "Use this template" is the only action. Signed in, it opens a menu headed
-// by the count of chosen templates and what taking this one costs, then
-// Customize (not on a phone, where the customizer's rail is not offered) and
-// the two original downloads. A template that is not yet the person's asks
-// first (ChooseTemplate.tsx). Signed out, the same button opens a card that
-// asks for a sign-in, with the customizer as the way back.
+// "Use this template" is the only action, and the same for everyone, since
+// nothing about a template needs an account: a menu headed by that promise,
+// then Customize (not on a phone, where the customizer's rail is not offered)
+// and the two original downloads. For a signed-in person who saved a
+// customization of this template, Customize opens their newest saved site.
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Menu } from '@base-ui/react/menu';
-import { Popover } from '@base-ui/react/popover';
 import { ArrowUpRight, ChevronDown } from 'lucide-react';
 import LogoMark from 'components/logo/LogoMark';
 import { initials } from 'components/nav';
 import ImpersonationNotice from 'components/nav/ImpersonationNotice';
-import Toaster from 'components/Toaster';
 import { signOut, useSessionUser } from 'lib/authClient';
 import { stopImpersonating } from 'lib/impersonation';
 import { ebGaramond, plexMono, plexSans } from 'lib/fonts';
-import { chosenOf, customizeHref as customizerFor, startDownload } from 'lib/myTemplates';
+import { customizeHref as customizerFor, savedOf, useSavedTemplates } from 'lib/savedTemplates';
 import useMediaQuery from 'lib/useMediaQuery';
 import { withArticle } from 'lib/article';
-import { TemplateUsage, choiceNote, useTemplateGate } from './ChooseTemplate';
 import styles from './TemplatePreview.module.css';
 
 export default function TemplatePreview({
   slug,
   name,
   topic,
-  names,
 }: {
   slug: string;
   name: string;
-  /** Every template's name by slug, for the choose dialog's list. */
-  names: Readonly<Record<string, string>>;
   /** Names the page and the frame for a screen reader, which the URL in the
       bar does not. */
   topic: string;
@@ -45,10 +38,8 @@ export default function TemplatePreview({
   // The width SiteWorkspace.module.css hides the customizer's rail below.
   const narrow = useMediaQuery('(max-width: 768px)');
 
-  const { guard, dialog, templates } = useTemplateGate(names);
-  const chosen = chosenOf(templates, slug);
-  const customizeHref = customizerFor(slug, chosen);
-  const next = encodeURIComponent(`/studio/customize/?slug=${slug}`);
+  const saved = useSavedTemplates();
+  const customizeHref = customizerFor(slug, savedOf(saved, slug));
 
   const useLabel = (
     <>
@@ -75,88 +66,43 @@ export default function TemplatePreview({
         </Link>
 
         <div className={styles.actions}>
-          {user ? (
-            <Menu.Root>
-              <Menu.Trigger className={styles.use}>{useLabel}</Menu.Trigger>
-              <Menu.Portal>
-                <Menu.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>
-                  <Menu.Popup className={`${styles.menu} ${styles.useMenu}`}>
-                    <div className={styles.usage}>
-                      <TemplateUsage templates={templates} tone="menu" />
-                      <p className={styles.usageNote}>{choiceNote(templates, slug, name)}</p>
-                    </div>
-                    {/* The header closes with a rule of its own, so the one
-                        under Customize goes with it on a phone. */}
-                    {narrow ? null : (
-                      <>
-                        <Menu.Item
-                          className={styles.option}
-                          render={<Link href={customizeHref} prefetch={false} />}
-                          onClick={(event) => {
-                            if (chosen) return;
-                            event.preventDefault();
-                            guard(slug, name, 'customize', () => router.push(customizeHref));
-                          }}
-                        >
-                          <span className={styles.optionTitle}>Customize</span>
-                          <span className={styles.optionNote}>Change colors and patterns</span>
-                        </Menu.Item>
-                        <Menu.Separator className={styles.menuRule} />
-                      </>
-                    )}
-                    <div className={styles.menuLabel}>Download original</div>
-                    {(
-                      [
-                        ['html', 'Static HTML & CSS', 'Drop on any host'],
-                        ['react', 'React project', 'Components, ready for a repo'],
-                      ] as const
-                    ).map(([format, title, note]) => {
-                      const href = `/downloads/${slug}-${format}.zip`;
-
-                      return (
-                        <Menu.Item
-                          key={format}
-                          className={styles.option}
-                          render={<a href={href} download />}
-                          onClick={(event) => {
-                            if (chosen) return;
-                            event.preventDefault();
-                            guard(slug, name, 'download', () => startDownload(href));
-                          }}
-                        >
-                          <span className={styles.optionTitle}>{title}</span>
-                          <span className={styles.optionNote}>{note}</span>
-                        </Menu.Item>
-                      );
-                    })}
-                  </Menu.Popup>
-                </Menu.Positioner>
-              </Menu.Portal>
-            </Menu.Root>
-          ) : (
-            <Popover.Root>
-              <Popover.Trigger className={styles.use}>{useLabel}</Popover.Trigger>
-              <Popover.Portal>
-                <Popover.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>
-                  <Popover.Popup className={styles.signCard} aria-label="Sign in to use this template">
-                    <Popover.Title className={styles.signTitle}>Sign in to use this template</Popover.Title>
-                    <Popover.Description className={styles.signCopy}>
-                      Customize it online, download it as-is, or export it as a React project.
-                    </Popover.Description>
-                    <div className={styles.signActions}>
-                      <Link href={`/sign-in?next=${next}`} prefetch={false} className={styles.signIn}>
-                        Log in
-                      </Link>
-                      <Link href={`/sign-up?next=${next}`} prefetch={false} className={styles.signUp}>
-                        Sign up
-                      </Link>
-                    </div>
-                    <p className={styles.signFree}>Free to use.</p>
-                  </Popover.Popup>
-                </Popover.Positioner>
-              </Popover.Portal>
-            </Popover.Root>
-          )}
+          <Menu.Root>
+            <Menu.Trigger className={styles.use}>{useLabel}</Menu.Trigger>
+            <Menu.Portal>
+              <Menu.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>
+                <Menu.Popup className={`${styles.menu} ${styles.useMenu}`}>
+                  <p className={styles.usageNote}>Free to customize and download. No account needed.</p>
+                  {/* The note closes with a rule of its own, so the one under
+                      Customize goes with it on a phone. */}
+                  {narrow ? null : (
+                    <>
+                      <Menu.Item className={styles.option} render={<Link href={customizeHref} prefetch={false} />}>
+                        <span className={styles.optionTitle}>Customize</span>
+                        <span className={styles.optionNote}>Change colors and patterns</span>
+                      </Menu.Item>
+                      <Menu.Separator className={styles.menuRule} />
+                    </>
+                  )}
+                  <div className={styles.menuLabel}>Download original</div>
+                  {(
+                    [
+                      ['html', 'Static HTML & CSS', 'Drop on any host'],
+                      ['react', 'React project', 'Components, ready for a repo'],
+                    ] as const
+                  ).map(([format, title, note]) => (
+                    <Menu.Item
+                      key={format}
+                      className={styles.option}
+                      render={<a href={`/downloads/${slug}-${format}.zip`} download />}
+                    >
+                      <span className={styles.optionTitle}>{title}</span>
+                      <span className={styles.optionNote}>{note}</span>
+                    </Menu.Item>
+                  ))}
+                </Menu.Popup>
+              </Menu.Positioner>
+            </Menu.Portal>
+          </Menu.Root>
 
           {user ? (
             <Menu.Root>
@@ -181,7 +127,7 @@ export default function TemplatePreview({
                       Patterns
                     </Menu.Item>
                     <Menu.Item className={styles.menuItem} render={<Link href="/templates/" prefetch={false} />}>
-                      Websites
+                      Website templates
                     </Menu.Item>
                     <Menu.Item className={styles.menuItem} render={<Link href="/account/settings/" prefetch={false} />}>
                       Settings
@@ -199,7 +145,7 @@ export default function TemplatePreview({
                         router.push('/');
                       }}
                     >
-                      {impersonating ? 'Stop impersonating' : 'Sign out'}
+                      {impersonating ? 'Stop impersonating' : 'Log out'}
                     </Menu.Item>
                   </Menu.Popup>
                 </Menu.Positioner>
@@ -231,8 +177,6 @@ export default function TemplatePreview({
         </div>
       </div>
 
-      {dialog}
-      <Toaster />
     </div>
   );
 }

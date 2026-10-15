@@ -5,11 +5,11 @@
  * reached from everywhere (a template, the gallery, a shared link, a mail
  * client) and none of them is inside Studio.
  *
- * Two grounds, deliberately: a white bar on warm paper, so the card reads as
- * a sheet laid on the page rather than a panel cut out of it.
+ * One white ground since the 14 October designs: the bar runs into the page
+ * with no rule under it, and the card is set apart by its edge and shadow.
  */
 .shell {
-  --a-paper: #fbfaf8;
+  --a-paper: #ffffff;
   --a-card: #ffffff;
   --a-ink: #0e0e13;
   --a-muted: oklch(0.45 0.01 260);
@@ -33,43 +33,43 @@
 }
 
 .bar {
-  display: flex;
+  display: grid;
   flex: none;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   gap: 20px;
   align-items: center;
-  justify-content: space-between;
-  padding: 14px 32px;
+  padding: 30px 48px;
   background-color: var(--a-card);
-  border-bottom: 1px solid var(--a-rule);
 }
 
+/* The way back: a chevron and the word, at the bar's start. */
 .back {
   display: flex;
-  flex: none;
+  gap: 6px;
   align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  color: oklch(0.4 0.01 260);
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.14);
-  transition: color 200ms ease, background-color 200ms ease;
+  justify-self: start;
+  min-width: 0;
+  min-height: 24px;
+  font: 500 12px var(--a-sans);
+  color: var(--a-ink);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 200ms ease;
 }
 
 .back:hover {
-  color: var(--a-ink);
-  background-color: oklch(0 0 0 / 0.04);
+  color: oklch(0.4 0.01 260);
 }
 
 .back svg {
   display: block;
-  /* Optically centers the chevron in the circle. */
-  margin-left: -1px;
+  flex: none;
 }
 
 .home {
   display: inline-flex;
   align-items: center;
+  justify-self: center;
   color: var(--a-ink);
 }
 
@@ -95,8 +95,7 @@
 
 @media (max-width: 768px) {
   .bar {
-    padding-right: 20px;
-    padding-left: 20px;
+    padding: 20px;
   }
 
   .wrap {

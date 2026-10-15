@@ -1,25 +1,25 @@
 # Sending mail from the Worker
 
-The Worker sends four kinds of message, all through `worker/lib/mail.ts`:
+The Worker sends two kinds of message, both through `worker/lib/mail.ts`:
 
 | Message | To | When |
 | --- | --- | --- |
 | Confirm your Tabbied account | the person | sign-up (better-auth); HTML, with a link that lasts `AUTH_LINK_HOURS` |
 | Reset your Tabbied password | the person | "Forgot password" (better-auth); HTML, with a single-use link that lasts `AUTH_LINK_HOURS` |
-| Your 5 extra templates are ready | the person | five minutes after a first "Request more"; HTML, with a single-use link that adds 5 |
-| More templates: <name> | the team | a later request, for review |
-| You have more Tabbied templates / About your request | the person | an admin grants or declines a reviewed request |
-| You have more Tabbied templates | the person | an admin raises a limit from `/admin/users` with "Email them" ticked (a decrease is never mailed) |
 
-The three messages to a person with a link in them are designed, and share
-one layout, `designedHtml` in `mail.ts`: the mark, a mono eyebrow, a heading,
-a black pill button, a note under it, a rule, and the sign-off, with inline
-styles and tables because a mail client reads no stylesheet. The two
-better-auth mails also write their link out under the button, for a client
-that will not follow it, and say how long it lasts: `AUTH_LINK_HOURS`, which
-`worker/auth.ts` hands to better-auth as both lifetimes, so the sentence and
-the link cannot disagree. Every message keeps a plain-text part that says the
-same thing.
+The template allowance's messages (the "Request more" link, the team's
+review notice, the grant and decline replies) went with the allowance in
+October 2026: templates are free to download without an account, and an
+account is only needed to save a customization.
+
+Both messages are designed, and share one layout, `designedHtml` in
+`mail.ts`: the mark, a mono eyebrow, a heading, a black pill button, a note
+under it, a rule, and the sign-off, with inline styles and tables because a
+mail client reads no stylesheet. Each also writes its link out under the
+button, for a client that will not follow it, and says how long it lasts:
+`AUTH_LINK_HOURS`, which `worker/auth.ts` hands to better-auth as both
+lifetimes, so the sentence and the link cannot disagree. Every message keeps
+a plain-text part that says the same thing.
 
 The lockup at the top is a hosted picture, `public/email/tabbied-lockup.png`,
 not the inline SVG and web font the site draws it with: Gmail strips `<svg>`
@@ -32,17 +32,14 @@ lose the ink; after the mark changes, recapture it with
 `npm run build && node scripts/capture-email-lockup.mjs`.
 
 Each message is built by its own function in `mail.ts` (`verificationEmail`,
-`approvalEmail`, `requestDecisionEmail`, ...) and sent separately, so the
+`resetPasswordEmail`) and sent separately, so the
 admin's **Email preview** (`/admin/emails/`) can render every one with the
 same code, from sample data, and send a test copy of any of them to the
 admin's own address. A message added to `mail.ts` needs an entry in
 `worker/lib/emailPreview.ts` too.
 
-The first-request email is scheduled with Resend's `scheduled_at` rather than
-sent at once, which is the design's "usually within 5 minutes". Scheduled
-messages show in Resend's dashboard under Emails until they go, and can be
-cancelled there. In dev (no key) it is written to `dev_mail` immediately,
-with its link in the `url` column, which is how the tests follow it.
+In dev (no key) every message is written to `dev_mail` instead, with its
+link in the `url` column, which is how the tests follow it.
 
 The provider is [Resend](https://resend.com), over its HTTP API. Receiving
 mail at hello@tabbied.com is a separate setup on Cloudflare Email Routing,
@@ -54,22 +51,23 @@ described in `docs/hello-email.md`; the two do not conflict (below).
 | --- | --- | --- |
 | `RESEND_API_KEY` | Secret | Turns sending on. Without it, dev writes every message to the `dev_mail` table, and production *throws* on sign-up, because a verification mail that silently goes nowhere strands the account. |
 | `MAIL_FROM` | Secret (optional) | The From line, e.g. `Tabbied <hello@tabbied.com>`. That is also the default. Its domain has to be verified in Resend. |
-| `TEAM_EMAIL` | Secret (optional) | Comma-separated inboxes that hear about "Request more". Falls back to `ADMIN_EMAILS`, then to `MAIL_FROM`'s address. |
 
-Put all three as **Secrets**, not dashboard Text variables: a Text variable
+Put both as **Secrets**, not dashboard Text variables: a Text variable
 is replaced by `wrangler.jsonc`'s own `vars` on the next `wrangler deploy`
 (the same trap `ADMIN_EMAILS` fell into).
 
 ```bash
 npx wrangler secret put RESEND_API_KEY
 npx wrangler secret put MAIL_FROM      # optional
-npx wrangler secret put TEAM_EMAIL     # optional
 ```
 
+`TEAM_EMAIL`, which named who heard about "Request more", is read by nothing
+now; a Worker that still has it set can have it deleted
+(`npx wrangler secret delete TEAM_EMAIL`).
+
 `GET /api/health` reports the result without revealing anything:
-`mail.provider` is `resend`, `dev-mail` or `none`, and `mail.teamInboxes`
-counts who hears about requests. `none` in production is the whole
-diagnosis of a sign-up that answers 500.
+`mail.provider` is `resend`, `dev-mail` or `none`. `none` in production is
+the whole diagnosis of a sign-up that answers 500.
 
 ## Setting up Resend, once
 
@@ -106,14 +104,5 @@ diagnosis of a sign-up that answers 500.
 
 Sign-up and password mail are better-auth's, and a failed send fails the
 request, which is right: the person has to hear that the link never went.
-
-The team notice and the grant notice are courtesies. The request row and
-the admin's decision are written first and are what the site reads, so a
-failed send is logged and reported (`mailed: false` on a decision) rather
-than undoing anything. The admin's Requests page is the source of truth
-for who is waiting.
-
-Replies: the team notice carries `Reply-To` set to the person, so answering
-it in Gmail writes to them. The decision mail carries the first team inbox
-as its `Reply-To`, so a person's answer lands with the team rather than at
-the From address.
+The admin's test copies (`/admin/emails/`) report a failed send in the
+answer, with Resend's own reason.

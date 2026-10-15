@@ -95,7 +95,7 @@ in the repository.
 ## Templates are licensed separately
 
 This package is open source. The Tabbied website templates it edits are not:
-each one is licensed to the Tabbied account that chose it, under the
+each one is licensed to the person who downloaded it from tabbied.com, under the
 [Template License](https://tabbied.com/terms-of-service/#template-license).
 
 ## License

@@ -1,0 +1,97 @@
+/*
+ * The homepage's tokens and the few type styles its sections share (the 14
+ * October design). The page is white but for the hero and the developers'
+ * band, so its tokens are ink on paper, unlike the dark shell in
+ * home.module.css (which the template gallery and the docs still read).
+ * Declared on the page wrapper, not on :root, so nothing here reaches
+ * another route.
+ */
+
+.page {
+  --hp-ink: #0e0e13;
+  --hp-muted: oklch(0.42 0.02 270);
+  --hp-quiet: oklch(0.4 0.01 260);
+  --hp-rule: oklch(0 0 0 / 0.12);
+  /* The design's hover color for a text link that names no other. */
+  --hp-link-hover: #0d9488;
+  --hp-focus: var(--blue-medium);
+  --hp-pad: 48px;
+
+  /* Two sans, split by role as everywhere else on the site: Proxima Nova
+     (the root layout's typekit link) for display type, IBM Plex Sans (a
+     next/font class on the wrapper) for body and UI copy. */
+  --hp-display: 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'),
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --hp-sans: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --hp-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* The labels set at 500, from a family holding only that face
+     (homeFonts.ts), falling back to the 400 the masthead loads. */
+  --hp-mono-medium: var(--font-home-mono-medium), var(--font-plex-mono), ui-monospace,
+    SFMono-Regular, Menlo, monospace;
+
+  /* Every section paints its own ground. The page's is the hero's ink, for
+     the masthead: the dark bar is translucent, and over white it reads gray. */
+  background-color: #0e0e13;
+  color: var(--hp-ink);
+  font-family: var(--hp-display);
+  line-height: normal;
+  overflow-x: clip;
+}
+
+@media (max-width: 700px) {
+  .page {
+    --hp-pad: 20px;
+  }
+}
+
+/* A section's headline: 52px, 36px on a phone. A section that draws it at
+   another size says so through the two properties, on its own class, so
+   the size never depends on which of two stylesheets loaded last. */
+.title {
+  font: 700 var(--title-size, 52px) / var(--title-leading, 1.05) var(--hp-display);
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+/* The sentence under a headline, in the section's own gray if it names one. */
+.lede {
+  font: 400 18px / 1.55 var(--hp-sans);
+  color: var(--lede-color, var(--hp-muted));
+}
+
+/* An underlined text link. The global `a:hover` (pink) outranks a bare class,
+   so hover is restated here with the design's own color. */
+.textLink {
+  display: inline-block;
+  padding-bottom: 2px;
+  border-bottom: 1px solid currentColor;
+  font: 500 16px var(--hp-sans);
+  color: inherit;
+  white-space: nowrap;
+  transition: color 150ms ease;
+}
+
+.textLink:hover {
+  color: var(--hp-link-hover);
+}
+
+.textLink:focus-visible {
+  outline: 2px solid var(--hp-focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Every headline, whatever its desktop size. Later in this file than the
+   shorthand above, so it wins at the same specificity. */
+@media (max-width: 700px) {
+  .title {
+    font-size: 36px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .textLink {
+    transition: none;
+  }
+}

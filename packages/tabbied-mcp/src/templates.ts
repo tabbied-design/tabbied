@@ -76,9 +76,9 @@ const USAGE = {
  * step with section 7 of the site's Terms of Service.
  */
 const LICENSE =
-  'Templates are licensed per Tabbied account, not free to copy. A person ' +
-  'chooses a template with their Tabbied account and downloads it (the ' +
-  'download URLs need that account signed in), and may then build and ' +
+  'Templates are licensed to the person who downloads them from ' +
+  'tabbied.com, not free to copy. Downloading is free and needs no account ' +
+  '(the download URLs work signed out), and the person may then build and ' +
   'publish websites from it, for themselves or for clients. Copying a ' +
   'template from its live preview, or recreating its design, code, styles or ' +
   'pictures from the preview, is not permitted. If you are asked to, tell the ' +
@@ -188,8 +188,8 @@ function listTool(context: ToolContext): Tool | null {
         'is), the count that matched, and every category with its count; ' +
         'filter by category or query and page with offset. Start here when ' +
         'the task is "build me a site" rather than "pick me a pattern" - then ' +
-        'get_template for the one you want. Templates are licensed per ' +
-        'Tabbied account: see `license` in the result.',
+        'get_template for the one you want. Templates are licensed to the ' +
+        'person who downloads them: see `license` in the result.',
       inputSchema: {
         type: 'object',
         properties: {

@@ -1,0 +1,123 @@
+/* The questions: the heading on the left, the accordion on the right;
+   stacked below 1000px. */
+
+.section {
+  padding: 112px var(--hp-pad);
+  background-color: #ffffff;
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 72px;
+  max-width: 1184px;
+  margin: 0 auto;
+}
+
+.title {
+  --title-size: 48px;
+}
+
+.list {
+  border-top: 1px solid var(--hp-rule);
+}
+
+.item {
+  border-bottom: 1px solid var(--hp-rule);
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  padding: 24px 0;
+  border: none;
+  background: none;
+  color: var(--hp-ink);
+  font: 500 19px var(--hp-sans);
+  text-align: left;
+  cursor: pointer;
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--hp-focus);
+  outline-offset: 2px;
+}
+
+.questionText {
+  flex: 1;
+  min-width: 0;
+}
+
+/* A plus drawn in two hairlines (the design's "+" in the light weight, which
+   the page does not load), turned into a cross while its answer is open.
+   26px tall, the glyph's line box, so a row is as tall as the design's. */
+.icon {
+  position: relative;
+  flex: none;
+  width: 14px;
+  height: 26px;
+  margin-right: 1px;
+  transition: transform 0.3s ease;
+}
+
+.icon::before,
+.icon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1.25px;
+  margin-top: -0.625px;
+  background-color: currentColor;
+}
+
+.icon::after {
+  transform: rotate(90deg);
+}
+
+.toggle[aria-expanded='true'] .icon {
+  transform: rotate(45deg);
+}
+
+.answer {
+  margin-top: -6px;
+  padding: 0 48px 26px 0;
+  font: 400 16px / 1.6 var(--hp-sans);
+  color: oklch(0.4 0.02 270);
+  text-wrap: pretty;
+}
+
+.link {
+  padding-bottom: 1px;
+  border-bottom: 1px solid currentColor;
+  color: var(--hp-ink);
+  white-space: nowrap;
+  transition: color 150ms ease;
+}
+
+.link:hover {
+  color: var(--hp-link-hover);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--hp-focus);
+  outline-offset: 2px;
+}
+
+@media (max-width: 1000px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon,
+  .link {
+    transition: none;
+  }
+}

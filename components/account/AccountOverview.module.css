@@ -1,9 +1,8 @@
-/* The overview's own pieces: the two summary cards, the chosen templates,
-   and the "Request more" dialog. */
+/* The overview's own pieces: the two summary cards and the saved
+   templates. */
 
-/* The artboard's box: the chosen-templates ring on paper, the AI card in ink.
-   Not clipped, since the (i) tip hangs out of it: each half rounds its own
-   corners instead. */
+/* The artboard's box: what is saved on paper, the AI card in ink. Each half
+   rounds its own corners. */
 .cards {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -11,19 +10,8 @@
   border-radius: 14px;
 }
 
-/* The Worker sent a download click here because every template is chosen. */
-.notice {
-  margin: 0 0 20px;
-  padding: 14px 18px;
-  font: 400 14px / 1.5 var(--s-sans);
-  color: oklch(0.32 0.05 70);
-  background-color: oklch(0.965 0.045 88);
-  border: 1px solid oklch(0.87 0.07 82);
-  border-radius: 12px;
-}
-
-/* The paper half: the ring beside what it is counting. */
-.gaugeCard {
+/* The paper half: the count beside what it is counting. */
+.savedCard {
   display: flex;
   gap: 28px;
   align-items: center;
@@ -33,88 +21,28 @@
   border-radius: 13px 0 0 13px;
 }
 
-.gauge {
-  position: relative;
+.savedCount {
   flex: none;
-  width: 96px;
-  height: 96px;
-}
-
-/* A quarter turn left, so the arc starts at twelve rather than at three. */
-.gauge svg {
-  display: block;
-  transform: rotate(-90deg);
-}
-
-.gaugeValue {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font: 700 28px var(--s-display);
+  margin: 0;
+  font: 700 56px / 1 var(--s-display);
   font-variant-numeric: tabular-nums;
   color: var(--s-ink);
+  letter-spacing: -0.02em;
 }
 
-.gaugeLabel {
-  display: flex;
-  gap: 8px;
-  align-items: center;
+.savedLabel {
   margin: 0 0 8px;
   font: 400 15px var(--s-sans);
   color: var(--s-ink);
 }
 
-/* The artboard's small (i): what counts, on a click. */
-.tipWrap {
-  position: relative;
-  display: inline-flex;
-}
-
-.tipButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 19px;
-  height: 19px;
-  padding: 0;
-  font: 600 10px var(--s-mono);
-  color: oklch(0.45 0.01 260);
-  background: none;
-  border: 1px solid oklch(0 0 0 / 0.28);
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.tipButton:hover,
-.tipButton[aria-expanded='true'] {
-  color: var(--s-ink);
-  border-color: var(--s-ink);
-}
-
-.tip {
-  position: absolute;
-  top: calc(100% + 9px);
-  left: 50%;
-  z-index: 30;
-  width: 250px;
-  padding: 11px 13px;
-  font: 400 12.5px / 1.5 var(--s-sans);
-  color: #eef0f6;
-  background: #0e0e13;
-  border-radius: 10px;
-  box-shadow: 0 10px 28px oklch(0 0 0 / 0.22);
-  transform: translateX(-50%);
-}
-
-.gaugeCount {
+.savedNames {
   margin: 0 0 6px;
   font: 400 14px var(--s-sans);
   color: oklch(0.45 0.01 260);
 }
 
-.gaugeNames {
+.savedNote {
   margin: 0;
   font: 400 13px var(--s-sans);
   color: oklch(0.45 0.01 260);
@@ -233,8 +161,8 @@
   background-color: oklch(0 0 0 / 0.02);
 }
 
-/* A chosen template: the artboard's row, a little tighter than the other
-   account tables'. */
+/* A saved site: the artboard's row, a little tighter than the other account
+   tables'. */
 .tplRow {
   display: grid;
   align-items: center;
@@ -285,10 +213,6 @@
   color: var(--s-ink);
 }
 
-.dateQuiet {
-  color: oklch(0.58 0.01 260);
-}
-
 .dateAdded {
   color: oklch(0.45 0.01 260);
 }
@@ -330,8 +254,7 @@
   opacity: 0.55;
 }
 
-/* The artboard's link, with a lucide palette before the word and an arrow
-   after it; the underline is the word's alone. */
+/* The artboard's "Keep editing", with an arrow after it. */
 .customize {
   display: inline-flex;
   gap: 6px;
@@ -401,7 +324,7 @@
   background: oklch(0 0 0 / 0.08);
 }
 
-/* The empty slot: the way to the gallery while there are templates left. */
+/* The last row: the way to the gallery, for another template. */
 .slot {
   display: flex;
   gap: 16px;
@@ -442,193 +365,6 @@
   color: oklch(0.52 0.01 260);
 }
 
-/* At the limit: what that means, and the one message the beta allows. */
-.limit {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 26px;
-  background-color: oklch(0 0 0 / 0.02);
-  border-top: 1px solid oklch(0 0 0 / 0.08);
-}
-
-.limitTitle {
-  margin: 0 0 5px;
-  font: 600 16px var(--s-sans);
-  color: var(--s-ink);
-}
-
-.limitNote {
-  margin: 0;
-  font: 400 14px / 1.5 var(--s-sans);
-  color: oklch(0.52 0.01 260);
-}
-
-/* The row's own button is a size down from the dialog's. */
-.limit .primary,
-.limit .secondary {
-  padding: 10px 18px;
-  white-space: nowrap;
-}
-
-.primary,
-.secondary {
-  padding: 11px 20px;
-  font: 600 14px var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova', sans-serif;
-  border: none;
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-.primary {
-  color: #fff;
-  background: #0e0e13;
-}
-
-.primary:hover:enabled {
-  background: #25252e;
-}
-
-.primary:disabled {
-  cursor: default;
-  opacity: 0.5;
-}
-
-.secondary {
-  font-weight: 500;
-  color: #0e0e13;
-  background: transparent;
-  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.16);
-}
-
-.secondary:hover {
-  background: oklch(0 0 0 / 0.04);
-}
-
-/* -- "Request more" ----------------------------------------------------------
-   Portaled under <body>: the fonts are named outright. */
-
-.backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  background: oklch(0.1 0.01 260 / 0.55);
-}
-
-/* Hung 48px from the top, as the artboard does, not centered: a form that
-   grows (the fair-price field) then grows downward. */
-.dialog {
-  position: fixed;
-  top: 48px;
-  left: 50%;
-  z-index: 91;
-  box-sizing: border-box;
-  width: min(560px, calc(100vw - 40px));
-  padding: 32px;
-  color: #0e0e13;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 24px 60px oklch(0 0 0 / 0.3);
-  transform: translateX(-50%);
-}
-
-.dialogClose {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  width: 34px;
-  height: 34px;
-  font: 300 22px / 1 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
-  color: oklch(0.45 0.01 260);
-  background: none;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.dialogClose:hover {
-  background: oklch(0 0 0 / 0.05);
-}
-
-.dialogCount {
-  margin: 0 0 10px;
-  font: 400 11px var(--font-plex-mono, 'IBM Plex Mono'), ui-monospace, monospace;
-  color: oklch(0.4 0.13 175);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.dialogTitle {
-  margin: 0 0 8px;
-  font: 700 28px / 1.15 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
-  letter-spacing: -0.015em;
-}
-
-.dialogBody {
-  margin: 0 0 24px;
-  font: 400 15px / 1.6 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
-  color: oklch(0.45 0.01 260);
-  text-wrap: pretty;
-}
-
-.textarea {
-  box-sizing: border-box;
-  width: 100%;
-  margin: 0 0 20px;
-  padding: 11px 13px;
-  font: 400 14px / 1.5 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
-  color: #0e0e13;
-  resize: vertical;
-  border: 1px solid oklch(0 0 0 / 0.14);
-  border-radius: 10px;
-  outline: none;
-}
-
-.textarea:focus {
-  border-color: #0e0e13;
-}
-
-.dialogActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: flex-end;
-}
-
-/* The artboard's Cancel and Done sit a pixel taller than its Send. */
-.dialogActions .secondary,
-.dialogActions .done {
-  padding: 12px 20px;
-}
-
-/* Send, until the form is answered: a pale pill rather than a faded black one. */
-.dialogActions .primary:disabled {
-  color: oklch(0 0 0 / 0.35);
-  background: oklch(0 0 0 / 0.08);
-  opacity: 1;
-}
-
-.sent {
-  margin: 6px 0 20px;
-  padding: 16px 18px;
-  background: oklch(0.96 0.03 168);
-  border-radius: 12px;
-}
-
-.sentTitle {
-  margin: 0 0 4px;
-  font: 600 15px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
-}
-
-.sentBody {
-  margin: 0;
-  font: 400 14px / 1.55 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
-  color: oklch(0.35 0.02 200);
-  text-wrap: pretty;
-}
-
 /* Shown while the templates load. Two rows' worth, so the page does not
    reflow when the real ones land. */
 .skeleton {
@@ -654,7 +390,7 @@
     grid-template-columns: 1fr;
   }
 
-  .gaugeCard {
+  .savedCard {
     border-right: none;
     border-bottom: 1px solid oklch(0 0 0 / 0.08);
     border-radius: 13px 13px 0 0;
@@ -706,238 +442,10 @@
   .recentsHead h2 {
     white-space: nowrap;
   }
-
-  /* The tip opens leftward from the (i), which sits near the right edge here. */
-  .tip {
-    right: -12px;
-    left: auto;
-    transform: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .skeleton {
     animation: none;
   }
-}
-
-/* -- The request forms (portaled: fonts named outright) ----------------------- */
-
-.dialog {
-  max-height: calc(100dvh - 96px);
-  overflow-y: auto;
-}
-
-.form {
-  display: grid;
-  gap: 22px;
-  margin: 0 0 24px;
-}
-
-.question {
-  display: grid;
-  gap: 10px;
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  border: none;
-}
-
-.questionLabel {
-  padding: 0;
-  font: 600 14px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
-  color: #0e0e13;
-}
-
-/* A legend is no grid item, so the fieldset's gap never reaches it. */
-legend.questionLabel {
-  margin-bottom: 10px;
-}
-
-.chipRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.chip {
-  padding: 8px 14px;
-  font: 400 13.5px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
-  color: #0e0e13;
-  background: #fff;
-  border: 1px solid oklch(0 0 0 / 0.16);
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-.chip:hover {
-  border-color: oklch(0 0 0 / 0.4);
-}
-
-.chip[aria-pressed='true'] {
-  color: #fff;
-  background: #0e0e13;
-  border-color: #0e0e13;
-}
-
-.input {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 11px 13px;
-  font: 400 14px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
-  color: #0e0e13;
-  border: 1px solid oklch(0 0 0 / 0.14);
-  border-radius: 10px;
-  outline: none;
-}
-
-.input:focus {
-  border-color: #0e0e13;
-}
-
-.form .textarea {
-  margin: 0;
-}
-
-/* A later request's first answers, carried forward with an Edit. */
-.prior {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 16px;
-  background: oklch(0 0 0 / 0.035);
-  border-radius: 12px;
-}
-
-.priorLabel {
-  margin: 0 0 5px;
-  font: 600 11px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
-  color: oklch(0.5 0.01 260);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.priorSummary {
-  margin: 0;
-  font: 400 14px / 1.5 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
-  color: #0e0e13;
-}
-
-.priorEdit {
-  flex: none;
-  padding: 0;
-  font: 400 14px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
-  color: #0e0e13;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.secondary:disabled {
-  cursor: default;
-  opacity: 0.5;
-}
-
-/* -- Where a request stands, under the table ------------------------------------ */
-
-.limitText {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  min-width: 0;
-}
-
-.dotWait,
-.dotOk {
-  flex: none;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-.dotWait {
-  background: oklch(0.75 0.14 75);
-}
-
-.dotOk {
-  background: oklch(0.62 0.14 165);
-}
-
-/* -- "5 more templates added", after the emailed link --------------------------- */
-
-/* The text keeps 220px, so on a phone the button wraps under it. */
-.added {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  align-items: center;
-  margin: 0 0 20px;
-  padding: 18px 22px;
-  background: oklch(0.96 0.03 168);
-  border-radius: 14px;
-}
-
-.addedMark {
-  display: flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  font: 600 16px var(--s-sans);
-  color: #fff;
-  background: oklch(0.4 0.13 175);
-  border-radius: 50%;
-}
-
-.addedText {
-  flex: 1;
-  min-width: 220px;
-}
-
-.addedTitle {
-  margin: 0 0 3px;
-  font: 600 16px var(--s-sans);
-  color: var(--s-ink);
-}
-
-.addedBody {
-  margin: 0;
-  font: 400 14px / 1.5 var(--s-sans);
-  color: oklch(0.35 0.02 200);
-}
-
-.addedAction {
-  flex: none;
-  padding: 10px 18px;
-  font: 600 14px var(--s-sans);
-  color: #fff;
-  white-space: nowrap;
-  text-decoration: none;
-  background: #0e0e13;
-  border-radius: 999px;
-}
-
-.addedAction:hover {
-  color: #fff;
-  background: #25252e;
-}
-
-.addedClose {
-  flex: none;
-  width: 32px;
-  height: 32px;
-  font: 300 20px / 1 var(--s-sans);
-  color: oklch(0.35 0.02 200);
-  background: none;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.addedClose:hover {
-  background: oklch(0 0 0 / 0.05);
 }

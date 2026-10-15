@@ -3,66 +3,70 @@ import path from 'node:path';
 import { test, expect } from '@playwright/test';
 
 test.describe('Tabbied site', () => {
-  test('home page renders the hero and links into the gallery', async ({
+  test('home page leads with website templates and links into the gallery', async ({
     page,
   }) => {
     await page.goto('/');
 
-    await expect(page).toHaveTitle(/Tabbied/);
+    await expect(page).toHaveTitle(/website templates/i);
     await expect(
-      page.getByRole('heading', { level: 1, name: /Free patterns and\s+websites/ })
+      page.getByRole('heading', { level: 1, name: 'Websites with personality.' })
     ).toBeVisible();
 
     // Every figure is derived from the catalog at build time (lib/siteCounts),
-    // so this asserts the shape rather than the value.
-    const patternsStat = page.getByRole('link', { name: /^\d+ Patterns$/ });
-    await expect(patternsStat).toBeVisible();
-    const patternCount = Number(
-      (await patternsStat.textContent())?.match(/\d+/)?.[0]
+    // so this asserts the shape rather than the value: the hero's note and
+    // the carousel's "Browse all" carry the same template count.
+    const note = page.getByText(/^\d+ free templates\. No account needed\.$/);
+    await expect(note).toBeVisible();
+    const templateCount = Number((await note.textContent())?.match(/\d+/)?.[0]);
+    expect(templateCount).toBeGreaterThan(100);
+    await expect(page.getByRole('link', { name: new RegExp(`^Browse all ${templateCount}`) })).toHaveAttribute(
+      'href',
+      /\/templates\/?$/
     );
-    expect(patternCount).toBeGreaterThan(1);
 
-    // The same number appears in the hero sentence and on "View all".
-    await expect(
-      page.getByText(
-        new RegExp(`growing library of ${patternCount} customizable patterns`)
-      )
-    ).toBeVisible();
-    await expect(
-      page.getByRole('link', { name: `View all ${patternCount}` })
-    ).toBeVisible();
+    // A trade tab puts its site in the hero's front window.
+    const mockups = page.getByRole('img', { name: /^Sample websites for/ });
+    await page.getByRole('button', { name: 'Preview a florist template' }).click();
+    await expect(page.getByRole('button', { name: 'Preview a florist template' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(mockups).toHaveAttribute('aria-label', /^Sample websites for a florist and/);
 
-    await page.getByRole('link', { name: 'Make your pattern' }).click();
+    // Each slide leads to the gallery, searched for its trade.
+    await expect(page.getByRole('link', { name: 'Browse tattoo templates' })).toHaveAttribute(
+      'href',
+      '/templates/?q=tattoo'
+    );
 
-    await expect(page).toHaveURL(/\/patterns/);
+    // Patterns are second, a link away.
+    await expect(page.getByRole('link', { name: /Explore customizable patterns/ })).toHaveAttribute(
+      'href',
+      /\/patterns\/?$/
+    );
+
+    await page.getByRole('link', { name: 'Pick your template' }).click();
+    await expect(page).toHaveURL(/\/templates\/?$/);
     await expect(
-      page.getByRole('heading', { name: 'Pick a pattern' })
+      page.getByRole('heading', { level: 1, name: 'A website for every trade, free' })
     ).toBeVisible();
   });
 
   test('the homepage animates only when motion is welcome', async ({
     page,
   }) => {
-    // The hero grid, the marquees and the orbiting squares all run on their own
-    // clocks; under `prefers-reduced-motion` every one of them has to stop, not
-    // merely slow down.
+    // The trade tabs rise in and the carousel advances on a fill's clock;
+    // under `prefers-reduced-motion` both have to stop, not merely slow down.
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
 
-    const rail = page.locator('[class*="HomeTemplates-module"][class*="track"]');
-    await expect(rail.first()).toHaveCSS('animation-name', 'none');
+    const tab = page.getByRole('button', { name: 'Preview a florist template' });
+    await expect(tab.locator('..')).toHaveCSS('animation-name', 'none');
 
-    const before = await page
-      .locator('[class*="HomeHero-module"][class*="skylineCell"]')
-      .first()
-      .getAttribute('style');
-    await page.waitForTimeout(3000);
-    const after = await page
-      .locator('[class*="HomeHero-module"][class*="skylineCell"]')
-      .first()
-      .getAttribute('style');
-
-    expect(after).toBe(before);
+    // No clock, so no pause button, and the first slide stays put.
+    await expect(page.getByRole('button', { name: /(Pause|Play) carousel/ })).toHaveCount(0);
+    const dots = page.getByRole('tablist', { name: 'Slides' }).getByRole('tab');
+    await expect(dots.first()).toHaveAttribute('aria-selected', 'true');
+    await page.waitForTimeout(7000);
+    await expect(dots.first()).toHaveAttribute('aria-selected', 'true');
   });
 
   test('gallery pagination is reflected in the URL and survives reload', async ({
@@ -646,28 +650,28 @@ test.describe('Tabbied site (mobile viewport)', () => {
     await page.goto('/');
 
     // Below 768px the inline nav is display:none and the hamburger opens a
-    // menu of the three destinations and Sign in. The lockup is the way home,
+    // menu of the three destinations and Log in. The lockup is the way home,
     // and GitHub is in the footer, not up here.
     const trigger = page.getByRole('button', { name: 'Menu' });
     await expect(trigger).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toBeHidden();
+    await expect(page.locator('header[data-tone]').getByRole('link', { name: 'Log in', exact: true })).toBeHidden();
 
     await trigger.click();
 
     const menu = page.getByRole('menu');
     await expect(menu.getByRole('menuitem', { name: 'Home' })).toHaveCount(0);
     await expect(menu.getByRole('menuitem', { name: 'Patterns' })).toBeVisible();
-    await expect(menu.getByRole('menuitem', { name: 'Developers' })).toHaveAttribute(
+    await expect(menu.getByRole('menuitem', { name: 'For developers' })).toHaveAttribute(
       'href',
       /\/docs\/?$/
     );
-    await expect(menu.getByRole('menuitem', { name: 'Sign in' })).toHaveAttribute(
+    await expect(menu.getByRole('menuitem', { name: 'Log in' })).toHaveAttribute(
       'href',
       /\/sign-in/
     );
 
     // Choosing a destination navigates and closes the menu.
-    await menu.getByRole('menuitem', { name: 'Websites' }).click();
+    await menu.getByRole('menuitem', { name: 'Website templates' }).click();
     await expect(page).toHaveURL(/\/templates/);
     await expect(page.getByRole('menu')).toHaveCount(0);
   });
@@ -728,7 +732,7 @@ test.describe('Studio', () => {
 });
 
 test.describe('Template preview and customize', () => {
-  test('a template is framed with one thing to do with it, behind a sign-in', async ({ page }) => {
+  test('a template is framed with one thing to do with it, free for everyone', async ({ page }) => {
     // The frame loads the live template page, whose typekit and Google Fonts
     // stylesheets can hang in a sandbox with no outbound network, and `load`
     // would wait for them through the iframe. The bar is what is asserted.
@@ -738,26 +742,27 @@ test.describe('Template preview and customize', () => {
     // next/link writes the export's trailing slash.
     await expect(page.getByRole('link', { name: 'All templates' })).toHaveAttribute('href', '/templates/');
 
-    // Signed out (no Worker behind the export), the one button asks for a
-    // sign-in first, with the customizer as the way back; Customize and the
-    // downloads are behind it, not beside it.
-    await expect(page.getByRole('link', { name: 'Customize' })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'Download' })).toHaveCount(0);
+    // Signed out (no Worker behind the export), the one button opens the same
+    // menu anyone gets: no account needed, Customize, and both zips.
     await page.getByRole('button', { name: 'Use this template' }).click();
-
-    const card = page.getByRole('dialog', { name: 'Sign in to use this template' });
-    await expect(card).toBeVisible();
-    await expect(card.getByRole('link', { name: 'Log in' })).toHaveAttribute(
+    const menu = page.getByRole('menu');
+    await expect(menu.getByText('Free to customize and download. No account needed.')).toBeVisible();
+    await expect(menu.getByRole('menuitem', { name: /^Customize/ })).toHaveAttribute(
       'href',
-      /\/sign-in\/?\?next=%2Fstudio%2Fcustomize%2F%3Fslug%3Dverdant/
+      '/studio/customize/?slug=verdant'
     );
-    await expect(card.getByRole('link', { name: 'Sign up' })).toHaveAttribute(
+    await expect(menu.getByRole('menuitem', { name: /^Static HTML/ })).toHaveAttribute(
       'href',
-      /\/sign-up\/?\?next=%2Fstudio%2Fcustomize%2F%3Fslug%3Dverdant/
+      '/downloads/verdant-html.zip'
     );
+    await expect(menu.getByRole('menuitem', { name: /^React project/ })).toHaveAttribute(
+      'href',
+      '/downloads/verdant-react.zip'
+    );
+    await expect(page.getByText(/Sign in to use|Log in to use/)).toHaveCount(0);
   });
 
-  test('signed in, the menu says what taking a template costs and asks first', async ({ page }) => {
+  test('signed in, Customize reopens the newest saved site on the template', async ({ page }) => {
     await page.route('**/api/auth/get-session', (route) =>
       route.fulfill({
         status: 200,
@@ -768,37 +773,33 @@ test.describe('Template preview and customize', () => {
         }),
       })
     );
-    await page.route('**/api/account/templates', (route) =>
+    await page.route('**/api/studio/sites', (route) =>
       route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          used: 4,
-          total: 5,
-          left: 1,
-          chosen: ['solstice', 'werkraum', 'cobalt-works', 'mistral-cycles'].map((slug) => ({ slug, chosenAt: '2026-09-01T00:00:00Z', site: null })),
-          request: null,
+          sites: [
+            {
+              id: 'newest', slug: 'verdant', templateName: 'Verdant', title: 'Harbour Plants', stance: '',
+              palette: [], revisions: 2, createdAt: '2026-09-01T00:00:00Z', updatedAt: '2026-09-03T00:00:00Z',
+            },
+          ],
         }),
       })
     );
     await page.goto('/templates/verdant/', { waitUntil: 'domcontentloaded' });
 
     await page.getByRole('button', { name: 'Use this template' }).click();
-    const menu = page.getByRole('menu');
-    await expect(menu.getByText('4 of 5 templates chosen')).toBeVisible();
-    await expect(menu.getByText(/uses your last template/)).toBeVisible();
-
-    // A download of a template not yet theirs goes through the dialog.
-    await menu.getByRole('menuitem', { name: /Static HTML/ }).click();
-    const dialog = page.getByRole('dialog');
-    await expect(dialog.getByText('This uses your last template.', { exact: false })).toBeVisible();
-    await expect(dialog.getByRole('button', { name: 'Use template & download' })).toBeVisible();
+    await expect(page.getByRole('menu').getByRole('menuitem', { name: /^Customize/ })).toHaveAttribute(
+      'href',
+      '/studio/site/?id=newest'
+    );
   });
 
   test('signing up names the terms and the password rule', async ({ page }) => {
     await page.goto('/sign-up/');
 
-    // The account is what a template's license is granted to.
+    // The terms, Template License included, are named where an account is made.
     await expect(page.getByRole('link', { name: 'Terms of Service' })).toHaveAttribute(
       'href',
       '/terms-of-service/'
@@ -814,15 +815,14 @@ test.describe('Template preview and customize', () => {
     await expect(page.getByRole('link', { name: 'Terms of Service' })).toHaveCount(0);
   });
 
-  test('customizing while signed out goes to sign-in with the way back', async ({ page }) => {
+  test('customizing while signed out opens the customizer, not a sign-in', async ({ page }) => {
     // No Worker behind the export: the session read fails and reads as
     // signed out, which is the case a fresh visitor is in.
     await page.goto('/studio/customize/?slug=verdant');
 
-    await page.waitForURL(/\/sign-in\/?\?next=/, { timeout: 15000 });
-    expect(decodeURIComponent(new URL(page.url()).searchParams.get('next') ?? '')).toBe(
-      '/studio/customize/?slug=verdant'
-    );
+    await expect(page.getByRole('complementary', { name: 'Customize this site' })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('button', { name: 'Download' })).toBeVisible();
+    await expect(page).toHaveURL(/\/studio\/customize\/\?slug=verdant$/);
   });
 });
 
@@ -832,21 +832,21 @@ test.describe('Shared site header', () => {
   }) => {
     await page.goto('/templates');
 
-    // Patterns / Websites / Developers in the middle, Sign in on the
-    // right. The lockup is the way home, and GitHub is in the footer.
+    // Website templates / Patterns / For developers in the middle, templates
+    // first, and Log in on the right. The lockup is the way home, and GitHub
+    // is in the footer.
     const nav = page.getByRole('navigation', { name: 'Main' });
-    await expect(nav.getByRole('link')).toHaveCount(3);
-    await expect(page.getByRole('link', { name: 'Tabbied home' })).toHaveAttribute('href', '/');
-    await expect(nav.getByRole('link', { name: 'Patterns' })).toBeVisible();
-    await expect(nav.getByRole('link', { name: 'Developers' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Tabbied on GitHub' })).toHaveCount(0);
+    const bar = page.locator('header[data-tone]').first();
+    await expect(nav.getByRole('link')).toHaveText(['Website templates', 'Patterns', 'For developers']);
+    await expect(bar.getByRole('link', { name: 'Tabbied home' })).toHaveAttribute('href', '/');
+    await expect(bar.getByRole('link', { name: 'Log in', exact: true })).toBeVisible();
+    await expect(bar.getByRole('link', { name: 'Tabbied on GitHub' })).toHaveCount(0);
 
     // At desktop widths the inline nav replaces the hamburger entirely.
     await expect(page.getByRole('button', { name: 'Menu' })).toBeHidden();
 
-    // "Websites" is the current section; it is flagged for assistive tech.
-    await expect(nav.getByRole('link', { name: 'Websites' })).toHaveAttribute(
+    // "Website templates" is the current section; it is flagged for assistive tech.
+    await expect(nav.getByRole('link', { name: 'Website templates' })).toHaveAttribute(
       'aria-current',
       'page'
     );
@@ -855,12 +855,12 @@ test.describe('Shared site header', () => {
       'page'
     );
 
-    // The content pages draw the same bar in ink; Developers is the last
+    // The content pages draw the same bar in ink; For developers is the last
     // destination and marks itself on the landing page and every page under it.
     for (const path of ['/docs', '/docs/react', '/docs/web-component']) {
       await page.goto(path);
       await expect(nav.getByRole('link', { name: 'Patterns' })).toBeVisible();
-      await expect(nav.getByRole('link', { name: 'Developers' })).toHaveAttribute(
+      await expect(nav.getByRole('link', { name: 'For developers' })).toHaveAttribute(
         'aria-current',
         'page'
       );
@@ -871,7 +871,7 @@ test.describe('Shared site header', () => {
     await expect(page.locator('header a[aria-current="page"]')).toHaveCount(0);
   });
 
-  test('a browser that was signed in draws a placeholder, not Sign in, until the session answers', async ({
+  test('a browser that was signed in draws a placeholder, not Log in, until the session answers', async ({
     page,
   }) => {
     await page.addInitScript(() => window.localStorage.setItem('tabbied:signed-in', '1'));
@@ -887,13 +887,13 @@ test.describe('Shared site header', () => {
     await page.goto('/templates');
     const bar = page.locator('header[data-tone]').first();
     await expect(bar).toHaveAttribute('data-session', 'likely');
-    await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toBeHidden();
+    await expect(bar.getByRole('link', { name: 'Log in', exact: true })).toBeHidden();
 
     await expect.poll(() => answer !== null).toBe(true);
     answer!();
-    await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toBeVisible();
+    await expect(bar.getByRole('link', { name: 'Log in', exact: true })).toBeVisible();
     await expect(bar).not.toHaveAttribute('data-session', 'likely');
-    // The wrong hint is cleared, so the next page draws Sign in at once.
+    // The wrong hint is cleared, so the next page draws Log in at once.
     expect(await page.evaluate(() => window.localStorage.getItem('tabbied:signed-in'))).toBeNull();
   });
 });

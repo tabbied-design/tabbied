@@ -265,31 +265,67 @@ export const devMail = sqliteTable('dev_mail', {
 });
 
 /**
- * One template download: the zip a person took, and when. A log, not a
- * counter: what a person may take is decided by `templateChoice`, and a row is
- * written only for a zip that was allowed and served.
+ * One template download: a zip that went out, and when. A log, not a gate:
+ * anyone may take any template, and a row is written for every zip served
+ * (index.ts). Null `userId` is a download with no account, which is most of
+ * them; a signed-in one carries the person, and goes with their account.
  */
 export const download = sqliteTable(
   'download',
   {
     id: text('id').primaryKey(),
-    userId: text('user_id')
-      .notNull()
-      .references(() => user.id, { onDelete: 'cascade' }),
+    userId: text('user_id').references(() => user.id, { onDelete: 'cascade' }),
     /** The template's slug. */
     slug: text('slug').notNull(),
     /** 'html' | 'react': which package was taken. */
     format: text('format').notNull(),
     createdAt: createdAt(),
   },
-  (table) => [index('download_user_created_idx').on(table.userId, table.createdAt)]
+  (table) => [
+    index('download_user_created_idx').on(table.userId, table.createdAt),
+    // The admin overview counts the last 30 days across everyone.
+    index('download_created_idx').on(table.createdAt),
+  ]
 );
 
 /**
- * A template a person has made theirs: one of the five an account may choose
- * during the beta (lib/templates.ts). Unique per person and template, so
- * choosing twice is one row, and the claim that writes it checks the count in
- * the same statement.
+ * First-party product counts the site reports (routes/events.ts): the
+ * customizer opened, a signed-out Save asked for an account, and the edits
+ * held at that gate saved after signing in. One row per event, read only as
+ * counts by the admin overview. `kind` is one of `EVENT_KINDS` there.
+ *
+ * `userId` is whoever was signed in, if anyone. It outlives the account as a
+ * null (SET NULL, not CASCADE), so removing a person does not rewrite last
+ * month's counts.
+ */
+export const event = sqliteTable(
+  'event',
+  {
+    id: text('id').primaryKey(),
+    kind: text('kind').notNull(),
+    /** The template it happened on, when there is one. */
+    slug: text('slug'),
+    userId: text('user_id').references(() => user.id, { onDelete: 'set null' }),
+    createdAt: createdAt(),
+  },
+  (table) => [
+    index('event_kind_created_idx').on(table.kind, table.createdAt),
+    // What a user's removal looks up to clear, so it is not a scan.
+    index('event_user_idx').on(table.userId),
+  ]
+);
+
+// -- The beta allowance, kept as history ---------------------------------------
+//
+// Until October 2026 every account chose five templates, could ask for more,
+// and an admin could change the limit. That is gone: templates are free to
+// download without an account. These three tables stay declared so that no
+// migration drops what they hold, and nothing reads or writes them any more.
+// They still cascade with an account.
+
+/**
+ * A template a person had made theirs: one of the five an account could
+ * choose during the beta. Unique per person and template.
  */
 export const templateChoice = sqliteTable(
   'template_choice',
@@ -306,16 +342,13 @@ export const templateChoice = sqliteTable(
 
 /**
  * "Request more": a person asking for templates beyond their five, and what
- * came of it (lib/templates.ts). Two kinds, told apart by `round`:
+ * came of it. Two kinds, told apart by `round`:
  *
- * - Round 1, a person's first request, is granted by the person themselves:
- *   an email with a single-use link goes out at `sendAt`, and following it
- *   adds 5 (`status` 'sent', then 'activated'). Only the link's SHA-256 is kept.
- * - Every later round is read by the team, who grant or decline it
+ * - Round 1, a person's first request, was granted by the person themselves:
+ *   an email with a single-use link went out at `sendAt`, and following it
+ *   added 5 (`status` 'sent', then 'activated'). Only the link's SHA-256 is kept.
+ * - Every later round was read by the team, who granted or declined it
  *   ('pending', then 'granted' or 'declined').
- *
- * A person has at most one open request at a time; `openRequest` checks that
- * in its insert, since the rows themselves are a history.
  */
 export const templateRequest = sqliteTable(
   'template_request',
@@ -357,9 +390,7 @@ export const templateRequest = sqliteTable(
 
 /**
  * A change an admin made to a person's allowance without being asked
- * (/admin/users): positive to raise it, negative to lower it. Counted by `allowanceSql` beside granted requests, and kept
- * out of `templateRequest` because a grant is not something the person
- * asked for: the request flow reads the latest request row as theirs.
+ * (/admin/users): positive to raise it, negative to lower it.
  */
 export const templateGrant = sqliteTable(
   'template_grant',

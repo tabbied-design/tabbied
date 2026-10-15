@@ -135,7 +135,7 @@ export function orderTemplates<T extends Spreadable & { slug: string }>(items: r
  * ahead of the spread. Unlike an addition, changing it moves the cards after
  * it, which is the point: it is an editorial choice, not growth. The
  * spread's neighbor rules don't bind it (e2e/templates.spec.ts checks them
- * after the lead). The homepage's template rails show these too.
+ * after the lead).
  */
 export const GALLERY_LEAD: readonly string[] = [
   // 2026-10-02: picked for the top of the first page.

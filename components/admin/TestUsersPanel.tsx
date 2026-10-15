@@ -4,8 +4,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { Check, Copy, Plus, RefreshCw, Trash2 } from 'lucide-react';
 import { ApiError, apiFetch } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';
-import { PersonName, QuotaEdit, planLabel, type UserRow } from './panels';
-import TemplatesDialog from './TemplatesDialog';
+import { PersonName, planLabel, type UserRow } from './panels';
 import UserActions from './UserActions';
 import { useAdminData } from './useAdminData';
 import styles from './admin.module.css';
@@ -44,7 +43,6 @@ export default function TestUsersPanel() {
   const [copied, setCopied] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [removeAll, setRemoveAll] = useState<'idle' | 'confirm' | 'busy'>('idle');
-  const [managing, setManaging] = useState<UserRow | null>(null);
 
   useEffect(() => {
     setPassword((current) => current || `test-${randomSlug(8)}`);
@@ -269,8 +267,8 @@ export default function TestUsersPanel() {
               <thead>
                 <tr>
                   <th>User</th>
-                  <th>Plan</th>
-                  <th>Template quota</th>
+                  <th>Account</th>
+                  <th>Saved templates</th>
                   <th>Created</th>
                   <th aria-label="Actions" />
                 </tr>
@@ -285,9 +283,7 @@ export default function TestUsersPanel() {
                     <td>
                       <span className={styles.plan}>{planLabel(row.plan)}</span>
                     </td>
-                    <td>
-                      <QuotaEdit row={row} onEdit={() => setManaging(row)} />
-                    </td>
+                    <td>{row.sites}</td>
                     <td className={styles.cellDim}>{day(row.createdAt)}</td>
                     <td className={styles.menuCell}>
                       <UserActions row={row} self={row.id === me?.id} onChanged={reload} onError={setMessage} />
@@ -299,19 +295,9 @@ export default function TestUsersPanel() {
           </div>
         )}
 
-        {managing ? (
-          <TemplatesDialog
-            person={managing}
-            open
-            onOpenChange={(open) => (open ? null : setManaging(null))}
-            onChanged={reload}
-          />
-        ) : null}
-
         <p className={styles.footnote}>
           Test users are ordinary accounts, told apart only by the reserved @{domain} domain, and safe to remove at
-          any time. Every account is on the {planLabel()} plan during the beta, test users too, and each starts with the
-          same template allowance as anyone. A ban or a removal reaches the Worker at once; a page already open as
+          any time. Every account is on the {planLabel()} plan during the beta, test users too. A ban or a removal reaches the Worker at once; a page already open as
           that account can take up to five minutes to notice (the session cookie cache).
         </p>
       </div>

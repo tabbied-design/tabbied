@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import { TEMPLATE_SITES } from 'components/template/templateData';
 import { NEW_TEMPLATE_SITES } from 'lib/templateSites';
 import TemplatePreview from 'components/template/TemplatePreview';
-import { TEMPLATE_NAMES } from 'lib/templateIndex';
 import { pageMetadata, templateImage } from 'lib/seo';
 import { templateShot } from 'lib/templateShots';
 import { withArticle } from 'lib/article';
@@ -67,5 +66,5 @@ export default async function TemplatePreviewPage({
 
   if (!entry) notFound();
 
-  return <TemplatePreview slug={entry.slug} name={entry.name} topic={entry.topic} names={TEMPLATE_NAMES} />;
+  return <TemplatePreview slug={entry.slug} name={entry.name} topic={entry.topic} />;
 }

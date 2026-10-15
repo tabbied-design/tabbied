@@ -94,10 +94,13 @@ runs it before anything else. Run it before committing.
 The three packages are MIT, each with its own LICENSE (npm packs a LICENSE
 file whatever `files` says). Everything else is proprietary and the root
 LICENSE says so: the repository is public to be read, not reused. A website
-template is licensed per account by the Template License, section 7 of the
-Terms of Service (`#template-license`, linked from everywhere below, so the
-id stays). Its substance lives in five places, and a change to it is a change
-to all five in one commit:
+template is licensed to the person who downloads it from tabbied.com by the
+Template License, section 7 of the Terms of Service (`#template-license`,
+linked from everywhere below, so the id stays). Until 14 October 2026 it was
+licensed to the account that chose it; downloading needs no account now (see
+"Free downloads" below), and the five places moved together. Its substance
+lives in five places, and a change to it is a change to all five in one
+commit:
 
 - `app/terms-of-service/page.tsx`, the license itself, which governs;
 - `TEMPLATE_LICENSE` in `scripts/package-templates.mjs`, written as
@@ -120,8 +123,8 @@ Two things worth not re-litigating:
   skips an element it did not render at the end of `<body>`, so hydration is
   unaffected. The export stays clean because the downloads are derived from
   it: a download is the licensee's own copy, and a notice in it telling an
-  agent "this is not yours to copy" would turn away the person who chose the
-  template. Its `AGENTS.md` says the opposite (help the licensee; don't help
+  agent "this is not yours to copy" would turn away the person who downloaded
+  the template. Its `AGENTS.md` says the opposite (help the licensee; don't help
   redistribute). The e2e suite serves `out/` with no Worker, so it never sees
   the notice; `worker/test/api.test.ts` does.
 - **The notices state facts and suggest; they never command.** "Copying this
@@ -166,10 +169,10 @@ Three things that are explicit here and were implicit or automatic on Vercel:
   an MCP client's POST breaks it. `/api` is listed for exactly the same reason
   and it is not optional: every POST to the platform tier would otherwise be
   answered with a redirect before the Worker saw it. **Any new non-asset route
-  must join this list.** `/downloads/*` is the one asset folder on it: a
-  template zip is a signed-in act that makes the template one of the
-  person's five (see "Five templates per account" below), and the edge
-  would otherwise hand it to anyone. The Worker gates `<slug>-<format>.zip` and passes everything else
+  must join this list.** `/downloads/*` is the one asset folder on it: every
+  template zip is free to anyone, and is counted on its way out (a `download`
+  row, with the person when there is a session; see "Free downloads" below),
+  which the edge would skip. The Worker logs `<slug>-<format>.zip` and passes everything else
   under the folder, the packaged pages the previews read, back to the binding,
   except the React package's unzipped folder (`<slug>-react/`), which answers
   404 (`isReactSource`): it is the template's authored source, in the deploy
@@ -860,9 +863,8 @@ registered, annotated (both codemods) and built them. Things learned:
 
 Every template has a screenshot in `public/template-shots/<slug>.webp`: the
 `/templates` card shows it with the site's live pattern as a tile in the
-corner, and the homepage's template rails show it alone. `lib/templateShots.ts`
-reads the folder at build time, so a template with no shot falls back to its
-pattern on both.
+corner. `lib/templateShots.ts` reads the folder at build time, so a template
+with no shot falls back to its pattern.
 
 `npm run build`, then `node scripts/generate-template-shots.mjs [slug ...]`
 (no slugs shoots all). A shot starts **below the site's top bar**: a
@@ -914,9 +916,12 @@ newer than their sources. A template with no shot uses its pattern's card.
 
 `/templates` shows 48 cards a page (whole rows at three, two or one
 columns, so the last row is never cut short), in the order `GALLERY_ORDER`
-in `lib/templateOrder.ts` commits, with the category and the page in the
-query string (`?category=food-and-drink&page=2`). Four things worth not
-re-litigating:
+in `lib/templateOrder.ts` commits, with the category, the page and the search
+in the query string (`?category=food-and-drink&page=2&q=bakery`). Since the 14
+October designs the hero is "A website for every trade, free" with the search
+box in it, and a card is one link, straight into the customizer (or onto the
+person's newest saved site on that template), with the screenshot kept as
+the thumbnail. Four things worth not re-litigating:
 
 - **The order spreads the batches, and a batch is a seed prefix.** The
   registries list templates in the batches they were made in, and a batch
@@ -950,9 +955,7 @@ re-litigating:
   order given and may put two of a batch side by side; the neighbor rule
   (and `e2e/templates.spec.ts`) applies between the cards after it, not to
   the seam, since the spread was laid out without the lead. A slug in both
-  lists fails the export. The homepage's template rails show the lead too
-  (`HomeTemplates`), dealt alternately into the two rows, so editing it
-  changes both pages.
+  lists fails the export.
 - **The URL is read after mount, not with `useSearchParams`**, the same as
   the pattern library's `?page=`: `useSearchParams` in a static export
   renders the whole route on the client. The first paint is All, page 1,
@@ -960,9 +963,7 @@ re-litigating:
   out, so All on page 1 is plain `/templates/`. A chip or a page pushes a
   history entry, and the page numbers are real links. A page past the end
   shows the last page, an unknown category shows All, and so does
-  `?category=yours` for a visitor who is signed out.
-- **A card's "Sign in to use" carries the view** as `?next=`, so signing in
-  comes back to the category and page it left from.
+  `?category=saved` (or the older `yours`) for a visitor who is signed out.
 
 ## The mark, and the font that travels with it
 
@@ -990,63 +991,67 @@ weight.
 ## The masthead - one bar, two tones
 
 `components/nav/SiteNav` is the site's masthead: the lockup on the left (the
-way home, so there is no Home link), Patterns / Websites / Developers in
-the middle, and on the right either "Sign in" or
+way home, so there is no Home link), Website templates / Patterns / For
+developers in the middle (templates first since the 14 October designs made
+them the lead, in sentence case in the display face at 15px, underlined on
+hover and for the current page), and on the right either "Log in" (bold) or
 the person as a pill - the initials in a circle beside two rules - opening a
 menu (email, My account, Settings, and Admin for a person whose row says
-`role = 'admin'`, then Sign out; the item for the current page is ink and
+`role = 'admin'`, then Log out; the item for the current page is ink and
 600, the rest grey). My account is only in that menu, never in the middle.
 Below 768px the destinations fold into that menu, or behind
 a hamburger when signed out. It takes a `tone` (`dark` for the homepage and
 the template gallery, `light` for everything else) and a `sticky` flag the
-pattern library uses because its rail starts where the bar ends. `HomeNav`,
-`MainHeader`, `AccountHeader` and `GalleryTopBar` are now one-line wrappers
-over it.
+pattern library uses because its rail starts where the bar ends.
+`MainHeader`, `AccountHeader` and `GalleryTopBar` are one-line wrappers over
+it.
 
 Four things worth not re-litigating:
 
-- **The bar states a height; it does not add up to one.** 62px light, 67px
-  dark, 56px below 768px - the artboards' own bars, measured. Vertical
-  padding plus whatever the right-hand slot happened to be drew it 13px
-  taller than the design everywhere, because the circle rather than the
-  lockup was the tallest thing in the row. A stated height also keeps the bar
-  from changing height when the session resolves, and it lets the 42px
-  account pill sit inside the artboards' bar rather than setting it.
-  `--gallery-bar-h` in `SelectPattern.module.css` is the light number: the
-  library's rail is fixed below the bar, so the two have to agree.
+- **The bar states a height; it does not add up to one.** 80px in both
+  tones (the 14 October artboards; 62px light and 67px dark before), 56px
+  below 768px - the artboards' own bars, measured. Vertical padding plus
+  whatever the right-hand slot happened to be drew it taller than the design,
+  because the circle rather than the lockup was the tallest thing in the
+  row. A stated height also keeps the bar from changing height when the
+  session resolves, and it lets the 42px account pill sit inside the
+  artboards' bar rather than setting it. `--gallery-bar-h` in
+  `SelectPattern.module.css` is the same number: the library's rail is fixed
+  below the bar, so the two have to agree.
 - **Below 768px it is pinned**, on every route and in both tones, which is
   why `--n-bg` exists - the bar is otherwise transparent and takes whatever
   the page is. At those widths the destinations live *behind* this bar, so a
   bar that scrolled away would take the site's navigation with it. **The
-  dark tone is pinned at every width**, on the designs' translucent ground
-  (`oklch(0.17 0.012 285 / 0.82)` under a 14px blur), since the homepage and
-  gallery artboards both draw it that way; for the light tone the `sticky`
-  flag stays a page's own choice.
-- **GitHub is in the footer, not the bar.** The 2026 artboards put three
+  dark tone is pinned at every width**, on the designs' ink ground
+  (`rgb(14 14 19 / 0.85)` under a 14px blur, with no hairline), since the
+  homepage and gallery artboards both draw it that way; for the light tone
+  the `sticky` flag stays a page's own choice.
+- **GitHub is in the footer, not the bar.** The artboards put three
   destinations and the account up top and everything else in `HomeFooter`;
   the docs joined the bar later as its last destination, first as "React
-  Component" and now as "Developers", the `/docs` landing page, which lights
-  for every page under it. The footer has four columns on a desktop: the
-  name with the contact lines under it, Product, and "For Developers" over
-  the last two, which lists each docs page (`DEVELOPER_LINKS` in
-  `HomeFooter`) read down two of the footer's own tracks (a subgrid), so it
-  is no longer than the Product list; a new docs page joins that list and
-  the landing page's cards. GitHub is a mark at the left of the bottom bar,
-  before the copyright and the legal pages. The Octocat is
-  `components/GitHubMark`, one copy for the footer, the docs pages' GitHub
-  links and the sign-in button. The bar used to carry a different set of
-  links on every page, which is what one component ends. Studio is in
-  neither now: the generation flow is held back from the first launch (see
-  below), and the footer's Product list is the artboard's own - Patterns,
-  Websites, My account.
+  Component", then "Developers" and now "For developers", the `/docs`
+  landing page, which lights for every page under it. The footer, since the
+  14 October designs, is one line (the lockup, the same three destinations
+  and "Log in", or "My account" for someone signed in) over the copyright,
+  in a `light` tone under the homepage and `dark` elsewhere. Under the docs
+  (`developers`) a line between them lists each docs page (`DEVELOPER_LINKS`
+  in `HomeFooter`); a new docs page joins that list and the landing page's
+  cards. GitHub is a mark at the left of the bottom line, before the
+  copyright and the legal pages, which the design's footer leaves out and
+  this one keeps: the Template License is linked from everywhere. The
+  Octocat is `components/GitHubMark`, one copy for the footer, the docs
+  pages' GitHub links and the sign-in button. The bar used to carry a
+  different set of links on every page, which is what one component ends.
+  Studio is in neither: the generation flow is held back from the first
+  launch (see below).
 - **It renders the signed-out chrome until a session says otherwise, unless
   this browser was signed in last time.** The export cannot know who is
   looking, and most visitors are nobody; a ghost in the right-hand slot for
   everyone while the session resolves would leave the phone layout with no
-  menu at all until the fetch returned. But a signed-in person saw "Sign in"
+  menu at all until the fetch returned. But a signed-in person saw "Log in"
   flash to their initials on every page, so `useSessionUser` keeps a hint in
   localStorage (`SESSION_HINT_KEY`) and a script inline in the bar marks it
-  `data-session="likely"` as the page is parsed, which swaps "Sign in" for a
+  `data-session="likely"` as the page is parsed, which swaps "Log in" for a
   placeholder circle; state keeps it until the session answers. Only a
   browser with the hint gets the ghost, and a wrong hint costs one fetch.
 
@@ -1115,35 +1120,37 @@ not obvious from the diff:
   Export is the same dropdown as the desktop. The palettes are the first
   thirty (and the one in use) in a swipeable row, and "View all" opens
   `PaletteBrowser` in a fullscreen `Dialog`; the rail search is desktop only.
-- **The template preview has one action.** "Use this template" opens, when
-  signed in, a menu headed by the count of chosen templates and what taking
-  this one costs, then Customize and the two original downloads; a template
-  not yet the person's asks first (`ChooseTemplate.tsx`). Signed out it is a
-  card asking for a sign-in, with the customizer as `?next=`. The bar's left
-  edge is the Tabbied mark and "Websites", the way back to the gallery.
+- **The template preview has one action.** "Use this template" opens the
+  same menu for everyone (since the 14 October designs): "Free to customize
+  and download. No account needed.", then Customize (the newest saved site
+  for someone who saved one) and the two original downloads, plain links. The
+  bar's left edge is the Tabbied mark and "Websites", the way back to the
+  gallery.
 - **Popups are portaled, so they carry their own tokens.** The preview's
   menus and the customizer's are rendered under `<body>`, outside the page
   wrapper that declares `--s-*`; a `font:` or `background-color:` naming an
-  undeclared token is invalid as a whole, which is how the sign-in card's
-  "Log in" pill lost its background. Each popup class redeclares what it
-  reads.
+  undeclared token is invalid as a whole, which is how a sign-in card's
+  "Log in" pill once lost its background. Each popup class redeclares what
+  it reads.
 - **The customizer: Save in the rail, no Reset palette, no editor on a
   phone, no download gauge.** Save is at the foot of the rail beside the
-  controls, and the bar is dark like the preview's. The template's own
+  controls. Since the 14 October design there is no bar: the rail is on the
+  right, as the pattern editor's is, headed by the site's name at 40px
+  (wrapping, with a pencil that turns it into the rename field), and the way
+  back and Download are a row over the canvas (`CustomizerBar`), with no
+  account menu, since the customizer needs no account. The template's own
   palette row is the reset. Below 768px the rail is hidden and a notice says
   customizing wants a larger screen, with the site full bleed to preview and
   download; the canvas-first layout that pinned the page at half the viewport
-  is gone. The count of chosen templates is drawn on the account overview
-  and in the preview's menu, not in the customizer's rail.
-- **The account overview is "Your templates"** (the 23 September designs).
-  The ring counts the chosen templates against the allowance, with an (i)
-  saying what counts; beside it the AI card ("Not yet available", a hatched
-  track, a sentence about a later release). Under them the chosen templates
-  as a table: name and kind, when it was last customized and when it was
-  added, a Download menu (the customized version's HTML when a site was
-  saved, then the original's HTML and React) and Customize, which opens the
-  newest saved site or a fresh draft. Then either the empty slot, leading to
-  the gallery, or, at the limit, "Request more". There is no account
+  is gone.
+- **The account overview is "Your templates"** (the 14 October designs,
+  after the 23 September ones). A card counts the saved templates ("No
+  limit on saves or downloads."); beside it the AI card ("Not yet
+  available", a hatched track, a sentence about a later release). Under them
+  the saved sites as a table: name and template, when it was last saved and
+  when it was made, a Download menu (the customized version, then the
+  original's HTML and React) and "Keep editing", which opens that site. Then
+  "Customize another template", leading to the gallery. There is no account
   sub-navigation: pages beyond the overview (settings, sites) carry one
   "Account overview" link back, and the downloads history page is gone.
 
@@ -1152,7 +1159,7 @@ not obvious from the diff:
 The designs arrive as `*.dc.html` pages with inline styles, and the inline
 values are the spec: read a size, weight or color from the source, and
 compare it with `getComputedStyle` on the site, not by eye. Two things make
-their pixels lie. The 24 September export bundles a
+their pixels lie. The 24 September export (and the 14 October one) bundles a
 `fonts/ProximaNova-Regular.otf` that is in fact the Bold cut, so every
 Proxima Nova weight in those artboards draws bold whatever the source says;
 the site follows the source's weight (400, 500), not the render. And the
@@ -1202,19 +1209,33 @@ not re-litigating:
   option), so the file is what the stage showed, at the ratio that was
   picked.
 
-## The homepage - its own shell, and a hydration rule
+## The homepage - templates first, its own shell, and a hydration rule
 
-`app/page.tsx` and `/templates` are the two routes in the dark editorial
-treatment. The homepage brings its own token set
-(`components/main-page/home.module.css`, inherited by every `Home*` section as
-`var(--h-...)`) and the dark `HomeFooter`; the template gallery wraps itself in
-the same tokens so its masthead, cards and footer read from one set, and so
-does `/docs/react`, as a light section of that shell (below). Every other
-route renders the masthead in its light tone; the legal pages and the 404 are
-the older light theme and end in `components/Footer`. Nothing here is global:
-the tokens sit on the page wrapper, not on `:root`, so restyling the homepage
-cannot reach `/patterns`, only the pages that opt into the set. The three
-how-it-works steps are hidden below 768px, as the artboard hides them.
+Since the 14 October designs (Sy's note: make website templates the hero and
+patterns secondary) the homepage leads with templates: a dark hero
+("Websites with personality.") with two mock sites that change with a row
+of trade tabs along its foot, a carousel of trades ("The world still runs on
+skilled hands."), a mock site recolored from a toolbar ("Any template.
+Entirely your own."), then patterns ("Good patterns go beyond websites."),
+the developers, the questions and a last way in, over the light footer. It
+is built from one component per section in `components/main-page/`
+(`TradesHero`, `SkilledHands`, `MakeItYours`, `BeyondWebsites`,
+`ForDevelopers`, `HomeFaq`, `HomeCta`), reading `HomePage.module.css`'s
+tokens and the design's data in `homeData.ts`. The mock sites are drawn in
+markup with static pictures under `public/images/home/` (pattern stills, the
+carousel's photos, the gallery tiles), not live patterns: thirty live
+css-doodle fields on one page would cost what the gallery measured
+(`gallery-cost.mjs`). The mock sites' six display faces load through
+`next/font` for this page only, unpreloaded (`homeFonts.ts`).
+
+`/templates` and the docs keep the older dark editorial token set
+(`components/main-page/home.module.css`, read as `var(--h-...)`): the
+template gallery wraps itself in it so its masthead, cards and footer read
+from one set, and so does `/docs/react`, as a light section of that shell
+(below). Every other route renders the masthead in its light tone; the legal
+pages and the 404 are the older light theme and end in `components/Footer`.
+Nothing here is global: the tokens sit on the page wrapper, not on `:root`,
+so restyling one page cannot reach another.
 
 **The docs pages are the design's light section, not a third theme.**
 `DocsShell` (every page under `/docs` but `/docs/mcp`, which draws the same
@@ -1242,32 +1263,33 @@ keywords). Two things about it:
 
 Three things worth not re-litigating:
 
-- **The animated grids are seeded, then random.** The hero skyline, its margin
-  columns, the pattern demo, and the story backdrop are all grids of randomly
-  shaped cells that reshuffle on a timer. A `Math.random()` call during render
-  makes the prerendered HTML disagree with the first client render and hydration
-  blows up, so the *initial* grid comes from `seededRandom()` in `homeMotion.ts`
-  (the same one on the server and in the browser), and only the timers, which
-  start after mount, use real randomness. The same trap catches module-scope
-  constants: a `Math.random()` at the top level of a module runs once per
-  process, which is not once per page.
+- **Nothing random in a render.** A `Math.random()` call during render
+  makes the prerendered HTML disagree with the first client render and
+  hydration blows up, so anything that varies starts from `seededRandom()`
+  in `homeMotion.ts` (the same one on the server and in the browser), and
+  only what runs after mount may use real randomness. The same trap catches
+  module-scope constants: a `Math.random()` at the top level of a module runs
+  once per process, which is not once per page.
 - **Every figure is derived.** `lib/siteCounts.ts` counts the presets, the
-  template sites, and the palette library; the hero sentence, both stat rows and
-  the two "view all" links read it. It is server-only on purpose - counting the
-  keys of `patterns` in a client component would ship the whole catalog to the
-  browser to learn one number. `e2e/smoke.spec.ts` asserts the same count
-  appears in all three places rather than pinning the value.
-- **Reduced motion stops all of it.** Six independent clocks run on this page
-  plus three CSS animations (the two marquees and the orbiting squares). Every
-  timer is gated on `useMediaQuery('(prefers-reduced-motion: reduce)')` and every
-  animation and transition has a `@media (prefers-reduced-motion: reduce)`
-  override; a marquee that merely slows down is the failure this guards against.
+  template sites, and the palette library; the hero's "N free templates",
+  the carousel's "Browse all N" and the page's description read it. It is
+  server-only on purpose - counting the keys of `patterns` in a client
+  component would ship the whole catalog to the browser to learn one number.
+  `e2e/smoke.spec.ts` asserts the count is the same in both places rather
+  than pinning the value.
+- **Reduced motion stops all of it.** The trade tabs rise in on a CSS
+  animation, and the carousel's clock is its active dot's fill: the slide
+  advances when the fill's animation ends, so the stylesheet's
+  `@media (prefers-reduced-motion: reduce)` override, which removes the
+  fill, is what stops autoplay (and the pause button is not drawn). Every
+  transition has the same override. A carousel that merely slows down is
+  the failure this guards against.
 
 IBM Plex Mono and IBM Plex Sans are loaded by `next/font` (`lib/fonts.ts`)
 **in the page**, not the root layout, so only the routes that use them preload
 them. The two sans split by role, as the artboards do: proxima-nova, from the
-layout's typekit link, sets display type (headings, stat figures, primary
-buttons), and Plex Sans sets body and UI copy.
+layout's typekit link, sets display type (headings and the masthead), and
+Plex Sans sets body and UI copy, buttons included.
 
 ## The platform tier - auth, generation, media
 
@@ -1300,7 +1322,9 @@ second, so a client sending two requests in a second (exactly the burst the
 limiter catches) turned the intended 429 into a 500, and with no
 compare-and-set the count could only ever be approximate. In D1 the rollover
 and the increment are one atomic statement, the count is exact, and the table
-cannot grow past one row per user per endpoint. Sessions moved to
+cannot grow past one row per user per endpoint. (The one gate keyed by
+address rather than user, `POST /api/events`, sweeps its ended windows as it
+goes; see "Free downloads".) Sessions moved to
 better-auth's `cookieCache`, which beats a second store by removing the lookup
 rather than relocating it.
 
@@ -1379,83 +1403,64 @@ Things worth not re-litigating:
   infers it from the *server* config, which lives in `worker/` and is outside
   the site's tsconfig on purpose, so the client types `data` as `never`.
 
-## Five templates per account - chosen once, then unlimited
+## Free downloads - an account is for saving
 
-During the beta every account chooses five website templates. Choosing is
-explicit ("Add to my templates" on a gallery card) or implicit (the first
-download of a template, or the first customizer Save of it), and once a
-template is chosen its colors and patterns can be changed and it can be
-downloaded as often as the person likes. This replaced a cap of thirty
-distinct templates a month (migration 0007 carries every template a person
-had already downloaded or saved into the new table, more than five for an
-early account if so; nothing taken is taken back, they just cannot choose
-another). Five things worth not re-litigating:
+Since 14 October 2026 (Sy's note and the 14 October designs) every template
+is free to customize and download with no account: the gallery's cards open
+the customizer, the preview's "Use this template" menu is the same for
+everyone, and the only thing that asks for an account is Save. It replaced
+the beta's five templates per account (choosing, the claim on download and
+on the first save, "Request more" in two rounds, the admin's grants); the
+founders framed it as an experiment to measure, so the admin overview counts
+what it changes. Five things worth not re-litigating:
 
-- **The claim lives where the bytes leave.** `/downloads/*` is in
-  `run_worker_first`, and `GET /downloads/<slug>-<format>.zip` in
-  `worker/index.ts` requires a session and runs `claimTemplate`
-  (`worker/lib/templates.ts`) before serving the zip through `env.ASSETS`;
-  a miss gives a choice this request made back, so a zip the packager never
-  wrote costs nothing (a 304 is not a miss: the browser already holds the
-  bytes, and the choice stands). The check and the write are one `INSERT OR IGNORE
-  ... SELECT ... WHERE count < allowance`, over a unique `(user, slug)`
-  index: read, compare, then write let 154 concurrent requests all read a
-  count under the old cap, and one account took 51. A HEAD or a Range
-  resuming past byte 0 is answered by the same rule and writes nothing
-  (`takesCopy`). `POST /api/studio/sites {slug}` (the customizer's first
-  Save) and `POST /api/account/templates {slug}` make the same claim.
-- **The dialog is the page's, the rule is the Worker's.** Every way to take
-  a template that is not yet the person's asks first
-  (`components/template/ChooseTemplate.tsx`): how many are chosen, what this
-  one costs, and at the limit the chosen ones and "Request more". The page
-  learns what is chosen from `GET /api/account/templates`, read once per
-  page into a small store (`lib/myTemplates.ts`) the 377 gallery cards
-  share. Someone who opens a zip's URL directly is held to the same five.
-- **A click and a fetch are answered differently.** A navigation (a download
-  link, told by `Sec-Fetch-Mode`) is sent where the answer is: to
-  `/sign-in/?next=` with the page it came from, or to `/account/?templates=
-  full`, which the overview reads after mount and says out loud. A fetch
-  (the customizer building a customized zip) gets JSON and a 401 or 403,
-  and `buildCustomisedArchive` puts that sentence in a toast. The
-  `download` table is now a log of served zips, nothing more.
-- **"Request more" comes in two rounds** (the 24 September designs). The
-  first request answers three questions (role, what they build, how many
-  sites) and is granted by the person: `POST /api/account/templates/request`
-  writes a round-1 row and schedules an email for five minutes later
-  (Resend's `scheduled_at`, so nothing here has to wake up) carrying a
-  single-use link, `GET /api/account/templates/activate?token=`, that adds
-  5 and lands on `/account/?activated=5`. Only the token's SHA-256 is kept,
-  the link lapses after 7 days, and a resend mints a new one (the old link
-  stops working). A resend is refused until the first email is due, since
-  Resend still holds that message and a new token would make its link dead
-  on arrival, and is held to three in ten minutes; every route here that
-  sends mail sits behind a `consume` burst gate, because each call is a
-  real message. The five-minute wait is the design's, so the request
-  reads as looked at rather than paid out; the account row says "on its
-  way" until the send time, then "approved" with a Resend button. Every
-  later request carries those answers forward and adds how many, whether
-  the person would pay, a link and a note; it goes to the team (`TEAM_EMAIL`,
-  else `ADMIN_EMAILS`, with the person as Reply-To) and waits under
-  `/admin/requests/`, where granting adds 1 to 20, declining adds none, Undo
-  puts it back, and a decision mails the person. One request may be open at
-  a time, checked in the insert itself (`openRequest`). The allowance is
-  five plus every `granted` whose status is `activated` or `granted`, plus
-  every admin change (`template_grant`, below), never under five, and
-  that rule is one `allowanceSql`, read by the person's page, the claim and
-  both admin lists alike; the users directory once carried a copy of its
-  own that read a single grant row and left `activated` out, so an account
-  that had followed the link showed 10 / 5 there. Emailed links are built
-  on `PUBLIC_ORIGIN`, as the auth mails are, never on the host a request
-  arrived on.
-  Migration 0008 rebuilt `template_request` for this by hand: drizzle's
-  output copied columns the old table did not have and switched foreign
-  keys off, which D1 does not allow.
-- **The e2e suite never sees the gate.** `serve out` has no Worker, so the
-  zips are plain files there and the specs stub the session and
-  `/api/account/templates`; `worker/test/templates.test.ts` is where the
-  claim, the concurrency, the customizer save and the request are proved.
+- **Downloads are counted where the bytes leave, not gated.** `/downloads/*`
+  stays in `run_worker_first`: `GET /downloads/<slug>-<format>.zip` logs a
+  `download` row (`user_id` null when signed out; migration 0011 rebuilt the
+  table to allow it) and serves the zip through `env.ASSETS`, and a miss
+  gives the row back (a 304 is not a miss). A HEAD or a Range resuming past
+  byte 0 is served and writes nothing (`takesCopy`). The session is read only
+  to name the person, and an auth failure of any kind logs the download as
+  anonymous rather than refusing it.
+- **The customizer's counts are a beacon, `POST /api/events`.** A closed list
+  of kinds (`lib/events.ts`): `customize` (the customizer opened on a
+  template), `save-gate` (a signed-out Save asked for an account) and
+  `gate-save` (the edits stashed at that gate were saved after signing in).
+  It is unauthenticated, so it is burst-limited per address through the same
+  D1 window as everything else, and `sweepExpired` clears ended windows so
+  the per-address rows do not pile up. The admin overview reads it with the
+  download log: downloads in 30 days (and how many with no account),
+  customizer sessions, new accounts and how many began at the save gate, and
+  saved templates. Visits are Cloudflare's Web Analytics, not ours.
+- **The save gate stashes the draft, in localStorage.**
+  `components/studio/SaveGate.tsx` offers a free account or a log-in; either
+  link writes the draft (`lib/pendingSave.ts`, a week's life, one template)
+  before it leaves, and the account forms carry `?intent=save` (their copy
+  says the edits carry over) and `?next=` back to the customizer, through
+  the confirmation email too (`/verify-email/?next=`, which goes on once the
+  link has signed the person in). The customizer puts a stash for its
+  template back on the canvas once the session has answered, and saves it at
+  once if there is one. localStorage rather than the address: a document is
+  too long for a query string, and the confirmation link opens a new tab.
+- **The beta's tables are history, not dropped.** `template_choice`,
+  `template_request` and `template_grant` stay declared in the schema with
+  their rows; nothing reads or writes them, and no migration removes data.
+  Their routes, mails, dialogs and the admin's Requests page are gone; the
+  commit that removed them is the way back if the experiment is reversed.
+- **What a person has saved is read from their sites.** `lib/savedTemplates.ts`
+  reads `GET /api/studio/sites` once per page: the gallery's "Saved (n)"
+  chip (`?category=saved`; the old `yours` still opens it) and badge, the
+  preview's Customize (the newest saved site on that template, else a draft)
+  and the account overview's table all come from it. A person with several
+  saved sites on one template has several rows on the account page.
 
-Mail itself (Resend, `MAIL_FROM`, `TEAM_EMAIL`, the DNS records and what
+Migration 0011 has to reach production before the code that writes a null
+`user_id` or an event deploys (`npm run deploy` runs it first). With the old
+schema an anonymous download's row cannot be written: the zip is still
+served, since counting never refuses a download, but it goes uncounted, and
+`/api/events` answers 503 like any route on a table that is not there.
+
+Mail itself (Resend, `MAIL_FROM`, the DNS records and what
 `/api/health` reports) is `docs/email.md`.
 
 ## Studio - matching, then generating
@@ -1682,12 +1687,12 @@ whatever text Studio wrote, so putting them back is a UI change.
   rebuilding `site` and `revision` **child first**: SQLite cannot alter a
   column's constraint and D1 cannot switch foreign keys off, and dropping a
   parent under enforced keys runs an implicit DELETE that would cascade every
-  saved document away. `/studio/customize/?slug=` is the one door in - the
-  framed `/templates/<slug>/` preview's "Use this template" links to it, and
-  it handles the sign-in detour. The gallery cards no longer do: the
-  artboard's card footer is the DOWNLOAD label and the two format pills, and
-  nothing else. The account's "Create new site" leads to `/templates`, since
-  a site starts from a template and the slug is the choice being made.
+  saved document away. `/studio/customize/?slug=` is the one door in: every
+  gallery card and the framed `/templates/<slug>/` preview's "Use this
+  template" lead to it, and it opens for anyone, signed in or not; only the
+  first Save asks for an account (the save gate, see "Free downloads"). The
+  account's "Customize another template" leads to `/templates`, since a site
+  starts from a template and the slug is the choice being made.
 - **The rail edits through the engine, live.** Choosing a palette plans the
   properties and the pattern-host rewrites and runs them against the iframe's
   document, then calls `window.__tabbied.rehydrate()` inside it, which the
@@ -1836,14 +1841,14 @@ so a new test joins an existing file unless it needs a fresh database.
 
 ## The admin's hands on an account - impersonate, ban, remove, test users
 
-The directory (`/admin/users`) shows a Plan column (everyone is `free`
+The directory (`/admin/users`) shows an Account column (everyone is `free`
 during the beta; `PLAN` in `worker/lib/users.ts` is the one place that says
-so) and a Template Quota, red once everything allowed is chosen, with a
-pencil that opens Manage templates. There is no Status column: Unverified
-and Banned are badges by the name. Each row ends in an ellipsis menu,
-`components/admin/UserActions.tsx`: Impersonate, Ban or Unban, Remove. The
-same menu sits on a user's detail view and on `/admin/test-users`. Five
-things worth not re-litigating:
+so), then the person's saved templates and their signed-in downloads (the
+14 October design; there is no quota since downloads went free). There is
+no Status column: Unverified and Banned are badges by the name. Each row
+ends in an ellipsis menu, `components/admin/UserActions.tsx`: Impersonate,
+Ban or Unban, Remove. The same menu sits on a user's detail view and on
+`/admin/test-users`. Four things worth not re-litigating:
 
 - **Remove is ours; impersonate and ban are better-auth's.** better-auth's
   `remove-user` deletes the row and the sessions, and D1 cascades the rest,
@@ -1869,7 +1874,7 @@ things worth not re-litigating:
   heights and the dark one's backdrop blur would become a fixed child's
   containing block. The account menus (SiteNav, the customizer's, the
   template preview's) head themselves "Viewing as" and put "Stop
-  impersonating" where "Sign out" was: better-auth's sign-out ends the
+  impersonating" where "Log out" was: better-auth's sign-out ends the
   borrowed session and leaves the admin's own in a cookie nothing reads, so
   signing out there signed the admin out too. Stopping returns to the page
   the admin started from (per tab, in sessionStorage).
@@ -1881,35 +1886,15 @@ things worth not re-litigating:
   `node:crypto` without `nodejs_compat`), so a batch in one request would
   spend that CPU several times over; the page loops and reports progress.
   The password is shown once on the page, since only its hash is kept.
-- **An admin changes a person's templates from the same menu.** "Manage
-  templates" (`TemplatesDialog`) takes chosen templates back (some, or all:
-  Reset) and sets the limit without a request: up by at most 20 at a time,
-  or down, never under the free five. Taking one back
-  deletes what the person made on it too, their sites on that template and
-  those sites' pictures (`removeChosenTemplates`), and the dialog says how
-  many before it happens. A change is a `template_grant` row holding the
-  difference (negative to lower), not a `template_request`: the request flow
-  reads the latest request row as the person's own, so a grant stored there
-  would pose as their request. `allowanceSql` counts both and floors the sum
-  at `FREE_TEMPLATES`, so no combination of decreases and undone grants
-  takes anyone under five; the route writes the difference from the
-  unfloored sum (`rawAllowanceSql`), so the limit set is exactly the one
-  asked for. Only a raise is mailed: "Email them" is on by default and sends
-  `adminGrantEmail`, not the decision email, which thanks the person for a
-  request they never sent. A change can be taken back; what the person
-  already chose stays chosen, as for an early account over the limit.
-  Migration 0009 made the table, and `allowanceSql` reads it on every claim,
-  so **0009 must be applied to production before the code that reads it
-  deploys**: without it every download and the account page fail.
 - **The email preview renders what is sent, not a copy of it.**
   `worker/lib/mail.ts` builds each message (`verificationEmail`,
-  `approvalEmail`, ...) apart from sending it, and both the senders and
+  `resetPasswordEmail`) apart from sending it, and both the senders and
   `worker/lib/emailPreview.ts` call the builders, so `/admin/emails` shows
   the bytes a person receives. A new message in `mail.ts` needs an entry
   there or the page quietly stops describing the mail. A test copy goes
   only to the admin asking (there is no address field), behind a burst
   gate like every route that sends mail. Links carry `PREVIEW-ONLY` tokens
-  that confirm, reset and grant nothing. The lockup in designed mail is a
+  that confirm and reset nothing. The lockup in designed mail is a
   hosted PNG (`public/email/tabbied-lockup.png`, captured from `Logo` by
   `scripts/capture-email-lockup.mjs`), because Gmail strips inline SVG and
   ignores web fonts. There is no admin page for the dev mailbox: `dev_mail`
@@ -2089,8 +2074,8 @@ element and the HTML div are plain blocks (full width, 0px tall until
 something gives them a height), so a case can have a different answer in
 each. Every result was measured in Chromium, never reasoned out: `fill`
 taking the width is what makes "a height and a ratio" 800 by 300 and not 600
-by 300. Each box is the design live, in the homepage hero's first palette
-(Mint) on a transparent ground, outlined so its extent reads.
+by 300. Each box is the design live, in the docs' first palette (Mint,
+`homePalettes.ts`) on a transparent ground, outlined so its extent reads.
 
 **Recipes** (`examples/recipes/<setup>.ts`): the same seven layout and eight
 interaction recipes on every page, then the setup's own "in an app" ones.

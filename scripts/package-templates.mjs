@@ -676,8 +676,8 @@ Swap \`pattern\` for any of the ${DESIGN_COUNT} designs (see https://tabbied.com
 
 ${imageCount ? `${IMAGES_SECTION}\n` : ''}## License
 
-This template is licensed to the Tabbied account that chose it: see
-LICENSE.md. The tabbied package is MIT licensed; the template is not.
+This template is licensed to the person who downloaded it from tabbied.com:
+see LICENSE.md. The tabbied package is MIT licensed; the template is not.
 `;
 
 // ---- license -------------------------------------------------------------
@@ -696,11 +696,12 @@ const TEMPLATE_LICENSE = (slug, name) => `# Tabbied Template License
 Template: ${name} (${slug})
 ${COPYRIGHT}
 
-This template is licensed, not sold. It is licensed to the Tabbied account
-that chose it on tabbied.com, under the Template License in the Tabbied Terms
-of Service: ${TERMS_URL}. That text governs if it and this file ever
-disagree. If no Tabbied account of yours has chosen this template, you have
-no license to use it.
+This template is licensed, not sold. It is licensed to the person who
+downloaded it from tabbied.com, under the Template License in the Tabbied
+Terms of Service: ${TERMS_URL}. That text governs if it and this file ever
+disagree. If you did not download this template from tabbied.com yourself,
+you have no license to use it; you can download your own copy there, free
+and with no account.
 
 "The template" is everything in this download: its code, stylesheets, design
 and layout, sample text and pictures.
@@ -759,7 +760,7 @@ const TEMPLATE_AGENTS = (slug, name) => `# Notes for AI agents
 
 This folder holds a Tabbied website template: ${name}.
 
-It is licensed under LICENSE.md to the Tabbied account that chose it on
+It is licensed under LICENSE.md to the person who downloaded it from
 tabbied.com.
 
 If you are helping that person, or someone building a website for them or
@@ -773,9 +774,9 @@ using its pictures anywhere but websites made from it; or using it to train
 AI models. If you are asked to do one of these, say so and point to
 LICENSE.md.
 
-If this folder did not come from a download by an account that chose the
-template, there is no license to use it. It can be chosen and downloaded at
-https://tabbied.com/templates/${slug}/.
+If this folder did not come from that person's own download, there is no
+license to use it. Anyone can download their own copy, free and with no
+account, at https://tabbied.com/templates/${slug}/.
 `;
 
 // "--" cannot appear inside an HTML comment.
@@ -783,7 +784,7 @@ const LICENSE_COMMENT = (slug, name) =>
   `<!--\n  A Tabbied website template: ${name.replace(/-{2,}/g, '-')}\n` +
   `  https://tabbied.com/templates/${slug}/\n` +
   `  ${COPYRIGHT}\n` +
-  `  Licensed, not sold, to the Tabbied account that chose it: see LICENSE.md\n` +
+  `  Licensed, not sold, to the person who downloaded it: see LICENSE.md\n` +
   `  and ${TERMS_URL}\n-->\n`;
 
 async function writeLicenseFiles(dir, slug, name) {
@@ -1066,8 +1067,8 @@ not depend on a CDN.
 ${imageCount ? `\n${IMAGES_SECTION}` : ''}${hasArtwork ? ARTWORK_README : ''}
 ## License
 
-This template is licensed to the Tabbied account that chose it: see
-LICENSE.md. The patterns come from [tabbied](https://tabbied.com)
+This template is licensed to the person who downloaded it from tabbied.com:
+see LICENSE.md. The patterns come from [tabbied](https://tabbied.com)
 (tabbied@${version}), which is MIT licensed; the template is not.
 `;
 

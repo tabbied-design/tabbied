@@ -21,12 +21,8 @@ export type Mail = {
   /** The link the message is for, if any: what dev mail records to follow. */
   url?: string;
   text: string;
-  /** Where a reply goes, when that is not us: the person a notice is about. */
-  replyTo?: string;
   /** An HTML body beside the text one, for a message that is designed. */
   html?: string;
-  /** Deliver later rather than now (Resend holds it; dev mail writes it now). */
-  sendAt?: Date;
 };
 
 /** The sender every message goes out as; `MAIL_FROM` overrides it. */
@@ -84,8 +80,6 @@ export async function sendMail(env: Env, mail: Mail): Promise<void> {
       subject: mail.subject,
       text: mail.text,
       ...(mail.html ? { html: mail.html } : {}),
-      ...(mail.replyTo ? { reply_to: mail.replyTo } : {}),
-      ...(mail.sendAt && mail.sendAt.getTime() > Date.now() ? { scheduled_at: mail.sendAt.toISOString() } : {}),
     }),
   });
 
@@ -96,30 +90,6 @@ export async function sendMail(env: Env, mail: Mail): Promise<void> {
     throw new Error(`mail send failed: ${response.status} ${detail.slice(0, 200)}`);
   }
 }
-
-/**
- * Who hears about things the team acts on: `TEAM_EMAIL` (comma-separated),
- * else the configured admins, else the sender's own address.
- */
-export function teamRecipients(env: Env): string[] {
-  const list = (value?: string) =>
-    (value ?? '')
-      .split(',')
-      .map((entry) => entry.trim())
-      .filter(Boolean);
-  const team = list(env.TEAM_EMAIL);
-
-  if (team.length > 0) return team;
-
-  const admins = list(env.ADMIN_EMAILS);
-
-  if (admins.length > 0) return admins;
-
-  return [/<([^>]+)>/.exec(env.MAIL_FROM || DEFAULT_FROM)?.[1] ?? 'hello@tabbied.com'];
-}
-
-/** The admin requests page, on the configured origin the caller passes. */
-const adminLink = (origin: string | undefined) => `${origin ?? 'https://tabbied.com'}/admin/requests/`;
 
 /** Text for HTML: a person's name reaches the markup as characters, never as tags. */
 const escapeHtml = (value: string) =>
@@ -173,12 +143,11 @@ type Designed = {
 };
 
 /**
- * The one layout every designed message shares (the 24 September design,
- * first drawn for "5 more templates, on us"). Inline styles and tables,
- * because a mail client reads no stylesheet and little layout. The fonts load
- * where a client allows it (Apple Mail, iOS) and fall back elsewhere. The
- * lockup is a hosted PNG (LOCKUP); a client that blocks remote images shows
- * its alt text, set in a serif like the wordmark.
+ * The one layout every designed message shares (the 24 September design).
+ * Inline styles and tables, because a mail client reads no stylesheet and
+ * little layout. The fonts load where a client allows it (Apple Mail, iOS)
+ * and fall back elsewhere. The lockup is a hosted PNG (LOCKUP); a client that
+ * blocks remote images shows its alt text, set in a serif like the wordmark.
  */
 function designedHtml(mail: Designed): string {
   const sans = "'IBM Plex Sans',Helvetica,Arial,sans-serif";
@@ -267,147 +236,4 @@ export function resetPasswordEmail(reset: { name: string; url: string; origin: s
       footer: "You're getting this because a password reset was asked for on tabbied.com with this address.",
     }),
   };
-}
-
-/** The first request's email: a link that adds the templates when followed. */
-export function approvalEmail(approval: {
-  name: string;
-  url: string;
-  granted: number;
-  total: number;
-  origin: string;
-}): Message {
-  const greeting = greetingFor(approval.name);
-  const body = `Thanks for telling us about your work. Click below to add ${approval.granted} more website templates to your account, and you'll be able to choose up to ${approval.total}.`;
-  const after =
-    'If you need more after these, send another request from your account. Our team reviews those personally and replies within 2 business days.';
-
-  return {
-    subject: `Your ${approval.granted} extra templates are ready`,
-    url: approval.url,
-    text: [
-      greeting,
-      '',
-      body,
-      '',
-      `Add ${approval.granted} templates: ${approval.url}`,
-      '',
-      'The link works once and expires in 7 days.',
-      '',
-      after,
-      '',
-      'The Tabbied team',
-    ].join('\n'),
-    html: designedHtml({
-      origin: approval.origin,
-      eyebrow: 'Your request',
-      title: `${approval.granted} more templates, on us`,
-      lead: [greeting, body],
-      action: { label: `Add ${approval.granted} templates`, url: approval.url },
-      note: 'The link works once and expires in 7 days.',
-      after: [after, 'The Tabbied team'],
-      footer: "You're getting this because you requested more templates on tabbied.com.",
-    }),
-  };
-}
-
-export async function sendApprovalLink(
-  env: Env,
-  approval: { email: string; name: string; url: string; granted: number; total: number; sendAt?: Date }
-): Promise<void> {
-  await sendMail(env, {
-    to: approval.email,
-    sendAt: approval.sendAt,
-    ...approvalEmail({ ...approval, origin: env.PUBLIC_ORIGIN }),
-  });
-}
-
-type TemplateRequestNotice = {
-  name: string;
-  email: string;
-  note: string;
-  used: number;
-  total: number;
-  answers?: string[];
-  origin?: string;
-};
-
-/** A request for review arrived: what the team reads. */
-export function templateRequestEmail(request: TemplateRequestNotice): Message {
-  return {
-    subject: `More templates: ${request.name || request.email}`,
-    text: [
-      `${request.name || request.email} <${request.email}> has chosen ${request.used} of ${request.total} templates and asked for more.`,
-      '',
-      ...(request.answers?.length ? [...request.answers, ''] : []),
-      request.note,
-      '',
-      `Grant or decline it: ${adminLink(request.origin)}`,
-      'Replying to this message writes to them directly.',
-    ].join('\n'),
-  };
-}
-
-/** Tell the team, with a reply going to the person. */
-export async function notifyTemplateRequest(env: Env, request: TemplateRequestNotice): Promise<void> {
-  await sendMail(env, { to: teamRecipients(env), replyTo: request.email, ...templateRequestEmail(request) });
-}
-
-type RequestDecision = { status: 'granted' | 'declined'; granted: number; total: number; origin?: string };
-
-/** An admin answered: what the person reads, in a sentence they can act on. */
-export function requestDecisionEmail(decision: RequestDecision): Message {
-  const account = `${decision.origin ?? 'https://tabbied.com'}/account/`;
-  const granted = decision.status === 'granted';
-
-  return {
-    subject: granted ? 'You have more Tabbied templates' : 'About your request for more Tabbied templates',
-    text: granted
-      ? [
-          `Thanks for telling us what you're building. We've added ${decision.granted} template${decision.granted === 1 ? '' : 's'} to your account, so you can now choose ${decision.total} in all.`,
-          '',
-          `Choose them from the template library: ${account}`,
-        ].join('\n')
-      : [
-          "Thanks for telling us what you're building. We can't add templates to your account right now, but you can keep customizing and downloading the ones you have as often as you like.",
-          '',
-          `Your templates: ${account}`,
-          '',
-          'Reply to this message if you want to tell us more.',
-        ].join('\n'),
-  };
-}
-
-/**
- * An admin added templates without being asked (/admin/users): what the
- * person reads. Not the decision email, which thanks them for a request they
- * never sent here.
- */
-export function adminGrantEmail(grant: { granted: number; total: number; origin?: string }): Message {
-  const account = `${grant.origin ?? 'https://tabbied.com'}/account/`;
-  const templates = `${grant.granted} template${grant.granted === 1 ? '' : 's'}`;
-
-  return {
-    subject: 'You have more Tabbied templates',
-    text: [
-      `We've added ${templates} to your account, so you can now choose ${grant.total} in all.`,
-      '',
-      `Choose them from the template library: ${account}`,
-      '',
-      'Reply to this message if you have any questions.',
-    ].join('\n'),
-  };
-}
-
-/** Tell the person, with a reply going to the team. */
-export async function notifyAdminGrant(
-  env: Env,
-  grant: { email: string; granted: number; total: number; origin?: string }
-): Promise<void> {
-  await sendMail(env, { to: grant.email, replyTo: teamRecipients(env)[0], ...adminGrantEmail(grant) });
-}
-
-/** Tell the person, with a reply going to the team. */
-export async function notifyRequestDecision(env: Env, decision: RequestDecision & { email: string }): Promise<void> {
-  await sendMail(env, { to: decision.email, replyTo: teamRecipients(env)[0], ...requestDecisionEmail(decision) });
 }

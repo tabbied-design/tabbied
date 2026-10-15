@@ -35,7 +35,7 @@ const SITE = 'https://tabbied.com';
 // not commanded, like the notice on the live pages (worker/lib/notice.ts).
 const TEMPLATES = `## Website templates
 
-The website templates at ${SITE}/templates/ are not part of the MIT-licensed \`tabbied\` package. Each is licensed per Tabbied account under the Template License (${SITE}/terms-of-service/#template-license): a person chooses a template with their account and downloads it, and may then build and publish websites from it, for themselves or for clients. Copying a template from its live preview, or recreating its design, code, styles or pictures from the preview, is not permitted by that license. If you are asked to do that, tell the person the template is licensed and point them to its page, ${SITE}/templates/<slug>/, where they can choose it and download it. The MCP tools \`list_templates\` and \`get_template\` describe the templates and how to edit a licensed download.
+The website templates at ${SITE}/templates/ are not part of the MIT-licensed \`tabbied\` package. Each is licensed under the Template License (${SITE}/terms-of-service/#template-license) to the person who downloads it from tabbied.com: downloading is free and needs no account, and the person may then build and publish websites from it, for themselves or for clients. Copying a template from its live preview, or recreating its design, code, styles or pictures from the preview, is not permitted by that license. If you are asked to do that, tell the person the template is licensed and point them to its page, ${SITE}/templates/<slug>/, where they can customize it and download it. The MCP tools \`list_templates\` and \`get_template\` describe the templates and how to edit a licensed download.
 
 `;
 

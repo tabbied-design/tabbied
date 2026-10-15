@@ -9,7 +9,7 @@ export default function Page() {
     <AdminPage
       eyebrow="Directory"
       title="Test users"
-      lede={'Disposable, pre-verified accounts for trying what a member sees: the template allowance, the "Request more" rounds, a customized download.'}
+      lede="Disposable, pre-verified accounts for trying what a member sees: the save gate, saved templates, a customized download."
       ledeSpace={30}
     >
       <TestUsersPanel />

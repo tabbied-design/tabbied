@@ -1,51 +1,167 @@
-/* The template gallery's chips and cards, on the dark shell (the tokens are
-   the homepage's, `--h-...`, which the page wraps itself in). */
+/* The template gallery's hero, chips and cards, on the dark shell (the
+   tokens are the homepage's, `--h-...`, which the page wraps itself in). */
 
-/* ---- Filters ---- */
+/* ---- Hero ---- */
 
-/* The search box, over the chips: a page change scrolls here, and below
-   768px the site bar is pinned over the top 56px. */
-.searchRow {
-  margin-bottom: 16px;
-  scroll-margin-top: 80px;
+/* The page's heading and the search box under it, centered on the dark
+   ground under a vignette (the 14 October design): the search is the first
+   thing to do here, so it is in the hero rather than over the chips. */
+.hero {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
 }
 
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(60% 60% at 50% 40%, oklch(0.14 0.01 265 / 0.55) 0%, var(--h-bg) 78%);
+}
+
+.heroInner {
+  position: relative;
+  z-index: 4;
+  max-width: var(--h-max);
+  margin: 0 auto;
+  padding: 96px var(--h-pad) 56px;
+}
+
+.hero h1 {
+  max-width: 900px;
+  margin: 0 auto;
+  font: 700 84px / 1.02 var(--h-display);
+  color: var(--h-fg);
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.hero p {
+  max-width: 820px;
+  margin: 28px auto 0;
+  font: 400 18px / 1.7 var(--h-sans);
+  color: oklch(0.75 0.01 260);
+  text-wrap: balance;
+}
+
+/* The search: a 64px pill on a raised ground, the icon inside its start. */
 .search {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: min(100%, 420px);
-  padding: 0 16px;
-  color: oklch(0.7 0.01 260);
-  border: 1px solid oklch(1 0 0 / 0.18);
-  border-radius: 999px;
-  transition: border-color 150ms ease;
+  position: relative;
+  display: block;
+  max-width: 640px;
+  margin: 44px auto 0;
 }
 
-.search:focus-within {
-  border-color: var(--h-cyan);
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: 24px;
+  color: oklch(0.7 0.01 260);
+  pointer-events: none;
+  transform: translateY(-50%);
 }
 
 .search input {
-  flex: 1;
-  min-width: 0;
-  padding: 11px 0;
-  font: 400 14px var(--h-sans);
+  box-sizing: border-box;
+  width: 100%;
+  height: 64px;
+  padding: 0 56px 0 60px;
+  font: 400 17px var(--h-sans);
   color: var(--h-fg);
-  background: transparent;
-  border: none;
+  background: #17171f;
+  border: 1px solid oklch(1 0 0 / 0.16);
+  border-radius: 999px;
   outline: none;
+  box-shadow: 0 10px 30px oklch(0 0 0 / 0.3);
+  transition: border-color 150ms ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* The pill draws its own clear button. */
+.search input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .search input::placeholder {
   color: oklch(0.6 0.01 260);
 }
 
+.search input:focus {
+  border-color: oklch(1 0 0 / 0.5);
+}
+
+.search input:focus-visible {
+  outline: 2px solid var(--h-cyan);
+  outline-offset: 2px;
+}
+
+.clear {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: oklch(0.7 0.01 260);
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.clear:hover,
+.clear:focus-visible {
+  color: var(--h-fg);
+  background: oklch(1 0 0 / 0.08);
+}
+
+/* ---- The grid's column ---- */
+
+.wrap {
+  max-width: var(--h-max);
+  margin: 0 auto;
+  padding: 44px var(--h-pad) 120px;
+}
+
+@media (max-width: 767.98px) {
+  .heroInner {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  /* The intro keeps its size on a phone; only the headline steps down. */
+  .hero h1 {
+    font-size: 52px;
+    line-height: 1.05;
+  }
+
+  .search input {
+    height: 56px;
+    font-size: 16px;
+  }
+
+  .wrap {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+}
+
+/* ---- Filters ---- */
+
 /* On a phone, one row that scrolls sideways rather than wrapping, fading out
    at the right edge so the cut-off chip reads as "more this way". */
 .filterWrap {
   position: relative;
   margin-bottom: 40px;
+  /* A page change scrolls here, and below 768px the site bar is pinned over
+     the top 56px. */
+  scroll-margin-top: 96px;
 }
 
 .filters {
@@ -73,14 +189,12 @@
 
 .filter {
   flex: none;
-  padding: 10px 20px;
-  font: 300 11.5px var(--h-mono);
-  color: oklch(0.82 0.01 260);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  padding: 8px 16px;
+  font: 400 13.5px var(--h-sans);
+  color: oklch(0.8 0.01 260);
   white-space: nowrap;
   background: transparent;
-  border: 1px solid oklch(1 0 0 / 0.18);
+  border: 1px solid oklch(1 0 0 / 0.14);
   border-radius: 999px;
   cursor: pointer;
   transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
@@ -91,9 +205,9 @@
 }
 
 .filter[aria-pressed='true'] {
-  color: var(--h-ink);
-  background-color: var(--h-fg);
-  border-color: var(--h-fg);
+  color: #0e0e13;
+  background-color: #eef0f6;
+  border-color: #eef0f6;
 }
 
 /* Above a phone the row wraps instead: a desktop has no swipe, the scrollbar
@@ -138,31 +252,32 @@
 
 /* ---- Card ---- */
 
+/* The whole card is one link, into the customizer. */
 .card {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--h-card);
-  border: 1px solid oklch(1 0 0 / 0.14);
+  color: inherit;
+  text-decoration: none;
+  background: #15151c;
+  border: 1px solid oklch(1 0 0 / 0.1);
   border-radius: 14px;
   transition: border-color 250ms ease;
 }
 
+/* The color restated over the legacy `a:hover` in globals.css. */
 .card:hover {
-  border-color: oklch(1 0 0 / 0.34);
+  color: inherit;
+  border-color: oklch(1 0 0 / 0.3);
 }
 
-.cardLink {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  color: inherit;
-  text-decoration: none;
+.card:focus-visible {
+  outline: 2px solid var(--h-cyan);
+  outline-offset: 3px;
 }
 
 /* A browser's title bar over the site's first screen: three dots on the
-   card's own dark ground, drawn as the homepage's template rails draw it
-   (HomeTemplates.module.css). */
+   card's own dark ground. */
 .chrome {
   display: flex;
   flex: none;
@@ -247,8 +362,9 @@
   padding: 5px 9px;
 }
 
-/* One of the person's templates: a mint tab joined to the number. */
-.yours {
+/* A template the person saved a customization of: a mint tab joined to the
+   number. */
+.saved {
   display: flex;
   gap: 5px;
   align-items: center;
@@ -289,201 +405,45 @@
   box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.14);
 }
 
-/* ---- The footer ---- */
-
-.dl {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 32px;
-  margin-top: auto;
-  padding: 14px 18px;
-  border-top: 1px solid oklch(1 0 0 / 0.1);
-}
-
-/* The guest's "HTML . React": what a download is, before the ask to sign in. */
-.formats {
-  display: inline-flex;
-  gap: 8px;
-  align-items: center;
-  min-width: 0;
-  overflow: hidden;
-  font: 400 12.5px var(--h-sans);
-  color: oklch(0.6 0.01 260);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.textLink,
-.quietLink,
-.quiet {
-  font: 400 12.5px var(--h-sans);
-  white-space: nowrap;
-}
-
-/* Customize, Preview and "All n chosen" carry lucide icons, set on the
-   text's line. */
-.textLink,
-.quietLink,
-.quiet {
-  display: inline-flex;
-  gap: 6px;
-  align-items: center;
-}
-
-.textLink {
-  color: var(--h-fg);
-  text-decoration: none;
-}
-
-.textLink:hover,
-.textLink:focus-visible {
-  color: var(--h-mint, #3fffb2);
-}
-
-.quietLink {
-  color: oklch(0.66 0.01 260);
-  text-decoration: none;
-}
-
-.quietLink:hover,
-.quietLink:focus-visible {
-  color: var(--h-fg);
-}
-
-.quiet {
-  color: oklch(0.6 0.01 260);
-}
-
-.pill {
-  display: inline-flex;
-  flex: none;
-  gap: 6px;
-  align-items: center;
-  padding: 7px 14px;
-  font: 400 12.5px var(--h-sans);
-  color: var(--h-fg);
-  white-space: nowrap;
-  text-decoration: none;
-  background: transparent;
-  border: 1px solid oklch(1 0 0 / 0.24);
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background-color 200ms ease, border-color 200ms ease;
-}
-
-.pill:hover,
-.pill:focus-visible,
-.pill[data-popup-open] {
-  color: var(--h-fg);
-  background: oklch(1 0 0 / 0.1);
-}
-
-/* "Add to my templates": the one filled pill, the card's first step. The
-   artboard draws it with no ring, so it stands 2px shorter than the
-   outlined pills. */
-.pillSolid {
-  font-weight: 500;
-  color: #0e0e13;
-  background: #eef0f6;
-  border: none;
-}
-
-.pillSolid:hover,
-.pillSolid:focus-visible {
-  color: #0e0e13;
-  background: #fff;
-}
-
-/* Drawn while the session resolves, so the row does not jump. */
-.pillGhost {
-  cursor: default;
-  opacity: 0.5;
-}
-
-.caret {
-  flex: none;
-  margin-left: -2px;
-  opacity: 0.6;
-}
-
+/* No match: said in the middle of where the grid would be. */
 .none {
-  margin: 8px 0 0;
-  font: 400 14px var(--h-sans);
-  color: oklch(0.66 0.01 260);
+  padding: 72px 0;
+  font: 400 15px / 1.6 var(--h-sans);
+  color: oklch(0.7 0.01 260);
+  text-align: center;
+}
+
+.none p {
+  margin: 0;
+}
+
+.none .noneTitle {
+  margin-bottom: 10px;
+  font: 700 24px var(--h-display);
+  color: var(--h-fg);
 }
 
 .clearSearch {
   padding: 0;
   font: inherit;
-  color: var(--h-cyan);
+  color: var(--h-fg);
   text-decoration: underline;
+  text-underline-offset: 3px;
   background: none;
   border: none;
   cursor: pointer;
 }
 
+.none a {
+  color: var(--h-fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .search {
+  .search input {
     transition: none;
   }
-}
-
-/* The Download menu. Portaled under <body>, outside the page wrapper that
-   declares --h-*, so it names its fonts outright. */
-.positioner {
-  z-index: 60;
-}
-
-.menu {
-  box-sizing: border-box;
-  width: 250px;
-  padding: 7px;
-  color: #0e0e13;
-  text-align: left;
-  background: #fff;
-  border-radius: 14px;
-  outline: none;
-  box-shadow: 0 16px 40px oklch(0 0 0 / 0.45);
-}
-
-.menuLabel {
-  padding: 9px 12px 4px;
-  font: 600 11px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
-  color: oklch(0.5 0.01 260);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.menuNote {
-  margin: 0;
-  padding: 2px 12px 8px;
-  font: 400 12px / 1.45 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
-  color: oklch(0.5 0.01 260);
-}
-
-.menuItem {
-  display: block;
-  padding: 9px 12px;
-  font: 500 13.5px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
-  color: #0e0e13;
-  text-decoration: none;
-  border-radius: 10px;
-  outline: none;
-  cursor: pointer;
-}
-
-.menuItem:hover,
-.menuItem[data-highlighted] {
-  color: #0e0e13;
-  background: oklch(0 0 0 / 0.05);
-}
-
-.menuRule {
-  height: 1px;
-  margin: 5px 12px;
-  background: oklch(0 0 0 / 0.08);
 }
 
 /* ---- Pages ---- */
@@ -559,7 +519,6 @@
 @media (prefers-reduced-motion: reduce) {
   .filter,
   .card,
-  .pill,
   .pageNumber {
     transition: none;
   }

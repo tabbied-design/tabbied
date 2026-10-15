@@ -14,11 +14,11 @@ export default function AuthBackLink() {
   const back = safeNext(useSearchParams().get('next'), '/');
 
   return (
-    <Link href={back} prefetch={false} className={styles.back} aria-label="Go back">
+    <Link href={back} prefetch={false} className={styles.back} title="Go back">
       <svg
-        viewBox="0 0 24 24"
-        width="17"
-        height="17"
+        viewBox="7 0 10 24"
+        width="9"
+        height="22"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.7"
@@ -26,8 +26,9 @@ export default function AuthBackLink() {
         strokeLinejoin="round"
         aria-hidden="true"
       >
-        <path d="M14.5 5.5 8 12l6.5 6.5" />
+        <path d="M15 5.5 8.5 12l6.5 6.5" />
       </svg>
+      Back
     </Link>
   );
 }

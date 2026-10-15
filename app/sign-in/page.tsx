@@ -5,7 +5,7 @@ import AuthForm from 'components/account/AuthForm';
 import AuthShell from 'components/account/AuthShell';
 
 export const metadata: Metadata = {
-  title: 'Sign in - Tabbied',
+  title: 'Log in - Tabbied',
   robots: { index: false, follow: false },
 };
 

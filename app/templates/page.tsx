@@ -21,8 +21,8 @@ import s from './templates.module.css';
 const TOTAL = TEMPLATE_SITES.length + NEW_TEMPLATE_SITES.length;
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Website templates - Tabbied',
-  description: `${TOTAL} free website templates, each built around a Tabbied generative pattern. Preview them, customize their colors and patterns, or download them as HTML or React.`,
+  title: 'Free website templates for every trade - Tabbied',
+  description: `${TOTAL} free website templates for florists, barbers, bakers, electricians and every trade in between. Customize their colors and patterns and download them as HTML or React, no account needed.`,
   path: '/templates/',
 });
 
@@ -41,7 +41,6 @@ export default function TemplatesGallery() {
   const sites = [
     ...TEMPLATE_SITES.map((x, i) => ({
       slug: x.slug,
-      href: `/templates/${x.slug}/`,
       name: x.brand,
       topic: x.topic,
       pattern: x.pattern,
@@ -51,7 +50,6 @@ export default function TemplatesGallery() {
     })),
     ...NEW_TEMPLATE_SITES.map((x) => ({
       slug: x.slug,
-      href: `/templates/${x.slug}/`,
       name: x.name,
       topic: x.topic,
       pattern: x.patternSlug,
@@ -81,27 +79,11 @@ export default function TemplatesGallery() {
       <SiteNav tone="dark" />
 
       <main>
-        <header className={s.hero}>
-          {/* The design's backdrop grid renders no cells, so the hero is the
-              flat ground with only its vignette over it. */}
-          <div className={s.heroScrim} />
-          <div className={s.heroInner}>
-            <p className={s.eyebrow}>Website templates</p>
-            <h1>
-              {TOTAL} sites,<br />
-              <span>one pattern engine</span>
-            </h1>
-            <p>
-              Every site below uses a <strong>Tabbied</strong> generative pattern as its
-              main design accent, themed end to end with a single palette.
-              Same component, {TOTAL} completely different moods.
-            </p>
-          </div>
-        </header>
-
-        <div className={s.wrap}>
-          <TemplatesGrid cards={cards} />
-        </div>
+        <TemplatesGrid
+          cards={cards}
+          title="A website for every trade, free"
+          lede="Starting out as a florist, barber, baker, electrician, dog groomer or landscaper? Find a template made for your line of work, match it to your colors, and download it."
+        />
       </main>
 
       <HomeFooter />

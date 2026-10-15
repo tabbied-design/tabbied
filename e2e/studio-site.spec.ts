@@ -406,16 +406,14 @@ test.describe('studio site', () => {
     await expect(rail.getByRole('button', { name: 'Save changes' })).toBeDisabled();
     await expect(page.getByText('Verdant', { exact: true }).first()).toBeVisible();
     await expect(page.getByText('Verdant on Verdant')).toHaveCount(0);
-    await expect(page.getByRole('link', { name: 'Back to the template' })).toHaveAttribute(
-      'href',
-      `/templates/${SLUG}/`
-    );
+    await expect(page.getByRole('link', { name: 'Back to templates' })).toHaveAttribute('href', '/templates/');
     expect(made).toHaveLength(0);
 
     // A name and a palette, then Save: one site, with this document as its
     // first revision, and the page moves to the site's own address in place.
-    await rail.getByLabel('Your site name').fill('Harbour Plants');
-    await rail.getByLabel('Your site name').press('Enter');
+    await rail.getByRole('button', { name: 'Rename this site' }).click();
+    await rail.getByLabel('Site name').fill('Harbour Plants');
+    await rail.getByLabel('Site name').press('Enter');
     await rail.getByRole('button', { name: 'Cobalt', exact: true }).click();
     await rail.getByRole('button', { name: 'Save changes' }).click();
 
@@ -430,6 +428,83 @@ test.describe('studio site', () => {
     await expect(page).toHaveURL(/\/studio\/site\/\?id=e2edraft$/);
     await expect(page.getByText('Harbour Plants on Verdant')).toBeVisible();
     await expect(frame.locator('[data-edit-root]')).toBeAttached();
+  });
+
+  test('signed out, a draft is anyone\'s, and Save asks for an account and keeps the edits', async ({ page }) => {
+    let session: unknown = null;
+    await page.route('**/api/auth/get-session', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(session) })
+    );
+
+    // The product counts the customizer sends (lib/events.ts).
+    const events: string[] = [];
+    await page.route('**/api/events', (route) => {
+      events.push((route.request().postDataJSON() as { kind: string }).kind);
+      return route.fulfill({ status: 204 });
+    });
+
+    const made: { edits: { edits: { palette?: string[] } } }[] = [];
+    await page.route('**/api/studio/sites', (route) => {
+      if (route.request().method() !== 'POST') return route.fallback();
+      made.push(route.request().postDataJSON());
+
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ id: 'e2edraft', source: 'template', revision: 1, title: 'Verdant' }),
+      });
+    });
+
+    await page.goto(`/studio/customize/?slug=${SLUG}`);
+
+    // No sign-in in the way: the rail is there, and so is Download.
+    const frame = page.frameLocator('iframe');
+    await expect(frame.locator('[data-edit-root]')).toBeAttached({ timeout: 15_000 });
+    const rail = page.getByRole('complementary', { name: 'Customize this site' });
+    await expect(page.getByRole('button', { name: 'Download' })).toBeVisible();
+
+    const groundProperty = () =>
+      frame
+        .locator('[data-edit-root]')
+        .evaluate((root) => (root as HTMLElement).style.getPropertyValue('--brand-0').trim().toLowerCase());
+
+    await rail.getByRole('button', { name: 'Cobalt', exact: true }).click();
+    await expect.poll(groundProperty).toBe('#0a1a3f');
+
+    // Save asks for an account, says downloading never does, and makes
+    // nothing.
+    await rail.getByRole('button', { name: 'Save changes' }).click();
+    const gate = page.getByRole('dialog');
+    await expect(gate.getByRole('heading', { name: 'Create a free account to save Verdant' })).toBeVisible();
+    await expect(gate.getByText('Downloading never needs an account.')).toBeVisible();
+    const next = `next=${encodeURIComponent(`/studio/customize/?slug=${SLUG}`)}&intent=save`;
+    // trailingSlash: Next writes the link as /sign-up/.
+    await expect(gate.getByRole('link', { name: 'Create free account' })).toHaveAttribute('href', `/sign-up/?${next}`);
+    expect(made).toHaveLength(0);
+
+    // Following it stashes the edits on the way to the form.
+    await gate.getByRole('link', { name: 'Log in' }).click();
+    await expect(page).toHaveURL(/\/sign-in\/?\?next=.*intent=save$/);
+    await expect(page.getByRole('heading', { name: 'Log in to save' })).toBeVisible();
+    const stash = await page.evaluate(() => JSON.parse(localStorage.getItem('tabbied:pending-save') ?? 'null'));
+    expect(stash).toMatchObject({ slug: SLUG, edits: { edits: { palette: expect.any(Array) } } });
+
+    // Back with a session: the edits come back to the canvas and are saved
+    // at once, and the stash is spent.
+    session = {
+      session: { id: 's', userId: 'u1', expiresAt: '2030-01-01T00:00:00Z' },
+      user: { id: 'u1', name: 'Pat', email: 'pat@example.com', emailVerified: true, role: null },
+    };
+    await page.goto(`/studio/customize/?slug=${SLUG}`);
+    await expect(page.getByText('Saved to your account. Find it under Your templates.')).toBeVisible({
+      timeout: 15_000,
+    });
+    expect(made).toHaveLength(1);
+    expect(made[0].edits.edits.palette?.[0]?.toLowerCase()).toBe('#0a1a3f');
+    await expect(page).toHaveURL(/\/studio\/site\/\?id=e2edraft$/);
+    await expect.poll(groundProperty).toBe('#0a1a3f');
+    expect(await page.evaluate(() => localStorage.getItem('tabbied:pending-save'))).toBeNull();
+    expect(events).toEqual(expect.arrayContaining(['customize', 'save-gate', 'gate-save']));
   });
 
   test('404 reads as a missing site, with a way back', async ({ page }) => {

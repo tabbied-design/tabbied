@@ -3,13 +3,12 @@
    since most of them open on a pale ground. The iframe shows the live
    /templates/<slug>/site/ route; nothing in this file reaches it. */
 
-/* The tokens are declared on the page and again on the two popups, because
+/* The tokens are declared on the page and again on the popups, because
    the popups are portaled to <body>: outside the page they would read none
    of these, and a `font:` or `background-color:` naming one is then invalid
    as a whole. */
 .page,
-.menu,
-.signCard {
+.menu {
   --s-paper: #fbfaf8;
   --s-ink: #0e0e13;
   --s-bar: #14141a;
@@ -152,18 +151,14 @@
   width: 300px;
 }
 
-/* The menu's header: the count of chosen templates, its bar, and what
-   taking this one costs, closed by a rule the popup's full width. */
-.usage {
-  margin-bottom: 5px;
-  padding: 10px 12px 12px;
-  border-bottom: 1px solid var(--s-rule);
-}
-
+/* The menu's header: the promise that nothing here needs an account,
+   closed by a rule the popup's full width. */
 .usageNote {
-  margin: 0;
+  margin: 0 0 5px;
+  padding: 10px 12px 12px;
   font: 400 12.5px/1.5 var(--s-sans);
   color: oklch(0.5 0.01 260);
+  border-bottom: 1px solid var(--s-rule);
 }
 
 .menuLabel {
@@ -222,81 +217,6 @@
   display: block;
   font: 400 13px var(--s-sans);
   color: oklch(0.5 0.01 260);
-}
-
-/* ---- Signed out: the ask ------------------------------------------------- */
-
-.signCard {
-  box-sizing: border-box;
-  width: 300px;
-  padding: 20px;
-  font-family: var(--s-sans);
-  color: var(--s-ink);
-  background-color: #fff;
-  border-radius: 14px;
-  outline: none;
-  box-shadow: 0 16px 40px oklch(0 0 0 / 0.2);
-  transform-origin: var(--transform-origin);
-  transition: opacity 120ms ease, transform 120ms ease;
-}
-
-.signCard[data-starting-style],
-.signCard[data-ending-style] {
-  opacity: 0;
-  transform: scale(0.97);
-}
-
-.signTitle {
-  margin: 0 0 6px;
-  font: 600 15px var(--s-sans);
-}
-
-.signCopy {
-  margin: 0 0 16px;
-  font: 400 13px / 1.55 var(--s-sans);
-  color: oklch(0.48 0.01 260);
-}
-
-.signActions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.signIn,
-.signUp {
-  display: block;
-  padding: 11px;
-  font: 500 13.5px var(--s-sans);
-  text-align: center;
-  border-radius: 999px;
-}
-
-.signIn {
-  color: #fff;
-  background-color: var(--s-bar);
-}
-
-.signIn:hover {
-  color: #fff;
-  background-color: #25252e;
-}
-
-.signUp {
-  color: var(--s-ink);
-  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.16);
-}
-
-.signUp:hover {
-  color: var(--s-ink);
-  background-color: oklch(0 0 0 / 0.04);
-}
-
-.signFree {
-  margin: 12px 0 0;
-  font: italic 400 13px var(--s-serif);
-  color: oklch(0.55 0.01 260);
-  text-align: center;
 }
 
 /* ---- The person ---------------------------------------------------------- */
@@ -471,8 +391,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .menu,
-  .signCard {
+  .menu {
     transition: none;
   }
 }

@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 import LegalPage, { InShort } from 'components/legal/LegalPage';
 import { pageMetadata } from 'lib/seo';
 
-// The rules for using Tabbied, kept in step with what the product does: the
-// template allowance (worker/lib/templates.ts), AI usage limits
-// (worker/lib/quota.ts), uploads, sharing by link, and admin actions on
-// accounts. The data side is the Privacy Policy, linked from here.
+// The rules for using Tabbied, kept in step with what the product does:
+// templates free to download with no account (worker/index.ts, /downloads),
+// AI usage limits (worker/lib/quota.ts), uploads, sharing by link, and admin
+// actions on accounts. The data side is the Privacy Policy, linked from here.
 //
 // The Template License (section 7) is restated in every download's LICENSE.md
 // (TEMPLATE_LICENSE in scripts/package-templates.mjs) and summed up in the
@@ -24,7 +24,7 @@ const EMAIL = 'hello@tabbied.com';
 
 export default function TermsOfServicePage() {
   return (
-    <LegalPage title="Terms of Service" updated="October 2, 2026">
+    <LegalPage title="Terms of Service" updated="October 15, 2026">
       <InShort>
         <ul>
           <li>
@@ -32,9 +32,9 @@ export default function TermsOfServicePage() {
             commercially.
           </li>
           <li>
-            Templates you choose can be used to build and publish websites for
-            yourself or your clients. Each template is licensed to the account
-            that chose it.
+            Templates you download can be used to build and publish websites
+            for yourself or your clients. Each template is licensed to the
+            person who downloaded it from tabbied.com; no account is needed.
           </li>
           <li>
             Don&apos;t resell, share or redistribute templates, and don&apos;t
@@ -111,9 +111,9 @@ export default function TermsOfServicePage() {
       <h2>4. Plans, limits and payments</h2>
       <h3>Free use</h3>
       <p>
-        Free accounts have limits, such as the number of templates you can
-        choose and how much you can use AI features each day. The limits that
-        apply to you are shown in your account. We may change them.
+        Free use has limits, such as how much you can use AI features each
+        day. The limits that apply to you are shown in your account. We may
+        change them.
       </p>
       <h3>Paid plans</h3>
       <ul>
@@ -211,10 +211,12 @@ export default function TermsOfServicePage() {
         and the customizer.
       </p>
       <p>
-        When you choose a template with your account, we grant you a
-        worldwide, non-exclusive, non-transferable, perpetual license to use
-        it to make websites (&quot;end products&quot;) for yourself or for
-        clients, including commercially. You may:
+        When you download a template from tabbied.com, as it is or as you
+        customized it, we grant you a worldwide, non-exclusive,
+        non-transferable, perpetual license to use it to make websites
+        (&quot;end products&quot;) for yourself or for clients, including
+        commercially. You don&apos;t need an account to download a template or
+        to have this license. You may:
       </p>
       <ul>
         <li>
@@ -232,11 +234,11 @@ export default function TermsOfServicePage() {
         </li>
       </ul>
       <p>
-        The license belongs to the account that chose the template. It is the
-        same on every plan unless your plan says otherwise, and changing or
-        cancelling a plan doesn&apos;t take back a template you have already
-        chosen. You don&apos;t have to show a credit or notice on the websites
-        you publish.
+        The license belongs to the person who downloaded the template. It is
+        the same on every plan unless your plan says otherwise, and changing or
+        cancelling a plan, or deleting your account, doesn&apos;t take back a
+        template you have already downloaded. You don&apos;t have to show a
+        credit or notice on the websites you publish.
       </p>
       <p>Unless we agree otherwise in writing, you may not:</p>
       <ul>
@@ -261,9 +263,9 @@ export default function TermsOfServicePage() {
         </li>
         <li>
           copy or recreate a template from its preview or from our site, by
-          hand, with automated tools or with an AI agent, instead of choosing
-          it with your account. A close recreation of a template counts as
-          using it;
+          hand, with automated tools or with an AI agent, instead of
+          downloading it from tabbied.com. A close recreation of a template
+          counts as using it;
         </li>
         <li>
           use templates, or any part of them, to train, fine-tune or evaluate
@@ -279,14 +281,14 @@ export default function TermsOfServicePage() {
       </ul>
       <p>
         The previews on tabbied.com are there so you can see a template before
-        you choose it. Viewing a preview, or having its code because your
+        you download it. Viewing a preview, or having its code because your
         browser or a tool downloaded the page, gives you no license to use the
-        template.
+        template: the license comes with the template&apos;s download.
       </p>
       <p>
         If you break this license, it ends for the templates involved, and we
-        may end it for all of your templates by closing your account (section
-        9). You must then stop using those templates, delete your copies of
+        may end it for all of your templates and close your account if you
+        have one (section 9). You must then stop using those templates, delete your copies of
         them, and remove any copies you made available to others. Websites you
         finished and handed over to clients before then, in line with this
         license, may stay in use.
@@ -347,7 +349,8 @@ export default function TermsOfServicePage() {
         </li>
         <li>
           share your account, your downloads or a template&apos;s files so
-          that others can use templates they haven&apos;t chosen;
+          that others can use templates they haven&apos;t downloaded
+          themselves;
         </li>
         <li>
           probe, attack or interfere with Tabbied&apos;s security or
@@ -370,8 +373,9 @@ export default function TermsOfServicePage() {
       </p>
       <p>
         You can stop using Tabbied and delete your account at any time. When
-        your account ends, the licenses for templates you chose and websites
-        you made continue, unless we closed the account because you broke
+        your account ends, the licenses for templates you downloaded and
+        websites you made continue, unless we closed the account because you
+        broke
         these terms (see the Template License in section 7 for what happens
         then). Sections 5 to 7 and 10 to 15 survive the end of this
         agreement.

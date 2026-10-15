@@ -17,13 +17,14 @@ const EMAIL = 'hello@tabbied.com';
 
 export default function PrivacyPolicyPage() {
   return (
-    <LegalPage title="Privacy Policy" updated="October 2, 2026">
+    <LegalPage title="Privacy Policy" updated="October 15, 2026">
       <InShort>
         <ul>
           <li>
-            You can browse and export patterns without an account. We collect
-            personal data when you create an account and use features such as
-            templates, saved sites, uploads and AI generation.
+            You can browse, customize and download patterns and website
+            templates without an account. We collect personal data when you
+            create an account and use features such as saved sites, uploads
+            and AI generation.
           </li>
           <li>
             When you use AI features, we store your prompts, the AI responses,
@@ -59,10 +60,12 @@ export default function PrivacyPolicyPage() {
 
       <h3>Without an account</h3>
       <p>
-        Patterns are drawn and exported in your browser. Browsing patterns
-        and templates, customizing patterns and exporting them does not send
-        what you make to us. Like any website, our hosting provider receives
-        technical information with each request (see{' '}
+        Patterns are drawn and exported in your browser, and templates are
+        customized in it. Browsing, customizing and downloading patterns and
+        templates does not send what you make to us. We count template
+        downloads and visits to the template customizer (which template, and
+        when) without linking them to you. Like any website, our hosting
+        provider receives technical information with each request (see{' '}
         <a href="#technical">Technical information</a>).
       </p>
 
@@ -87,17 +90,18 @@ export default function PrivacyPolicyPage() {
       <h3>What you make and upload</h3>
       <ul>
         <li>
-          The templates you choose, the sites you customize and save, every
-          saved revision of them, and the names you give them.
+          The sites you customize and save, every saved revision of them, and
+          the names you give them.
         </li>
         <li>
           Pictures you upload (PNG, JPEG or WebP) and any note you add to
           them.
         </li>
         <li>
-          Your answers when you ask for more templates: your role, what you
-          build, how many sites you make, whether and what you would pay, a
-          link to your work and any note you write.
+          If you chose templates or asked for more of them during the beta,
+          those choices and your answers: your role, what you build, how many
+          sites you make, whether and what you would pay, a link to your work
+          and any note you wrote.
         </li>
       </ul>
 
@@ -140,8 +144,10 @@ export default function PrivacyPolicyPage() {
           errors, kept by our hosting provider.
         </li>
         <li>
-          Records of template downloads and short-lived counters we use to
-          limit how often an account can call our API.
+          Records of template downloads and of visits to the template
+          customizer, linked to your account when you are signed in, and
+          short-lived counters we use to limit how often an account, or an IP
+          address, can call our API.
         </li>
       </ul>
 
@@ -159,8 +165,7 @@ export default function PrivacyPolicyPage() {
         </li>
         <li>
           To send the emails the service needs: confirming your address,
-          resetting your password, and messages about your template requests
-          and your account. We don&apos;t send marketing email; if we start,
+          resetting your password, and messages about your account. We don&apos;t send marketing email; if we start,
           you will be able to opt out.
         </li>
         <li>
@@ -275,8 +280,10 @@ export default function PrivacyPolicyPage() {
         </li>
         <li>
           When you delete your account, we delete your account, sites,
-          revisions, uploads, generated images, AI history, template choices,
-          requests and usage records.
+          revisions, uploads, generated images, AI history, download records,
+          template choices, requests and usage records. Counts of customizer
+          visits made while you were signed in are kept, no longer linked to
+          you.
         </li>
         <li>
           Some data outlasts that for a limited time: database backups, which

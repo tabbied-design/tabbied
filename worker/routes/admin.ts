@@ -3,18 +3,18 @@ import { and, desc, eq, gte, like, ne, or, sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/d1';
 import { z } from 'zod';
 import * as schema from '../db/schema';
-import { aiUsage, generation, revision, site, templateChoice, templateGrant, templateRequest, upload, user } from '../db/schema';
+import { aiUsage, download, event, generation, revision, site, upload, user } from '../db/schema';
 import type { Env } from '../env';
 import { APIError } from 'better-auth/api';
 import { buildAuth } from '../auth';
 import { EMAIL_PREVIEWS } from '../lib/emailPreview';
-import { mailProvider, notifyAdminGrant, notifyRequestDecision, sendMail } from '../lib/mail';
-import { FREE_TEMPLATES, MAX_GRANT, allowanceSql, rawAllowanceSql, templateStatus } from '../lib/templates';
+import { mailProvider, sendMail } from '../lib/mail';
 import { DAILY_CAPS, startOfUtcDay } from '../lib/quota';
 import { consume } from '../lib/ratelimit';
 import { authConfigured } from '../lib/session';
 import { loadEditableCatalog } from '../lib/templateAssets';
-import { PLAN, TEST_EMAIL_DOMAIN, isTestEmail, removeChosenTemplates, removeUsers, testEmailSql } from '../lib/users';
+import { PLAN, TEST_EMAIL_DOMAIN, isTestEmail, removeUsers, testEmailSql } from '../lib/users';
+import type { EventKind } from './events';
 
 // The admin tier: reads over everything, for people whose user row says
 // `role = 'admin'`. Bans and impersonation are better-auth's own endpoints
@@ -57,14 +57,33 @@ admin.use('*', async (c, next) => {
 
 const daysAgo = (days: number) => new Date(Date.now() - days * 86_400_000);
 
+// The overview's figures. The headline four are the 2026-10 design's:
+// downloads over the last 30 days (no account needed, so most carry no
+// user), customizer sessions, new accounts and how many of them began at the
+// Save gate, and the sites saved across every account. The rest are the
+// generation tier's, held back from the first launch but still answered.
 admin.get('/overview', async (c) => {
   const db = drizzle(c.env.DB, { schema });
   const today = startOfUtcDay();
   const week = daysAgo(7);
-
   const fortnight = daysAgo(14);
+  const month = daysAgo(30);
 
-  const [[users], [newUsers], [generations], [sites], [fallbacks], [spend], [images], signups, [chosen], [pending]] = await Promise.all([
+  const [
+    [users],
+    [newUsers],
+    [generations],
+    [sites],
+    [fallbacks],
+    [spend],
+    [images],
+    signups,
+    [downloads],
+    events,
+    [newAccounts],
+    [fromSave],
+    [saved],
+  ] = await Promise.all([
     db.select({ n: sql<number>`count(*)` }).from(user),
     db.select({ n: sql<number>`count(*)` }).from(user).where(gte(user.createdAt, week)),
     db.select({ n: sql<number>`count(*)` }).from(generation).where(gte(generation.createdAt, week)),
@@ -89,17 +108,41 @@ admin.get('/overview', async (c) => {
       .where(gte(user.createdAt, fortnight))
       .groupBy(sql`date(${user.createdAt}, 'unixepoch')`)
       .orderBy(sql`date(${user.createdAt}, 'unixepoch')`),
-    db.select({ n: sql<number>`count(*)` }).from(templateChoice),
-    db.select({ n: sql<number>`count(*)` }).from(templateRequest).where(eq(templateRequest.status, 'pending')),
+    db
+      .select({
+        n: sql<number>`count(*)`,
+        anonymous: sql<number>`coalesce(sum(${download.userId} is null), 0)`,
+      })
+      .from(download)
+      .where(gte(download.createdAt, month)),
+    db
+      .select({ kind: event.kind, n: sql<number>`count(*)` })
+      .from(event)
+      .where(gte(event.createdAt, month))
+      .groupBy(event.kind),
+    db.select({ n: sql<number>`count(*)` }).from(user).where(gte(user.createdAt, month)),
+    // "71% started from a save": the month's new accounts that went on to
+    // save the edits they were holding when Save asked them to sign up.
+    db
+      .select({ n: sql<number>`count(distinct ${event.userId})` })
+      .from(event)
+      .innerJoin(user, eq(user.id, event.userId))
+      .where(and(eq(event.kind, 'gate-save'), gte(user.createdAt, month))),
+    db.select({ n: sql<number>`count(*)` }).from(site),
   ]);
+
+  const eventCount = (kind: EventKind) => Number(events.find((row) => row.kind === kind)?.n ?? 0);
 
   return c.json({
     users: Number(users.n),
-    templatesChosen: Number(chosen.n),
-    averageChosen: Number(users.n) ? Number(chosen.n) / Number(users.n) : 0,
-    freeTemplates: FREE_TEMPLATES,
-    pendingRequests: Number(pending.n),
     newUsersThisWeek: Number(newUsers.n),
+    downloads30d: Number(downloads.n),
+    anonymousDownloads30d: Number(downloads.anonymous),
+    customizerSessions30d: eventCount('customize'),
+    saveGates30d: eventCount('save-gate'),
+    newAccounts30d: Number(newAccounts.n),
+    newAccountsFromSave30d: Number(fromSave.n),
+    savedTemplates: Number(saved.n),
     generationsThisWeek: Number(generations.n),
     sitesThisWeek: Number(sites.n),
     fallbackRate: Number(generations.n) ? Number(fallbacks.n) / Number(generations.n) : 0,
@@ -145,12 +188,11 @@ admin.get('/users', async (c) => {
       // Qualified by hand: with no join in the outer query drizzle renders
       // `${user.id}` as a bare "id", which inside the subquery resolves to
       // site.id (see CLAUDE.md). `${site}` alone is the table name.
+      // `sites` is the directory's "Saved templates".
       sites: sql<number>`(select count(*) from ${site} where ${site}.user_id = ${user}.id)`,
       generations: sql<number>`(select count(*) from ${generation} where ${generation}.user_id = ${user}.id)`,
-      chosen: sql<number>`(select count(*) from ${templateChoice} where ${templateChoice}.user_id = ${user}.id)`,
-      // The same rule the person's own page and the claim apply
-      // (lib/templates.ts), correlated to this row.
-      allowance: sql<number>`${allowanceSql(sql`${user}.id`)}`,
+      // Every zip this person took while signed in, all time.
+      downloads: sql<number>`(select count(*) from ${download} where ${download}.user_id = ${user}.id)`,
     })
     .from(user)
     .where(
@@ -170,8 +212,7 @@ admin.get('/users', async (c) => {
       test: isTestEmail(row.email),
       sites: Number(row.sites),
       generations: Number(row.generations),
-      chosen: Number(row.chosen),
-      allowance: Number(row.allowance),
+      downloads: Number(row.downloads),
     })),
   });
 });
@@ -186,7 +227,7 @@ admin.get('/users/:id', async (c) => {
     return c.json({ error: 'Not found' }, 404);
   }
 
-  const [sites, generations, usage, templates, grants] = await Promise.all([
+  const [sites, generations, usage, [downloads]] = await Promise.all([
     db
       .select({ id: site.id, slug: site.slug, title: site.title, updatedAt: site.updatedAt })
       .from(site)
@@ -204,19 +245,7 @@ admin.get('/users/:id', async (c) => {
       .from(aiUsage)
       .where(and(eq(aiUsage.userId, id), gte(aiUsage.createdAt, startOfUtcDay())))
       .groupBy(aiUsage.endpoint),
-    templateStatus(db, id),
-    db
-      .select({
-        id: templateGrant.id,
-        granted: templateGrant.granted,
-        note: templateGrant.note,
-        createdAt: templateGrant.createdAt,
-        // Qualified by hand, as in /users: the admin's address, while they last.
-        grantedBy: sql<string | null>`(select u.email from ${user} u where u.id = ${templateGrant}.granted_by)`,
-      })
-      .from(templateGrant)
-      .where(eq(templateGrant.userId, id))
-      .orderBy(desc(templateGrant.createdAt)),
+    db.select({ n: sql<number>`count(*)` }).from(download).where(eq(download.userId, id)),
   ]);
 
   return c.json({
@@ -236,146 +265,8 @@ admin.get('/users/:id', async (c) => {
     sites,
     generations,
     usageToday: usage.map((u) => ({ ...u, calls: Number(u.calls), cost: Number(u.cost), cap: DAILY_CAPS[u.endpoint as keyof typeof DAILY_CAPS]?.calls ?? null })),
-    templates: {
-      used: templates.used,
-      total: templates.total,
-      left: templates.left,
-      chosen: templates.chosen,
-      grants,
-    },
+    downloads: Number(downloads.n),
   });
-});
-
-// ---- A person's templates -----------------------------------------------------
-// What an admin can do to someone's allowance without a request: take chosen
-// templates back (one, several, or all of them) and set the limit, up or down
-// but never under the free five. Taking a template back also deletes what the
-// person made on it, their sites and those sites' pictures (lib/users.ts).
-// Setting the limit writes the difference as a template_grant row, which
-// allowanceSql counts beside granted requests; a raise can mail the person.
-
-const removeTemplatesSchema = z.union([
-  z.object({ all: z.literal(true) }),
-  z.object({ slugs: z.array(z.string().min(1).max(120)).min(1).max(500) }),
-]);
-
-admin.post('/users/:id/templates/remove', async (c) => {
-  const parsed = removeTemplatesSchema.safeParse(await c.req.json().catch(() => null));
-
-  if (!parsed.success) {
-    return c.json({ error: 'Name the templates to remove, or all of them.' }, 400);
-  }
-
-  const db = drizzle(c.env.DB, { schema });
-  const id = c.req.param('id');
-  const [person] = await db.select({ id: user.id }).from(user).where(eq(user.id, id)).limit(1);
-
-  if (!person) {
-    return c.json({ error: 'Not found' }, 404);
-  }
-
-  // Only what is actually chosen: a slug the person does not have is not an error, just nothing.
-  const wanted = 'all' in parsed.data ? null : new Set(parsed.data.slugs);
-  const chosen = await db.select({ slug: templateChoice.slug }).from(templateChoice).where(eq(templateChoice.userId, id));
-  const slugs = chosen.map((row) => row.slug).filter((slug) => !wanted || wanted.has(slug));
-  const sitesDeleted = await removeChosenTemplates(c.env, id, slugs);
-  const status = await templateStatus(db, id);
-
-  return c.json({ removed: slugs, sitesDeleted, used: status.used, total: status.total });
-});
-
-const limitSchema = z.object({
-  /** The limit wanted: at least the free five. */
-  limit: z.number().int().min(FREE_TEMPLATES).max(10_000),
-  note: z.string().trim().max(500).default(''),
-  /** Mail the person; only a raise is announced. */
-  notify: z.boolean().default(true),
-});
-
-admin.post('/users/:id/grants', async (c) => {
-  const parsed = limitSchema.safeParse(await c.req.json().catch(() => null));
-
-  if (!parsed.success) {
-    return c.json({ error: `Set a limit of ${FREE_TEMPLATES} or more.` }, 400);
-  }
-
-  const who = c.get('admin');
-  const db = drizzle(c.env.DB, { schema });
-  const id = c.req.param('id');
-  const [person] = await db.select({ email: user.email }).from(user).where(eq(user.id, id)).limit(1);
-
-  if (!person) {
-    return c.json({ error: 'Not found' }, 404);
-  }
-
-  const { limit, note } = parsed.data;
-  const raw = await db.get<{ raw: number }>(sql`select ${rawAllowanceSql(id)} as raw`);
-  const before = Math.max(FREE_TEMPLATES, Number(raw?.raw ?? FREE_TEMPLATES));
-
-  if (limit === before) {
-    return c.json({ error: `Their limit is already ${limit}.` }, 400);
-  }
-
-  if (limit - before > MAX_GRANT) {
-    return c.json({ error: `Raise a limit by at most ${MAX_GRANT} at a time.` }, 400);
-  }
-
-  // The difference from the unfloored sum, so the new limit is exactly what
-  // was asked even where earlier changes had pushed the sum under the floor.
-  const granted = limit - Number(raw?.raw ?? FREE_TEMPLATES);
-  const notify = parsed.data.notify && limit > before;
-
-  // Each notified grant is a real message, so it sits behind a burst gate like
-  // every route here that sends mail. A quiet change sends nothing.
-  if (notify) {
-    const burst = await consume(db, { key: `grantmail:${who.id}`, max: 20, windowSeconds: 10 * 60 });
-
-    if (!burst.ok) {
-      return c.json({ error: 'That is twenty emails in ten minutes. Untick "Email them", or try again shortly.' }, 429, {
-        'retry-after': String(burst.retryAfter),
-      });
-    }
-  }
-
-  const [row] = await db
-    .insert(templateGrant)
-    .values({ id: crypto.randomUUID(), userId: id, granted, note, grantedBy: who.id })
-    .returning();
-  const status = await templateStatus(db, id);
-  let mailed: boolean | null = null;
-
-  if (notify) {
-    // Written first, mailed second: a failed send is reported, never unwinds the grant.
-    mailed = await notifyAdminGrant(c.env, { email: person.email, granted: limit - before, total: status.total, origin: c.env.PUBLIC_ORIGIN })
-      .then(() => true)
-      .catch((error) => {
-        console.error('[mail] admin grant notice failed', error);
-        return false;
-      });
-  }
-
-  return c.json({ grant: { id: row.id, granted: row.granted }, total: status.total, mailed });
-});
-
-/**
- * Take a change back: a mistyped number, say. Nothing chosen is taken away,
- * and the floor keeps the limit at five or more whatever is undone.
- */
-admin.delete('/users/:id/grants/:grantId', async (c) => {
-  const db = drizzle(c.env.DB, { schema });
-  const id = c.req.param('id');
-  const [row] = await db
-    .delete(templateGrant)
-    .where(and(eq(templateGrant.id, c.req.param('grantId')), eq(templateGrant.userId, id)))
-    .returning({ id: templateGrant.id });
-
-  if (!row) {
-    return c.json({ error: 'Not found' }, 404);
-  }
-
-  const status = await templateStatus(db, id);
-
-  return c.json({ removed: row.id, total: status.total });
 });
 
 /**
@@ -409,8 +300,8 @@ admin.delete('/users/:id', async (c) => {
 });
 
 // ---- Test users ----------------------------------------------------------------
-// Disposable accounts for trying what a member sees (the five templates, the
-// "Request more" rounds, a customized download) without a real inbox. Made
+// Disposable accounts for trying what a member sees (saving a customization,
+// the account page, a customized download) without a real inbox. Made
 // verified on the reserved domain, since nothing sent there arrives, and only
 // there: this route cannot make an account that looks like a person's.
 //
@@ -520,7 +411,7 @@ admin.post('/emails/test', async (c) => {
 
   const who = c.get('admin');
   const db = drizzle(c.env.DB, { schema });
-  // Each call is a real message (see CLAUDE.md, "Request more").
+  // Each call is a real message, so it sits behind a burst gate.
   const burst = await consume(db, { key: `mailtest:${who.id}`, max: 10, windowSeconds: 10 * 60 });
 
   if (!burst.ok) {
@@ -539,140 +430,6 @@ admin.post('/emails/test', async (c) => {
   }
 
   return c.json({ to: who.email, provider });
-});
-
-// ---- "Request more" --------------------------------------------------------
-// The requests people at their limit sent (lib/templates.ts). A first request
-// is granted by the person following its emailed link, so it is only listed
-// here, on a tab of its own; a later one takes the admin's answer. A grant
-// counts toward the allowance while the status says 'granted'. Every decision
-// but an undo mails the person after the row is written, and a failed send is
-// reported in the answer rather than unwinding the decision.
-
-// The tabs of the Requests page: what each shows, as a WHERE clause.
-const REQUEST_TABS = {
-  review: sql`${templateRequest.round} > 1 and ${templateRequest.status} = 'pending'`,
-  link: sql`${templateRequest.round} = 1`,
-  granted: sql`${templateRequest.round} > 1 and ${templateRequest.status} = 'granted'`,
-  declined: sql`${templateRequest.round} > 1 and ${templateRequest.status} = 'declined'`,
-} as const;
-
-type RequestTab = keyof typeof REQUEST_TABS;
-
-const requestQuery = z.object({
-  tab: z.enum(Object.keys(REQUEST_TABS) as [RequestTab, ...RequestTab[]]).default('review'),
-});
-
-admin.get('/requests', async (c) => {
-  const query = requestQuery.safeParse({ tab: c.req.query('tab') });
-
-  if (!query.success) return badQuery(c);
-
-  const db = drizzle(c.env.DB, { schema });
-  const tabs = Object.keys(REQUEST_TABS) as RequestTab[];
-  const [rows, ...counts] = await Promise.all([
-    db
-      .select({
-        id: templateRequest.id,
-        userId: templateRequest.userId,
-        name: user.name,
-        email: user.email,
-        round: templateRequest.round,
-        status: templateRequest.status,
-        granted: templateRequest.granted,
-        role: templateRequest.role,
-        building: templateRequest.building,
-        sites: templateRequest.sites,
-        need: templateRequest.need,
-        pay: templateRequest.pay,
-        fairPrice: templateRequest.fairPrice,
-        link: templateRequest.link,
-        note: templateRequest.note,
-        sendAt: templateRequest.sendAt,
-        decidedAt: templateRequest.decidedAt,
-        createdAt: templateRequest.createdAt,
-        chosen: sql<number>`(select count(*) from ${templateChoice} where ${templateChoice}.user_id = ${templateRequest}.user_id)`,
-        allowance: sql<number>`${allowanceSql(sql`${templateRequest}.user_id`)}`,
-        // The person's emailed-link request, for "+5 via email link on ...".
-        firstActivatedAt: sql<number | null>`(select r1.decided_at from ${templateRequest} r1 where r1.user_id = ${templateRequest}.user_id and r1.round = 1 and r1.status = 'activated')`,
-      })
-      .from(templateRequest)
-      .innerJoin(user, eq(user.id, templateRequest.userId))
-      .where(REQUEST_TABS[query.data.tab])
-      .orderBy(desc(templateRequest.createdAt))
-      .limit(200),
-    ...tabs.map((tab) => db.select({ n: sql<number>`count(*)` }).from(templateRequest).where(REQUEST_TABS[tab])),
-  ]);
-
-  return c.json({
-    free: FREE_TEMPLATES,
-    counts: Object.fromEntries(tabs.map((tab, i) => [tab, Number(counts[i][0]?.n ?? 0)])),
-    requests: rows.map((row) => ({
-      ...row,
-      chosen: Number(row.chosen),
-      allowance: Number(row.allowance),
-      firstActivatedAt: row.firstActivatedAt ? new Date(Number(row.firstActivatedAt) * 1000) : null,
-    })),
-  });
-});
-
-const decisionSchema = z.discriminatedUnion('status', [
-  z.object({ status: z.literal('granted'), granted: z.number().int().min(1).max(MAX_GRANT) }),
-  z.object({ status: z.literal('declined') }),
-  z.object({ status: z.literal('pending') }),
-]);
-
-admin.post('/requests/:id', async (c) => {
-  const parsed = decisionSchema.safeParse(await c.req.json().catch(() => null));
-
-  if (!parsed.success) {
-    return c.json({ error: `Grant 1 to ${MAX_GRANT} templates, decline, or undo.` }, 400);
-  }
-
-  const db = drizzle(c.env.DB, { schema });
-  const id = c.req.param('id');
-  const decision = parsed.data;
-  const granted = decision.status === 'granted' ? decision.granted : 0;
-
-  // Only a reviewed request takes a decision: a first request's grant is
-  // the person's own, by the emailed link.
-  const [row] = await db
-    .update(templateRequest)
-    .set({
-      status: decision.status,
-      granted,
-      decidedAt: decision.status === 'pending' ? null : new Date(),
-    })
-    .where(and(eq(templateRequest.id, id), sql`${templateRequest.round} > 1`))
-    .returning();
-
-  if (!row) {
-    return c.json({ error: 'Not found' }, 404);
-  }
-
-  let mailed: boolean | null = null;
-
-  if (decision.status !== 'pending') {
-    const [person] = await db.select({ email: user.email }).from(user).where(eq(user.id, row.userId)).limit(1);
-    const status = await templateStatus(db, row.userId);
-
-    mailed = await notifyRequestDecision(c.env, {
-      email: person.email,
-      status: decision.status,
-      granted,
-      total: status.total,
-      // The configured origin, never the host this request arrived on (a
-      // preview alias would otherwise be mailed out).
-      origin: c.env.PUBLIC_ORIGIN,
-    })
-      .then(() => true)
-      .catch((error) => {
-        console.error('[mail] request decision failed', error);
-        return false;
-      });
-  }
-
-  return c.json({ request: { id: row.id, status: row.status, granted: row.granted, decidedAt: row.decidedAt }, mailed });
 });
 
 admin.get('/usage', async (c) => {
@@ -837,10 +594,7 @@ admin.get('/quotas', (c) =>
   c.json({
     // Read-only: the caps are constants in worker/lib/quota.ts and the burst
     // windows in the routes.
-    caps: {
-      ...DAILY_CAPS,
-      'template-choice': { calls: FREE_TEMPLATES, label: 'templates an account may choose' },
-    },
+    caps: DAILY_CAPS,
     editable: false,
   })
 );

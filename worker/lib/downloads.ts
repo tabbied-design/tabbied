@@ -2,9 +2,10 @@ import { eq } from 'drizzle-orm';
 import { download } from '../db/schema';
 import type { Db } from './quota';
 
-// Template downloads: the file names the gate recognises, and the log of what
-// went out. What a person may take is decided by the templates they have
-// chosen (lib/templates.ts); a row here only records a zip that was served.
+// Template downloads: the file names the route recognises, and the log of
+// what went out. Every template is free to take, with or without an account,
+// so nothing here decides anything; a row only records a zip that was served,
+// and the admin overview counts them.
 
 /** The zip formats a template ships as, in the file name `<slug>-<format>.zip`. */
 const DOWNLOAD_FORMATS = ['html', 'react'] as const;
@@ -12,11 +13,17 @@ const DOWNLOAD_FORMATS = ['html', 'react'] as const;
 export type DownloadFormat = (typeof DOWNLOAD_FORMATS)[number];
 
 /**
- * Record one download before the zip is served. The caller gives the row back
- * (`forgetDownload`) when the asset turns out not to exist, so a row is only
- * ever kept for bytes that went out.
+ * Record one download before the zip is served, against the person when one
+ * is signed in and against nobody (null) otherwise. The caller gives the row
+ * back (`forgetDownload`) when the asset turns out not to exist, so a row is
+ * only ever kept for bytes that went out.
  */
-export async function logDownload(db: Db, userId: string, slug: string, format: DownloadFormat): Promise<string> {
+export async function logDownload(
+  db: Db,
+  userId: string | null,
+  slug: string,
+  format: DownloadFormat
+): Promise<string> {
   const id = crypto.randomUUID();
 
   await db.insert(download).values({ id, userId, slug, format });
@@ -30,10 +37,10 @@ export async function forgetDownload(db: Db, id: string): Promise<void> {
 }
 
 /**
- * Whether a request takes a copy of the zip, and so may choose a template and
- * is logged. A HEAD asks about the file without taking it (a link checker, a
- * download manager sizing it up), and a Range that starts past the first
- * byte resumes a copy whose first request already counted.
+ * Whether a request takes a copy of the zip, and so is logged. A HEAD asks
+ * about the file without taking it (a link checker, a download manager sizing
+ * it up), and a Range that starts past the first byte resumes a copy whose
+ * first request already counted.
  */
 export function takesCopy(request: Request): boolean {
   if (request.method !== 'GET') return false;
@@ -46,8 +53,8 @@ export function takesCopy(request: Request): boolean {
 /**
  * A path inside a React package's unzipped folder (`/downloads/<slug>-react/`),
  * which is never served. The folder is the template's authored source, in the
- * deploy only because the zip beside it is made from it; the zip, behind the
- * claim, is the one way that source leaves. Nothing on the site reads the
+ * deploy only because the zip beside it is made from it; the zip is the one
+ * way that source leaves. Nothing on the site reads the
  * folder (the e2e suite reads it from disk), unlike the HTML package's, which
  * the customizer and the Studio preview draw from.
  */

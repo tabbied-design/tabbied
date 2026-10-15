@@ -18,6 +18,12 @@
 // with `template`, and the first Save makes the site with the draft as
 // revision 1 and moves the address to /studio/site/?id= with replaceState, so
 // the canvas and the rail stay as they are.
+//
+// A draft needs no account: anyone can change its colors and patterns and
+// download it. Saving does, so a signed-out Save opens the save gate, which
+// stashes the draft (lib/pendingSave.ts) on its way to the account forms. When
+// the customizer opens on that template again the stash is put back on the
+// canvas, and saved at once if there is a session by then.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -36,6 +42,10 @@ import {
 import type { DesignChoice } from 'lib/designCatalog';
 import type { SiteDocument } from 'lib/studioDocument';
 import { apiFetch, ApiError } from 'lib/apiFetch';
+import { useSessionUser } from 'lib/authClient';
+import { track } from 'lib/events';
+import { clearPendingSave, readPendingSave, stashPendingSave } from 'lib/pendingSave';
+import { refreshSavedTemplates } from 'lib/savedTemplates';
 import {
   archiveNameFor,
   buildCustomisedArchive,
@@ -51,6 +61,7 @@ import {
 import Toaster, { toaster } from 'components/Toaster';
 import CustomizerBar from './CustomizerBar';
 import { PreviewNotices } from './PreviewFrame';
+import SaveGate from './SaveGate';
 import SiteRail, { type SaveState } from './SiteRail';
 import styles from './SiteWorkspace.module.css';
 
@@ -150,6 +161,13 @@ export default function StudioSite({
   const [canvasKey, setCanvasKey] = useState(0);
   const frameRef = useRef<HTMLIFrameElement | null>(null);
   const shuffleTimer = useRef<number | null>(null);
+  const { user, isPending: sessionPending } = useSessionUser();
+  const [gateOpen, setGateOpen] = useState(false);
+  // The stash is looked at once per draft, after the session has answered.
+  const restored = useRef(false);
+  // The latest render's save, for the restore effect below, which is
+  // declared before the early returns that `save` is written after.
+  const saveRef = useRef<((document: EditsDocument, title?: string, fromGate?: boolean) => Promise<void>) | null>(null);
 
   useEffect(
     () => () => {
@@ -298,6 +316,32 @@ export default function StudioSite({
     [spec, rebuild]
   );
 
+  // Edits stashed at the save gate come back to the canvas when the
+  // customizer opens on their template again, and are saved at once when a
+  // session exists. Signed out still, they wait on the canvas, unsaved.
+  const draftSlug = ready && ready.site.id === '' ? ready.site.slug : null;
+
+  useEffect(() => {
+    if (!draftSlug || restored.current || sessionPending) return;
+    restored.current = true;
+
+    const pending = readPendingSave(draftSlug);
+
+    if (!pending) return;
+
+    setDraft(pending.edits);
+    setSaveState('dirty');
+    rebuild(pending.edits);
+    setState((prev) =>
+      prev.status === 'ready' ? { ...prev, site: { ...prev.site, title: pending.title || prev.site.title } } : prev
+    );
+
+    if (!user) return;
+
+    clearPendingSave();
+    void saveRef.current?.(pending.edits, pending.title, true);
+  }, [draftSlug, sessionPending, user, rebuild]);
+
   const touch = (next: EditsDocument) => {
     setDraft(next);
     setSaveState('dirty');
@@ -307,9 +351,16 @@ export default function StudioSite({
     return (
       <p className={styles.notice} role="alert">
         {state.message}{' '}
-        <Link href="/account/" className={styles.back} prefetch={false}>
-          Your templates
-        </Link>
+        {/* A draft came from the gallery; a saved site from the account. */}
+        {template ? (
+          <Link href="/templates/" className={styles.back} prefetch={false}>
+            All templates
+          </Link>
+        ) : (
+          <Link href="/account/" className={styles.back} prefetch={false}>
+            Your templates
+          </Link>
+        )}
         .
       </p>
     );
@@ -391,8 +442,13 @@ export default function StudioSite({
   // The handlers below update state functionally: the rail stays live while a
   // request is out, and spreading this render's stale `ready` back in would
   // undo a change made meanwhile (a reset during a rename, say).
-  const save = async () => {
-    const saving = draft;
+  const save = async (saving: EditsDocument = draft, title: string = site.title, fromGate = false) => {
+    // Only saving asks for an account; a draft is anyone's until then.
+    if (unsaved && !user) {
+      setGateOpen(true);
+      track('save-gate', site.slug);
+      return;
+    }
 
     setSaveState('saving');
 
@@ -402,7 +458,7 @@ export default function StudioSite({
       const { revision, id } = unsaved
         ? await apiFetch<{ id: string; revision: number }>('/api/studio/sites', {
             method: 'POST',
-            body: JSON.stringify({ slug: site.slug, edits: saving, title: site.title }),
+            body: JSON.stringify({ slug: site.slug, edits: saving, title }),
           })
         : {
             id: site.id,
@@ -441,12 +497,21 @@ export default function StudioSite({
       // "Saved" only if nothing changed while the request was out; a change
       // in flight has already marked the draft dirty.
       setSaveState((current) => (current === 'saving' ? 'saved' : current));
-      toaster.add({ title: `Saved. Your customized ${site.templateName} now uses these edits.` });
+      void refreshSavedTemplates();
+
+      if (fromGate) {
+        track('gate-save', site.slug);
+        toaster.add({ title: 'Saved to your account. Find it under Your templates.' });
+      } else {
+        toaster.add({ title: `Saved. Your customized ${site.templateName} now uses these edits.` });
+      }
     } catch (cause) {
       setSaveState('dirty');
       toaster.add({ title: cause instanceof ApiError ? cause.message : 'Could not save.' });
     }
   };
+
+  saveRef.current = save;
 
   const rename = async (title: string) => {
     // A draft keeps its name until the Save that makes it, and naming it is
@@ -513,19 +578,6 @@ export default function StudioSite({
 
   return (
     <>
-      <CustomizerBar
-        mine={site.mine}
-        template={unsaved ? site.slug : undefined}
-        downloading={downloading}
-        onDownloadHtml={() => void downloadHtml()}
-        onDownloadReact={() => void downloadReact()}
-        slug={site.slug}
-        templateName={site.templateName}
-        colors={palette}
-        unsaved={saveState === 'dirty' || saveState === 'saving'}
-        editedAt={unsaved ? null : site.latest.createdAt}
-      />
-
       {/* Two notices this page owns, distinct from the engine's: a fallback
           revision is only the three-string rebrand, and drift is the pinned
           template no longer matching the packaged one. */}
@@ -606,6 +658,18 @@ export default function StudioSite({
         ) : null}
 
         <div className={styles.stage}>
+          <CustomizerBar
+            mine={site.mine}
+            template={unsaved ? site.slug : undefined}
+            downloading={downloading}
+            onDownloadHtml={() => void downloadHtml()}
+            onDownloadReact={() => void downloadReact()}
+            slug={site.slug}
+            templateName={site.templateName}
+            colors={palette}
+            unsaved={saveState === 'dirty' || saveState === 'saving'}
+            editedAt={unsaved ? null : site.latest.createdAt}
+          />
           <div className={styles.frame}>
             <div className={styles.chrome}>
               <span className={styles.dot} aria-hidden="true" />
@@ -691,6 +755,13 @@ export default function StudioSite({
         </div>
       </div>
 
+      <SaveGate
+        open={gateOpen}
+        onOpenChange={setGateOpen}
+        templateName={site.templateName}
+        next={`/studio/customize/?slug=${site.slug}`}
+        onLeave={() => stashPendingSave({ slug: site.slug, title: site.title, edits: draft })}
+      />
       <Toaster />
     </>
   );
