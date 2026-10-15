@@ -1,0 +1,465 @@
+/* The skilled-trades carousel: centered heading and chips, a full-width
+   viewport with one slide centered and its neighbors dimmed either side, and
+   the dots and the pause button under it. */
+
+.section {
+  padding: 144px 0 112px;
+  background-color: #ffffff;
+}
+
+.head {
+  padding: 0 var(--hp-pad);
+  text-align: center;
+}
+
+.title {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.lede {
+  max-width: 760px;
+  margin: 18px auto 0;
+  text-wrap: balance;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 36px;
+}
+
+.filter {
+  padding: 12px 22px;
+  border: none;
+  border-radius: 999px;
+  background-color: transparent;
+  color: var(--hp-ink);
+  font: 400 16px var(--hp-sans);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.filter[aria-pressed='true'] {
+  background-color: #ededed;
+}
+
+.browseAll {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 8px 12px 18px;
+  color: var(--hp-ink);
+  font: 500 16px var(--hp-sans);
+  white-space: nowrap;
+  transition: color 150ms ease;
+}
+
+.browseAll span {
+  padding-bottom: 2px;
+  border-bottom: 1px solid currentColor;
+}
+
+.browseAll:hover {
+  color: var(--hp-link-hover);
+}
+
+/* -- The track -------------------------------------------------------------- */
+
+.viewport {
+  position: relative;
+  margin-top: 48px;
+  overflow: hidden;
+  /* Vertical swipes still scroll the page; sideways ones are ours. */
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.viewport[data-dragging] {
+  cursor: grabbing;
+}
+
+.track {
+  --slide-w: min(78vw, 1120px);
+  --slide-gap: 24px;
+
+  display: flex;
+  gap: var(--slide-gap);
+  transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.viewport[data-dragging] .track {
+  transition: none;
+}
+
+.slide {
+  position: relative;
+  flex: 0 0 var(--slide-w);
+  aspect-ratio: 16 / 9.4;
+  overflow: hidden;
+  border-radius: 22px;
+  color: #ffffff;
+  opacity: 0.45;
+  cursor: pointer;
+  transition: opacity 0.5s ease;
+}
+
+.slide[data-current] {
+  opacity: 1;
+  cursor: inherit;
+}
+
+.photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0) 55%),
+    radial-gradient(ellipse 70% 60% at 35% 105%, oklch(1 0 0 / 0.16), transparent 70%);
+}
+
+/* 560px of text, as the design measures it (its box is content-box). */
+.caption {
+  position: relative;
+  max-width: 648px;
+  padding: 40px 44px 0;
+}
+
+.category {
+  font: 500 12px var(--hp-mono-medium);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: oklch(1 0 0 / 0.78);
+}
+
+.name {
+  margin-top: 12px;
+  font: 700 36px / 1.1 var(--hp-display);
+  letter-spacing: -0.02em;
+}
+
+.description {
+  margin-top: 10px;
+  font: 400 17px / 1.5 var(--hp-sans);
+  color: oklch(1 0 0 / 0.88);
+  text-wrap: pretty;
+}
+
+/* -- The site in front ------------------------------------------------------ */
+
+.mock {
+  position: absolute;
+  left: 44px;
+  bottom: -9%;
+  width: 62%;
+  container-type: inline-size;
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: var(--site-bg);
+  color: var(--site-ink);
+  box-shadow: 0 40px 80px -30px oklch(0 0 0 / 0.55);
+}
+
+.siteHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2.6cqw 4cqw;
+}
+
+.brand {
+  font: 500 2.5cqw var(--site-family);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  gap: 2.8cqw;
+  font: 400 1.3cqw var(--hp-sans);
+  white-space: nowrap;
+}
+
+.siteBody {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 4cqw;
+  align-items: center;
+  padding: 1cqw 4cqw 5cqw;
+}
+
+.headline {
+  font: var(--site-head-weight) 6.4cqw / 1.02 var(--site-family);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.sub {
+  margin-top: 2.4cqw;
+  font: 400 1.5cqw / 1.5 var(--hp-sans);
+  color: var(--site-muted);
+}
+
+.button {
+  display: inline-block;
+  margin-top: 3cqw;
+  padding: 1.2cqw 2.4cqw;
+  border-radius: 99px;
+  background-color: var(--site-button-bg);
+  color: var(--site-button-ink);
+  font: 500 1.3cqw var(--hp-sans);
+  white-space: nowrap;
+}
+
+.art {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 1cqw;
+}
+
+.art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The palette and the face, on a card beside the site. */
+.typeChip {
+  position: absolute;
+  right: calc(25% - 44px);
+  bottom: 16%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background-color: #ffffff;
+  color: var(--hp-ink);
+  white-space: nowrap;
+  box-shadow: 0 18px 40px -16px oklch(0 0 0 / 0.5);
+}
+
+.swatches {
+  display: flex;
+}
+
+.swatches span {
+  width: 22px;
+  height: 22px;
+  margin-right: -6px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+}
+
+.setIn {
+  margin-left: 6px;
+  font: 400 13px var(--hp-sans);
+  color: oklch(0.4 0.01 260);
+}
+
+.setIn span {
+  font-weight: 500;
+  color: var(--hp-ink);
+}
+
+/* The way into the gallery, searched for this trade. */
+.open {
+  position: absolute;
+  right: 28px;
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: var(--hp-ink);
+  font: 400 20px var(--hp-sans);
+  box-shadow: 0 10px 24px -10px oklch(0 0 0 / 0.5);
+  transition: color 150ms ease;
+}
+
+.open:hover {
+  color: var(--hp-link-hover);
+}
+
+/* -- The dots and the pause button ------------------------------------------ */
+
+.controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+  max-width: min(78vw, 1120px);
+  margin: 28px auto 0;
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+}
+
+/* Each dot's button is its mark plus the 6px gap the design leaves after
+   it, and 24px tall: the hit area is larger than the mark, and no two
+   overlap. */
+.dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.dot[aria-selected='true'] {
+  width: 38px;
+}
+
+.dotMark {
+  position: relative;
+  display: block;
+  width: 6px;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 99px;
+  background-color: oklch(0 0 0 / 0.22);
+}
+
+.dot[aria-selected='true'] .dotMark {
+  width: 32px;
+  background-color: oklch(0 0 0 / 0.16);
+}
+
+/* The autoplay clock: the slide advances when this has filled. */
+.fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 99px;
+  background-color: var(--hp-ink);
+  transform-origin: left center;
+  animation-name: fill;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fill {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.play {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid oklch(0 0 0 / 0.15);
+  border-radius: 50%;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: border-color 150ms ease;
+}
+
+.play:hover {
+  border-color: oklch(0 0 0 / 0.35);
+}
+
+.pauseIcon {
+  width: 12px;
+  height: 14px;
+  background: linear-gradient(90deg, var(--hp-ink) 0 4px, transparent 4px 8px, var(--hp-ink) 8px 12px);
+}
+
+.playIcon {
+  width: 0;
+  height: 0;
+  margin-left: 3px;
+  border-style: solid;
+  border-width: 8px 0 8px 13px;
+  border-color: transparent transparent transparent var(--hp-ink);
+}
+
+.filter:focus-visible,
+.browseAll:focus-visible,
+.open:focus-visible,
+.dot:focus-visible,
+.play:focus-visible {
+  outline: 2px solid var(--hp-focus);
+  outline-offset: 2px;
+}
+
+.filter:focus-visible,
+.dot:focus-visible {
+  border-radius: 999px;
+}
+
+/* -- Narrower --------------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+  .typeChip {
+    display: none;
+  }
+}
+
+/* The design's 16 / 9.4 card is too short here for the caption to clear
+   the site rising from its foot, so the card is drawn taller until the
+   phone shape below takes over. */
+@media (max-width: 960px) {
+  .slide {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (max-width: 700px) {
+  .slide {
+    aspect-ratio: 4 / 5;
+  }
+
+  .mock {
+    left: 3%;
+    bottom: -14%;
+    width: 94%;
+  }
+
+  .controls {
+    padding: 0 var(--hp-pad);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track,
+  .slide,
+  .browseAll,
+  .open,
+  .play {
+    transition: none;
+  }
+
+  /* No fill, no clock: the carousel moves only when asked. */
+  .fill {
+    animation: none;
+  }
+}

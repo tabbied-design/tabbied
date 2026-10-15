@@ -1,0 +1,387 @@
+/* The hero: copy and two site windows on the page's ink, the trade tabs
+   along its foot. Sizes inside a window are `cqw` of that window (each is a
+   size container), so a window is drawn as one picture at any width. */
+
+.hero {
+  position: relative;
+  background-color: #0e0e13;
+  color: #ffffff;
+}
+
+.inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 64px;
+  align-items: center;
+  max-width: 1376px;
+  margin: 0 auto;
+  /* The foot leaves room for the band of tabs (96px) and their lift. */
+  padding: 88px var(--hp-pad) 168px;
+}
+
+.copy {
+  position: relative;
+  z-index: 1;
+}
+
+.title {
+  margin: 0;
+  font: 700 66px / 1.02 var(--hp-display);
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.intro {
+  max-width: 460px;
+  margin-top: 24px;
+  font: 400 19px / 1.55 var(--hp-sans);
+  color: oklch(0.82 0.01 270);
+  text-wrap: pretty;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 28px;
+  margin-top: 36px;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 26px;
+  border-radius: 999px;
+  background-color: #ffffff;
+  color: #0e0e13;
+  font: 500 16px var(--hp-sans);
+  transition: background-color 150ms ease;
+}
+
+.cta:hover {
+  background-color: #e3e5fb;
+  color: #0e0e13;
+}
+
+.cta:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
+.note {
+  margin-top: 20px;
+  font: 400 14px var(--hp-sans);
+  color: oklch(0.72 0.01 260);
+}
+
+/* -- The two windows -------------------------------------------------------- */
+
+.showcase {
+  position: relative;
+  z-index: 1;
+  /* Room under the large window for the small one to overhang it. */
+  padding-bottom: 9%;
+}
+
+.large,
+.small {
+  container-type: inline-size;
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: var(--site-bg);
+  color: var(--site-ink);
+  transition:
+    background-color 0.45s ease,
+    color 0.45s ease;
+}
+
+.large {
+  position: relative;
+  z-index: 1;
+  width: 88%;
+  box-shadow:
+    0 40px 80px -36px oklch(0.25 0.03 50 / 0.45),
+    0 0 0 1px oklch(0 0 0 / 0.08);
+}
+
+.small {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 0;
+  width: 50%;
+  box-shadow:
+    0 40px 70px -30px oklch(0.2 0.03 220 / 0.55),
+    0 0 0 1px oklch(0 0 0 / 0.1);
+}
+
+.smallBar {
+  --mb-gap: 1.3cqw;
+  --mb-pad: 2.2cqw 2.6cqw;
+  --mb-rule: none;
+  --mb-dot: 1.7cqw;
+  --mb-address-pad: 0.7cqw 4cqw;
+  --mb-address-size: 1.9cqw;
+  --mb-spacer: 6cqw;
+}
+
+.siteHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2.6cqw 4cqw;
+}
+
+.brand {
+  font: var(--site-brand);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  gap: 2.8cqw;
+  font: 400 1.3cqw var(--hp-sans);
+  white-space: nowrap;
+}
+
+.siteBody {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 4cqw;
+  align-items: center;
+  padding: 1cqw 4cqw 4.4cqw;
+}
+
+.headline {
+  font: var(--site-head);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.sub {
+  margin-top: 2.4cqw;
+  font: 400 1.5cqw / 1.5 var(--hp-sans);
+  color: var(--site-muted);
+}
+
+.button {
+  display: inline-block;
+  margin-top: 3cqw;
+  padding: 1.2cqw 2.4cqw;
+  border-radius: 99px;
+  background-color: var(--site-button-bg);
+  color: var(--site-button-ink);
+  font: 500 1.3cqw var(--hp-sans);
+  white-space: nowrap;
+  transition:
+    background-color 0.45s ease,
+    color 0.45s ease;
+}
+
+.art {
+  aspect-ratio: 1 / 1.05;
+  overflow: hidden;
+  border-radius: 1cqw;
+}
+
+.art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.strip {
+  display: flex;
+  gap: 6cqw;
+  padding: 1.8cqw 4cqw;
+  border-top: 1px solid oklch(0.3 0.03 50 / 0.15);
+  font: 500 1cqw var(--hp-mono-medium);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--site-muted);
+  white-space: nowrap;
+}
+
+/* The small window: the same site, set larger for its size. */
+.small .siteHead {
+  gap: 3cqw;
+  padding: 4.4cqw 6cqw 2cqw;
+}
+
+.small .nav {
+  gap: 4cqw;
+  font-size: 2.2cqw;
+  color: var(--site-muted);
+}
+
+.small .siteBody {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 5cqw;
+  padding: 3cqw 6cqw 6.5cqw;
+}
+
+.small .headline {
+  letter-spacing: -0.02em;
+}
+
+.small .button {
+  margin-top: 5cqw;
+  padding: 2cqw 3.8cqw;
+  font-size: 2.2cqw;
+}
+
+.small .art {
+  aspect-ratio: 1 / 1.15;
+  border-radius: 1.6cqw;
+}
+
+/* -- The trade tabs --------------------------------------------------------- */
+
+/* A strip along the hero's foot, full bleed, that clips the tabs' lower
+   edge so they read as rising out of the next section. `clip`, not
+   `hidden`: a hidden overflow is a scroll container, and focusing a tab past
+   its edge would scroll it under the row's own shift. */
+.band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 96px;
+  overflow: clip;
+  pointer-events: none;
+}
+
+.row {
+  position: absolute;
+  left: 50%;
+  bottom: -24px;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  transform: translateX(calc(-50% + var(--shift, 0px)));
+  transition: transform 0.35s ease;
+}
+
+.slot {
+  flex: none;
+  animation: rise 0.7s cubic-bezier(0.2, 0.9, 0.25, 1.25) backwards;
+  animation-delay: calc(var(--i) * 55ms);
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(110%);
+  }
+}
+
+.tab {
+  position: relative;
+  display: block;
+  width: 172px;
+  padding: 0;
+  overflow: hidden;
+  border: none;
+  border-radius: 16px 16px 0 0;
+  background-color: #1b1b22;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.25s ease;
+}
+
+/* The design's hairline, over the picture rather than under it. */
+.tab::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.06);
+  pointer-events: none;
+}
+
+.tab[aria-pressed='true'] {
+  transform: translateY(-12px);
+}
+
+.tab:focus-visible {
+  outline: none;
+}
+
+.tab:focus-visible::after {
+  box-shadow:
+    inset 0 0 0 2px #0e0e13,
+    inset 0 0 0 4px #ffffff;
+}
+
+/* The pattern at 300px wide, centered, as the design's background-size. */
+.tabArt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  max-width: none;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.pill {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background-color: #ffffff;
+  color: #0e0e13;
+  font: 500 12px / 1 var(--hp-sans);
+  white-space: nowrap;
+  box-shadow: 0 1px 2px oklch(0 0 0 / 0.15);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.tab[aria-pressed='true'] .pill {
+  background-color: #0e0e13;
+  color: #ffffff;
+}
+
+/* -- Narrower --------------------------------------------------------------- */
+
+@media (max-width: 1000px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 56px;
+    padding-top: 56px;
+  }
+
+  .title {
+    font-size: 56px;
+  }
+}
+
+@media (max-width: 700px) {
+  .title {
+    font-size: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slot {
+    animation: none;
+  }
+
+  .row,
+  .tab,
+  .pill,
+  .large,
+  .small,
+  .button,
+  .cta {
+    transition: none;
+  }
+}

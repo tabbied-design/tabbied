@@ -863,9 +863,8 @@ registered, annotated (both codemods) and built them. Things learned:
 
 Every template has a screenshot in `public/template-shots/<slug>.webp`: the
 `/templates` card shows it with the site's live pattern as a tile in the
-corner, and the homepage's template rails show it alone. `lib/templateShots.ts`
-reads the folder at build time, so a template with no shot falls back to its
-pattern on both.
+corner. `lib/templateShots.ts` reads the folder at build time, so a template
+with no shot falls back to its pattern.
 
 `npm run build`, then `node scripts/generate-template-shots.mjs [slug ...]`
 (no slugs shoots all). A shot starts **below the site's top bar**: a
@@ -1003,9 +1002,9 @@ menu (email, My account, Settings, and Admin for a person whose row says
 Below 768px the destinations fold into that menu, or behind
 a hamburger when signed out. It takes a `tone` (`dark` for the homepage and
 the template gallery, `light` for everything else) and a `sticky` flag the
-pattern library uses because its rail starts where the bar ends. `HomeNav`,
-`MainHeader`, `AccountHeader` and `GalleryTopBar` are now one-line wrappers
-over it.
+pattern library uses because its rail starts where the bar ends.
+`MainHeader`, `AccountHeader` and `GalleryTopBar` are one-line wrappers over
+it.
 
 Four things worth not re-litigating:
 
@@ -1210,19 +1209,33 @@ not re-litigating:
   option), so the file is what the stage showed, at the ratio that was
   picked.
 
-## The homepage - its own shell, and a hydration rule
+## The homepage - templates first, its own shell, and a hydration rule
 
-`app/page.tsx` and `/templates` are the two routes in the dark editorial
-treatment. The homepage brings its own token set
-(`components/main-page/home.module.css`, inherited by every `Home*` section as
-`var(--h-...)`) and the dark `HomeFooter`; the template gallery wraps itself in
-the same tokens so its masthead, cards and footer read from one set, and so
-does `/docs/react`, as a light section of that shell (below). Every other
-route renders the masthead in its light tone; the legal pages and the 404 are
-the older light theme and end in `components/Footer`. Nothing here is global:
-the tokens sit on the page wrapper, not on `:root`, so restyling the homepage
-cannot reach `/patterns`, only the pages that opt into the set. The three
-how-it-works steps are hidden below 768px, as the artboard hides them.
+Since the 14 October designs (Sy's note: make website templates the hero and
+patterns secondary) the homepage leads with templates: a dark hero
+("Websites with personality.") with two mock sites that change with a row
+of trade tabs along its foot, a carousel of trades ("The world still runs on
+skilled hands."), a mock site recolored from a toolbar ("Any template.
+Entirely your own."), then patterns ("Good patterns go beyond websites."),
+the developers, the questions and a last way in, over the light footer. It
+is built from one component per section in `components/main-page/`
+(`TradesHero`, `SkilledHands`, `MakeItYours`, `BeyondWebsites`,
+`ForDevelopers`, `HomeFaq`, `HomeCta`), reading `HomePage.module.css`'s
+tokens and the design's data in `homeData.ts`. The mock sites are drawn in
+markup with static pictures under `public/images/home/` (pattern stills, the
+carousel's photos, the gallery tiles), not live patterns: thirty live
+css-doodle fields on one page would cost what the gallery measured
+(`gallery-cost.mjs`). The mock sites' six display faces load through
+`next/font` for this page only, unpreloaded (`homeFonts.ts`).
+
+`/templates` and the docs keep the older dark editorial token set
+(`components/main-page/home.module.css`, read as `var(--h-...)`): the
+template gallery wraps itself in it so its masthead, cards and footer read
+from one set, and so does `/docs/react`, as a light section of that shell
+(below). Every other route renders the masthead in its light tone; the legal
+pages and the 404 are the older light theme and end in `components/Footer`.
+Nothing here is global: the tokens sit on the page wrapper, not on `:root`,
+so restyling one page cannot reach another.
 
 **The docs pages are the design's light section, not a third theme.**
 `DocsShell` (every page under `/docs` but `/docs/mcp`, which draws the same
@@ -1250,32 +1263,33 @@ keywords). Two things about it:
 
 Three things worth not re-litigating:
 
-- **The animated grids are seeded, then random.** The hero skyline, its margin
-  columns, the pattern demo, and the story backdrop are all grids of randomly
-  shaped cells that reshuffle on a timer. A `Math.random()` call during render
-  makes the prerendered HTML disagree with the first client render and hydration
-  blows up, so the *initial* grid comes from `seededRandom()` in `homeMotion.ts`
-  (the same one on the server and in the browser), and only the timers, which
-  start after mount, use real randomness. The same trap catches module-scope
-  constants: a `Math.random()` at the top level of a module runs once per
-  process, which is not once per page.
+- **Nothing random in a render.** A `Math.random()` call during render
+  makes the prerendered HTML disagree with the first client render and
+  hydration blows up, so anything that varies starts from `seededRandom()`
+  in `homeMotion.ts` (the same one on the server and in the browser), and
+  only what runs after mount may use real randomness. The same trap catches
+  module-scope constants: a `Math.random()` at the top level of a module runs
+  once per process, which is not once per page.
 - **Every figure is derived.** `lib/siteCounts.ts` counts the presets, the
-  template sites, and the palette library; the hero sentence, both stat rows and
-  the two "view all" links read it. It is server-only on purpose - counting the
-  keys of `patterns` in a client component would ship the whole catalog to the
-  browser to learn one number. `e2e/smoke.spec.ts` asserts the same count
-  appears in all three places rather than pinning the value.
-- **Reduced motion stops all of it.** Six independent clocks run on this page
-  plus three CSS animations (the two marquees and the orbiting squares). Every
-  timer is gated on `useMediaQuery('(prefers-reduced-motion: reduce)')` and every
-  animation and transition has a `@media (prefers-reduced-motion: reduce)`
-  override; a marquee that merely slows down is the failure this guards against.
+  template sites, and the palette library; the hero's "N free templates",
+  the carousel's "Browse all N" and the page's description read it. It is
+  server-only on purpose - counting the keys of `patterns` in a client
+  component would ship the whole catalog to the browser to learn one number.
+  `e2e/smoke.spec.ts` asserts the count is the same in both places rather
+  than pinning the value.
+- **Reduced motion stops all of it.** The trade tabs rise in on a CSS
+  animation, and the carousel's clock is its active dot's fill: the slide
+  advances when the fill's animation ends, so the stylesheet's
+  `@media (prefers-reduced-motion: reduce)` override, which removes the
+  fill, is what stops autoplay (and the pause button is not drawn). Every
+  transition has the same override. A carousel that merely slows down is
+  the failure this guards against.
 
 IBM Plex Mono and IBM Plex Sans are loaded by `next/font` (`lib/fonts.ts`)
 **in the page**, not the root layout, so only the routes that use them preload
 them. The two sans split by role, as the artboards do: proxima-nova, from the
-layout's typekit link, sets display type (headings, stat figures, primary
-buttons), and Plex Sans sets body and UI copy.
+layout's typekit link, sets display type (headings and the masthead), and
+Plex Sans sets body and UI copy, buttons included.
 
 ## The platform tier - auth, generation, media
 
@@ -2060,8 +2074,8 @@ element and the HTML div are plain blocks (full width, 0px tall until
 something gives them a height), so a case can have a different answer in
 each. Every result was measured in Chromium, never reasoned out: `fill`
 taking the width is what makes "a height and a ratio" 800 by 300 and not 600
-by 300. Each box is the design live, in the homepage hero's first palette
-(Mint) on a transparent ground, outlined so its extent reads.
+by 300. Each box is the design live, in the docs' first palette (Mint,
+`homePalettes.ts`) on a transparent ground, outlined so its extent reads.
 
 **Recipes** (`examples/recipes/<setup>.ts`): the same seven layout and eight
 interaction recipes on every page, then the setup's own "in an app" ones.

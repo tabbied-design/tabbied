@@ -3,66 +3,70 @@ import path from 'node:path';
 import { test, expect } from '@playwright/test';
 
 test.describe('Tabbied site', () => {
-  test('home page renders the hero and links into the gallery', async ({
+  test('home page leads with website templates and links into the gallery', async ({
     page,
   }) => {
     await page.goto('/');
 
-    await expect(page).toHaveTitle(/Tabbied/);
+    await expect(page).toHaveTitle(/website templates/i);
     await expect(
-      page.getByRole('heading', { level: 1, name: /Free patterns and\s+websites/ })
+      page.getByRole('heading', { level: 1, name: 'Websites with personality.' })
     ).toBeVisible();
 
     // Every figure is derived from the catalog at build time (lib/siteCounts),
-    // so this asserts the shape rather than the value.
-    const patternsStat = page.getByRole('link', { name: /^\d+ Patterns$/ });
-    await expect(patternsStat).toBeVisible();
-    const patternCount = Number(
-      (await patternsStat.textContent())?.match(/\d+/)?.[0]
+    // so this asserts the shape rather than the value: the hero's note and
+    // the carousel's "Browse all" carry the same template count.
+    const note = page.getByText(/^\d+ free templates\. No account needed\.$/);
+    await expect(note).toBeVisible();
+    const templateCount = Number((await note.textContent())?.match(/\d+/)?.[0]);
+    expect(templateCount).toBeGreaterThan(100);
+    await expect(page.getByRole('link', { name: new RegExp(`^Browse all ${templateCount}`) })).toHaveAttribute(
+      'href',
+      /\/templates\/?$/
     );
-    expect(patternCount).toBeGreaterThan(1);
 
-    // The same number appears in the hero sentence and on "View all".
-    await expect(
-      page.getByText(
-        new RegExp(`growing library of ${patternCount} customizable patterns`)
-      )
-    ).toBeVisible();
-    await expect(
-      page.getByRole('link', { name: `View all ${patternCount}` })
-    ).toBeVisible();
+    // A trade tab puts its site in the hero's front window.
+    const mockups = page.getByRole('img', { name: /^Sample websites for/ });
+    await page.getByRole('button', { name: 'Preview a florist template' }).click();
+    await expect(page.getByRole('button', { name: 'Preview a florist template' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(mockups).toHaveAttribute('aria-label', /^Sample websites for a florist and/);
 
-    await page.getByRole('link', { name: 'Make your pattern' }).click();
+    // Each slide leads to the gallery, searched for its trade.
+    await expect(page.getByRole('link', { name: 'Browse tattoo templates' })).toHaveAttribute(
+      'href',
+      '/templates/?q=tattoo'
+    );
 
-    await expect(page).toHaveURL(/\/patterns/);
+    // Patterns are second, a link away.
+    await expect(page.getByRole('link', { name: /Explore customizable patterns/ })).toHaveAttribute(
+      'href',
+      /\/patterns\/?$/
+    );
+
+    await page.getByRole('link', { name: 'Pick your template' }).click();
+    await expect(page).toHaveURL(/\/templates\/?$/);
     await expect(
-      page.getByRole('heading', { name: 'Pick a pattern' })
+      page.getByRole('heading', { level: 1, name: 'A website for every trade, free' })
     ).toBeVisible();
   });
 
   test('the homepage animates only when motion is welcome', async ({
     page,
   }) => {
-    // The hero grid, the marquees and the orbiting squares all run on their own
-    // clocks; under `prefers-reduced-motion` every one of them has to stop, not
-    // merely slow down.
+    // The trade tabs rise in and the carousel advances on a fill's clock;
+    // under `prefers-reduced-motion` both have to stop, not merely slow down.
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
 
-    const rail = page.locator('[class*="HomeTemplates-module"][class*="track"]');
-    await expect(rail.first()).toHaveCSS('animation-name', 'none');
+    const tab = page.getByRole('button', { name: 'Preview a florist template' });
+    await expect(tab.locator('..')).toHaveCSS('animation-name', 'none');
 
-    const before = await page
-      .locator('[class*="HomeHero-module"][class*="skylineCell"]')
-      .first()
-      .getAttribute('style');
-    await page.waitForTimeout(3000);
-    const after = await page
-      .locator('[class*="HomeHero-module"][class*="skylineCell"]')
-      .first()
-      .getAttribute('style');
-
-    expect(after).toBe(before);
+    // No clock, so no pause button, and the first slide stays put.
+    await expect(page.getByRole('button', { name: /(Pause|Play) carousel/ })).toHaveCount(0);
+    const dots = page.getByRole('tablist', { name: 'Slides' }).getByRole('tab');
+    await expect(dots.first()).toHaveAttribute('aria-selected', 'true');
+    await page.waitForTimeout(7000);
+    await expect(dots.first()).toHaveAttribute('aria-selected', 'true');
   });
 
   test('gallery pagination is reflected in the URL and survives reload', async ({

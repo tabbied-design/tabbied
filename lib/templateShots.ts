@@ -1,6 +1,6 @@
 // Screenshots of the template sites (scripts/generate-template-shots.mjs),
 // read off public/template-shots at build time, so a shot added there reaches
-// the gallery's cards and the homepage's rails with nothing else to change.
+// the gallery's cards with nothing else to change.
 //
 // Server-only: it reads the file system during the export.
 import { existsSync, readdirSync } from 'node:fs';

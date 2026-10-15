@@ -21,7 +21,7 @@ import styles from './ReactDocs.module.css';
 //
 // Each case is a card of its own, its code inside it, so a code block never
 // reads as belonging to the case after it. The boxes are the design the code
-// names, live, in the homepage hero's first palette (Mint) on a transparent
+// names, live, in the docs' first palette (Mint) on a transparent
 // ground, outlined so the box's extent reads where the ground shows.
 
 /** Prose with `code` spans, the form the example data is written in. */
