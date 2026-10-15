@@ -25,7 +25,7 @@ export const HERO_TRADES: readonly HeroTrade[] = [
   { label: 'Café', slug: 'morrow-coffee', tabHeight: 46 },
   { label: 'Dog groomer', slug: 'muddy-paws-mobile', tabHeight: 62 },
   { label: 'Tailor', slug: 'running-stitch-alterations', tabHeight: 52 },
-  { label: 'Florist', slug: 'wild-stem', tabHeight: 56 },
+  { label: 'Florist', slug: 'posy-wedding-flowers', tabHeight: 56 },
   { label: 'Hair salon', slug: 'fringe-salon', tabHeight: 64 },
   { label: 'Plumber', slug: 'northside-plumbing', tabHeight: 48 },
   { label: 'Baker', slug: 'rye-and-levain', tabHeight: 60 },
