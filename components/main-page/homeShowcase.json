@@ -38,6 +38,9 @@
   "pawsh-grooming": {
     "display": "Baloo 2"
   },
+  "posy-wedding-flowers": {
+    "display": "Playfair Display"
+  },
   "ringlet-curl-studio": {
     "display": "Bricolage Grotesque"
   },
@@ -60,9 +63,6 @@
     "display": "Barlow Condensed"
   },
   "wheelhouse-ceramics": {
-    "display": "Young Serif"
-  },
-  "wild-stem": {
     "display": "Young Serif"
   }
 }

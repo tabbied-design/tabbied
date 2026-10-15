@@ -51,7 +51,7 @@ const MIME = {
 const args = process.argv.slice(2);
 const baseAt = args.indexOf('--base');
 const base = baseAt >= 0 ? args[baseAt + 1] : null;
-const named = args.filter((arg, index) => !arg.startsWith('--') && index !== baseAt + 1);
+const named = args.filter((arg, index) => !arg.startsWith('--') && (baseAt < 0 || index !== baseAt + 1));
 
 const { HERO_TRADES, SLIDES, MAKE_IT_YOURS } = await import(
   pathToFileURL(join(ROOT, 'components', 'main-page', 'homeData.ts')).href

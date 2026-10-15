@@ -45,6 +45,49 @@ const distFileFor = (url: string): string | null => {
   return fs.existsSync(file) ? file : null;
 };
 
+// Hooks rather than styles: lucide's icon classes and Figure's
+// `figure`/`figure--cutout` markers. A page that styles neither is not
+// missing anything.
+const HOOKS = new Set([
+  'figure',
+  'figure--cutout',
+  // TemplateMenu's shape, declared in base.css (styles/globals.css).
+  'template-menu',
+  'template-menu__toggle',
+  'template-menu__icon',
+  'template-menu__panel',
+  // Artwork's, likewise in base.css.
+  'artwork',
+  'artwork--mask',
+  'artwork--masks',
+  'artwork__layer',
+  'artwork--vector',
+  'artwork--duotone',
+  'artwork--tint',
+  'artwork--fill',
+  'artwork__shade',
+  'artwork--cover',
+]);
+
+/**
+ * The classes the markup uses that no rule in `css` names. Comments are
+ * stripped first, because they name classes too.
+ */
+const orphanClasses = (html: string, css: string): string[] => {
+  const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  const declared = new Set(
+    [...withoutComments.matchAll(/\.(-?[A-Za-z_][A-Za-z0-9_-]*)/g)].map((m) => m[1])
+  );
+  const onPage = new Set<string>();
+  for (const attr of html.matchAll(/class="([^"]*)"/g)) {
+    for (const name of attr[1].split(/\s+/)) if (name) onPage.add(name);
+  }
+
+  return [...onPage].filter(
+    (name) => !declared.has(name) && !name.startsWith('lucide') && !HOOKS.has(name)
+  );
+};
+
 for (const fixture of FIXTURES) {
   const TEMPLATE_DIR = dirFor(fixture.slug);
 
@@ -136,7 +179,8 @@ for (const fixture of FIXTURES) {
 
     // Hashed class names, the Next runtime and the RSC payload are exactly
     // what makes an export unusable as a template.
-    expect(html).not.toMatch(/-module__[A-Za-z0-9_]+__/);
+    // The hash can hold a `-` (`-D-Hpa`), so any residue counts.
+    expect(html).not.toContain('-module__');
     expect(html).not.toContain('/_next/');
     expect(html).not.toContain('__next_f');
     expect(html).not.toMatch(/<!--\/?\$[!?]?-->/);
@@ -172,47 +216,13 @@ for (const fixture of FIXTURES) {
     expect(css).not.toContain('composes:');
 
     // Every class the markup uses must survive into the stylesheet, in a
-    // rule: comments are stripped first because they name classes too.
-    const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
-    const declared = new Set(
-      [...withoutComments.matchAll(/\.(-?[A-Za-z_][A-Za-z0-9_-]*)/g)].map((m) => m[1])
-    );
-    const onPage = new Set<string>();
-    for (const attr of html.matchAll(/class="([^"]*)"/g)) {
-      for (const name of attr[1].split(/\s+/)) if (name) onPage.add(name);
-    }
-    // Hooks rather than styles: lucide's icon classes and Figure's
-    // `figure`/`figure--cutout` markers. A page that styles neither is not
-    // missing anything.
-    const HOOKS = new Set([
-      'figure',
-      'figure--cutout',
-      // TemplateMenu's shape, declared in base.css (styles/globals.css).
-      'template-menu',
-      'template-menu__toggle',
-      'template-menu__icon',
-      'template-menu__panel',
-      // Artwork's, likewise in base.css.
-      'artwork',
-      'artwork--mask',
-      'artwork--masks',
-      'artwork__layer',
-      'artwork--vector',
-      'artwork--duotone',
-      'artwork--tint',
-      'artwork--fill',
-      'artwork__shade',
-      'artwork--cover',
-    ]);
-    const orphans = [...onPage].filter(
-      (name) =>
-        !declared.has(name) && !name.startsWith('lucide') && !HOOKS.has(name)
-    );
-    expect(orphans, `classes used by the page but absent from its stylesheet`)
+    // rule.
+    expect(orphanClasses(html, css), `classes used by the page but absent from its stylesheet`)
       .toEqual([]);
 
     // Braces balance: the trim walks the sheet by hand, skipping comments
     // that contain a literal `{`.
+    const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
     expect((withoutComments.match(/\{/g) ?? []).length).toBe(
       (withoutComments.match(/\}/g) ?? []).length
     );
@@ -312,6 +322,34 @@ for (const fixture of FIXTURES) {
 // The React packages ship the site's own components as their source, comments
 // and all; a note written for this repository's maintainers (a script, the
 // test suite, CLAUDE.md) means nothing in somebody's project.
+// Every packaged page, not only the fixtures. A class the packager left hashed
+// matches no rule, and the page ships unstyled: 30 did, each one with a `-` in
+// its module hash, which the de-hashing did not expect.
+test('every packaged HTML page finds its classes in its stylesheets', () => {
+  const downloads = path.dirname(dirFor('x'));
+  const sites = fs
+    .readdirSync(downloads)
+    .filter((name) => !name.endsWith('-react') && fs.existsSync(path.join(downloads, name, 'index.html')));
+
+  expect(sites.length).toBeGreaterThan(100);
+
+  const problems: string[] = [];
+  for (const slug of sites) {
+    const html = fs.readFileSync(path.join(downloads, slug, 'index.html'), 'utf-8');
+    const css = ['base.css', `${slug}.css`]
+      .map((file) => fs.readFileSync(path.join(downloads, slug, 'styles', file), 'utf-8'))
+      .join('\n');
+    // `undefined` is a lookup of a variant the page gives no rule (`s.none`,
+    // `s.slotOff`): residue, but styled exactly as the live page is.
+    const orphans = orphanClasses(html, css).filter((name) => name !== 'undefined');
+
+    if (html.includes('-module__')) problems.push(`${slug}: hashed class names left in the markup`);
+    else if (orphans.length > 0) problems.push(`${slug}: ${orphans.join(', ')}`);
+  }
+
+  expect(problems, 'classes used by a page but absent from its stylesheets').toEqual([]);
+});
+
 test("no React package names this repository's own tooling", () => {
   const downloads = path.dirname(dirFor('x'));
   const sources = fs

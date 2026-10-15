@@ -452,9 +452,15 @@ global sheet's stack did reach one template element, the shared
 the download draw the same type.
 
 A site fails loudly rather than shipping broken: more than one CSS module on a
-page, or two hashed names collapsing onto one plain name. All 377 sites
-package, so `KNOWN_UNSUPPORTED` is empty - anything that throws is a new
-problem and exits non-zero.
+page, two hashed names collapsing onto one plain name, or a hashed name left
+in the markup after de-hashing. That last one shipped for 30 sites: the hash
+is base64url and can hold a `-` (`-D-Hpa`), which the pattern did not allow,
+so every class on those pages stayed hashed, matched nothing in the shipped
+stylesheet, and the download and the customizer drew an unstyled page with a
+pattern field over all of it. `e2e/templates.spec.ts` now checks every
+packaged page's classes against its stylesheets, not only the fixtures'. All
+377 sites package, so `KNOWN_UNSUPPORTED` is empty - anything that throws is a
+new problem and exits non-zero.
 
 `composes:` needs no flattening, which is easy to get backwards. CSS Modules
 resolves a local `composes` in the **markup**: `.h2Light { composes: h2 }`

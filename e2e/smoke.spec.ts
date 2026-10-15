@@ -31,7 +31,7 @@ test.describe('Tabbied site', () => {
     await florist.click();
     await expect(florist).toHaveAttribute('aria-pressed', 'true');
     const floristName = (await florist.getAttribute('aria-label'))!.replace(/^Florist: /, '');
-    await expect(page.getByRole('link', { name: new RegExp(`^Preview ${floristName}, a florist template`) })).toHaveAttribute(
+    await expect(page.getByRole('link', { name: new RegExp(`^Preview ${floristName}, an? [a-z ]*florist template`) })).toHaveAttribute(
       'href',
       /^\/templates\/[a-z0-9-]+\/$/
     );
