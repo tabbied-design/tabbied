@@ -14,7 +14,6 @@ export const metadata = {
    menu card in the hero, a strip of tiles between the courses, and the
    border along the foot of the page. The tiles are paprika, saffron and
    herb, the three things in every dish on the autumn card. */
-const CLOTH = '#1f2b26';
 const CARD = '#f3ebdc';
 const PAPRIKA = '#c8553d';
 const SAFFRON = '#e3a73e';

@@ -14,7 +14,6 @@ export const metadata = {
    the way warmth spreads from a pair of hands. It fills the round lamp in
    the hero, a band before the policies, the face of the gift certificate
    and the foot of the page, always on the room's own dark ground. */
-const NIGHT = '#211a1c';
 const CREAM = '#f1e5d8';
 const CLAY = '#c27a63';
 const PEACH = '#e8b496';

@@ -14,7 +14,6 @@ export const metadata = {
    as bonds closing into rings. The field fills the benzene-ring hexagon
    in the hero, the gap at the top of the periodic table of topics, a band
    before the rates and the edge of the footer, always on the board. */
-const BOARD = '#0f1f2b';
 const CHALK = '#e8eef0';
 const FLAME = '#e8574a';
 const TEAL = '#5cc2b8';

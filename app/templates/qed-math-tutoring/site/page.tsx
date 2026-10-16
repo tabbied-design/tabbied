@@ -13,7 +13,6 @@ export const metadata = {
    blackboard and the snub square tiling is chalked on it: squares and
    triangles, five to a vertex. It is Figure 1 in the hero, Figure 2 between
    the lemmas, the border of the corollary and the foot of the board. */
-const SLATE = '#1f2d2b';
 const CHALK = '#ecebe2';
 const YELLOW = '#f0cf62';
 const PINK = '#ec8f8a';

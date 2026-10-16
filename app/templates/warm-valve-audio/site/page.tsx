@@ -17,7 +17,6 @@ export const metadata = {
 const ALU = '#e4e3de';
 const BLACK = '#121212';
 const AMBER = '#f2a93b';
-const RED = '#d23a2e';
 
 const GRILLE = ['transparent', BLACK, BLACK, BLACK, BLACK, BLACK];
 const GRILLE_FOOT = ['transparent', BLACK, BLACK, BLACK, BLACK, BLACK];

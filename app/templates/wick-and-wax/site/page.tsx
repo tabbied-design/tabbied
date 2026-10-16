@@ -13,7 +13,6 @@ export const metadata = {
 /* Site colors. A candle is cut out of a pattern whose first color is the
    wax; the photograph's own shading gives it its glass, its tin, its flame. */
 const WAX = '#F6F2EC';
-const INK = '#231F1C';
 const AMBER = '#B8864B';
 const HEATHER = '#7C6F8E';
 const SMOKE = '#A39A90';

@@ -12,7 +12,6 @@ export const metadata = {
 
 /* Site colors. Every field runs over a transparent ground, so the paper
    shows between the cut shapes the way it does in a real wycinanka. */
-const PAPER = '#faf7f0';
 const BLACK = '#151515';
 const RED = '#d42b2b';
 const GREEN = '#2e8b3e';

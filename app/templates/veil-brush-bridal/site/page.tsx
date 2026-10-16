@@ -13,7 +13,6 @@ export const metadata = {
    tints of one rose, folded corner to corner like tulle. It fills the
    dressing-room mirror in the hero, lies under the trial card, runs as a
    band between the packages and the travel fees, and edges the footer. */
-const IVORY = '#fbf6f1';
 const ESPRESSO = '#2f2329';
 const BERRY = '#8f4a5f';
 const ROSE = '#d69aa3';

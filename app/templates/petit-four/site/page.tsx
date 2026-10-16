@@ -14,10 +14,8 @@ export const metadata = {
    from the same four inks the page is set in; the cabinet's back wall keeps
    its ground transparent so the tinted panel behind it shows through. */
 const CREAM = '#fbf6ee';
-const COCOA = '#3a2327';
 const PISTACHIO = '#bcd4a0';
 const ROSE = '#f0bcc6';
-const GILT = '#a57a42';
 
 const AWNING = [CREAM, ROSE];
 const CARTOUCHE = [CREAM, PISTACHIO, ROSE];

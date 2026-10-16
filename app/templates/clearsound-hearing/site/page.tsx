@@ -56,7 +56,6 @@ const STEPS: Step[] = [
   { n: '6', min: 10, time: '10 minutes', title: 'What happens next', body: 'Often nothing: many people just need a check in two years. If hearing aids would help, we say so, and then we let you go home and think.' },
 ];
 
-const FREQS = ['250', '500', '1k', '2k', '4k', '8k'];
 const LEVELS = ['0', '20', '40', '60', '80', '100', '120'];
 
 /* A sample chart, the shape we see most: fine in the low notes, falling

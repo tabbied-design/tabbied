@@ -17,8 +17,6 @@ export const metadata = {
 const PAINT = '#f4f5f0';
 const SLATE = '#1f2a30';
 const CEDAR = '#b4602e';
-const LAWN = '#3e7a4a';
-const SKY = '#a9cbe3';
 
 const PANEL = ['transparent', CEDAR, CEDAR, CEDAR, CEDAR, CEDAR];
 const BAND = ['transparent', SLATE, SLATE, SLATE, SLATE, SLATE];

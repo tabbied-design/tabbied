@@ -13,7 +13,6 @@ export const metadata = {
    mark: quarter discs tucked into turning corners, like notes on a beat.
    It is pressed into the record in the hero, runs as a band after the run
    of show, fills the first-dance panel and edges the footer. */
-const NIGHT = '#15121e';
 const CREAM = '#f3ece0';
 const PINK = '#ff4f8b';
 const CYAN = '#3fd0e0';

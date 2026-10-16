@@ -14,7 +14,6 @@ export const metadata = {
    after cell, in sailcloth, flare orange, sea teal and rope. It fills the
    slipway ramp in the hero, runs as the wake between the calendar and the
    checklist, and edges the footer. */
-const HARBOR = '#102231';
 const SAIL = '#ece6d6';
 const FLARE = '#f0642d';
 const TIDE = '#4fa3a5';

@@ -13,7 +13,6 @@ export const metadata = {
 /* Site colors. The fields sit on `transparent`, so the leaves and dots are
    drawn on whatever panel holds them. */
 const SAGE = '#2E7D6B';
-const CORAL = '#E86F4E';
 const GRAY = '#8C9A94';
 const PALE = '#DDE8E3';
 const PAPER = '#F5F8F6';

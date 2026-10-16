@@ -13,10 +13,8 @@ export const metadata = {
 /* Site colors. Every pattern here is printing: Ben-Day dots in one ink on
    the flat color of the panel behind them (a transparent ground). */
 const PAPER = '#fbf3dc';
-const INK = '#16130f';
 const RED = '#e33b2e';
 const YELLOW = '#ffd23a';
-const BLUE = '#2b6fd8';
 
 const SPLASH = ['transparent', YELLOW];
 const BLUEDOTS = ['transparent', PAPER];

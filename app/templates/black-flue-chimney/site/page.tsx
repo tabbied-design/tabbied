@@ -14,8 +14,6 @@ export const metadata = {
    miss. It frames the sample certificate in the hero, builds the chimney in
    the cross-section, stands as a row of stacks over the safety checklist and
    lays the footer course. */
-const SOOT = '#1d1a18';
-const BONE = '#efe5d3';
 const BRICK = '#b4482f';
 const EMBER = '#e3934a';
 const RUST = '#7e3424';

@@ -15,7 +15,6 @@ export const metadata = {
    between the columns: a wide span in the hero that narrows into a spine
    running down the whole page, with the prices sitting on it, and a band
    under the footer. */
-const PAPER = '#f4f6f1';
 const NAVY = '#1b2b4b';
 const RED = '#d8483e';
 const HARBOR = '#4f7fa3';

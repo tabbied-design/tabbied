@@ -261,7 +261,6 @@ const lpt = ([u, v], span) => {
   const m = (e) => lscale(ladd(e, lin(o)), 100 / span);
   return `${lstr(m(u))}% ${lstr(m(v))}%`;
 };
-const L = (c, name, k = 1) => (name ? lin(c, { [name]: k }) : lin(c));
 
 // -- truchet sets and paths ------------------------------------------------------
 

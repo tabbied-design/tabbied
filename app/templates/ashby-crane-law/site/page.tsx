@@ -16,7 +16,6 @@ export const metadata = {
    with a vellum pinstripe. It lines the hero, runs as a ribbon between the
    articles, marks the partners' page and edges the footer. */
 const VELLUM = '#f3eee3';
-const NAVY = '#1b2340';
 const OXBLOOD = '#7c2735';
 const GREEN = '#2d5a44';
 const GOLD = '#b48d2e';

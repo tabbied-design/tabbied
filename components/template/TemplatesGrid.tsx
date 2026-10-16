@@ -237,7 +237,6 @@ export default function TemplatesGrid({
   // the long one.
   const narrowSearch = useMediaQuery('(max-width: 559.98px)');
   const shown = matching.slice((current - 1) * PER_PAGE, current * PER_PAGE);
-  const here = galleryHref(active, current, query);
 
   // Only worked out for a search that found nothing, over the cards the
   // filter holds, so every offer finds something where the person is.

@@ -14,7 +14,6 @@ export const metadata = {
    are worked on a transparent ground: the gaps between the stitches are
    whatever the ball, band or placket behind them is. */
 const OAT = '#efe5d3';
-const PEAT = '#34281f';
 const RUST = '#b4532e';
 const MOSS = '#5d6a38';
 const HONEY = '#d8a445';

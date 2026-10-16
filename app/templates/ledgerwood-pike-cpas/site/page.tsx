@@ -15,7 +15,6 @@ export const metadata = {
    transparent ground so the paper shows between them. It fills the note in
    the hero, frames the services like a certificate border, and runs along
    the foot of the page. */
-const PAPER = '#f3eee1';
 const INK = '#1d3a31';
 const SEAL = '#7e2d27';
 const GILT = '#b08a3e';

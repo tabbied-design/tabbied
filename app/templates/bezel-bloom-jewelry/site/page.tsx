@@ -13,7 +13,6 @@ export const metadata = {
    are the studio's mark: triangles of jewel color on velvet. They fill a cut
    stone in the hero, run as a band under the ring builder, sit at the center
    of the commission halo and line the foot of the page. */
-const VELVET = '#1b1422';
 const PEARL = '#f4ede4';
 const GOLD = '#d6b26e';
 const RUBY = '#c8375c';

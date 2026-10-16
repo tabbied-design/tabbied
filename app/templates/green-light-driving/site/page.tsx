@@ -13,7 +13,6 @@ export const metadata = {
 /* Site colors. The car, the light and the sign are stacked masks, one per
    color layer, each painted with one of the page's custom properties. */
 const PAPER = '#F3F5F2';
-const ASPHALT = '#141A16';
 const GREEN = '#1F9D55';
 const AMBER = '#F6C026';
 const GRAY = '#858D87';

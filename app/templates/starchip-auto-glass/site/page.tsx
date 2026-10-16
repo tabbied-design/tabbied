@@ -16,7 +16,6 @@ export const metadata = {
    be replaced in the coin test, the band before the van schedule and the
    edge of the footer. */
 const CONCRETE = '#e8e6e1';
-const ASPHALT = '#1c2124';
 const SIGNAL = '#f2b51e';
 const GLASS = '#9cc6cc';
 const PANE = '#cfe3e3';

@@ -395,7 +395,7 @@ export default function HollisPianoPage() {
                       <span data-edit={`care.planWho.${i}`} data-edit-max="60" className={s.planWho}>{row.who}</span>
                       <span data-edit={`care.planNote.${i}`} data-edit-max="60" className={s.planNote}>{row.note}</span>
                     </th>
-                    {MONTHS.map((m, i) => (
+                    {MONTHS.map((_, i) => (
                       <td key={MONTH_NAMES[i]}>
                         {row.months.includes(i) ? <span className={s.note} role="img" aria-label={`Tune in ${MONTH_NAMES[i]}`} /> : null}
                       </td>

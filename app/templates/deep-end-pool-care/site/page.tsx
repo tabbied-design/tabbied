@@ -16,7 +16,6 @@ export const metadata = {
    runs as the waterline between the route and the seasons, lies under the
    winter cover and edges the footer. */
 const FOAM = '#edf5f2';
-const DEEP = '#0c3442';
 const AQUA = '#2aa6a0';
 const CORAL = '#ee6a4e';
 const SUN = '#f2c14e';

@@ -16,7 +16,6 @@ export const metadata = {
    speaker cone: chalk and on-air red on the black of the booth. It fills
    the hero, sits in the speaker panel, sweeps between the rates and the
    studio, and edges the footer. */
-const STUDIO = '#141418';
 const CHALK = '#efe8dc';
 const SIGNAL = '#e5483d';
 const AMBER = '#f0b23e';

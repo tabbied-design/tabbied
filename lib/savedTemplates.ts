@@ -93,14 +93,3 @@ export function savedSlugs(saved: SavedTemplatesState): Set<string> {
 export function customizeHref(slug: string, site: Pick<SiteSummary, 'id'> | null): string {
   return site ? `/studio/site/?id=${site.id}` : `/studio/customize/?slug=${slug}`;
 }
-
-/** Start a zip download the way a link with `download` would. */
-export function startDownload(href: string): void {
-  const anchor = document.createElement('a');
-
-  anchor.href = href;
-  anchor.download = '';
-  document.body.append(anchor);
-  anchor.click();
-  anchor.remove();
-}

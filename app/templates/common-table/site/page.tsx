@@ -11,7 +11,6 @@ export const metadata = {
 
 /* Site colors. The horizon field and the progress fill take `transparent`
    in the background slot, so they draw on the cream page itself. */
-const INK = '#22201C';
 const CARROT = '#E0642E';
 const LEAF = '#3E7C59';
 const HUSK = '#F1E6D2';

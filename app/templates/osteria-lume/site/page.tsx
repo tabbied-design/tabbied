@@ -12,7 +12,6 @@ export const metadata = {
 /* Site colors. The tablecloth paints the pale linen as its own cloth; the
    stitched fold takes `transparent`, so it sits in the card's paper. */
 const LINEN = '#F7F2E9';
-const INK = '#1E1B18';
 const TOMATO = '#C8402B';
 const GRAY = '#8A8275';
 const PALE = '#E7DFD1';

@@ -13,7 +13,6 @@ export const metadata = {
 /* Site colors. The tile panel lays its octagons on a transparent ground, so
    the panel's ink shows through as the grout; the star band and the knafeh
    tray do the same over sand. */
-const INK = '#2a2318';
 const OLIVE = '#58662a';
 const POMEGRANATE = '#a02338';
 const OIL = '#c29a3a';

@@ -15,7 +15,6 @@ export const metadata = {
    one thing. It is the round window of the hero, the horizon between the
    course and the retreats, and the small circle that waits by the first
    sit. */
-const NIGHT = '#1c2030';
 const MOON = '#ebe5d6';
 const CANDLE = '#d4a05a';
 const DUSK = '#5f6f95';

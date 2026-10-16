@@ -15,7 +15,6 @@ export const metadata = {
    switched on) reads as pixels and as nested components at once: it is the
    README's banner, the strip between the projects and the calendar, and
    the last line of the file. */
-const PAPER = '#f4f5f7';
 const INK = '#16161d';
 const VIOLET = '#5b47d6';
 const CORAL = '#f0604d';

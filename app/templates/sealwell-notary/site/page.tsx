@@ -15,7 +15,6 @@ export const metadata = {
    seal, maps the three zones and edges the apostille ribbon and the footer. */
 const PAPER = '#f5f0e3';
 const NAVY = '#1c2b4a';
-const WAX = '#8c2232';
 const GOLD = '#b08a3e';
 const STEEL = '#6d7f99';
 

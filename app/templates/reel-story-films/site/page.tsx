@@ -14,7 +14,6 @@ export const metadata = {
    frame like a tally light. It fills the viewfinder in the hero, runs as a
    reel between the films and the shot list, is the picture in each frame
    of the turnaround strip, and the footer's last reel. */
-const NIGHT = '#141312';
 const SILVER = '#ece6da';
 const RED = '#d8452f';
 const BRASS = '#c7a25a';

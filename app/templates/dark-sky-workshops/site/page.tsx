@@ -13,7 +13,6 @@ export const metadata = {
    starlight, the violet haze of the band, a warm star and a cold one. The
    Milky Way is the sky over the ridge in the hero and the three prints
    for sale, and closes the page above the footer. */
-const NIGHT = '#0e0d24';
 const STAR = '#f3eee2';
 const HAZE = '#5b4d9c';
 const GOLD = '#f0c26a';

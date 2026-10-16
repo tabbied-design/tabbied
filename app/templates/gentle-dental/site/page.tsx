@@ -13,8 +13,6 @@ export const metadata = {
 /* Site colors. The garden in the window and the leaves in the footer are
    ivy in the page's own greens on a transparent ground, so the pane or band
    behind them is the sky; the quiet-room veil is the same greens in dots. */
-const LINEN = '#f4f1e8';
-const MOSS = '#26352c';
 const SAGE = '#a7bba1';
 const FERN = '#5a7a62';
 const CLAY = '#d9b7a0';

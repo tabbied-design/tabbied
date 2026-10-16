@@ -16,7 +16,6 @@ export const metadata = {
    into them like water finding its way down: the cross-section beside the
    log card in the hero, the drain field between the sections, and the
    ground line at the foot of the page. */
-const MANILA = '#e9dfc6';
 const INK = '#1f2420';
 const HIVIS = '#e0662a';
 const OLIVE = '#6b7046';

@@ -11,7 +11,6 @@ export const metadata = {
 
 /* Site colors. The tile plate lays the mist tile over the page's own
    ground; the sparkle field sits on the ink band, so its slot is empty. */
-const INK = '#1A2322';
 const GREEN = '#5BAF7A';
 const LEMON = '#F2C94C';
 const MIST = '#E6ECE7';
