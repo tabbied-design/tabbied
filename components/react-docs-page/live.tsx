@@ -14,7 +14,7 @@ import styles from './ReactDocs.module.css';
 const MOUNT_MARGIN = '400px';
 
 /** True once `ref`'s element has come within MOUNT_MARGIN of the viewport. */
-export function useNear(ref: { current: Element | null }) {
+function useNear(ref: { current: Element | null }) {
   const [near, setNear] = useState(false);
 
   useEffect(() => {

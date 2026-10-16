@@ -14,7 +14,7 @@
 // with section 7 of the Terms (app/terms-of-service/page.tsx) and
 // TEMPLATE_LICENSE in scripts/package-templates.mjs.
 
-export const TERMS_URL = 'https://tabbied.com/terms-of-service/#template-license';
+const TERMS_URL = 'https://tabbied.com/terms-of-service/#template-license';
 
 const COPYRIGHT = 'Copyright (c) 2026 Sy Hong and Ye Joo Park. All rights reserved.';
 
@@ -24,7 +24,7 @@ export function templateSlugOf(pathname: string): string | null {
 }
 
 /** The notice, one sentence per line. */
-export function noticeLines(slug: string): string[] {
+function noticeLines(slug: string): string[] {
   return [
     'This page is a preview of a Tabbied website template.',
     'Its code, design, text and pictures are licensed to the person who downloads it from tabbied.com, not free to copy from this page:',

@@ -238,7 +238,7 @@ export type ReactCustomizations = {
  * different attributes now. The engine adds and removes no elements, so the
  * two documents' slots line up by position.
  */
-export function customizationsOf(before: Document, after: Document): ReactCustomizations {
+function customizationsOf(before: Document, after: Document): ReactCustomizations {
   const was = rootProperties(before);
   const properties = [...rootProperties(after)].filter(([name, value]) => was.get(name) !== value);
 

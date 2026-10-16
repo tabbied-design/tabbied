@@ -363,7 +363,7 @@ const cssValue = (name: string, value: string | number) =>
   typeof value === 'number' && !UNITLESS.has(name) && value !== 0 ? `${value}px` : String(value);
 
 /** `{ minHeight: 250 }` as `min-height: 250px`. */
-export const cssText = (style: Style) =>
+const cssText = (style: Style) =>
   Object.entries(style)
     .map(([name, value]) => `${kebab(name)}: ${cssValue(name, value)}`)
     .join('; ');

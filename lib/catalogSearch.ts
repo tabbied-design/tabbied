@@ -49,12 +49,12 @@ export type SearchableTemplate = {
   topic?: string;
 };
 
-export function templateKeywords(template: SearchableTemplate): string {
+function templateKeywords(template: SearchableTemplate): string {
   return [template.slug, template.name, template.category ?? '', template.topic ?? ''].join(' ').toLowerCase();
 }
 
 /** The query's words; an empty query matches everything. */
-export const queryTerms = (query: string): string[] => query.toLowerCase().split(/\s+/).filter(Boolean);
+const queryTerms = (query: string): string[] => query.toLowerCase().split(/\s+/).filter(Boolean);
 
 export function matchesQuery(keywords: string, query: string): boolean {
   return queryTerms(query).every((term) => keywords.includes(term));
@@ -63,7 +63,7 @@ export function matchesQuery(keywords: string, query: string): boolean {
 // -- Templates, by word ------------------------------------------------------
 
 /** Lowercase letters and digits, accents dropped ("Cafe" for "Caf\u00e9"), one entry per word. */
-export const words = (text: string): string[] =>
+const words = (text: string): string[] =>
   text
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -193,7 +193,7 @@ export function indexTemplate(template: SearchableTemplate): TemplateIndex {
  * Payroll at all: plumbline is neither its stem nor a word that starts with
  * "plumber".
  */
-export function scoreTemplate(index: TemplateIndex, query: string): number {
+function scoreTemplate(index: TemplateIndex, query: string): number {
   let score = 0;
 
   for (const term of words(query)) {

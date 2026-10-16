@@ -13,6 +13,7 @@
     "outDir": "dist",
     "rootDir": "src",
     "strict": true,
+    "noUnusedLocals": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "isolatedModules": true,

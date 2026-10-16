@@ -47,7 +47,7 @@ const BY_SLUG = new Map(TEMPLATE_INDEX.map((entry) => [entry.slug, entry]));
 const TABS_DIR = path.join(process.cwd(), 'public', 'images', 'home', 'tabs');
 const DISPLAY = captured as Record<string, { display?: string | null }>;
 
-export function showcaseTemplate(slug: string): ShowcaseTemplate {
+function showcaseTemplate(slug: string): ShowcaseTemplate {
   const entry = BY_SLUG.get(slug);
 
   if (!entry) {
