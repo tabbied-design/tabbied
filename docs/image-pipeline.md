@@ -170,8 +170,7 @@ What holds the contract together now:
   regression the check exists to refuse.
 - The committed filename contract is unchanged: cut-outs still promote to
   `<id>-cutout.webp`, so served URLs, the manifest, and `Figure` move not at
-  all. A legacy `<id>-cutout.png` on disk (old removal output) still wins
-  over its sibling `<id>.png`, which in that layout is the *opaque* original.
+  all.
 
 ## Promotion and serving
 
@@ -180,9 +179,8 @@ What holds the contract together now:
   cut-out lands on a busy pattern where a lossy alpha edge shows. PNG->WebP
   runs ~14× smaller (~130 kB for a 1536×1024).
 - Promotion follows the flag: `cutout: false` -> `<id>.webp`; `cutout: true` ->
-  `<id>-cutout.webp`, sourced from the native-alpha original (or a legacy
-  `-cutout.png` when one exists; `--keep-original` is only meaningful in that
-  legacy layout). A `cutout: true` prompt with no candidate on disk - or an
+  `<id>-cutout.webp`, sourced from the native-alpha original. A
+  `cutout: true` prompt with no candidate on disk - or an
   opaque one - is an **error**, not a skip; both are what silently leave a
   stale or broken committed image after a regeneration.
 - `scripts/build-image-manifest.mjs` writes `lib/generated/images.js`
