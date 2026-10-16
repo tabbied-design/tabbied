@@ -200,26 +200,26 @@ on `PatternOption`), so package consumers can implement the same UX.
 - After any pattern change, run the parity sweep for it (below); keep the
   representative list and threshold table in `e2e/svg-export.spec.ts` in
   sync (thresholds are mirrored in `scripts/svg-parity-sweep.mjs`).
-- **The tier belongs in the batch definition, never only in the generated
-  JSON.** Each `scripts/pattern-gen/pattern-defs-N.mjs` takes `svgExport` /
-  `svgExportNote` in a design's cfg and its generator emits them. A tier
-  written straight into `packages/tabbied/patterns/*.json` is silently erased
-  the next time anyone regenerates that batch - the generators rewrite every
-  file they own. This is not hypothetical: `wedge` lost its `svgExport: false`
-  that way, and nothing failed.
+- **For batch 14 the tier belongs in the definition, never only in the
+  generated JSON.** `scripts/pattern-gen/pattern-defs-14/` takes `svgExport` /
+  `svgExportNote` in a design's cfg and `generate-batch14.mjs` emits them. A
+  tier written straight into one of its `packages/tabbied/patterns/*.json` is
+  silently erased the next time anyone regenerates the batch, because the
+  generator rewrites every file it owns. This is not hypothetical: `wedge` lost
+  its `svgExport: false` that way, and nothing failed.
+- **Every design before batch 14 is authored in its JSON.** The generators for
+  batches 1-13 were retired: the catalog metadata and the cost fixes were
+  written into the JSON after they last ran, so running one would have stripped
+  or reverted them. Edit those files directly. Batches 10-13 keep their
+  definitions, because batch 14 builds on their helpers, and their validators,
+  which read the shipped JSON.
 - The three tiers are **pinned by a unit test** (`packages/tabbied/test/`), so
   losing or changing one fails `npm test --workspace tabbied`. Changing a
   design's tier means updating that test and the counts above with it.
 - **A batch generator owns a bounded range of gallery orders**, and deletes
   anything in its range it no longer defines. The bound is the important half:
   batch 10 once claimed every order above 1100 and so deleted the whole of
-  batch 11. Batch 11 owns 1200-1399, batch 12 owns 1400-1999, batch 13 owns
-  2000-2999, the hand-authored September drop sits at 3000-3042, and batch 14
-  owns 4000-4999.
-- `scripts/pattern-gen/generate-patterns.mjs` (batches 1-3) is historical and
-  refuses to run: its definitions would recreate 105 retired designs and
-  overwrite `tetro`. For those patterns the JSON is authoritative - edit it
-  directly, and the unit test guards the tiers.
+  batch 11. Batch 14, the one generator left, owns 4000-4999.
 
 ## Verification
 

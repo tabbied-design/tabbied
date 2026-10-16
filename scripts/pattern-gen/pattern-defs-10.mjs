@@ -14,7 +14,8 @@
 //                        than its middle.
 //   H. Bands             moldings and banding, run across the sheet.
 //
-// House rules (enforced by generate-batch10.mjs and validate-batch10.mjs):
+// House rules (validate-batch10.mjs checks them against the shipped JSON,
+// which is authoritative for this batch now that its generator is retired):
 //
 //   * exactly one @random(${shapeFrequency}) gate per design, so the frequency
 //     slider always thins the field;

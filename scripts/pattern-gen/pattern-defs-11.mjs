@@ -22,13 +22,12 @@
 // (G, N, O and P were authored and cut; the letters skip them rather than
 // renumber designs that already have their gallery order.)
 //
-// House rules, enforced by generate-batch11.mjs (via pattern-lints.mjs) and
-// validate-batch11.mjs: exactly one @random(${shapeFrequency}) gate per
-// design; every design samples a transition-able ink per cell so a reseed
-// morphs; a randomized custom prop read more than once goes through
-// @var(--x); nothing paints var(--color0), because a hole knocked out in the
-// background color stops being a hole the moment the background is
-// transparent.
+// House rules, checked against the shipped JSON by validate-batch11.mjs:
+// exactly one @random(${shapeFrequency}) gate per design; every design samples
+// a transition-able ink per cell so a reseed morphs; a randomized custom prop
+// read more than once goes through @var(--x); nothing paints var(--color0),
+// because a hole knocked out in the background color stops being a hole the
+// moment the background is transparent.
 import { RESERVED, TAKEN } from './pattern-defs-11/shared.mjs';
 import { sectionA } from './pattern-defs-11/a-split.mjs';
 import { sectionB } from './pattern-defs-11/b-rule.mjs';
@@ -58,7 +57,7 @@ const SECTIONS = [
   sectionM,
 ];
 
-// Batch 11 owns gallery orders 1200-1399 (see generate-batch11.mjs).
+// Batch 11 owns gallery orders 1200-1399.
 const FIRST_ORDER = 1200;
 
 let order = FIRST_ORDER;
