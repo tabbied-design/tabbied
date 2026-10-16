@@ -19,6 +19,7 @@
     // migration this build expects. Wrangler bundles JSON on its own.
     "resolveJsonModule": true,
     "strict": true,
+    "noUnusedLocals": true,
     "noEmit": true,
     "skipLibCheck": true,
     "esModuleInterop": true,

@@ -14,7 +14,6 @@ export const metadata = {
    behind the hero with a lens over it that shows the same dots magnified,
    then a band between the services and the doctors, and the footer's edge. */
 const PORCELAIN = '#f6efea';
-const PLUM = '#3a1d35';
 const ROSE = '#b84a68';
 const APRICOT = '#e8a07a';
 const PETAL = '#f0c6c2';

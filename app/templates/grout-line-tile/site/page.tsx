@@ -19,7 +19,6 @@ const BOTTLE = '#14302b';
 const GLAZE = '#2e7563';
 const CELADON = '#a8cfc0';
 const IVORY = '#e6dcc4';
-const SPACER = '#c45f35';
 
 const WALL = ['transparent', BOTTLE, GLAZE, CELADON, IVORY, CELADON, PORCELAIN];
 const TEST = ['transparent', BOTTLE, IVORY, CELADON, IVORY, GLAZE, PORCELAIN];

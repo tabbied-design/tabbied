@@ -27,13 +27,12 @@
 // (B, H, K, M, O, P and Q were authored and cut; the letters skip them rather
 // than renumber designs that already have their gallery order.)
 //
-// House rules, enforced by generate-batch12.mjs (via pattern-lints.mjs) and
-// validate-batch12.mjs: exactly one @random(${shapeFrequency}) gate per
-// design; every design samples a transition-able ink per cell so a reseed
-// morphs; a randomized custom prop read more than once goes through
-// @var(--x); nothing paints var(--color0), because a hole knocked out in the
-// background color stops being a hole the moment the background is
-// transparent.
+// House rules, checked against the shipped JSON by validate-batch12.mjs:
+// exactly one @random(${shapeFrequency}) gate per design; every design samples
+// a transition-able ink per cell so a reseed morphs; a randomized custom prop
+// read more than once goes through @var(--x); nothing paints var(--color0),
+// because a hole knocked out in the background color stops being a hole the
+// moment the background is transparent.
 import { RESERVED, TAKEN12 } from './pattern-defs-12/shared.mjs';
 import { sectionA } from './pattern-defs-12/a-falloff.mjs';
 import { sectionC } from './pattern-defs-12/c-stipple.mjs';
@@ -65,7 +64,7 @@ const SECTIONS = [
   sectionT,
 ];
 
-// Batch 12 owns gallery orders 1400-1999 (see generate-batch12.mjs).
+// Batch 12 owns gallery orders 1400-1999.
 const FIRST_ORDER = 1400;
 
 let order = FIRST_ORDER;

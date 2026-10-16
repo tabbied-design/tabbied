@@ -14,7 +14,6 @@ export const metadata = {
    curtains of green, teal and lilac on a transparent ground, so the night
    of the page is their sky. In the arched window of the hero, along the
    horizon between the routines and the packages, and over the footer. */
-const NIGHT = '#101a2c';
 const MOON = '#f2ead6';
 const AURORA = '#6fd6a8';
 const TIDE = '#48b5c8';

@@ -15,7 +15,6 @@ export const metadata = {
    the hero, the shutter beside the emergency line, the sample on the new
    doors, and the threshold under the footer. */
 const CONCRETE = '#e7e4dd';
-const SLATE = '#1f2a30';
 const ORANGE = '#e8641c';
 const STEEL = '#4a7088';
 const SKY = '#9cc7d9';

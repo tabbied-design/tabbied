@@ -14,7 +14,6 @@ export const metadata = {
    column, on a transparent ground so the night-green field shows between.
    It fills the outer rings of the target, runs as a quiver band, and edges
    the footer. */
-const FIELD = '#17241d';
 const CHALK = '#efe8d6';
 const GOLD = '#e2b23a';
 const RED = '#c8452f';

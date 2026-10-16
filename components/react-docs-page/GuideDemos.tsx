@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 import { TabbiedPattern } from 'tabbied/react';
 import { blossom, maze, mixtape, quilt, radius, ring, vitrail } from 'tabbied/patterns';
 import { PACKAGE_VERSION } from 'lib/siteCounts';
-import CodeBlock from './CodeBlock';
 import Example from './Example';
 import ReseedExportDemo from './ReseedExportDemo';
 import {
@@ -34,12 +33,6 @@ function Demo({ setup, part, children }: { setup: GuideSetup; part: GuidePart; c
       {children}
     </Example>
   );
-}
-
-/** A sample with nothing to draw beside it. */
-export function GuideCode({ setup, part }: { setup: GuideSetup; part: GuidePart }) {
-  const { code, lang, title } = sample(setup, part);
-  return <CodeBlock code={code} lang={lang} title={title} className={styles.codeStandalone} />;
 }
 
 export function QuickStartDemo({ setup }: { setup: GuideSetup }) {

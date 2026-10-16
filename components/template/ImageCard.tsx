@@ -6,7 +6,7 @@ import s from './TemplateSite.module.css';
 
 // The site palette (and its background color) is appended to every prompt so a
 // generated image blends into the page.
-export function withPalette(prompt: string, colors: string[]): string {
+function withPalette(prompt: string, colors: string[]): string {
   const bg = colors[0];
   return `${prompt} Color palette: ${colors.join(', ')}. Use ${bg} as the background so the image blends into the page.`;
 }

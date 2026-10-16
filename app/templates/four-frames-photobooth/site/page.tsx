@@ -20,7 +20,6 @@ const TEAL = '#1f8c8c';
 
 const HOUSE = [PAPER, TEAL, RED, BLACK, TEAL, RED];
 const HOUSE_SOFT = ['transparent', TEAL, RED, TEAL];
-const DOTS = ['transparent', BLACK, RED];
 const CONFETTI = [PAPER, RED, TEAL, BLACK];
 const CHECKS = [PAPER, BLACK, RED, TEAL, BLACK, RED];
 const CUT = [PAPER, TEAL, BLACK, RED, TEAL, PAPER];

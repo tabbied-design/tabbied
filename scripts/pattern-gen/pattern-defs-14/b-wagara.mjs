@@ -220,9 +220,6 @@ const contour = (f, n = 96, eps = 0.0012) => {
 /** An implicit shape on the unit box as one clip-path polygon. */
 const shapeOf = (f, n, eps) => P(pct(joined(contour(f, n, eps))));
 
-/** Signed distance to a disc. */
-const disc = (x, y, cx, cy, r) => Math.hypot(x - cx, y - cy) - r;
-
 /** A ring band as a mask layer, its radii in percent of the box half-side. */
 const ringL = (inner, outer, at = '50% 50%') =>
   `radial-gradient(circle closest-side at ${at}, transparent ${inner}%, #000 ${inner}% ${outer}%, transparent ${outer}%)`;

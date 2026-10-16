@@ -25,13 +25,12 @@
 //   O. Fresco     the fall of ink quantized into counted levels.
 //   P. Woolwork   a periodic field crossed with a smooth ramp.
 //
-// House rules, enforced by generate-batch13.mjs (via pattern-lints.mjs) and
-// validate-batch13.mjs / validate-svg-batch13.mjs: exactly one
-// @random(${shapeFrequency}) gate per design; every design samples a
-// transition-able ink per cell so a reseed morphs; a randomized custom prop
-// read more than once goes through @var(--x); nothing paints var(--color0),
-// because a hole knocked out in the background color stops being a hole the
-// moment the background is transparent.
+// House rules, checked against the shipped JSON by validate-batch13.mjs /
+// validate-svg-batch13.mjs: exactly one @random(${shapeFrequency}) gate per
+// design; every design samples a transition-able ink per cell so a reseed
+// morphs; a randomized custom prop read more than once goes through @var(--x);
+// nothing paints var(--color0), because a hole knocked out in the background
+// color stops being a hole the moment the background is transparent.
 import { RESERVED, TAKEN13 } from './pattern-defs-13/shared.mjs';
 import { sectionA } from './pattern-defs-13/a-shore.mjs';
 import { sectionB } from './pattern-defs-13/b-fell.mjs';
@@ -69,7 +68,7 @@ const SECTIONS = [
   sectionP,
 ];
 
-// Batch 13 owns gallery orders 2000-2999 (see generate-batch13.mjs).
+// Batch 13 owns gallery orders 2000-2999.
 const FIRST_ORDER = 2000;
 
 let order = FIRST_ORDER;

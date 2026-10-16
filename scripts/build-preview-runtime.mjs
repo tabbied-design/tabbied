@@ -11,7 +11,7 @@
 // The bundle carries the whole catalog, because "Shuffle patterns" can swap a
 // field to any design and a missing one hydrates to a blank. The packaged HTML
 // is still read, to check the packager wrote something this runtime can draw.
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';

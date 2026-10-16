@@ -13,7 +13,6 @@ export const metadata = {
 /* Site colors, the same values as the roles on .page. The circles and the
    folded belts are drawn on a transparent ground, so the mat shows through
    them. */
-const MAT = '#f6f4ef';
 const INK = '#121212';
 const YELLOW = '#f2b705';
 const GREEN = '#2b8a57';

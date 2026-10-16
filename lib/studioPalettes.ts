@@ -31,13 +31,13 @@ export type PaletteChoice = {
  * ground or drawing it at partial opacity: at exactly 4.5:1 a 70% mix of it
  * drops under 3:1.
  */
-export const TEXT_CONTRAST = 7;
+const TEXT_CONTRAST = 7;
 
 /** What any other ink the template set at 3:1 or more keeps. */
-export const INK_CONTRAST = 3;
+const INK_CONTRAST = 3;
 
 /** An ink the template set within this of its ground is a tint of it. */
-export const TINT_CONTRAST = 1.3;
+const TINT_CONTRAST = 1.3;
 
 /** A color that renders as nothing, so `transparent` must survive a recolor. */
 export const isTransparent = (value: string): boolean => {

@@ -14,7 +14,6 @@ export const metadata = {
    ones on the other in the hero, the current inside the duct diagram, and
    a last draft along the footer. */
 const FROST = '#eef3f5';
-const DUCT = '#10293a';
 const BLUE = '#2a77ad';
 const EMBER = '#cc4a2c';
 const ICE = '#9fd0e3';

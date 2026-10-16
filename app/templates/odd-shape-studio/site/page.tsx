@@ -17,8 +17,6 @@ export const metadata = {
 const COBALT = '#2c3fcf';
 const CREAM = '#f5efe2';
 const TOMATO = '#ff5b35';
-const BUTTER = '#ffd23f';
-const NIGHT = '#15151a';
 
 const BLOBS = ['transparent', CREAM, CREAM];
 const WAVES = ['transparent', COBALT, COBALT];

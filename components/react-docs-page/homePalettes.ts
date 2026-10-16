@@ -7,7 +7,7 @@ import { PALETTE_POOLS, type PaletteName } from 'components/main-page/homeMotion
 import { fitToColorBounds } from 'lib/randomPalettes';
 
 /** `--h-bg`, the dark shell's ground. */
-export const HOME_GROUND = '#0e0e13';
+const HOME_GROUND = '#0e0e13';
 
 /** The pool's near-white, the dark shell's own ink: on the docs' white paper it draws nothing. */
 const PAPER_INK = '#eef0f6';

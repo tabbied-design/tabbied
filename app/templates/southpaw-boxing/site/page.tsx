@@ -13,7 +13,6 @@ export const metadata = {
 /* Site colors. The zigzag bands and the main-event panel are printed in
    black and red over the bone paper; the ticket's halftone and the
    hatched bill at the foot do the same over the canvas tone. */
-const BONE = '#efe6d2';
 const BLACK = '#151311';
 const RED = '#c8231b';
 const CANVAS = '#bfa57a';

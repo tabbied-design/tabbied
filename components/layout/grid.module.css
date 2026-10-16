@@ -1,10 +1,10 @@
 /*
- * A tiny responsive 12-column grid (Container / Row / Col). Spans, offsets and
- * order are custom properties set per breakpoint on each <Col>, with a
- * fallback chain so an unset breakpoint inherits the next smaller one
- * (mobile-first, as Bootstrap does).
+ * A tiny responsive 12-column grid (Container / Row / Col). Spans and offsets
+ * are custom properties set per breakpoint on each <Col>, with a fallback
+ * chain so an unset breakpoint inherits the next smaller one; below md a
+ * column is full width.
  *
- * Breakpoints (min-width): sm 748px, md 992px, lg 1300px.
+ * Breakpoints (min-width): sm 748px (the container only), md 992px, lg 1300px.
  */
 
 .container {
@@ -46,31 +46,19 @@
   flex: 0 0 auto;
   padding-right: calc(0.5 * var(--gutter-x, 32px));
   padding-left: calc(0.5 * var(--gutter-x, 32px));
-  width: var(--col-xs, 100%);
-  margin-left: var(--off-xs, 0);
-  order: var(--ord-xs, 0);
-}
-
-@media (min-width: 748px) {
-  .col {
-    width: var(--col-sm, var(--col-xs, 100%));
-    margin-left: var(--off-sm, var(--off-xs, 0));
-    order: var(--ord-sm, var(--ord-xs, 0));
-  }
+  width: 100%;
 }
 
 @media (min-width: 992px) {
   .col {
-    width: var(--col-md, var(--col-sm, var(--col-xs, 100%)));
-    margin-left: var(--off-md, var(--off-sm, var(--off-xs, 0)));
-    order: var(--ord-md, var(--ord-sm, var(--ord-xs, 0)));
+    width: var(--col-md, 100%);
+    margin-left: var(--off-md, 0);
   }
 }
 
 @media (min-width: 1300px) {
   .col {
-    width: var(--col-lg, var(--col-md, var(--col-sm, var(--col-xs, 100%))));
-    margin-left: var(--off-lg, var(--off-md, var(--off-sm, var(--off-xs, 0))));
-    order: var(--ord-lg, var(--ord-md, var(--ord-sm, var(--ord-xs, 0))));
+    width: var(--col-lg, var(--col-md, 100%));
+    margin-left: var(--off-lg, var(--off-md, 0));
   }
 }

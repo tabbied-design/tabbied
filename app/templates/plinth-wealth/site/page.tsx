@@ -13,7 +13,6 @@ export const metadata = {
    relief is carved stone: limestone and sand faces with a bronze shadow.
    It stands in the hero as a plinth, runs as a frieze under the letter,
    holds up the pledge as a column and makes the footer's base course. */
-const STONE = '#f3eee5';
 const SLATE = '#1f2b33';
 const BRONZE = '#8f6239';
 const SAND = '#d8c6a6';

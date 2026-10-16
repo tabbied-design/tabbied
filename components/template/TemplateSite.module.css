@@ -74,9 +74,6 @@
   position: relative;
   z-index: 20;
 }
-.navOnDark {
-  color: var(--onDark);
-}
 .logo {
   font-family: var(--display);
   font-weight: 700;
@@ -553,48 +550,8 @@
   margin: 8px 0 0;
   letter-spacing: calc(-0.01em + var(--tracking, 0em));
 }
-.edStrip {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(20px, 3vw, 36px);
-  padding-bottom: clamp(30px, 4vw, 46px);
-}
-.edStrip article {
-  padding-bottom: 22px;
-}
-.edStrip .edArt {
-  height: 190px;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 16px;
-}
-.edStrip .k {
-  color: var(--c1);
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: calc(0.1em + var(--tracking, 0em));
-  text-transform: uppercase;
-  padding: 0 20px;
-}
-.edStrip h3 {
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 22px;
-  margin: 8px 20px 6px;
-  line-height: 1.08;
-}
-.edStrip p {
-  margin: 0 20px;
-  opacity: 0.66;
-  font-size: 15px;
-}
-@media (max-width: 820px) {
-  .edStrip {
-    grid-template-columns: 1fr;
-  }
-}
 
-/* -- Layout: BOUTIQUE (elegant centered hero + collection) ----------------- */
+/* -- Layout: BOUTIQUE (elegant centered hero) ------------------------------ */
 .boutHero {
   position: relative;
   min-height: 96vh;
@@ -651,62 +608,6 @@
   font-size: 13px;
   letter-spacing: calc(0.22em + var(--tracking, 0em));
   text-transform: uppercase;
-}
-.collection {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: var(--sp) var(--pad-x);
-}
-.collectionHead {
-  text-align: center;
-  margin-bottom: 60px;
-}
-.collectionHead .eyebrow {
-  margin-bottom: 12px;
-}
-.collectionHead h2 {
-  font-family: var(--display);
-  font-weight: 500;
-  font-size: clamp(32px, 5vw, 60px);
-  margin: 0;
-  letter-spacing: calc(0.01em + var(--tracking, 0em));
-}
-/* The 2px gap over a tinted backdrop was a grid of hairlines by another name;
-   a real gap separates the cells instead. */
-.scents {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: clamp(18px, 2vw, 28px);
-}
-.scent {
-  text-align: center;
-}
-.scent .scentArt {
-  height: 340px;
-  position: relative;
-  overflow: hidden;
-}
-.scent .scentBody {
-  padding: 26px 24px 40px;
-}
-.scent .n {
-  font-size: 12px;
-  letter-spacing: calc(0.28em + var(--tracking, 0em));
-  color: var(--c1);
-  text-transform: uppercase;
-}
-.scent h3 {
-  font-family: var(--display);
-  font-weight: 500;
-  font-size: 28px;
-  margin: 10px 0 8px;
-  letter-spacing: calc(0.02em + var(--tracking, 0em));
-}
-.scent .meta {
-  font-family: var(--display);
-  font-style: italic;
-  opacity: 0.7;
-  font-size: 17px;
 }
 
 /* Shared content wrapper for grid sections */
@@ -1086,8 +987,6 @@ header + .manifesto {
 .statBandL { font-size: 13px; letter-spacing: calc(0.12em + var(--tracking, 0em)); text-transform: uppercase; opacity: 0.85; margin-top: 8px; }
 
 /* FAQ */
-.faqHead { max-width: var(--max); margin: 0 auto; padding: 0 var(--pad-x); }
-.faqHead h2 { font-family: var(--display); font-weight: 600; font-size: clamp(28px, 5vw, 48px); letter-spacing: calc(-0.02em + var(--tracking, 0em)); margin: 0 0 24px; }
 .faqList { max-width: 820px; margin: 0 auto; padding: 0 var(--pad-x); display: grid; }
 /* Questions are separated by a hairline rather than each sitting in its own
    filled card: on a flat page the cards read as clutter, while a rule keeps the

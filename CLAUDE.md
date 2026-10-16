@@ -2482,10 +2482,12 @@ rendered patterns to true vector SVG. Rules that must not regress:
 - **Fail loudly, never silently wrong**: unsupported CSS throws
   `SvgExportUnsupportedError`. New patterns must either stay inside the
   supported CSS subset, extend the converter, or set `svgExport: false`
-  (+ note). Batches 11 and 12 are authored to be clean throughout and share
+  (+ note). Batches 11-14 are authored to be clean throughout and share
   their lints (`scripts/pattern-gen/pattern-lints.mjs`) and their two gates
-  (`svg-sweep.mjs`, `render-sweep.mjs`); a batch generator owns a *bounded*
-  range of gallery orders and deletes anything in range it no longer defines.
+  (`svg-sweep.mjs`, `render-sweep.mjs`). Batch 14's is the only generator
+  left; it owns a *bounded* range of gallery orders and deletes anything in
+  range it no longer defines. Every design before it is authored in its JSON
+  (docs/svg-export.md says why the older generators were retired).
   Verify with `node scripts/svg-parity-sweep.mjs <slug>` and keep
   `e2e/svg-export.spec.ts`'s representative list + thresholds in sync.
 - **Bundle contract**: the converter (~12 KB gz minified) is lazy-loaded by

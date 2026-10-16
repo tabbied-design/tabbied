@@ -13,7 +13,6 @@ export const metadata = {
    a plat on blueprint: the parcel in the hero is cut out of the protractor
    field, half rings in chalk, flagging-tape orange, survey gold and sky,
    laid on a transparent ground so the blueprint shows between them. */
-const BLUE = '#173a5c';
 const CHALK = '#edf0e9';
 const FLAG = '#ee6a35';
 const GOLD = '#f1bf3d';

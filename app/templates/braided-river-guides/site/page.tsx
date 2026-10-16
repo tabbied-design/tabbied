@@ -14,7 +14,6 @@ export const metadata = {
    blue, birch, trout rose and caddis gold, laid on a transparent ground so
    the deep pool green runs between them. It is the river on the map, the
    lid of the fly box, a band before the gear list and the footer's edge. */
-const POOL = '#16302d';
 const BIRCH = '#f2ebda';
 const WATER = '#7cbad0';
 const TROUT = '#e8896f';

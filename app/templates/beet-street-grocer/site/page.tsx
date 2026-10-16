@@ -12,7 +12,6 @@ export const metadata = {
 
 /* Site colors. The crate fields lay leaves in beet, leaf and carrot on a
    transparent ground, so the board or the crate shows between them. */
-const SLATE = '#1f2a27';
 const CHALK = '#ece8dc';
 const BEET = '#b0305a';
 const LEAF = '#7aa35a';

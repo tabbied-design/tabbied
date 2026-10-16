@@ -14,7 +14,6 @@ export const metadata = {
    paper shows between them. It is the featured parcel in the hero, each
    listing's outline, the township behind the plat map, and the verge the
    footer stands on. */
-const HAY = '#f3eddc';
 const FIELD = '#24382b';
 const RUST = '#b0502a';
 const WHEAT = '#c99a32';

@@ -13,7 +13,6 @@ export const metadata = {
    a cream program, a scarlet house curtain, and the gold and sage of the
    thread wall. The bobbins are the workshop's thread, a wall of spools on
    a transparent ground so the stage shows between them. */
-const STAGE = '#1e1716';
 const CREAM = '#f1e6d2';
 const SCARLET = '#d4483a';
 const GOLD = '#e2a73a';

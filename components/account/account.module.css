@@ -259,12 +259,6 @@
   text-decoration: underline;
 }
 
-.footnote {
-  margin: 18px 0 0;
-  font: 400 13px / 1.6 var(--s-sans);
-  color: oklch(0.5 0.01 260);
-}
-
 /* Plain data tables (the usage ledger). */
 .table {
   width: 100%;
@@ -598,19 +592,6 @@
     padding-left: 24px;
   }
 
-  .nav {
-    gap: 0 22px;
-    padding: 10px 0;
-  }
-
-  /* 40px rows on the narrow layout, where these are tapped. */
-  .navLink {
-    display: inline-flex;
-    align-items: center;
-    min-height: 40px;
-    padding: 0;
-  }
-
   .head {
     flex-direction: column;
     gap: 20px;
@@ -665,7 +646,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .navLink,
   .cta,
   .fieldRow input,
   .button {

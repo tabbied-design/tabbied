@@ -14,8 +14,6 @@ export const metadata = {
    is the wash: two layers of translucent discs that pool where they cross.
    It is the painting taped to the board in the hero, each of the three
    prints, the holiday panel and the footer's last stroke. */
-const PAPER = '#faf6ef';
-const INDIGO = '#2c3550';
 const CERULEAN = '#3a7fb0';
 const SIENNA = '#d48c3a';
 const ROSE = '#c55470';

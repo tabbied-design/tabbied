@@ -27,10 +27,10 @@ export const CONCEPT_SETUPS: { id: GuideSetup; label: string }[] = [
 ];
 
 /** The two-color palette in the colors example: a ground and one ink. */
-export const TWO_COLORS = ['#0b2545', '#eef4ed'] as const;
+const TWO_COLORS = ['#0b2545', '#eef4ed'] as const;
 
 /** Any CSS color works, `transparent` and `oklch()` included. */
-export const ANY_COLORS = ['transparent', 'oklch(0.65 0.2 25)', '#13a8a8'] as const;
+const ANY_COLORS = ['transparent', 'oklch(0.65 0.2 25)', '#13a8a8'] as const;
 
 const VERSION = '@VERSION@';
 const SCRIPT = `<script type="module" src="https://cdn.jsdelivr.net/npm/tabbied@${VERSION}/dist/element/tabbied-element.js"></script>`;

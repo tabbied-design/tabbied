@@ -15,8 +15,6 @@ export const metadata = {
    practice's mark, a red and larkspur gingham on a linen ground, the
    tablecloth of a kitchen-table doctor. It fills the face of the card, runs
    as a band before the fees, tops the family card and edges the footer. */
-const LINEN = '#fbf7f0';
-const INK = '#22304f';
 const BERRY = '#c8414b';
 const LARKSPUR = '#5b63b7';
 const SKY = '#a9bde3';

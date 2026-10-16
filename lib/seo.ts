@@ -54,7 +54,7 @@ export const templateImage = (
 // cut here instead, at a word, so the cut is ours and reads as one.
 const DESCRIPTION_LIMIT = 160;
 
-export function fitDescription(text: string | undefined): string | undefined {
+function fitDescription(text: string | undefined): string | undefined {
   if (!text || text.length <= DESCRIPTION_LIMIT) return text;
 
   const cut = text.slice(0, DESCRIPTION_LIMIT - 3);

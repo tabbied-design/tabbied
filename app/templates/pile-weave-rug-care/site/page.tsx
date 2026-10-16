@@ -16,7 +16,6 @@ export const metadata = {
    on a transparent ground so the wool shows between the threads. It is the
    rug in the hero, a runner laid between the sections, and the doormat at
    the foot of the page. */
-const WOOL = '#f4ecdc';
 const INDIGO = '#23325a';
 const MADDER = '#b5392f';
 const SAFFRON = '#e0a13a';

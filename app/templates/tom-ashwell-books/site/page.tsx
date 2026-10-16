@@ -13,7 +13,6 @@ export const metadata = {
    how Tom makes his pictures: wave-edged sheets of cut paper laid one over
    the next. At sunset in the hero spread, at the foot of every cover, as
    the band before the activity sheets, and along the top of the footer. */
-const CREAM = '#fbf3e2';
 const NAVY = '#1c2a4a';
 const SUN = '#f4a53a';
 const CORAL = '#e0654b';

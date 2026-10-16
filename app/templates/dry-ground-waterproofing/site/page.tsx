@@ -15,7 +15,6 @@ export const metadata = {
    over the hero, falls on the drawing of the wall, and soaks the warranty
    band, always on the storm role so the streaks stay pale on dark. */
 const CONCRETE = '#e9e7e1';
-const STORM = '#15202b';
 const RAIN = '#4f9bd0';
 const CLAY = '#b0602c';
 const SKY = '#c5d6e2';

@@ -15,7 +15,6 @@ export const metadata = {
    other, is the photograph: silvered out on the left of the hero and
    restored on the right, thinned by damage in the price levels, laid out
    as a contact sheet, and along the footer. */
-const DARK = '#1f1915';
 const ALBUMEN = '#efe4d2';
 const SEPIA = '#b9824f';
 const SILVER = '#9aa7ad';

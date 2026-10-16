@@ -7,12 +7,9 @@
  *   cutout: false -> commits <id>.webp            (a scene, served full-bleed)
  *   cutout: true  -> commits <id>-cutout.webp     (an object, placed on a pattern)
  *
- * Cut-outs come straight from generation now - gpt-image-2 emits a real alpha
+ * Cut-outs come straight from generation - gpt-image-2 emits a real alpha
  * channel (background:"transparent"), so <id>.png IS the cut-out and is promoted
- * under the -cutout name (the committed filename contract does not move). A
- * legacy <id>-cutout.png from the retired background-removal pass wins when
- * present, so re-promoting an old project can't regress to its opaque original;
- * --keep-original only means anything in that legacy layout.
+ * under the -cutout name (the committed filename contract does not move).
  *
  * A cutout:true prompt with no candidate on disk is an ERROR, not a silent skip:
  * that combination is what leaves a page serving a stale image after a
@@ -33,7 +30,6 @@
  *   --only <id[,id..]> Only these prompt ids
  *   --from <dir>      Candidate directory (default: ./generated-images)
  *   --quality <n>     WebP quality of the served image (default: 92)
- *   --keep-original   Legacy layouts only: also promote the opaque original beside a cut-out
  *   --no-build        Skip the manifest rebuild afterwards
  *   --dry-run         Report what would be promoted; write nothing
  *   -h, --help        Show this help
@@ -54,7 +50,7 @@ const OUT_DIR = join(ROOT, "public", "images", "sites");
 function parseArgs(argv) {
   const opts = {
     project: null, only: null, from: join(process.cwd(), "generated-images"),
-    quality: 92, keepOriginal: false, build: true, dryRun: false, help: false,
+    quality: 92, build: true, dryRun: false, help: false,
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -64,7 +60,6 @@ function parseArgs(argv) {
       case "--only": opts.only = next().split(",").map((x) => x.trim()).filter(Boolean); break;
       case "--from": opts.from = next(); break;
       case "--quality": opts.quality = Math.min(100, Math.max(1, Number(next()) || 92)); break;
-      case "--keep-original": opts.keepOriginal = true; break;
       case "--no-build": opts.build = false; break;
       case "--dry-run": opts.dryRun = true; break;
       case "-h": case "--help": opts.help = true; break;
@@ -98,15 +93,11 @@ function plan(r, opts) {
       : { error: `no ${r.id}.png in ${opts.from}` };
   }
   const cutStem = `${r.id}${CUTOUT_SUFFIX}`;
-  // <id>.png is the cut-out. A legacy <id>-cutout.png takes precedence, since
-  // in that layout <id>.png is the OPAQUE original.
-  const legacy = existsSync(src(cutStem));
-  const native = existsSync(src(r.id));
-  if (!legacy && !native) {
+  if (!existsSync(src(r.id))) {
     const stale = existsSync(join(OUT_DIR, `${cutStem}.webp`));
     return {
       error:
-        `cutout:true but neither ${cutStem}.png nor ${r.id}.png in ${opts.from}.` +
+        `cutout:true but no ${r.id}.png in ${opts.from}.` +
         (stale
           ? `\n    public/images/sites/${cutStem}.webp already exists, so the site will KEEP SERVING THE OLD IMAGE.`
           : "") +
@@ -114,9 +105,7 @@ function plan(r, opts) {
     };
   }
   // requireAlpha refuses an opaque PNG promoted under the -cutout name.
-  const jobs = [{ src: legacy ? cutStem : r.id, out: cutStem, requireAlpha: !legacy }];
-  if (opts.keepOriginal && legacy && native) jobs.push({ src: r.id, out: r.id });
-  return { jobs };
+  return { jobs: [{ src: r.id, out: cutStem, requireAlpha: true }] };
 }
 
 async function main() {

@@ -14,7 +14,6 @@ export const metadata = {
    in the hero, a strip of quilt under the timeline, the moon again over the
    evening contact page, and a hem along the footer. */
 const MILK = '#fbf4ef';
-const COCOA = '#3e2c33';
 const ROSE = '#d99aa5';
 const SAGE = '#9dbaa6';
 const BUTTER = '#f0d48f';

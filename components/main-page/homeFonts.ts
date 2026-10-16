@@ -12,7 +12,7 @@ import { IBM_Plex_Mono } from 'next/font/google';
  * separate family holding only the 500 face is set on those labels alone:
  * put in a stack with the other, it would draw the 400 text at 500 too.
  */
-export const plexMonoMedium = IBM_Plex_Mono({
+const plexMonoMedium = IBM_Plex_Mono({
   subsets: ['latin'],
   weight: ['500'],
   variable: '--font-home-mono-medium',
@@ -20,5 +20,5 @@ export const plexMonoMedium = IBM_Plex_Mono({
   preload: false,
 });
 
-/** Every class above, for the page wrapper. */
-export const HOME_FONT_VARIABLES = [plexMonoMedium].map((font) => font.variable).join(' ');
+/** The family's class, for the page wrapper. */
+export const HOME_FONT_VARIABLES = plexMonoMedium.variable;

@@ -14,7 +14,6 @@ export const metadata = {
    the bothcut design: lens-shaped cuts in gold and claret on a transparent
    ground, so the table's own charcoal shows through like a damask. It runs
    down the table in the hero, under the pricing, and along the footer. */
-const BONE = '#ece3d0';
 const GOLD = '#c29a52';
 const CLARET = '#6d2430';
 

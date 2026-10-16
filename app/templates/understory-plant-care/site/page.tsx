@@ -15,7 +15,6 @@ export const metadata = {
    band and the footer; its leaves are laid on a transparent ground so the
    deep green between them reads as shade. */
 const GLASS = '#e8ede0';
-const FOREST = '#16332a';
 const LEAF = '#2f7a4d';
 const LIME = '#93c46e';
 const POT = '#c3643f';

@@ -16,7 +16,7 @@
 //   Referrer-Policy             the origin, not the path, to other sites.
 //   Permissions-Policy          no camera, microphone, location or payment,
 //                               which nothing here uses.
-export const SECURITY_HEADERS: Readonly<Record<string, string>> = {
+const SECURITY_HEADERS: Readonly<Record<string, string>> = {
   'strict-transport-security': 'max-age=31536000',
   'x-frame-options': 'SAMEORIGIN',
   'content-security-policy': "frame-ancestors 'self'",
