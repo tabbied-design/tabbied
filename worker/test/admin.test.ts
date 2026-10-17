@@ -3,7 +3,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { AUTH_LINK_HOURS, verificationEmail } from '../lib/mail';
 import { ORIGIN, json, signIn } from './helpers';
 
-const ROUTES = ['overview', 'users', 'usage', 'generations', 'templates', 'uploads', 'quotas', 'emails'];
+const ROUTES = ['overview', 'users', 'usage', 'generations', 'templates', 'downloads', 'uploads', 'quotas', 'emails'];
 
 const cookieOf = (response: Response) =>
   response.headers
@@ -246,6 +246,16 @@ describe('acting on accounts', () => {
     };
     const verdantThisWeek = (o: { topDownloads7d?: { slug: string; n: number }[] }) =>
       o.topDownloads7d?.find((row) => row.slug === 'verdant')?.n ?? 0;
+    // The Downloads page's row for the template, in a period.
+    type TemplateRow = Record<'downloads' | 'guests' | 'signedIn' | 'html' | 'react' | 'customized', number>;
+    const verdantRow = async (period: string) => {
+      const body = (await call(`downloads?period=${period}`).then((r) => r.json())) as {
+        templates: (TemplateRow & { slug: string })[];
+      };
+      return body.templates.find((row) => row.slug === 'verdant')!;
+    };
+    const monthBefore = await verdantRow('30');
+    const allBefore = await verdantRow('all');
     const send = (kind: string, headers: Record<string, string> = {}) =>
       SELF.fetch(`${ORIGIN}/api/events`, { method: 'POST', headers: { ...json, ...headers }, body: JSON.stringify({ kind, slug: 'verdant' }) });
 
@@ -295,6 +305,31 @@ describe('acting on accounts', () => {
       newAccountsFromSave30d: 1,
       savedTemplates: 1,
     });
+
+    // The Downloads page splits the same rows per template: who took them,
+    // in which format, and how many were customized, in the period asked.
+    const delta = (later: TemplateRow, earlier: TemplateRow) =>
+      Object.fromEntries(
+        (['downloads', 'guests', 'signedIn', 'html', 'react', 'customized'] as const).map((key) => [key, later[key] - earlier[key]])
+      );
+    expect(delta(await verdantRow('30'), monthBefore)).toEqual({
+      downloads: 4,
+      guests: 3,
+      signedIn: 1,
+      html: 3,
+      react: 1,
+      customized: 1,
+    });
+    // All time takes in the download from before the window.
+    expect(delta(await verdantRow('all'), allBefore)).toEqual({
+      downloads: 5,
+      guests: 4,
+      signedIn: 1,
+      html: 3,
+      react: 2,
+      customized: 1,
+    });
+    expect((await call('downloads?period=12')).status).toBe(400);
 
     // The directory and the person's page read the same rows.
     const listed = (await call('users?q=saver').then((r) => r.json())) as {

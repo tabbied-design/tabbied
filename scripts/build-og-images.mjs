@@ -1,24 +1,25 @@
 #!/usr/bin/env node
 /**
- * The share cards for the pattern and template pages: 1200x630 JPEGs in
- * `public/og/`, the shape X, LinkedIn and Slack frame a large card in. They
- * used to be the 960x960 WebP previews, which those unfurlers crop to a strip
- * (and some do not read at all), and a template's card was its pattern, not
- * the website.
+ * The share cards for the pattern pages: 1200x630 JPEGs in `public/og/`, the
+ * shape X, LinkedIn and Slack frame a large card in. They used to be the
+ * 960x960 WebP previews, which those unfurlers crop to a strip (and some do
+ * not read at all).
  *
  *   public/og/patterns/<slug>.jpg   og.png's brand panel beside the design's
  *                                   committed preview (public/previews)
- *   public/og/templates/<slug>.jpg  the template's screenshot
- *                                   (public/template-shots), full bleed, with
- *                                   the lockup in the corner
+ *
+ * The templates had cards of their own, their screenshots, until their
+ * framed preview pages were removed (a template opens straight in the
+ * customizer, one page for every template); public/og/templates/ is cleared
+ * if an older build left it.
  *
  * Derived from committed files only, with no browser and no fonts: the brand
- * panel is cut from public/og.png and the lockup is public/email's PNG, so
- * the deploy build makes the same bytes a laptop does. Not committed: the
- * build writes them before the export (prebuild), like the image manifest.
+ * panel is cut from public/og.png, so the deploy build makes the same bytes a
+ * laptop does. Not committed: the build writes them before the export
+ * (prebuild), like the image manifest.
  *
  * Incremental: a card newer than its sources and this script is kept, so a
- * second run is a no-op. Retired designs and templates lose their cards.
+ * second run is a no-op. Retired designs lose their cards.
  *
  *   node scripts/build-og-images.mjs [--force]
  */
@@ -30,9 +31,7 @@ const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const PUBLIC = join(ROOT, 'public');
 const OUT = join(PUBLIC, 'og');
 const PREVIEWS = join(PUBLIC, 'previews');
-const SHOTS = join(PUBLIC, 'template-shots');
 const BASE = join(PUBLIC, 'og.png');
-const LOCKUP = join(PUBLIC, 'email', 'tabbied-lockup.png');
 const SELF = fileURLToPath(import.meta.url);
 
 const WIDTH = 1200;
@@ -70,27 +69,6 @@ const panel = await sharp(BASE)
   .png()
   .toBuffer();
 
-// The lockup is drawn on white, so it sits on a white plate rather than
-// straight on a screenshot of any color.
-const PLATE = { width: 236, height: 76, inset: 32 };
-const lockup = await sharp(LOCKUP).resize({ height: 50 }).png().toBuffer();
-const lockupWidth = (await sharp(lockup).metadata()).width;
-const plate = await sharp(
-  Buffer.from(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${PLATE.width}" height="${PLATE.height}">` +
-      `<rect width="${PLATE.width}" height="${PLATE.height}" rx="14" fill="#ffffff"/></svg>`
-  )
-)
-  .composite([
-    {
-      input: lockup,
-      left: Math.round((PLATE.width - lockupWidth) / 2),
-      top: Math.round((PLATE.height - 50) / 2),
-    },
-  ])
-  .png()
-  .toBuffer();
-
 const canvas = () =>
   sharp({ create: { width: WIDTH, height: HEIGHT, channels: 3, background: '#0e0e13' } });
 
@@ -112,35 +90,11 @@ async function patternCard(slug) {
   return true;
 }
 
-async function templateCard(slug) {
-  const shot = join(SHOTS, `${slug}.webp`);
-  const target = join(OUT, 'templates', `${slug}.jpg`);
-
-  if (!stale(target, [shot, LOCKUP, SELF])) return false;
-
-  // The shot starts below the site's top bar (generate-template-shots.mjs),
-  // so its top is the hero: that is the part kept.
-  const site = await sharp(shot)
-    .resize(WIDTH, HEIGHT, { fit: 'cover', position: 'top' })
-    .toBuffer();
-  await canvas()
-    .composite([
-      { input: site, left: 0, top: 0 },
-      { input: plate, left: PLATE.inset, top: HEIGHT - PLATE.height - PLATE.inset },
-    ])
-    .jpeg(JPEG)
-    .toFile(target);
-
-  return true;
-}
-
 const patterns = slugsIn(PREVIEWS, '.webp');
-const templates = slugsIn(SHOTS, '.webp');
 
 mkdirSync(join(OUT, 'patterns'), { recursive: true });
-mkdirSync(join(OUT, 'templates'), { recursive: true });
 removeOrphans(join(OUT, 'patterns'), new Set(patterns));
-removeOrphans(join(OUT, 'templates'), new Set(templates));
+rmSync(join(OUT, 'templates'), { recursive: true, force: true });
 
 // A few at a time: sharp works off the main thread, so this is what keeps a
 // fresh build (every card) to seconds.
@@ -155,14 +109,8 @@ async function eachLimited(jobs, limit) {
 }
 
 const written = await eachLimited(
-  [
-    ...patterns.map((slug) => () => patternCard(slug)),
-    ...templates.map((slug) => () => templateCard(slug)),
-  ],
+  patterns.map((slug) => () => patternCard(slug)),
   4
 );
 
-console.log(
-  `og: ${written} share card(s) written, ${patterns.length + templates.length - written} up to date ` +
-    `(${patterns.length} patterns, ${templates.length} templates)`
-);
+console.log(`og: ${written} share card(s) written, ${patterns.length - written} up to date`);

@@ -10,6 +10,7 @@ import {
   type PointerEvent,
 } from 'react';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import useMediaQuery from 'lib/useMediaQuery';
 import BrowserBar from './MockBrowser';
 import GalleryLink from './GalleryLink';
@@ -31,7 +32,7 @@ import styles from './HomeHero.module.css';
 //
 // A slide is dragged or swiped sideways; the dots are a tab list (one tab
 // stop, arrow keys between them), and the slide's arrow, like the site in
-// front, opens the template's preview.
+// front, opens the template in the customizer.
 
 const SLIDE_SECONDS = 6;
 
@@ -309,11 +310,11 @@ export default function HomeHero({ templateCount, slides }: { templateCount: num
                   href={slide.href}
                   prefetch={false}
                   className={styles.open}
-                  aria-label={`Preview ${slide.name}, ${slide.kind} template`}
+                  aria-label={`Customize ${slide.name}, ${slide.kind} template`}
                   tabIndex={on ? undefined : -1}
                   draggable={false}
                 >
-                  &#x2192;
+                  <ArrowRight size={20} strokeWidth={1.8} aria-hidden="true" />
                 </Link>
               </div>
             );

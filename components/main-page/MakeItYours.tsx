@@ -273,7 +273,7 @@ export default function MakeItYours({ template, palettes, designs }: MakeItYours
             href={template.href}
             prefetch={false}
             className={styles.siteLink}
-            aria-label={`Preview ${template.name}, ${template.kind} template, shown here in ${shownAs}`}
+            aria-label={`Customize ${template.name}, ${template.kind} template, shown here in ${shownAs}`}
           />
         </div>
 

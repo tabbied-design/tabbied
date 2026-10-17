@@ -33,7 +33,7 @@ import * as schema from './db/schema';
 import { requireUser } from './lib/session';
 import { downloadUse, forgetDownload, isReactSource, logDownload, parseDownloadName, takesCopy } from './lib/downloads';
 import { mailProvider } from './lib/mail';
-import { templateSlugOf, withLicenseNotice } from './lib/notice';
+import { customizerPath, previewSlugOf, templateSlugOf, withLicenseNotice } from './lib/notice';
 import { isTemplateSite, withNoindex } from './lib/noindex';
 import { withSecurityHeaders } from './lib/securityHeaders';
 import media from './routes/media';
@@ -482,6 +482,24 @@ app.route('/api', api);
 // that the export, and every download derived from it, never does
 // (worker/lib/notice.ts), and the bare sites a noindex, for the same reason
 // (worker/lib/noindex.ts). `/templates/*/` in run_worker_first sends them here.
+//
+// /templates/<slug>/ was the template's framed preview. A template opens
+// straight in the customizer now, so the old address, in links and search
+// results and in the license's own text, goes there: a redirect here rather
+// than in _redirects, which never sees a run_worker_first route. Only for a
+// template that exists, so a mistyped one still gets the 404 page.
+
+app.get('/templates/:slug/', async (c, next) => {
+  const slug = previewSlugOf(new URL(c.req.url).pathname);
+
+  if (!slug) return next();
+
+  const page = await c.env.ASSETS.fetch(new Request(new URL(`/templates/${slug}/site/`, c.req.url), { method: 'HEAD' }));
+
+  if (!page.ok) return next();
+
+  return c.redirect(customizerPath(slug), 301);
+});
 
 app.get('/templates/*', async (c, next) => {
   const slug = templateSlugOf(new URL(c.req.url).pathname);

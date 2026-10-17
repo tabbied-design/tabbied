@@ -87,8 +87,8 @@ describe('the security headers', () => {
 describe('the live template pages', () => {
   // The notice is the Worker's, added on the way out (worker/lib/notice.ts):
   // the export, and every download derived from it, carries none.
-  it('carry the license notice, on the preview and on the page it frames', async () => {
-    for (const path of ['/templates/verdant/', '/templates/verdant/site/']) {
+  it('carry the license notice', async () => {
+    for (const path of ['/templates/verdant/site/']) {
       const response = await SELF.fetch(`${ORIGIN}${path}`);
 
       expect(response.status, path).toBe(200);
@@ -110,13 +110,24 @@ describe('the live template pages', () => {
     expect(site.headers.get('x-robots-tag')).toBe('noindex');
     expect(await site.text()).toContain('<meta name="robots" content="noindex"/>');
 
-    // The framed preview is the page to find, and the download is the
-    // licensee's own site, so neither carries it.
-    for (const path of ['/templates/verdant/', '/downloads/verdant/']) {
+    // The download is the licensee's own site, so it does not carry it.
+    for (const path of ['/downloads/verdant/']) {
       const response = await SELF.fetch(`${ORIGIN}${path}`);
       expect(response.headers.get('x-robots-tag'), path).toBeNull();
       expect(await response.text(), path).not.toContain('name="robots"');
     }
+  });
+
+  it('send the old preview address to the customizer, for a template that exists', async () => {
+    // /templates/<slug>/ was the framed preview, and the license text still
+    // names it as where a template is got.
+    const moved = await SELF.fetch(`${ORIGIN}/templates/verdant/`, { redirect: 'manual' });
+    expect(moved.status).toBe(301);
+    expect(moved.headers.get('location')).toBe('/studio/customize/?slug=verdant');
+
+    const missing = await SELF.fetch(`${ORIGIN}/templates/no-such-template/`, { redirect: 'manual' });
+    expect(missing.status).toBe(404);
+    await missing.body?.cancel();
   });
 
   it('leave everything else as the export wrote it', async () => {

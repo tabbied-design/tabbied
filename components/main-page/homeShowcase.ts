@@ -29,7 +29,7 @@ export type ShowcaseTemplate = {
   colors: string[];
   /** Its screenshot, 960x720 (public/template-shots). */
   shot: string;
-  /** Its framed preview, the page with "Use this template" on it. */
+  /** The customizer, opened on a draft of it. */
   href: string;
   /** A strip of the pattern it wears: captured from the page, else the design's preview. */
   strip: string;
@@ -66,7 +66,7 @@ function showcaseTemplate(slug: string): ShowcaseTemplate {
     kind: withArticle(entry.topic.toLowerCase()),
     colors: entry.colors,
     shot,
-    href: `/templates/${slug}/`,
+    href: `/studio/customize/?slug=${slug}`,
     strip,
     display: DISPLAY[slug]?.display ?? null,
   };

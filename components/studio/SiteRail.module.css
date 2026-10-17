@@ -368,9 +368,39 @@
 
 .field {
   display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 2px 0;
+}
+
+/* The row's thumbnail and names, one button that shows the field on the
+   page. It reaches 8px past the column so its hover reads as a row. */
+.fieldShow {
+  display: flex;
+  flex: 1;
   gap: 13px;
   align-items: center;
-  padding: 6px 0;
+  min-width: 0;
+  margin-left: -8px;
+  padding: 4px 8px;
+  color: inherit;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.fieldShow:hover {
+  background-color: oklch(0 0 0 / 0.04);
+}
+
+.fieldShow:focus-visible,
+.fieldAction:focus-visible,
+.pickerBack:focus-visible,
+.tile:focus-visible {
+  outline: 2px solid var(--s-ink);
+  outline-offset: 2px;
 }
 
 .fieldThumb {
@@ -511,6 +541,164 @@
   }
 }
 
+/* ---- The pattern library, in place of the list -------------------------- */
+
+/* The panel fills the rail while the picker is open, and the tiles scroll
+   inside it, as the palette list does on Colors. */
+.panelPicker {
+  flex: 1;
+  overflow: visible;
+}
+
+.picker {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.pickerBack {
+  display: inline-flex;
+  flex: none;
+  gap: 6px;
+  align-items: center;
+  align-self: flex-start;
+  margin: -4px 0 12px -6px;
+  padding: 4px 6px;
+  font: 400 12px var(--s-mono);
+  color: oklch(0.45 0.01 260);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pickerBack:hover {
+  color: var(--s-ink);
+  background-color: oklch(0 0 0 / 0.05);
+}
+
+.pickerTitle {
+  flex: none;
+  margin: 0 0 6px;
+  font: 700 18px / 1.25 var(--s-display);
+  color: var(--s-ink);
+  letter-spacing: -0.01em;
+}
+
+.pickerSearch {
+  display: flex;
+  flex: none;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 14px;
+  padding: 0 12px;
+  color: oklch(0.45 0.01 260);
+  background-color: oklch(0.97 0.002 260);
+  border-radius: 9px;
+}
+
+.pickerSearch:focus-within {
+  box-shadow: inset 0 0 0 1px var(--s-ink);
+}
+
+.pickerSearch input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 0;
+  font: 400 13px var(--s-sans);
+  color: var(--s-ink);
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.pickerSearch input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+/* The negative margin is the rail's side padding, less a little for a
+   tile's ring, so the scrollbar sits at the rail's edge. */
+.pickerScroll {
+  flex: 1;
+  min-height: 0;
+  margin: 0 -22px 18px;
+  padding: 2px 22px 12px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0 0 0 / 0.22) transparent;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 5px 5px 8px;
+  font: 400 12px var(--s-sans);
+  color: var(--s-ink);
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 11px;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
+  cursor: pointer;
+}
+
+.tile:hover {
+  background-color: oklch(0 0 0 / 0.04);
+}
+
+.tileOn,
+.tileOn:hover {
+  color: #fff;
+  background-color: var(--s-ink);
+  box-shadow: none;
+}
+
+/* The design, live in the field's colors, over the page's ground. */
+.tileArt {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 7px;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
+}
+
+.tileArt > * {
+  width: 100%;
+  height: 100%;
+}
+
+.tileName {
+  padding: 0 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tileTag {
+  padding: 0 3px;
+  font: 400 11px var(--s-mono);
+  color: oklch(0.5 0.01 260);
+}
+
+.tileOn .tileTag {
+  color: oklch(0.82 0.01 260);
+}
+
 /* ---- Save ---------------------------------------------------------------- */
 
 /* Under the open tab, at the rail's full width, with its rule inset to the
@@ -621,6 +809,19 @@
     height: auto;
     max-height: 222px;
     padding: 0 10px 26px;
+  }
+
+  /* The library scrolls in a window of its own here too, or every tile
+     would be in view and drawing at once. */
+  .picker {
+    display: flex;
+  }
+
+  .pickerScroll {
+    flex: none;
+    max-height: 460px;
+    margin: 0 -18px 24px;
+    padding: 2px 18px 12px;
   }
 
   .saveDock {

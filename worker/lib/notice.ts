@@ -1,5 +1,6 @@
-// The license notice on the live template pages: /templates/<slug>/ (the
-// framed preview) and /templates/<slug>/site/ (the page it frames).
+// The license notice on the live template pages, /templates/<slug>/site/.
+// (/templates/<slug>/ was a framed preview of it, which carried the notice
+// too; it redirects to the customizer now, see worker/index.ts.)
 //
 // It is added here, on the way out, and never by the export. Every download
 // is derived from the export, and a download is the licensee's own copy: a
@@ -20,8 +21,16 @@ const COPYRIGHT = 'Copyright (c) 2026 Sy Hong and Ye Joo Park. All rights reserv
 
 /** The template a live page shows, or null for any other path. */
 export function templateSlugOf(pathname: string): string | null {
-  return /^\/templates\/([a-z0-9-]+)\/(?:site\/)?$/.exec(pathname)?.[1] ?? null;
+  return /^\/templates\/([a-z0-9-]+)\/site\/$/.exec(pathname)?.[1] ?? null;
 }
+
+/** The template a removed preview address named, `/templates/<slug>/`, or null. */
+export function previewSlugOf(pathname: string): string | null {
+  return /^\/templates\/([a-z0-9-]+)\/$/.exec(pathname)?.[1] ?? null;
+}
+
+/** Where a template is opened: the customizer, on a draft of it. */
+export const customizerPath = (slug: string) => `/studio/customize/?slug=${slug}`;
 
 /** The notice, one sentence per line. */
 function noticeLines(slug: string): string[] {

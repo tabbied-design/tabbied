@@ -30,26 +30,6 @@ export const patternImage = (slug: string, name: string): ShareImage => ({
   alt: `${name}, a Tabbied pattern`,
 });
 
-/**
- * A template's share card: its screenshot (public/og/templates) when it has
- * one, so a shared link shows the website rather than the pattern under it.
- * A template not shot yet falls back to its pattern's card.
- */
-export const templateImage = (
-  slug: string,
-  name: string,
-  shot: string | undefined,
-  pattern: string
-): ShareImage =>
-  shot
-    ? {
-        url: `/og/templates/${slug}.jpg`,
-        width: 1200,
-        height: 630,
-        alt: `${name}, a Tabbied website template`,
-      }
-    : { ...patternImage(pattern, name), alt: `${name}, a Tabbied website template` };
-
 // Search results cut a description at about 160 characters. A longer one is
 // cut here instead, at a word, so the cut is ours and reads as one.
 const DESCRIPTION_LIMIT = 160;

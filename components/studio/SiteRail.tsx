@@ -6,16 +6,20 @@
 // edited here yet. Every change is planned and applied by the parent; this
 // only says what was asked for.
 //
+// On Patterns, a field's row shows that field on the page (the parent scrolls
+// the canvas to it), and its pencil does the same and puts the pattern library
+// in the rail in place of the list (DesignPicker), drawn in the field's colors.
+//
 // Colors is a list of palettes rather than color pickers, because picking
 // colors that work together is the hard part and the library has done it. The
 // pencil on a row opens the pickers, seeded with that palette. The template's
 // own palette is the first row, and choosing it is the reset.
-import { useEffect, useMemo, useState, type KeyboardEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { Pencil, Save, Undo2 } from 'lucide-react';
 import type { PatternSlot, TemplateSpec } from 'tabbied-templates';
 import type { DesignChoice } from 'lib/designCatalog';
 import { activeChoice, paletteChoices } from 'lib/studioPalettes';
-import DesignDialog from './DesignDialog';
+import DesignPicker from './DesignPicker';
 import FieldThumb from './FieldThumb';
 import PaletteDialog from './PaletteDialog';
 import styles from './SiteRail.module.css';
@@ -46,6 +50,9 @@ const sectionOf = (id: string) => {
   return head.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, (c) => c.toUpperCase());
 };
 
+/** The id of a field's row button, which focus goes back to from the picker. */
+const fieldButtonId = (slotId: string) => `rail-field-${slotId.replace(/[^a-zA-Z0-9_-]/g, '-')}`;
+
 /** What a color role is called: the spec's own name where it has one. */
 const roleLabel = (spec: TemplateSpec, index: number): string =>
   spec.palette.names?.[index] ?? (index === 0 ? 'Ground' : `Ink ${index}`);
@@ -65,6 +72,7 @@ export default function SiteRail({
   fieldChanged,
   onFieldDesign,
   onResetField,
+  onShowField,
   patternsChanged,
   shuffling,
   onShuffle,
@@ -96,6 +104,8 @@ export default function SiteRail({
   onFieldDesign: (slot: PatternSlot, slug: string) => void;
   /** Put one field back to the template's own design. */
   onResetField: (slot: PatternSlot) => void;
+  /** Bring one field into view on the canvas. */
+  onShowField: (slot: PatternSlot) => void;
   patternsChanged: boolean;
   shuffling: boolean;
   onShuffle: () => void;
@@ -108,8 +118,10 @@ export default function SiteRail({
   const [renaming, setRenaming] = useState(false);
   /** The row whose pencil was pressed, or null when the dialog is shut. */
   const [editing, setEditing] = useState<string | null>(null);
-  /** The pattern field whose pencil was pressed, or null when the picker is shut. */
+  /** The pattern field whose pencil was pressed, or null when the list shows. */
   const [picking, setPicking] = useState<PatternSlot | null>(null);
+  /** The field the picker was last open on, to hand focus back to its row. */
+  const pickedLast = useRef<string | null>(null);
 
   const choices = useMemo(
     () => paletteChoices(templateName, spec.palette.colors),
@@ -142,6 +154,29 @@ export default function SiteRail({
       setName(title);
       event.currentTarget.blur();
     }
+  };
+
+  // Back from the picker, focus returns to the row it was opened from, so a
+  // keyboard does not start over at the top of the rail.
+  useEffect(() => {
+    if (picking) {
+      pickedLast.current = picking.id;
+      return;
+    }
+
+    if (!pickedLast.current) return;
+    document.getElementById(fieldButtonId(pickedLast.current))?.focus();
+    pickedLast.current = null;
+  }, [picking]);
+
+  const choose = (next: RailTab) => {
+    setTab(next);
+    setPicking(null);
+  };
+
+  const pick = (slot: PatternSlot) => {
+    onShowField(slot);
+    setPicking(slot);
   };
 
   // Memoized: the rail re-renders on every palette click, shuffle tick and
@@ -201,7 +236,7 @@ export default function SiteRail({
             aria-selected={tab === key}
             aria-controls={`rail-panel-${key}`}
             className={`${styles.tab} ${tab === key ? styles.tabOn : ''}`}
-            onClick={() => setTab(key)}
+            onClick={() => choose(key)}
           >
             {label}
           </button>
@@ -277,120 +312,139 @@ export default function SiteRail({
           id="rail-panel-patterns"
           role="tabpanel"
           aria-labelledby="rail-tab-patterns"
-          className={styles.panel}
+          className={picking ? `${styles.panel} ${styles.panelPicker}` : styles.panel}
         >
-          <p className={styles.hint}>
-            The patterns currently placed on the page. Change any one of them,
-            or shuffle to draw a new set from the pattern library.
-          </p>
-          {patternSlots.length === 0 ? (
-            <p className={styles.hint}>This template has no pattern fields.</p>
+          {picking ? (
+            <DesignPicker
+              key={picking.id}
+              fieldLabel={fieldLabel(picking)}
+              designs={designs}
+              current={designOn(picking)}
+              authored={picking.config.slug}
+              palette={fieldPalette(picking)}
+              ground={palette[0] ?? 'transparent'}
+              onPick={(slug) => onFieldDesign(picking, slug)}
+              onBack={() => setPicking(null)}
+            />
           ) : (
-            // An explicit role: `list-style: none` strips the implicit one in
-            // some engines, and the shuffle test counts the rows by it.
-            <ul role="list" className={`${styles.fields} ${shuffling ? styles.fieldsBusy : ''}`}>
-              {patternSlots.map((slot) => {
-                const slug = designOn(slot);
-                const label = fieldLabel(slot);
-                const changed = fieldChanged(slot);
+            <>
+              <p className={styles.hint}>
+                The patterns currently placed on the page. Pick one to see it,
+                change any of them, or shuffle to draw a new set from the
+                pattern library.
+              </p>
+              {patternSlots.length === 0 ? (
+                <p className={styles.hint}>This template has no pattern fields.</p>
+              ) : (
+                // An explicit role: `list-style: none` strips the implicit one in
+                // some engines, and the shuffle test counts the rows by it.
+                <ul
+                  role="list"
+                  aria-label="Patterns on the page"
+                  className={`${styles.fields} ${shuffling ? styles.fieldsBusy : ''}`}
+                >
+                  {patternSlots.map((slot) => {
+                    const slug = designOn(slot);
+                    const label = fieldLabel(slot);
+                    const changed = fieldChanged(slot);
 
-                return (
-                  <li key={slot.id} className={styles.field}>
-                    <FieldThumb
-                      slug={slug}
-                      palette={fieldPalette(slot)}
-                      seed={fieldSeed(slot)}
-                      ground={palette[0] ?? 'transparent'}
-                    />
-                    <span className={styles.fieldMeta}>
-                      <span className={styles.fieldDesign}>{names.get(slug) ?? slug}</span>
-                      <span className={styles.fieldSlot}>{label}</span>
-                    </span>
-                    <span className={styles.fieldActions}>
-                      {changed ? (
+                    return (
+                      <li key={slot.id} className={styles.field}>
+                        {/* The row itself shows the field on the page; the
+                            pencil and the undo beside it change it. */}
                         <button
                           type="button"
-                          className={styles.fieldAction}
-                          title={`Reset the ${label} pattern`}
-                          aria-label={`Reset the ${label} pattern`}
-                          onClick={() => onResetField(slot)}
+                          id={fieldButtonId(slot.id)}
+                          className={styles.fieldShow}
+                          title={`Show the ${label} pattern on the page`}
+                          aria-label={`Show the ${label} pattern on the page`}
+                          onClick={() => onShowField(slot)}
                         >
-                          <Undo2 size={13} aria-hidden="true" />
+                          <FieldThumb
+                            slug={slug}
+                            palette={fieldPalette(slot)}
+                            seed={fieldSeed(slot)}
+                            ground={palette[0] ?? 'transparent'}
+                          />
+                          <span className={styles.fieldMeta}>
+                            <span className={styles.fieldDesign}>{names.get(slug) ?? slug}</span>
+                            <span className={styles.fieldSlot}>{label}</span>
+                          </span>
                         </button>
-                      ) : null}
-                      <button
-                        type="button"
-                        className={styles.fieldAction}
-                        title={`Change the ${label} pattern`}
-                        aria-label={`Change the ${label} pattern`}
-                        onClick={() => setPicking(slot)}
-                      >
-                        <Pencil size={13} aria-hidden="true" />
-                      </button>
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
+                        <span className={styles.fieldActions}>
+                          {changed ? (
+                            <button
+                              type="button"
+                              className={styles.fieldAction}
+                              title={`Reset the ${label} pattern`}
+                              aria-label={`Reset the ${label} pattern`}
+                              onClick={() => onResetField(slot)}
+                            >
+                              <Undo2 size={13} aria-hidden="true" />
+                            </button>
+                          ) : null}
+                          <button
+                            type="button"
+                            className={styles.fieldAction}
+                            title={`Change the ${label} pattern`}
+                            aria-label={`Change the ${label} pattern`}
+                            onClick={() => pick(slot)}
+                          >
+                            <Pencil size={13} aria-hidden="true" />
+                          </button>
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+              <div className={styles.patternActions}>
+                {patternsChanged ? (
+                  <button
+                    type="button"
+                    className={styles.textAction}
+                    aria-label="Reset patterns"
+                    title="Reset patterns"
+                    onClick={onResetPatterns}
+                  >
+                    Reset
+                  </button>
+                ) : null}
+                <button
+                  type="button"
+                  className={patternsChanged ? styles.shuffle : `${styles.shuffle} ${styles.shuffleWide}`}
+                  disabled={shuffling || patternSlots.length === 0}
+                  onClick={onShuffle}
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="15"
+                    height="15"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                    className={shuffling ? styles.spin : undefined}
+                  >
+                    {shuffling ? (
+                      <path d="M12 3a9 9 0 1 0 9 9" />
+                    ) : (
+                      <>
+                        <path d="M16 3h5v5" />
+                        <path d="M4 20 21 3" />
+                        <path d="M21 16v5h-5" />
+                        <path d="m15 15 6 6" />
+                        <path d="M4 4l5 5" />
+                      </>
+                    )}
+                  </svg>
+                  {shuffling ? 'Generating...' : 'Shuffle patterns'}
+                </button>
+              </div>
+            </>
           )}
-          <DesignDialog
-            open={picking !== null}
-            onOpenChange={(next) => {
-              if (!next) setPicking(null);
-            }}
-            fieldLabel={picking ? fieldLabel(picking) : ''}
-            designs={designs}
-            current={picking ? designOn(picking) : ''}
-            authored={picking?.config.slug ?? ''}
-            onPick={(slug) => {
-              if (picking) onFieldDesign(picking, slug);
-            }}
-          />
-          <div className={styles.patternActions}>
-            {patternsChanged ? (
-              <button
-                type="button"
-                className={styles.textAction}
-                aria-label="Reset patterns"
-                title="Reset patterns"
-                onClick={onResetPatterns}
-              >
-                Reset
-              </button>
-            ) : null}
-            <button
-              type="button"
-              className={patternsChanged ? styles.shuffle : `${styles.shuffle} ${styles.shuffleWide}`}
-              disabled={shuffling || patternSlots.length === 0}
-              onClick={onShuffle}
-            >
-              <svg
-                viewBox="0 0 24 24"
-                width="15"
-                height="15"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-                className={shuffling ? styles.spin : undefined}
-              >
-                {shuffling ? (
-                  <path d="M12 3a9 9 0 1 0 9 9" />
-                ) : (
-                  <>
-                    <path d="M16 3h5v5" />
-                    <path d="M4 20 21 3" />
-                    <path d="M21 16v5h-5" />
-                    <path d="m15 15 6 6" />
-                    <path d="M4 4l5 5" />
-                  </>
-                )}
-              </svg>
-              {shuffling ? 'Generating...' : 'Shuffle patterns'}
-            </button>
-          </div>
         </section>
       ) : null}
 

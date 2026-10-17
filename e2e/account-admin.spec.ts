@@ -180,6 +180,77 @@ test.describe('account and admin pages', () => {
   });
 });
 
+test.describe('download statistics', () => {
+  test.skip(
+    [...REQUIRED, path.join(REPO_ROOT, 'out', 'admin', 'downloads', 'index.html')].some((file) => !fs.existsSync(file)),
+    'run `npm run build` first'
+  );
+
+  test.beforeEach(async ({ page }) => {
+    await page.route(/https:\/\/(use\.typekit\.net|fonts\.googleapis\.com|fonts\.gstatic\.com)\//, (route) => route.abort());
+  });
+
+  test('downloads per template, by guests and signed in, for a chosen period', async ({ page }) => {
+    await stubSession(page, 'admin');
+    const asked: string[] = [];
+    const row = (slug: string, name: string, counts: number[], lastAt: string | null = '2026-10-16T09:00:00Z') => {
+      const [downloads, guests, html, react, customized] = counts;
+      return { slug, name, retired: false, downloads, guests, signedIn: downloads - guests, html, react, customized, lastAt };
+    };
+    await page.route('**/api/admin/downloads?*', (route) => {
+      const period = new URL(route.request().url()).searchParams.get('period') ?? '30';
+      asked.push(period);
+      const all = period === 'all';
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          period,
+          totals: {
+            downloads: all ? 900 : 120, guests: all ? 700 : 90, signedIn: all ? 200 : 30, html: 80, react: 40,
+            customized: 25, customizedByGuests: 20, people: 12, templates: 2,
+          },
+          chartDays: all ? 90 : Number(period),
+          byDay: [{ day: new Date().toISOString().slice(0, 10), guests: 4, signedIn: 2 }],
+          templates: [
+            row('live-wire-electric', 'Live Wire Electric', [80, 60, 50, 30, 20]),
+            row('crumb-bakehouse', 'Crumb Bakehouse', [40, 30, 30, 10, 5]),
+            row('verdant', 'Verdant', [0, 0, 0, 0, 0], null),
+          ],
+        }),
+      });
+    });
+
+    await page.goto('/admin/downloads/');
+    await expect(page.getByRole('navigation', { name: 'Admin' }).getByRole('link', { name: 'Downloads' })).toHaveAttribute(
+      'href',
+      '/admin/downloads/'
+    );
+
+    // The site's totals, split by who took them.
+    await expect(page.getByText('75% of downloads, with no account')).toBeVisible();
+    await expect(page.getByText('by 12 people', { exact: false })).toBeVisible();
+
+    // A row per template downloaded, most downloaded first; none hides the
+    // templates with nothing until asked.
+    const table = page.getByRole('table');
+    const rows = table.locator('tbody tr');
+    await expect(rows).toHaveCount(2);
+    await expect(rows.first().locator('td')).toHaveText(['Live Wire Electric', '80', '60', '20', '50', '30', '20', /\S/]);
+    await page.getByRole('button', { name: 'Include templates with none' }).click();
+    await expect(rows).toHaveCount(3);
+
+    // A heading sorts by its column.
+    await table.getByRole('button', { name: 'Template' }).click();
+    await expect(rows.first().locator('td').first()).toHaveText('Crumb Bakehouse');
+
+    // The period is asked of the Worker.
+    await page.getByRole('button', { name: 'All time' }).click();
+    await expect(page.getByText('900', { exact: true })).toBeVisible();
+    expect(asked).toEqual(['30', 'all']);
+  });
+});
+
 test.describe('acting on accounts', () => {
   test.skip(REQUIRED.some((file) => !fs.existsSync(file)), 'run `npm run build` first');
 

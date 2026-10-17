@@ -206,7 +206,7 @@
   color: var(--hp-ink);
 }
 
-/* The way to the template's preview. */
+/* The way into the template's customizer. */
 .open {
   position: absolute;
   right: 28px;
@@ -219,7 +219,6 @@
   border-radius: 50%;
   background-color: #ffffff;
   color: var(--hp-ink);
-  font: 400 20px var(--hp-sans);
   box-shadow: 0 10px 24px -10px oklch(0 0 0 / 0.5);
   transition: color 150ms ease;
 }

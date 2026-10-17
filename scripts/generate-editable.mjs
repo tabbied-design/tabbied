@@ -78,46 +78,34 @@ const titleOf = (html) => {
     : '';
 };
 
-// The name the gallery shows, read off the framed preview page's
-// `tabbied:template-name` meta (app/templates/[slug]/page.tsx). A template's
-// own <title> carries a tagline, and both are entity-encoded.
-const galleryNameOf = (slug) => {
-  const previewPath = path.join(repoRoot, 'out', 'templates', slug, 'index.html');
-
-  if (!existsSync(previewPath)) return '';
-
-  const match = /<meta\s+name="tabbied:template-name"\s+content="([^"]*)"/i.exec(
-    readFileSync(previewPath, 'utf8')
-  );
-
-  return match ? decodeEntities(match[1]).trim() : '';
-};
-
-// The gallery category and the one-line topic of every template, so the MCP
-// `list_templates` tool can filter on the one and summarize with the other.
-// The topic is read off the export, out/studio-index.json, which the first
-// `next build` writes from the template registries. No exported file carries
-// the category, so the table is read out of lib/templateCategories.ts, the
-// way check:thumbnails reads galleryThumbnails.ts; a template the parse
-// misses fails below, since the gallery's own build has already proved the
-// table complete.
+// The name the gallery shows and the one-line topic of every template, read
+// off the export's out/studio-index.json, which the first `next build` writes
+// from the template registries. A template's own <title> carries a tagline,
+// and the name is what the account's downloads list, the customizer and the
+// MCP catalog should call it; the topic is what the MCP `list_templates` tool
+// summarizes with. (The name was read off the framed preview page's meta
+// until that page was removed.)
 const studioIndexPath = path.join(repoRoot, 'out', 'studio-index.json');
-const topics = new Map(
-  existsSync(studioIndexPath)
-    ? JSON.parse(readFileSync(studioIndexPath, 'utf8')).entries.map((entry) => [
-        entry.slug,
-        entry.topic,
-      ])
-    : []
-);
+const studioEntries = existsSync(studioIndexPath)
+  ? JSON.parse(readFileSync(studioIndexPath, 'utf8')).entries
+  : [];
+const galleryNames = new Map(studioEntries.map((entry) => [entry.slug, entry.name]));
+const topics = new Map(studioEntries.map((entry) => [entry.slug, entry.topic]));
+
+const galleryNameOf = (slug) => galleryNames.get(slug) ?? '';
 
 if (topics.size === 0) {
   console.warn(
     'editable: out/studio-index.json is missing - catalog entries will carry ' +
-      'no topic. Run `next build` first.'
+      'no topic and their pages\' titles for names. Run `next build` first.'
   );
 }
 
+// The gallery category of every template, so the MCP `list_templates` tool
+// can filter on it. No exported file carries the category, so the table is
+// read out of lib/templateCategories.ts, the way check:thumbnails reads
+// galleryThumbnails.ts; a template the parse misses fails below, since the
+// gallery's own build has already proved the table complete.
 const categories = (() => {
   const source = readFileSync(
     path.join(repoRoot, 'lib', 'templateCategories.ts'),
@@ -150,7 +138,8 @@ const fontsOf = (html) => {
 const slugs = readdirSync(exportDir, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name)
-  // out/templates/<slug>/ is the framed preview; the site is its site/.
+  // Each template's page is out/templates/<slug>/site/; the folder holds
+  // the gallery's own files beside them.
   .filter((slug) => existsSync(path.join(exportDir, slug, 'site', 'index.html')))
   .filter((slug) => only.length === 0 || only.includes(slug))
   .sort();
