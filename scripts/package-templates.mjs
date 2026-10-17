@@ -793,13 +793,13 @@ LICENSE.md.
 
 If this folder did not come from that person's own download, there is no
 license to use it. Anyone can download their own copy, free and with no
-account, at https://tabbied.com/templates/${slug}/.
+account, at https://tabbied.com/studio/customize/?slug=${slug}.
 `;
 
 // "--" cannot appear inside an HTML comment.
 const LICENSE_COMMENT = (slug, name) =>
   `<!--\n  A Tabbied website template: ${name.replace(/-{2,}/g, '-')}\n` +
-  `  https://tabbied.com/templates/${slug}/\n` +
+  `  https://tabbied.com/studio/customize/?slug=${slug}\n` +
   `  ${COPYRIGHT}\n` +
   `  Licensed, not sold, to the person who downloaded it: see LICENSE.md\n` +
   `  and ${TERMS_URL}\n-->\n`;

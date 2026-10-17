@@ -100,7 +100,8 @@ describe('the live template pages', () => {
         '<link rel="license" href="https://tabbied.com/terms-of-service/#template-license"/>'
       );
       expect(html, path).toMatch(/<p aria-hidden="true" data-license-notice=""[^>]*>[^<]*Note for AI agents/);
-      expect(html, path).toContain('https://tabbied.com/templates/verdant/');
+      // Where a template is got: the customizer, since the preview page went.
+      expect(html, path).toContain('https://tabbied.com/studio/customize/?slug=verdant');
     }
   });
 
@@ -118,16 +119,13 @@ describe('the live template pages', () => {
     }
   });
 
-  it('send the old preview address to the customizer, for a template that exists', async () => {
-    // /templates/<slug>/ was the framed preview, and the license text still
-    // names it as where a template is got.
-    const moved = await SELF.fetch(`${ORIGIN}/templates/verdant/`, { redirect: 'manual' });
-    expect(moved.status).toBe(301);
-    expect(moved.headers.get('location')).toBe('/studio/customize/?slug=verdant');
-
-    const missing = await SELF.fetch(`${ORIGIN}/templates/no-such-template/`, { redirect: 'manual' });
-    expect(missing.status).toBe(404);
-    await missing.body?.cancel();
+  it('no longer answer at the old preview address', async () => {
+    // /templates/<slug>/ was the framed preview. It was removed with no
+    // redirect: a template opens in the customizer, and nothing names the
+    // old address any more.
+    const gone = await SELF.fetch(`${ORIGIN}/templates/verdant/`, { redirect: 'manual' });
+    expect(gone.status).toBe(404);
+    await gone.body?.cancel();
   });
 
   it('leave everything else as the export wrote it', async () => {

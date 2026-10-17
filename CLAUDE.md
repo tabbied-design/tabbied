@@ -116,10 +116,8 @@ commit:
 Two things worth not re-litigating:
 
 - **The live pages' notice is added at the edge, never by the export.** The
-  Worker rewrites `/templates/<slug>/site/` with HTMLRewriter (and
-  `/templates/<slug>/`, the framed preview the notice and the license name as
-  where a template is got, 301s to the customizer since that page was
-  removed): a comment and a `rel="license"` link in the head, and the same
+  Worker rewrites `/templates/<slug>/site/` with HTMLRewriter: a comment and
+  a `rel="license"` link in the head, and the same
   words as a visually hidden, `aria-hidden` paragraph at the end of the body,
   for an agent that reads a page as text and never sees a comment. React 19
   skips an element it did not render at the end of `<body>`, so hydration is
@@ -181,11 +179,9 @@ Three things that are explicit here and were implicit or automatic on Vercel:
   only because its zip is made from it, and the zip is the one way that source
   leaves. The e2e suite reads that folder from disk, so it never notices.
   `/templates/*/` is the other: the live template pages, which the Worker
-  serves with the license notice added (see "Licensing" below), and the old
-  `/templates/<slug>/` preview addresses, which it 301s to
-  `/studio/customize/?slug=` when the template exists. It names the pages
-  only (`*` is a deep match, and the trailing slash keeps the RSC payloads
-  beside them asset-first).
+  serves with the license notice added (see "Licensing" below). It names the
+  pages only (`*` is a deep match, and the trailing slash keeps the RSC
+  payloads beside them asset-first).
 
 **tabbied.com and www.tabbied.com are Worker Custom Domains**, declared in
 `wrangler.jsonc`'s `routes` with `custom_domain: true` and enabled for
@@ -1156,10 +1152,14 @@ not obvious from the diff:
   gallery and the homepage alike, and the customizer's Download menu holds
   the original zips. The customizer's "Open in new tab" (in the canvas's
   browser bar, and in the top row on a phone) shows the site alone, as it
-  stands. Its page was `app/templates/[slug]/`; the Worker 301s the old
-  address to the customizer (see "Hosting"), and the editable generator
-  reads template names from `out/studio-index.json`, which is where the
-  page's `tabbied:template-name` meta used to supply them.
+  stands. Its page was `app/templates/[slug]/`, and its address is a 404
+  now, with no redirect: few people will have kept it, and the gallery is
+  one click from anywhere. The license texts that named it as where a
+  template is got (the live pages' notice, `llms.txt`, each download's
+  `AGENTS.md` and `index.html` comment) name the customizer,
+  `/studio/customize/?slug=`, instead. The editable generator reads
+  template names from `out/studio-index.json`, which is where the page's
+  `tabbied:template-name` meta used to supply them.
 - **Popups are portaled, so they carry their own tokens.** The preview's
   menus and the customizer's are rendered under `<body>`, outside the page
   wrapper that declares `--s-*`; a `font:` or `background-color:` naming an
@@ -1785,9 +1785,9 @@ whatever text Studio wrote, so putting them back is a UI change.
   column's constraint and D1 cannot switch foreign keys off, and dropping a
   parent under enforced keys runs an implicit DELETE that would cascade every
   saved document away. `/studio/customize/?slug=` is the one door in: every
-  gallery card and every template the homepage shows lead to it (the old
-  `/templates/<slug>/` preview address is a 301 to it), and it opens for
-  anyone, signed in or not; only the
+  gallery card and every template the homepage shows lead to it, and the
+  license texts name it as where a template is got; it opens for anyone,
+  signed in or not; only the
   first Save asks for an account (the save gate, see "Free downloads"). The
   account's "Customize another template" leads to `/templates`, since a site
   starts from a template and the slug is the choice being made.

@@ -760,8 +760,8 @@ test.describe('Studio', () => {
 
 test.describe('Customizing a template', () => {
   test('a template opens in the customizer; there is no preview page to pass through', async ({ page }) => {
-    // The framed preview at /templates/<slug>/ is gone from the export (the
-    // Worker sends the old address to the customizer; worker/test/api.test.ts).
+    // The framed preview at /templates/<slug>/ is gone from the export, with
+    // no redirect (worker/test/api.test.ts).
     // Read off the disk: `serve` answers a folder with a listing of it.
     const out = path.join(process.cwd(), 'out', 'templates', 'verdant');
     expect(fs.existsSync(path.join(out, 'index.html'))).toBe(false);
