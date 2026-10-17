@@ -578,25 +578,22 @@ test.describe('the /templates gallery', () => {
     await expect(card.getByText('Saved', { exact: true })).toBeVisible();
     await expect(card).toHaveAttribute('href', '/studio/site/?id=site-werkraum');
 
-    // Signed out, the preview's one menu says no account is needed and
-    // hands over both zips.
+    // Signed out, the customizer's Download menu hands over both original
+    // zips, with no account.
     await page.unroute('**/api/auth/get-session');
     await page.route('**/api/auth/get-session', (route) =>
       route.fulfill({ status: 200, contentType: 'application/json', body: 'null' })
     );
-    await page.goto('/templates/werkraum/');
+    await page.goto('/studio/customize/?slug=werkraum');
+    await expect(page.getByRole('complementary', { name: 'Customize this site' })).toBeVisible({ timeout: 15000 });
 
     for (const [label, format] of [
-      ['Static HTML & CSS', 'html'],
+      ['HTML & CSS', 'html'],
       ['React project', 'react'],
     ] as const) {
-      await page.getByRole('button', { name: 'Use this template' }).click();
-      await expect(page.getByText('Free to customize and download. No account needed.')).toBeVisible();
-      await expect(page.getByRole('menuitem', { name: /Customize/ })).toHaveAttribute(
-        'href',
-        '/studio/customize/?slug=werkraum'
-      );
-      const item = page.getByRole('menuitem', { name: new RegExp(`^${label}`) });
+      await page.getByRole('button', { name: 'Download' }).click();
+      await expect(page.getByText(/No account needed/)).toBeVisible();
+      const item = page.getByRole('menuitem', { name: `Original Werkraum, ${label}` });
       await expect(item).toHaveAttribute('href', `/downloads/werkraum-${format}.zip`);
       const download = page.waitForEvent('download');
       await item.click();

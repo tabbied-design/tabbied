@@ -573,6 +573,126 @@ admin.get('/templates', async (c) => {
   });
 });
 
+const downloadsQuery = z.object({
+  /** The period, in days back from now, or every download there is. */
+  period: z.enum(['7', '30', '90', 'all']).default('30'),
+});
+
+/** The most days the chart draws: all time is charted over its last 90. */
+const CHART_DAYS_MAX = 90;
+
+// Downloads per template, for the Downloads page: every template in the
+// catalog (none downloaded is worth seeing too), each with its downloads in
+// the period split by who took them (no account, or signed in) and by
+// format, the customized ones among them, and when it last went out; the
+// same split for the whole site, the people who took them signed in, and a
+// day-by-day count for the chart. A download is a row in `download`
+// (worker/lib/downloads.ts); a customized one is a row there plus a
+// `download-customized` event beside it, which is what is counted here.
+admin.get('/downloads', async (c) => {
+  const query = downloadsQuery.safeParse({ period: c.req.query('period') });
+
+  if (!query.success) return badQuery(c);
+
+  const days = query.data.period === 'all' ? null : Number(query.data.period);
+  const since = days === null ? null : daysAgo(days);
+  const chartDays = Math.min(days ?? CHART_DAYS_MAX, CHART_DAYS_MAX);
+  const db = drizzle(c.env.DB, { schema });
+
+  const inPeriod = since ? gte(download.createdAt, since) : undefined;
+  const guests = sql<number>`coalesce(sum(${download.userId} is null), 0)`;
+  const day = sql<string>`date(${download.createdAt}, 'unixepoch')`;
+
+  const [catalog, perTemplate, customized, byDay, [people]] = await Promise.all([
+    loadEditableCatalog(c.env, c.req.raw),
+    db
+      .select({
+        slug: download.slug,
+        n: sql<number>`count(*)`,
+        guests,
+        html: sql<number>`coalesce(sum(${download.format} = 'html'), 0)`,
+        react: sql<number>`coalesce(sum(${download.format} = 'react'), 0)`,
+        last: sql<number>`max(${download.createdAt})`,
+      })
+      .from(download)
+      .where(inPeriod)
+      .groupBy(download.slug),
+    db
+      .select({
+        slug: event.slug,
+        n: sql<number>`count(*)`,
+        guests: sql<number>`coalesce(sum(${event.userId} is null), 0)`,
+      })
+      .from(event)
+      .where(
+        and(eq(event.kind, 'download-customized' satisfies EventKind), since ? gte(event.createdAt, since) : undefined)
+      )
+      .groupBy(event.slug),
+    // Days with none are absent here and filled in by the page.
+    db
+      .select({ day, n: sql<number>`count(*)`, guests })
+      .from(download)
+      .where(gte(download.createdAt, daysAgo(chartDays)))
+      .groupBy(day)
+      .orderBy(day),
+    db
+      .select({ n: sql<number>`count(distinct ${download.userId})` })
+      .from(download)
+      .where(inPeriod),
+  ]);
+
+  const counted = new Map(perTemplate.map((row) => [row.slug, row]));
+  const customizedBySlug = new Map(customized.map((row) => [row.slug, Number(row.n)]));
+  const names = new Map(
+    (catalog.templates as { slug: string; name?: string }[]).map((entry) => [entry.slug, entry.name ?? entry.slug])
+  );
+  // The catalog's templates, then any slug downloaded that it no longer has
+  // (a retired template), so no download goes uncounted.
+  const slugs = [...names.keys(), ...perTemplate.map((row) => row.slug).filter((slug) => !names.has(slug))];
+
+  const templates = slugs.map((slug) => {
+    const row = counted.get(slug);
+    const n = Number(row?.n ?? 0);
+    const anonymous = Number(row?.guests ?? 0);
+
+    return {
+      slug,
+      name: names.get(slug) ?? slug,
+      retired: !names.has(slug),
+      downloads: n,
+      guests: anonymous,
+      signedIn: n - anonymous,
+      html: Number(row?.html ?? 0),
+      react: Number(row?.react ?? 0),
+      customized: customizedBySlug.get(slug) ?? 0,
+      lastAt: row?.last ? new Date(Number(row.last) * 1000).toISOString() : null,
+    };
+  });
+
+  const sum = (pick: (row: (typeof templates)[number]) => number) => templates.reduce((total, row) => total + pick(row), 0);
+  const downloads = sum((row) => row.downloads);
+  const guestDownloads = sum((row) => row.guests);
+
+  return c.json({
+    period: query.data.period,
+    totals: {
+      downloads,
+      guests: guestDownloads,
+      signedIn: downloads - guestDownloads,
+      html: sum((row) => row.html),
+      react: sum((row) => row.react),
+      customized: customized.reduce((total, row) => total + Number(row.n), 0),
+      customizedByGuests: customized.reduce((total, row) => total + Number(row.guests), 0),
+      // Who took them signed in; a guest cannot be told from another guest.
+      people: Number(people?.n ?? 0),
+      templates: templates.filter((row) => row.downloads > 0).length,
+    },
+    chartDays,
+    byDay: byDay.map((row) => ({ day: row.day, guests: Number(row.guests), signedIn: Number(row.n) - Number(row.guests) })),
+    templates,
+  });
+});
+
 admin.get('/uploads', async (c) => {
   const query = listQuery.safeParse({ limit: c.req.query('limit') });
 

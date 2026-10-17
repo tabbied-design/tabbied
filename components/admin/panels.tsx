@@ -11,7 +11,7 @@ import { ApiError, apiFetch, apiUrl } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';
 import { initials } from 'components/nav';
 import UserActions from './UserActions';
-import { money, useAdminData, when } from './useAdminData';
+import { cell, money, saveCsv, useAdminData, when } from './useAdminData';
 import styles from './admin.module.css';
 
 const Load = ({ error }: { error: string | null }) => (
@@ -111,7 +111,7 @@ function GrowthChart({ signups }: { signups?: { day: string; n: number }[] }) {
   );
 }
 
-/** The week's most downloaded templates, each a link to its preview. */
+/** The week's most downloaded templates, each a link to its live page. */
 function TopDownloads({ rows = [] }: { rows?: { slug: string; n: number }[] }) {
   return (
     <div className={`${styles.card} ${styles.chartCard}`}>
@@ -120,6 +120,9 @@ function TopDownloads({ rows = [] }: { rows?: { slug: string; n: number }[] }) {
           <h2 className={styles.h3}>Most downloaded</h2>
           <p className={styles.cardSub}>Templates by downloads, original and customized, last 7 days</p>
         </div>
+        <Link href="/admin/downloads/" prefetch={false} className={styles.pill}>
+          Every template <ArrowRight size={13} aria-hidden="true" />
+        </Link>
       </div>
       {rows.length === 0 ? (
         <p className={styles.quiet}>No downloads this week.</p>
@@ -127,7 +130,7 @@ function TopDownloads({ rows = [] }: { rows?: { slug: string; n: number }[] }) {
         <ol className={styles.topList}>
           {rows.map((row) => (
             <li key={row.slug} className={styles.topRow}>
-              <a href={`/templates/${row.slug}/`} className={styles.topSlug}>
+              <a href={`/templates/${row.slug}/site/`} className={styles.topSlug}>
                 {row.slug}
               </a>
               <span className={styles.topCount}>{row.n.toLocaleString()}</span>
@@ -666,6 +669,345 @@ export function GenerationDetailPanel({ id }: { id: string }) {
         <pre className={styles.pre}>{JSON.stringify(data.result, null, 2)}</pre>
       </Section>
     </div>
+  );
+}
+
+// ---- downloads --------------------------------------------------------------
+
+type DownloadPeriod = '7' | '30' | '90' | 'all';
+
+const PERIODS: [DownloadPeriod, string][] = [
+  ['7', 'Last 7 days'],
+  ['30', 'Last 30 days'],
+  ['90', 'Last 90 days'],
+  ['all', 'All time'],
+];
+
+type TemplateDownloads = {
+  slug: string;
+  name: string;
+  /** Downloaded, but no longer in the catalog. */
+  retired: boolean;
+  downloads: number;
+  /** Taken with no account. */
+  guests: number;
+  signedIn: number;
+  html: number;
+  react: number;
+  /** Of `downloads`, the ones the customizer built. */
+  customized: number;
+  lastAt: string | null;
+};
+
+type Downloads = {
+  period: DownloadPeriod;
+  totals: {
+    downloads: number;
+    guests: number;
+    signedIn: number;
+    html: number;
+    react: number;
+    customized: number;
+    customizedByGuests: number;
+    /** Accounts that downloaded while signed in. */
+    people: number;
+    /** Templates downloaded at least once in the period. */
+    templates: number;
+  };
+  /** How many days the chart covers: the period, or the last 90 for all time. */
+  chartDays: number;
+  byDay: { day: string; guests: number; signedIn: number }[];
+  templates: TemplateDownloads[];
+};
+
+type SortKey = 'name' | 'downloads' | 'guests' | 'signedIn' | 'html' | 'react' | 'customized' | 'lastAt';
+
+const COLUMNS: [SortKey, string][] = [
+  ['name', 'Template'],
+  ['downloads', 'Downloads'],
+  ['guests', 'Guests'],
+  ['signedIn', 'Signed in'],
+  ['html', 'HTML'],
+  ['react', 'React'],
+  ['customized', 'Customized'],
+  ['lastAt', 'Last download'],
+];
+
+const percent = (part: number, whole: number) => (whole ? `${Math.round((part / whole) * 100)}%` : '0%');
+
+/** The last `count` UTC days, oldest first, each with its two counts or zero. */
+function downloadDays(rows: Downloads['byDay'], count: number) {
+  const byDay = new Map(rows.map((row) => [row.day, row]));
+  const today = new Date();
+
+  return Array.from({ length: count }, (_, offset) => {
+    const date = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - (count - 1 - offset)));
+    const key = date.toISOString().slice(0, 10);
+    const row = byDay.get(key);
+
+    return {
+      key,
+      label: date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', timeZone: 'UTC' }),
+      guests: row?.guests ?? 0,
+      signedIn: row?.signedIn ?? 0,
+    };
+  });
+}
+
+/** Downloads per day, each bar the guests' share under the signed-in one. */
+function DownloadChart({ data }: { data: Downloads }) {
+  const days = downloadDays(data.byDay, data.chartDays);
+  const peak = Math.max(1, ...days.map((entry) => entry.guests + entry.signedIn));
+  // Past a fortnight the bars close up and only every few carry a label, so
+  // a month or a quarter still reads.
+  const dense = days.length > 14;
+  const every = Math.ceil(days.length / 15);
+
+  return (
+    <div className={`${styles.card} ${styles.chartCard}`}>
+      <div className={styles.cardHead}>
+        <div>
+          <h2 className={styles.h3}>Downloads by day</h2>
+          <p className={styles.cardSub}>
+            {data.period === 'all' ? 'The last 90 days' : `The last ${data.chartDays} days`} (UTC), guests and signed in
+          </p>
+        </div>
+        <ul className={styles.legend} aria-hidden="true">
+          <li>
+            <span className={styles.swatchGuest} />
+            Guests
+          </li>
+          <li>
+            <span className={styles.swatchSigned} />
+            Signed in
+          </li>
+        </ul>
+      </div>
+      <div
+        className={`${styles.bars} ${dense ? styles.barsDense : ''}`}
+        role="img"
+        aria-label={`Downloads per day: ${days
+          .filter((entry) => entry.guests + entry.signedIn > 0)
+          .map((entry) => `${entry.label} ${entry.guests} guests, ${entry.signedIn} signed in`)
+          .join('; ') || 'none'}`}
+      >
+        {days.map((entry) => {
+          const total = entry.guests + entry.signedIn;
+
+          return (
+            <div key={entry.key} className={styles.barCol} title={`${entry.label}: ${entry.guests} guests, ${entry.signedIn} signed in`}>
+              {total === 0 ? (
+                <div className={`${styles.bar} ${styles.barEmpty}`} />
+              ) : (
+                <div className={styles.barStack} style={{ height: `${Math.round((total / peak) * 100)}%` }}>
+                  {entry.signedIn > 0 ? <div className={styles.barSigned} style={{ flexGrow: entry.signedIn }} /> : null}
+                  {entry.guests > 0 ? <div className={styles.barGuest} style={{ flexGrow: entry.guests }} /> : null}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      <div className={`${styles.barLabels} ${dense ? styles.barsDense : ''}`} aria-hidden="true">
+        {days.map((entry, index) => (
+          <span key={entry.key} className={styles.barLabel}>
+            {index > 0 ? ' ' : ''}
+            {index % every === 0 ? entry.label : ''}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function DownloadsPanel() {
+  const [period, setPeriod] = useState<DownloadPeriod>('30');
+  const [query, setQuery] = useState('');
+  const [showAll, setShowAll] = useState(false);
+  const [sort, setSort] = useState<{ key: SortKey; descending: boolean }>({ key: 'downloads', descending: true });
+  const { data, error } = useAdminData<Downloads>(`/api/admin/downloads?period=${period}`);
+
+  const rows = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    const value = (row: TemplateDownloads) => (sort.key === 'lastAt' ? row.lastAt ?? '' : row[sort.key]);
+
+    return (data?.templates ?? [])
+      .filter((row) => showAll || row.downloads > 0)
+      .filter((row) => !needle || row.name.toLowerCase().includes(needle) || row.slug.includes(needle))
+      .sort((a, b) => {
+        const [x, y] = [value(a), value(b)];
+        const order = typeof x === 'string' ? x.localeCompare(String(y)) : x - (y as number);
+        // Ties fall back to the name, so the order is stable.
+        return (sort.descending ? -order : order) || a.name.localeCompare(b.name);
+      });
+  }, [data, query, showAll, sort]);
+
+  const label = PERIODS.find(([key]) => key === period)?.[1] ?? '';
+
+  const exportRows = () => {
+    const header = ['slug', 'name', 'downloads', 'guests', 'signed_in', 'html', 'react', 'customized', 'last_download'];
+    const lines = rows.map((row) =>
+      [row.slug, row.name, row.downloads, row.guests, row.signedIn, row.html, row.react, row.customized, row.lastAt ?? '']
+        .map(cell)
+        .join(',')
+    );
+    saveCsv(`tabbied-downloads-${period === 'all' ? 'all-time' : `${period}-days`}-${new Date().toISOString().slice(0, 10)}.csv`, [
+      header.join(','),
+      ...lines,
+    ]);
+  };
+
+  return (
+    <>
+      <div className={styles.toolbar} role="group" aria-label="Period">
+        {PERIODS.map(([key, name]) => (
+          <button
+            key={key}
+            type="button"
+            className={`${styles.pill} ${key === period ? styles.pillOn : ''}`}
+            aria-pressed={key === period}
+            onClick={() => setPeriod(key)}
+          >
+            {name}
+          </button>
+        ))}
+      </div>
+
+      {!data || data.period !== period ? (
+        <Load error={error} />
+      ) : (
+        <>
+          <ul className={styles.stats} style={{ marginTop: 22 }}>
+            <li className={styles.stat}>
+              <p className={styles.statLabel}>Downloads</p>
+              <p className={styles.statValue}>{data.totals.downloads.toLocaleString()}</p>
+              <p className={styles.statNote}>
+                {label}, {data.totals.html.toLocaleString()} HTML and {data.totals.react.toLocaleString()} React, of{' '}
+                {data.totals.templates.toLocaleString()} {data.totals.templates === 1 ? 'template' : 'templates'}
+              </p>
+            </li>
+            <li className={styles.stat}>
+              <p className={styles.statLabel}>Guests</p>
+              <p className={styles.statValue}>{data.totals.guests.toLocaleString()}</p>
+              <p className={styles.statNote}>
+                {percent(data.totals.guests, data.totals.downloads)} of downloads, with no account
+              </p>
+            </li>
+            <li className={styles.stat}>
+              <p className={styles.statLabel}>Signed in</p>
+              <p className={styles.statValue}>{data.totals.signedIn.toLocaleString()}</p>
+              <p className={styles.statNote}>
+                {percent(data.totals.signedIn, data.totals.downloads)} of downloads, by{' '}
+                {data.totals.people === 1 ? '1 person' : `${data.totals.people.toLocaleString()} people`}
+              </p>
+            </li>
+            <li className={`${styles.stat} ${styles.statDark}`}>
+              <p className={styles.statLabel}>Customized</p>
+              <p className={styles.statValue}>{data.totals.customized.toLocaleString()}</p>
+              <p className={styles.statNote}>
+                Built in the customizer, {data.totals.customizedByGuests.toLocaleString()} by guests
+              </p>
+            </li>
+          </ul>
+
+          <DownloadChart data={data} />
+
+          <div className={styles.sectionHead}>
+            <h2 className={styles.h2}>By template</h2>
+            <div className={styles.toolbar}>
+              <button
+                type="button"
+                className={`${styles.pill} ${showAll ? styles.pillOn : ''}`}
+                aria-pressed={showAll}
+                onClick={() => setShowAll((value) => !value)}
+              >
+                Include templates with none
+              </button>
+              <button type="button" className={styles.pill} onClick={exportRows} disabled={rows.length === 0}>
+                Export CSV
+              </button>
+              <label className={styles.search}>
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="oklch(0.55 0.01 260)" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="6.5" />
+                  <path d="M16 16l4 4" />
+                </svg>
+                <input
+                  type="search"
+                  placeholder="Search templates"
+                  aria-label="Search templates"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                />
+              </label>
+            </div>
+          </div>
+
+          <div className={`${styles.panel} ${styles.scroll}`}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  {COLUMNS.map(([key, name]) => {
+                    const on = sort.key === key;
+
+                    return (
+                      <th
+                        key={key}
+                        aria-sort={on ? (sort.descending ? 'descending' : 'ascending') : 'none'}
+                        className={key === 'name' ? undefined : styles.numeric}
+                      >
+                        <button
+                          type="button"
+                          className={styles.sortButton}
+                          onClick={() =>
+                            setSort((current) =>
+                              current.key === key
+                                ? { key, descending: !current.descending }
+                                : // Figures read largest first, names from A.
+                                  { key, descending: key !== 'name' }
+                            )
+                          }
+                        >
+                          {name}
+                          {on ? <span aria-hidden="true">{sort.descending ? ' \u2193' : ' \u2191'}</span> : null}
+                        </button>
+                      </th>
+                    );
+                  })}
+                </tr>
+              </thead>
+              <tbody>
+                {rows.length === 0 ? (
+                  <tr>
+                    <td colSpan={COLUMNS.length} className={styles.quiet}>
+                      {query.trim() ? 'No template matches that search.' : `No downloads in this period.`}
+                    </td>
+                  </tr>
+                ) : (
+                  rows.map((row) => (
+                    <tr key={row.slug}>
+                      <td>
+                        {row.retired ? (
+                          <span>{row.name} (retired)</span>
+                        ) : (
+                          <a href={`/templates/${row.slug}/site/`}>{row.name}</a>
+                        )}
+                      </td>
+                      <td className={styles.numeric}>{row.downloads.toLocaleString()}</td>
+                      <td className={styles.numeric}>{row.guests.toLocaleString()}</td>
+                      <td className={styles.numeric}>{row.signedIn.toLocaleString()}</td>
+                      <td className={styles.numeric}>{row.html.toLocaleString()}</td>
+                      <td className={styles.numeric}>{row.react.toLocaleString()}</td>
+                      <td className={styles.numeric}>{row.customized.toLocaleString()}</td>
+                      <td className={styles.numeric}>{row.lastAt ? when(row.lastAt) : '-'}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+    </>
   );
 }
 

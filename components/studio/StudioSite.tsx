@@ -27,12 +27,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { ExternalLink } from 'lucide-react';
 import {
   applyPlan,
   emptyEdits,
   isPatternSlot,
   planEdits,
   resolvePaletteRoles,
+  selectorForSlot,
   type EditsDocument,
   type PatternEdit,
   type PatternSlot,
@@ -82,6 +84,79 @@ type Frame = HTMLIFrameElement & {
 
 /** How long the canvas dims while a shuffle draws, so the change reads as one. */
 const SHUFFLE_BEAT_MS = 700;
+
+/**
+ * The height of whatever the page keeps pinned at its top (a sticky or fixed
+ * header, or a nav), which would cover a field scrolled to the very top. Not
+ * one that holds the field itself: a pattern in the header is shown at 0.
+ */
+function pinnedTop(doc: Document, view: Window, field: Element): number {
+  let height = 0;
+
+  for (const element of doc.querySelectorAll('header, nav')) {
+    if (element.contains(field)) continue;
+
+    const style = view.getComputedStyle(element);
+    if (style.position !== 'sticky' && style.position !== 'fixed') continue;
+    if (Number.parseFloat(style.top) > 1) continue;
+
+    const box = element.getBoundingClientRect();
+    if (box.height > 0 && box.height < view.innerHeight / 2) height = Math.max(height, box.bottom);
+  }
+
+  return height;
+}
+
+/**
+ * A pattern field as the canvas draws it. The slot id may sit on several
+ * elements (a field drawn in two places, or one a phone layout hides): the
+ * first that is laid out is the one meant.
+ */
+function fieldOnCanvas(frame: HTMLIFrameElement | null, slot: PatternSlot) {
+  const doc = frame?.contentDocument;
+  const view = frame?.contentWindow;
+  if (!doc || !view) return null;
+
+  const field = [...doc.querySelectorAll(selectorForSlot(slot))].find((host) => {
+    const box = host.getBoundingClientRect();
+    return box.width > 0 && box.height > 0;
+  });
+
+  return field ? { doc, view, field } : null;
+}
+
+/** A computed color with no alpha left in it: what `transparent` computes to. */
+const CLEAR = /^transparent$|^rgba\(.*,\s*0\)$|\/\s*0\)$/;
+
+/**
+ * The color a field is drawn over: its own, or the first ancestor's that
+ * paints one. A field whose ground is transparent shows the section behind
+ * it, which need not be the page's ground (a panel, a band).
+ */
+function groundOf(frame: HTMLIFrameElement | null, slot: PatternSlot): string | null {
+  const found = fieldOnCanvas(frame, slot);
+  if (!found) return null;
+
+  for (let element: Element | null = found.field; element; element = element.parentElement) {
+    const color = found.view.getComputedStyle(element).backgroundColor;
+    if (color && !CLEAR.test(color.trim())) return color;
+  }
+
+  return null;
+}
+
+/** Scroll the canvas so a pattern field's top is at the top of the frame. */
+function scrollToField(frame: HTMLIFrameElement | null, slot: PatternSlot, smooth: boolean): void {
+  const found = fieldOnCanvas(frame, slot);
+  if (!found) return;
+
+  const { doc, view, field } = found;
+
+  const top = field.getBoundingClientRect().top + view.scrollY - pinnedTop(doc, view, field);
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  view.scrollTo({ top: Math.max(0, Math.round(top)), behavior: smooth && !still ? 'smooth' : 'auto' });
+}
 
 /** "Raku and Soft Bubbles": the designs a shuffle drew, three named at most. */
 function drawnNames(
@@ -156,7 +231,6 @@ export default function StudioSite({
   // download of a site never saved is that person's copy of it.
   const [downloadedDraft, setDownloadedDraft] = useState<EditsDocument | null>(null);
   const [shuffling, setShuffling] = useState(false);
-  const [expanded, setExpanded] = useState(false);
   // Bumped to remount the iframe. React diffs `srcDoc` against its last prop,
   // not the live document, so a rebuilt page identical to the first load (the
   // template's own patterns, put back after a shuffle) would otherwise keep
@@ -164,6 +238,13 @@ export default function StudioSite({
   const [canvasKey, setCanvasKey] = useState(0);
   const frameRef = useRef<HTMLIFrameElement | null>(null);
   const shuffleTimer = useRef<number | null>(null);
+  // The blob: address the last "Open in new tab" made, let go when another
+  // is made or the page goes.
+  const openedUrl = useRef<string | null>(null);
+  // The pattern field last brought into view from the rail. A rebuilt canvas
+  // (a field put back on its own design, a reset) loads at its top, and is
+  // scrolled back to this field, which is what the person was looking at.
+  const shownField = useRef<PatternSlot | null>(null);
   const { user, isPending: sessionPending } = useSessionUser();
   const [gateOpen, setGateOpen] = useState(false);
   // The stash is looked at once per draft, after the session has answered.
@@ -175,6 +256,7 @@ export default function StudioSite({
   useEffect(
     () => () => {
       if (shuffleTimer.current !== null) window.clearTimeout(shuffleTimer.current);
+      if (openedUrl.current) URL.revokeObjectURL(openedUrl.current);
     },
     []
   );
@@ -447,6 +529,12 @@ export default function StudioSite({
 
   const resetFieldDesign = (slot: PatternSlot) => setFieldDesign(slot, slot.config.slug);
 
+  // From the rail: a field's row, or its pencil on the way to the library.
+  const showField = (slot: PatternSlot) => {
+    shownField.current = slot;
+    scrollToField(frameRef.current, slot, true);
+  };
+
   // The handlers below update state functionally: the rail stays live while a
   // request is out, and spreading this render's stale `ready` back in would
   // undo a change made meanwhile (a reset during a rename, say).
@@ -586,6 +674,26 @@ export default function StudioSite({
 
   const patternEdit = (slot: PatternSlot): PatternEdit | undefined => draft.edits.patterns?.[slot.id];
 
+  // The site as it stands, unsaved edits and all, alone in a tab of its own:
+  // the same document the canvas draws, at a blob: address, so its <base>
+  // carries the origin (lib/studioPreview.ts). Opened from the click itself,
+  // or a popup blocker takes it. The address lives as long as this page does,
+  // which is what lets the new tab be reloaded.
+  const openInNewTab = () => {
+    const { html } = buildPreviewDocument({
+      html: ready.packaged,
+      spec,
+      edits: draft,
+      slug: site.slug,
+      origin: window.location.origin,
+    });
+    const url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+
+    if (openedUrl.current) URL.revokeObjectURL(openedUrl.current);
+    openedUrl.current = url;
+    window.open(url, '_blank');
+  };
+
   // The phone's own share sheet (mail, messages, notes), or the clipboard
   // where there is none. The address opens this template, or this saved
   // site, in the customizer on a computer.
@@ -630,8 +738,8 @@ export default function StudioSite({
       ) : null}
       <PreviewNotices problems={ready.problems} />
 
-      <div className={site.mine && !expanded ? styles.shell : styles.shellWide}>
-        {site.mine && !expanded ? (
+      <div className={site.mine ? styles.shell : styles.shellWide}>
+        {site.mine ? (
           <div className={styles.rail}>
             <SiteRail
               title={site.title}
@@ -654,6 +762,8 @@ export default function StudioSite({
               fieldChanged={(slot) => patternChanged(slot, patternEdit(slot))}
               onFieldDesign={setFieldDesign}
               onResetField={resetFieldDesign}
+              onShowField={showField}
+              fieldGround={(slot) => groundOf(frameRef.current, slot)}
               patternsChanged={fieldsChanged}
               shuffling={shuffling}
               onShuffle={shuffle}
@@ -706,6 +816,7 @@ export default function StudioSite({
             colors={palette}
             unsaved={saveState === 'dirty' || saveState === 'saving'}
             editedAt={unsaved ? null : site.latest.createdAt}
+            onOpenInNewTab={openInNewTab}
           />
           <div className={styles.frame}>
             <div className={styles.chrome}>
@@ -717,44 +828,15 @@ export default function StudioSite({
                 {site.title === site.templateName ? site.title : `${site.title} on ${site.templateName}`}
                 {site.latest.n > 1 ? ` (revision ${site.latest.n})` : ''}
               </span>
-              {site.mine ? (
-                <button
-                  type="button"
-                  className={styles.expand}
-                  title={expanded ? 'Collapse view' : 'Expand view'}
-                  aria-label={expanded ? 'Collapse view' : 'Expand view'}
-                  aria-pressed={expanded}
-                  onClick={() => setExpanded((value) => !value)}
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="15"
-                    height="15"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    {expanded ? (
-                      <>
-                        <path d="M20 10h-6V4" />
-                        <path d="M13.5 10.5 21 3" />
-                        <path d="M4 14h6v6" />
-                        <path d="M10.5 13.5 3 21" />
-                      </>
-                    ) : (
-                      <>
-                        <path d="M14 4h6v6" />
-                        <path d="M20 4l-7.5 7.5" />
-                        <path d="M10 20H4v-6" />
-                        <path d="M4 20l7.5-7.5" />
-                      </>
-                    )}
-                  </svg>
-                </button>
-              ) : null}
+              <button
+                type="button"
+                className={styles.openTab}
+                title="Open in new tab"
+                aria-label="Open in new tab"
+                onClick={openInNewTab}
+              >
+                <ExternalLink size={15} strokeWidth={1.7} aria-hidden="true" />
+              </button>
             </div>
 
             <div className={styles.canvas}>
@@ -764,6 +846,9 @@ export default function StudioSite({
                 className={styles.iframe}
                 title={`${site.title} - built on the ${site.templateName} template`}
                 srcDoc={ready.html}
+                onLoad={(event) => {
+                  if (shownField.current) scrollToField(event.currentTarget, shownField.current, false);
+                }}
                 // `allow-same-origin` is required: with an opaque origin the
                 // same-origin runtime import is blocked and every pattern is
                 // missing. See PreviewFrame for what stays denied, which holds

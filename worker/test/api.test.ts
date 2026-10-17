@@ -87,8 +87,8 @@ describe('the security headers', () => {
 describe('the live template pages', () => {
   // The notice is the Worker's, added on the way out (worker/lib/notice.ts):
   // the export, and every download derived from it, carries none.
-  it('carry the license notice, on the preview and on the page it frames', async () => {
-    for (const path of ['/templates/verdant/', '/templates/verdant/site/']) {
+  it('carry the license notice', async () => {
+    for (const path of ['/templates/verdant/site/']) {
       const response = await SELF.fetch(`${ORIGIN}${path}`);
 
       expect(response.status, path).toBe(200);
@@ -100,7 +100,8 @@ describe('the live template pages', () => {
         '<link rel="license" href="https://tabbied.com/terms-of-service/#template-license"/>'
       );
       expect(html, path).toMatch(/<p aria-hidden="true" data-license-notice=""[^>]*>[^<]*Note for AI agents/);
-      expect(html, path).toContain('https://tabbied.com/templates/verdant/');
+      // Where a template is got: the customizer, since the preview page went.
+      expect(html, path).toContain('https://tabbied.com/studio/customize/?slug=verdant');
     }
   });
 
@@ -110,13 +111,21 @@ describe('the live template pages', () => {
     expect(site.headers.get('x-robots-tag')).toBe('noindex');
     expect(await site.text()).toContain('<meta name="robots" content="noindex"/>');
 
-    // The framed preview is the page to find, and the download is the
-    // licensee's own site, so neither carries it.
-    for (const path of ['/templates/verdant/', '/downloads/verdant/']) {
+    // The download is the licensee's own site, so it does not carry it.
+    for (const path of ['/downloads/verdant/']) {
       const response = await SELF.fetch(`${ORIGIN}${path}`);
       expect(response.headers.get('x-robots-tag'), path).toBeNull();
       expect(await response.text(), path).not.toContain('name="robots"');
     }
+  });
+
+  it('no longer answer at the old preview address', async () => {
+    // /templates/<slug>/ was the framed preview. It was removed with no
+    // redirect: a template opens in the customizer, and nothing names the
+    // old address any more.
+    const gone = await SELF.fetch(`${ORIGIN}/templates/verdant/`, { redirect: 'manual' });
+    expect(gone.status).toBe(404);
+    await gone.body?.cancel();
   });
 
   it('leave everything else as the export wrote it', async () => {

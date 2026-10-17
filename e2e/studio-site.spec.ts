@@ -277,23 +277,30 @@ test.describe('studio site', () => {
     await rail.getByRole('tab', { name: 'Patterns' }).click();
 
     // Every row carries a pencil; none carries an undo until it has changed.
-    const rows = rail.locator('li');
+    const rows = rail.getByRole('list', { name: 'Patterns on the page' }).locator('li');
     await expect(rows).toHaveCount(before.length);
     await expect(rail.getByRole('button', { name: /^Change the .* pattern$/ })).toHaveCount(before.length);
     await expect(rail.getByRole('button', { name: /^Reset the .* pattern$/ })).toHaveCount(0);
 
-    // The pencil opens the library for that field; a search narrows it and
-    // choosing a design applies it to that field alone, live.
+    // The pencil puts the library in the rail, in place of the list, with no
+    // dialog over the page; a search narrows it and choosing a design applies
+    // it to that field alone, live, and the library stays open.
     await rows.first().getByRole('button', { name: /^Change the .* pattern$/ }).click();
-    const dialog = page.getByRole('dialog');
-    await expect(dialog.getByRole('heading', { name: /^Change the .* pattern$/ })).toBeVisible();
-    await dialog.getByLabel('Search patterns').fill(targetName);
-    await dialog.getByRole('button', { name: targetName, exact: true }).click();
-    await expect(dialog).toHaveCount(0);
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(rail.getByRole('heading', { name: /^Change the .* pattern$/ })).toBeVisible();
+    const library = rail.getByRole('list', { name: 'Pattern library' });
+    // The tiles are drawn live, in the colors the field wears.
+    await expect(library.locator('css-doodle').first()).toBeAttached({ timeout: 15_000 });
+    await rail.getByLabel('Search patterns').fill(targetName);
+    await library.getByRole('button', { name: targetName, exact: true }).click();
+    await expect(library.getByRole('button', { name: targetName, exact: true })).toHaveAttribute('aria-pressed', 'true');
 
     await expect.poll(() => hosts.first().getAttribute('data-pattern')).toBe(target);
     const after = await hosts.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-pattern')));
     expect(after.slice(1)).toEqual(before.slice(1));
+
+    // Back to the list.
+    await rail.getByRole('button', { name: 'All patterns' }).click();
     await expect(rows.first().locator('img')).toHaveAttribute('src', `/previews/${target}.webp`);
     // And over it the design drawn live, in the colors the field wears.
     await expect(rows.first().locator('css-doodle')).toBeAttached({ timeout: 15_000 });
@@ -309,6 +316,65 @@ test.describe('studio site', () => {
       .poll(() => hosts.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-pattern'))))
       .toEqual(before);
     await expect(rail.getByRole('button', { name: /^Reset the .* pattern$/ })).toHaveCount(0);
+  });
+
+  test('a field row scrolls the page to it, and the site opens in a tab of its own', async ({
+    page,
+    context,
+  }) => {
+    await page.route('**/api/studio/sites/**', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(siteDocument({ mine: true })),
+      })
+    );
+
+    await page.goto('/studio/site/?id=e2esite');
+
+    const frame = page.frameLocator('iframe');
+    await expect(frame.locator('[data-edit-pattern] [data-pattern]').first()).toBeAttached({ timeout: 15_000 });
+
+    const rail = page.getByRole('complementary', { name: 'Customize this site' });
+    await rail.getByRole('tab', { name: 'Patterns' }).click();
+    const rows = rail.getByRole('list', { name: 'Patterns on the page' }).locator('li');
+
+    // The last field is the furthest down the page: its row brings its top
+    // to the top of the frame, clear of a pinned header.
+    await rows.last().getByRole('button', { name: /^Show the .* pattern on the page$/ }).click();
+    const iframe = page.locator('iframe');
+    const fieldTop = async () =>
+      iframe.evaluate((node: HTMLIFrameElement) => {
+        const doc = node.contentDocument!;
+        const fields = [...doc.querySelectorAll('[data-edit-pattern]')].filter(
+          (field) => field.getBoundingClientRect().height > 0
+        );
+        return {
+          scrolled: node.contentWindow!.scrollY,
+          top: fields[fields.length - 1].getBoundingClientRect().top,
+        };
+      });
+    await expect.poll(async () => (await fieldTop()).scrolled, { timeout: 5_000 }).toBeGreaterThan(0);
+    await expect.poll(async () => (await fieldTop()).top, { timeout: 5_000 }).toBeLessThan(160);
+    expect((await fieldTop()).top).toBeGreaterThanOrEqual(-1);
+
+    // Open in new tab: the site as it stands, unsaved edits and all, with its
+    // patterns drawn, at an address of its own.
+    await rail.getByRole('tab', { name: 'Colors' }).click();
+    await rail.getByRole('button', { name: 'Cobalt', exact: true }).click();
+    const [tab] = await Promise.all([
+      context.waitForEvent('page'),
+      page.getByRole('button', { name: 'Open in new tab' }).first().click(),
+    ]);
+    await tab.waitForLoadState();
+    expect(tab.url()).toMatch(/^blob:/);
+    await expect(tab.locator('[data-edit-pattern] css-doodle').first()).toBeAttached({ timeout: 15_000 });
+    expect(
+      await tab.evaluate(() =>
+        getComputedStyle(document.querySelector('[data-edit-root]')!).getPropertyValue('--brand-0').trim().toLowerCase()
+      )
+    ).toBe('#0a1a3f');
+    await tab.close();
   });
 
   test('the customized React project carries the colors and pattern fields over its source', async ({
@@ -333,10 +399,17 @@ test.describe('studio site', () => {
     const rail = page.getByRole('complementary', { name: 'Customize this site' });
     await rail.getByRole('button', { name: 'Cobalt', exact: true }).click();
     await rail.getByRole('tab', { name: 'Patterns' }).click();
-    await rail.locator('li').first().getByRole('button', { name: /^Change the .* pattern$/ }).click();
-    const dialog = page.getByRole('dialog');
-    await dialog.getByLabel('Search patterns').fill(target);
-    await dialog.getByRole('button', { name: target === 'radius' ? 'Radius' : 'Lobe', exact: true }).click();
+    await rail
+      .getByRole('list', { name: 'Patterns on the page' })
+      .locator('li')
+      .first()
+      .getByRole('button', { name: /^Change the .* pattern$/ })
+      .click();
+    await rail.getByLabel('Search patterns').fill(target);
+    await rail
+      .getByRole('list', { name: 'Pattern library' })
+      .getByRole('button', { name: target === 'radius' ? 'Radius' : 'Lobe', exact: true })
+      .click();
     await expect.poll(() => hosts.first().getAttribute('data-pattern')).toBe(target);
 
     await page.getByRole('button', { name: 'Download' }).click();

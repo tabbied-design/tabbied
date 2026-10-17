@@ -116,8 +116,8 @@ commit:
 Two things worth not re-litigating:
 
 - **The live pages' notice is added at the edge, never by the export.** The
-  Worker rewrites `/templates/<slug>/` and `/templates/<slug>/site/` with
-  HTMLRewriter: a comment and a `rel="license"` link in the head, and the same
+  Worker rewrites `/templates/<slug>/site/` with HTMLRewriter: a comment and
+  a `rel="license"` link in the head, and the same
   words as a visually hidden, `aria-hidden` paragraph at the end of the body,
   for an agent that reads a page as text and never sees a comment. React 19
   skips an element it did not render at the end of `<body>`, so hydration is
@@ -226,8 +226,8 @@ is the check.
 
 **Redirects live in `public/_redirects`**, beside `_headers` and read the
 same way. The template sites moved from `/template/<slug>/` to
-`/templates/<slug>/site/` (one noun, one tree: the framed preview is
-`/templates/<slug>/` and the site it frames is under it), and the old paths
+`/templates/<slug>/site/` (one noun, one tree: the framed preview was
+`/templates/<slug>/` and the site it framed is under it), and the old paths
 301 there. A route under `run_worker_first` never reaches this file, so a
 redirect for one of those belongs in the Worker. A rule here also beats a
 page the export has: `/docs/` redirected to `/docs/react/` long after the
@@ -243,17 +243,18 @@ and it changed no behavior: same MCP handler, same statelessness, same
 JSON 404); auth, generations, media, and the AI gateway land with the bindings
 they need. See `agent-outputs/20260827-studio-ai-plan.md`.
 
-The export is inside the platform limits - roughly 18,600 files against a
+The export is inside the platform limits - roughly 16,400 files against a
 ceiling of 20,000 per Worker version on Workers Free (100,000 on Workers Paid,
 with wrangler 4.34 or later), largest file 3.0 MB against 25 MiB - but both
 are counted per Worker *version*, and on the free plan the headroom is now
-about 1,400 files. Every pattern costs seven: its page and four RSC payloads,
+about 3,600 files. Every pattern costs seven: its page and four RSC payloads,
 its preview and its share card, so batch 14's 44 designs added about 300 (all
 300 it was written with would have added about 2,100). A template site with
-no pictures costs about 33: its framed and its bare page with their RSC
-payloads, the two zips and the folders they are made from, its screenshot
-and its share card. The professionals set's hundred added about 3,300, and
-another set that size would not fit on Workers Free.
+no pictures costs about 27: its page with its RSC payloads, the two zips
+and the folders they are made from, and its screenshot (it cost about 33
+while it had a framed preview page and a share card of its own, both
+removed on 2026-10-17, which gave back about 2,200). The professionals
+set's hundred added about 3,300.
 The Worker script is separate and small: about 3.4 MiB uncompressed (620 KiB
 gzipped, `npx wrangler deploy --dry-run --outdir <dir>`) against a 64 MiB
 limit that, since September 2026, is the only size check on any plan; no
@@ -908,15 +909,16 @@ never set its body type in Karla at all.
 ## Share cards - 1200x630, derived at build time
 
 A pattern page's share card is `public/og/patterns/<slug>.jpg`, the brand
-panel cut from `public/og.png` beside the design's preview; a template's is
-`public/og/templates/<slug>.jpg`, its screenshot full bleed with the lockup on
-a white plate (`lib/seo.ts`, `patternImage` and `templateImage`). They were
-the 960x960 WebP previews, which the large card crops to a strip, and a
-template's was its pattern rather than the website. `scripts/build-og-images.mjs`
-(`npm run og`, in prebuild and predev) writes them with sharp from committed
-files only, no browser and no fonts, so they are gitignored and the deploy
-build makes them: about 30 seconds from nothing, nothing at all when they are
-newer than their sources. A template with no shot uses its pattern's card.
+panel cut from `public/og.png` beside the design's preview (`lib/seo.ts`,
+`patternImage`). They were the 960x960 WebP previews, which the large card
+crops to a strip. `scripts/build-og-images.mjs` (`npm run og`, in prebuild
+and predev) writes them with sharp from committed files only, no browser
+and no fonts, so they are gitignored and the deploy build makes them: about
+30 seconds from nothing, nothing at all when they are newer than their
+sources. Templates had cards too, their screenshots, until their preview
+pages were removed (a template opens in the customizer, one page for all of
+them, which cannot carry a card per template); the script clears
+`public/og/templates/` if an older build left it.
 
 ## The template gallery - a mixed order, pages, and the URL
 
@@ -1144,12 +1146,20 @@ not obvious from the diff:
   Export is the same dropdown as the desktop. The palettes are the first
   thirty (and the one in use) in a swipeable row, and "View all" opens
   `PaletteBrowser` in a fullscreen `Dialog`; the rail search is desktop only.
-- **The template preview has one action.** "Use this template" opens the
-  same menu for everyone (since the 14 October designs): "Free to customize
-  and download. No account needed.", then Customize (the newest saved site
-  for someone who saved one) and the two original downloads, plain links. The
-  bar's left edge is the Tabbied mark and "Websites", the way back to the
-  gallery.
+- **There is no template preview page any more** (2026-10-17). It had
+  one action, "Use this template", a menu of Customize and the two original
+  downloads; a template now opens straight in the customizer, from the
+  gallery and the homepage alike, and the customizer's Download menu holds
+  the original zips. The customizer's "Open in new tab" (in the canvas's
+  browser bar, and in the top row on a phone) shows the site alone, as it
+  stands. Its page was `app/templates/[slug]/`, and its address is a 404
+  now, with no redirect: few people will have kept it, and the gallery is
+  one click from anywhere. The license texts that named it as where a
+  template is got (the live pages' notice, `llms.txt`, each download's
+  `AGENTS.md` and `index.html` comment) name the customizer,
+  `/studio/customize/?slug=`, instead. The editable generator reads
+  template names from `out/studio-index.json`, which is where the page's
+  `tabbied:template-name` meta used to supply them.
 - **Popups are portaled, so they carry their own tokens.** The preview's
   menus and the customizer's are rendered under `<body>`, outside the page
   wrapper that declares `--s-*`; a `font:` or `background-color:` naming an
@@ -1267,9 +1277,10 @@ it honest:
   throws on a slug no template has or one with no screenshot, so the export
   fails before a card can lead somewhere else.
 - **The site in front of a slide is the template's screenshot**
-  (`public/template-shots`, above), a link to `/templates/<slug>/` like the
-  slide's arrow, and a reshoot reaches the homepage too. The first slide's
-  pictures load with the page; the rest are lazy.
+  (`public/template-shots`, above), a link into the customizer
+  (`/studio/customize/?slug=`) like the slide's arrow, and a reshoot reaches
+  the homepage too. The first slide's pictures load with the page; the rest
+  are lazy.
 - **The carousel's "Set in" chip is the face the template's h1 is set in**,
   and the demo toolbar's first pattern is a strip of the pattern its
   template wears, in its colors: both captured off the live page by
@@ -1293,7 +1304,7 @@ it honest:
   one design on every field; the template's own row puts each field's
   authored slug, seed and options back, which a plan can do without
   rebuilding the frame. The frame is `inert`, and a link laid over it (a
-  link may not hold an iframe) opens the template's preview.
+  link may not hold an iframe) opens the template in the customizer.
 
 Two faces load through `next/font` for this page alone (`homeFonts.ts`):
 the mono at 500 for the labels and the wordmark's serif at 500 for the line
@@ -1479,8 +1490,8 @@ Things worth not re-litigating:
 
 Since 14 October 2026 (Sy's note and the 14 October designs) every template
 is free to customize and download with no account: the gallery's cards open
-the customizer, the preview's "Use this template" menu is the same for
-everyone, and the only thing that asks for an account is Save. It replaced
+the customizer, its Download menu is the same for everyone, and the only
+thing that asks for an account is Save. It replaced
 the beta's five templates per account (choosing, the claim on download and
 on the first save, "Request more" in two rounds, the admin's grants); the
 founders framed it as an experiment to measure, so the admin overview counts
@@ -1501,7 +1512,13 @@ what it changes. Five things worth not re-litigating:
   project reads its result from, served and not logged. Until 2026-10-15 a
   customized React download counted as two downloads and none said it was
   customized. The overview shows the customized share and the week's ten
-  most downloaded templates.
+  most downloaded templates, and `/admin/downloads/` (`GET
+  /api/admin/downloads?period=7|30|90|all`) every template's: its downloads
+  split by guests (no account) and signed in, by HTML and React, how many
+  were customized, and when it last went out, with the site's totals, a
+  day-by-day chart and a CSV of the table. Templates with none in the period
+  are a toggle away, and a slug downloaded that the catalog no longer has is
+  listed as retired rather than dropped.
 - **The customizer's counts are a beacon, `POST /api/events`.** A closed list
   of kinds (`lib/events.ts`): `customize` (the customizer opened on a
   template), `save-gate` (a signed-out Save asked for an account) and
@@ -1560,7 +1577,7 @@ routes were deleted.
 
 The customizer is **not** part of this. `/studio/customize/?slug=` and
 `/studio/site/?id=` are the template customizer, they make no model call, and
-they stay reachable from the framed template preview and from the account.
+they stay reachable from the gallery, the homepage and the account.
 
 The rest of this section describes the flow as built, for when it comes back.
 
@@ -1768,8 +1785,9 @@ whatever text Studio wrote, so putting them back is a UI change.
   column's constraint and D1 cannot switch foreign keys off, and dropping a
   parent under enforced keys runs an implicit DELETE that would cascade every
   saved document away. `/studio/customize/?slug=` is the one door in: every
-  gallery card and the framed `/templates/<slug>/` preview's "Use this
-  template" lead to it, and it opens for anyone, signed in or not; only the
+  gallery card and every template the homepage shows lead to it, and the
+  license texts name it as where a template is got; it opens for anyone,
+  signed in or not; only the
   first Save asks for an account (the save gate, see "Free downloads"). The
   account's "Customize another template" leads to `/templates`, since a site
   starts from a template and the slug is the choice being made.
@@ -1786,6 +1804,18 @@ whatever text Studio wrote, so putting them back is a UI change.
   `POST /api/studio/sites/:id/revisions` with the whole document, validated
   by `planEdits` server-side with the catalog's slugs as `designs`; a swap to
   a design the catalog does not have is a 422, not a blank field.
+- **A field is changed beside the page, never over it** (2026-10-17). On the
+  Patterns tab a field's row scrolls the canvas to the top of that field
+  (`scrollToField` in `StudioSite`, below whatever header the page pins,
+  and back to it when a rebuild reloads the canvas), and its pencil does the
+  same and puts the pattern library in the rail in place of the list
+  (`DesignPicker`). It was a dialog over the page, which hid the field being
+  changed and drew every design in its own colors; each tile is now drawn
+  live in the colors the field wears (`fieldPalette`), over the page's
+  ground. A pick applies at once and the library stays open, so designs can
+  be tried in turn. 382 live tiles would be 382 css-doodles, so a tile draws
+  only while it is near the list's scrolled view and lets go when it leaves,
+  and the list scrolls in a window of its own in every layout.
 - **Colors is a list of palettes, not a row of pickers.** The rail offers the
   template's own palette and then all 437 in `lib/paletteLibrary.ts`; the
   pickers are still there, behind the pencil on a row (`PaletteDialog`), which
@@ -1949,11 +1979,11 @@ Ban or Unban, Remove. The same menu sits on a user's detail view and on
   `impersonatedBy` set) and lands on `/account/`; the admin tier then answers
   404 to it like to any member, so `AdminPage` shows "You are viewing as"
   with a way back instead of "Not found". Every page with a bar (SiteNav,
-  the customizer's, the template preview's) renders `ImpersonationNotice`,
+  the customizer's) renders `ImpersonationNotice`,
   a pill portaled to `<body>` and fixed, because the bars state their
   heights and the dark one's backdrop blur would become a fixed child's
-  containing block. The account menus (SiteNav, the customizer's, the
-  template preview's) head themselves "Viewing as" and put "Stop
+  containing block. The account menus (SiteNav's) head themselves
+  "Viewing as" and put "Stop
   impersonating" where "Log out" was: better-auth's sign-out ends the
   borrowed session and leaves the admin's own in a cookie nothing reads, so
   signing out there signed the admin out too. Stopping returns to the page

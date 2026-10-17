@@ -170,14 +170,21 @@ export function buildPreviewDocument(options: {
   /** Any edits document - a three-string rebrand or a full revision. */
   edits: EditsDocument;
   slug: string;
+  /**
+   * The site's origin, for a document opened at an address of its own (a
+   * `blob:` URL in a new tab) rather than in a srcdoc frame. A srcdoc
+   * document resolves a path-only <base> against its parent's; a blob: one
+   * cannot resolve it at all, and then nothing the page loads is found.
+   */
+  origin?: string;
 }): PreviewDocument {
-  const { html, spec, edits, slug } = options;
+  const { html, spec, edits, slug, origin = '' } = options;
   const parsed = new DOMParser().parseFromString(html, 'text/html');
   const head = parsed.head;
 
   // First child: a <base> only governs the references that follow it.
   const base = parsed.createElement('base');
-  base.setAttribute('href', packagedTemplateUrl(slug));
+  base.setAttribute('href', `${origin}${packagedTemplateUrl(slug)}`);
   head.insertBefore(base, head.firstChild);
 
   const problems = [

@@ -33,9 +33,9 @@ test.describe('Tabbied site', () => {
     const slide = page.getByRole('tabpanel', { name: /^1 of \d+: / });
     await expect(slide.getByRole('heading', { level: 2 })).toHaveText('Art & design');
     await expect(page.getByText('The world still runs on skilled hands.')).toBeVisible();
-    await expect(page.getByRole('link', { name: /^Preview Inkwell Tattoo, a tattoo studio template$/ })).toHaveAttribute(
+    await expect(page.getByRole('link', { name: /^Customize Inkwell Tattoo, a tattoo studio template$/ })).toHaveAttribute(
       'href',
-      '/templates/inkwell-tattoo/'
+      '/studio/customize/?slug=inkwell-tattoo'
     );
 
     // Patterns are second, a link away.
@@ -55,20 +55,21 @@ test.describe('Tabbied site', () => {
     // The designs drew fictional businesses, several of which were not
     // templates and some of which shared a name with another one
     // (components/main-page/homeShowcase.ts). Now every slide and the live
-    // demo name a template, and each link must open its preview.
+    // demo name a template, and each link opens it in the customizer.
     await page.goto('/');
 
-    const hrefs = new Set(
+    const slugs = new Set(
       await page
-        .locator('main a[href^="/templates/"]')
-        .evaluateAll((anchors) => anchors.map((a) => a.getAttribute('href')!))
+        .locator('main a[href^="/studio/customize/?slug="]')
+        .evaluateAll((anchors) => anchors.map((a) => new URL(a.getAttribute('href')!, 'https://x').searchParams.get('slug')!))
     );
-    const previews = [...hrefs].filter((href) => /^\/templates\/[a-z0-9-]+\/$/.test(href));
 
     // Nine slides and the demo, every slide in the page whichever is in front.
-    expect(previews.length).toBeGreaterThanOrEqual(10);
-    for (const href of previews) {
-      expect((await request.get(href)).status(), href).toBe(200);
+    expect(slugs.size).toBeGreaterThanOrEqual(10);
+    for (const slug of slugs) {
+      // The customizer opens a template by its packaged page and its spec.
+      expect((await request.get(`/downloads/${slug}/index.html`)).status(), slug).toBe(200);
+      expect((await request.get(`/editable/${slug}.json`)).status(), slug).toBe(200);
     }
 
     // The picture in a window is that template's own screenshot.
@@ -757,68 +758,29 @@ test.describe('Studio', () => {
   });
 });
 
-test.describe('Template preview and customize', () => {
-  test('a template is framed with one thing to do with it, free for everyone', async ({ page }) => {
-    // The frame loads the live template page, whose typekit and Google Fonts
-    // stylesheets can hang in a sandbox with no outbound network, and `load`
-    // would wait for them through the iframe. The bar is what is asserted.
-    await page.goto('/templates/verdant/', { waitUntil: 'domcontentloaded' });
+test.describe('Customizing a template', () => {
+  test('a template opens in the customizer; there is no preview page to pass through', async ({ page }) => {
+    // The framed preview at /templates/<slug>/ is gone from the export, with
+    // no redirect (worker/test/api.test.ts).
+    // Read off the disk: `serve` answers a folder with a listing of it.
+    const out = path.join(process.cwd(), 'out', 'templates', 'verdant');
+    expect(fs.existsSync(path.join(out, 'index.html'))).toBe(false);
+    expect(fs.existsSync(path.join(out, 'site', 'index.html'))).toBe(true);
 
-    await expect(page.locator('iframe')).toHaveAttribute('src', '/templates/verdant/site/');
-    // next/link writes the export's trailing slash.
-    await expect(page.getByRole('link', { name: 'All templates' })).toHaveAttribute('href', '/templates/');
+    await page.goto('/studio/customize/?slug=verdant');
+    await expect(page.getByRole('complementary', { name: 'Customize this site' })).toBeVisible({ timeout: 15000 });
 
-    // Signed out (no Worker behind the export), the one button opens the same
-    // menu anyone gets: no account needed, Customize, and both zips.
-    await page.getByRole('button', { name: 'Use this template' }).click();
+    // Download offers the original in both formats, with no account.
+    await page.getByRole('button', { name: 'Download' }).click();
     const menu = page.getByRole('menu');
-    await expect(menu.getByText('Free to customize and download. No account needed.')).toBeVisible();
-    await expect(menu.getByRole('menuitem', { name: /^Customize/ })).toHaveAttribute(
-      'href',
-      '/studio/customize/?slug=verdant'
-    );
-    await expect(menu.getByRole('menuitem', { name: /^Static HTML/ })).toHaveAttribute(
+    await expect(menu.getByText(/No account needed/)).toBeVisible();
+    await expect(menu.getByRole('menuitem', { name: 'Original Verdant, HTML & CSS' })).toHaveAttribute(
       'href',
       '/downloads/verdant-html.zip'
     );
-    await expect(menu.getByRole('menuitem', { name: /^React project/ })).toHaveAttribute(
+    await expect(menu.getByRole('menuitem', { name: 'Original Verdant, React project' })).toHaveAttribute(
       'href',
       '/downloads/verdant-react.zip'
-    );
-    await expect(page.getByText(/Sign in to use|Log in to use/)).toHaveCount(0);
-  });
-
-  test('signed in, Customize reopens the newest saved site on the template', async ({ page }) => {
-    await page.route('**/api/auth/get-session', (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          session: { id: 's', userId: 'u1', expiresAt: '2030-01-01T00:00:00Z' },
-          user: { id: 'u1', name: 'Pat', email: 'pat@example.com', emailVerified: true, role: null },
-        }),
-      })
-    );
-    await page.route('**/api/studio/sites', (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          sites: [
-            {
-              id: 'newest', slug: 'verdant', templateName: 'Verdant', title: 'Harbour Plants', stance: '',
-              palette: [], revisions: 2, createdAt: '2026-09-01T00:00:00Z', updatedAt: '2026-09-03T00:00:00Z',
-            },
-          ],
-        }),
-      })
-    );
-    await page.goto('/templates/verdant/', { waitUntil: 'domcontentloaded' });
-
-    await page.getByRole('button', { name: 'Use this template' }).click();
-    await expect(page.getByRole('menu').getByRole('menuitem', { name: /^Customize/ })).toHaveAttribute(
-      'href',
-      '/studio/site/?id=newest'
     );
   });
 
@@ -946,7 +908,7 @@ test.describe('Share cards and canonical URLs', () => {
     expect(await head(page, '/templates/verdant/site/')).toMatchObject({ canonical: null, image: null, card: null });
   });
 
-  test('patterns and templates share a 1200x630 card of their own', async ({ page, request }) => {
+  test('a pattern has a 1200x630 card of its own', async ({ page, request }) => {
     expect(await head(page, '/patterns/')).toMatchObject({
       canonical: 'https://tabbied.com/patterns/',
       image: 'https://tabbied.com/og.png',
@@ -956,12 +918,7 @@ test.describe('Share cards and canonical URLs', () => {
       image: 'https://tabbied.com/og/patterns/radius.jpg',
       card: 'summary_large_image',
     });
-    // The website itself, not the pattern under it.
-    expect(await head(page, '/templates/verdant/')).toMatchObject({
-      image: 'https://tabbied.com/og/templates/verdant.jpg',
-    });
-
-    for (const path of ['/og/patterns/radius.jpg', '/og/templates/verdant.jpg']) {
+    for (const path of ['/og/patterns/radius.jpg']) {
       const response = await request.get(path);
       expect(response.status(), path).toBe(200);
       const bytes = await response.body();

@@ -4,6 +4,7 @@ import { useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
+  Download,
   FlaskConical,
   Gauge,
   Images,
@@ -22,6 +23,7 @@ import { plexMono, plexSans } from 'lib/fonts';
 import { apiFetch } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';
 import { stopImpersonating } from 'lib/impersonation';
+import { cell, saveCsv } from './useAdminData';
 import styles from './admin.module.css';
 
 // The admin frame: a sidebar naming the sections, a topbar with the one
@@ -39,6 +41,7 @@ const LINKS: [href: string, label: string, Icon: LucideIcon, readOnly?: boolean]
   ['/admin/usage/', 'AI usage', Sparkles],
   ['/admin/generations/', 'Generations', WandSparkles],
   ['/admin/templates/', 'Templates', LayoutTemplate],
+  ['/admin/downloads/', 'Downloads', Download],
   ['/admin/uploads/', 'Uploads', Images],
   ['/admin/emails/', 'Email preview', MailOpen],
   ['/admin/quotas/', 'Quotas', Gauge, true],
@@ -56,19 +59,6 @@ type UserRow = {
   sites: number;
   generations: number;
   downloads: number;
-};
-
-/**
- * A CSV cell: quoted when it has to be, doubled quotes inside. Names and
- * addresses are what people typed, and a spreadsheet runs a cell that starts
- * like a formula (`=HYPERLINK(...)`, `@SUM`, `+cmd|...`) when the file is
- * opened; a leading apostrophe is how every spreadsheet is told "text". A
- * carriage return breaks a row as surely as a newline, so it quotes too.
- */
-const cell = (value: unknown) => {
-  const raw = value === null || value === undefined ? '' : String(value);
-  const text = /^[=+\-@\t\r]/.test(raw) ? `'${raw}` : raw;
-  return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
 };
 
 /** The most the directory answers in one call; the file says when it hit it. */
@@ -99,17 +89,10 @@ async function exportUsers() {
       .map(cell)
       .join(',')
   );
-  const blob = new Blob([[header.join(','), ...lines].join('\n')], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement('a');
-  anchor.href = url;
   // A directory past the page size is a partial file, and the name says so
   // rather than leaving it to be discovered against the users page's count.
   const scope = users.length >= EXPORT_PAGE ? `-first-${EXPORT_PAGE}` : '';
-  anchor.download = `tabbied-users-${new Date().toISOString().slice(0, 10)}${scope}.csv`;
-  anchor.click();
-  // Revoking synchronously has cancelled the download in Safari.
-  setTimeout(() => URL.revokeObjectURL(url), 10_000);
+  saveCsv(`tabbied-users-${new Date().toISOString().slice(0, 10)}${scope}.csv`, [header.join(','), ...lines]);
 }
 
 export default function AdminPage({

@@ -1,6 +1,8 @@
 'use client';
 
-// The customizer's top row, over the canvas: the way back, and Download. The
+// The customizer's top row, over the canvas: the way back, and Download (and,
+// on a phone, where the canvas has no browser bar of its own, the button that
+// opens the site in a new tab). The
 // 14 October design dropped the dark bar the customizer had, with the
 // account menu that was in it: the customizer is reached without an
 // account, so it leads back to where it was opened from and offers nothing
@@ -15,6 +17,7 @@
 // JSX.
 import Link from 'next/link';
 import { Menu } from '@base-ui/react/menu';
+import { ExternalLink } from 'lucide-react';
 import ImpersonationNotice from 'components/nav/ImpersonationNotice';
 import styles from './CustomizerBar.module.css';
 
@@ -43,6 +46,7 @@ export default function CustomizerBar({
   colors,
   unsaved,
   editedAt,
+  onOpenInNewTab,
 }: {
   /** The viewer owns the site: the way back is the account. */
   mine: boolean;
@@ -63,6 +67,8 @@ export default function CustomizerBar({
   unsaved: boolean;
   /** When the latest revision was saved, or null for a site not saved yet. */
   editedAt: string | Date | null;
+  /** Open the site as it stands in a tab of its own. Shown here on a phone only. */
+  onOpenInNewTab: () => void;
 }) {
   const back =
     mine && !template
@@ -91,6 +97,15 @@ export default function CustomizerBar({
       </Link>
 
       <div className={styles.actions}>
+        <button
+          type="button"
+          className={styles.openTab}
+          title="Open in new tab"
+          aria-label="Open in new tab"
+          onClick={onOpenInNewTab}
+        >
+          <ExternalLink size={17} strokeWidth={1.8} aria-hidden="true" />
+        </button>
         <Menu.Root>
           <Menu.Trigger
             className={styles.download}

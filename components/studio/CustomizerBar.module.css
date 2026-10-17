@@ -65,7 +65,29 @@
   opacity: 0.7;
 }
 
+/* The canvas's browser bar holds this on a wider screen; on a phone that bar
+   is hidden, so the button is here. */
+.openTab {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  /* The phone's icon-only Download beside it: 16px and 8px either side. */
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--s-ink);
+  background: #fff;
+  border: 1px solid oklch(0 0 0 / 0.14);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.openTab:hover {
+  background-color: oklch(0 0 0 / 0.04);
+}
+
 .back:focus-visible,
+.openTab:focus-visible,
 .download:focus-visible {
   outline: 2px solid var(--blue-medium, #3b82f6);
   outline-offset: 2px;
@@ -250,6 +272,10 @@
 
   .downloadLabel {
     display: none;
+  }
+
+  .openTab {
+    display: flex;
   }
 }
 
