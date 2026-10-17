@@ -108,21 +108,49 @@ function pinnedTop(doc: Document, view: Window, field: Element): number {
 }
 
 /**
- * Scroll the canvas so a pattern field's top is at the top of the frame. The
- * slot id may sit on several elements (a field drawn in two places, or one a
- * phone layout hides): the first that is laid out is the one shown.
+ * A pattern field as the canvas draws it. The slot id may sit on several
+ * elements (a field drawn in two places, or one a phone layout hides): the
+ * first that is laid out is the one meant.
  */
-function scrollToField(frame: HTMLIFrameElement | null, slot: PatternSlot, smooth: boolean): void {
+function fieldOnCanvas(frame: HTMLIFrameElement | null, slot: PatternSlot) {
   const doc = frame?.contentDocument;
   const view = frame?.contentWindow;
-  if (!doc || !view) return;
+  if (!doc || !view) return null;
 
-  const hosts = [...doc.querySelectorAll(selectorForSlot(slot))];
-  const field = hosts.find((host) => {
+  const field = [...doc.querySelectorAll(selectorForSlot(slot))].find((host) => {
     const box = host.getBoundingClientRect();
     return box.width > 0 && box.height > 0;
   });
-  if (!field) return;
+
+  return field ? { doc, view, field } : null;
+}
+
+/** A computed color with no alpha left in it: what `transparent` computes to. */
+const CLEAR = /^transparent$|^rgba\(.*,\s*0\)$|\/\s*0\)$/;
+
+/**
+ * The color a field is drawn over: its own, or the first ancestor's that
+ * paints one. A field whose ground is transparent shows the section behind
+ * it, which need not be the page's ground (a panel, a band).
+ */
+function groundOf(frame: HTMLIFrameElement | null, slot: PatternSlot): string | null {
+  const found = fieldOnCanvas(frame, slot);
+  if (!found) return null;
+
+  for (let element: Element | null = found.field; element; element = element.parentElement) {
+    const color = found.view.getComputedStyle(element).backgroundColor;
+    if (color && !CLEAR.test(color.trim())) return color;
+  }
+
+  return null;
+}
+
+/** Scroll the canvas so a pattern field's top is at the top of the frame. */
+function scrollToField(frame: HTMLIFrameElement | null, slot: PatternSlot, smooth: boolean): void {
+  const found = fieldOnCanvas(frame, slot);
+  if (!found) return;
+
+  const { doc, view, field } = found;
 
   const top = field.getBoundingClientRect().top + view.scrollY - pinnedTop(doc, view, field);
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -735,6 +763,7 @@ export default function StudioSite({
               onFieldDesign={setFieldDesign}
               onResetField={resetFieldDesign}
               onShowField={showField}
+              fieldGround={(slot) => groundOf(frameRef.current, slot)}
               patternsChanged={fieldsChanged}
               shuffling={shuffling}
               onShuffle={shuffle}

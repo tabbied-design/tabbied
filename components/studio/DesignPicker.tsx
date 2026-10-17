@@ -93,7 +93,7 @@ export default function DesignPicker({
   authored: string;
   /** The colors the field wears on the page, ground first. */
   palette: readonly string[] | undefined;
-  /** The page's ground, behind a field whose own is transparent. */
+  /** What the field sits on in the page, behind a field whose own ground is transparent. */
   ground: string;
   onPick: (slug: string) => void;
   /** Back to the page's list of fields. */

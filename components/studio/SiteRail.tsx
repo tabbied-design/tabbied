@@ -73,6 +73,7 @@ export default function SiteRail({
   onFieldDesign,
   onResetField,
   onShowField,
+  fieldGround,
   patternsChanged,
   shuffling,
   onShuffle,
@@ -106,6 +107,8 @@ export default function SiteRail({
   onResetField: (slot: PatternSlot) => void;
   /** Bring one field into view on the canvas. */
   onShowField: (slot: PatternSlot) => void;
+  /** The color a field sits on, read off the canvas, or null if unknown. */
+  fieldGround: (slot: PatternSlot) => string | null;
   patternsChanged: boolean;
   shuffling: boolean;
   onShuffle: () => void;
@@ -122,6 +125,8 @@ export default function SiteRail({
   const [picking, setPicking] = useState<PatternSlot | null>(null);
   /** The field the picker was last open on, to hand focus back to its row. */
   const pickedLast = useRef<string | null>(null);
+  /** What the field being changed sits on, for the library's tiles. */
+  const [pickGround, setPickGround] = useState<string | null>(null);
 
   const choices = useMemo(
     () => paletteChoices(templateName, spec.palette.colors),
@@ -176,6 +181,9 @@ export default function SiteRail({
 
   const pick = (slot: PatternSlot) => {
     onShowField(slot);
+    // Read once, as the picker opens: the colors cannot change while it is
+    // open, since they are on the other tab.
+    setPickGround(fieldGround(slot));
     setPicking(slot);
   };
 
@@ -322,7 +330,7 @@ export default function SiteRail({
               current={designOn(picking)}
               authored={picking.config.slug}
               palette={fieldPalette(picking)}
-              ground={palette[0] ?? 'transparent'}
+              ground={pickGround ?? palette[0] ?? 'transparent'}
               onPick={(slug) => onFieldDesign(picking, slug)}
               onBack={() => setPicking(null)}
             />

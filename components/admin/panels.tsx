@@ -758,7 +758,9 @@ function downloadDays(rows: Downloads['byDay'], count: number) {
 function DownloadChart({ data }: { data: Downloads }) {
   const days = downloadDays(data.byDay, data.chartDays);
   const peak = Math.max(1, ...days.map((entry) => entry.guests + entry.signedIn));
-  // A label every few bars, so a month or a quarter still reads.
+  // Past a fortnight the bars close up and only every few carry a label, so
+  // a month or a quarter still reads.
+  const dense = days.length > 14;
   const every = Math.ceil(days.length / 15);
 
   return (
@@ -782,7 +784,7 @@ function DownloadChart({ data }: { data: Downloads }) {
         </ul>
       </div>
       <div
-        className={`${styles.bars} ${days.length > 30 ? styles.barsDense : ''}`}
+        className={`${styles.bars} ${dense ? styles.barsDense : ''}`}
         role="img"
         aria-label={`Downloads per day: ${days
           .filter((entry) => entry.guests + entry.signedIn > 0)
@@ -806,7 +808,7 @@ function DownloadChart({ data }: { data: Downloads }) {
           );
         })}
       </div>
-      <div className={`${styles.barLabels} ${days.length > 30 ? styles.barsDense : ''}`} aria-hidden="true">
+      <div className={`${styles.barLabels} ${dense ? styles.barsDense : ''}`} aria-hidden="true">
         {days.map((entry, index) => (
           <span key={entry.key} className={styles.barLabel}>
             {index > 0 ? ' ' : ''}

@@ -579,7 +579,8 @@
   min-height: 1px;
 }
 
-/* A month or a quarter of bars: closer together, and narrower corners. */
+/* More than a fortnight of bars: closer together, narrower corners, and a
+   label (on every few) allowed past its own bar. */
 .barsDense {
   gap: 3px;
 }

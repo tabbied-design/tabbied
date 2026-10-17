@@ -247,11 +247,11 @@ and it changed no behavior: same MCP handler, same statelessness, same
 JSON 404); auth, generations, media, and the AI gateway land with the bindings
 they need. See `agent-outputs/20260827-studio-ai-plan.md`.
 
-The export is inside the platform limits - roughly 18,600 files against a
+The export is inside the platform limits - roughly 16,400 files against a
 ceiling of 20,000 per Worker version on Workers Free (100,000 on Workers Paid,
 with wrangler 4.34 or later), largest file 3.0 MB against 25 MiB - but both
 are counted per Worker *version*, and on the free plan the headroom is now
-about 1,400 files. Every pattern costs seven: its page and four RSC payloads,
+about 3,600 files. Every pattern costs seven: its page and four RSC payloads,
 its preview and its share card, so batch 14's 44 designs added about 300 (all
 300 it was written with would have added about 2,100). A template site with
 no pictures costs about 27: its page with its RSC payloads, the two zips
