@@ -13,21 +13,21 @@ import Link from 'next/link';
 import useMediaQuery from 'lib/useMediaQuery';
 import BrowserBar from './MockBrowser';
 import GalleryLink from './GalleryLink';
-import type { SlideCategory, SlideView } from './homeShowcase';
-import t from './HomePage.module.css';
-import styles from './SkilledHands.module.css';
+import type { SlideView } from './homeShowcase';
+import styles from './HomeHero.module.css';
 
-// "The world still runs on skilled hands": a carousel of trades, each slide a
-// photograph of the work with a real template for it in front, filtered by
-// the chips above it, which are the gallery's own categories.
+// The homepage's hero (the 15 October design): the pitch and the way into the
+// gallery, then a carousel of trades on the hero's ink, each slide a
+// photograph of the work with a real template for it in front. Under it, "The
+// world still runs on skilled hands." beside the dots and the pause button.
 //
 // It advances on its own every SLIDE_SECONDS, and the clock is the active
 // dot's fill: a CSS animation whose end steps the carousel. So the dot shows
 // exactly how long is left, pausing is `animation-play-state`, and under
 // reduced motion the stylesheet removes the animation, which removes the
 // autoplay with it (the pause button goes too, having nothing to pause). It
-// also holds still while the section is off screen, under a mouse, while it
-// is being dragged, and while it has keyboard focus.
+// also holds still while the hero is off screen, while a mouse rests on the
+// slides, while it is being dragged, and while it has keyboard focus.
 //
 // A slide is dragged or swiped sideways; the dots are a tab list (one tab
 // stop, arrow keys between them), and the slide's arrow, like the site in
@@ -40,20 +40,9 @@ const DRAG_DISTANCE = 60;
 const FLICK_DISTANCE = 20;
 const FLICK_SPEED = 0.5;
 
-type Category = 'All' | SlideCategory['name'];
-
 type Drag = { x: number; y: number; time: number; id: number; axis: 'x' | 'y' | null };
 
-export default function SkilledHands({
-  templateCount,
-  slides: allSlides,
-  categories,
-}: {
-  templateCount: number;
-  slides: SlideView[];
-  categories: SlideCategory[];
-}) {
-  const [category, setCategory] = useState<Category>('All');
+export default function HomeHero({ templateCount, slides }: { templateCount: number; slides: SlideView[] }) {
   const [index, setIndex] = useState(0);
   const [userPaused, setUserPaused] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -69,8 +58,6 @@ export default function SkilledHands({
   // slide or follow its link.
   const movedRef = useRef(false);
 
-  const slides = category === 'All' ? allSlides : allSlides.filter((slide) => slide.category === category);
-  const chosen = categories.find((entry) => entry.name === category);
   const count = slides.length;
   const current = Math.min(index, count - 1);
   const autoplay = !reduced;
@@ -94,11 +81,6 @@ export default function SkilledHands({
   const go = (next: number) => setIndex(Math.max(0, Math.min(count - 1, next)));
 
   const advance = () => setIndex((i) => (Math.min(i, count - 1) + 1) % count);
-
-  const choose = (next: Category) => {
-    setCategory(next);
-    setIndex(0);
-  };
 
   // -- Dragging ---------------------------------------------------------------
 
@@ -163,8 +145,9 @@ export default function SkilledHands({
 
   // -- Pausing ----------------------------------------------------------------
 
-  // A pointer resting on the section holds it: the mouse only, since a tap
-  // fires enter with no leave to follow.
+  // A pointer resting on the slides holds them: the mouse only, since a tap
+  // fires enter with no leave to follow. Not the whole hero, or reading the
+  // headline would stop the carousel.
   const onPointerEnter = (event: PointerEvent<HTMLElement>) => {
     if (event.pointerType === 'mouse') setHovered(true);
   };
@@ -173,8 +156,8 @@ export default function SkilledHands({
     if (event.pointerType === 'mouse') setHovered(false);
   };
 
-  // Keyboard focus holds it too; focus left by a click on a chip does not,
-  // or one click would stop the carousel until the next click elsewhere.
+  // Keyboard focus holds it too; focus left by a click on a dot does not, or
+  // one click would stop the carousel until the next click elsewhere.
   const onFocus = (event: FocusEvent<HTMLElement>) => {
     if ((event.target as Element).matches(':focus-visible')) setFocused(true);
   };
@@ -208,42 +191,19 @@ export default function SkilledHands({
   return (
     <section
       ref={sectionRef}
-      className={styles.section}
-      aria-labelledby="skilled-hands-title"
-      onPointerEnter={onPointerEnter}
-      onPointerLeave={onPointerLeave}
+      className={styles.hero}
+      aria-labelledby="home-hero-title"
       onFocus={onFocus}
       onBlur={onBlur}
     >
       <div className={styles.head}>
-        <h2 id="skilled-hands-title" className={`${t.title} ${styles.title}`}>
-          The world still runs on skilled hands.
-        </h2>
-        <p className={`${t.lede} ${styles.lede}`}>
-          Start the business you've been thinking about, with a website as well made as your work.
-        </p>
-        <div className={styles.filters}>
-          {(['All', ...categories.map((entry) => entry.name)] as Category[]).map((name) => (
-            <button
-              key={name}
-              type="button"
-              className={styles.filter}
-              aria-pressed={name === category}
-              onClick={() => choose(name)}
-            >
-              {name}
-            </button>
-          ))}
-          {/* The chip's own category in the gallery, or the whole of it. */}
-          <GalleryLink
-            href={chosen ? `/templates/?category=${chosen.slug}` : '/templates'}
-            className={styles.browseAll}
-          >
-            <span>
-              {chosen ? `Browse all ${chosen.count} in ${chosen.name}` : `Browse all ${templateCount}`} &#x2192;
-            </span>
-          </GalleryLink>
-        </div>
+        <h1 id="home-hero-title" className={styles.title}>
+          Free website templates for <span className={styles.keep}>every trade.</span>
+        </h1>
+        <GalleryLink href="/templates" className={styles.cta}>
+          Pick your template
+        </GalleryLink>
+        <p className={styles.note}>{templateCount} free templates, patterns included.</p>
       </div>
 
       <div
@@ -252,6 +212,8 @@ export default function SkilledHands({
         aria-roledescription="carousel"
         aria-label="Templates for skilled trades"
         data-dragging={dragX !== null ? '' : undefined}
+        onPointerEnter={onPointerEnter}
+        onPointerLeave={onPointerLeave}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerEnd}
@@ -267,11 +229,13 @@ export default function SkilledHands({
         <div className={styles.track} style={trackStyle}>
           {slides.map((slide, k) => {
             const on = k === current;
+            // The first slide is in the first screen; the rest wait their turn.
+            const loading = k === 0 ? 'eager' : 'lazy';
 
             return (
               <div
                 key={slide.slug}
-                id={`skilled-slide-${k}`}
+                id={`home-slide-${k}`}
                 className={styles.slide}
                 role="tabpanel"
                 aria-roledescription="slide"
@@ -288,14 +252,14 @@ export default function SkilledHands({
                   width={1600}
                   height={900}
                   alt=""
-                  loading="lazy"
+                  loading={loading}
+                  fetchPriority={k === 0 ? 'high' : undefined}
                   decoding="async"
                   draggable={false}
                 />
                 <div className={styles.shade} />
                 <div className={styles.caption}>
-                  <div className={styles.category}>{slide.category}</div>
-                  <h3 className={styles.name}>{slide.name}</h3>
+                  <h2 className={styles.trade}>{slide.trade}</h2>
                   <p className={styles.description}>{slide.description}</p>
                 </div>
 
@@ -322,7 +286,7 @@ export default function SkilledHands({
                     width={960}
                     height={720}
                     alt=""
-                    loading="lazy"
+                    loading={loading}
                     decoding="async"
                     draggable={false}
                   />
@@ -358,54 +322,56 @@ export default function SkilledHands({
       </div>
 
       <div className={styles.controls}>
-        <span />
-        <div className={styles.dots} role="tablist" aria-label="Slides" onKeyDown={onDotsKey}>
-          {slides.map((slide, k) => {
-            const on = k === current;
+        <p className={styles.tagline}>The world still runs on skilled hands.</p>
+        <div className={styles.buttons}>
+          <div className={styles.dots} role="tablist" aria-label="Slides" onKeyDown={onDotsKey}>
+            {slides.map((slide, k) => {
+              const on = k === current;
 
-            return (
-              <button
-                key={slide.slug}
-                ref={(element) => {
-                  dotRefs.current[k] = element;
-                }}
-                type="button"
-                role="tab"
-                className={styles.dot}
-                aria-selected={on}
-                aria-controls={`skilled-slide-${k}`}
-                aria-label={slide.name}
-                tabIndex={on ? 0 : -1}
-                onClick={() => go(k)}
-              >
-                <span className={styles.dotMark}>
-                  {on ? (
-                    <span
-                      // A new key per slide (and per filter) restarts the fill.
-                      key={`${category}-${k}`}
-                      className={styles.fill}
-                      style={{
-                        animationDuration: `${SLIDE_SECONDS}s`,
-                        animationPlayState: running ? 'running' : 'paused',
-                      }}
-                      onAnimationEnd={advance}
-                    />
-                  ) : null}
-                </span>
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={slide.slug}
+                  ref={(element) => {
+                    dotRefs.current[k] = element;
+                  }}
+                  type="button"
+                  role="tab"
+                  className={styles.dot}
+                  aria-selected={on}
+                  aria-controls={`home-slide-${k}`}
+                  aria-label={slide.name}
+                  tabIndex={on ? 0 : -1}
+                  onClick={() => go(k)}
+                >
+                  <span className={styles.dotMark}>
+                    {on ? (
+                      <span
+                        // A new key per slide restarts the fill.
+                        key={k}
+                        className={styles.fill}
+                        style={{
+                          animationDuration: `${SLIDE_SECONDS}s`,
+                          animationPlayState: running ? 'running' : 'paused',
+                        }}
+                        onAnimationEnd={advance}
+                      />
+                    ) : null}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          {autoplay ? (
+            <button
+              type="button"
+              className={styles.play}
+              aria-label={userPaused ? 'Play carousel' : 'Pause carousel'}
+              onClick={() => setUserPaused((paused) => !paused)}
+            >
+              {userPaused ? <span className={styles.playIcon} /> : <span className={styles.pauseIcon} />}
+            </button>
+          ) : null}
         </div>
-        {autoplay ? (
-          <button
-            type="button"
-            className={styles.play}
-            aria-label={userPaused ? 'Play carousel' : 'Pause carousel'}
-            onClick={() => setUserPaused((paused) => !paused)}
-          >
-            {userPaused ? <span className={styles.playIcon} /> : <span className={styles.pauseIcon} />}
-          </button>
-        ) : null}
       </div>
     </section>
   );

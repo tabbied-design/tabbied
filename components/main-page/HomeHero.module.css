@@ -1,10 +1,12 @@
-/* The skilled-trades carousel: centered heading and chips, a full-width
-   viewport with one slide centered and its neighbors dimmed either side, and
-   the dots and the pause button under it. */
+/* The hero: the headline, its button and a note, centered on the page's
+   ink, then a full-width viewport with one slide centered and its neighbors
+   dimmed either side, and the tagline, the dots and the pause button under
+   it. */
 
-.section {
-  padding: 144px 0 112px;
-  background-color: #ffffff;
+.hero {
+  padding: 72px 0 88px;
+  background-color: #0e0e13;
+  color: #ffffff;
 }
 
 .head {
@@ -15,61 +17,50 @@
 .title {
   max-width: 1000px;
   margin: 0 auto;
-}
-
-.lede {
-  max-width: 760px;
-  margin: 18px auto 0;
+  font: 700 72px / 1.02 var(--hp-display);
+  letter-spacing: -0.04em;
   text-wrap: balance;
 }
 
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 36px;
-}
-
-.filter {
-  padding: 12px 22px;
-  border: none;
-  border-radius: 999px;
-  background-color: transparent;
-  color: var(--hp-ink);
-  font: 400 16px var(--hp-sans);
+/* "every trade." never breaks, so the line ends on the whole phrase. */
+.keep {
   white-space: nowrap;
-  cursor: pointer;
 }
 
-.filter[aria-pressed='true'] {
-  background-color: #ededed;
-}
-
-.browseAll {
+.cta {
   display: inline-flex;
   align-items: center;
-  padding: 12px 8px 12px 18px;
+  margin-top: 40px;
+  padding: 16px 30px;
+  border-radius: 999px;
+  background-color: #ffffff;
   color: var(--hp-ink);
   font: 500 16px var(--hp-sans);
   white-space: nowrap;
-  transition: color 150ms ease;
+  transition: background-color 150ms ease;
 }
 
-.browseAll span {
-  padding-bottom: 2px;
-  border-bottom: 1px solid currentColor;
+.cta:hover {
+  background-color: #e3e5fb;
+  color: var(--hp-ink);
 }
 
-.browseAll:hover {
-  color: var(--hp-link-hover);
+.cta:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
+.note {
+  margin-top: 20px;
+  font: 400 15px var(--hp-sans);
+  color: oklch(0.78 0.01 260);
 }
 
 /* -- The track -------------------------------------------------------------- */
 
 .viewport {
   position: relative;
-  margin-top: 48px;
+  margin-top: 56px;
   overflow: hidden;
   /* Vertical swipes still scroll the page; sideways ones are ours. */
   touch-action: pan-y;
@@ -138,17 +129,9 @@
   padding: 40px 44px 0;
 }
 
-.category {
-  font: 500 12px var(--hp-mono-medium);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: oklch(1 0 0 / 0.78);
-}
-
-.name {
-  margin-top: 12px;
-  font: 700 36px / 1.1 var(--hp-display);
-  letter-spacing: -0.02em;
+.trade {
+  font: 700 40px / 1.08 var(--hp-display);
+  letter-spacing: -0.025em;
 }
 
 .description {
@@ -245,15 +228,29 @@
   color: var(--hp-link-hover);
 }
 
-/* -- The dots and the pause button ------------------------------------------ */
+/* -- The tagline, the dots and the pause button ----------------------------- */
 
 .controls {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
   align-items: center;
   max-width: min(78vw, 1120px);
   margin: 28px auto 0;
+}
+
+/* The wordmark's serif, at 500, from a family holding only that face
+   (homeFonts.ts). */
+.tagline {
+  font: 500 22px / 1.25 var(--font-home-serif-medium), 'EB Garamond', Georgia, serif;
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .dots {
@@ -287,12 +284,12 @@
   height: 6px;
   overflow: hidden;
   border-radius: 99px;
-  background-color: oklch(0 0 0 / 0.22);
+  background-color: oklch(1 0 0 / 0.32);
 }
 
 .dot[aria-selected='true'] .dotMark {
   width: 32px;
-  background-color: oklch(0 0 0 / 0.16);
+  background-color: oklch(1 0 0 / 0.2);
 }
 
 /* The autoplay clock: the slide advances when this has filled. */
@@ -300,7 +297,7 @@
   position: absolute;
   inset: 0;
   border-radius: 99px;
-  background-color: var(--hp-ink);
+  background-color: #ffffff;
   transform-origin: left center;
   animation-name: fill;
   animation-timing-function: linear;
@@ -318,41 +315,39 @@
 }
 
 .play {
-  justify-self: end;
   display: flex;
+  flex: none;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 32px;
+  height: 32px;
   padding: 0;
-  border: 1px solid oklch(0 0 0 / 0.15);
+  border: 1px solid oklch(1 0 0 / 0.24);
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: transparent;
   cursor: pointer;
   transition: border-color 150ms ease;
 }
 
 .play:hover {
-  border-color: oklch(0 0 0 / 0.35);
+  border-color: oklch(1 0 0 / 0.55);
 }
 
 .pauseIcon {
-  width: 12px;
-  height: 14px;
-  background: linear-gradient(90deg, var(--hp-ink) 0 4px, transparent 4px 8px, var(--hp-ink) 8px 12px);
+  width: 9px;
+  height: 10px;
+  background: linear-gradient(90deg, #ffffff 0 3px, transparent 3px 6px, #ffffff 6px 9px);
 }
 
 .playIcon {
   width: 0;
   height: 0;
-  margin-left: 3px;
+  margin-left: 2px;
   border-style: solid;
-  border-width: 8px 0 8px 13px;
-  border-color: transparent transparent transparent var(--hp-ink);
+  border-width: 5px 0 5px 8px;
+  border-color: transparent transparent transparent #ffffff;
 }
 
-.filter:focus-visible,
-.browseAll:focus-visible,
 .open:focus-visible,
 .dot:focus-visible,
 .play:focus-visible {
@@ -360,7 +355,6 @@
   outline-offset: 2px;
 }
 
-.filter:focus-visible,
 .dot:focus-visible {
   border-radius: 999px;
 }
@@ -382,7 +376,48 @@
   }
 }
 
+@media (max-width: 1000px) {
+  .title {
+    font-size: 52px;
+  }
+}
+
+/* The tagline over the dots, once the two no longer fit a row. */
+@media (max-width: 760px) {
+  .controls {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .tagline {
+    font-size: 20px;
+  }
+}
+
+/* A phone: everything closer together, so the first slide is on the
+   first screen. */
 @media (max-width: 700px) {
+  .hero {
+    padding: 28px 0 44px;
+  }
+
+  .title {
+    font-size: 42px;
+  }
+
+  .cta {
+    margin-top: 22px;
+  }
+
+  .note {
+    margin-top: 12px;
+    font-size: 14px;
+  }
+
+  .viewport {
+    margin-top: 28px;
+  }
+
   .slide {
     aspect-ratio: 4 / 5;
   }
@@ -394,14 +429,14 @@
   }
 
   .controls {
-    padding: 0 var(--hp-pad);
+    margin-top: 18px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .track,
   .slide,
-  .browseAll,
+  .cta,
   .open,
   .play {
     transition: none;

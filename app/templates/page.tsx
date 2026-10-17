@@ -81,8 +81,12 @@ export default function TemplatesGallery() {
       <main>
         <TemplatesGrid
           cards={cards}
-          title="A website for every trade, free"
-          lede="Starting out as a florist, barber, baker, electrician, dog groomer or landscaper? Find a template made for your line of work, match it to your colors, and download it."
+          title={
+            <>
+              Find your free <span className={s.keep}>website template.</span>
+            </>
+          }
+          lede="Pick a template for your trade, match it to your colors, and download it."
         />
       </main>
 

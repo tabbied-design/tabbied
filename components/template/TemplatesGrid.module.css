@@ -31,7 +31,9 @@
   max-width: 900px;
   margin: 0 auto;
   font: 700 84px / 1.02 var(--h-display);
-  color: var(--h-fg);
+  /* Full white, a step brighter than the shell's text (the 15 October
+     design). */
+  color: #ffffff;
   letter-spacing: -0.025em;
   text-wrap: balance;
 }
@@ -129,26 +131,48 @@
   padding: 44px var(--h-pad) 120px;
 }
 
+/* A phone: the hero set flush left and drawn closer together, and the grid
+   pulled up under it, so the first cards are on the first screen. */
 @media (max-width: 767.98px) {
-  .heroInner {
-    padding-right: 24px;
-    padding-left: 24px;
+  .hero {
+    text-align: left;
   }
 
-  /* The intro keeps its size on a phone; only the headline steps down. */
+  .heroInner {
+    padding: 28px 20px 20px;
+  }
+
   .hero h1 {
-    font-size: 52px;
+    max-width: none;
+    margin: 0;
+    font-size: 40px;
     line-height: 1.05;
+    text-wrap: pretty;
+  }
+
+  .hero p {
+    max-width: none;
+    margin: 14px 0 0;
+    font-size: 16px;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+
+  .search {
+    margin-top: 22px;
   }
 
   .search input {
-    height: 56px;
+    height: 52px;
     font-size: 16px;
   }
 
   .wrap {
-    padding-right: 24px;
-    padding-left: 24px;
+    padding: 8px 24px 64px;
+  }
+
+  .filterWrap {
+    margin-bottom: 20px;
   }
 }
 
@@ -247,6 +271,7 @@
 @media (max-width: 768px) {
   .grid {
     grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
   }
 }
 

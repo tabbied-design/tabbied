@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent, type ReactNode } from 'react';
 import { Search, X } from 'lucide-react';
 import type { PatternDefinition } from 'tabbied';
 import {
@@ -162,7 +162,7 @@ export default function TemplatesGrid({
   lede,
 }: {
   cards: TemplateCard[];
-  title: string;
+  title: ReactNode;
   lede: string;
 }) {
   // The filter and page live in the URL, so a view can be shared, reloaded

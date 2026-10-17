@@ -1,6 +1,5 @@
-/* The browser bar of a mockup. Its defaults are the large mockups' (the hero's
-   front window and the carousel's); a smaller window overrides the
-   properties, never the rules. */
+/* The browser bar of a mockup. Its defaults are the hero carousel's; another
+   window (the demo's) overrides the properties, never the rules. */
 
 .bar {
   display: flex;

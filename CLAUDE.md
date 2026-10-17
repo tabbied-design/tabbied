@@ -923,9 +923,11 @@ newer than their sources. A template with no shot uses its pattern's card.
 `/templates` shows 48 cards a page (whole rows at three, two or one
 columns, so the last row is never cut short), in the order `GALLERY_ORDER`
 in `lib/templateOrder.ts` commits, with the category, the page and the search
-in the query string (`?category=food-and-drink&page=2&q=bakery`). Since the 14
-October designs the hero is "A website for every trade, free" with the search
-box in it, and a card is one link, straight into the customizer (or onto the
+in the query string (`?category=food-and-drink&page=2&q=bakery`). Since the 15
+October design the hero is "Find your free website template." (in full white,
+a step brighter than the shell's text) with the search box in it, flush left
+and drawn closer together on a phone so the first cards reach the first
+screen, and a card is one link, straight into the customizer (or onto the
 person's newest saved site on that template), with the screenshot kept as
 the thumbnail. Five things worth not re-litigating:
 
@@ -1234,16 +1236,20 @@ not re-litigating:
 ## The homepage - templates first, its own shell, and a hydration rule
 
 Since the 14 October designs (Sy's note: make website templates the hero and
-patterns secondary) the homepage leads with templates: a dark hero
-("Websites with personality.") with two windows onto templates that change
-with a row of trade tabs along its foot, a carousel of trades ("The world
-still runs on skilled hands."), a template recolored from a toolbar ("Any
-template. Entirely your own."), then patterns ("Good patterns go beyond
-websites."), the developers, the questions and a last way in, over the light
-footer. It is built from one component per section in
-`components/main-page/` (`TradesHero`, `SkilledHands`, `MakeItYours`,
-`BeyondWebsites`, `ForDevelopers`, `HomeFaq`, `HomeCta`), reading
-`HomePage.module.css`'s tokens.
+patterns secondary) the homepage leads with templates, and since the 15
+October one the carousel of trades is the hero: "Free website templates for
+every trade." over "Pick your template" on the dark ground, the slides under
+it (a trade and who it is for, a photograph of the work, a real template in
+front), and "The world still runs on skilled hands." beside the dots. Then
+a template recolored from a toolbar ("Make any template your own."),
+patterns ("Good patterns go beyond websites."), the developers, the
+questions and a last way in, over the light footer. The two windows and the
+row of trade tabs the hero had before are gone, and so are the carousel's
+category chips. Below 700px every section is drawn closer together (64px
+above and below, the hero 28px and 44px), so more of each shows on a phone.
+It is built from one component per section in `components/main-page/`
+(`HomeHero`, `MakeItYours`, `BeyondWebsites`, `ForDevelopers`, `HomeFaq`,
+`HomeCta`), reading `HomePage.module.css`'s tokens.
 
 **Every template the homepage shows is a real one, and opens it.** The
 design drew fictional businesses as mockups (Lumen, Kettle Plumbing, Ashby
@@ -1253,30 +1259,30 @@ rather than opening what the slide showed; the 2026-10-15 guest audit
 clicked "Ashby Plumbing" and landed on Northside Plumbing. Four things keep
 it honest:
 
-- **`homeData.ts` holds only the editorial choices**: which template stands
-  for each of the fourteen trades, each slide's template, photograph and
-  sentence (written from the template's own sections), and the demo's
-  template, palettes and designs. `homeShowcase.ts` resolves the rest on the
-  server from the registries, the category table and the screenshots, and
+- **`homeData.ts` holds only the editorial choices**: each slide's
+  template, photograph, trade and sentence (the design's copy: "Art &
+  design", "For tattoo studios, illustrators and independent artists."),
+  and the demo's template, palettes and designs. `homeShowcase.ts` resolves
+  the rest on the server from the registries and the screenshots, and
   throws on a slug no template has or one with no screenshot, so the export
   fails before a card can lead somewhere else.
-- **The windows are the templates' screenshots** (`public/template-shots`,
-  above), each a link to `/templates/<slug>/`, and a reshoot reaches the
-  homepage too. The hero fetches the other trades' shots once a pointer or
-  focus reaches the tab row, not on the first paint. The carousel's chips
-  are the gallery's own categories, and "Browse all" follows the chip into
-  `/templates/?category=`.
-- **A tab is a strip of the pattern its template wears, in its colors**, and
-  the carousel's "Set in" chip is the face the template's h1 is set in:
-  both captured off the live page by `scripts/capture-home-tabs.mjs` into
-  `public/images/home/tabs/` and `homeShowcase.json`, committed because the
-  deploy build has no browser. Run it after `homeData.ts` names a new
-  template (it reads the slugs from that file); until then the tab falls
-  back to the design's catalog preview in its own colors. It needs
+- **The site in front of a slide is the template's screenshot**
+  (`public/template-shots`, above), a link to `/templates/<slug>/` like the
+  slide's arrow, and a reshoot reaches the homepage too. The first slide's
+  pictures load with the page; the rest are lazy.
+- **The carousel's "Set in" chip is the face the template's h1 is set in**,
+  and the demo toolbar's first pattern is a strip of the pattern its
+  template wears, in its colors: both captured off the live page by
+  `scripts/capture-home-showcase.mjs` into `homeShowcase.json` and
+  `public/images/home/strips/`, committed because the deploy build has no
+  browser. Run it after `homeData.ts` names a new template (it reads the
+  slugs from that file); until then the chip names no face and the strip
+  falls back to the design's catalog preview in its own colors. It needs
   `MOCKUP_CHROMIUM=/opt/pw-browsers/chromium` in the cloud container, and
   takes `--base http://localhost:3000` to read a dev server instead of
   `out/`.
-- **"Any template" is the customizer in miniature, not a picture of it.**
+- **"Make any template your own" is the customizer in miniature, not a
+  picture of it.**
   The window is the template's packaged download in an iframe, drawn by the
   Studio's same-origin runtime and recolored by the same engine
   (`buildPreviewDocument`, `fitPalette`, `planEdits` and `rehydrate`), laid
@@ -1289,8 +1295,11 @@ it honest:
   rebuilding the frame. The frame is `inert`, and a link laid over it (a
   link may not hold an iframe) opens the template's preview.
 
-Only the mono face loads through `next/font` for this page alone
-(`homeFonts.ts`); the mockups' six display faces went with the mockups.
+Two faces load through `next/font` for this page alone (`homeFonts.ts`):
+the mono at 500 for the labels and the wordmark's serif at 500 for the line
+under the carousel, each a family holding only that weight, since the
+masthead preloads the others on every route. The mockups' six display faces
+went with the mockups.
 
 `/templates` and the docs keep the older dark editorial token set
 (`components/main-page/home.module.css`, read as `var(--h-...)`): the
@@ -1335,19 +1344,18 @@ Three things worth not re-litigating:
   module-scope constants: a `Math.random()` at the top level of a module runs
   once per process, which is not once per page.
 - **Every figure is derived.** `lib/siteCounts.ts` counts the presets, the
-  template sites, and the palette library; the hero's "N free templates",
-  the carousel's "Browse all N" and the page's description read it. It is
+  template sites, and the palette library; the hero's "N free templates,
+  patterns included." and the page's description read it. It is
   server-only on purpose - counting the keys of `patterns` in a client
   component would ship the whole catalog to the browser to learn one number.
   `e2e/smoke.spec.ts` asserts the count is the same in both places rather
   than pinning the value.
-- **Reduced motion stops all of it.** The trade tabs rise in on a CSS
-  animation, and the carousel's clock is its active dot's fill: the slide
-  advances when the fill's animation ends, so the stylesheet's
-  `@media (prefers-reduced-motion: reduce)` override, which removes the
-  fill, is what stops autoplay (and the pause button is not drawn). Every
-  transition has the same override. A carousel that merely slows down is
-  the failure this guards against.
+- **Reduced motion stops all of it.** The hero carousel's clock is its
+  active dot's fill: the slide advances when the fill's animation ends, so
+  the stylesheet's `@media (prefers-reduced-motion: reduce)` override,
+  which removes the fill, is what stops autoplay (and the pause button is
+  not drawn). Every transition has the same override. A carousel that
+  merely slows down is the failure this guards against.
 
 IBM Plex Mono and IBM Plex Sans are loaded by `next/font` (`lib/fonts.ts`)
 **in the page**, not the root layout, so only the routes that use them preload

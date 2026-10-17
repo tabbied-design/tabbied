@@ -13,3 +13,8 @@
 .page *::after {
   box-sizing: border-box;
 }
+
+/* The headline's last words, kept on one line. */
+.keep {
+  white-space: nowrap;
+}

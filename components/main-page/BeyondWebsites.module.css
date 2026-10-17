@@ -144,3 +144,15 @@
     margin-top: 56px;
   }
 }
+
+/* A phone: closer, so more of the pictures show on a screen. */
+@media (max-width: 700px) {
+  .section {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+
+  .examples {
+    margin-top: 40px;
+  }
+}
