@@ -136,6 +136,14 @@
   }
 }
 
+/* A phone: closer, so more of the code shows on a screen. */
+@media (max-width: 700px) {
+  .section {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .copy {
     transition: none;

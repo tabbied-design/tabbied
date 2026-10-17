@@ -10,33 +10,29 @@ test.describe('Tabbied site', () => {
 
     await expect(page).toHaveTitle(/website templates/i);
     await expect(
-      page.getByRole('heading', { level: 1, name: 'Websites with personality.' })
+      page.getByRole('heading', { level: 1, name: 'Free website templates for every trade.' })
     ).toBeVisible();
 
     // Every figure is derived from the catalog at build time (lib/siteCounts),
     // so this asserts the shape rather than the value: the hero's note and
-    // the carousel's "Browse all" carry the same template count.
-    const note = page.getByText(/^\d+ free templates\. No account needed\.$/);
+    // the page's description carry the same template count.
+    const note = page.getByText(/^\d+ free templates, patterns included\.$/);
     await expect(note).toBeVisible();
     const templateCount = Number((await note.textContent())?.match(/\d+/)?.[0]);
     expect(templateCount).toBeGreaterThan(100);
-    await expect(page.getByRole('link', { name: new RegExp(`^Browse all ${templateCount}`) })).toHaveAttribute(
-      'href',
-      /\/templates\/?$/
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      'content',
+      new RegExp(`^${templateCount} free website templates`)
     );
 
-    // A trade tab puts its template in the hero's front window, and the
-    // window is that template's preview.
-    const florist = page.getByRole('button', { name: /^Florist: / });
-    await florist.click();
-    await expect(florist).toHaveAttribute('aria-pressed', 'true');
-    const floristName = (await florist.getAttribute('aria-label'))!.replace(/^Florist: /, '');
-    await expect(page.getByRole('link', { name: new RegExp(`^Preview ${floristName}, an? [a-z ]*florist template`) })).toHaveAttribute(
-      'href',
-      /^\/templates\/[a-z0-9-]+\/$/
-    );
-
-    // Each slide leads to the template it shows.
+    // The carousel is the hero: the slide in front names its trade, and
+    // leads to the template it shows. Paused and brought back to the first
+    // slide, so the clock cannot move it on mid-assertion.
+    await page.getByRole('button', { name: 'Pause carousel' }).click();
+    await page.getByRole('tablist', { name: 'Slides' }).getByRole('tab').first().click();
+    const slide = page.getByRole('tabpanel', { name: /^1 of \d+: / });
+    await expect(slide.getByRole('heading', { level: 2 })).toHaveText('Art & design');
+    await expect(page.getByText('The world still runs on skilled hands.')).toBeVisible();
     await expect(page.getByRole('link', { name: /^Preview Inkwell Tattoo, a tattoo studio template$/ })).toHaveAttribute(
       'href',
       '/templates/inkwell-tattoo/'
@@ -51,41 +47,26 @@ test.describe('Tabbied site', () => {
     await page.getByRole('link', { name: 'Pick your template' }).click();
     await expect(page).toHaveURL(/\/templates\/?$/);
     await expect(
-      page.getByRole('heading', { level: 1, name: 'A website for every trade, free' })
+      page.getByRole('heading', { level: 1, name: 'Find your free website template.' })
     ).toBeVisible();
   });
 
   test('every template the homepage shows is a real one, and opens it', async ({ page, request }) => {
-    // The 14 October design drew fictional businesses, several of which were
-    // not templates and some of which shared a name with another one
-    // (components/main-page/homeShowcase.ts). Now every window, slide and the
-    // live demo name a template, and each link must open its preview.
+    // The designs drew fictional businesses, several of which were not
+    // templates and some of which shared a name with another one
+    // (components/main-page/homeShowcase.ts). Now every slide and the live
+    // demo name a template, and each link must open its preview.
     await page.goto('/');
 
-    const hrefs = new Set<string>();
-    const collect = async () => {
-      for (const href of await page
+    const hrefs = new Set(
+      await page
         .locator('main a[href^="/templates/"]')
-        .evaluateAll((anchors) => anchors.map((a) => a.getAttribute('href')!))) {
-        hrefs.add(href);
-      }
-    };
-
-    // The hero shows two templates at a time: each trade's tab puts its own
-    // in the front window. Focused rather than clicked, since the row is
-    // wider than the screen and its end tabs sit past the edge until reached.
-    const tabs = page.getByRole('group', { name: 'Trades' }).getByRole('button');
-    for (let i = 0; i < (await tabs.count()); i += 1) {
-      await tabs.nth(i).focus();
-      await expect(tabs.nth(i)).toHaveAttribute('aria-pressed', 'true');
-      await collect();
-    }
-    await collect();
-
+        .evaluateAll((anchors) => anchors.map((a) => a.getAttribute('href')!))
+    );
     const previews = [...hrefs].filter((href) => /^\/templates\/[a-z0-9-]+\/$/.test(href));
 
-    // Fourteen trades, nine slides and the demo, with repeats among them.
-    expect(previews.length).toBeGreaterThan(18);
+    // Nine slides and the demo, every slide in the page whichever is in front.
+    expect(previews.length).toBeGreaterThanOrEqual(10);
     for (const href of previews) {
       expect((await request.get(href)).status(), href).toBe(200);
     }
@@ -101,13 +82,10 @@ test.describe('Tabbied site', () => {
   test('the homepage animates only when motion is welcome', async ({
     page,
   }) => {
-    // The trade tabs rise in and the carousel advances on a fill's clock;
-    // under `prefers-reduced-motion` both have to stop, not merely slow down.
+    // The hero's carousel advances on a fill's clock; under
+    // `prefers-reduced-motion` it has to stop, not merely slow down.
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
-
-    const tab = page.getByRole('button', { name: /^Florist: / });
-    await expect(tab.locator('..')).toHaveCSS('animation-name', 'none');
 
     // No clock, so no pause button, and the first slide stays put.
     await expect(page.getByRole('button', { name: /(Pause|Play) carousel/ })).toHaveCount(0);

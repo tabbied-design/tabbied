@@ -8,7 +8,7 @@ import type { MakeItYoursView } from './homeShowcase';
 import t from './HomePage.module.css';
 import styles from './MakeItYours.module.css';
 
-// "Any template. Entirely your own.": a real template, and a toolbar along its
+// "Make any template your own.": a real template, and a toolbar along its
 // foot that recolors it and swaps its pattern, the two things the customizer
 // changes, done the way the customizer does them. The page in the window is
 // the template's download (/downloads/<slug>/), drawn by the customizer's
@@ -60,7 +60,7 @@ export default function MakeItYours({ template, palettes, designs }: MakeItYours
   }, [paletteIndex, designIndex]);
 
   const paletteOptions = [{ name: `${template.name}'s own`, colors: template.colors }, ...palettes];
-  const designOptions = [{ name: `${template.name}'s own`, preview: template.tab }, ...designs];
+  const designOptions = [{ name: `${template.name}'s own`, preview: template.strip }, ...designs];
   const shownAs = `${paletteIndex === OWN ? 'its own palette' : `the ${paletteOptions[paletteIndex].name} palette`} and ${
     designIndex === OWN ? 'its own patterns' : `the ${designOptions[designIndex].name} pattern`
   }`;
@@ -224,7 +224,7 @@ export default function MakeItYours({ template, palettes, designs }: MakeItYours
     <section ref={sectionRef} className={styles.section} aria-labelledby="make-it-yours-title">
       <div className={styles.inner}>
         <h2 id="make-it-yours-title" className={t.title}>
-          Any template. Entirely your own.
+          Make any template your own.
         </h2>
         <p className={`${t.lede} ${styles.lede}`}>
           Change the palette. Swap the pattern. Download it as HTML/CSS or React.
