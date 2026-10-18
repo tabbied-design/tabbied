@@ -1,5 +1,14 @@
 # tabbied-mcp
 
+## 0.3.2
+
+### Patch Changes
+
+- [#132](https://github.com/tabbied-design/tabbied/pull/132) [`8d25e2a`](https://github.com/tabbied-design/tabbied/commit/8d25e2af095db4e0b1f9b58a2b35d18314e823fc) Thanks [@subwaymatch](https://github.com/subwaymatch)! - Templates no longer need an account to download. The `license` that
+  `list_templates` and `get_template` return, and both READMEs, now say a
+  template is licensed to the person who downloads it from tabbied.com, and that
+  downloading is free and needs no account.
+
 ## 0.3.1
 
 ### Patch Changes
