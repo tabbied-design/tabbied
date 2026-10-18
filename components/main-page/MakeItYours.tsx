@@ -25,8 +25,13 @@ const OWN = 0;
 
 const keyOf = (palette: number, design: number) => `${palette}:${design}`;
 
-/** The width the page is laid out at before it is scaled into the window. */
-const pageWidth = (box: number) => (box < 640 ? 800 : 1280);
+/**
+ * The width the page is laid out at before it is scaled into the window: a
+ * desktop's, at every window size. A phone once got 800px, where a template
+ * stacks its hero and the pattern falls below the window (Live Wire
+ * Electric's did), and the pattern is what the toolbar under it changes.
+ */
+const PAGE_WIDTH = 1280;
 
 type Live = {
   /** The preview document, built from the package with the choices made so far. */
@@ -84,16 +89,15 @@ export default function MakeItYours({ template, palettes, designs }: MakeItYours
     return () => observer.disconnect();
   }, []);
 
-  // The page is laid out at a desktop (or, in a narrow window, a tablet)
-  // width and scaled to the window, so it reads as that site in miniature.
+  // The page is laid out at a desktop width and scaled to the window, so it
+  // reads as that site in miniature, as the carousel's screenshots do.
   useEffect(() => {
     const box = boxRef.current;
     if (!box) return;
 
     const measure = () => {
-      const width = pageWidth(box.clientWidth);
-      const scale = box.clientWidth / width;
-      setFit({ width, height: box.clientHeight / scale, scale });
+      const scale = box.clientWidth / PAGE_WIDTH;
+      setFit({ width: PAGE_WIDTH, height: box.clientHeight / scale, scale });
     };
 
     measure();
