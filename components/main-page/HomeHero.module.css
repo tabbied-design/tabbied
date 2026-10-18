@@ -12,6 +12,8 @@
 .head {
   padding: 0 var(--hp-pad);
   text-align: center;
+  /* The phone's headline is sized from this box's width, below. */
+  container-type: inline-size;
 }
 
 .title {
@@ -394,14 +396,16 @@
 }
 
 /* A phone: everything closer together, so the first slide is on the
-   first screen. */
+   first screen (the 17 October design). */
 @media (max-width: 700px) {
   .hero {
     padding: 28px 0 44px;
   }
 
+  /* Two lines on any phone: "Free website templates" fills the column at
+     a tenth of its width, and 42px is reached only where there is room. */
   .title {
-    font-size: 42px;
+    font-size: min(42px, calc(100cqw / 10.2));
   }
 
   .cta {
@@ -417,13 +421,29 @@
     margin-top: 28px;
   }
 
+  /* A shorter card: the caption tightened to fit it, and the site in
+     front sunk further below its foot. */
   .slide {
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 6 / 5;
+  }
+
+  .caption {
+    padding: 22px 22px 0;
+  }
+
+  .trade {
+    font-size: min(28px, 7.4vw);
+  }
+
+  .description {
+    margin-top: 6px;
+    font-size: 15px;
+    line-height: 1.45;
   }
 
   .mock {
     left: 3%;
-    bottom: -14%;
+    bottom: -26%;
     width: 94%;
   }
 

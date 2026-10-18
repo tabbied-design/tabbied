@@ -45,7 +45,7 @@
   display: flex;
   gap: 7px;
   align-items: center;
-  padding: 10px 20px;
+  padding: 10px 16px 10px 20px;
   font: 500 13.5px var(--s-sans);
   color: #fff;
   white-space: nowrap;
@@ -65,25 +65,37 @@
   opacity: 0.7;
 }
 
+/* Turns over while the menu is open. */
+.chevron {
+  display: block;
+  flex: none;
+  transition: transform 0.2s ease;
+}
+
+.download[data-popup-open] .chevron {
+  transform: rotate(180deg);
+}
+
 /* The canvas's browser bar holds this on a wider screen; on a phone that bar
-   is hidden, so the button is here. */
+   is hidden, so the button is here: flat, a grey circle with no border, and
+   20px from Download. */
 .openTab {
   display: none;
   align-items: center;
   justify-content: center;
-  /* The phone's icon-only Download beside it: 16px and 8px either side. */
   width: 32px;
   height: 32px;
+  margin-right: 10px;
   padding: 0;
   color: var(--s-ink);
-  background: #fff;
-  border: 1px solid oklch(0 0 0 / 0.14);
+  background-color: oklch(0.95 0 0);
+  border: none;
   border-radius: 50%;
   cursor: pointer;
 }
 
 .openTab:hover {
-  background-color: oklch(0 0 0 / 0.04);
+  background-color: oklch(0.91 0 0);
 }
 
 .back:focus-visible,
@@ -91,11 +103,6 @@
 .download:focus-visible {
   outline: 2px solid var(--blue-medium, #3b82f6);
   outline-offset: 2px;
-}
-
-.downloadIcon {
-  display: block;
-  flex: none;
 }
 
 /* ---- Menus ------------------------------------------------------------- */
@@ -127,11 +134,12 @@
   transform: scale(0.97);
 }
 
-/* -- Download: the customized version over the original, in two panes. -- */
+/* -- Download: a choice of format, or the customized version over the
+   original, in two panes. -- */
 
 .downloadMenu {
   width: 310px;
-  padding: 0 0 7px;
+  max-width: calc(100vw - 32px);
   overflow: hidden;
   border-radius: 14px;
   box-shadow: 0 16px 40px oklch(0 0 0 / 0.18);
@@ -143,15 +151,7 @@
 }
 
 .dlOriginal {
-  padding: 14px 18px 6px;
-}
-
-.dlHead {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
+  padding: 14px 18px 16px;
 }
 
 .dlTitle {
@@ -159,14 +159,12 @@
   color: #0e0e13;
 }
 
-.dlOriginal .dlTitle {
-  margin-bottom: 4px;
+.dlCustom .dlTitle {
+  margin-bottom: 12px;
 }
 
-.dlMeta {
-  font: 400 11px var(--s-mono);
-  color: oklch(0.5 0.01 260);
-  white-space: nowrap;
+.dlOriginal .dlTitle {
+  margin-bottom: 4px;
 }
 
 .dlSummary {
@@ -196,8 +194,14 @@
   color: oklch(0.5 0.01 260);
 }
 
-.dlSub {
+.dlSub,
+.dlLead {
   margin-bottom: 12px;
+}
+
+.dlLead {
+  font: 400 13px / 1.45 var(--s-sans);
+  color: oklch(0.3 0.01 260);
 }
 
 .dlActions {
@@ -242,22 +246,41 @@
   background-color: oklch(0 0 0 / 0.04);
 }
 
-.dlFormatNote {
+.dlZip {
   margin: 10px 0 0;
   font: 400 11.5px / 1.5 var(--s-sans);
   color: oklch(0.52 0.01 260);
 }
 
+/* Under the two panes, on a grey band of its own. */
 .dlFoot {
-  margin: 14px 0 0;
-  padding-top: 10px;
+  margin: 0;
+  padding: 11px 18px 13px;
   font: 400 11.5px / 1.5 var(--s-sans);
-  color: oklch(0.52 0.01 260);
+  color: oklch(0.48 0.01 260);
+  background-color: oklch(0.975 0.002 260);
   border-top: 1px solid oklch(0 0 0 / 0.08);
 }
 
+/* A phone's word on what a larger screen is for, on a pale green band. */
+.dlHint {
+  margin: 0;
+  padding: 13px 18px 15px;
+  font: 400 12.5px / 1.5 var(--s-sans);
+  color: oklch(0.35 0.01 260);
+  text-wrap: pretty;
+  background-color: oklch(0.97 0.025 175);
+  border-top: 1px solid oklch(0 0 0 / 0.08);
+}
+
+.dlHint strong {
+  font-weight: 600;
+  color: #0e0e13;
+}
+
 /* On a phone the row is a bar of its own over the full-bleed canvas, and
-   Download is a circle with the icon, as the design draws it. */
+   Download a smaller pill, still with its word: an icon alone read as a
+   download that would start at once. */
 @media (max-width: 768px) {
   .bar {
     margin: 0;
@@ -267,11 +290,10 @@
   }
 
   .download {
-    padding: 8px;
-  }
-
-  .downloadLabel {
-    display: none;
+    box-sizing: border-box;
+    gap: 6px;
+    height: 32px;
+    padding: 0 13px 0 16px;
   }
 
   .openTab {
@@ -280,7 +302,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .menu {
+  .menu,
+  .chevron {
     transition: none;
   }
 }

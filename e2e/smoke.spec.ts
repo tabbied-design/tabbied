@@ -31,11 +31,11 @@ test.describe('Tabbied site', () => {
     await page.getByRole('button', { name: 'Pause carousel' }).click();
     await page.getByRole('tablist', { name: 'Slides' }).getByRole('tab').first().click();
     const slide = page.getByRole('tabpanel', { name: /^1 of \d+: / });
-    await expect(slide.getByRole('heading', { level: 2 })).toHaveText('Art & design');
+    await expect(slide.getByRole('heading', { level: 2 })).toHaveText('Cafés & bakeries');
     await expect(page.getByText('The world still runs on skilled hands.')).toBeVisible();
-    await expect(page.getByRole('link', { name: /^Customize Inkwell Tattoo, a tattoo studio template$/ })).toHaveAttribute(
+    await expect(page.getByRole('link', { name: /^Customize Crumb Bakehouse, a neighborhood bakery template$/ })).toHaveAttribute(
       'href',
-      '/studio/customize/?slug=inkwell-tattoo'
+      '/studio/customize/?slug=crumb-bakehouse'
     );
 
     // Patterns are second, a link away.
@@ -770,10 +770,14 @@ test.describe('Customizing a template', () => {
     await page.goto('/studio/customize/?slug=verdant');
     await expect(page.getByRole('complementary', { name: 'Customize this site' })).toBeVisible({ timeout: 15000 });
 
-    // Download offers the original in both formats, with no account.
+    // Download offers the original in both formats, with no account. Nothing
+    // is changed yet, so there is no customized version to offer: the menu
+    // is a choice of format.
     await page.getByRole('button', { name: 'Download' }).click();
     const menu = page.getByRole('menu');
-    await expect(menu.getByText(/No account needed/)).toBeVisible();
+    await expect(menu.getByText('Choose a format')).toBeVisible();
+    await expect(menu.getByText('Free and unlimited.')).toBeVisible();
+    await expect(menu.getByRole('menuitem', { name: /^Customized version/ })).toHaveCount(0);
     await expect(menu.getByRole('menuitem', { name: 'Original Verdant, HTML & CSS' })).toHaveAttribute(
       'href',
       '/downloads/verdant-html.zip'

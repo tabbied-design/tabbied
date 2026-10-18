@@ -24,11 +24,11 @@
 export type HomeSlide = { slug: string; photo: string; trade: string; description: string };
 
 export const SLIDES: readonly HomeSlide[] = [
-  { slug: 'inkwell-tattoo', photo: 'tattoo', trade: 'Art & design', description: 'For tattoo studios, illustrators and independent artists.' },
+  { slug: 'crumb-bakehouse', photo: 'bakery', trade: 'Cafés & bakeries', description: 'For bakeries, coffee shops and patisseries.' },
   { slug: 'el-farolito-truck', photo: 'tacos', trade: 'Food & drink', description: 'For food trucks, restaurants and pop-up kitchens.' },
   { slug: 'ringlet-curl-studio', photo: 'hair-salon', trade: 'Hair & beauty', description: 'For hair salons, barbers and nail studios.' },
   { slug: 'pawsh-grooming', photo: 'dog-grooming', trade: 'Pet care', description: 'For dog groomers, walkers and pet sitters.' },
-  { slug: 'crumb-bakehouse', photo: 'bakery', trade: 'Cafés & bakeries', description: 'For bakeries, coffee shops and patisseries.' },
+  { slug: 'inkwell-tattoo', photo: 'tattoo', trade: 'Art & design', description: 'For tattoo studios, illustrators and independent artists.' },
   { slug: 'stitch-lane-tailors', photo: 'tailor', trade: 'Fashion & tailoring', description: 'For tailors, dressmakers and alteration studios.' },
   { slug: 'oxbow-workshop', photo: 'woodwork', trade: 'Makers & crafts', description: 'For furniture makers, joiners and ceramicists.' },
   { slug: 'heartwood-arborists', photo: 'landscaping', trade: 'Home & garden', description: 'For landscapers, gardeners and tree surgeons.' },

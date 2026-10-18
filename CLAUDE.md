@@ -1173,10 +1173,14 @@ not obvious from the diff:
   (wrapping, with a pencil that turns it into the rename field), and the way
   back and Download are a row over the canvas (`CustomizerBar`), with no
   account menu, since the customizer needs no account. The template's own
-  palette row is the reset. Below 768px the rail is hidden and a notice says
-  customizing wants a larger screen, with the site full bleed to preview and
-  download; the canvas-first layout that pinned the page at half the viewport
-  is gone.
+  palette row is the reset. Below 768px the rail is hidden, with the site
+  full bleed to preview and download; the canvas-first layout that pinned the
+  page at half the viewport is gone, and so is the notice that sat over the
+  page (17 October). The Download menu says it instead: on a phone it is
+  always "Choose a format" for the original, over a line saying what a
+  larger screen is for. On a wider screen it is that same choice until there
+  is a customized version (a change on the canvas, or a saved site), then
+  "Customized version" over "Original" (`customized` in `StudioSite`).
 - **The account overview is "Your templates"** (the 14 October designs,
   after the 23 September ones). A card counts the saved templates ("No
   limit on saves or downloads."); beside it the AI card ("Not yet
@@ -1256,7 +1260,10 @@ patterns ("Good patterns go beyond websites."), the developers, the
 questions and a last way in, over the light footer. The two windows and the
 row of trade tabs the hero had before are gone, and so are the carousel's
 category chips. Below 700px every section is drawn closer together (64px
-above and below, the hero 28px and 44px), so more of each shows on a phone.
+above and below, the hero 28px and 44px), so more of each shows on a phone,
+and since the 17 October design the headline is sized from its column
+(`min(42px, 100cqw / 10.2)`, the hero's head being a size container) so it
+holds two lines on any phone, and the slides are 6:5 with a tighter caption.
 It is built from one component per section in `components/main-page/`
 (`HomeHero`, `MakeItYours`, `BeyondWebsites`, `ForDevelopers`, `HomeFaq`,
 `HomeCta`), reading `HomePage.module.css`'s tokens.

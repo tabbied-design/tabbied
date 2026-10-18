@@ -415,7 +415,7 @@ test.describe('studio site', () => {
     await page.getByRole('button', { name: 'Download' }).click();
     const [download] = await Promise.all([
       page.waitForEvent('download'),
-      page.getByRole('menuitem', { name: 'Your customized version, React project' }).click(),
+      page.getByRole('menuitem', { name: 'Customized version, React project' }).click(),
     ]);
     expect(download.suggestedFilename()).toBe('ye-joo-park-react.zip');
 
@@ -482,12 +482,27 @@ test.describe('studio site', () => {
     await expect(page.getByRole('link', { name: 'Back to templates' })).toHaveAttribute('href', '/templates/');
     expect(made).toHaveLength(0);
 
+    // Nothing changed, so Download is the template in a choice of formats.
+    const download = page.getByRole('button', { name: 'Download' });
+    const menu = page.getByRole('menu');
+    await download.click();
+    await expect(menu.getByText('Choose a format')).toBeVisible();
+    await expect(menu.getByRole('menuitem', { name: /^Customized version/ })).toHaveCount(0);
+    await page.keyboard.press('Escape');
+
     // A name and a palette, then Save: one site, with this document as its
     // first revision, and the page moves to the site's own address in place.
     await rail.getByRole('button', { name: 'Rename this site' }).click();
     await rail.getByLabel('Site name').fill('Harbour Plants');
     await rail.getByLabel('Site name').press('Enter');
     await rail.getByRole('button', { name: 'Cobalt', exact: true }).click();
+
+    // A change makes a customized version, offered over the original.
+    await download.click();
+    await expect(menu.getByRole('menuitem', { name: 'Customized version, HTML & CSS' })).toBeVisible();
+    await expect(menu.getByText('As designed, without your edits')).toBeVisible();
+    await page.keyboard.press('Escape');
+
     await rail.getByRole('button', { name: 'Save changes' }).click();
 
     await expect(page.getByText(/^Saved\. Your customized Verdant/)).toBeVisible();
@@ -578,6 +593,40 @@ test.describe('studio site', () => {
     await expect.poll(groundProperty).toBe('#0a1a3f');
     expect(await page.evaluate(() => localStorage.getItem('tabbied:pending-save'))).toBeNull();
     expect(events).toEqual(expect.arrayContaining(['customize', 'save-gate', 'gate-save']));
+  });
+
+  test('on a phone the page is the site, and Download says what a larger screen is for', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.route('**/api/studio/sites/**', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(siteDocument({ mine: true })),
+      })
+    );
+
+    // A saved site: no rail and no notice over the page; the menu is the
+    // choice of format, and the customized version waits for a larger screen.
+    await page.goto('/studio/site/?id=e2esite');
+    await expect(page.frameLocator('iframe').locator('[data-edit-root]')).toBeAttached({ timeout: 15_000 });
+    await expect(page.getByRole('complementary', { name: 'Customize this site' })).toBeHidden();
+    await expect(page.getByText(/works on a larger screen/)).toHaveCount(0);
+
+    const menu = page.getByRole('menu');
+    await page.getByRole('button', { name: 'Download' }).click();
+    await expect(menu.getByText('Choose a format')).toBeVisible();
+    await expect(menu.getByRole('menuitem', { name: /^Customized version/ })).toHaveCount(0);
+    await expect(menu.getByText('Want your customized version?')).toBeVisible();
+    const box = await menu.boundingBox();
+    expect(box!.x).toBeGreaterThanOrEqual(0);
+    expect(box!.x + box!.width).toBeLessThanOrEqual(390);
+    await page.keyboard.press('Escape');
+
+    // A template nobody has saved: the menu says the same of customizing.
+    await page.goto(`/studio/customize/?slug=${SLUG}`);
+    await expect(page.frameLocator('iframe').locator('[data-edit-root]')).toBeAttached({ timeout: 15_000 });
+    await page.getByRole('button', { name: 'Download' }).click();
+    await expect(menu.getByText('Need to customize?')).toBeVisible();
   });
 
   test('404 reads as a missing site, with a way back', async ({ page }) => {

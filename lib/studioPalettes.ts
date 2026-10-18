@@ -167,7 +167,7 @@ export function fitPalette(source: readonly string[], authored: readonly string[
 const sameColor = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase();
 
 /** Two palettes are the same palette when every role matches, case aside. */
-const samePalette = (a: readonly string[], b: readonly string[]): boolean =>
+export const samePalette = (a: readonly string[], b: readonly string[]): boolean =>
   a.length === b.length && a.every((color, index) => sameColor(color, b[index] ?? ''));
 
 /**
