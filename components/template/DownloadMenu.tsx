@@ -7,8 +7,11 @@
 import { Menu } from '@base-ui/react/menu';
 import { ChevronDown, Download } from 'lucide-react';
 import { toaster } from 'components/Toaster';
-import { CUSTOMIZED_FORMAT_NOTE } from 'components/studio/CustomizerBar';
 import { downloadCustomisedSite } from 'lib/studioDownload';
+
+/** How each format carries the changes, said where the choice is made. */
+const CUSTOMIZED_FORMAT_NOTE =
+  'Your colors and patterns are written into the HTML page, and laid over the React source in files of their own.';
 
 /** Build and save the customized zip in the browser, with the outcome in a toast. */
 async function saveCustomised(siteId: string, format: 'html' | 'react'): Promise<void> {

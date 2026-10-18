@@ -8,32 +8,24 @@
 // account, so it leads back to where it was opened from and offers nothing
 // that needs one but Save, in the rail.
 //
-// Download is a menu of two packages, as the design draws it: the customized
-// version, rebuilt in the browser with the site's colors and patterns in it
-// (lib/studioDownload.ts), and the original template in both formats. Both
-// are free and need no account. The customized HTML has the changes written
-// into the page; the customized React project carries them in files of its
-// own over the template's source, since the document cannot be written into
-// JSX.
+// Download is a menu, and what it holds follows what there is to download
+// (the 17 October design). A template nobody has changed is one thing in two
+// formats, so the menu is a choice of format. Once there is a customized
+// version (a change on the canvas, or a saved site) it comes first, rebuilt
+// in the browser with the site's colors and patterns in it
+// (lib/studioDownload.ts), over the original template. Both are free and
+// need no account. On a phone, where nothing can be customized, the menu is
+// always the choice of format, and says what a larger screen is for: the
+// notice that said so used to sit over the page.
 import Link from 'next/link';
 import { Menu } from '@base-ui/react/menu';
 import { ExternalLink } from 'lucide-react';
 import ImpersonationNotice from 'components/nav/ImpersonationNotice';
+import useMediaQuery from 'lib/useMediaQuery';
 import styles from './CustomizerBar.module.css';
 
-/** How each format carries the changes, said where the choice is made. */
-export const CUSTOMIZED_FORMAT_NOTE =
-  'Your colors and patterns are written into the HTML page, and laid over the React source in files of their own.';
-
-/** "Edited Today" or "Edited Sep 22", as the design writes the last save. */
-function editedLabel(when: string | Date): string {
-  const date = new Date(when);
-
-  if (Number.isNaN(date.getTime())) return '';
-  if (date.toDateString() === new Date().toDateString()) return 'Edited Today';
-
-  return `Edited ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
-}
+/** Where the rail is hidden (SiteWorkspace.module.css), and the menu shortens. */
+const PHONE = '(max-width: 768px)';
 
 export default function CustomizerBar({
   mine,
@@ -44,8 +36,7 @@ export default function CustomizerBar({
   slug,
   templateName,
   colors,
-  unsaved,
-  editedAt,
+  customized,
   onOpenInNewTab,
 }: {
   /** The viewer owns the site: the way back is the account. */
@@ -63,17 +54,23 @@ export default function CustomizerBar({
   templateName: string;
   /** The colors the page wears now, ground first. */
   colors: readonly string[];
-  /** Changes on the canvas that no revision holds yet. */
-  unsaved: boolean;
-  /** When the latest revision was saved, or null for a site not saved yet. */
-  editedAt: string | Date | null;
+  /** There is a customized version to offer: a saved site, or changes on the canvas. */
+  customized: boolean;
   /** Open the site as it stands in a tab of its own. Shown here on a phone only. */
   onOpenInNewTab: () => void;
 }) {
-  const back =
-    mine && !template
-      ? { href: '/account/', label: 'Your templates' }
-      : { href: '/templates/', label: 'Templates' };
+  const phone = useMediaQuery(PHONE);
+  const saved = template === undefined;
+  const back = mine && saved ? { href: '/account/', label: 'Your templates' } : { href: '/templates/', label: 'Templates' };
+  const twoPanes = customized && !phone;
+
+  // A phone has no rail, so the menu says what a larger screen is for: a
+  // saved site's customized version is downloaded there too.
+  const hint = !saved
+    ? { lead: 'Need to customize?', rest: 'Open this page on a larger screen to change colors and patterns.' }
+    : mine
+      ? { lead: 'Want your customized version?', rest: 'Open this page on a larger screen to edit or download it.' }
+      : { lead: 'Want this customized version?', rest: 'Open this page on a larger screen to download it.' };
 
   return (
     <div className={styles.bar}>
@@ -104,7 +101,7 @@ export default function CustomizerBar({
           aria-label="Open in new tab"
           onClick={onOpenInNewTab}
         >
-          <ExternalLink size={17} strokeWidth={1.8} aria-hidden="true" />
+          <ExternalLink size={16} strokeWidth={1.8} aria-hidden="true" />
         </button>
         <Menu.Root>
           <Menu.Trigger
@@ -112,89 +109,97 @@ export default function CustomizerBar({
             disabled={downloading}
             aria-label={downloading ? 'Preparing the download' : 'Download'}
           >
+            <span>{downloading ? 'Preparing...' : 'Download'}</span>
+            {/* A menu, not a download: the arrow says the button opens. */}
             <svg
-              className={styles.downloadIcon}
+              className={styles.chevron}
               viewBox="0 0 24 24"
-              width="16"
-              height="16"
+              width="14"
+              height="14"
               fill="none"
               stroke="currentColor"
-              strokeWidth="1.8"
+              strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
               aria-hidden="true"
             >
-              <path d="M12 4v10m0 0 4-4m-4 4-4-4M5 19h14" />
+              <path d="m6 9 6 6 6-6" />
             </svg>
-            <span className={styles.downloadLabel}>{downloading ? 'Preparing...' : 'Download'}</span>
           </Menu.Trigger>
           <Menu.Portal>
             <Menu.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>
               <Menu.Popup className={`${styles.menu} ${styles.downloadMenu}`}>
-                <div className={styles.dlCustom}>
-                  <div className={styles.dlHead}>
-                    <span className={styles.dlTitle}>Your customized version</span>
-                    <span className={styles.dlMeta}>
-                      {unsaved ? 'Unsaved edits' : editedAt ? editedLabel(editedAt) : ''}
-                    </span>
+                {twoPanes ? (
+                  <div className={styles.dlCustom}>
+                    <div className={styles.dlTitle}>Customized version</div>
+                    <div className={styles.dlSummary}>
+                      <span className={styles.dlSwatches} aria-hidden="true">
+                        {colors.slice(0, 5).map((color, index) => (
+                          <span key={index} style={{ background: color }} />
+                        ))}
+                      </span>
+                      <span className={styles.dlNote}>Your latest edits</span>
+                    </div>
+                    <div className={styles.dlActions}>
+                      <Menu.Item
+                        className={`${styles.dlButton} ${styles.dlPrimary}`}
+                        aria-label="Customized version, HTML & CSS"
+                        onClick={onDownloadHtml}
+                      >
+                        HTML &amp; CSS
+                      </Menu.Item>
+                      <Menu.Item
+                        className={`${styles.dlButton} ${styles.dlPrimary}`}
+                        aria-label="Customized version, React project"
+                        onClick={onDownloadReact}
+                      >
+                        React
+                      </Menu.Item>
+                    </div>
                   </div>
-                  <div className={styles.dlSummary}>
-                    <span className={styles.dlSwatches} aria-hidden="true">
-                      {colors.slice(0, 5).map((color, index) => (
-                        <span key={index} style={{ background: color }} />
-                      ))}
-                    </span>
-                    <span className={styles.dlNote}>
-                      {unsaved ? 'Includes your latest edits, saved or not.' : 'Your latest colors and patterns.'}
-                    </span>
-                  </div>
-                  <div className={styles.dlActions}>
-                    <Menu.Item
-                      className={`${styles.dlButton} ${styles.dlPrimary}`}
-                      aria-label="Your customized version, HTML & CSS"
-                      onClick={onDownloadHtml}
-                    >
-                      HTML &amp; CSS
-                    </Menu.Item>
-                    <Menu.Item
-                      className={`${styles.dlButton} ${styles.dlSecondary}`}
-                      aria-label="Your customized version, React project"
-                      onClick={onDownloadReact}
-                    >
-                      React
-                    </Menu.Item>
-                  </div>
-                  <p className={styles.dlFormatNote}>{CUSTOMIZED_FORMAT_NOTE}</p>
-                </div>
+                ) : null}
                 <div className={styles.dlOriginal}>
-                  <div className={styles.dlTitle}>Original {templateName}</div>
-                  <div className={styles.dlSub}>As designed, without your edits</div>
+                  {twoPanes ? (
+                    <>
+                      <div className={styles.dlTitle}>Original</div>
+                      <div className={styles.dlSub}>As designed, without your edits</div>
+                    </>
+                  ) : (
+                    <>
+                      <div className={styles.dlTitle}>Choose a format</div>
+                      <div className={styles.dlLead}>Free and unlimited.</div>
+                    </>
+                  )}
                   <div className={styles.dlActions}>
                     <Menu.Item
-                      className={`${styles.dlButton} ${styles.dlSecondary}`}
+                      className={`${styles.dlButton} ${twoPanes ? styles.dlSecondary : styles.dlPrimary}`}
                       aria-label={`Original ${templateName}, HTML & CSS`}
                       render={<a href={`/downloads/${slug}-html.zip`} download />}
                     >
                       HTML &amp; CSS
                     </Menu.Item>
                     <Menu.Item
-                      className={`${styles.dlButton} ${styles.dlSecondary}`}
+                      className={`${styles.dlButton} ${twoPanes ? styles.dlSecondary : styles.dlPrimary}`}
                       aria-label={`Original ${templateName}, React project`}
                       render={<a href={`/downloads/${slug}-react.zip`} download />}
                     >
                       React
                     </Menu.Item>
                   </div>
-                  <p className={styles.dlFoot}>
-                    Free, unlimited downloads. No account needed. HTML &amp; CSS drops on any host;
-                    React is ready for a repo.
-                  </p>
+                  {twoPanes ? null : <p className={styles.dlZip}>Saves to your device as a .zip file.</p>}
                 </div>
+                {twoPanes ? (
+                  <p className={styles.dlFoot}>Free and unlimited. Saves to your device as a .zip file.</p>
+                ) : null}
+                {phone ? (
+                  <p className={styles.dlHint}>
+                    <strong>{hint.lead}</strong> {hint.rest}
+                  </p>
+                ) : null}
               </Menu.Popup>
             </Menu.Positioner>
           </Menu.Portal>
         </Menu.Root>
-
       </div>
     </div>
   );

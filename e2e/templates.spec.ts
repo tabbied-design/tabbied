@@ -592,7 +592,7 @@ test.describe('the /templates gallery', () => {
       ['React project', 'react'],
     ] as const) {
       await page.getByRole('button', { name: 'Download' }).click();
-      await expect(page.getByText(/No account needed/)).toBeVisible();
+      await expect(page.getByText('Free and unlimited.')).toBeVisible();
       const item = page.getByRole('menuitem', { name: `Original Werkraum, ${label}` });
       await expect(item).toHaveAttribute('href', `/downloads/werkraum-${format}.zip`);
       const download = page.waitForEvent('download');

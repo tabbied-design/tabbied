@@ -11,7 +11,8 @@
 //
 // Words and pictures are not edited here yet (the Worker keeps the routes, and
 // the rail's Content tab says so). Below 768px the rail is hidden and the page
-// is the site alone, to preview and download.
+// is the site alone, to preview and download; the Download menu says what a
+// larger screen is for.
 //
 // A site started from a template is a draft until its first Save, so a look at
 // a template leaves nothing in the account: /studio/customize/ renders this
@@ -54,6 +55,7 @@ import {
   buildCustomisedReactArchive,
   saveArchive,
 } from 'lib/studioDownload';
+import { samePalette } from 'lib/studioPalettes';
 import { designOn, patternChanged, patternsChanged, pickDesign, shuffleDesigns } from 'lib/studioPatterns';
 import {
   buildPreviewDocument,
@@ -471,6 +473,9 @@ export default function StudioSite({
   const unsaved = site.id === '';
   const palette = draft.edits.palette ?? spec.palette.colors;
   const fieldsChanged = patternsChanged(patternSlots, draft.edits.patterns);
+  // A customized version exists once the site is saved or the canvas differs
+  // from the template; until then Download offers the template alone.
+  const customized = !unsaved || fieldsChanged || !samePalette(palette, spec.palette.colors);
 
   // A whole palette at a time, from a rail row or the dialog's Save, fitted to
   // the spec's role count (the shape the page reads). The template's own row
@@ -694,26 +699,6 @@ export default function StudioSite({
     window.open(url, '_blank');
   };
 
-  // The phone's own share sheet (mail, messages, notes), or the clipboard
-  // where there is none. The address opens this template, or this saved
-  // site, in the customizer on a computer.
-  const sendLink = async () => {
-    const url = window.location.href;
-
-    if (typeof navigator.share === 'function') {
-      // A dismissed sheet rejects; that is the person's answer, not an error.
-      await navigator.share({ title: `${site.title} on Tabbied`, url }).catch(() => undefined);
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(url);
-      toaster.add({ title: 'Link copied. Open it on a computer to customize.' });
-    } catch {
-      toaster.add({ title: `Open ${url} on a computer to customize.` });
-    }
-  };
-
   return (
     <>
       {/* Two notices this page owns, distinct from the engine's: a fallback
@@ -774,36 +759,6 @@ export default function StudioSite({
           </div>
         ) : null}
 
-        {/* Shown only where the rail is not (see SiteWorkspace.module.css). */}
-        {site.mine ? (
-          <div className={styles.smallNotice} role="status">
-            <span className={styles.smallNoticeIcon} aria-hidden="true">
-              <svg
-                viewBox="0 0 24 24"
-                width="15"
-                height="15"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.9"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="3" y="4" width="18" height="12" rx="2" />
-                <path d="M8 20h8" />
-                <path d="M12 16v4" />
-              </svg>
-            </span>
-            <span className={styles.smallNoticeText}>
-              Customizing works on a larger screen. From here you can preview and download.
-            </span>
-            {/* Most visitors on a phone came from a link; this is how they
-                take the template to a computer without hunting for it. */}
-            <button type="button" className={styles.smallNoticeShare} onClick={() => void sendLink()}>
-              Send yourself the link
-            </button>
-          </div>
-        ) : null}
-
         <div className={styles.stage}>
           <CustomizerBar
             mine={site.mine}
@@ -814,8 +769,7 @@ export default function StudioSite({
             slug={site.slug}
             templateName={site.templateName}
             colors={palette}
-            unsaved={saveState === 'dirty' || saveState === 'saving'}
-            editedAt={unsaved ? null : site.latest.createdAt}
+            customized={customized}
             onOpenInNewTab={openInNewTab}
           />
           <div className={styles.frame}>
