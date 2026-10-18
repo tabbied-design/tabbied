@@ -309,6 +309,15 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
     writePageToUrl(1, true);
   };
 
+  // The phone layout has no search box, so a query typed in the wide one (a
+  // tablet turned to portrait) is cleared rather than left filtering a grid
+  // with nothing on screen to say so.
+  const searching = search !== '';
+
+  useEffect(() => {
+    if (isMobile && searching) onSearchChange('');
+  }, [isMobile, searching]);
+
   const onEditCustom = (palette: BrandPalette) => editor.openEditor(palette);
   const onEditLibrary = (palette: LibraryPalette) =>
     editor.openEditorAsCopy(palette);
@@ -337,10 +346,8 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
       />
       )}
 
-      {isMobile && (
+      {isMobile && browserOpen && (
       <GalleryMobileHeader
-        search={search}
-        onSearchChange={onSearchChange}
         palettes={savedPalettes}
         library={PALETTE_LIBRARY}
         selectedId={selectedId}
@@ -348,7 +355,6 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
         onEditCustom={onEditCustom}
         onEditLibrary={onEditLibrary}
         onDelete={removePalette}
-        browserOpen={browserOpen}
         onCloseBrowser={() => setBrowserOpen(false)}
       />
       )}

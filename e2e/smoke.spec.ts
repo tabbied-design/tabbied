@@ -664,11 +664,26 @@ test.describe('Tabbied site (mobile viewport)', () => {
     const allPill = page.getByRole('button', { name: /^All/ });
     await expect(allPill).toBeVisible();
 
+    // No search on a phone: the shelf and the grid are the page.
+    await expect(page.getByLabel('Search palettes and designs')).toHaveCount(0);
+
     // Tapping "All" swaps the shelf for the embedded palette browser.
     await allPill.click();
     await expect(
       page.getByRole('button', { name: 'Close palette browser' })
     ).toBeVisible();
+  });
+
+  test('the homepage demo draws its template as a desktop does, scaled down', async ({
+    page,
+  }) => {
+    // Laid out any narrower, a template stacks its hero and the pattern the
+    // toolbar changes falls below the window.
+    await page.goto('/');
+    await page.getByRole('heading', { name: 'Make any template your own.' }).scrollIntoViewIfNeeded();
+
+    const frame = page.locator('iframe[title$="recolored live"]');
+    await expect(frame).toHaveCSS('width', '1280px', { timeout: 15000 });
   });
 
   test('the homepage menu holds the destinations and the way in on mobile', async ({

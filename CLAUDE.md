@@ -1304,7 +1304,9 @@ it honest:
   The window is the template's packaged download in an iframe, drawn by the
   Studio's same-origin runtime and recolored by the same engine
   (`buildPreviewDocument`, `fitPalette`, `planEdits` and `rehydrate`), laid
-  out at 1280px (800px in a narrow window) and scaled down. It loads when
+  out at 1280px at every width and scaled down (a phone got 800px until 18
+  October, where Live Wire Electric's hero stacked and its pattern fell below
+  the window, out of sight of the toolbar that changes it). It loads when
   the section nears the screen, costs nothing before, and shows the
   screenshot until the page has drawn and wherever the package cannot be
   fetched, which includes `next dev` before a build. A pattern choice puts

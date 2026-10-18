@@ -1,5 +1,6 @@
-/* Mobile gallery header, under the shared masthead. Hidden on the two-column
-   desktop layout, where the fixed rail (GalleryRail) takes over instead. */
+/* Mobile gallery header, under the shared masthead: the palette browser, while
+   it is open. Hidden on the two-column desktop layout, where the fixed rail
+   (GalleryRail) takes over instead. */
 .wrapper {
   display: none;
 }
@@ -11,37 +12,6 @@
   }
 }
 
-/* The rail's ruled field, at the width of the page. */
-.search {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 0 9px;
-  color: oklch(0.55 0.01 260);
-  border-bottom: 1px solid oklch(0 0 0 / 0.16);
-  transition: border-color 120ms ease;
-}
-
-.search:hover,
-.search:focus-within {
-  border-color: oklch(0 0 0 / 0.4);
-}
-
-.search input {
-  flex: 1;
-  min-width: 0;
-  border: none;
-  background: transparent;
-  font-family: var(--font-sans-serif);
-  font-size: 13px;
-  color: #0e0e13;
-  outline: none;
-}
-
-.search svg {
-  flex: none;
-}
-
 /* When "All" opens the browser, it takes the palette slot as a bounded,
    internally scrolling panel (the same embedded browser as the desktop rail). */
 .browserPanel {
@@ -49,11 +19,4 @@
   flex-direction: column;
   height: 60vh;
   height: 60dvh;
-  margin-top: 12px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .search {
-    transition: none;
-  }
 }
