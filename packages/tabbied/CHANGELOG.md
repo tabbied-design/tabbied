@@ -1,5 +1,13 @@
 # tabbied
 
+## 0.10.1
+
+### Patch Changes
+
+- Changes since tabbied@0.10.0 that landed without a changeset:
+
+  - Remove stale generators and dead code; typecheck for unused locals ([#136](https://github.com/tabbied-design/tabbied/issues/136))
+
 ## 0.10.0
 
 ### Minor Changes
