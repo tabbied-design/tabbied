@@ -138,34 +138,6 @@ export function orderTemplates<T extends Spreadable & { slug: string }>(items: r
  * after the lead).
  */
 export const GALLERY_LEAD: readonly string[] = [
-  // 2026-10-15: the trades the gallery's heading names, first (the guest
-  // audit found page 1 opening on an arcade bar, a watch manufacture and a
-  // concert hall under "Starting out as a florist, barber, baker..."). The
-  // picks of 2026-10-02 follow them, in their order.
-  'wild-stem',
-  'live-wire-electric',
-  'crumb-bakehouse',
-  'stropline-barbers',
-  'northside-plumbing',
-  'morrow-coffee',
-  'muddy-paws-mobile',
-  'fringe-salon',
-  'fernhill-gardens',
-  'inkwell-tattoo',
-  'ridgecap-roofing',
-  'el-farolito-truck',
-  'keyway-locksmiths',
-  'clearwater-dental',
-  'northwind-heating-air',
-  'rye-and-levain',
-  'stitch-lane-tailors',
-  'wheelhouse-ceramics',
-  'kessler-auto',
-  'spruce-cleaning',
-  'true-grain-carpentry',
-  'tack-and-button',
-  'fresh-coat-decorators',
-  'picket-post-fencing',
   // 2026-10-02: picked for the top of the first page.
   'verdant',
   'continue-arcade-bar',
@@ -533,6 +505,33 @@ const GALLERY_SPREAD: readonly string[] = [
   'qed-math-tutoring',
   'night-owl-sleep',
   'dark-sky-workshops',
+  // 2026-10-21: the twenty-four everyday trades that led the gallery from
+  // 2026-10-15, moved out of GALLERY_LEAD so the hand-picked sites open the
+  // first page again, and spread among themselves (seed 353).
+  'stropline-barbers',
+  'el-farolito-truck',
+  'stitch-lane-tailors',
+  'wheelhouse-ceramics',
+  'clearwater-dental',
+  'northwind-heating-air',
+  'crumb-bakehouse',
+  'inkwell-tattoo',
+  'spruce-cleaning',
+  'rye-and-levain',
+  'wild-stem',
+  'fresh-coat-decorators',
+  'fringe-salon',
+  'fernhill-gardens',
+  'keyway-locksmiths',
+  'morrow-coffee',
+  'tack-and-button',
+  'northside-plumbing',
+  'kessler-auto',
+  'picket-post-fencing',
+  'muddy-paws-mobile',
+  'ridgecap-roofing',
+  'true-grain-carpentry',
+  'live-wire-electric',
 ];
 
 /** The gallery's order: the hand-picked lead, then the spread. */

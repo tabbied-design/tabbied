@@ -968,14 +968,17 @@ the thumbnail. Five things worth not re-litigating:
   The first 177 were laid out by `spreadTemplates` and frozen as they were
   first published; the fifty small-business sites were appended after them
   (2026-09-26), spread among themselves, the fifty picture-led sites
-  (2026-09-27, `pic-`) after those, and the hundred professionals sites
-  (2026-10-08, `pro-`) after those.
+  (2026-09-27, `pic-`) after those, the hundred professionals sites
+  (2026-10-08, `pro-`) after those, and the twenty-four trades that had led
+  the gallery (2026-10-21, below) after those.
 - **The first cards are picked by hand.** `GALLERY_ORDER` is `GALLERY_LEAD`,
-  forty-six templates chosen for the top of the first page (twenty-four
-  everyday trades on 2026-10-15, the florists, barbers, bakers and
-  electricians the gallery's own heading names, ahead of the twenty-three
-  picked on 2026-10-02, fifteen and then eight), then `GALLERY_SPREAD`,
-  the spread above less those, which is the part that stays append-only.
+  twenty-two templates chosen for the top of the first page on 2026-10-02
+  (fourteen and then eight), then `GALLERY_SPREAD`, the spread above less
+  those, which is the part that stays append-only. From 2026-10-15 the lead
+  opened with twenty-four everyday trades (the florists, barbers, bakers and
+  electricians the gallery's heading then named, Muddy Paws taken from the
+  2026-10-02 picks); on 2026-10-21 they left the lead for the end of the
+  spread, which put them on the last page and the picks first again.
   Editing the lead moves every card after it, so it is an editorial
   decision, not a side effect of adding templates. The lead is shown in the
   order given and may put two of a batch side by side; the neighbor rule
