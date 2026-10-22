@@ -1523,14 +1523,15 @@ what it changes. Five things worth not re-litigating:
   Worker writes beside it; `build` is the HTML package a customized React
   project reads its result from, served and not logged. Until 2026-10-15 a
   customized React download counted as two downloads and none said it was
-  customized. The overview shows the customized share and the week's ten
-  most downloaded templates, and `/admin/downloads/` (`GET
-  /api/admin/downloads?period=7|30|90|all`) every template's: its downloads
-  split by guests (no account) and signed in, by HTML and React, how many
-  were customized, and when it last went out, with the site's totals, a
-  day-by-day chart and a CSV of the table. Templates with none in the period
-  are a toggle away, and a slug downloaded that the catalog no longer has is
-  listed as retired rather than dropped.
+  customized. The overview shows the customized share, a downloads chart
+  and the range's ten most downloaded templates, and `/admin/downloads/`
+  (`GET /api/admin/downloads`, over a range: see "The admin's range and
+  charts" below) every template's: its downloads split by guests (no
+  account) and signed in, by HTML and React, how many were customized, and
+  when it last went out, with the site's totals, three charts (by who, by
+  format, customized or not) and a CSV of the table. Templates with none in
+  the range are a toggle away, and a slug downloaded that the catalog no
+  longer has is listed as retired rather than dropped.
 - **The customizer's counts are a beacon, `POST /api/events`.** A closed list
   of kinds (`lib/events.ts`): `customize` (the customizer opened on a
   template), `save-gate` (a signed-out Save asked for an account) and
@@ -1538,9 +1539,10 @@ what it changes. Five things worth not re-litigating:
   It is unauthenticated, so it is burst-limited per address through the same
   D1 window as everything else, and `sweepExpired` clears ended windows so
   the per-address rows do not pile up. The admin overview reads it with the
-  download log: downloads in 30 days (and how many with no account),
-  customizer sessions, new accounts and how many began at the save gate, and
-  saved templates. Visits are Cloudflare's Web Analytics, not ours.
+  download log, over its range (30 days unless asked): downloads (and how
+  many with no account), customizer sessions, new accounts and how many
+  began at the save gate, and saved templates, which is a total. Visits are
+  Cloudflare's Web Analytics, not ours.
 - **The save gate stashes the draft, in localStorage.**
   `components/studio/SaveGate.tsx` offers a free account or a log-in; either
   link writes the draft (`lib/pendingSave.ts`, a week's life, one template)
@@ -1571,6 +1573,42 @@ served, since counting never refuses a download, but it goes uncounted, and
 
 Mail itself (Resend, `MAIL_FROM`, the DNS records and what
 `/api/health` reports) is `docs/email.md`.
+
+## The admin's range and charts
+
+The overview and the Downloads page open on a row of presets (1 day, 7, 30
+and 90 days, 1 year, all time) and a Custom pair of UTC dates, and every
+figure, chart and table under the row reads that one range
+(`components/admin/RangePicker.tsx`). Four things worth not re-litigating:
+
+- **The Worker decides the window, the page only labels it.** Both routes
+  take `?period=1|7|30|90|365|all` or `?from=YYYY-MM-DD&to=YYYY-MM-DD` and
+  answer with `range` (`worker/lib/range.ts`): a day preset is the last N
+  UTC days with today included, so its bars and its totals count the same
+  rows and add up; 1 day is the running hour and the 23 before it; all time
+  starts on the day of the first row; a custom range is whole days, both
+  ends included, cut off at the end of today. A bad pair, a date that does
+  not exist, or a range that starts tomorrow is a 400. Until 2026-10-22 a
+  period was a rolling `now - N days` while its chart drew calendar days, so
+  the two disagreed at the edges.
+- **The span picks the bar.** An hour up to two days, a day up to 92, then a
+  week, or as many weeks as keep a chart to 104 bars. A series is the bars
+  that have anything, numbered from the range's start (`barOf`, an integer
+  division in the SQL); the page fills in the empty ones and words each
+  (`components/admin/range.ts`). All time used to be charted over its last
+  90 days only.
+- **Each bar reads out on hover and on focus** (`components/admin/BarChart.tsx`).
+  The column is the target, not the painted bar, so a day with one sign-up
+  is as easy to point at as the busiest; the chart takes focus once and the
+  arrows walk it; the readout lists every figure behind the bar (the growth
+  chart's new accounts, how many started from a save, and the running total
+  from `usersBefore`). A screen reader gets the chart as an image whose
+  label lists the bars with anything, and the readout as a live region.
+- **A new range holds the last answer, dimmed** (`useAdminData`'s `stale`),
+  rather than blinking to "Loading..." and back. The overview's old
+  fixed-window fields (`downloads30d`, `topDownloads7d`, `signupsByDay`, ...)
+  are gone, not kept beside the new ones: the page and the Worker deploy
+  together.
 
 ## Studio - matching, then generating
 

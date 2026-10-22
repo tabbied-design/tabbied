@@ -10,6 +10,18 @@ import { ArrowLeft, ArrowRight, ChevronDown } from 'lucide-react';
 import { ApiError, apiFetch, apiUrl } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';
 import { initials } from 'components/nav';
+import BarChart, { type ChartBar } from './BarChart';
+import RangePicker from './RangePicker';
+import {
+  barNote,
+  rangeLabel,
+  rangePhrase,
+  rangeQuery,
+  rangeSlug,
+  slotsOf,
+  type RangeChoice,
+  type ResolvedRange,
+} from './range';
 import UserActions from './UserActions';
 import { cell, money, saveCsv, useAdminData, when } from './useAdminData';
 import styles from './admin.module.css';
@@ -23,7 +35,12 @@ const day = (value: string | Date) =>
 
 // ---- overview ---------------------------------------------------------------
 
+/** One bar of downloads, as /api/admin/overview and /api/admin/downloads send it. */
+type DownloadBar = { i: number; n: number; guests: number; html: number; react: number; customized: number };
+
 type Overview = {
+  /** The window every figure below reads, but the saved templates. */
+  range: ResolvedRange;
   users: number;
   newUsersThisWeek: number;
   generationsThisWeek: number;
@@ -32,100 +49,205 @@ type Overview = {
   aiCallsToday: number;
   aiCostToday: number;
   imagesThisWeek: number;
-  /** Every zip served in the last 30 days, anonymous ones included. */
-  downloads30d: number;
-  anonymousDownloads30d: number;
-  /** Of those, the ones the customizer built. Absent from an older Worker. */
-  customizedDownloads30d?: number;
-  /** The week's most downloaded templates, original and customized together. */
-  topDownloads7d?: { slug: string; n: number }[];
-  /** Times the customizer was opened on a template, last 30 days. */
-  customizerSessions30d: number;
-  newAccounts30d: number;
+  /** Accounts made before the range: where the growth chart's running total starts. */
+  usersBefore: number;
+  /** Every zip served in the range, anonymous ones included. */
+  downloads: number;
+  anonymousDownloads: number;
+  /** Of those, the ones the customizer built. */
+  customizedDownloads: number;
+  /** The range's most downloaded templates, original and customized together. */
+  topDownloads: { slug: string; n: number }[];
+  /** Times the customizer was opened on a template. */
+  customizerSessions: number;
+  saveGates: number;
+  newAccounts: number;
   /** Of those, the accounts whose edits were saved through the save gate. */
-  newAccountsFromSave30d: number;
-  /** Saved customizations, across all accounts. */
+  newAccountsFromSave: number;
+  /** Saved customizations, across all accounts and all time. */
   savedTemplates: number;
-  saveGates30d: number;
-  /** Absent from a Worker older than the chart: read as no sign-ups. */
-  signupsByDay?: { day: string; n: number }[];
+  /** The bars with any sign-ups; the page fills in the rest. */
+  signupSeries: { i: number; n: number; fromSave: number }[];
+  downloadSeries: DownloadBar[];
 };
 
-/** The last fourteen UTC days, oldest first, each with its count or zero. */
-function fortnight(signups: { day: string; n: number }[] = []) {
-  const counts = new Map(signups.map((row) => [row.day, row.n]));
-  const today = new Date();
+/** A readout's line: the figure, and the noun that agrees with it. */
+const count = (n: number, one: string, many: string) => ({ value: n.toLocaleString(), label: n === 1 ? one : many });
 
-  return Array.from({ length: 14 }, (_, offset) => {
-    const date = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - (13 - offset)));
-    const key = date.toISOString().slice(0, 10);
+const percent = (part: number, whole: number) => (whole ? `${Math.round((part / whole) * 100)}%` : '0%');
+
+/** New accounts per bar, each with what came of them and the running total. */
+function GrowthChart({ data }: { data: Overview }) {
+  const byBar = new Map(data.signupSeries.map((row) => [row.i, row]));
+  let running = data.usersBefore;
+
+  const bars = slotsOf(data.range).map((slot): ChartBar => {
+    const n = byBar.get(slot.i)?.n ?? 0;
+    const fromSave = byBar.get(slot.i)?.fromSave ?? 0;
+    running += n;
 
     return {
-      key,
-      label: date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', timeZone: 'UTC' }),
-      short: String(date.getUTCDate()),
-      n: counts.get(key) ?? 0,
+      key: String(slot.i),
+      tick: slot.tick,
+      heading: slot.heading,
+      parts: [{ value: n, tone: styles.toneMint }],
+      lines: [
+        count(n, 'new user', 'new users'),
+        { value: fromSave.toLocaleString(), label: 'started from a save' },
+        count(running, 'user in all', 'users in all'),
+      ],
+      summary: n ? `${slot.heading} ${n}` : '',
     };
   });
-}
-
-function GrowthChart({ signups }: { signups?: { day: string; n: number }[] }) {
-  const days = fortnight(signups);
-  const total = days.reduce((sum, entry) => sum + entry.n, 0);
-  const peak = Math.max(1, ...days.map((entry) => entry.n));
 
   return (
-    <div className={`${styles.card} ${styles.chartCard}`}>
-      <div className={styles.cardHead}>
-        <div>
-          <h2 className={styles.h3}>User growth</h2>
-          <p className={styles.cardSub}>New accounts by day, last 14 days (UTC)</p>
-        </div>
-        <span className={styles.badge}>
-          {total === 1 ? '+1 user' : `+${total} users`}
-        </span>
-      </div>
-      <div className={styles.bars} role="img" aria-label={`New accounts per day: ${days.map((entry) => `${entry.label} ${entry.n}`).join(', ')}`}>
-        {days.map((entry) => (
-          <div key={entry.key} className={styles.barCol}>
-            <div
-              className={`${styles.bar} ${entry.n === 0 ? styles.barEmpty : ''}`}
-              style={{ height: `${Math.round((entry.n / peak) * 100)}%` }}
-              title={`${entry.label}: ${entry.n}`}
-            />
-          </div>
-        ))}
-      </div>
-      <div className={styles.barLabels} aria-hidden="true">
-        {/* A space between labels keeps the row fourteen numbers rather than
-            one long one, to a screen reader or a text query; flex draws
-            nothing for it. */}
-        {days.map((entry, index) => (
-          <span key={entry.key} className={styles.barLabel}>
-            {index > 0 ? ' ' : ''}
-            {entry.short}
-          </span>
-        ))}
-      </div>
-    </div>
+    <BarChart
+      title="User growth"
+      sub={`New accounts by ${data.range.bucket}, ${rangePhrase(data.range)} (UTC)${barNote(data.range)}`}
+      aside={<span className={styles.badge}>{data.newAccounts === 1 ? '+1 user' : `+${data.newAccounts.toLocaleString()} users`}</span>}
+      label={`New accounts per ${data.range.bucket}`}
+      bars={bars}
+    />
   );
 }
 
-/** The week's most downloaded templates, each a link to its live page. */
-function TopDownloads({ rows = [] }: { rows?: { slug: string; n: number }[] }) {
+const EMPTY_BAR = { n: 0, guests: 0, html: 0, react: 0, customized: 0 };
+
+/**
+ * The three ways the downloads are drawn: by who took them (the overview's,
+ * and the Downloads page's first), by format, and customized or not. Each
+ * readout says what its bar is made of; the first also says how many of the
+ * bar were customized, since the overview has no chart of its own for that.
+ */
+const DOWNLOAD_VIEWS = {
+  who: {
+    title: (range: ResolvedRange) => `Downloads by ${range.bucket}`,
+    label: (range: ResolvedRange) => `Downloads per ${range.bucket}`,
+    sub: 'guests and signed in',
+    legend: [
+      ['Guests', styles.toneSlate],
+      ['Signed in', styles.toneMint],
+    ],
+    draw: (row: Omit<DownloadBar, 'i'>): Pick<ChartBar, 'parts' | 'lines'> => ({
+      parts: [
+        { value: row.guests, tone: styles.toneSlate },
+        { value: row.n - row.guests, tone: styles.toneMint },
+      ],
+      lines: [
+        count(row.n, 'download', 'downloads'),
+        { ...count(row.n - row.guests, 'signed in', 'signed in'), tone: styles.toneMint },
+        { ...count(row.guests, 'guest', 'guests'), tone: styles.toneSlate },
+        count(row.customized, 'customized', 'customized'),
+      ],
+    }),
+  },
+  format: {
+    title: () => 'HTML and React',
+    label: (range: ResolvedRange) => `Downloads per ${range.bucket} by format`,
+    sub: 'by format',
+    legend: [
+      ['HTML', styles.toneSlate],
+      ['React', styles.toneMint],
+    ],
+    draw: (row: Omit<DownloadBar, 'i'>): Pick<ChartBar, 'parts' | 'lines'> => ({
+      parts: [
+        { value: row.html, tone: styles.toneSlate },
+        { value: row.react, tone: styles.toneMint },
+      ],
+      lines: [
+        count(row.n, 'download', 'downloads'),
+        { ...count(row.html, 'HTML', 'HTML'), tone: styles.toneSlate },
+        { ...count(row.react, 'React', 'React'), tone: styles.toneMint },
+      ],
+    }),
+  },
+  customized: {
+    title: () => 'Customized',
+    label: (range: ResolvedRange) => `Customized downloads per ${range.bucket}`,
+    sub: 'customized or as they are',
+    legend: [
+      ['As they are', styles.toneGray],
+      ['Customized', styles.toneMint],
+    ],
+    draw: (row: Omit<DownloadBar, 'i'>): Pick<ChartBar, 'parts' | 'lines'> => {
+      const plain = Math.max(0, row.n - row.customized);
+
+      return {
+        parts: [
+          { value: plain, tone: styles.toneGray },
+          { value: row.customized, tone: styles.toneMint },
+        ],
+        lines: [
+          count(row.n, 'download', 'downloads'),
+          { value: row.customized.toLocaleString(), label: `customized (${percent(row.customized, row.n)})`, tone: styles.toneMint },
+          { value: plain.toLocaleString(), label: 'as they are', tone: styles.toneGray },
+        ],
+      };
+    },
+  },
+} as const;
+
+/** The range's downloads per bar, drawn one of the three ways. */
+function DownloadChart({
+  range,
+  series,
+  view,
+}: {
+  range: ResolvedRange;
+  series: DownloadBar[];
+  view: keyof typeof DOWNLOAD_VIEWS;
+}) {
+  const { title, label, sub, legend, draw } = DOWNLOAD_VIEWS[view];
+  const byBar = new Map(series.map((row) => [row.i, row]));
+
+  const bars = slotsOf(range).map((slot): ChartBar => {
+    const row = byBar.get(slot.i) ?? EMPTY_BAR;
+    const drawn = draw(row);
+
+    return {
+      key: String(slot.i),
+      tick: slot.tick,
+      heading: slot.heading,
+      ...drawn,
+      summary: row.n || row.customized ? `${slot.heading} ${drawn.lines.map((line) => `${line.value} ${line.label}`).join(', ')}` : '',
+    };
+  });
+
+  return (
+    <BarChart
+      title={title(range)}
+      sub={`${rangeLabel(range)} (UTC), ${sub}${barNote(range)}`}
+      aside={
+        <ul className={styles.legend} aria-hidden="true">
+          {legend.map(([name, tone]) => (
+            <li key={name}>
+              <span className={`${styles.swatch} ${tone}`} />
+              {name}
+            </li>
+          ))}
+        </ul>
+      }
+      label={label(range)}
+      bars={bars}
+    />
+  );
+}
+
+/** The range's most downloaded templates, each a link to its live page. */
+function TopDownloads({ range, rows }: { range: ResolvedRange; rows: { slug: string; n: number }[] }) {
   return (
     <div className={`${styles.card} ${styles.chartCard}`}>
       <div className={styles.cardHead}>
         <div>
           <h2 className={styles.h3}>Most downloaded</h2>
-          <p className={styles.cardSub}>Templates by downloads, original and customized, last 7 days</p>
+          <p className={styles.cardSub}>Templates by downloads, original and customized, {rangePhrase(range)}</p>
         </div>
         <Link href="/admin/downloads/" prefetch={false} className={styles.pill}>
           Every template <ArrowRight size={13} aria-hidden="true" />
         </Link>
       </div>
       {rows.length === 0 ? (
-        <p className={styles.quiet}>No downloads this week.</p>
+        <p className={styles.quiet}>No downloads in this range.</p>
       ) : (
         <ol className={styles.topList}>
           {rows.map((row) => (
@@ -142,55 +264,83 @@ function TopDownloads({ rows = [] }: { rows?: { slug: string; n: number }[] }) {
   );
 }
 
-export function OverviewPanel() {
-  const { data, error } = useAdminData<Overview>('/api/admin/overview');
+/**
+ * What a page shows while it asks for another range: the last answer,
+ * dimmed, rather than a blank; and why, if the new one was refused.
+ */
+function Refreshing({ stale, error, children }: { stale: boolean; error: string | null; children: ReactNode }) {
+  return (
+    <>
+      {stale && error ? (
+        <p className={styles.error} role="alert">
+          {error}
+        </p>
+      ) : null}
+      <div className={stale ? styles.stale : undefined} aria-busy={stale}>
+        {children}
+      </div>
+    </>
+  );
+}
 
-  if (!data) return <Load error={error} />;
+export function OverviewPanel() {
+  const [range, setRange] = useState<RangeChoice>({ period: '30' });
+  const { data, error, stale } = useAdminData<Overview>(`/api/admin/overview?${rangeQuery(range)}`);
 
   // The 14 October design's four, which measure what dropping the sign-in
   // did: downloads with no account, customizer sessions, the accounts made
   // (and how many began at the save gate), and what was saved. The
   // endpoint's other figures (generations, sites, fallbacks, AI calls and
   // cost) are Studio's, and the AI usage and Generations pages carry them.
-  const fromSave = data.newAccounts30d
-    ? Math.round((data.newAccountsFromSave30d / data.newAccounts30d) * 100)
-    : 0;
-  const stats: { label: string; value: string; note: string; dark?: boolean }[] = [
-    {
-      label: 'Downloads',
-      value: data.downloads30d.toLocaleString(),
-      note: `Last 30 days, ${data.anonymousDownloads30d.toLocaleString()} with no account${
-        data.customizedDownloads30d === undefined ? '' : `, ${data.customizedDownloads30d.toLocaleString()} customized`
-      }`,
-    },
-    {
-      label: 'Customizer sessions',
-      value: data.customizerSessions30d.toLocaleString(),
-      note: `Last 30 days, ${data.saveGates30d.toLocaleString()} asked to save`,
-    },
-    {
-      label: 'New accounts',
-      value: data.newAccounts30d.toLocaleString(),
-      note: data.newAccounts30d ? `Last 30 days, ${fromSave}% started from a save` : 'Last 30 days',
-    },
-    { label: 'Saved templates', value: data.savedTemplates.toLocaleString(), note: 'Across all accounts', dark: true },
-  ];
+  const stats = (data: Overview): { label: string; value: string; note: string; dark?: boolean }[] => {
+    const over = rangeLabel(data.range);
+    const fromSave = data.newAccounts ? Math.round((data.newAccountsFromSave / data.newAccounts) * 100) : 0;
+
+    return [
+      {
+        label: 'Downloads',
+        value: data.downloads.toLocaleString(),
+        note: `${over}, ${data.anonymousDownloads.toLocaleString()} with no account, ${data.customizedDownloads.toLocaleString()} customized`,
+      },
+      {
+        label: 'Customizer sessions',
+        value: data.customizerSessions.toLocaleString(),
+        note: `${over}, ${data.saveGates.toLocaleString()} asked to save`,
+      },
+      {
+        label: 'New accounts',
+        value: data.newAccounts.toLocaleString(),
+        note: data.newAccounts ? `${over}, ${fromSave}% started from a save` : over,
+      },
+      { label: 'Saved templates', value: data.savedTemplates.toLocaleString(), note: 'Across all accounts', dark: true },
+    ];
+  };
 
   return (
     <>
-      <ul className={styles.stats}>
-        {stats.map((stat) => (
-          <li key={stat.label} className={`${styles.stat} ${stat.dark ? styles.statDark : ''}`}>
-            <p className={styles.statLabel}>{stat.label}</p>
-            <p className={styles.statValue}>{stat.value}</p>
-            <p className={styles.statNote}>{stat.note}</p>
-          </li>
-        ))}
-      </ul>
+      <RangePicker value={range} onChange={setRange} shown={data?.range ?? null} />
 
-      <GrowthChart signups={data.signupsByDay} />
+      {!data ? (
+        <Load error={error} />
+      ) : (
+        <Refreshing stale={stale} error={error}>
+          <ul className={styles.stats}>
+            {stats(data).map((stat) => (
+              <li key={stat.label} className={`${styles.stat} ${stat.dark ? styles.statDark : ''}`}>
+                <p className={styles.statLabel}>{stat.label}</p>
+                <p className={styles.statValue}>{stat.value}</p>
+                <p className={styles.statNote}>{stat.note}</p>
+              </li>
+            ))}
+          </ul>
 
-      <TopDownloads rows={data.topDownloads7d} />
+          <GrowthChart data={data} />
+
+          <DownloadChart range={data.range} series={data.downloadSeries} view="who" />
+
+          <TopDownloads range={data.range} rows={data.topDownloads} />
+        </Refreshing>
+      )}
 
       <div className={styles.sectionHead}>
         <h2 className={styles.h2}>Recent users</h2>
@@ -674,15 +824,6 @@ export function GenerationDetailPanel({ id }: { id: string }) {
 
 // ---- downloads --------------------------------------------------------------
 
-type DownloadPeriod = '7' | '30' | '90' | 'all';
-
-const PERIODS: [DownloadPeriod, string][] = [
-  ['7', 'Last 7 days'],
-  ['30', 'Last 30 days'],
-  ['90', 'Last 90 days'],
-  ['all', 'All time'],
-];
-
 type TemplateDownloads = {
   slug: string;
   name: string;
@@ -700,7 +841,7 @@ type TemplateDownloads = {
 };
 
 type Downloads = {
-  period: DownloadPeriod;
+  range: ResolvedRange;
   totals: {
     downloads: number;
     guests: number;
@@ -711,12 +852,11 @@ type Downloads = {
     customizedByGuests: number;
     /** Accounts that downloaded while signed in. */
     people: number;
-    /** Templates downloaded at least once in the period. */
+    /** Templates downloaded at least once in the range. */
     templates: number;
   };
-  /** How many days the chart covers: the period, or the last 90 for all time. */
-  chartDays: number;
-  byDay: { day: string; guests: number; signedIn: number }[];
+  /** The bars with any downloads; the page fills in the rest. */
+  downloadSeries: DownloadBar[];
   templates: TemplateDownloads[];
 };
 
@@ -733,99 +873,12 @@ const COLUMNS: [SortKey, string][] = [
   ['lastAt', 'Last download'],
 ];
 
-const percent = (part: number, whole: number) => (whole ? `${Math.round((part / whole) * 100)}%` : '0%');
-
-/** The last `count` UTC days, oldest first, each with its two counts or zero. */
-function downloadDays(rows: Downloads['byDay'], count: number) {
-  const byDay = new Map(rows.map((row) => [row.day, row]));
-  const today = new Date();
-
-  return Array.from({ length: count }, (_, offset) => {
-    const date = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - (count - 1 - offset)));
-    const key = date.toISOString().slice(0, 10);
-    const row = byDay.get(key);
-
-    return {
-      key,
-      label: date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', timeZone: 'UTC' }),
-      guests: row?.guests ?? 0,
-      signedIn: row?.signedIn ?? 0,
-    };
-  });
-}
-
-/** Downloads per day, each bar the guests' share under the signed-in one. */
-function DownloadChart({ data }: { data: Downloads }) {
-  const days = downloadDays(data.byDay, data.chartDays);
-  const peak = Math.max(1, ...days.map((entry) => entry.guests + entry.signedIn));
-  // Past a fortnight the bars close up and only every few carry a label, so
-  // a month or a quarter still reads.
-  const dense = days.length > 14;
-  const every = Math.ceil(days.length / 15);
-
-  return (
-    <div className={`${styles.card} ${styles.chartCard}`}>
-      <div className={styles.cardHead}>
-        <div>
-          <h2 className={styles.h3}>Downloads by day</h2>
-          <p className={styles.cardSub}>
-            {data.period === 'all' ? 'The last 90 days' : `The last ${data.chartDays} days`} (UTC), guests and signed in
-          </p>
-        </div>
-        <ul className={styles.legend} aria-hidden="true">
-          <li>
-            <span className={styles.swatchGuest} />
-            Guests
-          </li>
-          <li>
-            <span className={styles.swatchSigned} />
-            Signed in
-          </li>
-        </ul>
-      </div>
-      <div
-        className={`${styles.bars} ${dense ? styles.barsDense : ''}`}
-        role="img"
-        aria-label={`Downloads per day: ${days
-          .filter((entry) => entry.guests + entry.signedIn > 0)
-          .map((entry) => `${entry.label} ${entry.guests} guests, ${entry.signedIn} signed in`)
-          .join('; ') || 'none'}`}
-      >
-        {days.map((entry) => {
-          const total = entry.guests + entry.signedIn;
-
-          return (
-            <div key={entry.key} className={styles.barCol} title={`${entry.label}: ${entry.guests} guests, ${entry.signedIn} signed in`}>
-              {total === 0 ? (
-                <div className={`${styles.bar} ${styles.barEmpty}`} />
-              ) : (
-                <div className={styles.barStack} style={{ height: `${Math.round((total / peak) * 100)}%` }}>
-                  {entry.signedIn > 0 ? <div className={styles.barSigned} style={{ flexGrow: entry.signedIn }} /> : null}
-                  {entry.guests > 0 ? <div className={styles.barGuest} style={{ flexGrow: entry.guests }} /> : null}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-      <div className={`${styles.barLabels} ${dense ? styles.barsDense : ''}`} aria-hidden="true">
-        {days.map((entry, index) => (
-          <span key={entry.key} className={styles.barLabel}>
-            {index > 0 ? ' ' : ''}
-            {index % every === 0 ? entry.label : ''}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export function DownloadsPanel() {
-  const [period, setPeriod] = useState<DownloadPeriod>('30');
+  const [range, setRange] = useState<RangeChoice>({ period: '30' });
   const [query, setQuery] = useState('');
   const [showAll, setShowAll] = useState(false);
   const [sort, setSort] = useState<{ key: SortKey; descending: boolean }>({ key: 'downloads', descending: true });
-  const { data, error } = useAdminData<Downloads>(`/api/admin/downloads?period=${period}`);
+  const { data, error, stale } = useAdminData<Downloads>(`/api/admin/downloads?${rangeQuery(range)}`);
 
   const rows = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -842,16 +895,16 @@ export function DownloadsPanel() {
       });
   }, [data, query, showAll, sort]);
 
-  const label = PERIODS.find(([key]) => key === period)?.[1] ?? '';
-
   const exportRows = () => {
+    if (!data) return;
+
     const header = ['slug', 'name', 'downloads', 'guests', 'signed_in', 'html', 'react', 'customized', 'last_download'];
     const lines = rows.map((row) =>
       [row.slug, row.name, row.downloads, row.guests, row.signedIn, row.html, row.react, row.customized, row.lastAt ?? '']
         .map(cell)
         .join(',')
     );
-    saveCsv(`tabbied-downloads-${period === 'all' ? 'all-time' : `${period}-days`}-${new Date().toISOString().slice(0, 10)}.csv`, [
+    saveCsv(`tabbied-downloads-${rangeSlug(data.range)}-${new Date().toISOString().slice(0, 10)}.csv`, [
       header.join(','),
       ...lines,
     ]);
@@ -859,30 +912,18 @@ export function DownloadsPanel() {
 
   return (
     <>
-      <div className={styles.toolbar} role="group" aria-label="Period">
-        {PERIODS.map(([key, name]) => (
-          <button
-            key={key}
-            type="button"
-            className={`${styles.pill} ${key === period ? styles.pillOn : ''}`}
-            aria-pressed={key === period}
-            onClick={() => setPeriod(key)}
-          >
-            {name}
-          </button>
-        ))}
-      </div>
+      <RangePicker value={range} onChange={setRange} shown={data?.range ?? null} />
 
-      {!data || data.period !== period ? (
+      {!data ? (
         <Load error={error} />
       ) : (
-        <>
-          <ul className={styles.stats} style={{ marginTop: 22 }}>
+        <Refreshing stale={stale} error={error}>
+          <ul className={styles.stats}>
             <li className={styles.stat}>
               <p className={styles.statLabel}>Downloads</p>
               <p className={styles.statValue}>{data.totals.downloads.toLocaleString()}</p>
               <p className={styles.statNote}>
-                {label}, {data.totals.html.toLocaleString()} HTML and {data.totals.react.toLocaleString()} React, of{' '}
+                {rangeLabel(data.range)}, {data.totals.html.toLocaleString()} HTML and {data.totals.react.toLocaleString()} React, of{' '}
                 {data.totals.templates.toLocaleString()} {data.totals.templates === 1 ? 'template' : 'templates'}
               </p>
             </li>
@@ -910,7 +951,11 @@ export function DownloadsPanel() {
             </li>
           </ul>
 
-          <DownloadChart data={data} />
+          <DownloadChart range={data.range} series={data.downloadSeries} view="who" />
+          <div className={styles.chartPair}>
+            <DownloadChart range={data.range} series={data.downloadSeries} view="format" />
+            <DownloadChart range={data.range} series={data.downloadSeries} view="customized" />
+          </div>
 
           <div className={styles.sectionHead}>
             <h2 className={styles.h2}>By template</h2>
@@ -979,7 +1024,7 @@ export function DownloadsPanel() {
                 {rows.length === 0 ? (
                   <tr>
                     <td colSpan={COLUMNS.length} className={styles.quiet}>
-                      {query.trim() ? 'No template matches that search.' : `No downloads in this period.`}
+                      {query.trim() ? 'No template matches that search.' : 'No downloads in this range.'}
                     </td>
                   </tr>
                 ) : (
@@ -1005,7 +1050,7 @@ export function DownloadsPanel() {
               </tbody>
             </table>
           </div>
-        </>
+        </Refreshing>
       )}
     </>
   );
