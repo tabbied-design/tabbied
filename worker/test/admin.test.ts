@@ -58,11 +58,14 @@ describe('the admin tier', () => {
 
     const overview = (await SELF.fetch(`${ORIGIN}/api/admin/overview`, { headers: { cookie } }).then((r) => r.json())) as {
       users: number;
-      signupsByDay: { day: string; n: number }[];
+      newAccounts: number;
+      signupSeries: { i: number; n: number }[];
     };
     expect(overview.users).toBeGreaterThanOrEqual(2);
-    // Both accounts were created moments ago, so today is a day with sign-ups.
-    expect(overview.signupsByDay.reduce((sum, row) => sum + row.n, 0)).toBeGreaterThanOrEqual(2);
+    // Both accounts were created moments ago, so today is a day with sign-ups,
+    // and the chart's bars add up to the figure beside them.
+    expect(overview.signupSeries.reduce((sum, row) => sum + row.n, 0)).toBeGreaterThanOrEqual(2);
+    expect(overview.signupSeries.reduce((sum, row) => sum + row.n, 0)).toBe(overview.newAccounts);
 
     const users = (await SELF.fetch(`${ORIGIN}/api/admin/users?q=member`, { headers: { cookie } }).then((r) => r.json())) as {
       users: { email: string }[];
@@ -244,8 +247,8 @@ describe('acting on accounts', () => {
       expect(response.status).toBe(200);
       await response.arrayBuffer();
     };
-    const verdantThisWeek = (o: { topDownloads7d?: { slug: string; n: number }[] }) =>
-      o.topDownloads7d?.find((row) => row.slug === 'verdant')?.n ?? 0;
+    const verdantThisWeek = (o: { topDownloads?: { slug: string; n: number }[] }) =>
+      o.topDownloads?.find((row) => row.slug === 'verdant')?.n ?? 0;
     // The Downloads page's row for the template, in a period.
     type TemplateRow = Record<'downloads' | 'guests' | 'signedIn' | 'html' | 'react' | 'customized', number>;
     const verdantRow = async (period: string) => {
@@ -286,25 +289,43 @@ describe('acting on accounts', () => {
     const after = await overview();
     const moved = (field: string) => after[field] - before[field];
     expect(verdantThisWeek(after as never) - verdantThisWeek(before as never)).toBe(4);
+    // The overview's default is the last 30 days, which leaves out the old row.
     expect({
-      downloads30d: moved('downloads30d'),
-      anonymousDownloads30d: moved('anonymousDownloads30d'),
-      customizedDownloads30d: moved('customizedDownloads30d'),
-      customizerSessions30d: moved('customizerSessions30d'),
-      saveGates30d: moved('saveGates30d'),
-      newAccounts30d: moved('newAccounts30d'),
-      newAccountsFromSave30d: moved('newAccountsFromSave30d'),
+      downloads: moved('downloads'),
+      anonymousDownloads: moved('anonymousDownloads'),
+      customizedDownloads: moved('customizedDownloads'),
+      customizerSessions: moved('customizerSessions'),
+      saveGates: moved('saveGates'),
+      newAccounts: moved('newAccounts'),
+      newAccountsFromSave: moved('newAccountsFromSave'),
       savedTemplates: moved('savedTemplates'),
     }).toEqual({
-      downloads30d: 4,
-      anonymousDownloads30d: 3,
-      customizedDownloads30d: 1,
-      customizerSessions30d: 3,
-      saveGates30d: 1,
-      newAccounts30d: 1,
-      newAccountsFromSave30d: 1,
+      downloads: 4,
+      anonymousDownloads: 3,
+      customizedDownloads: 1,
+      customizerSessions: 3,
+      saveGates: 1,
+      newAccounts: 1,
+      newAccountsFromSave: 1,
       savedTemplates: 1,
     });
+
+    // The last 24 hours, by the hour: everything above happened in the
+    // running hour, the last bar, and the new account is in it too.
+    type Series = { i: number; n: number; guests: number; html: number; react: number; customized: number }[];
+    const day = (await call('overview?period=1').then((r) => r.json())) as {
+      range: { bucket: string; buckets: number };
+      downloads: number;
+      newAccountsFromSave: number;
+      downloadSeries: Series;
+      signupSeries: { i: number; n: number; fromSave: number }[];
+    };
+    expect(day.range).toMatchObject({ bucket: 'hour', buckets: 24 });
+    expect(day.downloadSeries.reduce((sum, row) => sum + row.n, 0)).toBe(day.downloads);
+    // (22 only when the hour turned over between the two.)
+    expect(day.downloadSeries.at(-1)!.i).toBeGreaterThanOrEqual(22);
+    expect(day.signupSeries.at(-1)!.i).toBeGreaterThanOrEqual(22);
+    expect(day.signupSeries.reduce((sum, row) => sum + row.fromSave, 0)).toBe(day.newAccountsFromSave);
 
     // The Downloads page splits the same rows per template: who took them,
     // in which format, and how many were customized, in the period asked.
@@ -330,6 +351,35 @@ describe('acting on accounts', () => {
       customized: 1,
     });
     expect((await call('downloads?period=12')).status).toBe(400);
+
+    // A custom range is whole UTC days: the day of the old row holds it alone.
+    const oldDay = new Date(Date.now() - 40 * 86_400_000).toISOString().slice(0, 10);
+    const thatDay = (await call(`downloads?from=${oldDay}&to=${oldDay}`).then((r) => r.json())) as {
+      range: { period: string; bucket: string; buckets: number };
+      totals: { downloads: number };
+      downloadSeries: Series;
+      templates: (TemplateRow & { slug: string })[];
+    };
+    expect(thatDay.range).toMatchObject({ period: 'custom', bucket: 'hour', buckets: 24 });
+    expect(thatDay.templates.find((row) => row.slug === 'verdant')).toMatchObject({ downloads: 1, guests: 1, react: 1 });
+    expect(thatDay.downloadSeries.reduce((sum, row) => sum + row.n, 0)).toBe(thatDay.totals.downloads);
+
+    // All time starts at the first download, so it holds the old row too.
+    const ever = (await call('downloads?period=all').then((r) => r.json())) as {
+      range: { start: string };
+      totals: { downloads: number };
+      downloadSeries: Series;
+    };
+    expect(Date.parse(ever.range.start)).toBeLessThanOrEqual(Date.now() - 40 * 86_400_000);
+    expect(ever.downloadSeries.reduce((sum, row) => sum + row.n, 0)).toBe(ever.totals.downloads);
+
+    // Half a pair, dates the wrong way round, a day that does not exist, and
+    // a range that starts tomorrow are the caller's mistake.
+    const tomorrow = new Date(Date.now() + 86_400_000).toISOString().slice(0, 10);
+    for (const query of [`from=${oldDay}`, `from=${tomorrow}&to=${oldDay}`, 'from=2026-02-30&to=2026-03-01', `from=${tomorrow}&to=${tomorrow}`]) {
+      expect((await call(`downloads?${query}`)).status, query).toBe(400);
+      expect((await call(`overview?${query}`)).status, query).toBe(400);
+    }
 
     // The directory and the person's page read the same rows.
     const listed = (await call('users?q=saver').then((r) => r.json())) as {

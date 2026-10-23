@@ -33,6 +33,39 @@ const userRow = (overrides: Record<string, unknown> = {}) => ({
   ...overrides,
 });
 
+const DAY = 86_400_000;
+
+/** A range of whole UTC days ending with today, as the Worker resolves one. */
+const daysRange = (period: string, days: number) => {
+  const end = new Date();
+  end.setUTCHours(24, 0, 0, 0);
+  return { period, start: new Date(end.getTime() - days * DAY).toISOString(), end: end.toISOString(), bucket: 'day', bucketSeconds: 86_400, buckets: days };
+};
+
+/** The range a stubbed admin read was asked for: a preset, or a custom pair. */
+const askedRange = (url: string) => {
+  const query = new URL(url).searchParams;
+  const [from, to] = [query.get('from'), query.get('to')];
+  if (from && to) {
+    const start = Date.parse(`${from}T00:00:00Z`);
+    const days = (Date.parse(`${to}T00:00:00Z`) - start) / DAY + 1;
+    return { asked: `${from}..${to}`, range: { ...daysRange('custom', days), start: new Date(start).toISOString(), end: new Date(start + days * DAY).toISOString() } };
+  }
+  const period = query.get('period') ?? '30';
+  return { asked: period, range: daysRange(period, period === 'all' ? 60 : Number(period)) };
+};
+
+/** /api/admin/overview's answer: today's bar has the sign-ups and downloads. */
+const overviewBody = (range: ReturnType<typeof daysRange>) => ({
+  range,
+  users: 42, usersBefore: 30, newUsersThisWeek: 5, generationsThisWeek: 17, sitesThisWeek: 6, fallbackRate: 0.12, aiCallsToday: 9,
+  aiCostToday: 0.734, imagesThisWeek: 3, downloads: 18940, anonymousDownloads: 15002, customizedDownloads: 2100,
+  customizerSessions: 7212, saveGates: 410, newAccounts: 302, newAccountsFromSave: 214, savedTemplates: 1184,
+  topDownloads: [{ slug: 'verdant', n: 40 }],
+  signupSeries: [{ i: range.buckets - 1, n: 5, fromSave: 2 }],
+  downloadSeries: [{ i: range.buckets - 1, n: 120, guests: 90, html: 80, react: 40, customized: 25 }],
+});
+
 test.describe('account and admin pages', () => {
   test.skip(REQUIRED.some((file) => !fs.existsSync(file)), 'run `npm run build` first');
 
@@ -136,15 +169,11 @@ test.describe('account and admin pages', () => {
     await expect(page.getByRole('navigation', { name: 'Admin' })).toHaveCount(0);
 
     await stubSession(page, 'admin');
-    await page.route('**/api/admin/overview', (route) =>
+    await page.route('**/api/admin/overview?*', (route) =>
       route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({
-          users: 42, newUsersThisWeek: 5, generationsThisWeek: 17, sitesThisWeek: 6, fallbackRate: 0.12, aiCallsToday: 9,
-          aiCostToday: 0.734, imagesThisWeek: 3, downloads30d: 18940, anonymousDownloads30d: 15002, customizerSessions30d: 7212,
-          saveGates30d: 410, newAccounts30d: 302, newAccountsFromSave30d: 214, savedTemplates: 1184, signupsByDay: [],
-        }),
+        body: JSON.stringify(overviewBody(daysRange('30', 30))),
       })
     );
     await page.route('**/api/admin/users?*', (route) =>
@@ -161,7 +190,7 @@ test.describe('account and admin pages', () => {
     // The design's four: downloads with no account, customizer sessions, the
     // accounts made and how many began at the save gate, and what is saved.
     await expect(page.getByText('18,940')).toBeVisible();
-    await expect(page.getByText('15,002 with no account', { exact: false })).toBeVisible();
+    await expect(page.getByText('Last 30 days, 15,002 with no account', { exact: false })).toBeVisible();
     await expect(page.getByText('7,212')).toBeVisible();
     await expect(page.getByText('71% started from a save', { exact: false })).toBeVisible();
     await expect(page.getByText('1,184')).toBeVisible();
@@ -198,20 +227,19 @@ test.describe('download statistics', () => {
       return { slug, name, retired: false, downloads, guests, signedIn: downloads - guests, html, react, customized, lastAt };
     };
     await page.route('**/api/admin/downloads?*', (route) => {
-      const period = new URL(route.request().url()).searchParams.get('period') ?? '30';
+      const { asked: period, range } = askedRange(route.request().url());
       asked.push(period);
       const all = period === 'all';
       return route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          period,
+          range,
           totals: {
             downloads: all ? 900 : 120, guests: all ? 700 : 90, signedIn: all ? 200 : 30, html: 80, react: 40,
             customized: 25, customizedByGuests: 20, people: 12, templates: 2,
           },
-          chartDays: all ? 90 : Number(period),
-          byDay: [{ day: new Date().toISOString().slice(0, 10), guests: 4, signedIn: 2 }],
+          downloadSeries: [{ i: range.buckets - 1, n: 6, guests: 4, html: 5, react: 1, customized: 2 }],
           templates: [
             row('live-wire-electric', 'Live Wire Electric', [80, 60, 50, 30, 20]),
             row('crumb-bakehouse', 'Crumb Bakehouse', [40, 30, 30, 10, 5]),
@@ -244,10 +272,75 @@ test.describe('download statistics', () => {
     await table.getByRole('button', { name: 'Template' }).click();
     await expect(rows.first().locator('td').first()).toHaveText('Crumb Bakehouse');
 
+    // Three charts read the same bars, each with its readout.
+    await expect(page.getByRole('heading', { name: 'Downloads by day' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'HTML and React' })).toBeVisible();
+    await page.getByRole('img', { name: /^Customized downloads per day/ }).focus();
+    await expect(page.getByText('customized (33%)')).toBeVisible();
+    await expect(page.getByText('4 as they are')).toBeVisible();
+
     // The period is asked of the Worker.
     await page.getByRole('button', { name: 'All time' }).click();
     await expect(page.getByText('900', { exact: true })).toBeVisible();
     expect(asked).toEqual(['30', 'all']);
+  });
+});
+
+test.describe('the overview', () => {
+  test.skip(REQUIRED.some((file) => !fs.existsSync(file)), 'run `npm run build` first');
+
+  test.beforeEach(async ({ page }) => {
+    await page.route(/https:\/\/(use\.typekit\.net|fonts\.googleapis\.com|fonts\.gstatic\.com)\//, (route) => route.abort());
+  });
+
+  test('one range for every figure, and a readout on every bar', async ({ page }) => {
+    await stubSession(page, 'admin');
+    const asked: string[] = [];
+    await page.route('**/api/admin/overview?*', (route) => {
+      const { asked: period, range } = askedRange(route.request().url());
+      asked.push(period);
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(overviewBody(range)) });
+    });
+    await page.route('**/api/admin/users?*', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ testDomain: 'tabbied.test', users: [] }) })
+    );
+
+    await page.goto('/admin/');
+    await expect(page.getByText('Last 30 days, 410 asked to save')).toBeVisible();
+
+    // Pointing at today's sign-ups reads them, with what came of them and
+    // the running total; a day with none says so.
+    const growth = page.getByRole('img', { name: /^New accounts per day/ });
+    await growth.locator('[data-bar="29"]').hover();
+    await expect(page.getByText('5 new users')).toBeVisible();
+    await expect(page.getByText('2 started from a save')).toBeVisible();
+    await expect(page.getByText('35 users in all')).toBeVisible();
+    await growth.locator('[data-bar="3"]').hover();
+    await expect(page.getByText('0 new users')).toBeVisible();
+    await expect(page.getByText('30 users in all')).toBeVisible();
+    await page.mouse.move(0, 0);
+    await expect(page.getByText('30 users in all')).toBeHidden();
+
+    // The keyboard gets the same readout: focus is the latest bar, the
+    // arrows walk back.
+    const downloads = page.getByRole('img', { name: /^Downloads per day/ });
+    await downloads.focus();
+    await expect(page.getByText('120 downloads')).toBeVisible();
+    await expect(page.getByText('90 guests')).toBeVisible();
+    await expect(page.getByText('25 customized')).toBeVisible();
+    await page.keyboard.press('ArrowLeft');
+    await expect(page.getByText('0 downloads')).toBeVisible();
+
+    // A preset, then a custom range: everything under the row reads it.
+    await page.getByRole('button', { name: '7 days' }).click();
+    await expect(page.getByText('Last 7 days, 15,002 with no account', { exact: false })).toBeVisible();
+    await page.getByRole('button', { name: 'Custom' }).click();
+    await page.getByLabel('From', { exact: true }).fill('2026-10-01');
+    await page.getByLabel('To', { exact: true }).fill('2026-10-14');
+    await page.getByRole('button', { name: 'Apply' }).click();
+    await expect(page.getByText('Oct 1 to Oct 14, 2026, 15,002 with no account', { exact: false })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Custom' })).toHaveAttribute('aria-pressed', 'true');
+    expect(asked).toEqual(['30', '7', '2026-10-01..2026-10-14']);
   });
 });
 

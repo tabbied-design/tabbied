@@ -3,9 +3,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch, ApiError } from 'lib/apiFetch';
 
-/** One fetch, three states, a reload - what every admin panel needs and nothing else. */
+/**
+ * One fetch, three states, a reload - what every admin panel needs and nothing
+ * else. When the path changes the last answer stays until the next arrives,
+ * and `stale` says it is for another path, so a page asking for a new range
+ * can hold its charts (dimmed) rather than blink to "Loading...".
+ */
 export function useAdminData<T>(path: string) {
-  const [data, setData] = useState<T | null>(null);
+  const [loaded, setLoaded] = useState<{ path: string; body: T } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [tick, setTick] = useState(0);
 
@@ -14,7 +19,7 @@ export function useAdminData<T>(path: string) {
     setError(null);
     apiFetch<T>(path)
       .then((body) => {
-        if (live) setData(body);
+        if (live) setLoaded({ path, body });
       })
       .catch((cause) => {
         if (live) setError(cause instanceof ApiError ? cause.message : 'Could not load.');
@@ -26,7 +31,7 @@ export function useAdminData<T>(path: string) {
 
   const reload = useCallback(() => setTick((n) => n + 1), []);
 
-  return { data, error, reload };
+  return { data: loaded?.body ?? null, stale: loaded !== null && loaded.path !== path, error, reload };
 }
 
 export const when = (value: string | Date) =>

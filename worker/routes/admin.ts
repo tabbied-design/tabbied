@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { and, desc, eq, gte, like, ne, or, sql } from 'drizzle-orm';
+import { and, desc, eq, gte, like, lt, ne, or, sql, type Column } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/d1';
 import { z } from 'zod';
 import * as schema from '../db/schema';
@@ -9,7 +9,8 @@ import { APIError } from 'better-auth/api';
 import { buildAuth } from '../auth';
 import { EMAIL_PREVIEWS } from '../lib/emailPreview';
 import { mailProvider, sendMail } from '../lib/mail';
-import { DAILY_CAPS, startOfUtcDay } from '../lib/quota';
+import { DAILY_CAPS, startOfUtcDay, type Db } from '../lib/quota';
+import { askedRange, barOf, rangeJson, resolveRange, within, type Range, type RangeAsk } from '../lib/range';
 import { consume } from '../lib/ratelimit';
 import { authConfigured } from '../lib/session';
 import { loadEditableCatalog } from '../lib/templateAssets';
@@ -57,21 +58,96 @@ admin.use('*', async (c, next) => {
 
 const daysAgo = (days: number) => new Date(Date.now() - days * 86_400_000);
 
-// The overview's figures. The headline four are the 2026-10 design's:
-// downloads over the last 30 days (no account needed, so most carry no
-// user, and how many the customizer built), customizer sessions, new
-// accounts and how many of them began at the Save gate, and the sites saved
-// across every account; then the week's most downloaded templates. The rest are the
-// generation tier's, held back from the first launch but still answered.
+// A query string that does not parse is the caller's mistake: a 400, not a 500.
+const badQuery = (c: { json: (body: unknown, status: 400) => Response }) =>
+  c.json({ error: 'Bad query.' }, 400);
+
+/**
+ * The asked range at this moment. "All time" starts on the day the first of
+ * `columns` was written, so its chart has no empty years in front of it.
+ */
+async function rangeAt(db: Db, ask: RangeAsk, columns: Column[]): Promise<Range | null> {
+  if (ask.period !== 'all') return resolveRange(ask, Date.now());
+
+  const firsts = await Promise.all(
+    columns.map((column) => db.get<{ t: number | null }>(sql`select min(${column}) as t from ${column.table}`))
+  );
+  const times = firsts.map((row) => row?.t).filter((t): t is number => typeof t === 'number');
+
+  return resolveRange(ask, Date.now(), times.length ? Math.min(...times) : null);
+}
+
+/**
+ * Downloads per bar of the range, for the charts: how many, how many by
+ * guests, by format, and the customized ones (their event, written beside
+ * the row; worker/lib/downloads.ts). Bars with none are absent here and
+ * filled in by the page.
+ */
+async function downloadSeries(db: Db, range: Range) {
+  const bar = barOf(download.createdAt, range);
+  const eventBar = barOf(event.createdAt, range);
+  const [rows, customized] = await Promise.all([
+    db
+      .select({
+        i: bar,
+        n: sql<number>`count(*)`,
+        guests: sql<number>`coalesce(sum(${download.userId} is null), 0)`,
+        html: sql<number>`coalesce(sum(${download.format} = 'html'), 0)`,
+        react: sql<number>`coalesce(sum(${download.format} = 'react'), 0)`,
+      })
+      .from(download)
+      .where(within(download.createdAt, range))
+      .groupBy(bar),
+    db
+      .select({ i: eventBar, n: sql<number>`count(*)` })
+      .from(event)
+      .where(and(eq(event.kind, 'download-customized' satisfies EventKind), within(event.createdAt, range)))
+      .groupBy(eventBar),
+  ]);
+
+  const bars = new Map(
+    rows.map((row) => [
+      Number(row.i),
+      { i: Number(row.i), n: Number(row.n), guests: Number(row.guests), html: Number(row.html), react: Number(row.react), customized: 0 },
+    ])
+  );
+
+  // The event can land a second after its row, so in the next bar: it still counts.
+  for (const row of customized) {
+    const i = Number(row.i);
+    const entry = bars.get(i) ?? { i, n: 0, guests: 0, html: 0, react: 0, customized: 0 };
+    bars.set(i, { ...entry, customized: Number(row.n) });
+  }
+
+  return [...bars.values()].sort((a, b) => a.i - b.i);
+}
+
+// The overview's figures, over the range the page asks for (`period`, or
+// `from` and `to`; worker/lib/range.ts), 30 days when it asks for none. The
+// headline four are the 2026-10 design's: downloads (no account needed, so
+// most carry no user, and how many the customizer built), customizer
+// sessions, new accounts and how many of them began at the Save gate, and
+// the sites saved across every account, which is a total, not the range's;
+// then the range's most downloaded templates, and the two charts' bars. The
+// rest are the generation tier's, held back from the first launch but still
+// answered, over their own fixed windows.
 admin.get('/overview', async (c) => {
+  const ask = askedRange(c.req.query(), '30');
+
+  if (!ask) return badQuery(c);
+
   const db = drizzle(c.env.DB, { schema });
+  const range = await rangeAt(db, ask, [user.createdAt, download.createdAt]);
+
+  if (!range) return badQuery(c);
+
   const today = startOfUtcDay();
   const week = daysAgo(7);
-  const fortnight = daysAgo(14);
-  const month = daysAgo(30);
+  const signupBar = barOf(user.createdAt, range);
 
   const [
     [users],
+    [usersBefore],
     [newUsers],
     [generations],
     [sites],
@@ -79,14 +155,15 @@ admin.get('/overview', async (c) => {
     [spend],
     [images],
     signups,
-    [downloads],
+    fromSave,
+    downloads,
     events,
-    [newAccounts],
-    [fromSave],
     [saved],
     topDownloads,
   ] = await Promise.all([
     db.select({ n: sql<number>`count(*)` }).from(user),
+    // Where the growth chart's running total starts.
+    db.select({ n: sql<number>`count(*)` }).from(user).where(lt(user.createdAt, new Date(range.start * 1000))),
     db.select({ n: sql<number>`count(*)` }).from(user).where(gte(user.createdAt, week)),
     db.select({ n: sql<number>`count(*)` }).from(generation).where(gte(generation.createdAt, week)),
     db.select({ n: sql<number>`count(*)` }).from(site).where(gte(site.createdAt, week)),
@@ -102,69 +179,70 @@ admin.get('/overview', async (c) => {
       .select({ n: sql<number>`coalesce(sum(${aiUsage.imageCount}), 0)` })
       .from(aiUsage)
       .where(gte(aiUsage.createdAt, week)),
-    // The growth chart: accounts created per UTC day over the last fortnight.
-    // Days with none are absent here and filled in by the page.
+    // The growth chart: accounts created per bar. Bars with none are absent
+    // here and filled in by the page.
     db
-      .select({ day: sql<string>`date(${user.createdAt}, 'unixepoch')`, n: sql<number>`count(*)` })
+      .select({ i: signupBar, n: sql<number>`count(*)` })
       .from(user)
-      .where(gte(user.createdAt, fortnight))
-      .groupBy(sql`date(${user.createdAt}, 'unixepoch')`)
-      .orderBy(sql`date(${user.createdAt}, 'unixepoch')`),
+      .where(within(user.createdAt, range))
+      .groupBy(signupBar),
+    // "71% started from a save": the range's new accounts that went on to
+    // save the edits they were holding when Save asked them to sign up, by
+    // the bar the account was made in.
     db
-      .select({
-        n: sql<number>`count(*)`,
-        anonymous: sql<number>`coalesce(sum(${download.userId} is null), 0)`,
-      })
-      .from(download)
-      .where(gte(download.createdAt, month)),
+      .select({ i: signupBar, n: sql<number>`count(distinct ${event.userId})` })
+      .from(event)
+      .innerJoin(user, eq(user.id, event.userId))
+      .where(and(eq(event.kind, 'gate-save'), within(user.createdAt, range)))
+      .groupBy(signupBar),
+    downloadSeries(db, range),
     db
       .select({ kind: event.kind, n: sql<number>`count(*)` })
       .from(event)
-      .where(gte(event.createdAt, month))
+      .where(within(event.createdAt, range))
       .groupBy(event.kind),
-    db.select({ n: sql<number>`count(*)` }).from(user).where(gte(user.createdAt, month)),
-    // "71% started from a save": the month's new accounts that went on to
-    // save the edits they were holding when Save asked them to sign up.
-    db
-      .select({ n: sql<number>`count(distinct ${event.userId})` })
-      .from(event)
-      .innerJoin(user, eq(user.id, event.userId))
-      .where(and(eq(event.kind, 'gate-save'), gte(user.createdAt, month))),
     db.select({ n: sql<number>`count(*)` }).from(site),
-    // Which templates went out this week, original and customized together:
-    // the guest audit asked for downloads per template.
+    // Which templates went out, original and customized together: the guest
+    // audit asked for downloads per template.
     db
       .select({ slug: download.slug, n: sql<number>`count(*)` })
       .from(download)
-      .where(gte(download.createdAt, week))
+      .where(within(download.createdAt, range))
       .groupBy(download.slug)
       .orderBy(sql`count(*) desc`, download.slug)
       .limit(10),
   ]);
 
   const eventCount = (kind: EventKind) => Number(events.find((row) => row.kind === kind)?.n ?? 0);
+  const fromSaveByBar = new Map(fromSave.map((row) => [Number(row.i), Number(row.n)]));
+  const signupSeries = signups
+    .map((row) => ({ i: Number(row.i), n: Number(row.n), fromSave: fromSaveByBar.get(Number(row.i)) ?? 0 }))
+    .sort((a, b) => a.i - b.i);
+  const total = <T>(rows: T[], pick: (row: T) => number) => rows.reduce((sum, row) => sum + pick(row), 0);
 
   return c.json({
+    range: rangeJson(range),
     users: Number(users.n),
-    newUsersThisWeek: Number(newUsers.n),
-    downloads30d: Number(downloads.n),
-    anonymousDownloads30d: Number(downloads.anonymous),
-    // Of downloads30d, the ones the customizer built (its own event, written
-    // beside the download row; worker/lib/downloads.ts).
-    customizedDownloads30d: eventCount('download-customized'),
-    topDownloads7d: topDownloads.map((row) => ({ slug: row.slug, n: Number(row.n) })),
-    customizerSessions30d: eventCount('customize'),
-    saveGates30d: eventCount('save-gate'),
-    newAccounts30d: Number(newAccounts.n),
-    newAccountsFromSave30d: Number(fromSave.n),
+    usersBefore: Number(usersBefore.n),
+    downloads: total(downloads, (row) => row.n),
+    anonymousDownloads: total(downloads, (row) => row.guests),
+    // Of downloads, the ones the customizer built.
+    customizedDownloads: total(downloads, (row) => row.customized),
+    topDownloads: topDownloads.map((row) => ({ slug: row.slug, n: Number(row.n) })),
+    customizerSessions: eventCount('customize'),
+    saveGates: eventCount('save-gate'),
+    newAccounts: total(signupSeries, (row) => row.n),
+    newAccountsFromSave: total(signupSeries, (row) => row.fromSave),
     savedTemplates: Number(saved.n),
+    signupSeries,
+    downloadSeries: downloads,
+    newUsersThisWeek: Number(newUsers.n),
     generationsThisWeek: Number(generations.n),
     sitesThisWeek: Number(sites.n),
     fallbackRate: Number(generations.n) ? Number(fallbacks.n) / Number(generations.n) : 0,
     aiCallsToday: Number(spend.calls),
     aiCostToday: Number(spend.cost),
     imagesThisWeek: Number(images.n),
-    signupsByDay: signups.map((row) => ({ day: row.day, n: Number(row.n) })),
   });
 });
 
@@ -178,10 +256,6 @@ const listQuery = z.object({
 const usageQuery = z.object({
   days: z.coerce.number().int().min(1).max(90).default(14),
 });
-
-// A query string that does not parse is the caller's mistake: a 400, not a 500.
-const badQuery = (c: { json: (body: unknown, status: 400) => Response }) =>
-  c.json({ error: 'Bad query.' }, 400);
 
 admin.get('/users', async (c) => {
   const query = listQuery.safeParse({ q: c.req.query('q'), limit: c.req.query('limit'), scope: c.req.query('scope') });
@@ -573,43 +647,33 @@ admin.get('/templates', async (c) => {
   });
 });
 
-const downloadsQuery = z.object({
-  /** The period, in days back from now, or every download there is. */
-  period: z.enum(['7', '30', '90', 'all']).default('30'),
-});
-
-/** The most days the chart draws: all time is charted over its last 90. */
-const CHART_DAYS_MAX = 90;
-
 // Downloads per template, for the Downloads page: every template in the
 // catalog (none downloaded is worth seeing too), each with its downloads in
-// the period split by who took them (no account, or signed in) and by
-// format, the customized ones among them, and when it last went out; the
-// same split for the whole site, the people who took them signed in, and a
-// day-by-day count for the chart. A download is a row in `download`
-// (worker/lib/downloads.ts); a customized one is a row there plus a
-// `download-customized` event beside it, which is what is counted here.
+// the range (as the overview reads it) split by who took them (no account,
+// or signed in) and by format, the customized ones among them, and when it
+// last went out; the same split for the whole site, the people who took
+// them signed in, and the bars for the charts. A download is a row in
+// `download` (worker/lib/downloads.ts); a customized one is a row there plus
+// a `download-customized` event beside it, which is what is counted here.
 admin.get('/downloads', async (c) => {
-  const query = downloadsQuery.safeParse({ period: c.req.query('period') });
+  const ask = askedRange(c.req.query(), '30');
 
-  if (!query.success) return badQuery(c);
+  if (!ask) return badQuery(c);
 
-  const days = query.data.period === 'all' ? null : Number(query.data.period);
-  const since = days === null ? null : daysAgo(days);
-  const chartDays = Math.min(days ?? CHART_DAYS_MAX, CHART_DAYS_MAX);
   const db = drizzle(c.env.DB, { schema });
+  const range = await rangeAt(db, ask, [download.createdAt]);
 
-  const inPeriod = since ? gte(download.createdAt, since) : undefined;
-  const guests = sql<number>`coalesce(sum(${download.userId} is null), 0)`;
-  const day = sql<string>`date(${download.createdAt}, 'unixepoch')`;
+  if (!range) return badQuery(c);
 
-  const [catalog, perTemplate, customized, byDay, [people]] = await Promise.all([
+  const inPeriod = within(download.createdAt, range);
+
+  const [catalog, perTemplate, customized, series, [people]] = await Promise.all([
     loadEditableCatalog(c.env, c.req.raw),
     db
       .select({
         slug: download.slug,
         n: sql<number>`count(*)`,
-        guests,
+        guests: sql<number>`coalesce(sum(${download.userId} is null), 0)`,
         html: sql<number>`coalesce(sum(${download.format} = 'html'), 0)`,
         react: sql<number>`coalesce(sum(${download.format} = 'react'), 0)`,
         last: sql<number>`max(${download.createdAt})`,
@@ -624,17 +688,9 @@ admin.get('/downloads', async (c) => {
         guests: sql<number>`coalesce(sum(${event.userId} is null), 0)`,
       })
       .from(event)
-      .where(
-        and(eq(event.kind, 'download-customized' satisfies EventKind), since ? gte(event.createdAt, since) : undefined)
-      )
+      .where(and(eq(event.kind, 'download-customized' satisfies EventKind), within(event.createdAt, range)))
       .groupBy(event.slug),
-    // Days with none are absent here and filled in by the page.
-    db
-      .select({ day, n: sql<number>`count(*)`, guests })
-      .from(download)
-      .where(gte(download.createdAt, daysAgo(chartDays)))
-      .groupBy(day)
-      .orderBy(day),
+    downloadSeries(db, range),
     db
       .select({ n: sql<number>`count(distinct ${download.userId})` })
       .from(download)
@@ -674,7 +730,8 @@ admin.get('/downloads', async (c) => {
   const guestDownloads = sum((row) => row.guests);
 
   return c.json({
-    period: query.data.period,
+    period: range.period,
+    range: rangeJson(range),
     totals: {
       downloads,
       guests: guestDownloads,
@@ -687,8 +744,7 @@ admin.get('/downloads', async (c) => {
       people: Number(people?.n ?? 0),
       templates: templates.filter((row) => row.downloads > 0).length,
     },
-    chartDays,
-    byDay: byDay.map((row) => ({ day: row.day, guests: Number(row.guests), signedIn: Number(row.n) - Number(row.guests) })),
+    downloadSeries: series,
     templates,
   });
 });
