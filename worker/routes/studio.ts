@@ -429,11 +429,10 @@ studio.post('/direction-image', async (c) => {
   let image;
 
   try {
-    // Transparent, so the still life sits on the card's own ground (and in a
-    // template's image slot) rather than in a box of its own.
+    // Transparent (every image is), so the still life sits on the card's own
+    // ground (and in a template's image slot) rather than in a box of its own.
     image = await generateImage(c.env, {
       prompt: directionImagePrompt(direction, row.description),
-      transparent: true,
     });
   } catch (error) {
     if (error instanceof UpstreamError) {

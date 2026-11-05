@@ -1,15 +1,18 @@
 #!/usr/bin/env node
 /**
- * Generate images with OpenAI's GPT Image 2, from data/image-prompts.json.
+ * Generate images with OpenAI's GPT Image 2.6 (meta.model in data/image-prompts.json),
+ * from data/image-prompts.json.
  *
- * Size and quality are resolved per prompt (prompt -> set -> project -> defaults), so one
- * batch can mix a 1024x1536 medium-quality portrait with a 1536x1024 low-quality
- * illustration. The CLI flags are overrides, not defaults.
+ * Every request is sent with background "transparent" (the rule for every image this
+ * repo generates, alongside quality "low"; see docs/image-pipeline.md). Size and quality
+ * are resolved per prompt (prompt -> set -> project -> defaults); the CLI flags are
+ * overrides, not defaults.
  *
- * Uses the Batch API (~50% cheaper). Prompts are chunked into --batch-size jobs and
- * every output file is parsed as a STREAM, never buffered whole: images come back as
- * inline base64 (~3.6 MB each), so a 1000-image batch would build a ~3.6 GB string and
- * blow V8's ~512 MB cap.
+ * GPT Image 2.6 is not offered through the Batch API, so with it `sync` is the command
+ * and `submit` refuses (see supportsBatch). For a model Batch does take (~50% cheaper),
+ * prompts are chunked into --batch-size jobs and every output file is parsed as a
+ * STREAM, never buffered whole: images come back as inline base64 (~3.6 MB each), so a
+ * 1000-image batch would build a ~3.6 GB string and blow V8's ~512 MB cap.
  *
  * Usage:
  *   OPENAI_API_KEY=sk-... node scripts/generate-images.mjs <command> [options]
@@ -17,6 +20,7 @@
  * Commands:
  *   dry-run    print the rendered prompts, targets and projected cost; no API calls
  *   submit     upload the JSONL batches and create them; prints the ids
+ *              (refused for a model the Batch API does not take, such as gpt-image-2.6-*)
  *   status     show batch status (--batch <id>, or every batch last submitted)
  *   download   download completed batches' images into --out
  *   sync       generate immediately, one request per prompt (bounded concurrency)
@@ -90,10 +94,22 @@ function printHelp() {
   console.log(src.slice(src.indexOf("/**"), src.indexOf("*/") + 2).replace(/^\/\*\*?|\*\/$|^ \* ?/gm, "").trim());
 }
 
+// -- Batch support -----------------------------------------------------------
+// On 2026-11-05 a batch naming gpt-image-2.6-flare or gpt-image-2.6-sunburst failed
+// validation with `model_not_found` ("not supported by the Batch API"), while the same
+// request on gpt-image-2.5-flare ran; the pricing page lists no Batch rate for 2.6.
+// Batch only refuses a model after the file is uploaded and the job created, so this is
+// checked before anything is sent. Narrow it if a later 2.6 joins the Batch API.
+const NO_BATCH_MODELS = /^gpt-image-2\.6(?:-|$)/;
+export const supportsBatch = (model) => !NO_BATCH_MODELS.test(model);
+
 // -- Cost estimation ---------------------------------------------------------
-// Image output tokens per request, measured against gpt-image-2 on 2026-07-28.
-// 1024x1536 is assumed equal to 1536x1024 (same pixel count) - verify before a
-// large portrait run.
+// Image output tokens per request. gpt-image-2.6-* bills about four times the models
+// before it at `low`, measured on gpt-image-2.6-flare on 2026-11-05; only `low` is
+// measured, the tier everything ships at.
+const COST_TOKENS_2_6 = { "1024x1024/low": 824, "1536x1024/low": 664, "1024x1536/low": 664 };
+// Measured against gpt-image-2 on 2026-07-28. 1024x1536 is assumed equal to
+// 1536x1024 (same pixel count).
 const COST_TOKENS = {
   "1024x1024/low": 196, "1024x1024/medium": 1372, "1024x1024/high": 5488,
   "1536x1024/low": 158, "1536x1024/medium": 1372, "1536x1024/high": 5488,
@@ -104,10 +120,11 @@ const USD_PER_MTOK = { batch: 15, sync: 30 };
 const sizeOf = (e, opts) => opts.size || e.size;
 const qualityOf = (e, opts) => opts.quality || e.quality;
 
-function describeCost(entries, opts, mode) {
+function describeCost(entries, opts, mode, model) {
+  const table = NO_BATCH_MODELS.test(model) ? COST_TOKENS_2_6 : COST_TOKENS;
   let tokens = 0;
   for (const e of entries) {
-    const t = COST_TOKENS[`${sizeOf(e, opts)}/${qualityOf(e, opts)}`];
+    const t = table[`${sizeOf(e, opts)}/${qualityOf(e, opts)}`];
     if (t === undefined) return `cost not estimable for ${sizeOf(e, opts)}/${qualityOf(e, opts)}`;
     tokens += t;
   }
@@ -117,10 +134,13 @@ function describeCost(entries, opts, mode) {
 const outputExt = (opts) => (opts.outputFormat === "jpeg" ? "jpg" : opts.outputFormat);
 
 function requestBody(e, opts, model) {
-  const body = { model, prompt: e.prompt, size: sizeOf(e, opts), quality: qualityOf(e, opts), n: 1 };
-  // Cut-outs get a real alpha channel, which needs png (the default) or webp.
-  // See docs/image-pipeline.md.
-  if (e.cutout) body.background = "transparent";
+  // Every image is requested on a transparent background, a scene included; the
+  // alpha needs png (the default) or webp. `cutout` decides what promotion does
+  // with the result, not the request. See docs/image-pipeline.md.
+  const body = {
+    model, prompt: e.prompt, size: sizeOf(e, opts), quality: qualityOf(e, opts),
+    background: "transparent", n: 1,
+  };
   if (opts.outputFormat !== "png") body.output_format = opts.outputFormat;
   return body;
 }
@@ -179,11 +199,13 @@ function decodeImage(respBody) {
 }
 
 // -- Commands ----------------------------------------------------------------
-function cmdDryRun(entries, opts) {
+function cmdDryRun(entries, opts, model) {
   const ext = outputExt(opts);
+  const batched = supportsBatch(model);
+  const jobs = batched ? `${chunk(entries, opts.batchSize).length} batch job(s)` : "sync only (no Batch API)";
   console.log(
-    `[dry-run] ${entries.length} prompt(s) · ${chunk(entries, opts.batchSize).length} batch job(s)\n` +
-      `          ${describeCost(entries, opts, "batch")}\n`,
+    `[dry-run] ${entries.length} prompt(s) · model ${model} · ${jobs}\n` +
+      `          ${describeCost(entries, opts, batched ? "batch" : "sync", model)}\n`,
   );
   for (const e of entries) {
     console.log(
@@ -375,12 +397,20 @@ async function main() {
     if (!QUALITIES.has(qualityOf(e, opts))) throw new Error(`prompt "${e.id}": unsupported quality "${qualityOf(e, opts)}"`);
   }
 
-  if (opts.command === "dry-run") return cmdDryRun(entries, opts);
+  if (opts.command === "dry-run") return cmdDryRun(entries, opts, model);
+
+  if (opts.command === "submit" && !supportsBatch(model)) {
+    console.error(
+      `${model} is not offered through the Batch API, so there is nothing to submit.\n` +
+        `Run the same selection with \`sync\` instead.`,
+    );
+    process.exit(1);
+  }
 
   const mode = opts.command === "sync" ? "sync" : "batch";
   console.log(
     `${entries.length} prompt(s) · model ${model} · ${outputExt(opts)} · out ${opts.out}\n` +
-      `${describeCost(entries, opts, mode)}\n`,
+      `${describeCost(entries, opts, mode, model)}\n`,
   );
   const key = requireKey();
   if (opts.command === "sync") return cmdSync(entries, opts, model, key);

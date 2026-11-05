@@ -89,6 +89,35 @@ never gets that exemption.
 first banned character, naming the file, line, column and code point. CI
 runs it before anything else. Run it before committing.
 
+## Generated images - GPT Image 2.6, low, transparent
+
+Every image this repo generates, offline or at runtime, is OpenAI's GPT
+Image 2.6 at `quality: "low"` with `background: "transparent"`:
+`gpt-image-2.6-flare`, or `gpt-image-2.6-sunburst`, which is the same release
+at the same price. The four places that name a model all say flare:
+`meta.model` in `data/image-prompts.json` and `data/mockup-prompts.json`,
+`AI_IMAGE_MODEL` in `wrangler.jsonc` (both blocks), and the explainers'
+`examples/remotion-explainers/scripts/prompts/*.json`. Each caller sends the
+quality and the background itself, so neither is a flag, and a scene is
+requested on a transparent background as much as a cut-out (`cutout` in the
+prompt JSON decides only how promotion names and checks the result). The
+images already committed, and Studio's pictures already stored, were made on
+`gpt-image-2` and `gpt-image-2.5-flare` and are kept; a model change never
+means regenerating them. Full reference: "One model, one set of settings" in
+`docs/image-pipeline.md`.
+
+Three things 2.6 changed, measured on 2026-11-05:
+
+- **No Batch API.** A batch naming either 2.6 model fails validation with
+  `model_not_found`, after its file is uploaded. `generate-images.mjs` checks
+  first (`supportsBatch`): `sync` is the command, `submit` refuses.
+- **About four times the tokens at `low`**: 664 image output tokens at
+  1536x1024 or 1024x1536 and 824 at 1024x1024 (158 and 196 before), so about
+  $0.02 a landscape image at the synchronous $30 per 1M.
+- **A subject comes back at alpha 254, never 255.** The promotion checks look
+  for transparent pixels, so none needed changing; a new check that treats
+  anything under 255 as see-through would flag every picture.
+
 ## Licensing - MIT packages, proprietary everything else
 
 The three packages are MIT, each with its own LICENSE (npm packs a LICENSE
@@ -1705,17 +1734,17 @@ things that shape follows from:
   `#fff` and `#ffffff` are one color, and comparing them as strings let an
   invisible ink get "repaired" into a color nobody chose.
 - **Imagery is lazy, idempotent and separately capped**: one image per
-  direction, on request, never three up front. `gpt-image-2.5-flare` emits real
+  direction, on request, never three up front. `gpt-image-2.6-flare` emits real
   alpha, which is why this reaches one vendor and not two
   (`docs/image-pipeline.md`).
-- **Two image models, and the split is the Batch API.** The Worker generates at
-  `quality: "low"` on `gpt-image-2.5-flare` (`AI_IMAGE_MODEL`), which OpenAI's
-  pricing page lists at exactly the `gpt-image-2` rates, so the switch bought
-  up to 50% lower latency for the same money. The offline collection pipeline
-  (`scripts/generate-images.mjs`, `scripts/generate-mockups.mjs`) stays on
-  `gpt-image-2` because **flare has no Batch API**, and batch is where that
-  pipeline gets its half-price rate: 159 images for ~$0.42. A version bump is
-  not a global find-and-replace here.
+- **One image model everywhere, and no Batch API for it.** The Worker
+  generates on `gpt-image-2.6-flare` (`AI_IMAGE_MODEL`) at `quality: "low"` on
+  a transparent background, the same model and settings as the offline
+  pipeline, the mockups and the explainers (see "Generated images" near the
+  top). The offline pipeline used to stay on `gpt-image-2` for the Batch
+  API's half-price rate (159 images for ~$0.42); 2.6 is not offered through
+  Batch at all, so it generates with `sync` now and `submit` refuses a 2.6
+  model.
 - The artboard's **photo upload** waits on `/api/uploads`; the **spinner** it
   drew for a synchronous match is now real, because generating is a real call.
 

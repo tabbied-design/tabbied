@@ -1,34 +1,54 @@
-# Template imagery: GPT Image 2 (native alpha) -> committed WebP
+# Template imagery: GPT Image 2.6 (native alpha) -> committed WebP
 
 How the imagery on the `/templates/<slug>/site/` sites is produced, reviewed, and
 committed. This documents the pipeline as implemented in this repo; the
 scripts live at the repo root under `scripts/`. (The older `scripts/images/`
 pipeline is retired - see its README - and **image generation uses the GPT
-Image API exclusively**, including transparency: `gpt-image-2` now honors
+Image API exclusively**, including transparency: the model honors
 `background: "transparent"`, which removed the separate Kie.ai
 background-removal vendor this pipeline used to need.)
 
-**This pipeline is `gpt-image-2`, and Studio's runtime is not.** The Worker
-generates on `gpt-image-2.5-flare` (`AI_IMAGE_MODEL` in `wrangler.jsonc`),
-which OpenAI prices at the same per-token rates and is up to 50% faster. It
-cannot be used here: **flare does not support the Batch API**, and everything
-below is built on batch at half the synchronous rate. Bumping this pipeline's
-model means giving that up, so the two are pinned separately on purpose.
+## One model, one set of settings
 
-The one exception so far is small on purpose: the seven cut-outs of the
-minimal set (2026-09-25; the loaf and croissant, the flat white, the
-bouquet, the pint, the teapot and the violin) were made with the same
-prompts and promotion, but through `sync --model gpt-image-2.5-flare`, since
-seven requests do not need a batch and flare returns them in seconds. The
-`meta.model` default stays `gpt-image-2`, so a later `submit` of those ids
-would regenerate them on the batch model; pass the same `--model` to keep
-them on flare.
+**Every image this repo generates is GPT Image 2.6 at `quality: "low"` with
+`background: "transparent"`.** That holds for this pipeline
+(`meta.model` in `data/image-prompts.json`), the mockups
+(`data/mockup-prompts.json`, `docs/pattern-mockups.md`), Studio's runtime
+(`AI_IMAGE_MODEL` in `wrangler.jsonc`, sent by `generateImage` in
+`worker/ai/client.ts`) and the Remotion explainers
+(`examples/remotion-explainers/scripts/prompts/*.json`). All four name
+`gpt-image-2.6-flare`; `gpt-image-2.6-sunburst` is the same release at the
+same price and is equally acceptable. Every request sends both settings
+itself, so neither is a flag to remember, and transparency is requested for
+a scene as much as for a cut-out (`cutout` decides promotion, below).
+
+Three things changed with 2.6, all measured on 2026-11-05:
+
+- **No Batch API.** A batch naming either 2.6 model fails validation with
+  `model_not_found` ("not supported by the Batch API"), and the pricing page
+  lists no Batch rate for it. A batch is only refused after its file is
+  uploaded, so `generate-images.mjs submit` refuses a 2.6 model up front
+  (`supportsBatch`); generate with `sync`. The streaming batch code stays for
+  a model the Batch API takes.
+- **About four times the tokens at `low`.** 664 image output tokens at
+  1536x1024 or 1024x1536 and 824 at 1024x1024, where `gpt-image-2` and
+  `gpt-image-2.5-flare` billed 158 and 196. At the synchronous $30 per 1M
+  that is about $0.02 per landscape image, against $0.0024 through Batch
+  before.
+- **A subject comes back at alpha 254, never 255.** Every check here looks
+  for transparent pixels, not for opaque ones, so none needed changing; a
+  new check should count 250 and above as solid.
+
+The images already committed are kept as they are and do not need
+regenerating: the collection was made on `gpt-image-2` through the Batch
+API, and the minimal set's seven cut-outs (2026-09-25), the artwork, and
+Studio's pictures stored in R2 on `gpt-image-2.5-flare`.
 
 ```
   data/image-prompts.json        <- 1. author the PROJECT (palette + style), then its prompts
             -
-            ▼  scripts/generate-images.mjs      (OpenAI Batch API, gpt-image-2, quality: low;
-            -                                    cutout: true adds background: "transparent")
+            ▼  scripts/generate-images.mjs      (OpenAI Images API, `sync`, gpt-image-2.6-flare,
+            -                                    quality: low, background: "transparent")
   generated-images/<id>.png      <- 2. candidates, gitignored, local scratch -
             -                         cut-outs arrive with a real alpha channel
             ▼  scripts/promote-images.mjs       (sharp -> WebP q92; verifies a cut-out
@@ -45,11 +65,12 @@ Two properties define the pipeline:
 - **An image is encoded exactly once and exists in git exactly once.** The
   promoted WebP is the served byte stream - no build-time re-encode, no source
   copy, no second lossy pass.
-- **Transparency is per-image, not global.** Whether an image is a cut-out is
-  a property of the *prompt*, declared in the JSON, and it drives every
-  downstream step: the `background: "transparent"` request parameter, the
-  alpha check at promotion, which filename gets committed, and the error when
-  a cut-out candidate is missing or opaque.
+- **The request is the same for every image; being a cut-out is per-image.**
+  Every request asks for `background: "transparent"`. Whether an image is a
+  cut-out is a property of the *prompt*, declared in the JSON, and it drives
+  what happens after generation: the alpha check at promotion, which filename
+  gets committed, and the error when a cut-out candidate is missing or
+  opaque.
 
 ## Prerequisites
 
@@ -74,7 +95,7 @@ Every field resolves through a cascade - **prompt -> set -> project ->
 - A **set** groups images that must read as one series - a team-portrait grid,
   a product line - by pinning the shared sentences (crop, light, backdrop,
   lens) and re-anchoring the palette for that medium. Generate a whole set in
-  one batch; six independently-written portraits will never grid together.
+  one run; six independently-written portraits will never grid together.
 - A **prompt** carries only what is specific to one image: `id`, `project`,
   optional `set`/`slot`/`size`, and the `subject`.
 
@@ -93,7 +114,11 @@ Rules that keep the results usable:
 
 - `cutout: true` for an **object** (product, portrait, prop) - something with
   a silhouette that will sit *on* a Tabbied pattern. `cutout: false` for a
-  **scene** - cut out a scene and you get ragged edges or a ghost.
+  **scene**, promoted full-bleed. A scene is requested on a transparent
+  background too, so write it to fill the frame, and look at its alpha before
+  promoting it: a cut-away scene has ragged edges or a ghost (the share of
+  partially transparent pixels is the measure, as for the artwork's
+  backgrounds below).
 - A cut-out prompt describes **the subject alone** - nothing else in frame.
   The `background: "transparent"` parameter does the isolation; do not ask
   for transparency in the prose (that paints a fake checkerboard) and do not
@@ -109,12 +134,13 @@ Rules that keep the results usable:
 ## Quality: `low`, deliberately
 
 This collection is generated at `quality: "low"` throughout (the
-`meta.defaults`). At 1536×1024 that is 158 output tokens ≈ **$0.0024/image**
-on Batch pricing - the full 159-image collection cost ~$0.42 and generated in
-about six minutes, with zero failed requests. `low` is visibly fine for
-graphic styles and for photos placed at card size; if a specific hero or
-portrait ever needs more, set `quality: "medium"` on that project or set (it
-is ~9× the cost, still cents) rather than globally.
+`meta.defaults`), and so is every image in the repo. On `gpt-image-2.6-flare`
+a 1536x1024 image is 664 output tokens, about **$0.02/image** at the
+synchronous rate (2.6 has no Batch rate). The original 159-image collection,
+made on `gpt-image-2` through the Batch API at 158 tokens, cost ~$0.42 and
+generated in about six minutes, with zero failed requests. `low` is visibly
+fine for graphic styles and for photos placed at card size; keep it there
+rather than raising a project or set.
 
 Accepted sizes: `1536x1024` (hero/landscape), `1024x1536` (portrait/tall
 product), `1024x1024` (square product/detail). Never `auto`.
@@ -125,11 +151,10 @@ product), `1024x1024` (square product/detail). Never `auto`.
 # 1. cost + prompt review (no API calls) - read the rendered prompts
 node scripts/generate-images.mjs dry-run --project neve-gelato
 
-# 2. generate via the Batch API (~50% cheaper). Three separate invocations -
-#    never one long-lived process; batch ids persist in generated-images/last-batch.json
-node scripts/generate-images.mjs submit --project neve-gelato
-node scripts/generate-images.mjs status          # repeat until "completed"
-node scripts/generate-images.mjs download
+# 2. generate. GPT Image 2.6 has no Batch API, so this is `sync` (bounded
+#    concurrency; `submit` refuses a 2.6 model). For a model Batch takes, the
+#    three-step submit / status / download flow still works.
+node scripts/generate-images.mjs sync --project neve-gelato
 
 # 3. REVIEW cut-outs over a real pattern at full size (alpha-edge artifacts and
 #    value collapse are invisible at thumbnail size), then promote:
@@ -141,26 +166,27 @@ git add public/images/sites lib/generated/images.js data/image-prompts.json
 ```
 
 Regenerating one image reuses its slug - edit the prompt's `subject`, then
-`submit/status/download --only <id> --force` and promote `--only <id>`. The
+`sync --only <id> --force` and promote `--only <id>`. The
 commit is one WebP plus one manifest line, and
 the manifest hash doubles as the cache-buster (`?v=<hash8>`), so returning
 visitors get the new bytes despite immutable caching.
 
 ## Transparency: native alpha, one vendor
 
-`gpt-image-2` accepts `background: "transparent"` and returns the subject on
-a real alpha channel, so a cut-out is finished the moment the batch downloads:
-generation and isolation are one call to one API. (Historically the
-parameter was a 400 on this model, and cut-outs took a second pass through
+`gpt-image-2.6-flare` accepts `background: "transparent"` and returns the
+subject on a real alpha channel, so a cut-out is finished the moment the
+response arrives: generation and isolation are one call to one API.
+(Historically the parameter was a 400 on `gpt-image-2`, and cut-outs took a
+second pass through
 Kie.ai's hosted `recraft/remove-background`; that whole leg - its API key,
 its upload hop, its rate limiter, and `scripts/remove-background.mjs` - is
 retired. **Future image generation uses the GPT Image API only.**)
 
 What holds the contract together now:
 
-- `cutout: true` in `data/image-prompts.json` is what adds the parameter to
-  the request (`requestBody` in `scripts/generate-images.mjs`) - transparency
-  stays a property of the prompt, not a flag someone must remember.
+- `requestBody` in `scripts/generate-images.mjs` adds the parameter to every
+  request, so it is not a flag someone must remember; `cutout: true` in
+  `data/image-prompts.json` is what holds the result to it at promotion.
 - Transparency needs an alpha-capable `output_format`: `png` (the default) or
   `webp`, never `jpeg`.
 - **Promotion verifies the alpha is real.** A `cutout: true` PNG with no
@@ -227,7 +253,7 @@ paths there. `build-image-manifest.mjs` does not scan `art/`, so these
 never appear to `Figure`.
 
 ```bash
-OPENAI_API_KEY=... node scripts/generate-images.mjs sync --only <ids> --model gpt-image-2.5-flare --quality low
+OPENAI_API_KEY=... node scripts/generate-images.mjs sync --only <ids>
 node scripts/promote-artwork.mjs --only <ids>
 ```
 
@@ -280,16 +306,17 @@ What was learned making the first 203:
 ## Gotcha checklist
 
 1. Transparency is the **parameter**, never the prompt - `background:
-   "transparent"` (sent automatically for `cutout: true`) returns real alpha;
+   "transparent"` (sent automatically on every request) returns real alpha;
    *asking* for transparency in the prose paints a fake checkerboard into the
    pixels. And it requires `png`/`webp` output, never `jpeg`.
 2. Batch output files embed base64 images and run to gigabytes - the scripts
-   stream them line by line; don't "simplify" that away.
+   stream them line by line; don't "simplify" that away. (It only matters for a
+   model the Batch API takes; GPT Image 2.6 is generated with `sync`.)
 3. Expensive failures happen on the **retrieval** side, after the paid work.
    Keep the retry wrappers on every GET.
 4. A palette-colored backdrop or a baked drop shadow ruins a cut-out (§ above).
-5. Faces are where `low` shows first; portraits are the first candidates for a
-   per-set `quality: "medium"`.
+5. Faces are where `low` shows first. Quality still stays `low`: reword or
+   reroll a portrait (a cent or two) rather than raising its quality.
 6. Two copies of a palette drift - the JSON project palette and the page's
    `TabbiedPattern` palette must stay byte-identical hexes.
 7. Filter by `--project`, not by id-prefix regex.
