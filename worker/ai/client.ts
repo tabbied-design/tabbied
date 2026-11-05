@@ -247,18 +247,19 @@ type ImageResult = { bytes: ArrayBuffer; contentType: string; model: string };
 export type ReferenceImage = { bytes: ArrayBuffer; contentType: string };
 
 /**
- * One image, as WebP. Transparency is a parameter, never a request in the
- * prose (which paints a fake checkerboard into the pixels). This stays on the
- * images endpoint rather than the Responses API's `image_generation` tool,
- * which would put a reasoning model in front of a prompt this repo tunes
- * deliberately and bill the rewrite (see docs/image-pipeline.md).
+ * One image, as WebP, always at `quality: "low"` on a transparent background
+ * (the rule for every image this repo generates; see docs/image-pipeline.md).
+ * Transparency is a parameter, never a request in the prose (which paints a
+ * fake checkerboard into the pixels). This stays on the images endpoint
+ * rather than the Responses API's `image_generation` tool, which would put a
+ * reasoning model in front of a prompt this repo tunes deliberately and bill
+ * the rewrite.
  */
 export async function generateImage(
   env: Env,
   options: {
     prompt: string;
     size?: string;
-    transparent?: boolean;
     /**
      * Pictures to draw from (a product, a place, a look). With any, the call
      * goes to the multipart `/images/edits`; without, to
@@ -274,7 +275,7 @@ export async function generateImage(
     quality: 'low',
     n: '1',
     output_format: 'webp',
-    ...(options.transparent ? { background: 'transparent' } : {}),
+    background: 'transparent',
   };
 
   let response: Response;

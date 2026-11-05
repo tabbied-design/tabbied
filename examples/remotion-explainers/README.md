@@ -14,7 +14,8 @@ number, so a film is code and renders the same way every time.
 
 All three are 1920x1080 at 30 fps. Every palette is taken from the Tabbied palette
 library, and every picture was generated with `gpt-image-2.5-flare` at
-`quality: "low"` on a transparent background. Narration and music come from
+`quality: "low"` on a transparent background (new pictures use
+`gpt-image-2.6-flare`, at the same settings; see [The pictures](#the-pictures)). Narration and music come from
 ElevenLabs (Eleven v4 and Eleven Music) and are laid on afterwards; see
 [Sound](#sound).
 
@@ -174,8 +175,18 @@ several browser tabs at once and in any order:
 (`OPENAI_API_KEY`) and writes `public/images/<film>/<id>.webp`:
 
 ```json
-{ "model": "gpt-image-2.5-flare", "quality": "low", "background": "transparent" }
+{ "model": "gpt-image-2.6-flare", "quality": "low", "background": "transparent" }
 ```
+
+Those are the settings for every picture, and the only ones: GPT Image 2.6
+(`-flare` here; `-sunburst` is the same release and price), `quality: "low"`,
+and a transparent background, which the script sends on every request. The
+pictures already in `public/images` were made with `gpt-image-2.5-flare` and
+are kept; the script skips a picture that exists unless it is given
+`--force`. A 2.6 picture at `low` is 664 image output tokens at 1536x1024 or
+1024x1536 and 824 at 1024x1024 (2.5 billed 158 and 196), about $0.02-0.025
+each, and its subject comes back at alpha 254 rather than 255, which the
+see-through warning below (it counts alpha under 235) does not mind.
 
 They are drawn in black and white on purpose. `src/components/Tinted.tsx` maps
 each pixel's lightness along two or three colors of the scene's palette with

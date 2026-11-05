@@ -26,7 +26,7 @@
  *   --only <id[,id..]>  Only these mockup ids
  *   --refs-only         Render the pattern references and stop (no API calls, free)
  *   --out <dir>         Output directory (default: ./generated-images/mockups)
- *   --quality <q>       low | medium | high (default: the JSON's meta.defaults)
+ *   --quality <q>       low | medium | high (default: the JSON's meta.defaults, low)
  *   --fidelity <f>      Send input_fidelity (gpt-image-1 only; gpt-image-2
  *                       rejects it with invalid_input_fidelity_model)
  *   --concurrency <n>   Parallel edit requests (default: 2)
@@ -97,6 +97,9 @@ async function editImage({ refPath, prompt, size, quality, fidelity, model, key 
   form.append('prompt', prompt);
   form.append('size', size);
   form.append('quality', quality);
+  // Every image this repo generates is on a transparent background (see
+  // docs/image-pipeline.md); the default png output carries the alpha.
+  form.append('background', 'transparent');
   form.append('n', '1');
   if (fidelity) form.append('input_fidelity', fidelity);
   form.append('image', new Blob([readFileSync(refPath)], { type: 'image/png' }), 'reference.png');
@@ -114,7 +117,7 @@ async function main() {
   if (opts.help) return printHelp();
 
   const data = JSON.parse(readFileSync(DATA_FILE, 'utf8'));
-  const model = data.meta?.model ?? 'gpt-image-2';
+  const model = data.meta?.model ?? 'gpt-image-2.6-flare';
   const defaults = data.meta?.defaults ?? {};
   let list = data.mockups;
   if (opts.only) list = list.filter((m) => opts.only.includes(m.id));

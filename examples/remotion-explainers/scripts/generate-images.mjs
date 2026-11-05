@@ -2,9 +2,11 @@
 // Generates a film's cut-outs with the GPT Image API and promotes them to
 // public/images/<film>/<id>.webp, where the film reads them with staticFile().
 //
-// Every image is requested on a transparent background (`background:
-// "transparent"`, which gpt-image-2.5-flare honors with a real alpha channel)
-// at `quality: "low"`. They are drawn in black and white on purpose: the
+// Every image is requested from the model the film's JSON names
+// (gpt-image-2.6-flare) on a transparent background (`background:
+// "transparent"`, which it honors with a real alpha channel) at
+// `quality: "low"`. 2.6 is not offered through the Batch API, which this
+// script never used: it sends one request per image. They are drawn in black and white on purpose: the
 // video tints each one with the palette of the scene it sits in (see
 // src/components/Tinted.tsx), so one file serves every palette.
 //

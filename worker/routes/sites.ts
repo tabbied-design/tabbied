@@ -850,7 +850,6 @@ sites.post('/:id/images', async (c) => {
         slotAlt: slot.alt,
         references: references.length,
       }),
-      transparent: true,
       references,
     });
   } catch (error) {

@@ -7,8 +7,9 @@
  *   cutout: false -> commits <id>.webp            (a scene, served full-bleed)
  *   cutout: true  -> commits <id>-cutout.webp     (an object, placed on a pattern)
  *
- * Cut-outs come straight from generation - gpt-image-2 emits a real alpha
- * channel (background:"transparent"), so <id>.png IS the cut-out and is promoted
+ * Cut-outs come straight from generation - the image model emits a real alpha
+ * channel (every request sends background:"transparent"; a scene may keep some
+ * alpha too), so <id>.png IS the cut-out and is promoted
  * under the -cutout name (the committed filename contract does not move).
  *
  * A cutout:true prompt with no candidate on disk is an ERROR, not a silent skip:
@@ -144,7 +145,7 @@ async function main() {
         console.error(
           `  failed ${job.out}: ${job.src}.png has no transparent pixels - a cut-out generated ` +
             `before native alpha, or a failed transparency request. Regenerate it ` +
-            `(cutout prompts send background:"transparent").`,
+            `(every prompt sends background:"transparent").`,
         );
         continue;
       }

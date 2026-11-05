@@ -8,6 +8,15 @@ the pattern on its lid, a van in full livery. Companion to
 `gpt-image-2` at `quality: low`. Everything below marked **measured** came out
 of that run; the rest is reasoning you should re-check on your own first batch.
 
+**New mockups use `gpt-image-2.6-flare` at `quality: "low"` with `background:
+"transparent"`**, the settings for every image this repo generates (see "One
+model, one set of settings" in `docs/image-pipeline.md`): `meta.model` in
+`data/mockup-prompts.json` names the model and `scripts/generate-mockups.mjs`
+sends the background on every edit. The edits endpoint accepts all three
+(checked 2026-11-05), and the object comes back on a real alpha channel, so a
+mockup is a cut-out of the object rather than a photograph with a backdrop;
+put the backdrop in the page. The five piloted mockups are kept as they are.
+
 ---
 
 ## 1. The question that decides the whole workflow
@@ -88,8 +97,9 @@ module and nothing mounts.
 ## 4. The edit call
 
 `POST https://api.openai.com/v1/images/edits`, **multipart/form-data** (not
-JSON): `model`, `image` (the reference PNG), `prompt`, `size`, `quality`, `n`.
-Response carries base64, same as the generations endpoint.
+JSON): `model`, `image` (the reference PNG), `prompt`, `size`, `quality`,
+`background` (always `transparent`), `n`. Response carries base64, same as the
+generations endpoint.
 
 **Measured gotchas:**
 
@@ -99,8 +109,8 @@ Response carries base64, same as the generations endpoint.
   models.
 - **The edits endpoint is not batchable.** The Batch API takes JSONL request
   bodies and this call is multipart, so mockups run synchronously with small
-  concurrency. At mockup volumes that is irrelevant: five images took well
-  under a minute.
+  concurrency (and GPT Image 2.6 is not offered through Batch anyway). At
+  mockup volumes that is irrelevant: five images took well under a minute.
 - **Never retry this POST.** It creates paid work; a silent re-send doubles the
   bill. The script reports a failure and carries on with the rest.
 
@@ -176,7 +186,8 @@ existing template imagery is unaffected.
 3. Run the edit, then compare the mockup against its reference side by side:
    check the palette has not drifted, the geometry is recognisably the design,
    and the pattern scale suits the object (not ant-sized, not billboard).
-4. Reroll failures. At `low` quality a reroll costs a fraction of a cent.
+4. Reroll failures. At `low` quality a 1024x1024 reroll costs about three
+   cents on 2.6 (824 image output tokens plus the reference as image input).
    If a design keeps failing, it is probably a global-progression design;
    move it to tier 1.
 

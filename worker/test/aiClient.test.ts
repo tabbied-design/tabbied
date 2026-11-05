@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { respondJson, UpstreamError } from '../ai/client';
+import { generateImage, respondJson, UpstreamError } from '../ai/client';
 import type { Env } from '../env';
 
 // The Responses API's answer is an item in an array, not a field, and two of
@@ -141,5 +141,51 @@ describe('respondJson', () => {
     await expect(ask()).rejects.toBeInstanceOf(UpstreamError);
     // A 4xx is a real answer, not a transient condition.
     expect(calls).toHaveLength(1);
+  });
+});
+
+// Every image this repo generates is GPT Image 2.6 at quality "low" on a
+// transparent background (CLAUDE.md, "Generated images"). The model comes from
+// AI_IMAGE_MODEL; the other two are sent by generateImage itself, on both
+// endpoints, so no caller can forget them.
+describe('generateImage', () => {
+  const answer = () =>
+    new Response(JSON.stringify({ data: [{ b64_json: btoa('webp') }] }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+
+  it('asks the generations endpoint for a low-quality image on a transparent background', async () => {
+    const calls = stub({ data: [{ b64_json: btoa('webp') }] });
+
+    const image = await generateImage(env(), { prompt: 'a teapot' });
+
+    expect(calls[0].url).toBe('https://upstream.test/v1/images/generations');
+    expect(calls[0].body).toMatchObject({
+      model: 'test-image-model',
+      quality: 'low',
+      background: 'transparent',
+      output_format: 'webp',
+    });
+    expect(image.contentType).toBe('image/webp');
+  });
+
+  it('sends the same settings to the edits endpoint with a reference', async () => {
+    const forms: FormData[] = [];
+
+    vi.stubGlobal('fetch', async (input: RequestInfo | URL, init?: RequestInit) => {
+      expect(String(input)).toBe('https://upstream.test/v1/images/edits');
+      forms.push(init?.body as FormData);
+      return answer();
+    });
+
+    await generateImage(env(), {
+      prompt: 'a teapot',
+      references: [{ bytes: new ArrayBuffer(4), contentType: 'image/png' }],
+    });
+
+    expect(forms[0].get('model')).toBe('test-image-model');
+    expect(forms[0].get('quality')).toBe('low');
+    expect(forms[0].get('background')).toBe('transparent');
   });
 });
